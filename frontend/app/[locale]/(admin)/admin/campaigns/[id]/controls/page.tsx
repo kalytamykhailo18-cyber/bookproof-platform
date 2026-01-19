@@ -451,7 +451,7 @@ export default function CampaignControlsPage() {
             {/* Allocate Credits */}
             <Dialog open={creditDialogOpen} onOpenChange={setCreditDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="w-full animate-fade-up-medium-slow">
+                <Button variant="outline" className="animate-fade-up-medium-slow w-full">
                   {t('actions.allocateCredits')}
                 </Button>
               </DialogTrigger>
@@ -494,7 +494,7 @@ export default function CampaignControlsPage() {
             {/* Adjust Overbooking */}
             <Dialog open={overbookingDialogOpen} onOpenChange={setOverbookingDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="w-full animate-fade-up-heavy-slow">
+                <Button variant="outline" className="animate-fade-up-heavy-slow w-full">
                   {t('actions.adjustOverbooking')}
                 </Button>
               </DialogTrigger>
@@ -509,7 +509,9 @@ export default function CampaignControlsPage() {
                       checked={overbookingEnabled}
                       onCheckedChange={(checked) => setOverbookingEnabled(checked as boolean)}
                     />
-                    <Label htmlFor="overbookingEnabled">{t('actions.overbookingDialog.enableLabel')}</Label>
+                    <Label htmlFor="overbookingEnabled">
+                      {t('actions.overbookingDialog.enableLabel')}
+                    </Label>
                   </div>
                   <div>
                     <Label htmlFor="overbooking">{t('actions.overbookingDialog.percentage')}</Label>

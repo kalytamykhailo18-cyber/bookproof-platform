@@ -210,7 +210,7 @@ export default function ExceptionsPage() {
   return (
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">{t('description')}</p>

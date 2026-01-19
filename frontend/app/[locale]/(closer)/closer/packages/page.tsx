@@ -153,7 +153,7 @@ export default function PackagesPage() {
   return (
     <div className="container mx-auto space-y-6 px-4 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('packages.title')}</h1>
           <p className="text-muted-foreground">{t('packages.description')}</p>
@@ -231,7 +231,7 @@ export default function PackagesPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-4 animate-fade-up">
+      <div className="flex animate-fade-up items-center gap-4">
         <Select
           value={statusFilter}
           onValueChange={(value) => setStatusFilter(value as CustomPackageStatus | 'ALL')}

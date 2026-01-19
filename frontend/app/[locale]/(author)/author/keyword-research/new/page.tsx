@@ -138,7 +138,7 @@ export default function NewKeywordResearchPage() {
             JSON.stringify({
               values: formValues,
               savedAt: new Date().toISOString(),
-            })
+            }),
           );
           setHasDraft(true);
           setLastSaved(new Date());
@@ -240,13 +240,7 @@ export default function NewKeywordResearchPage() {
                 </span>
               )}
             </span>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={clearDraft}
-              className="ml-4"
-            >
+            <Button type="button" variant="ghost" size="sm" onClick={clearDraft} className="ml-4">
               <Trash2 className="mr-1 h-4 w-4" />
               {t('draft.clear')}
             </Button>

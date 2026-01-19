@@ -103,7 +103,10 @@ export default function AdminReaderDetailPage() {
   const handleSuspend = () => {
     if (!actionReason.trim()) return;
     suspendReader.mutate(
-      { readerProfileId: readerId, data: { reason: actionReason, notes: actionNotes || undefined } },
+      {
+        readerProfileId: readerId,
+        data: { reason: actionReason, notes: actionNotes || undefined },
+      },
       {
         onSuccess: () => {
           setSuspendDialogOpen(false);
@@ -117,7 +120,10 @@ export default function AdminReaderDetailPage() {
   const handleUnsuspend = () => {
     if (!actionReason.trim()) return;
     unsuspendReader.mutate(
-      { readerProfileId: readerId, data: { reason: actionReason, notes: actionNotes || undefined } },
+      {
+        readerProfileId: readerId,
+        data: { reason: actionReason, notes: actionNotes || undefined },
+      },
       {
         onSuccess: () => {
           setUnsuspendDialogOpen(false);
@@ -150,7 +156,10 @@ export default function AdminReaderDetailPage() {
   const handleFlag = () => {
     if (!actionReason.trim()) return;
     flagReader.mutate(
-      { readerProfileId: readerId, data: { reason: actionReason, notes: actionNotes || undefined } },
+      {
+        readerProfileId: readerId,
+        data: { reason: actionReason, notes: actionNotes || undefined },
+      },
       {
         onSuccess: () => {
           setFlagDialogOpen(false);
@@ -164,7 +173,10 @@ export default function AdminReaderDetailPage() {
   const handleUnflag = () => {
     if (!actionReason.trim()) return;
     unflagReader.mutate(
-      { readerProfileId: readerId, data: { reason: actionReason, notes: actionNotes || undefined } },
+      {
+        readerProfileId: readerId,
+        data: { reason: actionReason, notes: actionNotes || undefined },
+      },
       {
         onSuccess: () => {
           setUnflagDialogOpen(false);
@@ -215,10 +227,16 @@ export default function AdminReaderDetailPage() {
     const statusConfig: Record<string, { color: string; icon: React.ReactNode }> = {
       WAITING: { color: 'bg-gray-100 text-gray-800', icon: <Clock className="h-3 w-3" /> },
       SCHEDULED: { color: 'bg-blue-100 text-blue-800', icon: <Clock className="h-3 w-3" /> },
-      ACCESS_GRANTED: { color: 'bg-purple-100 text-purple-800', icon: <CheckCircle className="h-3 w-3" /> },
+      ACCESS_GRANTED: {
+        color: 'bg-purple-100 text-purple-800',
+        icon: <CheckCircle className="h-3 w-3" />,
+      },
       IN_PROGRESS: { color: 'bg-yellow-100 text-yellow-800', icon: <Clock className="h-3 w-3" /> },
       SUBMITTED: { color: 'bg-blue-100 text-blue-800', icon: <CheckCircle className="h-3 w-3" /> },
-      VALIDATED: { color: 'bg-green-100 text-green-800', icon: <CheckCircle className="h-3 w-3" /> },
+      VALIDATED: {
+        color: 'bg-green-100 text-green-800',
+        icon: <CheckCircle className="h-3 w-3" />,
+      },
       REJECTED: { color: 'bg-red-100 text-red-800', icon: <XCircle className="h-3 w-3" /> },
       EXPIRED: { color: 'bg-red-100 text-red-800', icon: <AlertCircle className="h-3 w-3" /> },
     };
@@ -281,7 +299,7 @@ export default function AdminReaderDetailPage() {
       </div>
 
       {/* Header */}
-      <div className="flex items-start justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-start justify-between">
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-3xl font-bold">{reader.name}</h1>
@@ -292,7 +310,7 @@ export default function AdminReaderDetailPage() {
             {t('detail.joined')}: {new Date(reader.createdAt).toLocaleDateString()}
           </p>
         </div>
-        <div className="flex gap-2 animate-fade-left">
+        <div className="flex animate-fade-left gap-2">
           {reader.isActive ? (
             <Button
               type="button"
@@ -381,7 +399,7 @@ export default function AdminReaderDetailPage() {
                   </div>
                   <div className="animate-fade-up-extra-slow">
                     <Label className="text-muted-foreground">{t('fields.preferredGenres')}</Label>
-                    <div className="flex flex-wrap gap-1 mt-1">
+                    <div className="mt-1 flex flex-wrap gap-1">
                       {reader.preferredGenres.length > 0 ? (
                         reader.preferredGenres.map((genre) => (
                           <Badge key={genre} variant="outline" className="text-xs">
@@ -389,7 +407,9 @@ export default function AdminReaderDetailPage() {
                           </Badge>
                         ))
                       ) : (
-                        <span className="text-sm text-muted-foreground">{t('fields.noGenres')}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {t('fields.noGenres')}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -405,14 +425,14 @@ export default function AdminReaderDetailPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="grid gap-4 md:grid-cols-3">
-                  <div className="space-y-2 animate-fade-up-fast">
+                  <div className="animate-fade-up-fast space-y-2">
                     <Label className="text-muted-foreground">{t('stats.reliability')}</Label>
                     <div className="flex items-center gap-2">
                       <Progress value={reader.reliabilityScore} className="flex-1" />
                       <span className="font-bold">{reader.reliabilityScore.toFixed(0)}%</span>
                     </div>
                   </div>
-                  <div className="space-y-2 animate-fade-up-light-slow">
+                  <div className="animate-fade-up-light-slow space-y-2">
                     <Label className="text-muted-foreground">{t('stats.completion')}</Label>
                     <div className="flex items-center gap-2">
                       <Progress value={reader.completionRate} className="flex-1" />
@@ -442,7 +462,7 @@ export default function AdminReaderDetailPage() {
                 </CardHeader>
                 <CardContent>
                   {reader.recentAssignments.length === 0 ? (
-                    <p className="text-center text-muted-foreground py-8">
+                    <p className="py-8 text-center text-muted-foreground">
                       {t('overview.noAssignments')}
                     </p>
                   ) : (
@@ -502,9 +522,7 @@ export default function AdminReaderDetailPage() {
                     </div>
                     <div>
                       <Label className="text-muted-foreground">{t('wallet.totalWithdrawn')}</Label>
-                      <p className="text-lg font-semibold">
-                        ${reader.totalWithdrawn.toFixed(2)}
-                      </p>
+                      <p className="text-lg font-semibold">${reader.totalWithdrawn.toFixed(2)}</p>
                     </div>
                   </div>
                   <Button
@@ -537,9 +555,9 @@ export default function AdminReaderDetailPage() {
                     </Button>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3 max-h-64 overflow-y-auto">
+                <CardContent className="max-h-64 space-y-3 overflow-y-auto">
                   {reader.adminNotes.length === 0 ? (
-                    <p className="text-center text-muted-foreground text-sm py-4">
+                    <p className="py-4 text-center text-sm text-muted-foreground">
                       {t('notes.empty')}
                     </p>
                   ) : (
@@ -548,7 +566,7 @@ export default function AdminReaderDetailPage() {
                         key={note.id}
                         className={`rounded-lg bg-muted p-3 animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}
                       >
-                        <div className="flex justify-between items-start">
+                        <div className="flex items-start justify-between">
                           <p className="text-sm">{note.content}</p>
                           <Button
                             type="button"
@@ -570,7 +588,7 @@ export default function AdminReaderDetailPage() {
 
               {/* Flag Reason */}
               {reader.isFlagged && reader.flagReason && (
-                <Card className="border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950 animate-fade-left-medium-slow">
+                <Card className="animate-fade-left-medium-slow border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-yellow-800 dark:text-yellow-200">
                       <AlertCircle className="h-5 w-5" />
@@ -597,9 +615,7 @@ export default function AdminReaderDetailPage() {
             </CardHeader>
             <CardContent>
               {!reviewHistory || reviewHistory.reviews.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">
-                  {t('reviews.empty')}
-                </p>
+                <p className="py-8 text-center text-muted-foreground">{t('reviews.empty')}</p>
               ) : (
                 <Table>
                   <TableHeader>
@@ -625,9 +641,7 @@ export default function AdminReaderDetailPage() {
                           </div>
                         </TableCell>
                         <TableCell>{getAssignmentStatusBadge(review.status)}</TableCell>
-                        <TableCell>
-                          {new Date(review.submittedAt).toLocaleDateString()}
-                        </TableCell>
+                        <TableCell>{new Date(review.submittedAt).toLocaleDateString()}</TableCell>
                         <TableCell>
                           {review.validatedAt
                             ? new Date(review.validatedAt).toLocaleDateString()
@@ -680,7 +694,7 @@ export default function AdminReaderDetailPage() {
             </CardHeader>
             <CardContent>
               {reader.walletTransactions.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">
+                <p className="py-8 text-center text-muted-foreground">
                   {t('wallet.noTransactions')}
                 </p>
               ) : (
@@ -709,7 +723,8 @@ export default function AdminReaderDetailPage() {
                         <TableCell
                           className={`text-right font-medium ${transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'}`}
                         >
-                          {transaction.amount >= 0 ? '+' : ''}${Math.abs(transaction.amount).toFixed(2)}
+                          {transaction.amount >= 0 ? '+' : ''}$
+                          {Math.abs(transaction.amount).toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -725,9 +740,7 @@ export default function AdminReaderDetailPage() {
             </CardHeader>
             <CardContent>
               {reader.payoutHistory.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">
-                  {t('wallet.noPayouts')}
-                </p>
+                <p className="py-8 text-center text-muted-foreground">{t('wallet.noPayouts')}</p>
               ) : (
                 <Table>
                   <TableHeader>
@@ -745,12 +758,8 @@ export default function AdminReaderDetailPage() {
                         key={payout.id}
                         className={`animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}
                       >
-                        <TableCell>
-                          {new Date(payout.requestedAt).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          ${payout.amount.toFixed(2)}
-                        </TableCell>
+                        <TableCell>{new Date(payout.requestedAt).toLocaleDateString()}</TableCell>
+                        <TableCell className="font-medium">${payout.amount.toFixed(2)}</TableCell>
                         <TableCell>{payout.paymentMethod}</TableCell>
                         <TableCell>
                           <Badge
@@ -791,9 +800,7 @@ export default function AdminReaderDetailPage() {
             </CardHeader>
             <CardContent>
               {reader.amazonProfiles.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">
-                  {t('amazon.empty')}
-                </p>
+                <p className="py-8 text-center text-muted-foreground">{t('amazon.empty')}</p>
               ) : (
                 <div className="space-y-4">
                   {reader.amazonProfiles.map((profile, index) => (
@@ -801,18 +808,18 @@ export default function AdminReaderDetailPage() {
                       key={profile.id}
                       className={`flex items-center justify-between rounded-lg border p-4 animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}
                     >
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           {profile.isVerified ? (
-                            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                            <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600" />
                           ) : (
-                            <XCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
+                            <XCircle className="h-5 w-5 flex-shrink-0 text-red-600" />
                           )}
                           <a
                             href={profile.profileUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="truncate text-sm hover:underline flex items-center gap-1"
+                            className="flex items-center gap-1 truncate text-sm hover:underline"
                           >
                             {profile.profileUrl}
                             <ExternalLink className="h-3 w-3 flex-shrink-0" />
@@ -827,8 +834,7 @@ export default function AdminReaderDetailPage() {
                             </p>
                           ) : (
                             <p className="text-xs text-muted-foreground">
-                              {t('amazon.pending')} •{' '}
-                              {t('amazon.addedOn')}{' '}
+                              {t('amazon.pending')} • {t('amazon.addedOn')}{' '}
                               {new Date(profile.createdAt).toLocaleDateString()}
                             </p>
                           )}
@@ -887,9 +893,7 @@ export default function AdminReaderDetailPage() {
                   </Button>
                 )}
                 <p className="text-sm text-muted-foreground">
-                  {reader.isActive
-                    ? t('actions.suspendWarning')
-                    : t('actions.unsuspendInfo')}
+                  {reader.isActive ? t('actions.suspendWarning') : t('actions.unsuspendInfo')}
                 </p>
               </CardContent>
             </Card>
@@ -925,9 +929,7 @@ export default function AdminReaderDetailPage() {
                   </Button>
                 )}
                 <p className="text-sm text-muted-foreground">
-                  {reader.isFlagged
-                    ? t('actions.unflagInfo')
-                    : t('actions.flagWarning')}
+                  {reader.isFlagged ? t('actions.unflagInfo') : t('actions.flagWarning')}
                 </p>
               </CardContent>
             </Card>
@@ -965,9 +967,7 @@ export default function AdminReaderDetailPage() {
                   <Minus className="mr-2 h-4 w-4" />
                   {t('actions.deductFunds')}
                 </Button>
-                <p className="text-sm text-muted-foreground">
-                  {t('actions.walletInfo')}
-                </p>
+                <p className="text-sm text-muted-foreground">{t('actions.walletInfo')}</p>
               </CardContent>
             </Card>
 
@@ -989,9 +989,7 @@ export default function AdminReaderDetailPage() {
                   <Plus className="mr-2 h-4 w-4" />
                   {t('actions.addNote')}
                 </Button>
-                <p className="text-sm text-muted-foreground">
-                  {t('actions.noteInfo')}
-                </p>
+                <p className="text-sm text-muted-foreground">{t('actions.noteInfo')}</p>
               </CardContent>
             </Card>
           </div>
@@ -1026,11 +1024,7 @@ export default function AdminReaderDetailPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setSuspendDialogOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setSuspendDialogOpen(false)}>
               {t('dialogs.cancel')}
             </Button>
             <Button
@@ -1073,11 +1067,7 @@ export default function AdminReaderDetailPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setUnsuspendDialogOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setUnsuspendDialogOpen(false)}>
               {t('dialogs.cancel')}
             </Button>
             <Button
@@ -1101,7 +1091,10 @@ export default function AdminReaderDetailPage() {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="walletType">{t('dialogs.wallet.type')}</Label>
-              <Select value={walletType} onValueChange={(v) => setWalletType(v as 'ADD' | 'DEDUCT')}>
+              <Select
+                value={walletType}
+                onValueChange={(v) => setWalletType(v as 'ADD' | 'DEDUCT')}
+              >
                 <SelectTrigger id="walletType">
                   <SelectValue />
                 </SelectTrigger>
@@ -1143,11 +1136,7 @@ export default function AdminReaderDetailPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setWalletDialogOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setWalletDialogOpen(false)}>
               {t('dialogs.cancel')}
             </Button>
             <Button
@@ -1194,11 +1183,7 @@ export default function AdminReaderDetailPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setFlagDialogOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setFlagDialogOpen(false)}>
               {t('dialogs.cancel')}
             </Button>
             <Button
@@ -1241,11 +1226,7 @@ export default function AdminReaderDetailPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setUnflagDialogOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setUnflagDialogOpen(false)}>
               {t('dialogs.cancel')}
             </Button>
             <Button
@@ -1279,11 +1260,7 @@ export default function AdminReaderDetailPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setNoteDialogOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setNoteDialogOpen(false)}>
               {t('dialogs.cancel')}
             </Button>
             <Button

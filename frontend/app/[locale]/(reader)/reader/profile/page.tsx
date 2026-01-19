@@ -158,7 +158,7 @@ export default function ReaderProfilePage() {
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">{t('subtitle')}</p>
@@ -190,7 +190,7 @@ export default function ReaderProfilePage() {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Content Preference */}
-              <div className="space-y-2 animate-fade-up-fast">
+              <div className="animate-fade-up-fast space-y-2">
                 <Label htmlFor="contentPreference">{t('contentPreference.label')}</Label>
                 <Select
                   value={contentPreference}
@@ -207,16 +207,16 @@ export default function ReaderProfilePage() {
                     <SelectItem value={ContentPreference.AUDIOBOOK}>
                       {t('contentPreference.audiobook')}
                     </SelectItem>
-                    <SelectItem value={ContentPreference.BOTH}>{t('contentPreference.both')}</SelectItem>
+                    <SelectItem value={ContentPreference.BOTH}>
+                      {t('contentPreference.both')}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-muted-foreground">
-                  {t('contentPreference.help')}
-                </p>
+                <p className="text-xs text-muted-foreground">{t('contentPreference.help')}</p>
               </div>
 
               {/* Preferred Genres */}
-              <div className="space-y-3 animate-fade-up-light-slow">
+              <div className="animate-fade-up-light-slow space-y-3">
                 <Label>{t('genres.label')}</Label>
                 <div className="flex flex-wrap gap-2">
                   {GENRE_OPTIONS.map((genre) => (
@@ -230,14 +230,12 @@ export default function ReaderProfilePage() {
                     </Badge>
                   ))}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  {t('genres.help')}
-                </p>
+                <p className="text-xs text-muted-foreground">{t('genres.help')}</p>
               </div>
 
               {/* Save Button */}
               {isEditing && (
-                <div className="flex gap-2 pt-4 animate-fade-up-medium-slow">
+                <div className="animate-fade-up-medium-slow flex gap-2 pt-4">
                   <Button onClick={handleSave} disabled={isSaving}>
                     {isSaving ? (
                       t('actions.saving')
@@ -275,9 +273,7 @@ export default function ReaderProfilePage() {
                   <LinkIcon className="h-5 w-5" />
                   {t('sections.amazonProfiles')}
                 </CardTitle>
-                <CardDescription>
-                  {t('sections.amazonProfilesDesc')}
-                </CardDescription>
+                <CardDescription>{t('sections.amazonProfilesDesc')}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Existing Profiles */}
@@ -303,7 +299,9 @@ export default function ReaderProfilePage() {
                         </a>
                       </div>
                       <p className="ml-6 text-xs text-muted-foreground">
-                        {amazonProfile.isVerified ? t('amazonProfiles.verified') : t('amazonProfiles.pending')}
+                        {amazonProfile.isVerified
+                          ? t('amazonProfiles.verified')
+                          : t('amazonProfiles.pending')}
                       </p>
                     </div>
                     <Button
@@ -319,7 +317,7 @@ export default function ReaderProfilePage() {
 
                 {/* Add New Profile */}
                 {canAddAmazonProfile && (
-                  <div className="space-y-2 border-t pt-2 animate-fade-up-heavy-slow">
+                  <div className="animate-fade-up-heavy-slow space-y-2 border-t pt-2">
                     <Label htmlFor="newAmazonProfile">
                       {t('amazonProfiles.addLabel', { count: profile?.amazonProfiles.length || 0 })}
                     </Label>
@@ -342,14 +340,12 @@ export default function ReaderProfilePage() {
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      {t('amazonProfiles.example')}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{t('amazonProfiles.example')}</p>
                   </div>
                 )}
 
                 {!canAddAmazonProfile && (
-                  <div className="rounded border border-yellow-200 bg-yellow-50 p-3 dark:border-yellow-800 dark:bg-yellow-950 animate-fade-up">
+                  <div className="animate-fade-up rounded border border-yellow-200 bg-yellow-50 p-3 dark:border-yellow-800 dark:bg-yellow-950">
                     <p className="text-sm text-yellow-900 dark:text-yellow-100">
                       {t('amazonProfiles.maxReached')}
                     </p>
@@ -417,7 +413,7 @@ export default function ReaderProfilePage() {
                 </div>
 
                 {profile.isFlagged && (
-                  <div className="rounded border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-950 animate-pulse">
+                  <div className="animate-pulse rounded border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-950">
                     <div className="flex items-center gap-2">
                       <XCircle className="h-4 w-4 text-red-600" />
                       <span className="text-sm font-medium text-red-900 dark:text-red-100">
@@ -450,9 +446,9 @@ export default function ReaderProfilePage() {
 
         {!hasProfile && (
           <div className="space-y-6">
-            <Card className="border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950 animate-fade-left">
+            <Card className="animate-fade-left border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950">
               <CardContent className="pt-6">
-                <BookOpen className="mb-2 h-8 w-8 text-blue-600 animate-bounce-slow" />
+                <BookOpen className="animate-bounce-slow mb-2 h-8 w-8 text-blue-600" />
                 <h3 className="mb-1 font-semibold text-blue-900 dark:text-blue-100">
                   {t('createPrompt.title')}
                 </h3>

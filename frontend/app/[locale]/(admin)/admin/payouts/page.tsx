@@ -92,7 +92,7 @@ export default function AdminPayoutsPage() {
   const PayoutTable = ({ payouts }: { payouts: PayoutData[] }) => {
     if (payouts.length === 0) {
       return (
-        <div className="py-16 text-center animate-fade-up">
+        <div className="animate-fade-up py-16 text-center">
           <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
           <h3 className="text-lg font-semibold">{t('empty.title')}</h3>
           <p className="text-muted-foreground">{t('empty.description')}</p>
@@ -147,24 +147,44 @@ export default function AdminPayoutsPage() {
                 </Badge>
               </TableCell>
               <TableCell className="space-x-2 text-right">
-                <Button type="button" variant="ghost" size="sm" onClick={() => handleViewDetails(payout.id)}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleViewDetails(payout.id)}
+                >
                   <Eye className="mr-1 h-4 w-4" />
                   {t('actions.view')}
                 </Button>
                 {payout.status === 'REQUESTED' && (
                   <>
-                    <Button type="button" variant="ghost" size="sm" onClick={() => handleApprove(payout.id)}>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleApprove(payout.id)}
+                    >
                       <CheckCircle className="mr-1 h-4 w-4" />
                       {t('actions.approve')}
                     </Button>
-                    <Button type="button" variant="ghost" size="sm" onClick={() => handleReject(payout.id)}>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleReject(payout.id)}
+                    >
                       <XCircle className="mr-1 h-4 w-4" />
                       {t('actions.reject')}
                     </Button>
                   </>
                 )}
                 {payout.status === 'APPROVED' && (
-                  <Button type="button" variant="ghost" size="sm" onClick={() => handleComplete(payout.id)}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleComplete(payout.id)}
+                  >
                     <Clock className="mr-1 h-4 w-4" />
                     {t('actions.complete')}
                   </Button>

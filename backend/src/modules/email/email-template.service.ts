@@ -204,6 +204,11 @@ export class EmailTemplateService {
       },
 
       // Reader workflow
+      READER_APPLICATION_RECEIVED: {
+        EN: `Application Received - ${variables.bookTitle || 'Book Review'}`,
+        ES: `Solicitud recibida - ${variables.bookTitle || 'Reseña del libro'}`,
+        PT: `Inscrição recebida - ${variables.bookTitle || 'Avaliação do livro'}`,
+      },
       READER_MATERIALS_READY: {
         EN: `Your Book Materials Are Ready! - ${variables.bookTitle || 'Your Book'}`,
         ES: `¡Tus materiales del libro están listos! - ${variables.bookTitle || 'Tu libro'}`,
@@ -297,6 +302,11 @@ export class EmailTemplateService {
         EN: `New Payout Request - ${variables.paymentMethod || 'Payout'}`,
         ES: `Nueva solicitud de pago - ${variables.paymentMethod || 'Pago'}`,
         PT: `Nova solicitação de pagamento - ${variables.paymentMethod || 'Pagamento'}`,
+      },
+      ADMIN_NEW_AFFILIATE_APPLICATION: {
+        EN: `New Affiliate Application - ${variables.userName || 'Applicant'}`,
+        ES: `Nueva solicitud de afiliado - ${variables.userName || 'Solicitante'}`,
+        PT: `Nova inscrição de afiliado - ${variables.userName || 'Candidato'}`,
       },
 
       // Payments
@@ -413,6 +423,13 @@ export class EmailTemplateService {
         EN: `Credits Removed from Your Account - ${variables.creditsRemoved || 0} Credits`,
         ES: `Créditos eliminados de tu cuenta - ${variables.creditsRemoved || 0} Créditos`,
         PT: `Créditos removidos da sua conta - ${variables.creditsRemoved || 0} Créditos`,
+      },
+
+      // Affiliate
+      AFFILIATE_APPLICATION_RECEIVED: {
+        EN: `Affiliate Application Received - BookProof`,
+        ES: `Solicitud de afiliado recibida - BookProof`,
+        PT: `Inscrição de afiliado recebida - BookProof`,
       },
 
       // Landing page

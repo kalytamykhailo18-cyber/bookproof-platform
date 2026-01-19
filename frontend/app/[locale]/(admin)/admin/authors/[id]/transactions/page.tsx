@@ -123,7 +123,7 @@ export default function AuthorTransactionsPage() {
   return (
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
-      <div className="flex items-center gap-4 animate-fade-right">
+      <div className="flex animate-fade-right items-center gap-4">
         <Button type="button" asChild variant="ghost" size="icon">
           <Link href="/admin/authors">
             <ArrowLeft className="h-5 w-5" />
@@ -149,14 +149,14 @@ export default function AuthorTransactionsPage() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <div className="flex items-center gap-3 rounded-lg border p-4 animate-fade-up-fast">
+            <div className="flex animate-fade-up-fast items-center gap-3 rounded-lg border p-4">
               <CreditCard className="h-8 w-8 text-blue-500" />
               <div>
                 <p className="text-sm text-muted-foreground">{t('stats.totalPurchased')}</p>
                 <p className="text-2xl font-bold">{data.totalCreditsPurchased.toLocaleString()}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 rounded-lg border p-4 animate-fade-up-light-slow">
+            <div className="flex animate-fade-up-light-slow items-center gap-3 rounded-lg border p-4">
               <TrendingUp className="h-8 w-8 text-green-500" />
               <div>
                 <p className="text-sm text-muted-foreground">{t('stats.available')}</p>
@@ -165,7 +165,7 @@ export default function AuthorTransactionsPage() {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-3 rounded-lg border p-4 animate-fade-up-medium-slow">
+            <div className="animate-fade-up-medium-slow flex items-center gap-3 rounded-lg border p-4">
               <TrendingDown className="h-8 w-8 text-orange-500" />
               <div>
                 <p className="text-sm text-muted-foreground">{t('stats.used')}</p>
@@ -227,9 +227,7 @@ export default function AuthorTransactionsPage() {
                     key={tx.id}
                     className={`animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}
                   >
-                    <TableCell className="whitespace-nowrap">
-                      {formatDate(tx.createdAt)}
-                    </TableCell>
+                    <TableCell className="whitespace-nowrap">{formatDate(tx.createdAt)}</TableCell>
                     <TableCell>
                       <Badge className={getTransactionTypeColor(tx.type)}>
                         {t(`types.${tx.type}`)}
@@ -275,7 +273,7 @@ export default function AuthorTransactionsPage() {
               </TableBody>
             </Table>
           ) : (
-            <div className="py-16 text-center animate-fade-up">
+            <div className="animate-fade-up py-16 text-center">
               <History className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="text-lg font-semibold">{t('empty.title')}</h3>
               <p className="text-muted-foreground">
@@ -286,7 +284,7 @@ export default function AuthorTransactionsPage() {
 
           {/* Pagination */}
           {data.totalTransactions > limit && (
-            <div className="mt-4 flex items-center justify-between animate-fade-up">
+            <div className="mt-4 flex animate-fade-up items-center justify-between">
               <p className="text-sm text-muted-foreground">
                 {t('pagination.showing')} {page * limit + 1} -{' '}
                 {Math.min((page + 1) * limit, data.totalTransactions)} {t('pagination.of')}{' '}

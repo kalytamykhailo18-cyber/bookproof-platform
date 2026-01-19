@@ -74,7 +74,7 @@ export default function CloserDashboardPage() {
   return (
     <div className="container mx-auto space-y-6 px-4 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground">{t('dashboard.description')}</p>
@@ -95,7 +95,9 @@ export default function CloserDashboardPage() {
             <DollarSign className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{formatCurrency(stats?.salesThisMonth || 0)}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {formatCurrency(stats?.salesThisMonth || 0)}
+            </div>
             <div className="flex items-center text-xs text-muted-foreground">
               {stats?.salesGrowth !== undefined && stats.salesGrowth >= 0 ? (
                 <>
@@ -115,7 +117,9 @@ export default function CloserDashboardPage() {
 
         <Card className="animate-fade-up-light-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('dashboard.packagesInPipeline')}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t('dashboard.packagesInPipeline')}
+            </CardTitle>
             <Package className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
@@ -132,7 +136,9 @@ export default function CloserDashboardPage() {
             <TrendingUp className="h-4 w-4 text-purple-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-600">{(stats?.conversionRate || 0).toFixed(1)}%</div>
+            <div className="text-2xl font-bold text-purple-600">
+              {(stats?.conversionRate || 0).toFixed(1)}%
+            </div>
             <p className="text-xs text-muted-foreground">
               {t('dashboard.avgDealSize')}: {formatCurrency(stats?.averageDealSize || 0)}
             </p>
@@ -141,7 +147,9 @@ export default function CloserDashboardPage() {
 
         <Card className="animate-fade-up-very-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('dashboard.pendingCommission')}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t('dashboard.pendingCommission')}
+            </CardTitle>
             <Users className="h-4 w-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
@@ -265,7 +273,10 @@ export default function CloserDashboardPage() {
               </TableHeader>
               <TableBody>
                 {salesHistory.map((sale, index) => (
-                  <TableRow key={sale.id} className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}>
+                  <TableRow
+                    key={sale.id}
+                    className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
+                  >
                     <TableCell>
                       <div>
                         <p className="font-medium">{sale.clientName}</p>

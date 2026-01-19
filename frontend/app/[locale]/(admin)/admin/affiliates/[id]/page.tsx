@@ -224,7 +224,7 @@ export default function AdminAffiliateDetailsPage() {
       </div>
 
       {/* Header */}
-      <div className="flex items-start justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold">{affiliate.userName}</h1>
           <p className="mt-1 text-muted-foreground">{affiliate.userEmail}</p>
@@ -314,7 +314,12 @@ export default function AdminAffiliateDetailsPage() {
                           </FormItem>
                         )}
                       />
-                      <Button type="button" className="w-full" onClick={handleApprove} disabled={approveMutation.isPending}>
+                      <Button
+                        type="button"
+                        className="w-full"
+                        onClick={handleApprove}
+                        disabled={approveMutation.isPending}
+                      >
                         {approveMutation.isPending ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -370,13 +375,7 @@ export default function AdminAffiliateDetailsPage() {
                           <FormItem>
                             <FormLabel>{t('commissionRateDialog.label')}</FormLabel>
                             <FormControl>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                max="100"
-                                {...field}
-                              />
+                              <Input type="number" step="0.01" min="0" max="100" {...field} />
                             </FormControl>
                             <FormDescription>
                               {t('commissionRateDialog.currentRate')}: {affiliate.commissionRate}%
@@ -455,7 +454,9 @@ export default function AdminAffiliateDetailsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-600">{affiliate.stats?.totalClicks || 0}</div>
+            <div className="text-2xl font-bold text-purple-600">
+              {affiliate.stats?.totalClicks || 0}
+            </div>
             <p className="text-xs text-muted-foreground">
               {t('stats.conversionRate')}: {affiliate.stats?.conversionRate.toFixed(2) || 0}%
             </p>
@@ -470,7 +471,9 @@ export default function AdminAffiliateDetailsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{affiliate.stats?.totalReferrals || 0}</div>
+            <div className="text-2xl font-bold text-blue-600">
+              {affiliate.stats?.totalReferrals || 0}
+            </div>
             <p className="text-xs text-muted-foreground">
               {t('stats.active')}: {affiliate.stats?.activeReferrals || 0}
             </p>

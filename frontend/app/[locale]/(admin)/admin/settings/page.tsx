@@ -5,7 +5,16 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { DollarSign, Save, Loader2, Settings, RefreshCw, ToggleLeft, ToggleRight, Power } from 'lucide-react';
+import {
+  DollarSign,
+  Save,
+  Loader2,
+  Settings,
+  RefreshCw,
+  ToggleLeft,
+  ToggleRight,
+  Power,
+} from 'lucide-react';
 
 import {
   usePricingSettings,
@@ -46,7 +55,11 @@ export default function AdminSettingsPage() {
   const t = useTranslations('adminSettings');
   const { data: pricingSettings, isLoading, refetch } = usePricingSettings();
   const updatePricingMutation = useUpdateKeywordResearchPricing();
-  const { data: featureStatus, isLoading: featureLoading, refetch: refetchFeature } = useKeywordResearchFeatureStatus();
+  const {
+    data: featureStatus,
+    isLoading: featureLoading,
+    refetch: refetchFeature,
+  } = useKeywordResearchFeatureStatus();
   const updateFeatureMutation = useUpdateKeywordResearchFeature();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -139,13 +152,11 @@ export default function AdminSettingsPage() {
               {t('actions.refresh')}
             </Button>
           </div>
-          <CardDescription>
-            {t('features.description')}
-          </CardDescription>
+          <CardDescription>{t('features.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           {/* Keyword Research Feature Toggle */}
-          <div className="rounded-lg border p-4 animate-fade-up-light-slow">
+          <div className="animate-fade-up-light-slow rounded-lg border p-4">
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-3">
@@ -187,9 +198,7 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setFeatureToggleReason(e.target.value)}
                 className="mt-1"
               />
-              <p className="mt-1 text-xs text-muted-foreground">
-                {t('fields.auditNote')}
-              </p>
+              <p className="mt-1 text-xs text-muted-foreground">{t('fields.auditNote')}</p>
             </div>
           </div>
         </CardContent>
@@ -208,15 +217,13 @@ export default function AdminSettingsPage() {
               {t('actions.refresh')}
             </Button>
           </div>
-          <CardDescription>
-            {t('pricing.description')}
-          </CardDescription>
+          <CardDescription>{t('pricing.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <div className="space-y-6">
               {/* Keyword Research Pricing */}
-              <div className="rounded-lg border p-4 animate-fade-up-heavy-slow">
+              <div className="animate-fade-up-heavy-slow rounded-lg border p-4">
                 <div className="mb-4 flex items-center justify-between">
                   <div>
                     <h3 className="text-lg font-semibold">{t('pricing.keywordResearch.title')}</h3>
@@ -256,7 +263,8 @@ export default function AdminSettingsPage() {
                             </div>
                           </FormControl>
                           <FormDescription>
-                            {t('fields.currentPrice')}: ${pricingSettings?.keywordResearch?.price?.toFixed(2)}
+                            {t('fields.currentPrice')}: $
+                            {pricingSettings?.keywordResearch?.price?.toFixed(2)}
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -283,7 +291,11 @@ export default function AdminSettingsPage() {
                     />
 
                     <div className="flex gap-2">
-                      <Button type="button" onClick={handleSubmit} disabled={updatePricingMutation.isPending}>
+                      <Button
+                        type="button"
+                        onClick={handleSubmit}
+                        disabled={updatePricingMutation.isPending}
+                      >
                         {updatePricingMutation.isPending ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -309,13 +321,17 @@ export default function AdminSettingsPage() {
                 ) : (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-sm text-muted-foreground">{t('fields.currentPrice')}</Label>
+                      <Label className="text-sm text-muted-foreground">
+                        {t('fields.currentPrice')}
+                      </Label>
                       <p className="text-2xl font-bold text-green-600">
                         ${pricingSettings?.keywordResearch?.price?.toFixed(2) || '49.99'}
                       </p>
                     </div>
                     <div>
-                      <Label className="text-sm text-muted-foreground">{t('fields.currency')}</Label>
+                      <Label className="text-sm text-muted-foreground">
+                        {t('fields.currency')}
+                      </Label>
                       <p className="text-lg font-medium">
                         {pricingSettings?.keywordResearch?.currency || 'USD'}
                       </p>
@@ -333,10 +349,8 @@ export default function AdminSettingsPage() {
               </div>
 
               {/* Future: Add more pricing settings here */}
-              <div className="rounded-lg border border-dashed p-4 text-center text-muted-foreground animate-fade-up-extra-slow">
-                <p className="text-sm">
-                  {t('pricing.futureNote')}
-                </p>
+              <div className="animate-fade-up-extra-slow rounded-lg border border-dashed p-4 text-center text-muted-foreground">
+                <p className="text-sm">{t('pricing.futureNote')}</p>
               </div>
             </div>
           </Form>

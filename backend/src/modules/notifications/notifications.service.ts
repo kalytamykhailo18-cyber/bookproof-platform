@@ -248,7 +248,7 @@ export class NotificationsService {
   ): Promise<void> {
     await this.createNotification({
       userId,
-      type: NotificationType.APPLICATION_ACCEPTED,
+      type: NotificationType.REVIEW,
       title: 'Application Accepted',
       message: `Your application to review "${bookTitle}" has been accepted. You are #${queuePosition} in the queue.`,
       actionUrl: '/reader/dashboard',
@@ -266,7 +266,7 @@ export class NotificationsService {
   ): Promise<void> {
     await this.createNotification({
       userId,
-      type: NotificationType.ACCESS_GRANTED,
+      type: NotificationType.REVIEW,
       title: 'Book Access Granted',
       message: `You now have access to "${bookTitle}". Your review deadline is ${deadline.toLocaleDateString()}.`,
       actionUrl: '/reader/queue',
@@ -284,7 +284,7 @@ export class NotificationsService {
   ): Promise<void> {
     await this.createNotification({
       userId,
-      type: NotificationType.DEADLINE_APPROACHING,
+      type: NotificationType.REVIEW,
       title: 'Deadline Approaching',
       message: `You have ${hoursRemaining} hours left to submit your review for "${bookTitle}".`,
       actionUrl: '/reader/queue',
@@ -302,7 +302,7 @@ export class NotificationsService {
   ): Promise<void> {
     await this.createNotification({
       userId,
-      type: NotificationType.PAYMENT_ADDED,
+      type: NotificationType.PAYMENT,
       title: 'Payment Added',
       message: `$${amount.toFixed(2)} has been added to your wallet for reviewing "${bookTitle}".`,
       actionUrl: '/reader/wallet',
@@ -321,7 +321,7 @@ export class NotificationsService {
   ): Promise<void> {
     await this.createNotification({
       userId,
-      type: NotificationType.REVIEW_VALIDATED,
+      type: NotificationType.REVIEW,
       title: 'Review Validated',
       message: `A new review for "${bookTitle}" has been validated. Progress: ${reviewCount}/${targetReviews} reviews.`,
       actionUrl: '/author/campaigns',
@@ -339,7 +339,7 @@ export class NotificationsService {
   ): Promise<void> {
     await this.createBulkNotifications(
       adminUserIds,
-      NotificationType.REVIEW_PENDING_VALIDATION,
+      NotificationType.ADMIN,
       'Review Pending Validation',
       `A new review for "${bookTitle}" is pending validation.`,
       `/admin/reviews/${reviewId}`,
@@ -358,7 +358,7 @@ export class NotificationsService {
   ): Promise<void> {
     await this.createBulkNotifications(
       adminUserIds,
-      NotificationType.PAYOUT_REQUEST,
+      NotificationType.ADMIN,
       'Payout Request',
       `${readerName} has requested a payout of $${amount.toFixed(2)}.`,
       `/admin/payouts`,
@@ -375,7 +375,7 @@ export class NotificationsService {
   ): Promise<void> {
     await this.createNotification({
       userId,
-      type: NotificationType.NEW_REFERRAL,
+      type: NotificationType.GENERAL,
       title: 'New Referral',
       message: `${referredAuthorName} has signed up using your referral link.`,
       actionUrl: '/affiliate/dashboard',
@@ -393,7 +393,7 @@ export class NotificationsService {
   ): Promise<void> {
     await this.createNotification({
       userId,
-      type: NotificationType.REFERRAL_PURCHASE,
+      type: NotificationType.PAYMENT,
       title: 'Referral Made Purchase',
       message: `One of your referrals made a purchase of $${amount.toFixed(2)}. You earned $${commission.toFixed(2)} in commission.`,
       actionUrl: '/affiliate/commissions',

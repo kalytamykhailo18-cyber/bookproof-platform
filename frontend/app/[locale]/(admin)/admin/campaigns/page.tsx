@@ -53,15 +53,18 @@ export default function AdminCampaignsPage() {
     if (!campaigns) return [];
 
     return campaigns.filter((campaign) => {
-      const matchesSearch =
-        campaign.campaign.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = campaign.campaign.title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
 
-      const matchesStatus =
-        statusFilter === 'all' || campaign.campaign.status === statusFilter;
+      const matchesStatus = statusFilter === 'all' || campaign.campaign.status === statusFilter;
 
       // Calculate health status for filtering
       let healthStatus = 'on-track';
-      if (campaign.progress.completionPercentage < 50 && campaign.distribution.currentWeek > campaign.distribution.totalWeeks / 2) {
+      if (
+        campaign.progress.completionPercentage < 50 &&
+        campaign.distribution.currentWeek > campaign.distribution.totalWeeks / 2
+      ) {
         healthStatus = 'delayed';
       } else if (campaign.progress.completionPercentage >= 90) {
         healthStatus = 'ahead-of-schedule';
@@ -87,13 +90,27 @@ export default function AdminCampaignsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'ACTIVE':
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-200">{t('status.active')}</Badge>;
+        return (
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
+            {t('status.active')}
+          </Badge>
+        );
       case 'PAUSED':
-        return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">{t('status.paused')}</Badge>;
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">
+            {t('status.paused')}
+          </Badge>
+        );
       case 'COMPLETED':
-        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">{t('status.completed')}</Badge>;
+        return (
+          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
+            {t('status.completed')}
+          </Badge>
+        );
       case 'DRAFT':
-        return <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">{t('status.draft')}</Badge>;
+        return (
+          <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">{t('status.draft')}</Badge>
+        );
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -204,7 +221,7 @@ export default function AdminCampaignsPage() {
                 />
               </div>
             </div>
-            <div className="w-full md:w-48 animate-fade-left-light-slow">
+            <div className="w-full animate-fade-left-light-slow md:w-48">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder={t('filters.status')} />
@@ -218,7 +235,7 @@ export default function AdminCampaignsPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="w-full md:w-48 animate-fade-left-medium-slow">
+            <div className="animate-fade-left-medium-slow w-full md:w-48">
               <Select value={healthFilter} onValueChange={setHealthFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder={t('filters.health')} />
@@ -246,7 +263,7 @@ export default function AdminCampaignsPage() {
         </CardHeader>
         <CardContent>
           {filteredCampaigns.length === 0 ? (
-            <div className="py-16 text-center animate-fade-up">
+            <div className="animate-fade-up py-16 text-center">
               <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="text-lg font-semibold">{t('empty.title')}</h3>
               <p className="text-muted-foreground">{t('empty.description')}</p>
@@ -301,7 +318,8 @@ export default function AdminCampaignsPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      {t('table.week')} {campaign.distribution.currentWeek}/{campaign.distribution.totalWeeks}
+                      {t('table.week')} {campaign.distribution.currentWeek}/
+                      {campaign.distribution.totalWeeks}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
@@ -315,7 +333,9 @@ export default function AdminCampaignsPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => router.push(`/admin/campaigns/${campaign.campaign.id}/controls`)}
+                          onClick={() =>
+                            router.push(`/admin/campaigns/${campaign.campaign.id}/controls`)
+                          }
                         >
                           <Settings className="h-4 w-4" />
                         </Button>

@@ -126,14 +126,17 @@ export default function AffiliatePayoutsPage() {
   return (
     <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
       {/* Header */}
-      <div className="flex items-start justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="mt-2 text-muted-foreground">{t('description')}</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button type="button" disabled={hasPendingPayout || (stats?.approvedEarnings || 0) < 50}>
+            <Button
+              type="button"
+              disabled={hasPendingPayout || (stats?.approvedEarnings || 0) < 50}
+            >
               <Wallet className="mr-2 h-4 w-4" />
               {t('requestPayout')}
             </Button>
@@ -238,7 +241,12 @@ export default function AffiliatePayoutsPage() {
                   )}
                 />
 
-                <Button type="button" className="w-full" onClick={handleSubmit} disabled={requestMutation.isPending}>
+                <Button
+                  type="button"
+                  className="w-full"
+                  onClick={handleSubmit}
+                  disabled={requestMutation.isPending}
+                >
                   {requestMutation.isPending ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -316,7 +324,10 @@ export default function AffiliatePayoutsPage() {
               </TableHeader>
               <TableBody>
                 {payouts.map((payout, index) => (
-                  <TableRow key={payout.id} className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}>
+                  <TableRow
+                    key={payout.id}
+                    className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
+                  >
                     <TableCell className="font-semibold">${payout.amount.toFixed(2)}</TableCell>
                     <TableCell>{payout.paymentMethod}</TableCell>
                     <TableCell>{getPayoutStatusBadge(payout.status)}</TableCell>

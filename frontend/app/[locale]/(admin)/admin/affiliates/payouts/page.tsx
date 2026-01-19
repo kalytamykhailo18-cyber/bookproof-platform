@@ -300,7 +300,7 @@ export default function AdminAffiliatePayoutsPage() {
       <Card className="animate-zoom-in-slow">
         <CardContent className="pt-6">
           {!payouts || payouts.length === 0 ? (
-            <div className="py-16 text-center animate-fade-up">
+            <div className="animate-fade-up py-16 text-center">
               <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="text-lg font-semibold">{t('empty.title')}</h3>
               <p className="text-muted-foreground">{t('empty.description')}</p>

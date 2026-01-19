@@ -61,13 +61,15 @@ export default function ForgotPasswordPage() {
     return (
       <Card className="animate-zoom-in">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-center text-2xl font-bold animate-fade-down-fast">{t('success')}</CardTitle>
+          <CardTitle className="animate-fade-down-fast text-center text-2xl font-bold">
+            {t('success')}
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center space-y-4 py-8">
-          <div className="rounded-full bg-green-100 p-4 dark:bg-green-900 animate-zoom-in">
+          <div className="animate-zoom-in rounded-full bg-green-100 p-4 dark:bg-green-900">
             <CheckCircle2 className="h-16 w-16 text-green-600 dark:text-green-400" />
           </div>
-          <p className="text-center text-muted-foreground animate-fade-up">{t('successMessage')}</p>
+          <p className="animate-fade-up text-center text-muted-foreground">{t('successMessage')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
           <Link href="/login" className="w-full">
@@ -84,11 +86,15 @@ export default function ForgotPasswordPage() {
   return (
     <Card className="animate-zoom-in">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-center text-2xl font-bold animate-fade-down-fast">{t('title')}</CardTitle>
-        <CardDescription className="text-center animate-fade-up-fast">{t('subtitle')}</CardDescription>
+        <CardTitle className="animate-fade-down-fast text-center text-2xl font-bold">
+          {t('title')}
+        </CardTitle>
+        <CardDescription className="animate-fade-up-fast text-center">
+          {t('subtitle')}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-2 animate-fade-up-very-fast">
+        <div className="animate-fade-up-very-fast space-y-2">
           <Label htmlFor="email">{t('email')}</Label>
           <Input
             id="email"
@@ -102,8 +108,13 @@ export default function ForgotPasswordPage() {
         </div>
       </CardContent>
 
-      <CardFooter className="flex flex-col space-y-2 animate-fade-up-light-slow">
-        <Button type="button" className="w-full animate-zoom-in-light-slow" disabled={isRequestingReset} onClick={handleSubmit}>
+      <CardFooter className="flex animate-fade-up-light-slow flex-col space-y-2">
+        <Button
+          type="button"
+          className="w-full animate-zoom-in-light-slow"
+          disabled={isRequestingReset}
+          onClick={handleSubmit}
+        >
           {isRequestingReset ? t('submitting') : t('submitButton')}
         </Button>
 

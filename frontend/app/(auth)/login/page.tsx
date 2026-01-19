@@ -99,9 +99,7 @@ export default function LoginPage() {
             className={errors.password ? 'border-destructive' : ''}
             disabled={isLoggingIn}
           />
-          {errors.password && (
-            <p className="text-sm text-destructive">{errors.password.message}</p>
-          )}
+          {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
         </div>
 
         <div className="flex items-center justify-between">

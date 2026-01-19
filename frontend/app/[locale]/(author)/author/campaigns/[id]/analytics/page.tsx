@@ -55,7 +55,7 @@ export default function CampaignAnalyticsPage() {
   if (!tracking) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="flex h-64 flex-col items-center justify-center text-center animate-fade-up">
+        <div className="flex h-64 animate-fade-up flex-col items-center justify-center text-center">
           <AlertCircle className="mb-4 h-12 w-12 text-muted-foreground" />
           <p className="text-muted-foreground">{t('notFound') || 'Campaign not found'}</p>
           <Button variant="outline" className="mt-4" onClick={() => router.back()}>
@@ -122,8 +122,8 @@ export default function CampaignAnalyticsPage() {
             <h1 className="text-3xl font-bold">{tracking.campaign.bookTitle}</h1>
             <p className="text-muted-foreground">
               {isCompleted
-                ? (t('finalReportSubtitle') || 'Campaign Final Report')
-                : (t('analyticsSubtitle') || 'Campaign Analytics & Tracking')}
+                ? t('finalReportSubtitle') || 'Campaign Final Report'
+                : t('analyticsSubtitle') || 'Campaign Analytics & Tracking'}
             </p>
           </div>
           <Button variant="outline" onClick={() => window.print()}>
@@ -143,15 +143,19 @@ export default function CampaignAnalyticsPage() {
             </div>
             <Progress value={tracking.campaign.completionPercentage} className="h-3" />
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>{tracking.campaign.reviewsDelivered} {t('delivered') || 'delivered'}</span>
-              <span>{tracking.campaign.targetReviews} {t('target') || 'target'}</span>
+              <span>
+                {tracking.campaign.reviewsDelivered} {t('delivered') || 'delivered'}
+              </span>
+              <span>
+                {tracking.campaign.targetReviews} {t('target') || 'target'}
+              </span>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Campaign Status Overview */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4 animate-fade-up-light-slow">
+      <div className="grid animate-fade-up-light-slow grid-cols-1 gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Campaign Status</CardTitle>
@@ -220,7 +224,9 @@ export default function CampaignAnalyticsPage() {
             <Clock className="h-5 w-5" />
             {t('timeline.title') || 'Campaign Timeline'}
           </CardTitle>
-          <CardDescription>{t('timeline.description') || 'Key dates and milestones'}</CardDescription>
+          <CardDescription>
+            {t('timeline.description') || 'Key dates and milestones'}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -259,7 +265,9 @@ export default function CampaignAnalyticsPage() {
       <Card className="animate-fade-up-very-slow">
         <CardHeader>
           <CardTitle>{t('weeklyProgress.title') || 'Weekly Progress'}</CardTitle>
-          <CardDescription>{t('weeklyProgress.description') || 'Reviews completed per week'}</CardDescription>
+          <CardDescription>
+            {t('weeklyProgress.description') || 'Reviews completed per week'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -334,7 +342,9 @@ export default function CampaignAnalyticsPage() {
             <Star className="h-5 w-5" />
             {t('ratingDistribution.title') || 'Rating Distribution'}
           </CardTitle>
-          <CardDescription>{t('ratingDistribution.description') || 'Breakdown of review ratings'}</CardDescription>
+          <CardDescription>
+            {t('ratingDistribution.description') || 'Breakdown of review ratings'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -373,7 +383,9 @@ export default function CampaignAnalyticsPage() {
       <Card className="animate-zoom-in-fast">
         <CardHeader>
           <CardTitle>{t('distributionHealth.title') || 'Distribution Health'}</CardTitle>
-          <CardDescription>{t('distributionHealth.description') || 'How your campaign is progressing'}</CardDescription>
+          <CardDescription>
+            {t('distributionHealth.description') || 'How your campaign is progressing'}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between rounded-md border p-4">
@@ -431,7 +443,9 @@ export default function CampaignAnalyticsPage() {
               <AlertTriangle className="h-5 w-5" />
               {t('amazonRemovals.title') || 'Amazon Removals'}
             </CardTitle>
-            <CardDescription>{t('amazonRemovals.description') || 'Reviews removed by Amazon'}</CardDescription>
+            <CardDescription>
+              {t('amazonRemovals.description') || 'Reviews removed by Amazon'}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -464,7 +478,9 @@ export default function CampaignAnalyticsPage() {
               <Clock className="h-5 w-5" />
               {t('delays.title') || 'Campaign Delays'}
             </CardTitle>
-            <CardDescription>{t('delays.description') || 'Issues that have caused delays'}</CardDescription>
+            <CardDescription>
+              {t('delays.description') || 'Issues that have caused delays'}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>

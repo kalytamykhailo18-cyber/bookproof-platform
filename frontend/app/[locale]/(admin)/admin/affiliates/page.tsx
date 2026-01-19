@@ -150,7 +150,9 @@ export default function AdminAffiliatesPage() {
             <DollarSign className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">${stats.totalEarnings.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-blue-600">
+              ${stats.totalEarnings.toFixed(2)}
+            </div>
             <p className="text-xs text-muted-foreground">{t('stats.commissionsPaid')}</p>
           </CardContent>
         </Card>
@@ -161,7 +163,9 @@ export default function AdminAffiliatesPage() {
             <MousePointer className="h-4 w-4 text-purple-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-600">{stats.totalClicks.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-purple-600">
+              {stats.totalClicks.toLocaleString()}
+            </div>
             <p className="text-xs text-muted-foreground">{t('stats.referralClicks')}</p>
           </CardContent>
         </Card>
@@ -176,7 +180,7 @@ export default function AdminAffiliatesPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4">
-          <div className="flex-1 min-w-[200px] animate-fade-left-fast">
+          <div className="min-w-[200px] flex-1 animate-fade-left-fast">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -201,7 +205,7 @@ export default function AdminAffiliatesPage() {
             </Select>
           </div>
 
-          <div className="w-48 animate-fade-left-medium-slow">
+          <div className="animate-fade-left-medium-slow w-48">
             <Select value={activeFilter} onValueChange={setActiveFilter}>
               <SelectTrigger>
                 <SelectValue placeholder={t('filters.status')} />
@@ -227,7 +231,7 @@ export default function AdminAffiliatesPage() {
         </CardHeader>
         <CardContent>
           {filteredAffiliates.length === 0 ? (
-            <div className="py-16 text-center animate-fade-up">
+            <div className="animate-fade-up py-16 text-center">
               <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="text-lg font-semibold">{t('empty.title')}</h3>
               <p className="text-muted-foreground">{t('empty.description')}</p>

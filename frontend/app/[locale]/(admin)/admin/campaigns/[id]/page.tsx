@@ -84,7 +84,7 @@ export default function AdminCampaignDetailPage() {
           setPauseReason('');
           setPauseNotes('');
         },
-      }
+      },
     );
   };
 
@@ -97,7 +97,7 @@ export default function AdminCampaignDetailPage() {
           setResumeReason('');
           setResumeNotes('');
         },
-      }
+      },
     );
   };
 
@@ -113,7 +113,7 @@ export default function AdminCampaignDetailPage() {
           setNewDistribution('');
           setDistributionReason('');
         },
-      }
+      },
     );
   };
 
@@ -276,7 +276,9 @@ export default function AdminCampaignDetailPage() {
                       disabled={!resumeReason || resumeCampaign.isPending}
                       className="w-full"
                     >
-                      {resumeCampaign.isPending ? t('actions.resuming') : t('actions.confirmResume')}
+                      {resumeCampaign.isPending
+                        ? t('actions.resuming')
+                        : t('actions.confirmResume')}
                     </Button>
                   </div>
                 </DialogContent>
@@ -327,7 +329,9 @@ export default function AdminCampaignDetailPage() {
             <Star className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analytics.performance.averageRating.toFixed(1)}</div>
+            <div className="text-2xl font-bold">
+              {analytics.performance.averageRating.toFixed(1)}
+            </div>
             <p className="text-xs text-muted-foreground">{t('stats.internalRating')}</p>
           </CardContent>
         </Card>
@@ -338,8 +342,11 @@ export default function AdminCampaignDetailPage() {
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${health.daysOffSchedule > 0 ? 'text-red-600' : 'text-green-600'}`}>
-              {health.daysOffSchedule > 0 ? '+' : ''}{health.daysOffSchedule} {t('stats.days')}
+            <div
+              className={`text-2xl font-bold ${health.daysOffSchedule > 0 ? 'text-red-600' : 'text-green-600'}`}
+            >
+              {health.daysOffSchedule > 0 ? '+' : ''}
+              {health.daysOffSchedule} {t('stats.days')}
             </div>
             <p className="text-xs text-muted-foreground">{t('stats.scheduleVariance')}</p>
           </CardContent>
@@ -370,26 +377,40 @@ export default function AdminCampaignDetailPage() {
                     <p className="text-lg font-semibold">{analytics.campaign.targetReviews}</p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">{t('overview.reviewsDelivered')}</Label>
+                    <Label className="text-muted-foreground">
+                      {t('overview.reviewsDelivered')}
+                    </Label>
                     <p className="text-lg font-semibold">{analytics.progress.reviewsDelivered}</p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">{t('overview.reviewsValidated')}</Label>
-                    <p className="text-lg font-semibold text-green-600">{analytics.progress.reviewsValidated}</p>
+                    <Label className="text-muted-foreground">
+                      {t('overview.reviewsValidated')}
+                    </Label>
+                    <p className="text-lg font-semibold text-green-600">
+                      {analytics.progress.reviewsValidated}
+                    </p>
                   </div>
                 </div>
                 <div className="space-y-3">
                   <div>
                     <Label className="text-muted-foreground">{t('overview.reviewsRejected')}</Label>
-                    <p className="text-lg font-semibold text-red-600">{analytics.progress.reviewsRejected}</p>
+                    <p className="text-lg font-semibold text-red-600">
+                      {analytics.progress.reviewsRejected}
+                    </p>
                   </div>
                   <div>
                     <Label className="text-muted-foreground">{t('overview.reviewsExpired')}</Label>
-                    <p className="text-lg font-semibold text-yellow-600">{analytics.progress.reviewsExpired}</p>
+                    <p className="text-lg font-semibold text-yellow-600">
+                      {analytics.progress.reviewsExpired}
+                    </p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">{t('overview.completionPercentage')}</Label>
-                    <p className="text-lg font-semibold">{analytics.progress.completionPercentage.toFixed(1)}%</p>
+                    <Label className="text-muted-foreground">
+                      {t('overview.completionPercentage')}
+                    </Label>
+                    <p className="text-lg font-semibold">
+                      {analytics.progress.completionPercentage.toFixed(1)}%
+                    </p>
                   </div>
                 </div>
               </div>
@@ -445,11 +466,15 @@ export default function AdminCampaignDetailPage() {
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>{t('distribution.adjustDialog.title')}</DialogTitle>
-                      <DialogDescription>{t('distribution.adjustDialog.description')}</DialogDescription>
+                      <DialogDescription>
+                        {t('distribution.adjustDialog.description')}
+                      </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="new-distribution">{t('distribution.adjustDialog.reviewsPerWeek')}</Label>
+                        <Label htmlFor="new-distribution">
+                          {t('distribution.adjustDialog.reviewsPerWeek')}
+                        </Label>
                         <Input
                           id="new-distribution"
                           type="number"
@@ -470,10 +495,14 @@ export default function AdminCampaignDetailPage() {
                       <Button
                         type="button"
                         onClick={handleAdjustDistribution}
-                        disabled={!newDistribution || !distributionReason || adjustDistribution.isPending}
+                        disabled={
+                          !newDistribution || !distributionReason || adjustDistribution.isPending
+                        }
                         className="w-full"
                       >
-                        {adjustDistribution.isPending ? t('distribution.adjusting') : t('distribution.confirm')}
+                        {adjustDistribution.isPending
+                          ? t('distribution.adjusting')
+                          : t('distribution.confirm')}
                       </Button>
                     </div>
                   </DialogContent>
@@ -483,7 +512,9 @@ export default function AdminCampaignDetailPage() {
             <CardContent>
               <div className="grid gap-4 md:grid-cols-3">
                 <div>
-                  <Label className="text-muted-foreground">{t('distribution.reviewsPerWeek')}</Label>
+                  <Label className="text-muted-foreground">
+                    {t('distribution.reviewsPerWeek')}
+                  </Label>
                   <div className="flex items-center gap-2">
                     <p className="text-2xl font-bold">{analytics.distribution.reviewsPerWeek}</p>
                     {analytics.distribution.manualOverride && (

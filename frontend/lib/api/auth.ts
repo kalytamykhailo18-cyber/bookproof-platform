@@ -242,7 +242,10 @@ export const authApi = {
    * Per requirements.md Section 1.1
    */
   unlockAccount: async (data: UnlockAccountRequest): Promise<UnlockAccountResponse> => {
-    const response = await apiClient.post<UnlockAccountResponse>('/auth/admin/unlock-account', data);
+    const response = await apiClient.post<UnlockAccountResponse>(
+      '/auth/admin/unlock-account',
+      data,
+    );
     return response.data;
   },
 };

@@ -89,7 +89,8 @@ export default function AdminAuthorsPage() {
   }, [authors, searchTerm, statusFilter]);
 
   const stats = useMemo(() => {
-    if (!authors) return { total: 0, verified: 0, totalCredits: 0, availableCredits: 0, activeCampaigns: 0 };
+    if (!authors)
+      return { total: 0, verified: 0, totalCredits: 0, availableCredits: 0, activeCampaigns: 0 };
 
     return {
       total: authors.length,
@@ -223,7 +224,9 @@ export default function AdminAuthorsPage() {
             <TrendingUp className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.availableCredits.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {stats.availableCredits.toLocaleString()}
+            </div>
             <p className="text-xs text-muted-foreground">{t('stats.creditsAvailable')}</p>
           </CardContent>
         </Card>
@@ -261,7 +264,7 @@ export default function AdminAuthorsPage() {
                 />
               </div>
             </div>
-            <div className="w-full md:w-48 animate-fade-left-light-slow">
+            <div className="w-full animate-fade-left-light-slow md:w-48">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder={t('filters.status')} />
@@ -290,7 +293,7 @@ export default function AdminAuthorsPage() {
         </CardHeader>
         <CardContent>
           {filteredAuthors.length === 0 ? (
-            <div className="py-16 text-center animate-fade-up">
+            <div className="animate-fade-up py-16 text-center">
               <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="text-lg font-semibold">{t('empty.title')}</h3>
               <p className="text-muted-foreground">{t('empty.description')}</p>
@@ -349,12 +352,7 @@ export default function AdminAuthorsPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          asChild
-                        >
+                        <Button type="button" variant="ghost" size="sm" asChild>
                           <Link href={`/admin/authors/${author.id}/transactions`}>
                             <History className="h-4 w-4" />
                           </Link>
@@ -432,11 +430,7 @@ export default function AdminAuthorsPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setAddCreditsDialogOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setAddCreditsDialogOpen(false)}>
               {t('dialogs.cancel')}
             </Button>
             <Button
@@ -459,7 +453,8 @@ export default function AdminAuthorsPage() {
               {t('dialogs.removeCredits.description')}
               {selectedAuthor && (
                 <span className="mt-2 block font-semibold">
-                  {selectedAuthor.name} - {t('dialogs.removeCredits.available')}: {selectedAuthor.availableCredits}
+                  {selectedAuthor.name} - {t('dialogs.removeCredits.available')}:{' '}
+                  {selectedAuthor.availableCredits}
                 </span>
               )}
             </DialogDescription>
@@ -515,7 +510,9 @@ export default function AdminAuthorsPage() {
               onClick={handleRemoveCredits}
               disabled={!creditsAmount || !creditReason || removeCredits.isPending}
             >
-              {removeCredits.isPending ? t('dialogs.processing') : t('dialogs.removeCredits.confirm')}
+              {removeCredits.isPending
+                ? t('dialogs.processing')
+                : t('dialogs.removeCredits.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

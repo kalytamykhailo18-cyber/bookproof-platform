@@ -98,7 +98,7 @@ export default function AffiliateDashboardPage() {
 
   if (!profile) {
     return (
-      <div className="container mx-auto max-w-7xl px-4 py-8 animate-fade-up">
+      <div className="container mx-auto max-w-7xl animate-fade-up px-4 py-8">
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
@@ -116,7 +116,7 @@ export default function AffiliateDashboardPage() {
 
   if (!profile.isApproved) {
     return (
-      <div className="container mx-auto max-w-7xl px-4 py-8 animate-fade-up">
+      <div className="container mx-auto max-w-7xl animate-fade-up px-4 py-8">
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
@@ -132,7 +132,7 @@ export default function AffiliateDashboardPage() {
   return (
     <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
       {/* Header */}
-      <div className="flex items-start justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="mt-2 text-muted-foreground">
@@ -163,7 +163,9 @@ export default function AffiliateDashboardPage() {
             <DollarSign className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">${stats?.totalEarnings.toFixed(2) || '0.00'}</div>
+            <div className="text-2xl font-bold text-green-600">
+              ${stats?.totalEarnings.toFixed(2) || '0.00'}
+            </div>
             <p className="mt-1 text-xs text-muted-foreground">
               {t('stats.approvedEarnings')}: ${stats?.approvedEarnings.toFixed(2) || '0.00'}
             </p>
@@ -176,7 +178,9 @@ export default function AffiliateDashboardPage() {
             <TrendingUp className="h-4 w-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">${stats?.pendingEarnings.toFixed(2) || '0.00'}</div>
+            <div className="text-2xl font-bold text-yellow-600">
+              ${stats?.pendingEarnings.toFixed(2) || '0.00'}
+            </div>
             <p className="mt-1 text-xs text-muted-foreground">{t('stats.pendingDescription')}</p>
           </CardContent>
         </Card>
@@ -243,7 +247,10 @@ export default function AffiliateDashboardPage() {
               </TableHeader>
               <TableBody>
                 {commissions.slice(0, 5).map((commission, index) => (
-                  <TableRow key={commission.id} className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}>
+                  <TableRow
+                    key={commission.id}
+                    className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
+                  >
                     <TableCell>${commission.purchaseAmount.toFixed(2)}</TableCell>
                     <TableCell className="font-semibold">
                       ${commission.commissionAmount.toFixed(2)}
@@ -292,7 +299,10 @@ export default function AffiliateDashboardPage() {
               </TableHeader>
               <TableBody>
                 {payouts.slice(0, 5).map((payout, index) => (
-                  <TableRow key={payout.id} className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}>
+                  <TableRow
+                    key={payout.id}
+                    className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
+                  >
                     <TableCell className="font-semibold">${payout.amount.toFixed(2)}</TableCell>
                     <TableCell>{payout.paymentMethod}</TableCell>
                     <TableCell>{getPayoutStatusBadge(payout.status)}</TableCell>

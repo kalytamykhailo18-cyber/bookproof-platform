@@ -7,7 +7,15 @@ import { useCampaigns } from '@/hooks/useCampaigns';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Plus, CreditCard, BookOpen, TrendingUp, Activity, CheckCircle2 } from 'lucide-react';
+import {
+  Loader2,
+  Plus,
+  CreditCard,
+  BookOpen,
+  TrendingUp,
+  Activity,
+  CheckCircle2,
+} from 'lucide-react';
 import Link from 'next/link';
 import { CampaignStatus } from '@/lib/api/campaigns';
 
@@ -20,8 +28,8 @@ export default function AuthorDashboardPage() {
   const campaignStats = useMemo(() => {
     if (!campaigns) return { active: 0, completed: 0 };
     return {
-      active: campaigns.filter(c => c.status === CampaignStatus.ACTIVE).length,
-      completed: campaigns.filter(c => c.status === CampaignStatus.COMPLETED).length,
+      active: campaigns.filter((c) => c.status === CampaignStatus.ACTIVE).length,
+      completed: campaigns.filter((c) => c.status === CampaignStatus.COMPLETED).length,
     };
   }, [campaigns]);
 
@@ -61,9 +69,11 @@ export default function AuthorDashboardPage() {
             <Button
               className="animate-fade-left-fast"
               disabled={!creditBalance?.availableCredits || creditBalance.availableCredits <= 0}
-              title={!creditBalance?.availableCredits || creditBalance.availableCredits <= 0
-                ? (t('buttons.noCreditsTooltip') || 'Purchase credits to create campaigns')
-                : undefined}
+              title={
+                !creditBalance?.availableCredits || creditBalance.availableCredits <= 0
+                  ? t('buttons.noCreditsTooltip') || 'Purchase credits to create campaigns'
+                  : undefined
+              }
             >
               <Plus className="mr-2 h-4 w-4" />
               {t('buttons.newCampaign')}
@@ -140,7 +150,9 @@ export default function AuthorDashboardPage() {
       <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
         <Card className="animate-zoom-in-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('campaignStats.active') || 'Active Campaigns'}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t('campaignStats.active') || 'Active Campaigns'}
+            </CardTitle>
             <Activity className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
@@ -159,7 +171,9 @@ export default function AuthorDashboardPage() {
 
         <Card className="animate-zoom-in">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('campaignStats.completed') || 'Completed Campaigns'}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t('campaignStats.completed') || 'Completed Campaigns'}
+            </CardTitle>
             <CheckCircle2 className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>

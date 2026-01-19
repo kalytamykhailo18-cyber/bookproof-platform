@@ -72,7 +72,7 @@ export default function CreatePackagePage() {
   return (
     <div className="container mx-auto max-w-3xl space-y-6 px-4 py-8">
       {/* Header */}
-      <div className="flex items-center gap-4 animate-fade-up">
+      <div className="flex animate-fade-up items-center gap-4">
         <Link href={`/${locale}/closer/packages`}>
           <Button type="button" variant="ghost" size="icon">
             <ArrowLeft className="h-5 w-5" />
@@ -252,7 +252,7 @@ export default function CreatePackagePage() {
           </Card>
 
           {/* Actions */}
-          <div className="flex justify-end gap-4 animate-fade-up">
+          <div className="flex animate-fade-up justify-end gap-4">
             <Link href={`/${locale}/closer/packages`}>
               <Button type="button" variant="outline">
                 {t('createPackage.cancel')}

@@ -84,7 +84,10 @@ const useT = (): TFunction => useContext(TranslationContext);
 
 // Form schema for CTA settings
 const ctaSettingsSchema = z.object({
-  ctaText: z.string().min(1, 'CTA text is required').max(50, 'CTA text must be 50 characters or less'),
+  ctaText: z
+    .string()
+    .min(1, 'CTA text is required')
+    .max(50, 'CTA text must be 50 characters or less'),
   ctaLink: z.string().min(1, 'CTA link is required'),
   ctaMode: z.enum(['PRE_LAUNCH', 'LIVE']),
   isPublished: z.boolean(),
@@ -398,7 +401,8 @@ function LeadsTabContent() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Delete Lead</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Are you sure you want to delete this lead? This action cannot be undone.
+                              Are you sure you want to delete this lead? This action cannot be
+                              undone.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -554,9 +558,7 @@ function CtaSettingsTabContent() {
             <Settings className="h-5 w-5" />
             {languageNames[selectedLanguage]} {t('settings.title')}
           </CardTitle>
-          <CardDescription>
-            {t('settings.mode.description')}
-          </CardDescription>
+          <CardDescription>{t('settings.mode.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -574,15 +576,11 @@ function CtaSettingsTabContent() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="PRE_LAUNCH">
-                          {t('settings.mode.preLaunch')}
-                        </SelectItem>
+                        <SelectItem value="PRE_LAUNCH">{t('settings.mode.preLaunch')}</SelectItem>
                         <SelectItem value="LIVE">{t('settings.mode.live')}</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormDescription>
-                      {t('settings.mode.description')}
-                    </FormDescription>
+                    <FormDescription>{t('settings.mode.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -597,9 +595,7 @@ function CtaSettingsTabContent() {
                     <FormControl>
                       <Input placeholder={t('settings.ctaText.placeholder')} {...field} />
                     </FormControl>
-                    <FormDescription>
-                      {t('settings.ctaText.description')}
-                    </FormDescription>
+                    <FormDescription>{t('settings.ctaText.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -614,9 +610,7 @@ function CtaSettingsTabContent() {
                     <FormControl>
                       <Input placeholder={t('settings.ctaLink.placeholder')} {...field} />
                     </FormControl>
-                    <FormDescription>
-                      {t('settings.ctaLink.description')}
-                    </FormDescription>
+                    <FormDescription>{t('settings.ctaLink.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -629,9 +623,7 @@ function CtaSettingsTabContent() {
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
                       <FormLabel className="text-base">{t('settings.published.label')}</FormLabel>
-                      <FormDescription>
-                        {t('settings.published.description')}
-                      </FormDescription>
+                      <FormDescription>{t('settings.published.description')}</FormDescription>
                     </div>
                     <FormControl>
                       <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -686,7 +678,9 @@ function CtaSettingsTabContent() {
                   <TableCell>{page.ctaText}</TableCell>
                   <TableCell>
                     {page.isPublished ? (
-                      <Badge className="bg-green-100 text-green-800">{t('settings.published.label')}</Badge>
+                      <Badge className="bg-green-100 text-green-800">
+                        {t('settings.published.label')}
+                      </Badge>
                     ) : (
                       <Badge variant="secondary">Draft</Badge>
                     )}

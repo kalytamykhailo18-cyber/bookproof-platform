@@ -177,8 +177,8 @@ export default function EditCouponPage() {
               {/* Code is read-only */}
               <div>
                 <label className="text-sm font-medium">{t('new.fields.code.label')}</label>
-                <Input value={coupon.code} disabled className="mt-1.5 font-mono bg-muted" />
-                <p className="text-sm text-muted-foreground mt-1.5">
+                <Input value={coupon.code} disabled className="mt-1.5 bg-muted font-mono" />
+                <p className="mt-1.5 text-sm text-muted-foreground">
                   Coupon code cannot be changed after creation
                 </p>
               </div>

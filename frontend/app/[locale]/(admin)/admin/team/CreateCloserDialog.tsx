@@ -36,10 +36,7 @@ import {
  * Per requirements.md Section 1.4
  */
 const createCloserSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Email is required')
-    .email('Please provide a valid email address'),
+  email: z.string().min(1, 'Email is required').email('Please provide a valid email address'),
   name: z
     .string()
     .min(2, 'Name must be at least 2 characters')
@@ -122,9 +119,7 @@ export function CreateCloserDialog() {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    {t('createCloser.fields.emailDescription')}
-                  </FormDescription>
+                  <FormDescription>{t('createCloser.fields.emailDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -138,14 +133,9 @@ export function CreateCloserDialog() {
                 <FormItem>
                   <FormLabel>{t('createCloser.fields.name')}</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder={t('createCloser.fields.namePlaceholder')}
-                      {...field}
-                    />
+                    <Input placeholder={t('createCloser.fields.namePlaceholder')} {...field} />
                   </FormControl>
-                  <FormDescription>
-                    {t('createCloser.fields.nameDescription')}
-                  </FormDescription>
+                  <FormDescription>{t('createCloser.fields.nameDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -165,9 +155,7 @@ export function CreateCloserDialog() {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    {t('createCloser.fields.passwordDescription')}
-                  </FormDescription>
+                  <FormDescription>{t('createCloser.fields.passwordDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -211,18 +199,13 @@ export function CreateCloserDialog() {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      {t('createCloser.fields.isActive')}
-                    </FormLabel>
+                    <FormLabel className="text-base">{t('createCloser.fields.isActive')}</FormLabel>
                     <FormDescription>
                       {t('createCloser.fields.isActiveDescription')}
                     </FormDescription>
                   </div>
                   <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                 </FormItem>
               )}

@@ -478,9 +478,7 @@ export default function CampaignDetailPage() {
                             {campaign.synopsisFileName}
                           </p>
                         ) : (
-                          <p className="text-sm text-muted-foreground">
-                            {t('files.synopsisHint')}
-                          </p>
+                          <p className="text-sm text-muted-foreground">{t('files.synopsisHint')}</p>
                         )}
                       </div>
                     </div>
@@ -620,11 +618,7 @@ export default function CampaignDetailPage() {
                   </Button>
                 </Link>
 
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => window.print()}
-                >
+                <Button variant="outline" className="w-full" onClick={() => window.print()}>
                   <Download className="mr-2 h-4 w-4" />
                   {t('actions.downloadReport') || 'Download Report'}
                 </Button>
@@ -680,11 +674,7 @@ export default function CampaignDetailPage() {
                   </Button>
                 </Link>
 
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => window.print()}
-                >
+                <Button variant="outline" className="w-full" onClick={() => window.print()}>
                   <Download className="mr-2 h-4 w-4" />
                   {t('actions.downloadReport') || 'Download Report'}
                 </Button>

@@ -31,7 +31,7 @@ function getLocale(locale?: string): string {
 export function formatDate(
   date: string | Date,
   locale?: string,
-  options?: Intl.DateTimeFormatOptions
+  options?: Intl.DateTimeFormatOptions,
 ): string {
   const dateObj = new Date(date);
   const localeCode = getLocale(locale);
@@ -75,11 +75,7 @@ export function formatDateTime(date: string | Date, locale?: string): string {
  * @param currency - Currency code (USD, EUR, BRL)
  * @param locale - Language code (en, pt, es)
  */
-export function formatCurrency(
-  amount: number,
-  currency: string = 'USD',
-  locale?: string
-): string {
+export function formatCurrency(amount: number, currency: string = 'USD', locale?: string): string {
   const localeCode = getLocale(locale);
 
   return new Intl.NumberFormat(localeCode, {
@@ -97,7 +93,7 @@ export function formatCurrency(
 export function formatNumber(
   value: number,
   locale?: string,
-  options?: Intl.NumberFormatOptions
+  options?: Intl.NumberFormatOptions,
 ): string {
   const localeCode = getLocale(locale);
   return new Intl.NumberFormat(localeCode, options).format(value);

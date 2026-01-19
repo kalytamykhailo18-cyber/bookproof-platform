@@ -3,12 +3,26 @@
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
-import { useKeywordResearch, useDownloadKeywordResearchPdf, useKeywordResearchCheckout } from '@/hooks/useKeywordResearch';
+import {
+  useKeywordResearch,
+  useDownloadKeywordResearchPdf,
+  useKeywordResearchCheckout,
+} from '@/hooks/useKeywordResearch';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, Download, AlertCircle, Clock, CheckCircle2, XCircle, Edit, CreditCard, AlertTriangle } from 'lucide-react';
+import {
+  Loader2,
+  Download,
+  AlertCircle,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Edit,
+  CreditCard,
+  AlertTriangle,
+} from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { KeywordResearchStatus, TargetMarket } from '@/lib/api/keywords';
 import { toast } from 'sonner';
@@ -135,16 +149,18 @@ export default function KeywordResearchDetailsPage() {
             </Button>
           )}
           {/* Pay Now button - for PENDING status with unpaid orders */}
-          {research.status === KeywordResearchStatus.PENDING && !research.paid && research.price > 0 && (
-            <Button onClick={handlePayNow} disabled={checkoutMutation.isPending}>
-              {checkoutMutation.isPending ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <CreditCard className="mr-2 h-4 w-4" />
-              )}
-              Pay Now (${research.price.toFixed(2)})
-            </Button>
-          )}
+          {research.status === KeywordResearchStatus.PENDING &&
+            !research.paid &&
+            research.price > 0 && (
+              <Button onClick={handlePayNow} disabled={checkoutMutation.isPending}>
+                {checkoutMutation.isPending ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <CreditCard className="mr-2 h-4 w-4" />
+                )}
+                Pay Now (${research.price.toFixed(2)})
+              </Button>
+            )}
           {/* Download button - only for COMPLETED status */}
           {research.status === KeywordResearchStatus.COMPLETED && research.pdfUrl && (
             <Button onClick={handleDownload} disabled={downloadMutation.isPending}>
@@ -160,16 +176,18 @@ export default function KeywordResearchDetailsPage() {
       </div>
 
       {/* Payment Pending Alert */}
-      {research.status === KeywordResearchStatus.PENDING && !research.paid && research.price > 0 && (
-        <Alert variant="destructive" className="mb-6">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Payment Required</AlertTitle>
-          <AlertDescription>
-            Your keyword research order is awaiting payment. Please complete payment to start processing.
-            Amount due: <strong>${research.price.toFixed(2)}</strong>
-          </AlertDescription>
-        </Alert>
-      )}
+      {research.status === KeywordResearchStatus.PENDING &&
+        !research.paid &&
+        research.price > 0 && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Payment Required</AlertTitle>
+            <AlertDescription>
+              Your keyword research order is awaiting payment. Please complete payment to start
+              processing. Amount due: <strong>${research.price.toFixed(2)}</strong>
+            </AlertDescription>
+          </Alert>
+        )}
 
       {/* Status Banner */}
       <Card className="mb-6">

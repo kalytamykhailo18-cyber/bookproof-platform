@@ -53,9 +53,11 @@ export default function AdminReadersPage() {
 
   const { data: readers, isLoading: isLoadingReaders } = useAllReaders({
     search: searchQuery || undefined,
-    status: statusFilter !== 'all' ? (statusFilter as 'active' | 'suspended' | 'flagged') : undefined,
+    status:
+      statusFilter !== 'all' ? (statusFilter as 'active' | 'suspended' | 'flagged') : undefined,
     contentPreference: contentFilter !== 'all' ? (contentFilter as ContentPreference) : undefined,
-    hasVerifiedAmazon: verifiedFilter === 'verified' ? true : verifiedFilter === 'unverified' ? false : undefined,
+    hasVerifiedAmazon:
+      verifiedFilter === 'verified' ? true : verifiedFilter === 'unverified' ? false : undefined,
   });
 
   const { data: stats, isLoading: isLoadingStats } = useReaderStats();
@@ -68,9 +70,7 @@ export default function AdminReadersPage() {
   const getStatusBadge = (reader: (typeof readers)[0]) => {
     if (!reader.isActive) {
       return (
-        <Badge className="bg-red-100 text-red-800 hover:bg-red-200">
-          {t('status.suspended')}
-        </Badge>
+        <Badge className="bg-red-100 text-red-800 hover:bg-red-200">{t('status.suspended')}</Badge>
       );
     }
     if (reader.isFlagged) {
@@ -81,9 +81,7 @@ export default function AdminReadersPage() {
       );
     }
     return (
-      <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
-        {t('status.active')}
-      </Badge>
+      <Badge className="bg-green-100 text-green-800 hover:bg-green-200">{t('status.active')}</Badge>
     );
   };
 
@@ -249,7 +247,7 @@ export default function AdminReadersPage() {
                 />
               </div>
             </div>
-            <div className="w-full md:w-40 animate-fade-left-light-slow">
+            <div className="w-full animate-fade-left-light-slow md:w-40">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder={t('filters.status')} />
@@ -262,20 +260,26 @@ export default function AdminReadersPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="w-full md:w-40 animate-fade-left-medium-slow">
+            <div className="animate-fade-left-medium-slow w-full md:w-40">
               <Select value={contentFilter} onValueChange={setContentFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder={t('filters.contentPreference')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('filters.allPreferences')}</SelectItem>
-                  <SelectItem value={ContentPreference.EBOOK}>{t('contentPreference.ebook')}</SelectItem>
-                  <SelectItem value={ContentPreference.AUDIOBOOK}>{t('contentPreference.audiobook')}</SelectItem>
-                  <SelectItem value={ContentPreference.BOTH}>{t('contentPreference.both')}</SelectItem>
+                  <SelectItem value={ContentPreference.EBOOK}>
+                    {t('contentPreference.ebook')}
+                  </SelectItem>
+                  <SelectItem value={ContentPreference.AUDIOBOOK}>
+                    {t('contentPreference.audiobook')}
+                  </SelectItem>
+                  <SelectItem value={ContentPreference.BOTH}>
+                    {t('contentPreference.both')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="w-full md:w-48 animate-fade-left-heavy-slow">
+            <div className="animate-fade-left-heavy-slow w-full md:w-48">
               <Select value={verifiedFilter} onValueChange={setVerifiedFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder={t('filters.amazonVerification')} />
@@ -302,7 +306,7 @@ export default function AdminReadersPage() {
         </CardHeader>
         <CardContent>
           {filteredReaders.length === 0 ? (
-            <div className="py-16 text-center animate-fade-up">
+            <div className="animate-fade-up py-16 text-center">
               <Users className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="text-lg font-semibold">{t('empty.title')}</h3>
               <p className="text-muted-foreground">{t('empty.description')}</p>
@@ -349,7 +353,9 @@ export default function AdminReadersPage() {
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">
-                        <span className="font-medium text-green-600">{reader.reviewsCompleted}</span>
+                        <span className="font-medium text-green-600">
+                          {reader.reviewsCompleted}
+                        </span>
                         <span className="text-muted-foreground"> / </span>
                         <span className="text-red-600">{reader.reviewsExpired}</span>
                       </div>
@@ -359,11 +365,10 @@ export default function AdminReadersPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Progress
-                          value={reader.reliabilityScore}
-                          className="h-2 w-16"
-                        />
-                        <span className={`text-sm font-medium ${getReliabilityColor(reader.reliabilityScore)}`}>
+                        <Progress value={reader.reliabilityScore} className="h-2 w-16" />
+                        <span
+                          className={`text-sm font-medium ${getReliabilityColor(reader.reliabilityScore)}`}
+                        >
                           {reader.reliabilityScore.toFixed(0)}%
                         </span>
                       </div>

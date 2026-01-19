@@ -163,7 +163,7 @@ export default function InvoicesPage() {
   return (
     <div className="container mx-auto space-y-6 px-4 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('invoices.title')}</h1>
           <p className="text-muted-foreground">{t('invoices.description')}</p>
@@ -178,9 +178,7 @@ export default function InvoicesPage() {
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>{t('invoices.createInvoiceDialog.title')}</DialogTitle>
-              <DialogDescription>
-                {t('invoices.createInvoiceDialog.description')}
-              </DialogDescription>
+              <DialogDescription>{t('invoices.createInvoiceDialog.description')}</DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
@@ -261,11 +259,7 @@ export default function InvoicesPage() {
               </div>
             </div>
             <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setCreateDialogOpen(false)}
-              >
+              <Button type="button" variant="outline" onClick={() => setCreateDialogOpen(false)}>
                 {t('common.cancel')}
               </Button>
               <Button
@@ -341,7 +335,7 @@ export default function InvoicesPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-4 animate-fade-up">
+      <div className="flex animate-fade-up items-center gap-4">
         <Select
           value={statusFilter}
           onValueChange={(value) => setStatusFilter(value as PaymentStatus | 'ALL')}

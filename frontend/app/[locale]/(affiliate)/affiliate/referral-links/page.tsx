@@ -8,14 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import {
-  Copy,
-  CheckCircle,
-  MousePointerClick,
-  Users,
-  TrendingUp,
-  Share2,
-} from 'lucide-react';
+import { Copy, CheckCircle, MousePointerClick, Users, TrendingUp, Share2 } from 'lucide-react';
 
 export default function AffiliateReferralLinksPage() {
   const t = useTranslations('affiliates.referralLinks');
@@ -109,19 +102,39 @@ export default function AffiliateReferralLinksPage() {
           <div className="space-y-2">
             <p className="text-sm font-medium">{t('shareTo.title')}</p>
             <div className="flex gap-2">
-              <Button type="button" variant="outline" size="sm" onClick={() => handleShare('twitter')}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleShare('twitter')}
+              >
                 <Share2 className="mr-2 h-4 w-4" />
                 Twitter
               </Button>
-              <Button type="button" variant="outline" size="sm" onClick={() => handleShare('facebook')}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleShare('facebook')}
+              >
                 <Share2 className="mr-2 h-4 w-4" />
                 Facebook
               </Button>
-              <Button type="button" variant="outline" size="sm" onClick={() => handleShare('linkedin')}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleShare('linkedin')}
+              >
                 <Share2 className="mr-2 h-4 w-4" />
                 LinkedIn
               </Button>
-              <Button type="button" variant="outline" size="sm" onClick={() => handleShare('email')}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleShare('email')}
+              >
                 <Share2 className="mr-2 h-4 w-4" />
                 {t('shareTo.email')}
               </Button>
@@ -164,7 +177,9 @@ export default function AffiliateReferralLinksPage() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">{t('performance.conversionRate')}</p>
-                <p className="text-2xl font-bold text-purple-600">{stats?.conversionRate.toFixed(1) || 0}%</p>
+                <p className="text-2xl font-bold text-purple-600">
+                  {stats?.conversionRate.toFixed(1) || 0}%
+                </p>
               </div>
             </div>
           </div>

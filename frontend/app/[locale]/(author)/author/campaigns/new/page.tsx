@@ -177,7 +177,14 @@ export default function NewCampaignPage() {
     // Validate current step before proceeding
     if (currentStep === 'bookInfo') {
       const fieldsToValidate: (keyof CampaignFormData)[] = [
-        'title', 'authorName', 'asin', 'amazonLink', 'synopsis', 'language', 'genre', 'category'
+        'title',
+        'authorName',
+        'asin',
+        'amazonLink',
+        'synopsis',
+        'language',
+        'genre',
+        'category',
       ];
       const isValid = await trigger(fieldsToValidate);
       if (!isValid) return;
@@ -294,7 +301,9 @@ export default function NewCampaignPage() {
           {t('back') || 'Back'}
         </Button>
         <h1 className="text-3xl font-bold">{t('title') || 'Create New Campaign'}</h1>
-        <p className="mt-2 text-muted-foreground">{t('subtitle') || 'Set up your book review campaign'}</p>
+        <p className="mt-2 text-muted-foreground">
+          {t('subtitle') || 'Set up your book review campaign'}
+        </p>
       </div>
 
       {/* Progress Steps */}
@@ -345,7 +354,9 @@ export default function NewCampaignPage() {
                 </div>
 
                 <div className="animate-fade-up-fast">
-                  <Label htmlFor="subtitle">{t('bookInfo.subtitle') || 'Subtitle'} ({t('optional') || 'Optional'})</Label>
+                  <Label htmlFor="subtitle">
+                    {t('bookInfo.subtitle') || 'Subtitle'} ({t('optional') || 'Optional'})
+                  </Label>
                   <Input
                     id="subtitle"
                     {...register('subtitle')}
@@ -358,7 +369,9 @@ export default function NewCampaignPage() {
                   <Input
                     id="authorName"
                     {...register('authorName')}
-                    placeholder={t('bookInfo.authorNamePlaceholder') || 'Author name as appears on book'}
+                    placeholder={
+                      t('bookInfo.authorNamePlaceholder') || 'Author name as appears on book'
+                    }
                   />
                   {errors.authorName && (
                     <p className="mt-1 text-sm text-red-500">{errors.authorName.message}</p>
@@ -368,11 +381,7 @@ export default function NewCampaignPage() {
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="animate-fade-up-slow">
                     <Label htmlFor="asin">{t('bookInfo.asin') || 'Amazon ASIN'} *</Label>
-                    <Input
-                      id="asin"
-                      {...register('asin')}
-                      placeholder="B001234567"
-                    />
+                    <Input id="asin" {...register('asin')} placeholder="B001234567" />
                     {errors.asin && (
                       <p className="mt-1 text-sm text-red-500">{errors.asin.message}</p>
                     )}
@@ -397,7 +406,9 @@ export default function NewCampaignPage() {
                 </div>
 
                 <div className="animate-zoom-in">
-                  <Label htmlFor="amazonLink">{t('bookInfo.amazonLink') || 'Amazon Product Link'} *</Label>
+                  <Label htmlFor="amazonLink">
+                    {t('bookInfo.amazonLink') || 'Amazon Product Link'} *
+                  </Label>
                   <Input
                     id="amazonLink"
                     {...register('amazonLink')}
@@ -414,7 +425,9 @@ export default function NewCampaignPage() {
                     <Input
                       id="genre"
                       {...register('genre')}
-                      placeholder={t('bookInfo.genrePlaceholder') || 'e.g., Fantasy, Romance, Thriller'}
+                      placeholder={
+                        t('bookInfo.genrePlaceholder') || 'e.g., Fantasy, Romance, Thriller'
+                      }
                     />
                     {errors.genre && (
                       <p className="mt-1 text-sm text-red-500">{errors.genre.message}</p>
@@ -426,7 +439,9 @@ export default function NewCampaignPage() {
                     <Input
                       id="category"
                       {...register('category')}
-                      placeholder={t('bookInfo.categoryPlaceholder') || 'e.g., Fiction, Non-Fiction'}
+                      placeholder={
+                        t('bookInfo.categoryPlaceholder') || 'e.g., Fiction, Non-Fiction'
+                      }
                     />
                     {errors.category && (
                       <p className="mt-1 text-sm text-red-500">{errors.category.message}</p>
@@ -439,7 +454,10 @@ export default function NewCampaignPage() {
                   <Textarea
                     id="synopsis"
                     {...register('synopsis')}
-                    placeholder={t('bookInfo.synopsisPlaceholder') || 'Enter book description/synopsis (max 3 pages)'}
+                    placeholder={
+                      t('bookInfo.synopsisPlaceholder') ||
+                      'Enter book description/synopsis (max 3 pages)'
+                    }
                     rows={6}
                     className="resize-none"
                   />
@@ -447,7 +465,8 @@ export default function NewCampaignPage() {
                     <p className="mt-1 text-sm text-red-500">{errors.synopsis.message}</p>
                   )}
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {watch('synopsis')?.length || 0} / 7500 {t('bookInfo.characters') || 'characters'}
+                    {watch('synopsis')?.length || 0} / 7500{' '}
+                    {t('bookInfo.characters') || 'characters'}
                   </p>
                 </div>
               </div>
@@ -545,7 +564,9 @@ export default function NewCampaignPage() {
                           <FileText className="h-10 w-10 text-primary" />
                           <div>
                             <p className="font-medium">{ebookFile.name}</p>
-                            <p className="text-sm text-muted-foreground">{formatBytes(ebookFile.size)}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {formatBytes(ebookFile.size)}
+                            </p>
                           </div>
                           <Badge className="bg-green-500">
                             <Check className="h-3 w-3" />
@@ -557,7 +578,9 @@ export default function NewCampaignPage() {
                           <p className="text-sm text-muted-foreground">
                             {t('files.clickToUploadEbook') || 'Click to upload ebook file'}
                           </p>
-                          <p className="text-xs text-muted-foreground">EPUB, PDF, MOBI (max 50MB)</p>
+                          <p className="text-xs text-muted-foreground">
+                            EPUB, PDF, MOBI (max 50MB)
+                          </p>
                         </>
                       )}
                     </div>
@@ -575,7 +598,8 @@ export default function NewCampaignPage() {
                 )}
 
                 {/* Audiobook File Upload */}
-                {(selectedFormat === BookFormat.AUDIOBOOK || selectedFormat === BookFormat.BOTH) && (
+                {(selectedFormat === BookFormat.AUDIOBOOK ||
+                  selectedFormat === BookFormat.BOTH) && (
                   <div className="animate-fade-up-slow">
                     <Label>{t('files.audiobookFile') || 'Audiobook File'} *</Label>
                     <div
@@ -587,7 +611,9 @@ export default function NewCampaignPage() {
                           <Music className="h-10 w-10 text-primary" />
                           <div>
                             <p className="font-medium">{audiobookFile.name}</p>
-                            <p className="text-sm text-muted-foreground">{formatBytes(audiobookFile.size)}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {formatBytes(audiobookFile.size)}
+                            </p>
                           </div>
                           <Badge className="bg-green-500">
                             <Check className="h-3 w-3" />
@@ -624,10 +650,13 @@ export default function NewCampaignPage() {
                   <Input
                     id="amazonCouponCode"
                     {...register('amazonCouponCode')}
-                    placeholder={t('files.couponCodePlaceholder') || 'Enter Amazon coupon code for readers'}
+                    placeholder={
+                      t('files.couponCodePlaceholder') || 'Enter Amazon coupon code for readers'
+                    }
                   />
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {t('files.couponCodeHelp') || 'If you have a coupon code for readers to get the book at a discount'}
+                    {t('files.couponCodeHelp') ||
+                      'If you have a coupon code for readers to get the book at a discount'}
                   </p>
                 </div>
               </div>
@@ -641,7 +670,9 @@ export default function NewCampaignPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <CreditCard className="h-5 w-5 text-primary" />
-                      <span className="font-medium">{t('credits.availableCredits') || 'Available Credits'}</span>
+                      <span className="font-medium">
+                        {t('credits.availableCredits') || 'Available Credits'}
+                      </span>
                     </div>
                     <span className="text-2xl font-bold text-primary">{availableCredits}</span>
                   </div>
@@ -664,14 +695,17 @@ export default function NewCampaignPage() {
                     <p className="mt-1 text-sm text-red-500">{errors.creditsToAllocate.message}</p>
                   )}
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {t('credits.minimumRequired') || 'Minimum 10 credits required'} • {t('credits.each') || 'Each credit = 1 review'}
+                    {t('credits.minimumRequired') || 'Minimum 10 credits required'} •{' '}
+                    {t('credits.each') || 'Each credit = 1 review'}
                   </p>
                 </div>
 
                 {/* Credit Split for BOTH format */}
                 {selectedFormat === BookFormat.BOTH && (
                   <div className="animate-fade-up-light-slow space-y-4 rounded-lg border p-4">
-                    <h4 className="font-medium">{t('credits.splitCredits') || 'Split Credits Between Formats'}</h4>
+                    <h4 className="font-medium">
+                      {t('credits.splitCredits') || 'Split Credits Between Formats'}
+                    </h4>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="ebookCredits">
@@ -722,21 +756,27 @@ export default function NewCampaignPage() {
                 {/* Estimated Duration */}
                 {creditsToAllocate >= 10 && (
                   <div className="animate-fade-up-slow rounded-lg bg-primary/10 p-4">
-                    <h4 className="font-medium">{t('credits.estimatedDuration') || 'Estimated Campaign Duration'}</h4>
+                    <h4 className="font-medium">
+                      {t('credits.estimatedDuration') || 'Estimated Campaign Duration'}
+                    </h4>
                     <p className="mt-1 text-2xl font-bold">
                       {estimatedWeeks} {t('credits.weeks') || 'weeks'}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {t('credits.durationNote') || 'Based on our natural distribution algorithm for optimal review pacing'}
+                      {t('credits.durationNote') ||
+                        'Based on our natural distribution algorithm for optimal review pacing'}
                     </p>
                   </div>
                 )}
 
                 {/* Insufficient credits warning */}
                 {creditsToAllocate > availableCredits && (
-                  <div className="animate-zoom-in flex items-center gap-2 rounded-lg bg-red-100 p-4 text-red-700 dark:bg-red-900/20 dark:text-red-400">
+                  <div className="flex animate-zoom-in items-center gap-2 rounded-lg bg-red-100 p-4 text-red-700 dark:bg-red-900/20 dark:text-red-400">
                     <AlertCircle className="h-5 w-5" />
-                    <span>{t('credits.insufficientCredits') || 'You do not have enough credits. Please purchase more credits first.'}</span>
+                    <span>
+                      {t('credits.insufficientCredits') ||
+                        'You do not have enough credits. Please purchase more credits first.'}
+                    </span>
                   </div>
                 )}
               </div>
@@ -747,14 +787,18 @@ export default function NewCampaignPage() {
               <div className="space-y-6">
                 {/* Book Information Summary */}
                 <div className="animate-fade-up rounded-lg border p-4">
-                  <h4 className="mb-3 font-semibold">{t('review.bookInfo') || 'Book Information'}</h4>
+                  <h4 className="mb-3 font-semibold">
+                    {t('review.bookInfo') || 'Book Information'}
+                  </h4>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
                       <span className="text-muted-foreground">{t('review.title') || 'Title'}:</span>
                       <p className="font-medium">{watch('title')}</p>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">{t('review.author') || 'Author'}:</span>
+                      <span className="text-muted-foreground">
+                        {t('review.author') || 'Author'}:
+                      </span>
                       <p className="font-medium">{watch('authorName')}</p>
                     </div>
                     <div>
@@ -762,7 +806,9 @@ export default function NewCampaignPage() {
                       <p className="font-medium">{watch('asin')}</p>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">{t('review.language') || 'Language'}:</span>
+                      <span className="text-muted-foreground">
+                        {t('review.language') || 'Language'}:
+                      </span>
                       <p className="font-medium">{watch('language')}</p>
                     </div>
                     <div>
@@ -770,7 +816,9 @@ export default function NewCampaignPage() {
                       <p className="font-medium">{watch('genre')}</p>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">{t('review.format') || 'Format'}:</span>
+                      <span className="text-muted-foreground">
+                        {t('review.format') || 'Format'}:
+                      </span>
                       <p className="font-medium">{watch('availableFormats')}</p>
                     </div>
                   </div>
@@ -784,24 +832,30 @@ export default function NewCampaignPage() {
                       <ImageIcon className="h-4 w-4" />
                       <span>{t('review.cover') || 'Cover'}:</span>
                       <span className={coverFile ? 'text-green-600' : 'text-muted-foreground'}>
-                        {coverFile ? coverFile.name : (t('review.notUploaded') || 'Not uploaded')}
+                        {coverFile ? coverFile.name : t('review.notUploaded') || 'Not uploaded'}
                       </span>
                     </div>
-                    {(selectedFormat === BookFormat.EBOOK || selectedFormat === BookFormat.BOTH) && (
+                    {(selectedFormat === BookFormat.EBOOK ||
+                      selectedFormat === BookFormat.BOTH) && (
                       <div className="flex items-center gap-2">
                         <Book className="h-4 w-4" />
                         <span>{t('review.ebook') || 'Ebook'}:</span>
                         <span className={ebookFile ? 'text-green-600' : 'text-muted-foreground'}>
-                          {ebookFile ? ebookFile.name : (t('review.notUploaded') || 'Not uploaded')}
+                          {ebookFile ? ebookFile.name : t('review.notUploaded') || 'Not uploaded'}
                         </span>
                       </div>
                     )}
-                    {(selectedFormat === BookFormat.AUDIOBOOK || selectedFormat === BookFormat.BOTH) && (
+                    {(selectedFormat === BookFormat.AUDIOBOOK ||
+                      selectedFormat === BookFormat.BOTH) && (
                       <div className="flex items-center gap-2">
                         <Music className="h-4 w-4" />
                         <span>{t('review.audiobook') || 'Audiobook'}:</span>
-                        <span className={audiobookFile ? 'text-green-600' : 'text-muted-foreground'}>
-                          {audiobookFile ? audiobookFile.name : (t('review.notUploaded') || 'Not uploaded')}
+                        <span
+                          className={audiobookFile ? 'text-green-600' : 'text-muted-foreground'}
+                        >
+                          {audiobookFile
+                            ? audiobookFile.name
+                            : t('review.notUploaded') || 'Not uploaded'}
                         </span>
                       </div>
                     )}
@@ -810,7 +864,9 @@ export default function NewCampaignPage() {
 
                 {/* Credits Summary */}
                 <div className="animate-fade-up-light-slow rounded-lg border p-4">
-                  <h4 className="mb-3 font-semibold">{t('review.credits') || 'Credit Allocation'}</h4>
+                  <h4 className="mb-3 font-semibold">
+                    {t('review.credits') || 'Credit Allocation'}
+                  </h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span>{t('review.totalCredits') || 'Total Credits'}:</span>
@@ -830,14 +886,18 @@ export default function NewCampaignPage() {
                     )}
                     <div className="flex justify-between border-t pt-2">
                       <span>{t('review.estimatedDuration') || 'Estimated Duration'}:</span>
-                      <span>{estimatedWeeks} {t('credits.weeks') || 'weeks'}</span>
+                      <span>
+                        {estimatedWeeks} {t('credits.weeks') || 'weeks'}
+                      </span>
                     </div>
                   </div>
                 </div>
 
                 {/* Confirmation Checkboxes */}
                 <div className="animate-fade-up-slow space-y-4">
-                  <h4 className="font-semibold">{t('review.confirmations') || 'Please confirm the following'}</h4>
+                  <h4 className="font-semibold">
+                    {t('review.confirmations') || 'Please confirm the following'}
+                  </h4>
 
                   <div className="flex items-start space-x-3">
                     <Checkbox
@@ -846,7 +906,8 @@ export default function NewCampaignPage() {
                       onCheckedChange={(checked) => setConfirmInfo(checked === true)}
                     />
                     <Label htmlFor="confirmInfo" className="cursor-pointer text-sm leading-relaxed">
-                      {t('review.confirmInfo') || 'I confirm that all book information is accurate and matches my Amazon listing'}
+                      {t('review.confirmInfo') ||
+                        'I confirm that all book information is accurate and matches my Amazon listing'}
                     </Label>
                   </div>
 
@@ -856,8 +917,12 @@ export default function NewCampaignPage() {
                       checked={confirmCredits}
                       onCheckedChange={(checked) => setConfirmCredits(checked === true)}
                     />
-                    <Label htmlFor="confirmCredits" className="cursor-pointer text-sm leading-relaxed">
-                      {t('review.confirmCredits') || 'I understand that credits will be allocated immediately and this action cannot be undone'}
+                    <Label
+                      htmlFor="confirmCredits"
+                      className="cursor-pointer text-sm leading-relaxed"
+                    >
+                      {t('review.confirmCredits') ||
+                        'I understand that credits will be allocated immediately and this action cannot be undone'}
                     </Label>
                   </div>
 
@@ -867,8 +932,12 @@ export default function NewCampaignPage() {
                       checked={confirmTerms}
                       onCheckedChange={(checked) => setConfirmTerms(checked === true)}
                     />
-                    <Label htmlFor="confirmTerms" className="cursor-pointer text-sm leading-relaxed">
-                      {t('review.confirmTerms') || 'I agree to the terms of service and understand how the review campaign works'}
+                    <Label
+                      htmlFor="confirmTerms"
+                      className="cursor-pointer text-sm leading-relaxed"
+                    >
+                      {t('review.confirmTerms') ||
+                        'I agree to the terms of service and understand how the review campaign works'}
                     </Label>
                   </div>
                 </div>
@@ -898,7 +967,13 @@ export default function NewCampaignPage() {
             <Button
               type="button"
               onClick={handleFormSubmit}
-              disabled={isCreating || !confirmInfo || !confirmCredits || !confirmTerms || creditsToAllocate > availableCredits}
+              disabled={
+                isCreating ||
+                !confirmInfo ||
+                !confirmCredits ||
+                !confirmTerms ||
+                creditsToAllocate > availableCredits
+              }
             >
               {isCreating ? (
                 <>

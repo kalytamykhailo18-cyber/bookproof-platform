@@ -15,7 +15,24 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Check, Star, Shield, TrendingUp, Clock, Users, HeadphonesIcon, Mail, MessageCircle, BookOpen, CreditCard, Send, ThumbsUp, Gift, BookMarked, Wallet } from 'lucide-react';
+import {
+  Check,
+  Star,
+  Shield,
+  TrendingUp,
+  Clock,
+  Users,
+  HeadphonesIcon,
+  Mail,
+  MessageCircle,
+  BookOpen,
+  CreditCard,
+  Send,
+  ThumbsUp,
+  Gift,
+  BookMarked,
+  Wallet,
+} from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Accordion,
@@ -561,7 +578,12 @@ function LeadCaptureForm() {
                     {t('fields.marketingConsent.label')}
                   </Label>
                 </div>
-                <Button type="button" className="w-full" onClick={handleFormSubmit} disabled={isSubmitting}>
+                <Button
+                  type="button"
+                  className="w-full"
+                  onClick={handleFormSubmit}
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? t('submitting') : t('cta')}
                 </Button>
               </div>
@@ -598,11 +620,15 @@ function FAQSection() {
               <AccordionItem
                 key={item.id}
                 value={item.id}
-                className={index === 0 ? 'animate-fade-up-fast' : index < 3 ? 'animate-fade-up' : 'animate-fade-up-slow'}
+                className={
+                  index === 0
+                    ? 'animate-fade-up-fast'
+                    : index < 3
+                      ? 'animate-fade-up'
+                      : 'animate-fade-up-slow'
+                }
               >
-                <AccordionTrigger className="text-left">
-                  {t(item.questionKey)}
-                </AccordionTrigger>
+                <AccordionTrigger className="text-left">{t(item.questionKey)}</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
                   {t(item.answerKey)}
                 </AccordionContent>
@@ -635,10 +661,7 @@ function ContactSection() {
               <div>
                 <h3 className="mb-1 text-lg font-semibold">{t('email.title')}</h3>
                 <p className="mb-2 text-sm text-muted-foreground">{t('email.description')}</p>
-                <a
-                  href="mailto:support@bookproof.com"
-                  className="text-primary hover:underline"
-                >
+                <a href="mailto:support@bookproof.com" className="text-primary hover:underline">
                   support@bookproof.com
                 </a>
               </div>
