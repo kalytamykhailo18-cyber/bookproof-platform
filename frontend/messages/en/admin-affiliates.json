@@ -1,0 +1,52 @@
+{
+  "title": "Affiliate Management",
+  "subtitle": "Manage affiliate partners and track their performance",
+  "stats": {
+    "totalAffiliates": "Total Affiliates",
+    "registered": "registered partners",
+    "approved": "Approved",
+    "activePartners": "active partners",
+    "pending": "Pending",
+    "awaitingApproval": "awaiting approval",
+    "totalEarnings": "Total Earnings",
+    "commissionsPaid": "commissions paid",
+    "totalClicks": "Total Clicks",
+    "referralClicks": "referral clicks"
+  },
+  "filters": {
+    "title": "Filters",
+    "searchPlaceholder": "Search by name, email, or referral code...",
+    "approval": "Approval Status",
+    "allApproval": "All Approval Status",
+    "approved": "Approved",
+    "pending": "Pending",
+    "status": "Active Status",
+    "allStatus": "All Status",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "table": {
+    "title": "Affiliates",
+    "description": "View and manage all affiliate partners",
+    "affiliate": "Affiliate",
+    "referralCode": "Referral Code",
+    "commission": "Commission",
+    "earnings": "Earnings",
+    "approved": "Approved",
+    "clicks": "Clicks",
+    "conversions": "Conversions",
+    "status": "Status",
+    "joined": "Joined",
+    "actions": "Actions"
+  },
+  "status": {
+    "approved": "Approved",
+    "pending": "Pending",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "empty": {
+    "title": "No affiliates found",
+    "description": "No affiliates match your current filters"
+  }
+}

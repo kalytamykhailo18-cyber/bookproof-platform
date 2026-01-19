@@ -1,0 +1,69 @@
+{
+  "title": "Author Management",
+  "subtitle": "Manage all authors and their credits",
+  "stats": {
+    "totalAuthors": "Total Authors",
+    "registered": "Registered authors",
+    "verified": "Verified",
+    "verifiedAccounts": "Verified accounts",
+    "totalCredits": "Total Credits",
+    "creditsPurchased": "Credits purchased",
+    "availableCredits": "Available Credits",
+    "creditsAvailable": "Credits available",
+    "activeCampaigns": "Active Campaigns",
+    "runningCampaigns": "Running campaigns"
+  },
+  "status": {
+    "verified": "Verified",
+    "unverified": "Unverified"
+  },
+  "filters": {
+    "title": "Filters",
+    "searchPlaceholder": "Search by name or email...",
+    "status": "Status",
+    "allStatuses": "All Statuses",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "withActiveCampaigns": "With Active Campaigns",
+    "noActiveCampaigns": "No Active Campaigns"
+  },
+  "table": {
+    "title": "Authors",
+    "description": "All registered authors on the platform",
+    "author": "Author",
+    "verified": "Status",
+    "totalCredits": "Total Credits",
+    "available": "Available",
+    "used": "Used",
+    "campaigns": "Campaigns",
+    "actions": "Actions"
+  },
+  "empty": {
+    "title": "No authors found",
+    "description": "Try adjusting your filters or search query"
+  },
+  "dialogs": {
+    "reason": "Reason",
+    "reasonPlaceholder": "Enter reason...",
+    "notes": "Notes (optional)",
+    "notesPlaceholder": "Additional notes...",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+    "addCredits": {
+      "title": "Add Credits",
+      "description": "Manually add credits to author account",
+      "amount": "Credits to Add",
+      "amountPlaceholder": "Enter amount",
+      "confirm": "Add Credits"
+    },
+    "removeCredits": {
+      "title": "Remove Credits",
+      "description": "Manually remove credits from author account",
+      "amount": "Credits to Remove",
+      "amountPlaceholder": "Enter amount",
+      "available": "Available",
+      "max": "Maximum",
+      "confirm": "Remove Credits"
+    }
+  }
+}

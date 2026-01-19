@@ -1,0 +1,92 @@
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '@common/prisma/prisma.service';
+import { Request } from 'express';
+
+export interface JwtPayload {
+  sub: string;
+  email: string;
+  role: string;
+  tokenVersion?: number; // Used to invalidate all sessions on password reset
+}
+
+/**
+ * Custom JWT extractor that tries multiple sources:
+ * 1. Authorization header (Bearer token) - primary method
+ * 2. Query parameter 'token' - for HTML5 audio/video streaming
+ *
+ * The query parameter is needed because HTML5 <audio> elements
+ * cannot send Authorization headers. This is a common pattern
+ * for secure media streaming.
+ */
+function extractJwtFromHeaderOrQuery(req: Request): string | null {
+  // First try the Authorization header (preferred)
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    return authHeader.substring(7);
+  }
+
+  // Then try query parameter (for audio/video streaming)
+  // Only allow for specific streaming endpoints for security
+  const queryToken = req.query?.token as string;
+  if (queryToken && req.path?.includes('stream-audio')) {
+    return queryToken;
+  }
+
+  return null;
+}
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(
+    private configService: ConfigService,
+    private prisma: PrismaService,
+  ) {
+    super({
+      jwtFromRequest: extractJwtFromHeaderOrQuery,
+      ignoreExpiration: false,
+      secretOrKey: configService.get<string>('jwt.secret'),
+    });
+  }
+
+  async validate(payload: JwtPayload) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: payload.sub },
+      include: {
+        authorProfile: true,
+        readerProfile: true,
+        affiliateProfile: true,
+      },
+    });
+
+    if (!user || !user.isActive) {
+      throw new UnauthorizedException('User not found or inactive');
+    }
+
+    // Check tokenVersion to invalidate sessions after password reset
+    // Per requirements.md Section 1.6: All sessions invalidated on password reset
+    const payloadTokenVersion = payload.tokenVersion ?? 0;
+    const userTokenVersion = user.tokenVersion ?? 0;
+    if (payloadTokenVersion !== userTokenVersion) {
+      throw new UnauthorizedException('Session expired. Please log in again.');
+    }
+
+    return {
+      id: user.id,
+      userId: user.id, // Alias for id
+      email: user.email,
+      role: user.role,
+      name: user.name,
+      emailVerified: user.emailVerified,
+      authorProfileId: user.authorProfile?.id,
+      readerProfileId: user.readerProfile?.id,
+      affiliateProfileId: user.affiliateProfile?.id,
+      profileId: user.authorProfile?.id || user.readerProfile?.id || user.affiliateProfile?.id,
+      // Terms acceptance for authors (especially those created by Closers)
+      termsAccepted: user.authorProfile?.termsAccepted ?? true, // Default true for non-authors
+      accountCreatedByCloser: user.authorProfile?.accountCreatedByCloser ?? false,
+    };
+  }
+}

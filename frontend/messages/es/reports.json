@@ -1,0 +1,56 @@
+{
+  "title": "Informes de Campaña",
+  "description": "Ver y descargar informes detallados de campaña",
+  "noReports": "No hay informes de campaña disponibles aún",
+  "noReportsDescription": "Los informes se generan automáticamente cuando las campañas se completan",
+  "viewReport": "Ver Informe",
+  "downloadPdf": "Descargar PDF",
+  "regenerate": "Regenerar",
+  "regenerating": "Regenerando...",
+  "downloading": "Descargando...",
+  "generatedAt": "Generado",
+  "metrics": {
+    "totalReviews": "Total de Reseñas",
+    "validatedReviews": "Reseñas Validadas",
+    "averageRating": "Calificación Promedio",
+    "successRate": "Tasa de Éxito",
+    "delays": "Retrasos",
+    "replacements": "Reemplazos",
+    "campaignDuration": "Duración de Campaña",
+    "weeks": "semanas"
+  },
+  "ratingDistribution": {
+    "title": "Distribución de Calificaciones",
+    "fiveStar": "5 Estrellas",
+    "fourStar": "4 Estrellas",
+    "threeStar": "3 Estrellas",
+    "twoStar": "2 Estrellas",
+    "oneStar": "1 Estrella",
+    "reviews": "reseñas"
+  },
+  "ratingTrends": {
+    "title": "Tendencias de Calificación en el Tiempo",
+    "description": "Calificaciones promedio semanales a lo largo de tu campaña"
+  },
+  "performance": {
+    "title": "Métricas de Rendimiento",
+    "successRate": "Tasa de Éxito",
+    "delays": "Retrasos Encontrados",
+    "replacements": "Reemplazos Proporcionados"
+  },
+  "duration": {
+    "title": "Duración de Campaña",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Finalización",
+    "totalWeeks": "Total de Semanas"
+  },
+  "feedback": {
+    "title": "Comentarios Anónimos de Lectores",
+    "description": "Comentarios seleccionados de los lectores sobre tu libro (las identidades de los lectores están protegidas)"
+  },
+  "actions": {
+    "viewDetails": "Ver Detalles",
+    "download": "Descargar PDF",
+    "regenerate": "Regenerar Informe"
+  }
+}

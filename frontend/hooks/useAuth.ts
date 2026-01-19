@@ -1,0 +1,189 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  authApi,
+  RegisterRequest,
+  LoginRequest,
+  UserData,
+  RequestPasswordResetRequest,
+  ResetPasswordRequest,
+} from '@/lib/api/auth';
+import { tokenManager } from '@/lib/api/client';
+import { useAuthStore } from '@/store/authStore';
+import { useRouter } from 'next/navigation';
+import { useLoading } from '@/components/providers/LoadingProvider';
+import { toast } from 'sonner';
+
+export function useAuth() {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const { setUser, clearUser, user, isAuthenticated } = useAuthStore();
+  const { startLoading, stopLoading } = useLoading();
+
+  // Register mutation
+  const registerMutation = useMutation({
+    mutationFn: (data: RegisterRequest) => {
+      startLoading('Creating your account...');
+      return authApi.register(data);
+    },
+    onSuccess: (response) => {
+      stopLoading();
+      tokenManager.setToken(response.accessToken);
+      setUser(response.user);
+      queryClient.setQueryData(['user'], response.user);
+    },
+    onError: (error: any) => {
+      stopLoading();
+      console.error('Registration error:', error);
+    },
+  });
+
+  // Login mutation
+  const loginMutation = useMutation({
+    mutationFn: (data: LoginRequest) => {
+      startLoading('Signing you in...');
+      return authApi.login(data);
+    },
+    onSuccess: (response) => {
+      stopLoading();
+      tokenManager.setToken(response.accessToken);
+      setUser(response.user);
+      queryClient.setQueryData(['user'], response.user);
+
+      // Redirect based on role
+      switch (response.user.role) {
+        case 'AUTHOR':
+          router.push('/author');
+          break;
+        case 'READER':
+          router.push('/reader');
+          break;
+        case 'ADMIN':
+          router.push('/admin');
+          break;
+        case 'CLOSER':
+          router.push('/closer');
+          break;
+        case 'AFFILIATE':
+          router.push('/affiliate');
+          break;
+        default:
+          router.push('/');
+      }
+    },
+    onError: (error: any) => {
+      stopLoading();
+      console.error('Login error:', error);
+    },
+  });
+
+  // Verify email mutation
+  const verifyEmailMutation = useMutation({
+    mutationFn: (token: string) => {
+      startLoading('Verifying your email...');
+      return authApi.verifyEmail(token);
+    },
+    onSuccess: () => {
+      stopLoading();
+    },
+    onError: (error: any) => {
+      stopLoading();
+      console.error('Email verification error:', error);
+    },
+  });
+
+  // Request password reset mutation
+  const requestPasswordResetMutation = useMutation({
+    mutationFn: (data: RequestPasswordResetRequest) => {
+      startLoading('Sending reset link...');
+      return authApi.requestPasswordReset(data);
+    },
+    onSuccess: () => {
+      stopLoading();
+    },
+    onError: (error: any) => {
+      stopLoading();
+      console.error('Password reset request error:', error);
+    },
+  });
+
+  // Reset password mutation
+  const resetPasswordMutation = useMutation({
+    mutationFn: (data: ResetPasswordRequest) => {
+      startLoading('Resetting your password...');
+      return authApi.resetPassword(data);
+    },
+    onSuccess: () => {
+      stopLoading();
+    },
+    onError: (error: any) => {
+      stopLoading();
+      console.error('Password reset error:', error);
+    },
+  });
+
+  // Get current user profile query
+  const {
+    data: profileData,
+    isLoading: isLoadingProfile,
+    isError: isProfileError,
+  } = useQuery({
+    queryKey: ['user'],
+    queryFn: authApi.getProfile,
+    enabled: isAuthenticated && !!tokenManager.getToken(),
+    retry: false,
+  });
+
+  // Handle profile data changes
+  useEffect(() => {
+    if (profileData) {
+      setUser(profileData);
+    }
+  }, [profileData, setUser]);
+
+  // Handle profile errors
+  useEffect(() => {
+    if (isProfileError) {
+      clearUser();
+      tokenManager.clearToken();
+    }
+  }, [isProfileError, clearUser]);
+
+  // Logout function
+  const logout = () => {
+    tokenManager.clearToken();
+    clearUser();
+    queryClient.clear();
+    router.push('/login');
+    toast.success('Logged out successfully');
+  };
+
+  return {
+    user: (user || profileData) as UserData | undefined,
+    isAuthenticated,
+    isLoadingProfile,
+    register: registerMutation.mutate,
+    registerAsync: registerMutation.mutateAsync,
+    isRegistering: registerMutation.isPending,
+    registerError: registerMutation.error,
+    login: loginMutation.mutate,
+    loginAsync: loginMutation.mutateAsync,
+    isLoggingIn: loginMutation.isPending,
+    loginError: loginMutation.error,
+    verifyEmail: verifyEmailMutation.mutate,
+    verifyEmailAsync: verifyEmailMutation.mutateAsync,
+    isVerifyingEmail: verifyEmailMutation.isPending,
+    verifyEmailError: verifyEmailMutation.error,
+    requestPasswordReset: requestPasswordResetMutation.mutate,
+    requestPasswordResetAsync: requestPasswordResetMutation.mutateAsync,
+    isRequestingReset: requestPasswordResetMutation.isPending,
+    requestResetError: requestPasswordResetMutation.error,
+    resetPassword: resetPasswordMutation.mutate,
+    resetPasswordAsync: resetPasswordMutation.mutateAsync,
+    isResettingPassword: resetPasswordMutation.isPending,
+    resetPasswordError: resetPasswordMutation.error,
+    logout,
+  };
+}

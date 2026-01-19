@@ -1,0 +1,61 @@
+{
+  "title": "Historial de Transacciones",
+  "description": "Vea todas sus compras de créditos, pagos de suscripción y uso de créditos",
+  "summary": {
+    "totalSpent": "Total Gastado",
+    "allTime": "Todo el tiempo",
+    "totalPurchases": "Total de Compras",
+    "oneTimePayments": "Pagos únicos",
+    "subscriptionPayments": "Pagos de Suscripción",
+    "recurringCharges": "Cargos recurrentes",
+    "creditsUsed": "Créditos Usados",
+    "totalAllocated": "Total asignado"
+  },
+  "spending": {
+    "title": "Resumen de Gastos",
+    "description": "Sus gastos por categoría",
+    "creditPurchases": "Compras de Créditos",
+    "transactions": "transacciones",
+    "subscriptionPayments": "Pagos de Suscripción"
+  },
+  "filter": {
+    "all": "Todos",
+    "purchases": "Compras",
+    "subscriptions": "Suscripciones",
+    "usage": "Uso"
+  },
+  "table": {
+    "title": "Historial de Transacciones",
+    "description": "Todas sus transacciones financieras",
+    "date": "Fecha",
+    "type": "Tipo",
+    "description": "Descripción",
+    "reference": "Ref",
+    "credits": "Créditos",
+    "amount": "Monto",
+    "status": "Estado",
+    "actions": "Acciones",
+    "noData": "No se encontraron transacciones",
+    "changeFilter": "Intente cambiar el filtro"
+  },
+  "stripe": {
+    "title": "Compras Recientes de Créditos",
+    "description": "Sus compras más recientes de paquetes de créditos vía Stripe",
+    "table": {
+      "date": "Fecha",
+      "package": "Paquete",
+      "credits": "Créditos",
+      "amountPaid": "Monto Pagado",
+      "paymentMethod": "Método de Pago",
+      "status": "Estado",
+      "actions": "Acciones",
+      "noData": "Aún no hay compras de créditos"
+    }
+  },
+  "types": {
+    "purchase": "Compra",
+    "subscription": "Suscripción",
+    "usage": "Uso"
+  },
+  "loading": "Cargando transacciones..."
+}

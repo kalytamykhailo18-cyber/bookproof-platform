@@ -1,0 +1,54 @@
+{
+  "title": "Admin Dashboard",
+  "description": "Platform overview and key metrics",
+  "summary": {
+    "totalCampaigns": "Total Campaigns",
+    "activeCampaigns": "active",
+    "totalAuthors": "Total Authors",
+    "platformWide": "Platform-wide",
+    "totalReaders": "Total Readers",
+    "activeReaders": "active",
+    "pendingReviews": "Pending Reviews",
+    "awaitingCompletion": "Awaiting completion"
+  },
+  "revenue": {
+    "thisMonth": "Revenue This Month",
+    "changeFromLastMonth": "from last month",
+    "totalRevenue": "Total Revenue (All Time)",
+    "lifetimeEarnings": "Lifetime earnings",
+    "activeSubscriptions": "Active Subscriptions",
+    "mrr": "MRR",
+    "breakdown": "Revenue Breakdown",
+    "breakdownDescription": "Revenue by source",
+    "creditPurchases": "Credit Purchases",
+    "oneTimePayments": "One-time payments",
+    "subscriptions": "Subscriptions",
+    "recurringRevenue": "Recurring revenue"
+  },
+  "campaigns": {
+    "requireAttention": "Campaigns Requiring Attention",
+    "issuesNeedReview": "Issues that need admin review",
+    "bookTitle": "Book Title",
+    "author": "Author",
+    "issue": "Issue",
+    "severity": "Severity",
+    "status": "Status",
+    "noIssues": "No campaigns requiring attention"
+  },
+  "activity": {
+    "title": "Recent Activity",
+    "description": "Latest platform events",
+    "noActivity": "No recent activity"
+  },
+  "health": {
+    "title": "Platform Health",
+    "avgReviewCompletion": "Avg Review Completion",
+    "avgTimeToComplete": "Average time to complete",
+    "days": "days",
+    "readerSatisfaction": "Reader Satisfaction",
+    "basedOnFeedback": "Based on feedback",
+    "campaignSuccessRate": "Campaign Success Rate",
+    "completedOnTime": "Completed on time"
+  },
+  "loading": "Loading dashboard..."
+}

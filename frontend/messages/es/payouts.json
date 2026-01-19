@@ -1,0 +1,83 @@
+{
+  "title": "Billetera y Pagos",
+  "requestPayout": "Solicitar Pago",
+  "payoutHistory": "Historial de Pagos",
+  "transactionHistory": "Historial de Transacciones",
+  "availableBalance": "Saldo Disponible",
+  "totalEarned": "Total Ganado",
+  "pendingEarnings": "Ganancias Pendientes",
+  "minimumPayout": "El monto mínimo de pago es $50",
+  "amount": "Monto",
+  "paymentMethod": "Método de Pago",
+  "paymentDetails": "Detalles de Pago",
+  "notes": "Notas (Opcional)",
+  "submit": "Enviar Solicitud",
+  "submitting": "Enviando...",
+  "cancel": "Cancelar",
+
+  "paymentMethods": {
+    "PayPal": "PayPal",
+    "BankTransfer": "Transferencia Bancaria",
+    "Wise": "Wise",
+    "Crypto": "Criptomoneda"
+  },
+
+  "paypal": {
+    "email": "Email de PayPal",
+    "emailPlaceholder": "tu@email.com"
+  },
+
+  "bank": {
+    "accountNumber": "Número de Cuenta",
+    "routingNumber": "Número de Ruta",
+    "bankName": "Nombre del Banco",
+    "accountHolderName": "Nombre del Titular"
+  },
+
+  "wise": {
+    "email": "Email de Wise",
+    "emailPlaceholder": "tu@email.com"
+  },
+
+  "crypto": {
+    "walletAddress": "Dirección de Billetera",
+    "network": "Red",
+    "networkPlaceholder": "ETH, BTC, USDT, etc."
+  },
+
+  "status": {
+    "REQUESTED": "Solicitado",
+    "PENDING_REVIEW": "Revisión Pendiente",
+    "APPROVED": "Aprobado",
+    "PROCESSING": "Procesando",
+    "COMPLETED": "Completado",
+    "REJECTED": "Rechazado",
+    "CANCELLED": "Cancelado"
+  },
+
+  "history": {
+    "noPayouts": "No hay solicitudes de pago aún",
+    "requestedAt": "Solicitado",
+    "processedAt": "Procesado",
+    "paidAt": "Pagado",
+    "viewDetails": "Ver Detalles",
+    "transactionId": "ID de Transacción",
+    "rejectionReason": "Motivo de Rechazo",
+    "adminNotes": "Notas del Administrador"
+  },
+
+  "validation": {
+    "amountRequired": "El monto es requerido",
+    "amountMin": "El monto mínimo es $50",
+    "amountMax": "El monto excede el saldo disponible",
+    "methodRequired": "El método de pago es requerido",
+    "detailsRequired": "Los detalles de pago son requeridos",
+    "emailRequired": "El email es requerido",
+    "emailInvalid": "Formato de email inválido",
+    "accountNumberRequired": "El número de cuenta es requerido",
+    "routingNumberRequired": "El número de ruta es requerido",
+    "bankNameRequired": "El nombre del banco es requerido",
+    "walletAddressRequired": "La dirección de billetera es requerida",
+    "networkRequired": "La red es requerida"
+  }
+}

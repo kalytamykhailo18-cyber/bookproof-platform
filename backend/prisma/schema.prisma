@@ -1,0 +1,2156 @@
+// BookProof Database Schema - COMPREHENSIVE VERSION
+// PostgreSQL with Prisma ORM
+// Updated to satisfy ALL MVP requirements without gaps
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER MANAGEMENT & AUTHENTICATION
+// ============================================
+
+enum UserRole {
+  AUTHOR
+  READER
+  ADMIN
+  CLOSER
+  AFFILIATE
+}
+
+enum Language {
+  EN
+  PT
+  ES
+}
+
+model User {
+  id                String     @id @default(cuid())
+  email             String     @unique
+  passwordHash      String
+  role              UserRole
+  name              String
+  companyName       String?    // Company name (optional, primarily for authors)
+  phone             String?
+  phoneVerified     Boolean    @default(false)
+  country           String?
+  preferredLanguage Language   @default(EN)
+  preferredCurrency String     @default("USD")
+  marketingConsent  Boolean    @default(false) // Marketing consent checkbox
+  photo             String?
+  bio               String?
+  isActive          Boolean    @default(true)
+  emailVerified     Boolean    @default(false)
+  emailVerifiedAt   DateTime?
+  tokenVersion      Int        @default(0) // Incremented on password reset to invalidate all sessions
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  // Relations based on role
+  authorProfile     AuthorProfile?
+  readerProfile     ReaderProfile?
+  adminProfile      AdminProfile?
+  closerProfile     CloserProfile?
+  affiliateProfile  AffiliateProfile?
+
+  // Password reset
+  passwordResets    PasswordReset[]
+
+  // Activity tracking
+  notifications     Notification[]
+  emailLogs         EmailLog[]
+  auditLogs         AuditLog[]
+
+  // Notification settings
+  notificationEmailEnabled    Boolean  @default(true)
+  notificationEmailFrequency  String   @default("IMMEDIATE") // IMMEDIATE, DAILY, WEEKLY
+  notificationDisabledTypes   String?  @db.Text // JSON array of disabled types
+
+  @@index([email])
+  @@index([role])
+  @@index([isActive])
+}
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ============================================
+// AUTHOR PROFILE & CREDITS
+// ============================================
+
+model AuthorProfile {
+  id               String    @id @default(cuid())
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Credit balance
+  totalCreditsPurchased Int  @default(0) // Lifetime total
+  totalCreditsUsed      Int  @default(0) // Lifetime used
+  availableCredits      Int  @default(0) // Current available
+
+  // Stripe customer
+  stripeCustomerId String?   @unique
+
+  // Referral tracking (for attribution)
+  referredByAffiliateId String? // Links to AffiliateProfile.id
+  referredByCloserId    String? // Links to CloserProfile.id
+  referralDate          DateTime?
+
+  // Account status
+  accountCreatedByCloser Boolean  @default(false)
+  termsAccepted         Boolean   @default(false)
+  termsAcceptedAt       DateTime?
+
+  // Activity tracking
+  lastLoginAt      DateTime?
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // Relations
+  books                 Book[]
+  creditPurchases       CreditPurchase[]
+  creditTransactions    CreditTransaction[]
+  invoices              Invoice[]
+  subscriptions         Subscription[]
+  keywordResearchOrders KeywordResearch[]
+
+  @@index([userId])
+  @@index([stripeCustomerId])
+  @@index([referredByAffiliateId])
+  @@index([referredByCloserId])
+}
+
+// Standard package tiers offered by platform
+model PackageTier {
+  id              String   @id @default(cuid())
+  name            String   // e.g., "Starter", "Professional", "Enterprise"
+  credits         Int      @unique
+  basePrice       Decimal  @db.Decimal(10, 2)
+  currency        String   @default("USD")
+  validityDays    Int      // 30, 90, or 120 days
+
+  // Display
+  description     String?  @db.Text
+  isActive        Boolean  @default(true)
+  isPopular       Boolean  @default(false) // Marks the recommended/most popular package
+  displayOrder    Int      @default(0)
+
+  // Features (for marketing)
+  features        String?  @db.Text // JSON array of feature strings
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  purchases       CreditPurchase[]
+
+  @@index([credits])
+  @@index([isActive])
+  @@index([displayOrder])
+}
+
+model CreditPurchase {
+  id              String        @id @default(cuid())
+  authorProfileId String
+  authorProfile   AuthorProfile @relation(fields: [authorProfileId], references: [id], onDelete: Cascade)
+
+  // Package tier reference
+  packageTierId   String?
+  packageTier     PackageTier?  @relation(fields: [packageTierId], references: [id])
+
+  credits         Int
+  amountPaid      Decimal       @db.Decimal(10, 2)
+  currency        String        @default("USD")
+
+  // Validity window (activation window)
+  validityDays    Int           // 30, 90, or 120 days based on package size
+  purchaseDate    DateTime      @default(now())
+  activationWindowExpiresAt DateTime // Activation window expiration
+  activated       Boolean       @default(false) // True when allocated to campaign
+  activatedAt     DateTime?
+
+  // Admin notes
+  adminNotes      String?       @db.Text
+
+  // Payment details
+  stripePaymentId String?       @unique
+  paymentStatus   PaymentStatus @default(PENDING)
+  paymentMethod   String?       // "card", "bank_transfer", etc.
+
+  // Coupon applied
+  couponId        String?
+  coupon          Coupon?       @relation(fields: [couponId], references: [id])
+  discountApplied Decimal?      @db.Decimal(10, 2)
+
+  // Refund tracking
+  refundedAt      DateTime?
+  refundAmount    Decimal?      @db.Decimal(10, 2)
+  refundReason    String?       @db.Text
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  affiliateCommissions AffiliateCommission[]
+
+  @@index([authorProfileId])
+  @@index([paymentStatus])
+  @@index([purchaseDate])
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+model Subscription {
+  id                    String        @id @default(cuid())
+  authorProfileId       String
+  authorProfile         AuthorProfile @relation(fields: [authorProfileId], references: [id], onDelete: Cascade)
+
+  // Stripe subscription
+  stripeSubscriptionId  String        @unique
+  stripePriceId         String
+
+  // Plan details
+  planName              String
+  creditsPerMonth       Int
+  pricePerMonth         Decimal       @db.Decimal(10, 2)
+  currency              String        @default("USD")
+
+  // Credit tracking
+  totalCreditsAllocated Int           @default(0)
+
+  // Status
+  status                SubscriptionStatus @default(ACTIVE)
+
+  // Dates
+  currentPeriodStart    DateTime
+  currentPeriodEnd      DateTime
+  cancelAtPeriodEnd     Boolean       @default(false)
+  canceledAt            DateTime?
+  endedAt               DateTime?
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  @@index([authorProfileId])
+  @@index([stripeSubscriptionId])
+  @@index([status])
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  TRIALING
+  UNPAID
+}
+
+model CreditTransaction {
+  id              String        @id @default(cuid())
+  authorProfileId String
+  authorProfile   AuthorProfile @relation(fields: [authorProfileId], references: [id], onDelete: Cascade)
+
+  bookId          String?
+  book            Book?         @relation(fields: [bookId], references: [id])
+
+  amount          Int           // Positive for addition, negative for deduction
+  type            CreditTransactionType
+  description     String
+
+  // Balance after transaction
+  balanceAfter    Int
+
+  // Admin tracking for manual adjustments
+  performedBy     String?       // Admin user ID
+  notes           String?       @db.Text
+
+  createdAt       DateTime      @default(now())
+
+  @@index([authorProfileId])
+  @@index([bookId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum CreditTransactionType {
+  PURCHASE
+  SUBSCRIPTION_RENEWAL
+  ALLOCATION
+  DEDUCTION
+  REFUND
+  MANUAL_ADJUSTMENT
+  EXPIRATION
+  BONUS
+}
+
+// ============================================
+// BOOKS & CAMPAIGNS
+// ============================================
+
+enum BookFormat {
+  EBOOK
+  AUDIOBOOK
+  BOTH
+}
+
+enum CampaignStatus {
+  DRAFT
+  PENDING          // Submitted for activation, queue being prepared
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+model Book {
+  id                String         @id @default(cuid())
+  authorProfileId   String
+  authorProfile     AuthorProfile  @relation(fields: [authorProfileId], references: [id], onDelete: Cascade)
+
+  // Book information
+  title             String
+  authorName        String         // Author name as appears on book cover
+  asin              String
+  isbn              String?
+  amazonLink        String
+  synopsis          String         @db.Text // Max 3 pages - text content
+  synopsisFileUrl   String?        // Optional PDF synopsis file URL
+  synopsisFileName  String?        // Original filename for PDF synopsis
+  language          Language
+  genre             String
+  category          String
+  publishedDate     DateTime?
+  pageCount         Int?
+  wordCount         Int?
+  seriesName        String?
+  seriesNumber      Int?
+
+  // Available formats
+  availableFormats  BookFormat
+
+  // Files (stored in secure cloud storage)
+  ebookFileUrl      String?
+  ebookFileName     String?
+  ebookFileSize     BigInt?
+
+  audioBookFileUrl  String?
+  audioBookFileName String?
+  audioBookFileSize BigInt?
+  audioBookDuration Int?           // Duration in seconds
+
+  coverImageUrl     String?
+
+  // Reading instructions (optional) - per requirements.md Section 2.3
+  readingInstructions String?      @db.Text
+
+  // Campaign settings
+  creditsAllocated  Int            @default(0)
+  creditsUsed       Int            @default(0)
+  creditsRemaining  Int            @default(0)
+  targetReviews     Int            // Total reviews to deliver
+
+  // Distribution settings
+  reviewsPerWeek    Int            // Calculated based on package
+  weeklyDistribution Boolean       @default(true)
+  currentWeek       Int            @default(0) // Track which week campaign is in
+
+  // Campaign status
+  status            CampaignStatus @default(DRAFT)
+
+  // Dates
+  campaignStartDate DateTime?
+  campaignEndDate   DateTime?
+  expectedEndDate   DateTime?
+
+  // Amazon coupon (optional for verified purchase)
+  amazonCouponCode        String?
+  requireVerifiedPurchase Boolean @default(false)
+
+  // Overbooking buffer (20% safety margin)
+  overBookingEnabled Boolean       @default(true)
+  overBookingPercent Int           @default(20)
+  totalAssignedReaders Int         @default(0) // Including buffer
+
+  // Campaign analytics
+  totalReviewsDelivered Int        @default(0)
+  totalReviewsValidated Int        @default(0)
+  totalReviewsRejected  Int        @default(0)
+  totalReviewsExpired   Int        @default(0)
+  averageInternalRating Decimal?   @db.Decimal(3, 2)
+
+  // Admin controls
+  manualDistributionOverride Boolean @default(false)
+  distributionPausedAt       DateTime?
+  distributionResumedAt      DateTime?
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  // Relations
+  readerAssignments ReaderAssignment[]
+  reviews           Review[]
+  campaignReport    CampaignReport?
+  creditTransactions CreditTransaction[]
+  keywordResearch   KeywordResearch?
+  campaignMetrics   CampaignMetric[]
+  weeklySnapshots   CampaignWeeklySnapshot[]
+
+  @@index([authorProfileId])
+  @@index([status])
+  @@index([asin])
+  @@index([campaignStartDate])
+  @@index([authorName])
+  @@index([genre])
+  @@index([category])
+}
+
+// Track daily/weekly campaign metrics for admin dashboard
+model CampaignMetric {
+  id              String   @id @default(cuid())
+  bookId          String
+  book            Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  date            DateTime // Date of metric
+
+  // Daily metrics
+  assignmentsToday     Int  @default(0)
+  materialsReleasedToday Int @default(0)
+  reviewsSubmittedToday  Int @default(0)
+  reviewsValidatedToday  Int @default(0)
+  reviewsExpiredToday    Int @default(0)
+
+  // Running totals as of this date
+  totalAssignments     Int  @default(0)
+  totalReviewsValidated Int @default(0)
+
+  createdAt       DateTime @default(now())
+
+  @@unique([bookId, date])
+  @@index([bookId])
+  @@index([date])
+}
+
+// Weekly snapshot for campaign progression tracking
+model CampaignWeeklySnapshot {
+  id                    String   @id @default(cuid())
+  bookId                String
+  book                  Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  weekNumber            Int      // Week 1, 2, 3, etc.
+  weekStartDate         DateTime
+  weekEndDate           DateTime
+
+  // Planned vs actual
+  plannedAssignments    Int
+  actualAssignments     Int
+  plannedReviews        Int
+  actualReviews         Int
+
+  // Completion metrics
+  reviewsValidated      Int      @default(0)
+  reviewsExpired        Int      @default(0)
+  reviewsRejected       Int      @default(0)
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@unique([bookId, weekNumber])
+  @@index([bookId])
+  @@index([weekNumber])
+}
+
+// ============================================
+// READER PROFILE & PREFERENCES
+// ============================================
+
+enum ContentPreference {
+  EBOOK
+  AUDIOBOOK
+  BOTH
+}
+
+model ReaderProfile {
+  id                  String              @id @default(cuid())
+  userId              String              @unique
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Reader preferences
+  contentPreference   ContentPreference
+
+  // Amazon profiles (max 3 for validation only)
+  amazonProfiles      AmazonProfile[]
+
+  // Wallet for compensation
+  walletBalance       Decimal             @db.Decimal(10, 2) @default(0)
+  totalEarned         Decimal             @db.Decimal(10, 2) @default(0)
+  totalWithdrawn      Decimal             @db.Decimal(10, 2) @default(0)
+
+  // Performance statistics
+  reviewsCompleted    Int                 @default(0)
+  reviewsExpired      Int                 @default(0)
+  reviewsRejected     Int                 @default(0)
+  averageInternalRating Decimal?          @db.Decimal(3, 2)
+
+  // Reliability score (0-100, calculated)
+  reliabilityScore    Decimal?            @db.Decimal(5, 2)
+  completionRate      Decimal?            @db.Decimal(5, 2) // Percentage
+
+  // Amazon removal tracking
+  reviewsRemovedByAmazon Int              @default(0)
+  removalRate            Decimal?         @db.Decimal(5, 2) // Percentage
+
+  // Status flags
+  isActive            Boolean             @default(true)
+  isFlagged           Boolean             @default(false)
+  flagReason          String?             @db.Text
+  flaggedAt           DateTime?
+  flaggedBy           String?             // Admin user ID
+
+  // Preferred genres for better matching
+  preferredGenres     String[]            @default([])
+
+  // Activity tracking
+  lastLoginAt         DateTime?
+
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  // Relations
+  assignments         ReaderAssignment[]
+  reviews             Review[]
+  walletTransactions  WalletTransaction[]
+  payoutRequests      PayoutRequest[]
+
+  @@index([userId])
+  @@index([isActive])
+  @@index([isFlagged])
+  @@index([reliabilityScore])
+}
+
+model AmazonProfile {
+  id              String        @id @default(cuid())
+  readerProfileId String
+  readerProfile   ReaderProfile @relation(fields: [readerProfileId], references: [id], onDelete: Cascade)
+
+  profileUrl      String
+  profileName     String?
+  isVerified      Boolean       @default(false)
+  verifiedAt      DateTime?
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  assignments     ReaderAssignment[]
+  reviews         Review[]
+
+  @@index([readerProfileId])
+}
+
+// ============================================
+// READER ASSIGNMENT & QUEUE SYSTEM
+// ============================================
+
+enum AssignmentStatus {
+  WAITING          // In queue, not yet scheduled
+  SCHEDULED        // Scheduled for specific week but materials not released
+  APPROVED         // Materials released, deadline started
+  IN_PROGRESS      // Reader actively working on review
+  SUBMITTED        // Review submitted, pending validation
+  VALIDATED        // Review validated by admin
+  COMPLETED        // Review validated and compensated
+  EXPIRED          // Deadline passed without submission
+  REASSIGNED       // Moved to another reader
+  CANCELLED        // Assignment cancelled by admin
+}
+
+model ReaderAssignment {
+  id              String           @id @default(cuid())
+  bookId          String
+  book            Book             @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  readerProfileId String
+  readerProfile   ReaderProfile    @relation(fields: [readerProfileId], references: [id], onDelete: Cascade)
+
+  // Assignment details
+  status          AssignmentStatus @default(WAITING)
+  formatAssigned  BookFormat       // Which format reader will receive (EBOOK or AUDIOBOOK)
+  creditsValue    Int              // 1 for ebook, 2 for audiobook
+
+  // Amazon profile used for this assignment
+  amazonProfileId String?
+  amazonProfile   AmazonProfile?   @relation(fields: [amazonProfileId], references: [id])
+
+  // Queue position and scheduling
+  queuePosition   Int?
+  scheduledWeek   Int?             // Week number in campaign (1, 2, 3...)
+  scheduledDate   DateTime?        // Specific date when materials will be released
+
+  // Access control - CRITICAL for "Registration ≠ Access" rule
+  materialsReleasedAt DateTime?    // When reader got access to materials
+  materialsExpiresAt  DateTime?    // For audiobook access expiration (7 days)
+
+  // Audiobook streaming security
+  audioAccessToken    String?      @unique // Signed token for audiobook access
+  audioAccessExpiresAt DateTime?   // Token expiration
+  lastAudioAccessAt    DateTime?   // Last time reader accessed audio
+
+  // Ebook download tracking
+  ebookDownloadedAt   DateTime?
+
+  // Deadline tracking (72 hours from material release)
+  deadlineAt      DateTime?
+  deadlineExtendedAt DateTime?    // If admin grants extension
+  extensionReason    String?       @db.Text
+
+  // Reminders sent tracking
+  reminder24hSentAt DateTime?
+  reminder48hSentAt DateTime?
+  reminder72hSentAt DateTime?
+
+  // Expiration handling
+  expiredAt       DateTime?
+  expirationHandled Boolean        @default(false)
+
+  // Reassignment tracking
+  isReassignment     Boolean       @default(false)
+  originalAssignmentId String?
+  reassignmentReason   String?      @db.Text
+  reassignedBy         String?     // Admin user ID
+  reassignedAt         DateTime?
+
+  // Cancellation tracking
+  cancelledBy     String?          // Admin user ID
+  cancellationReason String?       @db.Text
+
+  // Reader self-withdrawal
+  withdrawnByReader  Boolean       @default(false)
+  withdrawnAt        DateTime?
+  withdrawalReason   String?       @db.Text
+
+  // Part of overbooking buffer
+  isBufferAssignment Boolean       @default(false)
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  // Relations
+  review          Review?
+  reminders       Reminder[]
+
+  @@index([bookId])
+  @@index([readerProfileId])
+  @@index([status])
+  @@index([scheduledDate])
+  @@index([deadlineAt])
+  @@index([scheduledWeek])
+  @@index([materialsReleasedAt])
+  @@index([amazonProfileId])
+  @@index([bookId, status])
+}
+
+model Reminder {
+  id                 String           @id @default(cuid())
+  readerAssignmentId String
+  readerAssignment   ReaderAssignment @relation(fields: [readerAssignmentId], references: [id], onDelete: Cascade)
+
+  reminderType       ReminderType
+  scheduledFor       DateTime         // When reminder should be sent
+  sentAt             DateTime?        // When actually sent
+  emailSent          Boolean          @default(false)
+  emailError         String?          @db.Text
+
+  createdAt          DateTime         @default(now())
+
+  @@index([readerAssignmentId])
+  @@index([scheduledFor])
+  @@index([emailSent])
+}
+
+enum ReminderType {
+  MATERIALS_READY      // Materials have been released
+  DEADLINE_24H         // 24 hours remaining
+  DEADLINE_48H         // 48 hours remaining
+  DEADLINE_72H         // Final warning
+  EXPIRATION_NOTICE    // Assignment expired
+}
+
+// ============================================
+// REVIEWS & VALIDATION
+// ============================================
+
+enum ReviewStatus {
+  PENDING_SUBMISSION   // Waiting for reader to submit
+  SUBMITTED            // Reader submitted, awaiting admin validation
+  PENDING_VALIDATION   // In admin validation queue
+  VALIDATED            // Approved by admin
+  REJECTED             // Rejected by admin
+  FLAGGED              // Flagged for issues
+  REMOVED_BY_AMAZON    // Detected as removed by Amazon
+}
+
+model Review {
+  id                 String           @id @default(cuid())
+  readerAssignmentId String           @unique
+  readerAssignment   ReaderAssignment @relation(fields: [readerAssignmentId], references: [id], onDelete: Cascade)
+
+  bookId             String
+  book               Book             @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  readerProfileId    String
+  readerProfile      ReaderProfile    @relation(fields: [readerProfileId], references: [id], onDelete: Cascade)
+
+  // Amazon profile used for this review
+  amazonProfileId    String?
+  amazonProfile      AmazonProfile?   @relation(fields: [amazonProfileId], references: [id])
+
+  // Review data submitted by reader (internal form)
+  amazonReviewLink   String           // ONLY visible to admin, never to author
+  internalRating     Int              // 1-5 stars (internal only)
+  internalFeedback   String           @db.Text // Internal feedback
+  publishedOnAmazon  Boolean          @default(false) // Checkbox confirmation
+
+  // Completion tracking
+  completedContent   Boolean          @default(false)
+  percentageCompleted Int?            // 0-100
+
+  // Validation by admin
+  status             ReviewStatus     @default(PENDING_SUBMISSION)
+  validatedAt        DateTime?
+  validatedBy        String?          // Admin user ID
+
+  // Issue tracking
+  hasIssue           Boolean          @default(false)
+  issueType          IssueType?
+  issueNotes         String?          @db.Text
+
+  // Amazon removal tracking (14-day guarantee)
+  removedByAmazon    Boolean          @default(false)
+  removalDetectedAt  DateTime?
+  removalDate        DateTime?
+  replacementEligible Boolean         @default(false) // Within 14 days
+  replacementProvided Boolean         @default(false)
+  replacementReviewId String?         // Link to replacement review
+
+  // Reader compensation
+  compensationPaid   Boolean          @default(false)
+  compensationAmount Decimal?         @db.Decimal(10, 2)
+  compensationPaidAt DateTime?
+
+  // Timestamps
+  submittedAt        DateTime?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  // Relations
+  issues             ReviewIssue[]
+  walletTransaction  WalletTransaction?
+  removalMonitoring  AmazonReviewMonitor?
+
+  @@index([bookId])
+  @@index([readerProfileId])
+  @@index([status])
+  @@index([hasIssue])
+  @@index([removedByAmazon])
+  @@index([validatedAt])
+  @@index([submittedAt])
+  @@index([amazonProfileId])
+}
+
+// Monitor reviews for Amazon removal (14-day guarantee period)
+model AmazonReviewMonitor {
+  id                  String    @id @default(cuid())
+  reviewId            String    @unique
+  review              Review    @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  amazonReviewLink    String
+
+  // Monitoring window (14 days from validation)
+  monitoringStartDate DateTime
+  monitoringEndDate   DateTime
+
+  // Check status
+  lastCheckedAt       DateTime?
+  nextCheckAt         DateTime
+  checkCount          Int       @default(0)
+
+  // Status
+  isActive            Boolean   @default(true)
+  stillExistsOnAmazon Boolean   @default(true)
+  removalDetectedAt   DateTime?
+
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@index([reviewId])
+  @@index([isActive])
+  @@index([nextCheckAt])
+  @@index([monitoringEndDate])
+}
+
+enum IssueType {
+  // Review issues
+  INVALID_LINK
+  REVIEW_NOT_FOUND
+  WRONG_BOOK
+  DUPLICATE
+  REMOVED_BY_AMAZON
+  SUSPICIOUS_CONTENT
+  GUIDELINE_VIOLATION
+  PROFILE_MISMATCH
+
+  // Customer disputes/complaints
+  AUTHOR_DISPUTE
+  AUTHOR_COMPLAINT
+  READER_COMPLAINT
+
+  // Unusual reader behavior
+  UNUSUAL_BEHAVIOR
+  SUSPECTED_FRAUD
+
+  // Payment issues
+  PAYMENT_FAILED
+  PAYMENT_DISPUTE
+  REFUND_REQUEST
+  PAYOUT_ISSUE
+  DUPLICATE_PAYMENT
+
+  // Technical errors
+  TECHNICAL_ERROR
+  SYSTEM_FAILURE
+  DATA_INCONSISTENCY
+
+  OTHER
+}
+
+model ReviewIssue {
+  id          String           @id @default(cuid())
+  reviewId    String
+  review      Review           @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  issueType   IssueType
+  description String           @db.Text
+  severity    IssueSeverity    @default(MEDIUM)
+
+  // Admin resolution
+  status      IssueResolutionStatus @default(OPEN)
+  resolvedBy  String?          // Admin user ID
+  resolution  String?          @db.Text
+  resolvedAt  DateTime?
+
+  // Actions taken
+  readerNotified Boolean        @default(false)
+  resubmissionRequested Boolean @default(false)
+  reassignmentTriggered Boolean @default(false)
+
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([reviewId])
+  @@index([status])
+  @@index([issueType])
+}
+
+enum IssueSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum IssueResolutionStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+  ESCALATED
+  RESUBMISSION_PENDING
+}
+
+// ============================================
+// CAMPAIGN REPORTING (Final PDF)
+// ============================================
+
+model CampaignReport {
+  id                    String   @id @default(cuid())
+  bookId                String   @unique
+  book                  Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  // Report data (calculated at campaign completion)
+  totalReviewsDelivered Int
+  totalReviewsValidated Int
+  averageRating         Decimal  @db.Decimal(3, 2)
+
+  // Rating distribution
+  fiveStarCount         Int      @default(0)
+  fourStarCount         Int      @default(0)
+  threeStarCount        Int      @default(0)
+  twoStarCount          Int      @default(0)
+  oneStarCount          Int      @default(0)
+
+  // Campaign duration
+  campaignStartDate     DateTime
+  campaignEndDate       DateTime
+  totalWeeks            Int
+
+  // Anonymized feedback (aggregated from all readers)
+  anonymousFeedback     String   @db.Text // JSON array of anonymized comments
+
+  // Rating trends over time (JSON array of weekly averages)
+  // Format: [{ week: 1, avgRating: 4.5, count: 3 }, { week: 2, avgRating: 4.2, count: 5 }, ...]
+  ratingTrends          String?  @db.Text
+
+  // Performance metrics
+  delaysEncountered     Int      @default(0)
+  replacementsProvided  Int      @default(0)
+  successRate           Decimal  @db.Decimal(5, 2) // Percentage
+
+  // Report file
+  pdfUrl                String?
+  pdfFileName           String?
+
+  // Generation and delivery
+  generatedAt           DateTime @default(now())
+  emailedAt             DateTime?
+  emailDeliveryStatus   String?  // "sent", "failed", "bounced"
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([bookId])
+  @@index([generatedAt])
+}
+
+// ============================================
+// READER WALLET & COMPENSATION
+// ============================================
+
+enum WalletTransactionType {
+  EARNING          // Payment for validated review
+  PAYOUT           // Withdrawal
+  ADJUSTMENT       // Manual admin adjustment
+  BONUS            // Bonus payment
+  REVERSAL         // Chargeback or correction
+}
+
+model WalletTransaction {
+  id              String               @id @default(cuid())
+  readerProfileId String
+  readerProfile   ReaderProfile        @relation(fields: [readerProfileId], references: [id], onDelete: Cascade)
+
+  reviewId        String?              @unique
+  review          Review?              @relation(fields: [reviewId], references: [id])
+
+  amount          Decimal              @db.Decimal(10, 2) // Positive or negative
+  type            WalletTransactionType
+  description     String
+
+  // Balance tracking
+  balanceBefore   Decimal              @db.Decimal(10, 2)
+  balanceAfter    Decimal              @db.Decimal(10, 2)
+
+  // Admin tracking for manual adjustments
+  performedBy     String?              // Admin user ID
+  notes           String?              @db.Text
+
+  createdAt       DateTime             @default(now())
+
+  @@index([readerProfileId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum PayoutRequestStatus {
+  REQUESTED
+  PENDING_REVIEW
+  APPROVED
+  PROCESSING
+  COMPLETED
+  REJECTED
+  CANCELLED
+}
+
+model PayoutRequest {
+  id              String        @id @default(cuid())
+  readerProfileId String
+  readerProfile   ReaderProfile @relation(fields: [readerProfileId], references: [id], onDelete: Cascade)
+
+  amount          Decimal       @db.Decimal(10, 2)
+  status          PayoutRequestStatus @default(REQUESTED)
+
+  // Payment method details (stored securely, encrypted in production)
+  paymentMethod   String        // e.g., "PayPal", "Bank Transfer", "Wire"
+  paymentDetails  String?       @db.Text // Encrypted JSON with account details
+
+  // Admin processing
+  processedBy     String?       // Admin user ID
+  processedAt     DateTime?
+  rejectionReason String?       @db.Text
+  notes           String?       @db.Text
+
+  // Payment tracking
+  transactionId   String?       // External payment system transaction ID
+  paidAt          DateTime?
+
+  requestedAt     DateTime      @default(now())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([readerProfileId])
+  @@index([status])
+  @@index([requestedAt])
+}
+
+// ============================================
+// ADMIN PROFILE
+// ============================================
+
+model AdminProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Granular permissions
+  permissions String[] // Array of permission strings like "campaigns.pause", "credits.adjust"
+  role        AdminRole @default(MODERATOR)
+
+  // Activity tracking
+  lastLoginAt DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([role])
+}
+
+enum AdminRole {
+  SUPER_ADMIN    // Full access
+  ADMIN          // Most access
+  MODERATOR      // Review validation, issue resolution
+  SUPPORT        // View only, limited actions
+}
+
+// ============================================
+// CLOSER PANEL (Sales Team)
+// ============================================
+
+model CloserProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Sales tracking
+  totalSales      Decimal   @db.Decimal(10, 2) @default(0)
+  totalClients    Int       @default(0)
+  totalPackagesSold Int     @default(0)
+
+  // Commission (optional)
+  commissionEnabled Boolean @default(false)
+  commissionRate    Decimal? @db.Decimal(5, 2)
+  commissionEarned  Decimal  @db.Decimal(10, 2) @default(0)
+  commissionPaid    Decimal  @db.Decimal(10, 2) @default(0)
+
+  // Status
+  isActive        Boolean   @default(true)
+
+  // Performance
+  conversionRate  Decimal?  @db.Decimal(5, 2)
+  averagePackageSize Decimal? @db.Decimal(10, 2)
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  customPackages  CustomPackage[]
+  invoices        Invoice[]
+
+  @@index([userId])
+  @@index([isActive])
+}
+
+model CustomPackage {
+  id              String        @id @default(cuid())
+  closerProfileId String
+  closerProfile   CloserProfile @relation(fields: [closerProfileId], references: [id], onDelete: Cascade)
+
+  packageName     String
+  description     String?       @db.Text
+  credits         Int
+  price           Decimal       @db.Decimal(10, 2)
+  currency        String        @default("USD")
+  validityDays    Int           // Activation window for credits
+
+  // Special terms
+  specialTerms    String?       @db.Text
+
+  // Internal notes (not visible to client)
+  internalNotes   String?       @db.Text
+
+  // Client information
+  clientName      String
+  clientEmail     String
+  clientCompany   String?
+
+  // Status tracking
+  status          CustomPackageStatus @default(DRAFT)
+
+  // Payment link
+  paymentLink     String?       @unique
+  paymentLinkExpiresAt DateTime? // Link expiration
+
+  // Tracking
+  sentAt          DateTime?
+  viewedAt        DateTime?     // When client viewed the offer
+  viewCount       Int           @default(0)
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  invoice         Invoice?
+
+  @@index([closerProfileId])
+  @@index([status])
+  @@index([clientEmail])
+}
+
+enum CustomPackageStatus {
+  DRAFT
+  SENT
+  VIEWED
+  PAID
+  EXPIRED
+  CANCELLED
+}
+
+model Invoice {
+  id                String         @id @default(cuid())
+
+  // Can be created by closer or system
+  closerProfileId   String?
+  closerProfile     CloserProfile? @relation(fields: [closerProfileId], references: [id])
+
+  authorProfileId   String?
+  authorProfile     AuthorProfile? @relation(fields: [authorProfileId], references: [id])
+
+  customPackageId   String?        @unique
+  customPackage     CustomPackage? @relation(fields: [customPackageId], references: [id])
+
+  // Invoice details
+  invoiceNumber     String         @unique
+  amount            Decimal        @db.Decimal(10, 2)
+  currency          String         @default("USD")
+  description       String?        @db.Text
+  dueDate           DateTime?
+
+  // Payment
+  paymentLink       String?
+  paymentStatus     PaymentStatus  @default(PENDING)
+  paidAt            DateTime?
+  stripePaymentId   String?        @unique
+  paymentMethod     String?
+
+  // Auto account creation (for new clients)
+  accountCreated    Boolean        @default(false)
+  accountCreatedAt  DateTime?
+  autoCreatedUserId String?        // Created user ID
+
+  // PDF
+  pdfUrl            String?
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@index([invoiceNumber])
+  @@index([paymentStatus])
+  @@index([closerProfileId])
+  @@index([authorProfileId])
+}
+
+// ============================================
+// AFFILIATE SYSTEM
+// ============================================
+
+model AffiliateProfile {
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Unique referral code
+  referralCode      String    @unique
+
+  // Custom referral slug (optional, for vanity URLs)
+  customSlug        String?   @unique
+
+  // Commission settings
+  commissionRate    Decimal   @db.Decimal(5, 2) @default(20.00) // Default 20%
+
+  // Lifetime commission (every purchase by referred authors)
+  lifetimeCommission Boolean  @default(true)
+
+  // Earnings tracking
+  totalEarnings     Decimal   @db.Decimal(10, 2) @default(0)
+  pendingEarnings   Decimal   @db.Decimal(10, 2) @default(0)
+  approvedEarnings  Decimal   @db.Decimal(10, 2) @default(0)
+  paidEarnings      Decimal   @db.Decimal(10, 2) @default(0)
+
+  // Statistics
+  totalClicks       Int       @default(0)
+  totalConversions  Int       @default(0)
+  conversionRate    Decimal?  @db.Decimal(5, 2)
+
+  // Status
+  isActive          Boolean   @default(true)
+  isApproved        Boolean   @default(false)
+  approvedAt        DateTime?
+  approvedBy        String?   // Admin user ID
+
+  // Application details
+  websiteUrl        String?
+  socialMediaUrls   String?   @db.Text // JSON array
+  promotionPlan     String?   @db.Text
+  estimatedReach    String?
+
+  // Payment details
+  paypalEmail       String?   // PayPal email for receiving payments
+
+  // Rejection
+  rejectedAt        DateTime?
+  rejectionReason   String?   @db.Text
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  clicks            AffiliateClick[]
+  referrals         AffiliateReferral[]
+  commissions       AffiliateCommission[]
+  payouts           AffiliatePayout[]
+
+  @@index([userId])
+  @@index([referralCode])
+  @@index([customSlug])
+  @@index([isApproved])
+  @@index([isActive])
+}
+
+// Track every click on affiliate links
+model AffiliateClick {
+  id                String           @id @default(cuid())
+  affiliateProfileId String
+  affiliateProfile  AffiliateProfile @relation(fields: [affiliateProfileId], references: [id], onDelete: Cascade)
+
+  // Tracking details
+  ipAddress         String?
+  userAgent         String?          @db.Text
+  refererUrl        String?          @db.Text
+  landingPage       String?
+
+  // Cookie tracking
+  cookieSet         Boolean          @default(false)
+  cookieId          String?          @unique
+
+  // Conversion tracking
+  converted         Boolean          @default(false)
+  convertedAt       DateTime?
+
+  clickedAt         DateTime         @default(now())
+
+  @@index([affiliateProfileId])
+  @@index([cookieId])
+  @@index([converted])
+  @@index([clickedAt])
+}
+
+// Track referred authors (conversions)
+model AffiliateReferral {
+  id                String           @id @default(cuid())
+  affiliateProfileId String
+  affiliateProfile  AffiliateProfile @relation(fields: [affiliateProfileId], references: [id], onDelete: Cascade)
+
+  // Referred author
+  referredAuthorId  String           // AuthorProfile.id
+
+  // Attribution tracking
+  firstClickAt      DateTime?
+  registeredAt      DateTime
+  firstPurchaseAt   DateTime?
+
+  // Tracking details
+  ipAddress         String?
+  userAgent         String?          @db.Text
+  refererSource     String?          // Where they came from
+
+  // Cookie tracking
+  cookieId          String?
+
+  createdAt         DateTime         @default(now())
+
+  @@index([affiliateProfileId])
+  @@index([referredAuthorId])
+  @@index([registeredAt])
+}
+
+model AffiliateCommission {
+  id                String           @id @default(cuid())
+  affiliateProfileId String
+  affiliateProfile  AffiliateProfile @relation(fields: [affiliateProfileId], references: [id], onDelete: Cascade)
+
+  // Source purchase
+  creditPurchaseId  String
+  creditPurchase    CreditPurchase   @relation(fields: [creditPurchaseId], references: [id], onDelete: Cascade)
+
+  // Referred author
+  referredAuthorId  String           // AuthorProfile.id
+
+  // Commission details
+  purchaseAmount    Decimal          @db.Decimal(10, 2)
+  commissionAmount  Decimal          @db.Decimal(10, 2)
+  commissionRate    Decimal          @db.Decimal(5, 2)
+
+  // Status tracking
+  status            CommissionStatus @default(PENDING)
+
+  // Pending period (e.g., 14-30 days to avoid refunds)
+  pendingUntil      DateTime?
+  approvedAt        DateTime?
+  paidAt            DateTime?
+
+  // Cancellation (if purchase refunded)
+  cancelledAt       DateTime?
+  cancellationReason String?         @db.Text
+
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([affiliateProfileId])
+  @@index([creditPurchaseId])
+  @@index([status])
+  @@index([referredAuthorId])
+  @@index([affiliateProfileId, status])
+}
+
+enum CommissionStatus {
+  PENDING          // Within refund window
+  APPROVED         // Ready for payout
+  PAID             // Included in payout
+  CANCELLED        // Purchase refunded
+}
+
+model AffiliatePayout {
+  id                String           @id @default(cuid())
+  affiliateProfileId String
+  affiliateProfile  AffiliateProfile @relation(fields: [affiliateProfileId], references: [id], onDelete: Cascade)
+
+  amount            Decimal          @db.Decimal(10, 2)
+  status            PayoutRequestStatus @default(REQUESTED)
+
+  // Payment details
+  paymentMethod     String
+  paymentDetails    String?          @db.Text // Encrypted
+
+  // Processing
+  processedBy       String?          // Admin user ID
+  processedAt       DateTime?
+  rejectionReason   String?          @db.Text
+  notes             String?          @db.Text
+
+  // External payment tracking
+  transactionId     String?
+  paidAt            DateTime?
+
+  requestedAt       DateTime         @default(now())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([affiliateProfileId])
+  @@index([status])
+  @@index([requestedAt])
+}
+
+// Marketing materials provided to affiliates
+model AffiliateMarketingMaterial {
+  id              String   @id @default(cuid())
+
+  title           String
+  description     String?  @db.Text
+  type            MarketingMaterialType
+
+  // File or content
+  fileUrl         String?
+  thumbnailUrl    String?
+  content         String?  @db.Text // For copy/paste text
+
+  // Metadata
+  language        Language @default(EN)
+  isActive        Boolean  @default(true)
+  displayOrder    Int      @default(0)
+
+  // Usage tracking
+  downloadCount   Int      @default(0)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([type])
+  @@index([language])
+  @@index([isActive])
+}
+
+enum MarketingMaterialType {
+  BANNER_IMAGE
+  SOCIAL_POST
+  EMAIL_TEMPLATE
+  PROMOTIONAL_COPY
+  VIDEO
+  INFOGRAPHIC
+  LANDING_PAGE_TEMPLATE
+}
+
+// ============================================
+// COUPONS & DISCOUNTS
+// ============================================
+
+enum CouponType {
+  PERCENTAGE        // % off
+  FIXED_AMOUNT      // $ off
+  FREE_ADDON        // Free keyword research
+}
+
+enum CouponAppliesTo {
+  CREDITS
+  KEYWORD_RESEARCH
+  ALL
+}
+
+model Coupon {
+  id              String          @id @default(cuid())
+  code            String          @unique
+
+  type            CouponType
+  appliesTo       CouponAppliesTo
+
+  // Discount values
+  discountPercent Decimal?        @db.Decimal(5, 2)
+  discountAmount  Decimal?        @db.Decimal(10, 2)
+
+  // Minimum requirements
+  minimumPurchase Decimal?        @db.Decimal(10, 2)
+  minimumCredits  Int?
+
+  // Usage limits
+  maxUses         Int?            // Null = unlimited
+  maxUsesPerUser  Int             @default(1)
+  currentUses     Int             @default(0)
+
+  // Validity period
+  isActive        Boolean         @default(true)
+  validFrom       DateTime        @default(now())
+  validUntil      DateTime?
+
+  // Tracking
+  createdBy       String          // Admin user ID
+  purpose         String?         @db.Text // Internal note about purpose
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relations
+  creditPurchases CreditPurchase[]
+  keywordResearches KeywordResearch[]
+  couponUsage     CouponUsage[]
+
+  @@index([code])
+  @@index([isActive])
+  @@index([validFrom])
+  @@index([validUntil])
+}
+
+model CouponUsage {
+  id              String   @id @default(cuid())
+  couponId        String
+  coupon          Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+  userId          String
+  userEmail       String
+
+  // What it was used for
+  creditPurchaseId String?
+  keywordResearchId String?
+
+  discountApplied Decimal  @db.Decimal(10, 2)
+
+  usedAt          DateTime @default(now())
+
+  @@index([couponId])
+  @@index([userId])
+  @@index([userEmail])
+  @@index([usedAt])
+}
+
+// ============================================
+// KEYWORD RESEARCH (Optional Upsell)
+// ============================================
+
+enum KeywordResearchStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+// Target market for keyword research (Amazon marketplace)
+enum TargetMarket {
+  US  // Amazon United States (amazon.com)
+  BR  // Amazon Brazil (amazon.com.br)
+}
+
+model KeywordResearch {
+  id              String                 @id @default(cuid())
+
+  authorProfileId String
+  authorProfile   AuthorProfile          @relation(fields: [authorProfileId], references: [id], onDelete: Cascade)
+
+  // Optional: linked to existing book in system (can be null for standalone purchases)
+  bookId          String?                @unique
+  book            Book?                  @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  // Input data from author
+  bookTitle       String
+  genre           String
+  category        String
+  description     String                 @db.Text
+  targetAudience  String                 @db.Text
+  competingBooks  String?                @db.Text
+  bookLanguage    Language
+  targetMarket    TargetMarket           @default(US)  // Amazon US or Brazil marketplace
+  additionalNotes String?                @db.Text
+
+  // Generated keywords (stored as JSON)
+  primaryKeywords     String?            @db.Text // JSON array
+  secondaryKeywords   String?            @db.Text // JSON array
+  longTailKeywords    String?            @db.Text // JSON array
+
+  // Additional generated data
+  usageGuidelines     String?            @db.Text // JSON object
+  kdpSuggestions      String?            @db.Text // JSON object
+
+  // PDF Report
+  pdfUrl          String?
+  pdfFileName     String?
+  pdfGeneratedAt  DateTime?
+
+  // Status
+  status          KeywordResearchStatus  @default(PENDING)
+  processingStartedAt DateTime?
+  completedAt         DateTime?
+  errorMessage        String?            @db.Text
+
+  // Payment
+  price           Decimal                @db.Decimal(10, 2)
+  paid            Boolean                @default(false)
+  paidAt          DateTime?
+
+  // Coupon (can be free via coupon)
+  couponId        String?
+  coupon          Coupon?                @relation(fields: [couponId], references: [id])
+
+  // Delivery
+  emailedAt       DateTime?
+  emailDelivered  Boolean                @default(false)
+  downloadCount   Int                    @default(0)
+  lastDownloadedAt DateTime?
+
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+
+  @@index([authorProfileId])
+  @@index([bookId])
+  @@index([status])
+}
+
+// ============================================
+// LANDING PAGES & LEAD CAPTURE
+// ============================================
+
+model LandingPage {
+  id              String   @id @default(cuid())
+  language        Language @unique
+
+  // Content blocks (stored as JSON for flexibility)
+  content         String   @db.Text // JSON structure
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?  @db.Text
+  metaKeywords    String?  @db.Text
+
+  // Settings
+  isPublished     Boolean  @default(false)
+  publishedAt     DateTime?
+
+  // Call-to-action configuration
+  ctaText         String   @default("Join Waitlist")
+  ctaLink         String   @default("#")
+  ctaMode         String   @default("PRE_LAUNCH") // "PRE_LAUNCH" or "LIVE"
+
+  // Analytics
+  totalViews      Int      @default(0)
+  totalLeads      Int      @default(0)
+  conversionRate  Decimal? @db.Decimal(5, 2)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([language])
+  @@index([isPublished])
+}
+
+model LandingPageLead {
+  id          String   @id @default(cuid())
+
+  // Contact info
+  email       String
+  name        String?
+
+  // Preferences
+  language    Language
+  userType    String?  // "author" or "reader"
+
+  // Source tracking
+  source      String?  // Where they came from (utm_source)
+  medium      String?  // utm_medium
+  campaign    String?  // utm_campaign
+  referrer    String?  @db.Text
+
+  // IP and location
+  ipAddress   String?
+  country     String?
+
+  // Consent
+  marketingConsent Boolean @default(false)
+  consentedAt      DateTime?
+
+  // Follow-up
+  welcomeEmailSent Boolean @default(false)
+  welcomeEmailSentAt DateTime?
+
+  // Conversion
+  converted        Boolean @default(false)
+  convertedToUserId String?
+  convertedAt      DateTime?
+
+  createdAt   DateTime @default(now())
+
+  @@index([email])
+  @@index([language])
+  @@index([userType])
+  @@index([source])
+  @@index([converted])
+  @@index([createdAt])
+}
+
+// ============================================
+// SYSTEM SETTINGS & CONFIGURATION
+// ============================================
+
+model SystemSetting {
+  id          String   @id @default(cuid())
+  category    String   // Group settings by category
+  key         String   @unique
+  value       String   @db.Text
+  dataType    String   @default("string") // "string", "number", "boolean", "json"
+  description String?  @db.Text
+
+  // Validation
+  isPublic    Boolean  @default(false) // Can non-admin see this?
+  isEditable  Boolean  @default(true)
+
+  updatedBy   String?  // Admin user ID
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([key])
+  @@index([category])
+}
+
+// Audit trail for all important actions
+model AuditLog {
+  id          String   @id @default(cuid())
+
+  // Who did it
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userEmail   String?
+  userRole    UserRole?
+
+  // What happened
+  action      String   // e.g., "campaign.paused", "credits.added"
+  entity      String   // e.g., "Book", "Review", "User"
+  entityId    String?
+
+  // Details
+  changes     String?  @db.Text // JSON with before/after values
+  description String?  @db.Text
+
+  // Context
+  ipAddress   String?
+  userAgent   String?  @db.Text
+
+  // Severity for filtering
+  severity    LogSeverity @default(INFO)
+
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([entity])
+  @@index([entityId])
+  @@index([action])
+  @@index([severity])
+  @@index([createdAt])
+}
+
+enum LogSeverity {
+  DEBUG
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
+// ============================================
+// EMAIL SYSTEM
+// ============================================
+
+enum EmailType {
+  // Authentication
+  WELCOME
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+  PASSWORD_CHANGED
+
+  // Reader workflow
+  READER_APPLICATION_RECEIVED       // When reader applies to review a book
+  READER_MATERIALS_READY
+  READER_DEADLINE_24H
+  READER_DEADLINE_48H
+  READER_DEADLINE_72H
+  READER_ASSIGNMENT_EXPIRED
+  READER_REVIEW_VALIDATED
+  READER_REVIEW_REJECTED
+  READER_PAYOUT_COMPLETED
+  READER_ASSIGNMENT_REASSIGNED      // When assignment is reassigned to another book
+  READER_ASSIGNMENT_CANCELLED       // When admin cancels reader assignment
+  READER_DEADLINE_EXTENDED          // When admin extends deadline
+  READER_RESUBMISSION_REQUESTED     // When admin requests resubmission
+
+  // Author workflow
+  AUTHOR_CAMPAIGN_STARTED
+  AUTHOR_CAMPAIGN_COMPLETED
+  AUTHOR_REPORT_READY
+  AUTHOR_PAYMENT_RECEIVED
+  AUTHOR_PAYMENT_FAILED
+  AUTHOR_CREDITS_EXPIRING_SOON
+  AUTHOR_CREDITS_EXPIRED
+  AUTHOR_CREDITS_ADDED              // When admin manually adds credits
+  AUTHOR_CREDITS_REMOVED            // When admin manually removes credits
+
+  // Admin notifications
+  ADMIN_NEW_ISSUE
+  ADMIN_URGENT_ISSUE
+  ADMIN_PAYOUT_REQUESTED
+  ADMIN_NEW_AFFILIATE_APPLICATION   // When new affiliate applies
+
+  // Payments
+  PAYMENT_RECEIVED
+  PAYMENT_FAILED
+  REFUND_PROCESSED
+  SUBSCRIPTION_RENEWED
+  SUBSCRIPTION_CANCELLED
+
+  // Keyword research
+  KEYWORD_RESEARCH_READY
+
+  // Affiliate
+  AFFILIATE_APPLICATION_RECEIVED    // When affiliate submits application
+  AFFILIATE_APPLICATION_APPROVED
+  AFFILIATE_APPLICATION_REJECTED
+  AFFILIATE_PAYOUT_PROCESSED
+  AFFILIATE_NEW_REFERRAL
+
+  // Closer
+  CLOSER_PAYMENT_RECEIVED
+  CLOSER_ACCOUNT_CREATED
+  CLOSER_PACKAGE_SENT_TO_CLIENT     // Email to client with payment link
+
+  // Author account created by Closer (sent to the author with credentials)
+  AUTHOR_ACCOUNT_CREATED_BY_CLOSER
+
+  // Landing page
+  LANDING_PAGE_WELCOME
+}
+
+model EmailTemplate {
+  id          String    @id @default(cuid())
+  type        EmailType
+  language    Language
+
+  name        String    // Human-readable name
+  subject     String
+  htmlBody    String    @db.Text
+  textBody    String    @db.Text
+
+  // Variables that can be used (for documentation)
+  availableVariables String? @db.Text // JSON array
+
+  // Template metadata
+  description String?   @db.Text
+  category    String?   // Group templates
+
+  isActive    Boolean   @default(true)
+  isDefault   Boolean   @default(false) // Is this the default template for this type+language?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([type, language, isDefault])
+  @@index([type])
+  @@index([language])
+  @@index([isActive])
+}
+
+model EmailLog {
+  id          String    @id @default(cuid())
+
+  // Recipient
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  email       String
+
+  // Email details
+  type        EmailType
+  subject     String
+
+  // Sending status
+  status      EmailStatus @default(PENDING)
+  sentAt      DateTime?
+  deliveredAt DateTime?
+  openedAt    DateTime?
+  clickedAt   DateTime?
+
+  // Error tracking
+  error       String?   @db.Text
+  retryCount  Int       @default(0)
+
+  // Provider tracking
+  providerMessageId String?
+  provider    String?   // e.g., "SendGrid", "AWS SES"
+
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([email])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum EmailStatus {
+  PENDING
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  FAILED
+  SPAM_COMPLAINT
+}
+
+// ============================================
+// NOTIFICATIONS (In-App)
+// ============================================
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type      NotificationType
+  title     String
+  message   String   @db.Text
+
+  // Optional link/action
+  actionUrl String?
+  actionLabel String?
+
+  // Optional metadata (JSON)
+  metadata  String?  @db.Text
+
+  // Status
+  isRead    Boolean  @default(false)
+  readAt    DateTime?
+
+  // Priority
+  priority  NotificationPriority @default(NORMAL)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum NotificationType {
+  SYSTEM
+  CAMPAIGN
+  REVIEW
+  PAYMENT
+  ADMIN
+  GENERAL
+}
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+// ============================================
+// DISPUTE MANAGEMENT (Customer Disputes/Complaints)
+// ============================================
+
+enum DisputeType {
+  AUTHOR_DISPUTE       // Author disputes review quality
+  AUTHOR_COMPLAINT     // Author complaint about service
+  READER_COMPLAINT     // Reader complaint about assignment
+  REVIEW_QUALITY       // Review quality issues
+  PAYMENT_ISSUE        // Payment-related disputes
+  SERVICE_ISSUE        // General service issues
+  POLICY_VIOLATION     // Policy violation disputes
+  OTHER                // Other disputes
+}
+
+enum DisputeStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  ESCALATED
+  REJECTED
+}
+
+enum DisputePriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model Dispute {
+  id                String          @id @default(cuid())
+
+  // Who created the dispute
+  userId            String
+  userRole          UserRole
+
+  // Dispute details
+  type              DisputeType
+  description       String          @db.Text
+  status            DisputeStatus   @default(OPEN)
+  priority          DisputePriority @default(MEDIUM)
+
+  // Related entity (optional)
+  relatedEntityType String?         // Campaign, Review, Assignment, Payment
+  relatedEntityId   String?
+
+  // Resolution
+  resolution        String?         @db.Text
+  resolvedBy        String?         // Admin user ID
+  resolvedAt        DateTime?
+
+  // Escalation
+  escalatedBy       String?         // Admin user ID
+  escalatedAt       DateTime?
+  escalationReason  String?         @db.Text
+
+  // Admin notes
+  adminNotes        String?         @db.Text
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([userId])
+  @@index([userRole])
+  @@index([type])
+  @@index([status])
+  @@index([priority])
+  @@index([relatedEntityType, relatedEntityId])
+  @@index([createdAt])
+}
+
+// ============================================
+// PAYMENT ISSUE MANAGEMENT
+// ============================================
+
+enum PaymentIssueType {
+  PAYMENT_FAILED
+  PAYMENT_DISPUTE
+  REFUND_REQUEST
+  PAYOUT_ISSUE
+  DUPLICATE_PAYMENT
+  CREDIT_MISMATCH      // Credit balance discrepancy
+  OTHER                // Other payment issues
+}
+
+enum PaymentIssueStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+  ESCALATED
+}
+
+enum PaymentIssueAction {
+  REFUNDED
+  CORRECTED            // Payment corrected manually
+  RECONCILED
+  CREDITED             // Credits applied to account
+  NO_ACTION            // No action needed
+  REJECTED
+  ESCALATED
+  PENDING_STRIPE
+}
+
+model PaymentIssue {
+  id                String              @id @default(cuid())
+
+  // Who is affected
+  userId            String
+  userRole          UserRole
+
+  // Issue details
+  type              PaymentIssueType
+  amount            Decimal             @db.Decimal(10, 2)
+  currency          String              @default("USD")
+  description       String              @db.Text
+
+  // Stripe references
+  stripePaymentId   String?
+  stripeRefundId    String?
+
+  // Status tracking
+  status            PaymentIssueStatus  @default(OPEN)
+  priority          DisputePriority     @default(HIGH) // Payment issues are high priority by default
+
+  // Resolution
+  resolution        String?             @db.Text
+  actionTaken       PaymentIssueAction?
+  resolvedBy        String?             // Admin user ID
+  resolvedAt        DateTime?
+
+  // Admin notes
+  adminNotes        String?             @db.Text
+
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@index([userId])
+  @@index([userRole])
+  @@index([type])
+  @@index([status])
+  @@index([priority])
+  @@index([stripePaymentId])
+  @@index([createdAt])
+}
+
+// ============================================
+// READER BEHAVIOR TRACKING
+// ============================================
+
+enum BehaviorFlagType {
+  FAST_REVIEW           // Review completed too quickly
+  SIMILAR_TEXT          // Review text similar to other reviews
+  MULTIPLE_IP           // Multiple readers from same IP
+  DEVICE_FINGERPRINT    // Suspicious device patterns
+  HIGH_REJECTION_RATE   // Many reviews rejected
+  NEW_ACCOUNT_ABUSE     // New account with suspicious activity
+}
+
+enum BehaviorFlagStatus {
+  ACTIVE
+  DISMISSED
+  INVESTIGATED
+  CONFIRMED
+}
+
+model ReaderBehaviorFlag {
+  id                String              @id @default(cuid())
+
+  // Which reader
+  readerProfileId   String
+
+  // Flag details
+  flagType          BehaviorFlagType
+  severity          IssueSeverity       @default(MEDIUM)
+  description       String              @db.Text
+
+  // Evidence/details
+  evidenceData      String?             @db.Text // JSON with specific details
+
+  // Behavior score impact
+  scoreImpact       Int                 @default(0) // Negative impact on reliability score
+
+  // Status tracking
+  status            BehaviorFlagStatus  @default(ACTIVE)
+
+  // Admin investigation
+  investigatedBy    String?             // Admin user ID
+  investigatedAt    DateTime?
+  investigationNotes String?            @db.Text
+
+  // Action taken
+  actionTaken       String?             // WARNED, SUSPENDED, BANNED, DISMISSED
+  actionTakenAt     DateTime?
+  actionTakenBy     String?             // Admin user ID
+
+  // Auto-generated or manual
+  isAutoGenerated   Boolean             @default(false)
+
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@index([readerProfileId])
+  @@index([flagType])
+  @@index([status])
+  @@index([severity])
+  @@index([isAutoGenerated])
+  @@index([createdAt])
+}
