@@ -1,0 +1,110 @@
+{
+  "title": "Gestión de Pagos",
+  "description": "Revisar y procesar solicitudes de pago de lectores",
+
+  "stats": {
+    "pending": "Pendientes",
+    "awaitingReview": "Esperando revisión",
+    "approved": "Aprobados",
+    "readyToProcess": "Listos para procesar",
+    "completed": "Completados",
+    "successfulPayouts": "Pagos exitosos",
+    "totalAmount": "Monto Total",
+    "allPayouts": "Todos los pagos"
+  },
+
+  "empty": {
+    "title": "No se encontraron pagos",
+    "description": "No hay pagos que coincidan con el filtro actual"
+  },
+
+  "tabs": {
+    "pending": "Pendientes",
+    "approved": "Aprobados",
+    "completed": "Completados",
+    "rejected": "Rechazados",
+    "all": "Todos"
+  },
+  "table": {
+    "reader": "Lector",
+    "amount": "Monto",
+    "method": "Método de Pago",
+    "requestedAt": "Solicitado",
+    "status": "Estado",
+    "actions": "Acciones"
+  },
+  "actions": {
+    "view": "Ver Detalles",
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "complete": "Marcar como Completado"
+  },
+  "dialog": {
+    "detailsTitle": "Detalles de Solicitud de Pago",
+    "approveTitle": "Aprobar Solicitud de Pago",
+    "rejectTitle": "Rechazar Solicitud de Pago",
+    "completeTitle": "Completar Pago",
+    "close": "Cerrar"
+  },
+  "fields": {
+    "readerName": "Nombre del Lector",
+    "readerEmail": "Email del Lector",
+    "amount": "Monto",
+    "paymentMethod": "Método de Pago",
+    "paymentDetails": "Detalles de Pago",
+    "requestNotes": "Notas de Solicitud",
+    "requestedAt": "Fecha de Solicitud",
+    "processedBy": "Procesado Por",
+    "processedAt": "Fecha de Procesamiento",
+    "transactionId": "ID de Transacción",
+    "rejectionReason": "Motivo de Rechazo",
+    "adminNotes": "Notas del Administrador"
+  },
+  "approve": {
+    "notesLabel": "Notas del Administrador (Opcional)",
+    "notesPlaceholder": "Agregar notas sobre esta aprobación...",
+    "confirmButton": "Aprobar Pago",
+    "cancelButton": "Cancelar",
+    "confirming": "Aprobando..."
+  },
+  "reject": {
+    "reasonLabel": "Motivo de Rechazo",
+    "reasonPlaceholder": "Explicar por qué se rechaza este pago (mínimo 10 caracteres)...",
+    "confirmButton": "Rechazar Pago",
+    "cancelButton": "Cancelar",
+    "confirming": "Rechazando...",
+    "validation": {
+      "reasonRequired": "El motivo de rechazo es obligatorio",
+      "reasonMinLength": "El motivo debe tener al menos 10 caracteres"
+    }
+  },
+  "complete": {
+    "transactionIdLabel": "ID de Transacción",
+    "transactionIdPlaceholder": "Ingresar el ID de transacción de pago externo",
+    "notesLabel": "Notas del Administrador (Opcional)",
+    "notesPlaceholder": "Agregar notas sobre este pago...",
+    "confirmButton": "Marcar como Completado",
+    "cancelButton": "Cancelar",
+    "confirming": "Procesando...",
+    "validation": {
+      "transactionIdRequired": "El ID de transacción es obligatorio",
+      "transactionIdMinLength": "El ID de transacción debe tener al menos 5 caracteres"
+    }
+  },
+  "status": {
+    "REQUESTED": "Solicitado",
+    "PENDING_REVIEW": "Revisión Pendiente",
+    "APPROVED": "Aprobado",
+    "PROCESSING": "Procesando",
+    "COMPLETED": "Completado",
+    "REJECTED": "Rechazado",
+    "CANCELLED": "Cancelado"
+  },
+  "emptyState": {
+    "noPending": "No hay solicitudes de pago pendientes",
+    "noApproved": "No hay pagos aprobados",
+    "noCompleted": "No hay pagos completados",
+    "noRejected": "No hay pagos rechazados",
+    "noPayouts": "Aún no hay solicitudes de pago"
+  }
+}

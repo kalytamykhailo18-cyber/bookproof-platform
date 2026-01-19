@@ -1,0 +1,381 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { useParams, useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useKeywordResearch, useUpdateKeywordResearch } from '@/hooks/useKeywordResearch';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Language, TargetMarket, KeywordResearchStatus } from '@/lib/api/keywords';
+
+const formSchema = z.object({
+  bookTitle: z.string().min(2, 'Book title is required'),
+  genre: z.string().min(2, 'Genre is required'),
+  category: z.string().min(2, 'Category is required'),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
+  targetAudience: z.string().min(5, 'Target audience is required'),
+  competingBooks: z.string().optional(),
+  bookLanguage: z.nativeEnum(Language),
+  targetMarket: z.nativeEnum(TargetMarket),
+  additionalNotes: z.string().optional(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+export default function EditKeywordResearchPage() {
+  const t = useTranslations('keyword-research');
+  const tNew = useTranslations('keyword-research.new');
+  const tEdit = useTranslations('keyword-research.edit');
+  const params = useParams();
+  const router = useRouter();
+  const id = params.id as string;
+
+  const { data: research, isLoading } = useKeywordResearch(id);
+  const updateMutation = useUpdateKeywordResearch();
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      bookTitle: '',
+      genre: '',
+      category: '',
+      description: '',
+      targetAudience: '',
+      competingBooks: '',
+      bookLanguage: Language.EN,
+      targetMarket: TargetMarket.US,
+      additionalNotes: '',
+    },
+  });
+
+  // Populate form with existing data
+  useEffect(() => {
+    if (research) {
+      form.reset({
+        bookTitle: research.bookTitle,
+        genre: research.genre,
+        category: research.category,
+        description: research.description,
+        targetAudience: research.targetAudience,
+        competingBooks: research.competingBooks || '',
+        bookLanguage: research.bookLanguage,
+        targetMarket: research.targetMarket,
+        additionalNotes: research.additionalNotes || '',
+      });
+    }
+  }, [research, form]);
+
+  const handleSubmit = async () => {
+    const isValid = await form.trigger();
+    if (!isValid) return;
+
+    const data = form.getValues();
+    try {
+      await updateMutation.mutateAsync({ id, data });
+      router.push(`/author/keyword-research/${id}`);
+    } catch (error) {
+      console.error('Failed to update keyword research:', error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <div className="flex min-h-[400px] items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!research) {
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <Card>
+          <CardContent className="py-12">
+            <div className="text-center">
+              <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+              <h3 className="mb-2 text-lg font-semibold">Keyword research not found</h3>
+              <p className="text-muted-foreground">
+                The requested keyword research could not be found.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Check if editing is allowed (only PENDING status)
+  if (research.status !== KeywordResearchStatus.PENDING) {
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Cannot Edit</AlertTitle>
+          <AlertDescription>{tEdit('cannotEdit')}</AlertDescription>
+        </Alert>
+        <div className="mt-4">
+          <Button variant="outline" onClick={() => router.push(`/author/keyword-research/${id}`)}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Details
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto max-w-4xl px-4 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <Button
+          variant="ghost"
+          onClick={() => router.push(`/author/keyword-research/${id}`)}
+          className="mb-4"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Details
+        </Button>
+        <h1 className="text-3xl font-bold">{tEdit('title')}</h1>
+        <p className="mt-2 text-muted-foreground">{tEdit('subtitle')}</p>
+      </div>
+
+      <Form {...form}>
+        <div className="space-y-6">
+          {/* Book Information */}
+          <Card>
+            <CardHeader>
+              <CardTitle>{tNew('steps.bookInfo')}</CardTitle>
+              <CardDescription>Update book information for keyword research</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="bookTitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{tNew('fields.bookTitle.label')}</FormLabel>
+                    <FormControl>
+                      <Input placeholder={tNew('fields.bookTitle.placeholder')} {...field} />
+                    </FormControl>
+                    <FormDescription>{tNew('fields.bookTitle.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Book Details */}
+          <Card>
+            <CardHeader>
+              <CardTitle>{tNew('steps.details')}</CardTitle>
+              <CardDescription>Provide detailed information about your book</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="genre"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{tNew('fields.genre.label')}</FormLabel>
+                      <FormControl>
+                        <Input placeholder={tNew('fields.genre.placeholder')} {...field} />
+                      </FormControl>
+                      <FormDescription>{tNew('fields.genre.description')}</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="bookLanguage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{tNew('fields.bookLanguage.label')}</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={Language.EN}>English</SelectItem>
+                          <SelectItem value={Language.ES}>Spanish</SelectItem>
+                          <SelectItem value={Language.PT}>Portuguese</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>{tNew('fields.bookLanguage.description')}</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="targetMarket"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{tNew('fields.targetMarket.label')}</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value={TargetMarket.US}>
+                          Amazon United States (amazon.com)
+                        </SelectItem>
+                        <SelectItem value={TargetMarket.BR}>
+                          Amazon Brazil (amazon.com.br)
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>{tNew('fields.targetMarket.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{tNew('fields.category.label')}</FormLabel>
+                    <FormControl>
+                      <Input placeholder={tNew('fields.category.placeholder')} {...field} />
+                    </FormControl>
+                    <FormDescription>{tNew('fields.category.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{tNew('fields.description.label')}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={tNew('fields.description.placeholder')}
+                        rows={4}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>{tNew('fields.description.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="targetAudience"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{tNew('fields.targetAudience.label')}</FormLabel>
+                    <FormControl>
+                      <Input placeholder={tNew('fields.targetAudience.placeholder')} {...field} />
+                    </FormControl>
+                    <FormDescription>{tNew('fields.targetAudience.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="competingBooks"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{tNew('fields.competingBooks.label')}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={tNew('fields.competingBooks.placeholder')}
+                        rows={3}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>{tNew('fields.competingBooks.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="additionalNotes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{tNew('fields.additionalNotes.label')}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={tNew('fields.additionalNotes.placeholder')}
+                        rows={3}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>{tNew('fields.additionalNotes.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Submit */}
+          <div className="flex justify-end gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push(`/author/keyword-research/${id}`)}
+            >
+              Cancel
+            </Button>
+            <Button type="button" onClick={handleSubmit} disabled={updateMutation.isPending}>
+              {updateMutation.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {tEdit('submitting')}
+                </>
+              ) : (
+                tEdit('submit')
+              )}
+            </Button>
+          </div>
+        </div>
+      </Form>
+    </div>
+  );
+}

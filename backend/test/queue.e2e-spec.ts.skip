@@ -1,0 +1,531 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import request from 'supertest';
+import { AppModule } from '../src/app.module';
+import { PrismaService } from '@common/prisma/prisma.service';
+import { UserRole, QueueStatus, AssignmentStatus, CampaignStatus, BookFormat, Language } from '@prisma/client';
+import { QueueService } from '@modules/queue/queue.service';
+import { addDays, subDays } from 'date-fns';
+
+describe('Queue System (e2e)', () => {
+  let app: INestApplication;
+  let prisma: PrismaService;
+  let queueService: QueueService;
+  let authorToken: string;
+  let readerToken: string;
+  let campaignId: string;
+  let bookId: string;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    prisma = app.get<PrismaService>(PrismaService);
+    queueService = app.get<QueueService>(QueueService);
+    await app.init();
+
+    // Create test author
+    const authorResponse = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send({
+        email: 'queue-author@test.com',
+        password: 'Test123!@#',
+        name: 'Queue Test Author',
+        role: UserRole.AUTHOR,
+      });
+    authorToken = authorResponse.body.accessToken;
+
+    // Create test reader
+    const readerResponse = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send({
+        email: 'queue-reader@test.com',
+        password: 'Test123!@#',
+        name: 'Queue Test Reader',
+        role: UserRole.READER,
+      });
+    readerToken = readerResponse.body.accessToken;
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+    await app.close();
+  });
+
+  describe('Queue Registration', () => {
+    beforeEach(async () => {
+      // Create a test campaign
+      const author = await prisma.user.findUnique({
+        where: { email: 'queue-author@test.com' },
+        include: { authorProfile: true },
+      });
+
+      const book = await prisma.book.create({
+        data: {
+          authorProfileId: author!.authorProfile!.id,
+          title: 'Test Book for Queue',
+          authorName: 'Queue Test Author',
+          asin: 'B0TEST123',
+          amazonLink: 'https://amazon.com/dp/B0TEST123',
+          synopsis: 'Test synopsis',
+          language: Language.EN,
+          genre: 'Fiction',
+          category: 'Mystery',
+          availableFormats: BookFormat.EBOOK,
+          creditsAllocated: 100,
+          creditsUsed: 0,
+          creditsRemaining: 100,
+          targetReviews: 25,
+          reviewsPerWeek: 5,
+          status: CampaignStatus.ACTIVE,
+          overBookingEnabled: true,
+          overBookingPercent: 20,
+        },
+      });
+
+      bookId = book.id;
+
+      const campaign = await prisma.campaign.create({
+        data: {
+          bookId: book.id,
+          status: CampaignStatus.ACTIVE,
+          campaignStartDate: new Date(),
+        },
+      });
+
+      campaignId = campaign.id;
+    });
+
+    it('should allow reader to join queue', async () => {
+      const response = await request(app.getHttpServer())
+        .post(`/queue/${bookId}/join`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .expect(201);
+
+      expect(response.body).toHaveProperty('id');
+      expect(response.body.bookId).toBe(bookId);
+      expect(response.body.status).toBe(QueueStatus.WAITING);
+    });
+
+    it('should prevent duplicate queue registration', async () => {
+      // Join queue first time
+      await request(app.getHttpServer())
+        .post(`/queue/${bookId}/join`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .expect(201);
+
+      // Try to join again
+      await request(app.getHttpServer())
+        .post(`/queue/${bookId}/join`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .expect(409); // Conflict
+    });
+
+    it('should reject unauthenticated queue registration', async () => {
+      await request(app.getHttpServer())
+        .post(`/queue/${bookId}/join`)
+        .expect(401);
+    });
+
+    it('should reject author from joining queue', async () => {
+      await request(app.getHttpServer())
+        .post(`/queue/${bookId}/join`)
+        .set('Authorization', `Bearer ${authorToken}`)
+        .expect(403);
+    });
+  });
+
+  describe('Weekly Distribution', () => {
+    beforeEach(async () => {
+      // Create campaign with 25 target reviews, 5 per week
+      const author = await prisma.user.findUnique({
+        where: { email: 'queue-author@test.com' },
+        include: { authorProfile: true },
+      });
+
+      const book = await prisma.book.create({
+        data: {
+          authorProfileId: author!.authorProfile!.id,
+          title: 'Weekly Distribution Test Book',
+          authorName: 'Queue Test Author',
+          asin: 'B0WEEKLY123',
+          amazonLink: 'https://amazon.com/dp/B0WEEKLY123',
+          synopsis: 'Test synopsis',
+          language: Language.EN,
+          genre: 'Fiction',
+          category: 'Mystery',
+          availableFormats: BookFormat.EBOOK,
+          creditsAllocated: 100,
+          creditsUsed: 0,
+          creditsRemaining: 100,
+          targetReviews: 25,
+          reviewsPerWeek: 5,
+          status: CampaignStatus.ACTIVE,
+          overBookingEnabled: true,
+          overBookingPercent: 20,
+          campaignStartDate: new Date(),
+        },
+      });
+
+      bookId = book.id;
+
+      // Create 30 readers in queue (20% buffer for 25 reviews)
+      const reader = await prisma.user.findUnique({
+        where: { email: 'queue-reader@test.com' },
+        include: { readerProfile: true },
+      });
+
+      for (let i = 0; i < 30; i++) {
+        await prisma.queue.create({
+          data: {
+            bookId: book.id,
+            readerProfileId: reader!.readerProfile!.id,
+            status: QueueStatus.WAITING,
+            joinedAt: subDays(new Date(), i), // Stagger join times
+          },
+        });
+      }
+    });
+
+    it('should assign correct number of readers per week', async () => {
+      // Run weekly distribution
+      await queueService.processWeeklyDistribution();
+
+      // Check assignments (should be 5 + 20% = 6 readers for first week)
+      const assignments = await prisma.readerAssignment.findMany({
+        where: {
+          bookId,
+          status: AssignmentStatus.SCHEDULED,
+        },
+      });
+
+      expect(assignments.length).toBeGreaterThanOrEqual(5);
+      expect(assignments.length).toBeLessThanOrEqual(6);
+    });
+
+    it('should respect overbooking percentage', async () => {
+      await queueService.processWeeklyDistribution();
+
+      const assignments = await prisma.readerAssignment.count({
+        where: { bookId },
+      });
+
+      // With 20% overbooking, should assign 6 readers (5 + 1)
+      expect(assignments).toBe(6);
+    });
+
+    it('should prioritize readers who joined earlier', async () => {
+      await queueService.processWeeklyDistribution();
+
+      const assignments = await prisma.readerAssignment.findMany({
+        where: { bookId },
+        include: {
+          queue: true,
+        },
+        orderBy: {
+          queue: {
+            joinedAt: 'asc',
+          },
+        },
+      });
+
+      // Verify assignments are in join order
+      for (let i = 0; i < assignments.length - 1; i++) {
+        expect(assignments[i].queue.joinedAt.getTime()).toBeLessThanOrEqual(
+          assignments[i + 1].queue.joinedAt.getTime(),
+        );
+      }
+    });
+
+    it('should update queue status to ASSIGNED', async () => {
+      await queueService.processWeeklyDistribution();
+
+      const assignedQueues = await prisma.queue.findMany({
+        where: {
+          bookId,
+          status: QueueStatus.ASSIGNED,
+        },
+      });
+
+      expect(assignedQueues.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('Deadline Expiration', () => {
+    let assignmentId: string;
+    let readerId: string;
+
+    beforeEach(async () => {
+      // Create reader and assignment
+      const reader = await prisma.user.findUnique({
+        where: { email: 'queue-reader@test.com' },
+        include: { readerProfile: true },
+      });
+
+      readerId = reader!.readerProfile!.id;
+
+      const author = await prisma.user.findUnique({
+        where: { email: 'queue-author@test.com' },
+        include: { authorProfile: true },
+      });
+
+      const book = await prisma.book.create({
+        data: {
+          authorProfileId: author!.authorProfile!.id,
+          title: 'Deadline Test Book',
+          authorName: 'Queue Test Author',
+          asin: 'B0DEADLINE123',
+          amazonLink: 'https://amazon.com/dp/B0DEADLINE123',
+          synopsis: 'Test synopsis',
+          language: Language.EN,
+          genre: 'Fiction',
+          category: 'Mystery',
+          availableFormats: BookFormat.EBOOK,
+          creditsAllocated: 100,
+          targetReviews: 25,
+          reviewsPerWeek: 5,
+          status: CampaignStatus.ACTIVE,
+        },
+      });
+
+      bookId = book.id;
+
+      const queue = await prisma.queue.create({
+        data: {
+          bookId: book.id,
+          readerProfileId: readerId,
+          status: QueueStatus.WAITING,
+        },
+      });
+
+      const assignment = await prisma.readerAssignment.create({
+        data: {
+          bookId: book.id,
+          readerProfileId: readerId,
+          queueId: queue.id,
+          status: AssignmentStatus.ACTIVE,
+          materialsReleasedAt: subDays(new Date(), 4), // 4 days ago
+          deadlineAt: subDays(new Date(), 1), // Expired 1 day ago (72 hours + 1 day)
+        },
+      });
+
+      assignmentId = assignment.id;
+    });
+
+    it('should expire assignments after 72 hours', async () => {
+      // Run deadline check
+      await queueService.checkExpiredDeadlines();
+
+      const assignment = await prisma.readerAssignment.findUnique({
+        where: { id: assignmentId },
+      });
+
+      expect(assignment?.status).toBe(AssignmentStatus.EXPIRED);
+    });
+
+    it('should send expiration email to reader', async () => {
+      await queueService.checkExpiredDeadlines();
+
+      // Check that email was logged
+      const emailLog = await prisma.emailLog.findFirst({
+        where: {
+          type: 'READER_ASSIGNMENT_EXPIRED',
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      expect(emailLog).toBeTruthy();
+    });
+
+    it('should mark queue entry for replacement', async () => {
+      await queueService.checkExpiredDeadlines();
+
+      const queue = await prisma.queue.findFirst({
+        where: {
+          bookId,
+          readerProfileId: readerId,
+        },
+      });
+
+      expect(queue?.status).toBe(QueueStatus.EXPIRED);
+    });
+  });
+
+  describe('Reader Assignment Replacement', () => {
+    beforeEach(async () => {
+      const author = await prisma.user.findUnique({
+        where: { email: 'queue-author@test.com' },
+        include: { authorProfile: true },
+      });
+
+      const book = await prisma.book.create({
+        data: {
+          authorProfileId: author!.authorProfile!.id,
+          title: 'Replacement Test Book',
+          authorName: 'Queue Test Author',
+          asin: 'B0REPLACE123',
+          amazonLink: 'https://amazon.com/dp/B0REPLACE123',
+          synopsis: 'Test synopsis',
+          language: Language.EN,
+          genre: 'Fiction',
+          category: 'Mystery',
+          availableFormats: BookFormat.EBOOK,
+          creditsAllocated: 100,
+          targetReviews: 25,
+          reviewsPerWeek: 5,
+          status: CampaignStatus.ACTIVE,
+        },
+      });
+
+      bookId = book.id;
+
+      // Create first reader with expired assignment
+      const reader1 = await prisma.user.findUnique({
+        where: { email: 'queue-reader@test.com' },
+        include: { readerProfile: true },
+      });
+
+      const queue1 = await prisma.queue.create({
+        data: {
+          bookId: book.id,
+          readerProfileId: reader1!.readerProfile!.id,
+          status: QueueStatus.ASSIGNED,
+        },
+      });
+
+      await prisma.readerAssignment.create({
+        data: {
+          bookId: book.id,
+          readerProfileId: reader1!.readerProfile!.id,
+          queueId: queue1.id,
+          status: AssignmentStatus.EXPIRED,
+          materialsReleasedAt: subDays(new Date(), 4),
+          deadlineAt: subDays(new Date(), 1),
+        },
+      });
+
+      // Create second reader waiting in queue
+      const reader2Response = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send({
+          email: 'replacement-reader@test.com',
+          password: 'Test123!@#',
+          name: 'Replacement Reader',
+          role: UserRole.READER,
+        });
+
+      const reader2 = await prisma.user.findUnique({
+        where: { email: 'replacement-reader@test.com' },
+        include: { readerProfile: true },
+      });
+
+      await prisma.queue.create({
+        data: {
+          bookId: book.id,
+          readerProfileId: reader2!.readerProfile!.id,
+          status: QueueStatus.WAITING,
+        },
+      });
+    });
+
+    it('should reassign expired assignments to waiting readers', async () => {
+      // Process replacements
+      await queueService.processReplacements();
+
+      // Check that new assignment was created for waiting reader
+      const newAssignment = await prisma.readerAssignment.findFirst({
+        where: {
+          bookId,
+          status: AssignmentStatus.SCHEDULED,
+        },
+        include: {
+          readerProfile: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+
+      expect(newAssignment).toBeTruthy();
+      expect(newAssignment?.readerProfile.user.email).toBe('replacement-reader@test.com');
+    });
+
+    it('should update replacement reader queue status', async () => {
+      await queueService.processReplacements();
+
+      const queue = await prisma.queue.findFirst({
+        where: {
+          bookId,
+          readerProfile: {
+            user: {
+              email: 'replacement-reader@test.com',
+            },
+          },
+        },
+      });
+
+      expect(queue?.status).toBe(QueueStatus.ASSIGNED);
+    });
+  });
+
+  describe('Queue Position', () => {
+    beforeEach(async () => {
+      const author = await prisma.user.findUnique({
+        where: { email: 'queue-author@test.com' },
+        include: { authorProfile: true },
+      });
+
+      const book = await prisma.book.create({
+        data: {
+          authorProfileId: author!.authorProfile!.id,
+          title: 'Position Test Book',
+          authorName: 'Queue Test Author',
+          asin: 'B0POSITION123',
+          amazonLink: 'https://amazon.com/dp/B0POSITION123',
+          synopsis: 'Test synopsis',
+          language: Language.EN,
+          genre: 'Fiction',
+          category: 'Mystery',
+          availableFormats: BookFormat.EBOOK,
+          creditsAllocated: 100,
+          targetReviews: 25,
+          reviewsPerWeek: 5,
+          status: CampaignStatus.ACTIVE,
+        },
+      });
+
+      bookId = book.id;
+    });
+
+    it('should return reader queue position', async () => {
+      // Join queue
+      await request(app.getHttpServer())
+        .post(`/queue/${bookId}/join`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .expect(201);
+
+      // Get queue position
+      const response = await request(app.getHttpServer())
+        .get(`/queue/${bookId}/position`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .expect(200);
+
+      expect(response.body).toHaveProperty('position');
+      expect(response.body).toHaveProperty('totalInQueue');
+      expect(response.body).toHaveProperty('estimatedWeeks');
+      expect(response.body.position).toBeGreaterThan(0);
+    });
+
+    it('should reject position check for non-queued reader', async () => {
+      await request(app.getHttpServer())
+        .get(`/queue/${bookId}/position`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .expect(404);
+    });
+  });
+});

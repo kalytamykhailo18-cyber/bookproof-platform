@@ -1,0 +1,63 @@
+{
+  "title": "Campaign Analytics & Tracking",
+  "status": {
+    "title": "Campaign Status",
+    "active": "In progress",
+    "completed": "Campaign status"
+  },
+  "overview": {
+    "totalReviews": "Total Reviews",
+    "completed": "completed",
+    "completionRate": "Completion Rate",
+    "creditsUsed": "Credits Used",
+    "remaining": "remaining"
+  },
+  "timeline": {
+    "title": "Campaign Timeline",
+    "description": "Key dates and milestones",
+    "started": "Campaign Started",
+    "expectedEnd": "Expected End Date",
+    "daysRemaining": "Days Remaining",
+    "days": "days"
+  },
+  "weeklyProgress": {
+    "title": "Weekly Progress",
+    "description": "Reviews completed per week",
+    "table": {
+      "week": "Week",
+      "dateRange": "Date Range",
+      "planned": "Planned",
+      "completed": "Completed",
+      "variance": "Variance",
+      "status": "Status",
+      "noData": "No weekly progress data available"
+    }
+  },
+  "health": {
+    "title": "Distribution Health",
+    "description": "How your campaign is progressing",
+    "overallHealth": "Overall Health",
+    "complete": "Complete",
+    "cumulativeVariance": "Cumulative Variance",
+    "reviews": "reviews",
+    "aheadOfSchedule": "Ahead of schedule",
+    "behindSchedule": "Behind schedule",
+    "avgReviewsPerWeek": "Average Reviews Per Week",
+    "reviewsPerWeek": "reviews/week",
+    "basedOnCompletedWeeks": "Based on completed weeks"
+  },
+  "assignments": {
+    "title": "Active Assignments",
+    "description": "Current beta readers working on your book",
+    "table": {
+      "reader": "Reader",
+      "assigned": "Assigned",
+      "deadline": "Deadline",
+      "status": "Status",
+      "progress": "Progress",
+      "noData": "No active assignments"
+    }
+  },
+  "loading": "Loading campaign analytics...",
+  "notFound": "Campaign not found"
+}

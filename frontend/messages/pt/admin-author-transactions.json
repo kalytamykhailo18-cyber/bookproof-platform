@@ -1,0 +1,52 @@
+{
+  "title": "Histórico de Transações de Créditos",
+  "subtitle": "Ver todas as transações de créditos deste autor",
+  "backToAuthors": "Voltar para Autores",
+  "stats": {
+    "totalPurchased": "Total Comprado",
+    "available": "Disponíveis",
+    "used": "Usados"
+  },
+  "types": {
+    "PURCHASE": "Compra",
+    "SUBSCRIPTION_RENEWAL": "Assinatura",
+    "ALLOCATION": "Alocação",
+    "DEDUCTION": "Dedução",
+    "REFUND": "Reembolso",
+    "MANUAL_ADJUSTMENT": "Ajuste Manual",
+    "EXPIRATION": "Expiração",
+    "BONUS": "Bônus"
+  },
+  "filters": {
+    "placeholder": "Filtrar por tipo",
+    "all": "Todos os Tipos"
+  },
+  "table": {
+    "title": "Transações",
+    "totalTransactions": "transações totais",
+    "date": "Data",
+    "type": "Tipo",
+    "description": "Descrição",
+    "amount": "Quantidade",
+    "balance": "Saldo Após",
+    "performedBy": "Realizado Por",
+    "book": "Livro",
+    "note": "Nota",
+    "system": "Sistema"
+  },
+  "empty": {
+    "title": "Nenhuma transação encontrada",
+    "description": "Este autor não tem transações de créditos ainda",
+    "filtered": "Nenhuma transação deste tipo"
+  },
+  "pagination": {
+    "showing": "Mostrando",
+    "of": "de",
+    "previous": "Anterior",
+    "next": "Próximo"
+  },
+  "error": {
+    "title": "Erro ao carregar",
+    "description": "Erro ao carregar o histórico de transações"
+  }
+}

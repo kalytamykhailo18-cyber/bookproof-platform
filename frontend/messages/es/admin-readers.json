@@ -1,0 +1,217 @@
+{
+  "title": "Gestión de Lectores",
+  "subtitle": "Gestionar todos los lectores de la plataforma",
+  "stats": {
+    "totalReaders": "Lectores Totales",
+    "allReaders": "Todos los lectores registrados",
+    "activeReaders": "Lectores Activos",
+    "currentlyActive": "Actualmente activos",
+    "suspendedReaders": "Suspendidos",
+    "accountsSuspended": "Cuentas suspendidas",
+    "flaggedReaders": "Marcados",
+    "needsAttention": "Necesita atención",
+    "totalBalance": "Balance Total",
+    "inReaderWallets": "En billeteras de lectores",
+    "newThisMonth": "Nuevos Este Mes",
+    "newRegistrations": "Nuevos registros",
+    "avgReliability": "Confiabilidad Prom.",
+    "platformAverage": "Promedio de plataforma",
+    "avgCompletion": "Finalización Prom.",
+    "completionRate": "Tasa de finalización",
+    "reliability": "Puntuación de Confiabilidad",
+    "completion": "Tasa de Finalización",
+    "reviewsCompleted": "Reseñas Completadas",
+    "reviewsExpired": "Reseñas Expiradas",
+    "reviewsRejected": "Reseñas Rechazadas"
+  },
+  "status": {
+    "active": "Activo",
+    "suspended": "Suspendido",
+    "flagged": "Marcado"
+  },
+  "contentPreference": {
+    "ebook": "Solo Ebook",
+    "audiobook": "Solo Audiolibro",
+    "both": "Ambos Formatos"
+  },
+  "filters": {
+    "title": "Filtros",
+    "searchPlaceholder": "Buscar por nombre o correo...",
+    "status": "Estado",
+    "allStatuses": "Todos los Estados",
+    "contentPreference": "Preferencia de Contenido",
+    "allPreferences": "Todas las Preferencias",
+    "amazonVerification": "Verificación de Amazon",
+    "allVerification": "Todos",
+    "verified": "Verificado",
+    "unverified": "No Verificado"
+  },
+  "table": {
+    "title": "Lectores",
+    "description": "Todos los lectores registrados en la plataforma",
+    "reader": "Lector",
+    "status": "Estado",
+    "preference": "Preferencia",
+    "amazon": "Amazon",
+    "reviews": "Reseñas",
+    "reliability": "Confiabilidad",
+    "wallet": "Billetera",
+    "actions": "Acciones",
+    "completedExpired": "completadas / expiradas",
+    "earned": "Ganado",
+    "book": "Libro",
+    "format": "Formato",
+    "assignedAt": "Asignado",
+    "rating": "Calificación",
+    "submittedAt": "Enviado",
+    "validatedAt": "Validado",
+    "date": "Fecha",
+    "type": "Tipo",
+    "description": "Descripción",
+    "amount": "Monto",
+    "requestedAt": "Solicitado",
+    "processedAt": "Procesado",
+    "method": "Método"
+  },
+  "empty": {
+    "title": "No se encontraron lectores",
+    "description": "Intenta ajustar tus filtros o búsqueda"
+  },
+  "detail": {
+    "backToReaders": "Volver a Lectores",
+    "joined": "Registrado"
+  },
+  "tabs": {
+    "overview": "Resumen",
+    "reviews": "Reseñas",
+    "wallet": "Billetera",
+    "amazon": "Amazon",
+    "actions": "Acciones"
+  },
+  "overview": {
+    "profileInfo": "Información del Perfil",
+    "performance": "Rendimiento",
+    "recentAssignments": "Asignaciones Recientes",
+    "recentAssignmentsDesc": "Últimas 10 asignaciones de libros",
+    "noAssignments": "Sin asignaciones aún"
+  },
+  "fields": {
+    "country": "País",
+    "language": "Idioma",
+    "contentPreference": "Preferencia de Contenido",
+    "preferredGenres": "Géneros Preferidos",
+    "noGenres": "Sin géneros preferidos"
+  },
+  "wallet": {
+    "summary": "Resumen de Billetera",
+    "balance": "Balance Actual",
+    "currentBalance": "Balance Actual",
+    "totalEarned": "Total Ganado",
+    "totalWithdrawn": "Total Retirado",
+    "adjust": "Ajustar Billetera",
+    "transactions": "Historial de Transacciones",
+    "transactionsDesc": "Todas las transacciones de billetera",
+    "noTransactions": "Sin transacciones aún",
+    "payoutHistory": "Historial de Pagos",
+    "noPayouts": "Sin pagos aún"
+  },
+  "reviews": {
+    "title": "Historial de Reseñas",
+    "description": "Todas las reseñas enviadas por este lector",
+    "empty": "Sin reseñas aún"
+  },
+  "amazon": {
+    "title": "Perfiles de Amazon",
+    "description": "Perfiles de Amazon vinculados para este lector",
+    "empty": "Sin perfiles de Amazon vinculados",
+    "verified": "Verificado",
+    "pending": "Pendiente de verificación",
+    "addedOn": "Agregado el",
+    "verify": "Verificar",
+    "confirmVerify": "¿Estás seguro de que deseas verificar manualmente este perfil de Amazon?"
+  },
+  "notes": {
+    "title": "Notas de Admin",
+    "empty": "Sin notas aún",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar esta nota?"
+  },
+  "flag": {
+    "reason": "Razón de la Marca"
+  },
+  "actions": {
+    "suspend": "Suspender",
+    "unsuspend": "Reactivar",
+    "flag": "Marcar",
+    "unflag": "Desmarcar",
+    "accountStatus": "Estado de Cuenta",
+    "accountStatusDesc": "Suspender o reactivar esta cuenta de lector",
+    "suspendAccount": "Suspender Cuenta",
+    "unsuspendAccount": "Reactivar Cuenta",
+    "suspendWarning": "Suspender evitará que el lector acceda a la plataforma y reciba nuevas asignaciones.",
+    "unsuspendInfo": "Esta cuenta está actualmente suspendida. Reactivar restaurará el acceso completo.",
+    "flagStatus": "Estado de Marca",
+    "flagStatusDesc": "Marcar esta cuenta para revisión o atención",
+    "removeflag": "Quitar Marca",
+    "flagAccount": "Marcar Cuenta",
+    "unflagInfo": "Esta cuenta está actualmente marcada. Quitar la marca eliminará la advertencia.",
+    "flagWarning": "Marcar señala esta cuenta para atención pero no restringe el acceso.",
+    "walletAdjustment": "Ajuste de Billetera",
+    "walletAdjustmentDesc": "Agregar o deducir fondos de la billetera del lector",
+    "addFunds": "Agregar Fondos",
+    "deductFunds": "Deducir Fondos",
+    "walletInfo": "Los ajustes de billetera requieren una razón y serán registrados.",
+    "adminNotes": "Notas de Admin",
+    "adminNotesDesc": "Agregar notas internas sobre este lector",
+    "addNote": "Agregar Nota",
+    "noteInfo": "Las notas solo son visibles para administradores y no se comparten con el lector."
+  },
+  "dialogs": {
+    "reason": "Razón",
+    "reasonPlaceholder": "Ingresa la razón...",
+    "notes": "Notas (opcional)",
+    "notesPlaceholder": "Notas adicionales...",
+    "cancel": "Cancelar",
+    "processing": "Procesando...",
+    "suspend": {
+      "title": "Suspender Lector",
+      "description": "Esto suspenderá la cuenta del lector y evitará el acceso a la plataforma.",
+      "confirm": "Suspender Cuenta"
+    },
+    "unsuspend": {
+      "title": "Reactivar Lector",
+      "description": "Esto restaurará el acceso del lector a la plataforma.",
+      "confirm": "Reactivar Cuenta"
+    },
+    "wallet": {
+      "title": "Ajustar Balance de Billetera",
+      "description": "Agregar o deducir fondos de la billetera de este lector.",
+      "type": "Tipo",
+      "add": "Agregar Fondos",
+      "deduct": "Deducir Fondos",
+      "amount": "Monto ($)",
+      "confirm": "Ajustar Balance"
+    },
+    "flag": {
+      "title": "Marcar Lector",
+      "description": "Marcar la cuenta de este lector para atención.",
+      "confirm": "Marcar Cuenta"
+    },
+    "unflag": {
+      "title": "Quitar Marca",
+      "description": "Quitar la marca de la cuenta de este lector.",
+      "confirm": "Quitar Marca"
+    },
+    "note": {
+      "title": "Agregar Nota de Admin",
+      "description": "Agregar una nota interna sobre este lector.",
+      "content": "Nota",
+      "placeholder": "Ingresa tu nota...",
+      "confirm": "Agregar Nota"
+    }
+  },
+  "notFound": {
+    "title": "Lector No Encontrado",
+    "description": "El lector que buscas no existe o ha sido eliminado.",
+    "backToList": "Volver a Lectores"
+  }
+}

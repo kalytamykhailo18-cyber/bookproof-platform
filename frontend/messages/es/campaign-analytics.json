@@ -1,0 +1,63 @@
+{
+  "title": "Análisis y Seguimiento de Campaña",
+  "status": {
+    "title": "Estado de la Campaña",
+    "active": "En progreso",
+    "completed": "Estado de la campaña"
+  },
+  "overview": {
+    "totalReviews": "Total de Reseñas",
+    "completed": "completadas",
+    "completionRate": "Tasa de Finalización",
+    "creditsUsed": "Créditos Usados",
+    "remaining": "restantes"
+  },
+  "timeline": {
+    "title": "Cronograma de la Campaña",
+    "description": "Fechas importantes e hitos",
+    "started": "Campaña Iniciada",
+    "expectedEnd": "Fecha de Finalización Esperada",
+    "daysRemaining": "Días Restantes",
+    "days": "días"
+  },
+  "weeklyProgress": {
+    "title": "Progreso Semanal",
+    "description": "Reseñas completadas por semana",
+    "table": {
+      "week": "Semana",
+      "dateRange": "Período",
+      "planned": "Planificado",
+      "completed": "Completado",
+      "variance": "Varianza",
+      "status": "Estado",
+      "noData": "No hay datos de progreso semanal disponibles"
+    }
+  },
+  "health": {
+    "title": "Salud de la Distribución",
+    "description": "Cómo está progresando su campaña",
+    "overallHealth": "Salud General",
+    "complete": "Completo",
+    "cumulativeVariance": "Varianza Acumulativa",
+    "reviews": "reseñas",
+    "aheadOfSchedule": "Adelantado",
+    "behindSchedule": "Retrasado",
+    "avgReviewsPerWeek": "Promedio de Reseñas Por Semana",
+    "reviewsPerWeek": "reseñas/semana",
+    "basedOnCompletedWeeks": "Basado en semanas completadas"
+  },
+  "assignments": {
+    "title": "Asignaciones Activas",
+    "description": "Lectores beta actuales trabajando en su libro",
+    "table": {
+      "reader": "Lector",
+      "assigned": "Asignado",
+      "deadline": "Plazo",
+      "status": "Estado",
+      "progress": "Progreso",
+      "noData": "No hay asignaciones activas"
+    }
+  },
+  "loading": "Cargando análisis de campaña...",
+  "notFound": "Campaña no encontrada"
+}

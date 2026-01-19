@@ -1,0 +1,54 @@
+{
+  "title": "Painel do Administrador",
+  "description": "Visão geral da plataforma e métricas principais",
+  "summary": {
+    "totalCampaigns": "Total de Campanhas",
+    "activeCampaigns": "ativas",
+    "totalAuthors": "Total de Autores",
+    "platformWide": "Em toda a plataforma",
+    "totalReaders": "Total de Leitores",
+    "activeReaders": "ativos",
+    "pendingReviews": "Avaliações Pendentes",
+    "awaitingCompletion": "Aguardando conclusão"
+  },
+  "revenue": {
+    "thisMonth": "Receita Este Mês",
+    "changeFromLastMonth": "do mês passado",
+    "totalRevenue": "Receita Total (Todo o Tempo)",
+    "lifetimeEarnings": "Ganhos vitalícios",
+    "activeSubscriptions": "Assinaturas Ativas",
+    "mrr": "RMR",
+    "breakdown": "Detalhamento de Receita",
+    "breakdownDescription": "Receita por fonte",
+    "creditPurchases": "Compras de Créditos",
+    "oneTimePayments": "Pagamentos únicos",
+    "subscriptions": "Assinaturas",
+    "recurringRevenue": "Receita recorrente"
+  },
+  "campaigns": {
+    "requireAttention": "Campanhas Requerendo Atenção",
+    "issuesNeedReview": "Problemas que precisam de revisão do administrador",
+    "bookTitle": "Título do Livro",
+    "author": "Autor",
+    "issue": "Problema",
+    "severity": "Gravidade",
+    "status": "Status",
+    "noIssues": "Nenhuma campanha requerendo atenção"
+  },
+  "activity": {
+    "title": "Atividade Recente",
+    "description": "Eventos mais recentes da plataforma",
+    "noActivity": "Nenhuma atividade recente"
+  },
+  "health": {
+    "title": "Saúde da Plataforma",
+    "avgReviewCompletion": "Conclusão Média de Avaliação",
+    "avgTimeToComplete": "Tempo médio para completar",
+    "days": "dias",
+    "readerSatisfaction": "Satisfação do Leitor",
+    "basedOnFeedback": "Baseado em feedback",
+    "campaignSuccessRate": "Taxa de Sucesso de Campanhas",
+    "completedOnTime": "Concluído no prazo"
+  },
+  "loading": "Carregando painel..."
+}

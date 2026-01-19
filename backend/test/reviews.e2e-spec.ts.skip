@@ -1,0 +1,555 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import request from 'supertest';
+import { AppModule } from '../src/app.module';
+import { PrismaService } from '@common/prisma/prisma.service';
+import { UserRole, ReviewStatus, AssignmentStatus, BookFormat, Language, CampaignStatus } from '@prisma/client';
+import { addDays } from 'date-fns';
+
+describe('Reviews (e2e)', () => {
+  let app: INestApplication;
+  let prisma: PrismaService;
+  let readerToken: string;
+  let adminToken: string;
+  let assignmentId: string;
+  let bookId: string;
+  let readerProfileId: string;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    prisma = app.get<PrismaService>(PrismaService);
+    await app.init();
+
+    // Create test reader
+    const readerResponse = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send({
+        email: 'review-reader@test.com',
+        password: 'Test123!@#',
+        name: 'Review Test Reader',
+        role: UserRole.READER,
+      });
+    readerToken = readerResponse.body.accessToken;
+
+    const reader = await prisma.user.findUnique({
+      where: { email: 'review-reader@test.com' },
+      include: { readerProfile: true },
+    });
+    readerProfileId = reader!.readerProfile!.id;
+
+    // Create test admin
+    const admin = await prisma.user.create({
+      data: {
+        email: 'review-admin@test.com',
+        passwordHash: '$2b$10$test.hashed.passwordHash',
+        name: 'Review Test Admin',
+        role: UserRole.ADMIN,
+      },
+    });
+
+    const adminResponse = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({
+        email: 'review-admin@test.com',
+        password: 'Test123!@#', // This will fail but we'll use direct token generation
+      });
+
+    // For testing, we'll generate admin token directly
+    // adminToken = ... (generate JWT token with admin role)
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+    await app.close();
+  });
+
+  beforeEach(async () => {
+    // Create test campaign and assignment
+    const author = await prisma.user.create({
+      data: {
+        email: `author-${Date.now()}@test.com`,
+        passwordHash: '$2b$10$test.hashed.passwordHash',
+        name: 'Test Author',
+        role: UserRole.AUTHOR,
+        authorProfile: {
+          create: {
+            availableCredits: 100,
+            allocatedCredits: 0,
+          },
+        },
+      },
+      include: { authorProfile: true },
+    });
+
+    const book = await prisma.book.create({
+      data: {
+        authorProfileId: author.authorProfile!.id,
+        title: 'Review Test Book',
+        authorName: 'Test Author',
+        asin: 'B0REVIEW123',
+        amazonLink: 'https://amazon.com/dp/B0REVIEW123',
+        synopsis: 'Test synopsis',
+        language: Language.EN,
+        genre: 'Fiction',
+        category: 'Mystery',
+        availableFormats: BookFormat.EBOOK,
+        creditsAllocated: 10,
+        targetReviews: 5,
+        reviewsPerWeek: 5,
+        status: CampaignStatus.ACTIVE,
+      },
+    });
+
+    bookId = book.id;
+
+    const queue = await prisma.queue.create({
+      data: {
+        bookId: book.id,
+        readerProfileId,
+        status: 'ASSIGNED',
+      },
+    });
+
+    const assignment = await prisma.readerAssignment.create({
+      data: {
+        bookId: book.id,
+        readerProfileId,
+        queueId: queue.id,
+        status: AssignmentStatus.ACTIVE,
+        materialsReleasedAt: new Date(),
+        deadlineAt: addDays(new Date(), 3), // 72 hours from now
+      },
+    });
+
+    assignmentId = assignment.id;
+  });
+
+  describe('Review Submission', () => {
+    it('should allow reader to submit review', async () => {
+      const response = await request(app.getHttpServer())
+        .post(`/reviews/assignments/${assignmentId}/submit`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .send({
+          amazonReviewLink: 'https://amazon.com/review/R1234567890ABC',
+          rating: 5,
+          feedback: 'Great book! Really enjoyed reading it.',
+        })
+        .expect(201);
+
+      expect(response.body).toHaveProperty('id');
+      expect(response.body.status).toBe(ReviewStatus.PENDING_VALIDATION);
+      expect(response.body.rating).toBe(5);
+      expect(response.body.amazonReviewLink).toBe('https://amazon.com/review/R1234567890ABC');
+    });
+
+    it('should reject review without Amazon link', async () => {
+      await request(app.getHttpServer())
+        .post(`/reviews/assignments/${assignmentId}/submit`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .send({
+          rating: 5,
+          feedback: 'Great book!',
+          // amazonReviewLink is missing
+        })
+        .expect(400);
+    });
+
+    it('should reject review with invalid Amazon link format', async () => {
+      await request(app.getHttpServer())
+        .post(`/reviews/assignments/${assignmentId}/submit`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .send({
+          amazonReviewLink: 'https://not-amazon.com/review/123',
+          rating: 5,
+          feedback: 'Great book!',
+        })
+        .expect(400);
+    });
+
+    it('should reject review with invalid rating', async () => {
+      await request(app.getHttpServer())
+        .post(`/reviews/assignments/${assignmentId}/submit`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .send({
+          amazonReviewLink: 'https://amazon.com/review/R1234567890ABC',
+          rating: 6, // Rating must be 1-5
+          feedback: 'Great book!',
+        })
+        .expect(400);
+    });
+
+    it('should reject duplicate review submission', async () => {
+      // Submit first review
+      await request(app.getHttpServer())
+        .post(`/reviews/assignments/${assignmentId}/submit`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .send({
+          amazonReviewLink: 'https://amazon.com/review/R1234567890ABC',
+          rating: 5,
+          feedback: 'Great book!',
+        })
+        .expect(201);
+
+      // Try to submit again
+      await request(app.getHttpServer())
+        .post(`/reviews/assignments/${assignmentId}/submit`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .send({
+          amazonReviewLink: 'https://amazon.com/review/R0987654321DEF',
+          rating: 4,
+          feedback: 'Still good!',
+        })
+        .expect(409); // Conflict
+    });
+
+    it('should update assignment status to REVIEW_SUBMITTED', async () => {
+      await request(app.getHttpServer())
+        .post(`/reviews/assignments/${assignmentId}/submit`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .send({
+          amazonReviewLink: 'https://amazon.com/review/R1234567890ABC',
+          rating: 5,
+          feedback: 'Great book!',
+        })
+        .expect(201);
+
+      const assignment = await prisma.readerAssignment.findUnique({
+        where: { id: assignmentId },
+      });
+
+      expect(assignment?.status).toBe(AssignmentStatus.REVIEW_SUBMITTED);
+    });
+
+    it('should reject review submission from non-assigned reader', async () => {
+      // Create another reader
+      const otherReaderResponse = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send({
+          email: 'other-reader@test.com',
+          password: 'Test123!@#',
+          name: 'Other Reader',
+          role: UserRole.READER,
+        });
+
+      await request(app.getHttpServer())
+        .post(`/reviews/assignments/${assignmentId}/submit`)
+        .set('Authorization', `Bearer ${otherReaderResponse.body.accessToken}`)
+        .send({
+          amazonReviewLink: 'https://amazon.com/review/R1234567890ABC',
+          rating: 5,
+          feedback: 'Great book!',
+        })
+        .expect(403);
+    });
+
+    it('should reject review submission after deadline', async () => {
+      // Update assignment to be expired
+      await prisma.readerAssignment.update({
+        where: { id: assignmentId },
+        data: {
+          status: AssignmentStatus.EXPIRED,
+          deadlineAt: addDays(new Date(), -1), // Expired yesterday
+        },
+      });
+
+      await request(app.getHttpServer())
+        .post(`/reviews/assignments/${assignmentId}/submit`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .send({
+          amazonReviewLink: 'https://amazon.com/review/R1234567890ABC',
+          rating: 5,
+          feedback: 'Great book!',
+        })
+        .expect(400);
+    });
+  });
+
+  describe('Review Validation', () => {
+    let reviewId: string;
+
+    beforeEach(async () => {
+      // Submit a review
+      const response = await request(app.getHttpServer())
+        .post(`/reviews/assignments/${assignmentId}/submit`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .send({
+          amazonReviewLink: 'https://amazon.com/review/R1234567890ABC',
+          rating: 5,
+          feedback: 'Great book!',
+        });
+
+      reviewId = response.body.id;
+    });
+
+    it('should get pending reviews for admin', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/reviews/pending')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200);
+
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBeGreaterThan(0);
+
+      const review = response.body[0];
+      expect(review).toHaveProperty('id');
+      expect(review).toHaveProperty('amazonReviewLink');
+      expect(review).toHaveProperty('rating');
+      expect(review.status).toBe(ReviewStatus.PENDING_VALIDATION);
+    });
+
+    it('should allow admin to validate review', async () => {
+      const response = await request(app.getHttpServer())
+        .post(`/reviews/${reviewId}/validate`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          isValid: true,
+          adminNotes: 'Review looks good',
+        })
+        .expect(200);
+
+      expect(response.body.status).toBe(ReviewStatus.VALIDATED);
+      expect(response.body.validatedAt).toBeTruthy();
+    });
+
+    it('should allow admin to reject review', async () => {
+      const response = await request(app.getHttpServer())
+        .post(`/reviews/${reviewId}/validate`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          isValid: false,
+          adminNotes: 'Review link is invalid',
+        })
+        .expect(200);
+
+      expect(response.body.status).toBe(ReviewStatus.REJECTED);
+      expect(response.body.rejectedAt).toBeTruthy();
+    });
+
+    it('should credit reader wallet when review is validated', async () => {
+      // Get initial balance
+      const initialWallet = await prisma.readerWallet.findUnique({
+        where: { readerProfileId },
+      });
+
+      const initialBalance = initialWallet?.availableBalance || 0;
+
+      // Validate review
+      await request(app.getHttpServer())
+        .post(`/reviews/${reviewId}/validate`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          isValid: true,
+        })
+        .expect(200);
+
+      // Check updated balance
+      const updatedWallet = await prisma.readerWallet.findUnique({
+        where: { readerProfileId },
+      });
+
+      expect(updatedWallet?.availableBalance).toBeGreaterThan(initialBalance);
+    });
+
+    it('should create wallet transaction when review is validated', async () => {
+      await request(app.getHttpServer())
+        .post(`/reviews/${reviewId}/validate`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          isValid: true,
+        })
+        .expect(200);
+
+      const transaction = await prisma.walletTransaction.findFirst({
+        where: {
+          readerProfileId,
+          type: 'EARNING',
+          relatedEntityId: reviewId,
+        },
+      });
+
+      expect(transaction).toBeTruthy();
+      expect(transaction?.amount).toBeGreaterThan(0);
+    });
+
+    it('should send email notification on validation', async () => {
+      await request(app.getHttpServer())
+        .post(`/reviews/${reviewId}/validate`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          isValid: true,
+        })
+        .expect(200);
+
+      const emailLog = await prisma.emailLog.findFirst({
+        where: {
+          type: 'READER_REVIEW_VALIDATED',
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      expect(emailLog).toBeTruthy();
+    });
+
+    it('should send email notification on rejection', async () => {
+      await request(app.getHttpServer())
+        .post(`/reviews/${reviewId}/validate`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          isValid: false,
+          adminNotes: 'Review link is invalid',
+        })
+        .expect(200);
+
+      const emailLog = await prisma.emailLog.findFirst({
+        where: {
+          type: 'READER_REVIEW_REJECTED',
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      expect(emailLog).toBeTruthy();
+    });
+
+    it('should update assignment status to VALIDATED', async () => {
+      await request(app.getHttpServer())
+        .post(`/reviews/${reviewId}/validate`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          isValid: true,
+        })
+        .expect(200);
+
+      const assignment = await prisma.readerAssignment.findUnique({
+        where: { id: assignmentId },
+      });
+
+      expect(assignment?.status).toBe(AssignmentStatus.VALIDATED);
+    });
+
+    it('should prevent non-admin from validating reviews', async () => {
+      await request(app.getHttpServer())
+        .post(`/reviews/${reviewId}/validate`)
+        .set('Authorization', `Bearer ${readerToken}`)
+        .send({
+          isValid: true,
+        })
+        .expect(403);
+    });
+  });
+
+  describe('Amazon Review Monitoring', () => {
+    let reviewId: string;
+
+    beforeEach(async () => {
+      // Create validated review
+      const review = await prisma.review.create({
+        data: {
+          readerAssignmentId: assignmentId,
+          amazonReviewLink: 'https://amazon.com/review/R1234567890ABC',
+          rating: 5,
+          feedback: 'Great book!',
+          status: ReviewStatus.VALIDATED,
+          submittedAt: new Date(),
+          validatedAt: new Date(),
+        },
+      });
+
+      reviewId = review.id;
+
+      // Create monitoring entry
+      await prisma.amazonReviewMonitor.create({
+        data: {
+          reviewId: review.id,
+          amazonReviewId: 'R1234567890ABC',
+          lastCheckedAt: new Date(),
+          isStillLive: true,
+        },
+      });
+    });
+
+    it('should check if review is still live on Amazon', async () => {
+      // This would typically call Amazon's API
+      const monitor = await prisma.amazonReviewMonitor.findFirst({
+        where: { reviewId },
+      });
+
+      expect(monitor).toBeTruthy();
+      expect(monitor?.amazonReviewId).toBe('R1234567890ABC');
+      expect(monitor?.isStillLive).toBe(true);
+    });
+
+    it('should flag removed reviews', async () => {
+      // Simulate review removal detection
+      await prisma.amazonReviewMonitor.update({
+        where: { reviewId },
+        data: {
+          isStillLive: false,
+          removedAt: new Date(),
+        },
+      });
+
+      const monitor = await prisma.amazonReviewMonitor.findFirst({
+        where: { reviewId },
+      });
+
+      expect(monitor?.isStillLive).toBe(false);
+      expect(monitor?.removedAt).toBeTruthy();
+    });
+  });
+
+  describe('Review Statistics', () => {
+    beforeEach(async () => {
+      // Create multiple validated reviews
+      for (let i = 0; i < 5; i++) {
+        await prisma.review.create({
+          data: {
+            readerAssignmentId: assignmentId,
+            amazonReviewLink: `https://amazon.com/review/R${i}`,
+            rating: 4 + (i % 2), // Alternating 4 and 5 star ratings
+            status: ReviewStatus.VALIDATED,
+            submittedAt: new Date(),
+            validatedAt: new Date(),
+          },
+        });
+      }
+    });
+
+    it('should calculate average rating for campaign', async () => {
+      const reviews = await prisma.review.findMany({
+        where: {
+          readerAssignment: {
+            bookId,
+          },
+          status: ReviewStatus.VALIDATED,
+        },
+      });
+
+      const totalRating = reviews.reduce((sum, r) => sum + (r.rating?.toNumber() || 0), 0);
+      const avgRating = totalRating / reviews.length;
+
+      expect(avgRating).toBeGreaterThan(4);
+      expect(avgRating).toBeLessThanOrEqual(5);
+    });
+
+    it('should count reviews by status', async () => {
+      const validatedCount = await prisma.review.count({
+        where: {
+          readerAssignment: {
+            bookId,
+          },
+          status: ReviewStatus.VALIDATED,
+        },
+      });
+
+      expect(validatedCount).toBe(5);
+    });
+  });
+});

@@ -1,0 +1,81 @@
+{
+  "title": "Comprar Créditos",
+  "description": "Escolha um pacote que atenda às suas necessidades",
+  "packages": {
+    "mostPopular": "Mais Popular",
+    "purchaseButton": "Comprar Pacote",
+    "purchasing": "Processando...",
+    "perCredit": "Preço por crédito",
+    "starter": {
+      "name": "Iniciante",
+      "description": "Perfeito para experimentar a plataforma"
+    },
+    "professional": {
+      "name": "Profissional",
+      "description": "Melhor valor para autores regulares"
+    },
+    "enterprise": {
+      "name": "Empresarial",
+      "description": "Para editoras e autores prolíficos"
+    }
+  },
+  "features": {
+    "credits": "Créditos de Leitor Beta",
+    "validity": "Dias de Validade",
+    "emailSupport": "Suporte por Email",
+    "prioritySupport": "Suporte Prioritário",
+    "analyticsDashboard": "Painel de Análises",
+    "dedicatedSupport": "Suporte Dedicado",
+    "customAnalytics": "Análises Personalizadas",
+    "bulkOperations": "Operações em Massa"
+  },
+  "coupon": {
+    "title": "Tem um Código de Cupom?",
+    "description": "Digite seu código de cupom para obter desconto na compra",
+    "label": "Código de Cupom",
+    "placeholder": "DIGITE-O-CODIGO-AQUI",
+    "apply": "Aplicar"
+  },
+  "history": {
+    "title": "Histórico de Compras",
+    "description": "Suas transações de compra de créditos",
+    "loading": "Carregando transações...",
+    "noData": "Ainda não há compras",
+    "getStarted": "Compre seu primeiro pacote de créditos para começar",
+    "table": {
+      "date": "Data",
+      "package": "Pacote",
+      "credits": "Créditos",
+      "amount": "Valor",
+      "status": "Status",
+      "validity": "Validade",
+      "actions": "Ações"
+    }
+  },
+  "info": {
+    "title": "Como Funcionam os Créditos",
+    "creditRatio": "Créditos são convertidos em avaliações com base no formato do conteúdo:",
+    "ebookRatio": "1 crédito = 1 avaliação de ebook",
+    "audiobookRatio": "2 créditos = 1 avaliação de audiobook",
+    "audiobookNote": "Audiobooks custam mais porque exigem mais tempo e esforço dos leitores.",
+    "validityTitle": "Validade dos Créditos",
+    "validityExplanation": "Os créditos devem ser ativados (alocados a uma campanha) dentro de uma janela específica baseada no tamanho do seu pacote:",
+    "validity30": "Até 200 créditos: 30 dias para ativar",
+    "validity90": "201-500 créditos: 90 dias para ativar",
+    "validity120": "501+ créditos: 120 dias para ativar",
+    "activationNote": "Uma vez ativada, sua campanha continua até a conclusão sem limite de tempo."
+  },
+  "faq": {
+    "title": "Perguntas Frequentes",
+    "question1": "Como os créditos são convertidos em avaliações?",
+    "answer1": "1 crédito equivale a 1 avaliação de ebook, e 2 créditos equivalem a 1 avaliação de audiobook. Audiobooks exigem mais créditos porque demandam mais tempo e esforço dos leitores.",
+    "question2": "Por quanto tempo os créditos são válidos?",
+    "answer2": "Os créditos devem ser ativados (alocados a uma campanha) dentro de 30, 90 ou 120 dias, dependendo do tamanho do pacote. Uma vez criada a campanha, ela continua até a conclusão sem limite de tempo.",
+    "question3": "Posso obter um reembolso?",
+    "answer3": "Créditos não utilizados podem ser reembolsados dentro de 14 dias da compra. Uma vez que os créditos são alocados a uma campanha, eles se tornam não reembolsáveis.",
+    "question4": "Quais métodos de pagamento vocês aceitam?",
+    "answer4": "Aceitamos todos os principais cartões de crédito, cartões de débito e carteiras digitais através do nosso gateway de pagamento seguro Stripe.",
+    "question5": "Posso comprar créditos para vários livros?",
+    "answer5": "Sim! Os créditos são adicionados ao saldo da sua conta e podem ser alocados para qualquer uma das suas campanhas."
+  }
+}

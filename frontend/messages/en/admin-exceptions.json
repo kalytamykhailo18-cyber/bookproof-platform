@@ -1,0 +1,104 @@
+{
+  "title": "Assignment Exceptions",
+  "description": "Manage deadline extensions, reassignments, cancellations, and error corrections",
+
+  "stats": {
+    "overdue": "Overdue",
+    "extended": "Extended",
+    "reassigned": "Reassigned",
+    "corrected": "Corrected"
+  },
+
+  "table": {
+    "title": "Assignments Requiring Attention",
+    "description": "View and manage assignments that need administrative action",
+    "assignmentId": "Assignment ID",
+    "bookTitle": "Book Title",
+    "reader": "Reader",
+    "status": "Status",
+    "reason": "Reason",
+    "type": "Type",
+    "actions": "Actions",
+    "noData": "No exceptions found"
+  },
+
+  "actions": {
+    "extendDeadline": "Extend Deadline",
+    "reassignReader": "Reassign Reader",
+    "bulkReassign": "Bulk Reassign",
+    "cancelAssignment": "Cancel Assignment",
+    "correctError": "Correct Error"
+  },
+
+  "dialogs": {
+    "extendDeadline": {
+      "title": "Extend Deadline",
+      "description": "Extend the deadline for this assignment",
+      "hoursLabel": "Extension Hours *",
+      "reasonLabel": "Reason *",
+      "reasonPlaceholder": "Explain why deadline is being extended",
+      "notesLabel": "Additional Notes",
+      "notesPlaceholder": "Optional notes for audit trail",
+      "cancel": "Cancel",
+      "confirm": "Extend Deadline",
+      "confirming": "Extending..."
+    },
+    "reassignReader": {
+      "title": "Reassign Reader",
+      "description": "Reassign this reader to a different book",
+      "targetBookIdLabel": "Target Book ID *",
+      "targetBookIdPlaceholder": "Enter target book ID",
+      "reasonLabel": "Reason *",
+      "reasonPlaceholder": "Explain why reader is being reassigned",
+      "notesLabel": "Additional Notes",
+      "notesPlaceholder": "Optional notes for audit trail",
+      "cancel": "Cancel",
+      "confirm": "Reassign Reader",
+      "confirming": "Reassigning..."
+    },
+    "bulkReassign": {
+      "title": "Bulk Reassign Assignments",
+      "description": "Reassign {count} selected assignments to a different book",
+      "targetBookIdLabel": "Target Book ID",
+      "targetBookIdPlaceholder": "Enter target book ID",
+      "reasonLabel": "Reason *",
+      "reasonPlaceholder": "Explain why these assignments are being reassigned",
+      "cancel": "Cancel",
+      "confirm": "Bulk Reassign",
+      "confirming": "Reassigning..."
+    },
+    "cancelAssignment": {
+      "title": "Cancel Assignment",
+      "description": "Cancel this assignment and optionally refund credits",
+      "reasonLabel": "Reason *",
+      "reasonPlaceholder": "Explain why assignment is being cancelled",
+      "refundLabel": "Refund credits to author",
+      "cancel": "Cancel",
+      "confirm": "Cancel Assignment",
+      "confirming": "Cancelling..."
+    },
+    "correctError": {
+      "title": "Correct Assignment Error",
+      "description": "Correct an error in this assignment",
+      "errorTypeLabel": "Error Type *",
+      "errorTypePlaceholder": "Select error type",
+      "correctionActionLabel": "Correction Action *",
+      "correctionActionPlaceholder": "Describe what action was taken to correct the error",
+      "notesLabel": "Additional Notes",
+      "notesPlaceholder": "Optional notes for audit trail",
+      "cancel": "Cancel",
+      "confirm": "Correct Error",
+      "confirming": "Correcting..."
+    }
+  },
+
+  "errorTypes": {
+    "WRONG_FORMAT": "Wrong Format",
+    "WRONG_BOOK": "Wrong Book",
+    "DUPLICATE": "Duplicate",
+    "MISSING_CREDITS": "Missing Credits",
+    "OTHER": "Other"
+  },
+
+  "loading": "Loading exceptions..."
+}

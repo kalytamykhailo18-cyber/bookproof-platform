@@ -1,0 +1,52 @@
+{
+  "title": "Gestión de Afiliados",
+  "subtitle": "Gestiona socios afiliados y rastrea su rendimiento",
+  "stats": {
+    "totalAffiliates": "Total Afiliados",
+    "registered": "socios registrados",
+    "approved": "Aprobados",
+    "activePartners": "socios activos",
+    "pending": "Pendientes",
+    "awaitingApproval": "esperando aprobación",
+    "totalEarnings": "Ganancias Totales",
+    "commissionsPaid": "comisiones pagadas",
+    "totalClicks": "Clics Totales",
+    "referralClicks": "clics de referencia"
+  },
+  "filters": {
+    "title": "Filtros",
+    "searchPlaceholder": "Buscar por nombre, email o código de referencia...",
+    "approval": "Estado de Aprobación",
+    "allApproval": "Todos los Estados",
+    "approved": "Aprobado",
+    "pending": "Pendiente",
+    "status": "Estado Activo",
+    "allStatus": "Todos los Estados",
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "table": {
+    "title": "Afiliados",
+    "description": "Ver y gestionar todos los socios afiliados",
+    "affiliate": "Afiliado",
+    "referralCode": "Código de Referencia",
+    "commission": "Comisión",
+    "earnings": "Ganancias",
+    "approved": "Aprobado",
+    "clicks": "Clics",
+    "conversions": "Conversiones",
+    "status": "Estado",
+    "joined": "Registrado",
+    "actions": "Acciones"
+  },
+  "status": {
+    "approved": "Aprobado",
+    "pending": "Pendiente",
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "empty": {
+    "title": "No se encontraron afiliados",
+    "description": "Ningún afiliado coincide con los filtros actuales"
+  }
+}
