@@ -2648,6 +2648,123 @@ export function getEmailTemplateContent(
       `,
     },
 
+    // Reader application
+    READER_APPLICATION_RECEIVED: {
+      EN: `
+        <h1>Application Received!</h1>
+        <p>Hi {{readerName}},</p>
+        <p>We've received your application to review <strong>{{bookTitle}}</strong>.</p>
+        <p>You're now in the queue and will be notified when it's your turn to access the materials.</p>
+        <p>Thank you for being part of the BookProof community!</p>
+      `,
+      ES: `
+        <h1>¡Solicitud Recibida!</h1>
+        <p>Hola {{readerName}},</p>
+        <p>Hemos recibido tu solicitud para revisar <strong>{{bookTitle}}</strong>.</p>
+        <p>Ahora estás en la cola y serás notificado cuando sea tu turno de acceder a los materiales.</p>
+        <p>¡Gracias por ser parte de la comunidad BookProof!</p>
+      `,
+      PT: `
+        <h1>Inscrição Recebida!</h1>
+        <p>Olá {{readerName}},</p>
+        <p>Recebemos sua inscrição para revisar <strong>{{bookTitle}}</strong>.</p>
+        <p>Você está na fila e será notificado quando for sua vez de acessar os materiais.</p>
+        <p>Obrigado por fazer parte da comunidade BookProof!</p>
+      `,
+    },
+
+    // Admin - new affiliate application
+    ADMIN_NEW_AFFILIATE_APPLICATION: {
+      EN: `
+        <h1>New Affiliate Application</h1>
+        <p>Hi Admin,</p>
+        <p>A new affiliate has applied to join the program:</p>
+        <div class="info-box">
+          <p><strong>Name:</strong> {{affiliateName}}</p>
+          <p><strong>Email:</strong> {{affiliateEmail}}</p>
+          <p><strong>Website:</strong> {{websiteUrl}}</p>
+        </div>
+        <div style="text-align: center;">
+          <a href="{{dashboardUrl}}" class="button">Review Application</a>
+        </div>
+      `,
+      ES: `
+        <h1>Nueva Solicitud de Afiliado</h1>
+        <p>Hola Admin,</p>
+        <p>Un nuevo afiliado ha solicitado unirse al programa:</p>
+        <div class="info-box">
+          <p><strong>Nombre:</strong> {{affiliateName}}</p>
+          <p><strong>Email:</strong> {{affiliateEmail}}</p>
+          <p><strong>Sitio web:</strong> {{websiteUrl}}</p>
+        </div>
+        <div style="text-align: center;">
+          <a href="{{dashboardUrl}}" class="button">Revisar Solicitud</a>
+        </div>
+      `,
+      PT: `
+        <h1>Nova Inscrição de Afiliado</h1>
+        <p>Olá Admin,</p>
+        <p>Um novo afiliado se inscreveu no programa:</p>
+        <div class="info-box">
+          <p><strong>Nome:</strong> {{affiliateName}}</p>
+          <p><strong>Email:</strong> {{affiliateEmail}}</p>
+          <p><strong>Site:</strong> {{websiteUrl}}</p>
+        </div>
+        <div style="text-align: center;">
+          <a href="{{dashboardUrl}}" class="button">Revisar Inscrição</a>
+        </div>
+      `,
+    },
+
+    // Affiliate application received
+    AFFILIATE_APPLICATION_RECEIVED: {
+      EN: `
+        <h1>Application Received!</h1>
+        <p>Hi {{affiliateName}},</p>
+        <p>Thank you for applying to the BookProof Affiliate Program!</p>
+        <p>We're reviewing your application and will get back to you within 2-3 business days.</p>
+        <div class="info-box">
+          <h3>What happens next?</h3>
+          <ul>
+            <li>Our team reviews your application</li>
+            <li>You'll receive an email with the decision</li>
+            <li>Once approved, you'll get access to your affiliate dashboard</li>
+          </ul>
+        </div>
+        <p>Thank you for your interest in partnering with BookProof!</p>
+      `,
+      ES: `
+        <h1>¡Solicitud Recibida!</h1>
+        <p>Hola {{affiliateName}},</p>
+        <p>¡Gracias por aplicar al Programa de Afiliados de BookProof!</p>
+        <p>Estamos revisando tu solicitud y te responderemos en 2-3 días hábiles.</p>
+        <div class="info-box">
+          <h3>¿Qué sigue?</h3>
+          <ul>
+            <li>Nuestro equipo revisa tu solicitud</li>
+            <li>Recibirás un correo con la decisión</li>
+            <li>Una vez aprobado, tendrás acceso a tu panel de afiliado</li>
+          </ul>
+        </div>
+        <p>¡Gracias por tu interés en asociarte con BookProof!</p>
+      `,
+      PT: `
+        <h1>Inscrição Recebida!</h1>
+        <p>Olá {{affiliateName}},</p>
+        <p>Obrigado por se inscrever no Programa de Afiliados da BookProof!</p>
+        <p>Estamos revisando sua inscrição e retornaremos em 2-3 dias úteis.</p>
+        <div class="info-box">
+          <h3>O que acontece agora?</h3>
+          <ul>
+            <li>Nossa equipe revisa sua inscrição</li>
+            <li>Você receberá um email com a decisão</li>
+            <li>Após aprovação, terá acesso ao painel de afiliado</li>
+          </ul>
+        </div>
+        <p>Obrigado pelo interesse em fazer parceria com a BookProof!</p>
+      `,
+    },
+
     // Landing page welcome email
     LANDING_PAGE_WELCOME: {
       EN: `
