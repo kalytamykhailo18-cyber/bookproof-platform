@@ -195,7 +195,7 @@ export default function AdminValidationPage() {
 
       {/* Bulk Actions */}
       {selectedReviews.length > 0 && (
-        <Card className="border-blue-300 bg-blue-50 dark:bg-blue-950 animate-zoom-in">
+        <Card className="animate-zoom-in border-blue-300 bg-blue-50 dark:bg-blue-950">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <p className="text-sm text-blue-900 dark:text-blue-100">
@@ -239,15 +239,18 @@ export default function AdminValidationPage() {
         </CardHeader>
         <CardContent>
           {!pendingReviews || pendingReviews.length === 0 ? (
-            <div className="py-16 text-center animate-fade-up">
-              <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500 animate-bounce-slow" />
+            <div className="animate-fade-up py-16 text-center">
+              <CheckCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-green-500" />
               <h3 className="mb-2 text-lg font-semibold">{t('empty.title')}</h3>
               <p className="text-muted-foreground">{t('empty.description')}</p>
             </div>
           ) : (
             <div className="space-y-4">
               {pendingReviews.map((review, index) => (
-                <Card key={review.id} className={`border-2 animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}>
+                <Card
+                  key={review.id}
+                  className={`border-2 animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}
+                >
                   <CardContent className="pt-6">
                     <div className="flex gap-4">
                       <Checkbox
@@ -279,7 +282,8 @@ export default function AdminValidationPage() {
                           </span>
                           {review.reader.reliabilityScore && (
                             <Badge variant="outline">
-                              {t('review.reliability')}: {review.reader.reliabilityScore.toFixed(0)}%
+                              {t('review.reliability')}: {review.reader.reliabilityScore.toFixed(0)}
+                              %
                             </Badge>
                           )}
                           {review.reader.completionRate && (
@@ -428,13 +432,15 @@ export default function AdminValidationPage() {
               {validationAction === ValidationAction.APPROVE && t('dialog.approve.title')}
               {validationAction === ValidationAction.REJECT && t('dialog.reject.title')}
               {validationAction === ValidationAction.FLAG && t('dialog.flag.title')}
-              {validationAction === ValidationAction.REQUEST_RESUBMISSION && t('dialog.resubmit.title')}
+              {validationAction === ValidationAction.REQUEST_RESUBMISSION &&
+                t('dialog.resubmit.title')}
             </DialogTitle>
             <DialogDescription>
               {validationAction === ValidationAction.APPROVE && t('dialog.approve.description')}
               {validationAction === ValidationAction.REJECT && t('dialog.reject.description')}
               {validationAction === ValidationAction.FLAG && t('dialog.flag.description')}
-              {validationAction === ValidationAction.REQUEST_RESUBMISSION && t('dialog.resubmit.description')}
+              {validationAction === ValidationAction.REQUEST_RESUBMISSION &&
+                t('dialog.resubmit.description')}
             </DialogDescription>
           </DialogHeader>
 

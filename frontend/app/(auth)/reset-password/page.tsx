@@ -85,9 +85,11 @@ export default function ResetPasswordPage() {
     return (
       <Card className="animate-zoom-in">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-center text-2xl font-bold animate-fade-down-fast">{t('error')}</CardTitle>
+          <CardTitle className="animate-fade-down-fast text-center text-2xl font-bold">
+            {t('error')}
+          </CardTitle>
         </CardHeader>
-        <CardContent className="py-8 text-center animate-fade-up">
+        <CardContent className="animate-fade-up py-8 text-center">
           <p className="text-muted-foreground">{t('errorInvalidToken')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
@@ -103,13 +105,15 @@ export default function ResetPasswordPage() {
     return (
       <Card className="animate-zoom-in">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-center text-2xl font-bold animate-fade-down-fast">{t('success')}</CardTitle>
+          <CardTitle className="animate-fade-down-fast text-center text-2xl font-bold">
+            {t('success')}
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center space-y-4 py-8">
-          <div className="rounded-full bg-green-100 p-4 dark:bg-green-900 animate-zoom-in">
+          <div className="animate-zoom-in rounded-full bg-green-100 p-4 dark:bg-green-900">
             <CheckCircle2 className="h-16 w-16 text-green-600 dark:text-green-400" />
           </div>
-          <p className="text-center text-muted-foreground animate-fade-up">{t('successMessage')}</p>
+          <p className="animate-fade-up text-center text-muted-foreground">{t('successMessage')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
           <Button type="button" onClick={() => router.push('/login')} className="w-full">
@@ -123,11 +127,15 @@ export default function ResetPasswordPage() {
   return (
     <Card className="animate-zoom-in">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-center text-2xl font-bold animate-fade-down-fast">{t('title')}</CardTitle>
-        <CardDescription className="text-center animate-fade-up-fast">{t('subtitle')}</CardDescription>
+        <CardTitle className="animate-fade-down-fast text-center text-2xl font-bold">
+          {t('title')}
+        </CardTitle>
+        <CardDescription className="animate-fade-up-fast text-center">
+          {t('subtitle')}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-2 animate-fade-up-very-fast">
+        <div className="animate-fade-up-very-fast space-y-2">
           <Label htmlFor="password">{t('password')}</Label>
           <Input
             id="password"
@@ -137,12 +145,10 @@ export default function ResetPasswordPage() {
             className={errors.password ? 'border-destructive' : ''}
             disabled={isResettingPassword}
           />
-          {errors.password && (
-            <p className="text-sm text-destructive">{errors.password.message}</p>
-          )}
+          {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
         </div>
 
-        <div className="space-y-2 animate-fade-left-fast">
+        <div className="animate-fade-left-fast space-y-2">
           <Label htmlFor="confirmPassword">{t('confirmPassword')}</Label>
           <Input
             id="confirmPassword"
@@ -159,7 +165,12 @@ export default function ResetPasswordPage() {
       </CardContent>
 
       <CardFooter className="animate-fade-up-light-slow">
-        <Button type="button" className="w-full animate-zoom-in-light-slow" disabled={isResettingPassword} onClick={handleResetPassword}>
+        <Button
+          type="button"
+          className="w-full animate-zoom-in-light-slow"
+          disabled={isResettingPassword}
+          onClick={handleResetPassword}
+        >
           {isResettingPassword ? t('submitting') : t('submitButton')}
         </Button>
       </CardFooter>

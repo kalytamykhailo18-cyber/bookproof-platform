@@ -47,7 +47,7 @@ const passwordSchema = z
   .regex(/[0-9]/, 'Password must contain at least one number')
   .regex(
     /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
-    'Password must contain at least one special character (!@#$%^&*()_+-=[]{};\':"|,.<>/?)'
+    'Password must contain at least one special character (!@#$%^&*()_+-=[]{};\':"|,.<>/?)',
   );
 
 const registerSchema = z
@@ -63,15 +63,34 @@ const registerSchema = z
     phone: z.string().optional(),
     country: z.string().min(1, 'Country is required'),
     contentPreference: z.enum(['EBOOK', 'AUDIOBOOK', 'BOTH']).optional(),
-    amazonProfileLinks: z.array(z.string().url('Please enter a valid URL')).max(3, 'Maximum 3 Amazon profile links allowed').optional(),
+    amazonProfileLinks: z
+      .array(z.string().url('Please enter a valid URL'))
+      .max(3, 'Maximum 3 Amazon profile links allowed')
+      .optional(),
     termsAccepted: z.boolean(),
     marketingConsent: z.boolean().optional(),
     // Affiliate-specific fields
     websiteUrl: z.string().url('Please enter a valid URL').optional(),
-    socialMediaUrls: z.string().max(1000, 'Social media URLs must not exceed 1000 characters').optional(),
-    promotionPlan: z.string().min(50, 'Promotion plan must be at least 50 characters').max(1000, 'Promotion plan must not exceed 1000 characters').optional(),
-    estimatedReach: z.string().max(500, 'Estimated reach must not exceed 500 characters').optional(),
-    preferredSlug: z.string().regex(/^[a-z0-9-]*$/, 'Slug must contain only lowercase letters, numbers, and hyphens').min(3, 'Slug must be at least 3 characters').max(50, 'Slug must not exceed 50 characters').optional().or(z.literal('')),
+    socialMediaUrls: z
+      .string()
+      .max(1000, 'Social media URLs must not exceed 1000 characters')
+      .optional(),
+    promotionPlan: z
+      .string()
+      .min(50, 'Promotion plan must be at least 50 characters')
+      .max(1000, 'Promotion plan must not exceed 1000 characters')
+      .optional(),
+    estimatedReach: z
+      .string()
+      .max(500, 'Estimated reach must not exceed 500 characters')
+      .optional(),
+    preferredSlug: z
+      .string()
+      .regex(/^[a-z0-9-]*$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
+      .min(3, 'Slug must be at least 3 characters')
+      .max(50, 'Slug must not exceed 50 characters')
+      .optional()
+      .or(z.literal('')),
     paypalEmail: z.string().email('Please enter a valid PayPal email').optional().or(z.literal('')),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -90,10 +109,13 @@ const registerSchema = z
     message: 'Website URL is required for affiliates',
     path: ['websiteUrl'],
   })
-  .refine((data) => data.role !== 'AFFILIATE' || (data.promotionPlan && data.promotionPlan.length >= 50), {
-    message: 'Promotion plan is required for affiliates (minimum 50 characters)',
-    path: ['promotionPlan'],
-  });
+  .refine(
+    (data) => data.role !== 'AFFILIATE' || (data.promotionPlan && data.promotionPlan.length >= 50),
+    {
+      message: 'Promotion plan is required for affiliates (minimum 50 characters)',
+      path: ['promotionPlan'],
+    },
+  );
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -135,14 +157,20 @@ export default function RegisterPage() {
   const handleRemoveAmazonLink = (index: number) => {
     const newLinks = amazonLinks.filter((_, i) => i !== index);
     setAmazonLinks(newLinks.length > 0 ? newLinks : ['']);
-    setValue('amazonProfileLinks', newLinks.filter(link => link.trim() !== ''));
+    setValue(
+      'amazonProfileLinks',
+      newLinks.filter((link) => link.trim() !== ''),
+    );
   };
 
   const handleAmazonLinkChange = (index: number, value: string) => {
     const newLinks = [...amazonLinks];
     newLinks[index] = value;
     setAmazonLinks(newLinks);
-    setValue('amazonProfileLinks', newLinks.filter(link => link.trim() !== ''));
+    setValue(
+      'amazonProfileLinks',
+      newLinks.filter((link) => link.trim() !== ''),
+    );
   };
 
   const handleRegister = async () => {
@@ -177,11 +205,15 @@ export default function RegisterPage() {
   return (
     <Card className="animate-zoom-in">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-center text-2xl font-bold animate-fade-down-fast">{t('title')}</CardTitle>
-        <CardDescription className="text-center animate-fade-up-fast">{t('subtitle')}</CardDescription>
+        <CardTitle className="animate-fade-down-fast text-center text-2xl font-bold">
+          {t('title')}
+        </CardTitle>
+        <CardDescription className="animate-fade-up-fast text-center">
+          {t('subtitle')}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-2 animate-fade-up-very-fast">
+        <div className="animate-fade-up-very-fast space-y-2">
           <Label htmlFor="name">{t('name')}</Label>
           <Input
             id="name"
@@ -193,7 +225,7 @@ export default function RegisterPage() {
           {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
         </div>
 
-        <div className="space-y-2 animate-fade-left-very-fast">
+        <div className="animate-fade-left-very-fast space-y-2">
           <Label htmlFor="email">{t('email')}</Label>
           <Input
             id="email"
@@ -206,7 +238,7 @@ export default function RegisterPage() {
           {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
         </div>
 
-        <div className="space-y-2 animate-fade-right-very-fast">
+        <div className="animate-fade-right-very-fast space-y-2">
           <Label htmlFor="password">{t('password')}</Label>
           <Input
             id="password"
@@ -216,12 +248,10 @@ export default function RegisterPage() {
             className={errors.password ? 'border-destructive' : ''}
             disabled={isRegistering}
           />
-          {errors.password && (
-            <p className="text-sm text-destructive">{errors.password.message}</p>
-          )}
+          {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
         </div>
 
-        <div className="space-y-2 animate-fade-up-fast">
+        <div className="animate-fade-up-fast space-y-2">
           <Label htmlFor="confirmPassword">{t('confirmPassword')}</Label>
           <Input
             id="confirmPassword"
@@ -236,12 +266,10 @@ export default function RegisterPage() {
           )}
         </div>
 
-        <div className="space-y-2 animate-zoom-in-fast">
+        <div className="animate-zoom-in-fast space-y-2">
           <Label htmlFor="role">{t('role')}</Label>
           <Select
-            onValueChange={(value) =>
-              setValue('role', value as 'AUTHOR' | 'READER' | 'AFFILIATE')
-            }
+            onValueChange={(value) => setValue('role', value as 'AUTHOR' | 'READER' | 'AFFILIATE')}
             disabled={isRegistering}
           >
             <SelectTrigger className={errors.role ? 'border-destructive' : ''}>
@@ -257,7 +285,7 @@ export default function RegisterPage() {
         </div>
 
         {selectedRole === 'AUTHOR' && (
-          <div className="space-y-2 animate-fade-up">
+          <div className="animate-fade-up space-y-2">
             <Label htmlFor="companyName">{t('companyName') || 'Company Name'}</Label>
             <Input
               id="companyName"
@@ -272,7 +300,7 @@ export default function RegisterPage() {
           </div>
         )}
 
-        <div className="space-y-2 animate-fade-left-fast">
+        <div className="animate-fade-left-fast space-y-2">
           <Label htmlFor="country">{t('country') || 'Country'} *</Label>
           <Select onValueChange={(value) => setValue('country', value)} disabled={isRegistering}>
             <SelectTrigger className={errors.country ? 'border-destructive' : ''}>
@@ -298,8 +326,8 @@ export default function RegisterPage() {
         </div>
 
         {selectedRole === 'READER' && (
-          <div className="space-y-4 animate-fade-up">
-            <div className="space-y-2 animate-zoom-in-fast">
+          <div className="animate-fade-up space-y-4">
+            <div className="animate-zoom-in-fast space-y-2">
               <Label htmlFor="contentPreference">
                 {t('contentPreference') || 'Content Format Preference'} *
               </Label>
@@ -330,15 +358,21 @@ export default function RegisterPage() {
               )}
             </div>
 
-            <div className="space-y-2 animate-fade-right">
+            <div className="animate-fade-right space-y-2">
               <Label>{t('amazonProfileLinks') || 'Amazon Profile Links'}</Label>
               <p className="text-xs text-muted-foreground">
                 {t('amazonProfileLinksHint') || 'Add up to 3 Amazon profile URLs (optional)'}
               </p>
               {amazonLinks.map((link, index) => (
-                <div key={index} className="flex gap-2 animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
+                <div
+                  key={index}
+                  className="flex animate-fade-in gap-2"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
                   <Input
-                    placeholder={t('amazonProfileLinkPlaceholder') || 'https://www.amazon.com/gp/profile/...'}
+                    placeholder={
+                      t('amazonProfileLinkPlaceholder') || 'https://www.amazon.com/gp/profile/...'
+                    }
                     value={link}
                     onChange={(e) => handleAmazonLinkChange(index, e.target.value)}
                     className={errors.amazonProfileLinks ? 'border-destructive' : ''}
@@ -366,7 +400,7 @@ export default function RegisterPage() {
                   disabled={isRegistering}
                   className="mt-2"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus className="mr-2 h-4 w-4" />
                   {t('addAnotherLink') || 'Add another link'}
                 </Button>
               )}
@@ -378,8 +412,8 @@ export default function RegisterPage() {
         )}
 
         {selectedRole === 'AFFILIATE' && (
-          <div className="space-y-4 animate-fade-up">
-            <div className="space-y-2 animate-zoom-in-fast">
+          <div className="animate-fade-up space-y-4">
+            <div className="animate-zoom-in-fast space-y-2">
               <Label htmlFor="websiteUrl">{t('websiteUrl') || 'Website URL'} *</Label>
               <Input
                 id="websiteUrl"
@@ -394,42 +428,52 @@ export default function RegisterPage() {
               )}
             </div>
 
-            <div className="space-y-2 animate-fade-left">
+            <div className="animate-fade-left space-y-2">
               <Label htmlFor="socialMediaUrls">{t('socialMediaUrls') || 'Social Media URLs'}</Label>
               <Input
                 id="socialMediaUrls"
-                placeholder={t('socialMediaUrlsPlaceholder') || 'https://twitter.com/you, https://instagram.com/you'}
+                placeholder={
+                  t('socialMediaUrlsPlaceholder') ||
+                  'https://twitter.com/you, https://instagram.com/you'
+                }
                 {...register('socialMediaUrls')}
                 className={errors.socialMediaUrls ? 'border-destructive' : ''}
                 disabled={isRegistering}
               />
               <p className="text-xs text-muted-foreground">
-                {t('socialMediaUrlsHint') || 'Enter your social media URLs separated by commas (optional)'}
+                {t('socialMediaUrlsHint') ||
+                  'Enter your social media URLs separated by commas (optional)'}
               </p>
               {errors.socialMediaUrls && (
                 <p className="text-sm text-destructive">{errors.socialMediaUrls.message}</p>
               )}
             </div>
 
-            <div className="space-y-2 animate-fade-right">
+            <div className="animate-fade-right space-y-2">
               <Label htmlFor="promotionPlan">{t('promotionPlan') || 'Promotion Plan'} *</Label>
               <Textarea
                 id="promotionPlan"
-                placeholder={t('promotionPlanPlaceholder') || 'Describe how you plan to promote BookProof (minimum 50 characters)...'}
+                placeholder={
+                  t('promotionPlanPlaceholder') ||
+                  'Describe how you plan to promote BookProof (minimum 50 characters)...'
+                }
                 {...register('promotionPlan')}
                 className={`min-h-[100px] ${errors.promotionPlan ? 'border-destructive' : ''}`}
                 disabled={isRegistering}
               />
               <p className="text-xs text-muted-foreground">
-                {t('promotionPlanHint') || 'Explain your audience and promotion strategy (50-1000 characters)'}
+                {t('promotionPlanHint') ||
+                  'Explain your audience and promotion strategy (50-1000 characters)'}
               </p>
               {errors.promotionPlan && (
                 <p className="text-sm text-destructive">{errors.promotionPlan.message}</p>
               )}
             </div>
 
-            <div className="space-y-2 animate-zoom-in">
-              <Label htmlFor="estimatedReach">{t('estimatedReach') || 'Estimated Audience Reach'}</Label>
+            <div className="animate-zoom-in space-y-2">
+              <Label htmlFor="estimatedReach">
+                {t('estimatedReach') || 'Estimated Audience Reach'}
+              </Label>
               <Input
                 id="estimatedReach"
                 placeholder={t('estimatedReachPlaceholder') || 'e.g., 10,000 monthly blog visitors'}
@@ -442,8 +486,10 @@ export default function RegisterPage() {
               )}
             </div>
 
-            <div className="space-y-2 animate-fade-up-fast">
-              <Label htmlFor="preferredSlug">{t('preferredSlug') || 'Preferred Referral Slug'}</Label>
+            <div className="animate-fade-up-fast space-y-2">
+              <Label htmlFor="preferredSlug">
+                {t('preferredSlug') || 'Preferred Referral Slug'}
+              </Label>
               <Input
                 id="preferredSlug"
                 placeholder={t('preferredSlugPlaceholder') || 'my-book-blog'}
@@ -452,14 +498,15 @@ export default function RegisterPage() {
                 disabled={isRegistering}
               />
               <p className="text-xs text-muted-foreground">
-                {t('preferredSlugHint') || 'Custom URL slug for your referral link (lowercase, numbers, hyphens only)'}
+                {t('preferredSlugHint') ||
+                  'Custom URL slug for your referral link (lowercase, numbers, hyphens only)'}
               </p>
               {errors.preferredSlug && (
                 <p className="text-sm text-destructive">{errors.preferredSlug.message}</p>
               )}
             </div>
 
-            <div className="space-y-2 animate-flip-up-fast">
+            <div className="animate-flip-up-fast space-y-2">
               <Label htmlFor="paypalEmail">{t('paypalEmail') || 'PayPal Email'}</Label>
               <Input
                 id="paypalEmail"
@@ -479,13 +526,11 @@ export default function RegisterPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-4 animate-fade-right-fast">
-          <div className="space-y-2 animate-flip-up-fast">
+        <div className="grid animate-fade-right-fast grid-cols-2 gap-4">
+          <div className="animate-flip-up-fast space-y-2">
             <Label htmlFor="language">{t('language')}</Label>
             <Select
-              onValueChange={(value) =>
-                setValue('preferredLanguage', value as 'EN' | 'PT' | 'ES')
-              }
+              onValueChange={(value) => setValue('preferredLanguage', value as 'EN' | 'PT' | 'ES')}
               defaultValue="EN"
               disabled={isRegistering}
             >
@@ -500,7 +545,7 @@ export default function RegisterPage() {
             </Select>
           </div>
 
-          <div className="space-y-2 animate-flip-down-fast">
+          <div className="animate-flip-down-fast space-y-2">
             <Label htmlFor="currency">{t('currency')}</Label>
             <Select
               onValueChange={(value) => setValue('preferredCurrency', value)}
@@ -519,8 +564,8 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        <div className="space-y-3 animate-fade-up">
-          <div className="flex items-start space-x-2 animate-zoom-in">
+        <div className="animate-fade-up space-y-3">
+          <div className="flex animate-zoom-in items-start space-x-2">
             <Checkbox
               id="terms"
               checked={termsAccepted}
@@ -536,26 +581,35 @@ export default function RegisterPage() {
             <p className="text-sm text-destructive">{errors.termsAccepted.message}</p>
           )}
 
-          <div className="flex items-start space-x-2 animate-fade-left">
+          <div className="flex animate-fade-left items-start space-x-2">
             <Checkbox
               id="marketingConsent"
               checked={marketingConsent}
               onCheckedChange={(checked) => setValue('marketingConsent', checked as boolean)}
               disabled={isRegistering}
             />
-            <Label htmlFor="marketingConsent" className="cursor-pointer text-sm font-normal leading-relaxed">
-              {t('marketingConsent') || 'I agree to receive marketing emails and updates about new features'}
+            <Label
+              htmlFor="marketingConsent"
+              className="cursor-pointer text-sm font-normal leading-relaxed"
+            >
+              {t('marketingConsent') ||
+                'I agree to receive marketing emails and updates about new features'}
             </Label>
           </div>
         </div>
       </CardContent>
 
-      <CardFooter className="flex flex-col space-y-4 animate-fade-up-light-slow">
-        <Button type="button" className="w-full animate-zoom-in-light-slow" disabled={isRegistering} onClick={handleRegister}>
+      <CardFooter className="flex animate-fade-up-light-slow flex-col space-y-4">
+        <Button
+          type="button"
+          className="w-full animate-zoom-in-light-slow"
+          disabled={isRegistering}
+          onClick={handleRegister}
+        >
           {isRegistering ? t('submitting') : t('submitButton')}
         </Button>
 
-        <p className="text-center text-sm text-muted-foreground animate-fade-up-slow">
+        <p className="animate-fade-up-slow text-center text-sm text-muted-foreground">
           {t('hasAccount')}{' '}
           <Link href="/login" className="font-medium text-primary hover:underline">
             {t('signIn')}

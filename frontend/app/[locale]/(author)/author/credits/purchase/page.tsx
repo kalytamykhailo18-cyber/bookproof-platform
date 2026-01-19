@@ -30,7 +30,21 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { CreditCard, Check, Calendar, DollarSign, Package, Receipt, Loader2, Sparkles, Search, X, Tag, CheckCircle, XCircle } from 'lucide-react';
+import {
+  CreditCard,
+  Check,
+  Calendar,
+  DollarSign,
+  Package,
+  Receipt,
+  Loader2,
+  Sparkles,
+  Search,
+  X,
+  Tag,
+  CheckCircle,
+  XCircle,
+} from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import Link from 'next/link';
 
@@ -259,8 +273,8 @@ export default function CreditPurchasePage() {
           </div>
           {includeKeywordResearch && (
             <div className="rounded-md bg-primary/10 p-3 text-sm">
-              <strong>Note:</strong> After purchasing credits, you&apos;ll be redirected to select which book to
-              apply keyword research to, or you can{' '}
+              <strong>Note:</strong> After purchasing credits, you&apos;ll be redirected to select
+              which book to apply keyword research to, or you can{' '}
               <Link href="/author/keyword-research/new" className="text-primary underline">
                 order keyword research separately
               </Link>
@@ -329,14 +343,13 @@ export default function CreditPurchasePage() {
                 <Alert className="border-green-500 bg-green-50 dark:bg-green-950/20">
                   <CheckCircle className="h-4 w-4 text-green-600" />
                   <AlertDescription className="text-green-700 dark:text-green-400">
-                    <span className="font-medium">Coupon applied!</span>{' '}
-                    {getDiscountText()}
+                    <span className="font-medium">Coupon applied!</span> {getDiscountText()}
                     {validatedCoupon.coupon?.appliesTo !== 'CREDITS' &&
-                     validatedCoupon.coupon?.appliesTo !== 'ALL' && (
-                      <span className="block mt-1 text-sm text-amber-600 dark:text-amber-400">
-                        Note: This coupon may not apply to credit purchases.
-                      </span>
-                    )}
+                      validatedCoupon.coupon?.appliesTo !== 'ALL' && (
+                        <span className="mt-1 block text-sm text-amber-600 dark:text-amber-400">
+                          Note: This coupon may not apply to credit purchases.
+                        </span>
+                      )}
                   </AlertDescription>
                 </Alert>
               ) : (

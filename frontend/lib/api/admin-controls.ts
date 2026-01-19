@@ -421,10 +421,7 @@ export const adminControlsApi = {
    * Reassign reader to different book
    */
   async reassignReader(assignmentId: string, data: ReassignReaderDto): Promise<unknown> {
-    const response = await apiClient.post(
-      `/admin/assignments/${assignmentId}/reassign`,
-      data,
-    );
+    const response = await apiClient.post(`/admin/assignments/${assignmentId}/reassign`, data);
     return response.data;
   },
 
@@ -432,10 +429,7 @@ export const adminControlsApi = {
    * Cancel reader assignment
    */
   async cancelAssignment(assignmentId: string, data: CancelAssignmentDto): Promise<unknown> {
-    const response = await apiClient.post(
-      `/admin/assignments/${assignmentId}/cancel`,
-      data,
-    );
+    const response = await apiClient.post(`/admin/assignments/${assignmentId}/cancel`, data);
     return response.data;
   },
 
@@ -464,10 +458,7 @@ export const adminControlsApi = {
    * Request resubmission for review issue
    */
   async requestResubmission(issueId: string, data: RequestResubmissionDto): Promise<unknown> {
-    const response = await apiClient.post(
-      `/reviews/issues/${issueId}/request-resubmission`,
-      data,
-    );
+    const response = await apiClient.post(`/reviews/issues/${issueId}/request-resubmission`, data);
     return response.data;
   },
 };

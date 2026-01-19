@@ -22,7 +22,13 @@ import { AvailableCampaign } from '@/lib/api/queue';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
-function CampaignCard({ campaign, className }: { campaign: AvailableCampaign; className?: string }) {
+function CampaignCard({
+  campaign,
+  className,
+}: {
+  campaign: AvailableCampaign;
+  className?: string;
+}) {
   const t = useTranslations('reader.campaigns');
   const { applyToCampaign, isApplying } = useMyAssignments();
   const { profile } = useReaderProfile();
@@ -69,12 +75,14 @@ function CampaignCard({ campaign, className }: { campaign: AvailableCampaign; cl
   const canApplyBasedOnFormat = availableFormats.length > 0;
 
   return (
-    <Card className={`transition-all hover:shadow-md hover:scale-[1.02] ${className || ''}`}>
+    <Card className={`transition-all hover:scale-[1.02] hover:shadow-md ${className || ''}`}>
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <CardTitle className="mb-1 text-lg">{campaign.title}</CardTitle>
-            <CardDescription>{t('campaign.byAuthor', { author: campaign.authorName })}</CardDescription>
+            <CardDescription>
+              {t('campaign.byAuthor', { author: campaign.authorName })}
+            </CardDescription>
             <div className="mt-2 flex items-center gap-2">
               <Badge variant="outline">{campaign.genre}</Badge>
               <Badge variant="outline">{campaign.language}</Badge>
@@ -212,9 +220,9 @@ export default function CampaignsPage() {
   return (
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-center justify-between">
         <div>
-          <div className="flex items-center gap-4 mb-2">
+          <div className="mb-2 flex items-center gap-4">
             <Button variant="ghost" size="sm" asChild className="animate-fade-right">
               <Link href="/reader">
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -238,7 +246,7 @@ export default function CampaignsPage() {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-4">
             {/* Search */}
-            <div className="space-y-2 animate-fade-up-fast">
+            <div className="animate-fade-up-fast space-y-2">
               <Label htmlFor="search">{t('filters.search')}</Label>
               <div className="relative">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -253,7 +261,7 @@ export default function CampaignsPage() {
             </div>
 
             {/* Genre Filter */}
-            <div className="space-y-2 animate-fade-up-light-slow">
+            <div className="animate-fade-up-light-slow space-y-2">
               <Label htmlFor="genre">{t('filters.genre')}</Label>
               <Select value={selectedGenre} onValueChange={setSelectedGenre}>
                 <SelectTrigger id="genre">
@@ -271,7 +279,7 @@ export default function CampaignsPage() {
             </div>
 
             {/* Language Filter */}
-            <div className="space-y-2 animate-fade-up-medium-slow">
+            <div className="animate-fade-up-medium-slow space-y-2">
               <Label htmlFor="language">{t('filters.language')}</Label>
               <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
                 <SelectTrigger id="language">
@@ -289,7 +297,7 @@ export default function CampaignsPage() {
             </div>
 
             {/* Format Filter */}
-            <div className="space-y-2 animate-fade-up-heavy-slow">
+            <div className="animate-fade-up-heavy-slow space-y-2">
               <Label htmlFor="format">{t('filters.format')}</Label>
               <Select value={selectedFormat} onValueChange={setSelectedFormat}>
                 <SelectTrigger id="format">
@@ -307,7 +315,7 @@ export default function CampaignsPage() {
       </Card>
 
       {/* Results Count */}
-      <div className="text-sm text-muted-foreground animate-fade-up-slow">
+      <div className="animate-fade-up-slow text-sm text-muted-foreground">
         {t('resultsCount', { count: filteredCampaigns?.length || 0 })}
       </div>
 
@@ -325,7 +333,7 @@ export default function CampaignsPage() {
       ) : (
         <Card className="animate-fade-up-slow">
           <CardContent className="py-16 text-center">
-            <BookOpen className="mx-auto mb-4 h-16 w-16 text-muted-foreground animate-bounce-slow" />
+            <BookOpen className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-muted-foreground" />
             <h3 className="mb-2 text-lg font-semibold">{t('emptyState.title')}</h3>
             <p className="text-muted-foreground">{t('emptyState.description')}</p>
           </CardContent>

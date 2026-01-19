@@ -79,7 +79,7 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
       <div className="container mx-auto p-6">
         <Card className="animate-fade-up">
           <CardContent className="py-16 text-center">
-            <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-500 animate-bounce-slow" />
+            <AlertCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="mb-2 text-lg font-semibold">{t('notFound.title')}</h3>
             <Button asChild className="mt-4">
               <Link href="/reader">{t('backToDashboard')}</Link>
@@ -101,9 +101,9 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
           </Link>
         </Button>
 
-        <Card className="border-green-300 bg-green-50 dark:bg-green-950 animate-zoom-in">
+        <Card className="animate-zoom-in border-green-300 bg-green-50 dark:bg-green-950">
           <CardContent className="py-16 text-center">
-            <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-600 animate-bounce-slow" />
+            <CheckCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-green-600" />
             <h3 className="mb-2 text-lg font-semibold text-green-900 dark:text-green-100">
               {t('success.title')}
             </h3>
@@ -139,7 +139,7 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
       </div>
 
       {/* Important Notice */}
-      <Card className="border-yellow-300 bg-yellow-50 dark:bg-yellow-950 animate-zoom-in">
+      <Card className="animate-zoom-in border-yellow-300 bg-yellow-50 dark:bg-yellow-950">
         <CardContent className="pt-6">
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 text-yellow-600" />
@@ -153,7 +153,10 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
                 <li>{t('notice.item3')}</li>
                 <li>{t('notice.item4')}</li>
                 <li>
-                  {t('notice.format', { format: assignment.formatAssigned, value: assignment.creditsValue })}
+                  {t('notice.format', {
+                    format: assignment.formatAssigned,
+                    value: assignment.creditsValue,
+                  })}
                 </li>
               </ul>
             </div>
@@ -169,13 +172,11 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
               <Send className="h-5 w-5" />
               {t('form.title')}
             </CardTitle>
-            <CardDescription>
-              {t('form.description')}
-            </CardDescription>
+            <CardDescription>{t('form.description')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Amazon Review Link */}
-            <div className="space-y-2 animate-fade-up-fast">
+            <div className="animate-fade-up-fast space-y-2">
               <Label htmlFor="amazonReviewLink">
                 {t('form.amazonLink')} <span className="text-red-500">*</span>
               </Label>
@@ -190,13 +191,11 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
               {errors.amazonReviewLink && (
                 <p className="text-xs text-red-500">{errors.amazonReviewLink}</p>
               )}
-              <p className="text-xs text-muted-foreground">
-                {t('form.amazonLinkExample')}
-              </p>
+              <p className="text-xs text-muted-foreground">{t('form.amazonLinkExample')}</p>
             </div>
 
             {/* Internal Star Rating */}
-            <div className="space-y-2 animate-fade-up-light-slow">
+            <div className="animate-fade-up-light-slow space-y-2">
               <Label>
                 {t('form.internalRating')} <span className="text-red-500">*</span>
               </Label>
@@ -218,13 +217,11 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
                   ))}
                 </div>
               </RadioGroup>
-              <p className="text-xs text-muted-foreground">
-                {t('form.ratingNote')}
-              </p>
+              <p className="text-xs text-muted-foreground">{t('form.ratingNote')}</p>
             </div>
 
             {/* Internal Feedback */}
-            <div className="space-y-2 animate-fade-up-medium-slow">
+            <div className="animate-fade-up-medium-slow space-y-2">
               <Label htmlFor="internalFeedback">
                 {t('form.feedback')} <span className="text-red-500">*</span>
               </Label>
@@ -238,15 +235,15 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
               />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>{errors.internalFeedback || t('form.minCharacters')}</span>
-                <span>{internalFeedback.length} {t('form.characters')}</span>
+                <span>
+                  {internalFeedback.length} {t('form.characters')}
+                </span>
               </div>
-              <p className="text-xs text-muted-foreground">
-                {t('form.feedbackNote')}
-              </p>
+              <p className="text-xs text-muted-foreground">{t('form.feedbackNote')}</p>
             </div>
 
             {/* Published Confirmation */}
-            <div className="space-y-2 animate-fade-up-heavy-slow">
+            <div className="animate-fade-up-heavy-slow space-y-2">
               <div className="flex items-start gap-2">
                 <Checkbox
                   id="publishedOnAmazon"
@@ -256,12 +253,9 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
                 />
                 <div className="space-y-1">
                   <Label htmlFor="publishedOnAmazon" className="cursor-pointer">
-                    {t('form.confirmPublished')}{' '}
-                    <span className="text-red-500">*</span>
+                    {t('form.confirmPublished')} <span className="text-red-500">*</span>
                   </Label>
-                  <p className="text-xs text-muted-foreground">
-                    {t('form.confirmPublishedNote')}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{t('form.confirmPublishedNote')}</p>
                   {errors.publishedOnAmazon && (
                     <p className="text-xs text-red-500">{errors.publishedOnAmazon}</p>
                   )}
@@ -270,8 +264,13 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
             </div>
 
             {/* Submit Button */}
-            <div className="flex gap-2 pt-4 animate-fade-up-slow">
-              <Button type="button" onClick={handleFormSubmit} disabled={isSubmitting} className="flex-1">
+            <div className="flex animate-fade-up-slow gap-2 pt-4">
+              <Button
+                type="button"
+                onClick={handleFormSubmit}
+                disabled={isSubmitting}
+                className="flex-1"
+              >
                 <Send className="mr-2 h-4 w-4" />
                 {isSubmitting ? t('form.submitting') : t('form.submit')}
               </Button>

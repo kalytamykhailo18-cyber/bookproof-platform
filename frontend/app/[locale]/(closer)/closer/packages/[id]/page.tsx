@@ -192,7 +192,7 @@ export default function PackageDetailPage() {
   return (
     <div className="container mx-auto max-w-4xl space-y-6 px-4 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href={`/${locale}/closer/packages`}>
             <Button type="button" variant="ghost" size="icon">

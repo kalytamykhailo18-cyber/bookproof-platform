@@ -60,8 +60,7 @@ export default function AdminTeamPage() {
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         return (
-          closer.email.toLowerCase().includes(query) ||
-          closer.name.toLowerCase().includes(query)
+          closer.email.toLowerCase().includes(query) || closer.name.toLowerCase().includes(query)
         );
       }
 
@@ -82,8 +81,7 @@ export default function AdminTeamPage() {
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         return (
-          admin.email.toLowerCase().includes(query) ||
-          admin.name.toLowerCase().includes(query)
+          admin.email.toLowerCase().includes(query) || admin.name.toLowerCase().includes(query)
         );
       }
 
@@ -130,7 +128,7 @@ export default function AdminTeamPage() {
   return (
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">{t('subtitle')}</p>
@@ -205,7 +203,7 @@ export default function AdminTeamPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4">
-          <div className="flex-1 min-w-[200px]">
+          <div className="min-w-[200px] flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -234,7 +232,7 @@ export default function AdminTeamPage() {
 
       {/* Tabs for Closers and Admins */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="animate-zoom-in-slow">
-        <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
+        <TabsList className="grid w-full max-w-[400px] grid-cols-2">
           <TabsTrigger value="closers" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             {t('tabs.closers')} ({filteredClosers.length})
@@ -287,9 +285,7 @@ export default function AdminTeamPage() {
                               {t('status.active')}
                             </Badge>
                           ) : (
-                            <Badge variant="secondary">
-                              {t('status.inactive')}
-                            </Badge>
+                            <Badge variant="secondary">{t('status.inactive')}</Badge>
                           )}
                         </TableCell>
                         <TableCell>{formatDate(closer.createdAt)}</TableCell>
@@ -353,9 +349,7 @@ export default function AdminTeamPage() {
                               {t('status.active')}
                             </Badge>
                           ) : (
-                            <Badge variant="secondary">
-                              {t('status.inactive')}
-                            </Badge>
+                            <Badge variant="secondary">{t('status.inactive')}</Badge>
                           )}
                         </TableCell>
                         <TableCell>{formatDate(admin.createdAt)}</TableCell>

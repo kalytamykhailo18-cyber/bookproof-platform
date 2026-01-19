@@ -2,6 +2,9 @@ import { IsEnum, IsOptional, IsBoolean, IsNumber, Min, Max } from 'class-validat
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NotificationType } from '@prisma/client';
 
+// Re-export for use in other modules
+export { NotificationType };
+
 export class NotificationResponseDto {
   @ApiProperty()
   id: string;

@@ -78,26 +78,20 @@ export default function CouponUsagePage() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('usage.overview.totalUses')}
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">{t('usage.overview.totalUses')}</CardTitle>
             <Hash className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalUses}</div>
             {coupon.maxUses && (
-              <p className="text-xs text-muted-foreground">
-                of {coupon.maxUses} max uses
-              </p>
+              <p className="text-xs text-muted-foreground">of {coupon.maxUses} max uses</p>
             )}
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('usage.overview.uniqueUsers')}
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">{t('usage.overview.uniqueUsers')}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -118,23 +112,22 @@ export default function CouponUsagePage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              ${stats.totalDiscountGiven.toFixed(2)}
-            </div>
+            <div className="text-2xl font-bold">${stats.totalDiscountGiven.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">total savings for users</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('usage.overview.avgDiscount')}
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">{t('usage.overview.avgDiscount')}</CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${stats.totalUses > 0 ? (stats.totalDiscountGiven / stats.totalUses).toFixed(2) : '0.00'}
+              $
+              {stats.totalUses > 0
+                ? (stats.totalDiscountGiven / stats.totalUses).toFixed(2)
+                : '0.00'}
             </div>
             <p className="text-xs text-muted-foreground">per use</p>
           </CardContent>
@@ -188,12 +181,8 @@ export default function CouponUsagePage() {
                     <TableCell>{usage.userEmail}</TableCell>
                     <TableCell>${usage.discountApplied.toFixed(2)}</TableCell>
                     <TableCell>
-                      {usage.creditPurchaseId && (
-                        <Badge variant="outline">Credit Purchase</Badge>
-                      )}
-                      {usage.keywordResearchId && (
-                        <Badge variant="outline">Keyword Research</Badge>
-                      )}
+                      {usage.creditPurchaseId && <Badge variant="outline">Credit Purchase</Badge>}
+                      {usage.keywordResearchId && <Badge variant="outline">Keyword Research</Badge>}
                     </TableCell>
                     <TableCell>{formatDate(usage.usedAt)}</TableCell>
                   </TableRow>

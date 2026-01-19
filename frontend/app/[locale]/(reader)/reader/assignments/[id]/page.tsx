@@ -62,11 +62,9 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
       <div className="container mx-auto p-6">
         <Card className="animate-fade-up">
           <CardContent className="py-16 text-center">
-            <XCircle className="mx-auto mb-4 h-16 w-16 text-red-500 animate-bounce-slow" />
+            <XCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="mb-2 text-lg font-semibold">{t('notFound.title')}</h3>
-            <p className="mb-4 text-muted-foreground">
-              {t('notFound.description')}
-            </p>
+            <p className="mb-4 text-muted-foreground">{t('notFound.description')}</p>
             <Button asChild>
               <Link href="/reader">{t('backToDashboard')}</Link>
             </Button>
@@ -133,7 +131,7 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
       </div>
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4 animate-fade-up">
+      <div className="flex animate-fade-up items-start justify-between gap-4">
         <div className="flex-1">
           <h1 className="mb-2 text-3xl font-bold">{assignment.book.title}</h1>
           <p className="text-lg text-muted-foreground">by {assignment.book.authorName}</p>
@@ -152,7 +150,7 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
           <img
             src={assignment.book.coverImageUrl}
             alt={assignment.book.title}
-            className="h-48 w-32 rounded object-cover shadow-lg animate-zoom-in"
+            className="h-48 w-32 animate-zoom-in rounded object-cover shadow-lg"
           />
         )}
       </div>
@@ -172,7 +170,7 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
                   <AlertCircle
-                    className={`h-8 w-8 ${isUrgent ? 'text-red-600 animate-pulse' : 'text-yellow-600'}`}
+                    className={`h-8 w-8 ${isUrgent ? 'animate-pulse text-red-600' : 'text-yellow-600'}`}
                   />
                   <div className="flex-1">
                     <h3
@@ -183,7 +181,11 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
                     <p
                       className={`text-sm ${isUrgent ? 'text-red-800 dark:text-red-200' : 'text-yellow-800 dark:text-yellow-200'}`}
                     >
-                      {t('deadline.due', { time: formatDistanceToNow(new Date(assignment.deadlineAt), { addSuffix: true }) })}
+                      {t('deadline.due', {
+                        time: formatDistanceToNow(new Date(assignment.deadlineAt), {
+                          addSuffix: true,
+                        }),
+                      })}
                       {assignment.hoursRemaining &&
                         ` (${Math.floor(assignment.hoursRemaining)} ${t('deadline.hoursRemaining')})`}
                     </p>
@@ -251,7 +253,11 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
                     </Button>
                     {assignment.ebookDownloadedAt && (
                       <p className="mt-2 text-center text-xs text-muted-foreground">
-                        {t('sections.downloaded', { time: formatDistanceToNow(new Date(assignment.ebookDownloadedAt), { addSuffix: true }) })}
+                        {t('sections.downloaded', {
+                          time: formatDistanceToNow(new Date(assignment.ebookDownloadedAt), {
+                            addSuffix: true,
+                          }),
+                        })}
                       </p>
                     )}
                   </CardContent>
@@ -280,14 +286,20 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
           {!materialsAvailable && (
             <Card className="animate-zoom-in">
               <CardContent className="py-16 text-center">
-                <Clock className="mx-auto mb-4 h-16 w-16 text-muted-foreground animate-pulse" />
+                <Clock className="mx-auto mb-4 h-16 w-16 animate-pulse text-muted-foreground" />
                 <h3 className="mb-2 text-lg font-semibold">{t('materialsNotAvailable.title')}</h3>
                 <p className="text-muted-foreground">
                   {assignment.status === AssignmentStatus.WAITING && (
-                    <>{t('materialsNotAvailable.waiting', { position: assignment.queuePosition })}</>
+                    <>
+                      {t('materialsNotAvailable.waiting', { position: assignment.queuePosition })}
+                    </>
                   )}
                   {assignment.status === AssignmentStatus.SCHEDULED && assignment.scheduledDate && (
-                    <>{t('materialsNotAvailable.scheduled', { date: new Date(assignment.scheduledDate).toLocaleDateString() })}</>
+                    <>
+                      {t('materialsNotAvailable.scheduled', {
+                        date: new Date(assignment.scheduledDate).toLocaleDateString(),
+                      })}
+                    </>
                   )}
                   {assignment.status === AssignmentStatus.EXPIRED && (
                     <>{t('materialsNotAvailable.expired')}</>
@@ -401,7 +413,7 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
 
           {/* Submit Review Action */}
           {canSubmitReview && (
-            <Card className="border-green-300 bg-green-50 dark:bg-green-950 animate-zoom-in">
+            <Card className="animate-zoom-in border-green-300 bg-green-50 dark:bg-green-950">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-green-900 dark:text-green-100">
                   <Send className="h-5 w-5" />
@@ -445,7 +457,9 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>{t('actions.withdrawDialog.cancel')}</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleWithdraw}>{t('actions.withdrawDialog.confirm')}</AlertDialogAction>
+                      <AlertDialogAction onClick={handleWithdraw}>
+                        {t('actions.withdrawDialog.confirm')}
+                      </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>

@@ -43,10 +43,7 @@ import {
  * Per requirements.md Section 1.3
  */
 const createAdminSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Email is required')
-    .email('Please provide a valid email address'),
+  email: z.string().min(1, 'Email is required').email('Please provide a valid email address'),
   name: z
     .string()
     .min(2, 'Name must be at least 2 characters')
@@ -78,10 +75,7 @@ const ALL_PERMISSIONS = [
 ];
 
 // Super admin only permissions
-const SUPER_ADMIN_PERMISSIONS = [
-  AdminPermission.MANAGE_ADMINS,
-  AdminPermission.MANAGE_FINANCIALS,
-];
+const SUPER_ADMIN_PERMISSIONS = [AdminPermission.MANAGE_ADMINS, AdminPermission.MANAGE_FINANCIALS];
 
 export function CreateAdminDialog() {
   const t = useTranslations('adminTeam');
@@ -126,7 +120,7 @@ export function CreateAdminDialog() {
           {t('admins.addAdmin')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>{t('createAdmin.title')}</DialogTitle>
           <DialogDescription>{t('createAdmin.description')}</DialogDescription>
@@ -148,9 +142,7 @@ export function CreateAdminDialog() {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    {t('createAdmin.fields.emailDescription')}
-                  </FormDescription>
+                  <FormDescription>{t('createAdmin.fields.emailDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -164,14 +156,9 @@ export function CreateAdminDialog() {
                 <FormItem>
                   <FormLabel>{t('createAdmin.fields.name')}</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder={t('createAdmin.fields.namePlaceholder')}
-                      {...field}
-                    />
+                    <Input placeholder={t('createAdmin.fields.namePlaceholder')} {...field} />
                   </FormControl>
-                  <FormDescription>
-                    {t('createAdmin.fields.nameDescription')}
-                  </FormDescription>
+                  <FormDescription>{t('createAdmin.fields.nameDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -191,9 +178,7 @@ export function CreateAdminDialog() {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    {t('createAdmin.fields.passwordDescription')}
-                  </FormDescription>
+                  <FormDescription>{t('createAdmin.fields.passwordDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -231,9 +216,7 @@ export function CreateAdminDialog() {
                       </SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                    {t('createAdmin.fields.adminLevelDescription')}
-                  </FormDescription>
+                  <FormDescription>{t('createAdmin.fields.adminLevelDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -268,14 +251,12 @@ export function CreateAdminDialog() {
                                     if (checked) {
                                       field.onChange([...current, permission]);
                                     } else {
-                                      field.onChange(
-                                        current.filter((p) => p !== permission)
-                                      );
+                                      field.onChange(current.filter((p) => p !== permission));
                                     }
                                   }}
                                 />
                               </FormControl>
-                              <FormLabel className="text-sm font-normal cursor-pointer">
+                              <FormLabel className="cursor-pointer text-sm font-normal">
                                 {t(`createAdmin.permissions.${permission}`)}
                               </FormLabel>
                             </FormItem>

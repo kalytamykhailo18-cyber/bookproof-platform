@@ -35,7 +35,7 @@ export default function CreditPurchasePage() {
       purchaseCredits(
         selectedPackage,
         couponCode || undefined,
-        includeKeywordResearch || undefined
+        includeKeywordResearch || undefined,
       );
     }
   };
@@ -207,7 +207,8 @@ export default function CreditPurchasePage() {
               {t('keywordResearch.title') || 'Add Keyword Research'}
             </CardTitle>
             <CardDescription>
-              {t('keywordResearch.description') || 'Professional keyword analysis to optimize your book visibility on Amazon'}
+              {t('keywordResearch.description') ||
+                'Professional keyword analysis to optimize your book visibility on Amazon'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -225,12 +226,15 @@ export default function CreditPurchasePage() {
                   {t('keywordResearch.addLabel') || 'Include Keyword Research Service'}
                 </Label>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {t('keywordResearch.benefits') || 'Get targeted keywords, category suggestions, and SEO optimization for your book listing'}
+                  {t('keywordResearch.benefits') ||
+                    'Get targeted keywords, category suggestions, and SEO optimization for your book listing'}
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-xl font-bold text-primary">+${keywordResearchPrice}</p>
-                <p className="text-xs text-muted-foreground">{t('keywordResearch.oneTime') || 'One-time fee'}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t('keywordResearch.oneTime') || 'One-time fee'}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -248,10 +252,10 @@ export default function CreditPurchasePage() {
               {packageTiers && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">
-                    {packageTiers.find(p => p.id === selectedPackage)?.name || 'Credit Package'}
+                    {packageTiers.find((p) => p.id === selectedPackage)?.name || 'Credit Package'}
                   </span>
                   <span className="font-medium">
-                    ${packageTiers.find(p => p.id === selectedPackage)?.basePrice || 0}
+                    ${packageTiers.find((p) => p.id === selectedPackage)?.basePrice || 0}
                   </span>
                 </div>
               )}
@@ -265,7 +269,9 @@ export default function CreditPurchasePage() {
               )}
               {couponCode && (
                 <div className="flex justify-between text-green-600">
-                  <span>{t('orderSummary.coupon') || 'Coupon'}: {couponCode}</span>
+                  <span>
+                    {t('orderSummary.coupon') || 'Coupon'}: {couponCode}
+                  </span>
                   <span>{t('orderSummary.appliedAtCheckout') || 'Applied at checkout'}</span>
                 </div>
               )}
@@ -273,8 +279,9 @@ export default function CreditPurchasePage() {
                 <div className="flex justify-between text-lg font-bold">
                   <span>{t('orderSummary.total') || 'Total'}</span>
                   <span>
-                    ${(
-                      (packageTiers?.find(p => p.id === selectedPackage)?.basePrice || 0) +
+                    $
+                    {(
+                      (packageTiers?.find((p) => p.id === selectedPackage)?.basePrice || 0) +
                       (includeKeywordResearch ? keywordResearchPrice : 0)
                     ).toFixed(2)}
                   </span>

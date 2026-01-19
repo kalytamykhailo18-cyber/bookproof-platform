@@ -55,7 +55,7 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
   const t = useTranslations('reader.dashboard');
 
   const getStatusVariant = (
-    status: AssignmentStatus
+    status: AssignmentStatus,
   ): 'warning' | 'info' | 'success' | 'progress' | 'pending' | 'complete' | 'error' | 'neutral' => {
     switch (status) {
       case AssignmentStatus.WAITING:
@@ -102,14 +102,16 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
 
   return (
     <Card
-      className={`cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] ${className || ''}`}
+      className={`cursor-pointer transition-all hover:scale-[1.02] hover:shadow-md ${className || ''}`}
       onClick={() => router.push(`/reader/assignments/${assignment.id}`)}
     >
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <CardTitle className="text-lg">{assignment.book.title}</CardTitle>
-            <CardDescription>{t('byAuthor', { author: assignment.book.authorName })}</CardDescription>
+            <CardDescription>
+              {t('byAuthor', { author: assignment.book.authorName })}
+            </CardDescription>
           </div>
           {assignment.book.coverImageUrl && (
             <img
@@ -143,7 +145,9 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
         {assignment.status === AssignmentStatus.SCHEDULED && assignment.scheduledDate && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4" />
-            <span>{t('scheduledFor', { date: new Date(assignment.scheduledDate).toLocaleDateString() })}</span>
+            <span>
+              {t('scheduledFor', { date: new Date(assignment.scheduledDate).toLocaleDateString() })}
+            </span>
           </div>
         )}
 
@@ -155,7 +159,8 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
             <Clock className="h-4 w-4" />
             <span>
               {isUrgent && <AlertCircle className="mr-1 inline h-4 w-4" />}
-              {t('deadline')}: {formatDistanceToNow(new Date(assignment.deadlineAt), { addSuffix: true })}
+              {t('deadline')}:{' '}
+              {formatDistanceToNow(new Date(assignment.deadlineAt), { addSuffix: true })}
               {assignment.hoursRemaining &&
                 ` (${Math.floor(assignment.hoursRemaining)}h ${t('remaining')})`}
             </span>
@@ -220,12 +225,10 @@ export default function ReaderDashboard() {
   return (
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between animate-fade-up">
+      <div className="flex animate-fade-up items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground">
-            {t('subtitle')}
-          </p>
+          <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
         <Button asChild className="animate-fade-left">
           <Link href="/reader/campaigns">
@@ -298,9 +301,7 @@ export default function ReaderDashboard() {
               <Calendar className="h-5 w-5 text-blue-500" />
               {t('sections.upcomingAssignments')}
             </CardTitle>
-            <CardDescription>
-              {t('sections.upcomingDescription')}
-            </CardDescription>
+            <CardDescription>{t('sections.upcomingDescription')}</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
             {upcomingAssignments.map((assignment, index) => (
@@ -329,7 +330,11 @@ export default function ReaderDashboard() {
               <AssignmentCard
                 key={assignment.id}
                 assignment={assignment}
-                className={index % 2 === 0 ? 'animate-fade-right-medium-slow' : 'animate-fade-left-medium-slow'}
+                className={
+                  index % 2 === 0
+                    ? 'animate-fade-right-medium-slow'
+                    : 'animate-fade-left-medium-slow'
+                }
               />
             ))}
           </CardContent>
@@ -340,11 +345,9 @@ export default function ReaderDashboard() {
       {assignments?.length === 0 && (
         <Card className="animate-fade-up-slow">
           <CardContent className="py-16 text-center">
-            <BookOpen className="mx-auto mb-4 h-16 w-16 text-muted-foreground animate-bounce-slow" />
+            <BookOpen className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-muted-foreground" />
             <h3 className="mb-2 text-lg font-semibold">{t('empty.title')}</h3>
-            <p className="mb-4 text-muted-foreground">
-              {t('empty.description')}
-            </p>
+            <p className="mb-4 text-muted-foreground">{t('empty.description')}</p>
             <Button asChild>
               <Link href="/reader/campaigns">
                 {t('browseBooks')}

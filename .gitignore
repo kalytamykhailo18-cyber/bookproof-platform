@@ -1,110 +1,41 @@
-# Dependencies
-node_modules/
-.pnp
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
 .pnp.js
 
-# Testing
-coverage/
-.nyc_output/
-*.lcov
+# testing
+/coverage
 
-# Production
-build/
-dist/
-.next/
-out/
+# next.js
+/.next/
+/out/
 
-# Environment Variables
-.env
-.env*.local
-.env.production
-.env.staging
-!.env.example
+# production
+/build
 
-# Logs
-logs/
-*.log
+# misc
+.DS_Store
+*.pem
+
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-# OS Files
-.DS_Store
-Thumbs.db
-*.swp
-*.swo
-*~
+# local env files
+.env
+.env*.local
 
-# IDE
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-.project
-.classpath
-.settings/
-*.iml
-
-# TypeScript
-*.tsbuildinfo
-tsconfig.tsbuildinfo
-
-# Prisma
-.prisma/
-migrations/.gitkeep
-
-# Uploads (local development)
-uploads/
-temp/
-public/uploads/
-
-# Cache
-.cache/
-.turbo/
-.parcel-cache/
-
-# Vercel
+# vercel
 .vercel
 
-# Docker
-docker-compose.override.yml
-
-# Backup files
-*.backup
-*.bak
-*.tmp
-
-# Error logs
-error.log
-combined.log
-
-# Sentry
-.sentryclirc
-
-# Credentials/Secrets (NEVER COMMIT)
-account.txt
-credentials.txt
-secrets.txt
-*.credentials
-*.secrets
-
-# Testing
-.test-results/
-
-# Generated files
-generated/
-*.generated.*
-
-# Lock files (optional - uncomment if not committing)
-# package-lock.json
-# yarn.lock
-# pnpm-lock.yaml
-
-bookproof
-bookproof.*
-overview
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+overview/
+logs/
+.env
 .claude
-.github
-docs/
+.husky

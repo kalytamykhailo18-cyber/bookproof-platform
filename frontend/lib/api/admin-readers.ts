@@ -169,16 +169,17 @@ export const adminReadersApi = {
    * Get reader details by ID
    */
   async getReaderDetails(readerProfileId: string): Promise<AdminReaderDetailDto> {
-    const response = await apiClient.get<AdminReaderDetailDto>(
-      `/admin/readers/${readerProfileId}`,
-    );
+    const response = await apiClient.get<AdminReaderDetailDto>(`/admin/readers/${readerProfileId}`);
     return response.data;
   },
 
   /**
    * Suspend a reader
    */
-  async suspendReader(readerProfileId: string, data: SuspendReaderDto): Promise<AdminReaderDetailDto> {
+  async suspendReader(
+    readerProfileId: string,
+    data: SuspendReaderDto,
+  ): Promise<AdminReaderDetailDto> {
     const response = await apiClient.post<AdminReaderDetailDto>(
       `/admin/readers/${readerProfileId}/suspend`,
       data,
@@ -189,7 +190,10 @@ export const adminReadersApi = {
   /**
    * Unsuspend a reader
    */
-  async unsuspendReader(readerProfileId: string, data: UnsuspendReaderDto): Promise<AdminReaderDetailDto> {
+  async unsuspendReader(
+    readerProfileId: string,
+    data: UnsuspendReaderDto,
+  ): Promise<AdminReaderDetailDto> {
     const response = await apiClient.post<AdminReaderDetailDto>(
       `/admin/readers/${readerProfileId}/unsuspend`,
       data,
@@ -200,7 +204,10 @@ export const adminReadersApi = {
   /**
    * Adjust reader wallet balance
    */
-  async adjustWallet(readerProfileId: string, data: AdjustWalletDto): Promise<AdminReaderDetailDto> {
+  async adjustWallet(
+    readerProfileId: string,
+    data: AdjustWalletDto,
+  ): Promise<AdminReaderDetailDto> {
     const response = await apiClient.post<AdminReaderDetailDto>(
       `/admin/readers/${readerProfileId}/wallet/adjust`,
       data,
@@ -222,7 +229,10 @@ export const adminReadersApi = {
   /**
    * Remove flag from reader
    */
-  async unflagReader(readerProfileId: string, data: UnflagReaderDto): Promise<AdminReaderDetailDto> {
+  async unflagReader(
+    readerProfileId: string,
+    data: UnflagReaderDto,
+  ): Promise<AdminReaderDetailDto> {
     const response = await apiClient.post<AdminReaderDetailDto>(
       `/admin/readers/${readerProfileId}/unflag`,
       data,
@@ -233,7 +243,10 @@ export const adminReadersApi = {
   /**
    * Add admin note to reader
    */
-  async addAdminNote(readerProfileId: string, data: AddAdminNoteDto): Promise<AdminReaderDetailDto> {
+  async addAdminNote(
+    readerProfileId: string,
+    data: AddAdminNoteDto,
+  ): Promise<AdminReaderDetailDto> {
     const response = await apiClient.post<AdminReaderDetailDto>(
       `/admin/readers/${readerProfileId}/notes`,
       data,
@@ -251,7 +264,10 @@ export const adminReadersApi = {
   /**
    * Verify Amazon profile manually
    */
-  async verifyAmazonProfile(readerProfileId: string, amazonProfileId: string): Promise<AdminReaderDetailDto> {
+  async verifyAmazonProfile(
+    readerProfileId: string,
+    amazonProfileId: string,
+  ): Promise<AdminReaderDetailDto> {
     const response = await apiClient.post<AdminReaderDetailDto>(
       `/admin/readers/${readerProfileId}/amazon-profiles/${amazonProfileId}/verify`,
     );

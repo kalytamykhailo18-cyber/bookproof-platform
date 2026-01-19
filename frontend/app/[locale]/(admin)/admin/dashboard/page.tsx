@@ -158,7 +158,9 @@ export default function AdminDashboardPage() {
 
         <Card className="animate-zoom-in-medium-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('revenue.activeSubscriptions')}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t('revenue.activeSubscriptions')}
+            </CardTitle>
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -181,19 +183,23 @@ export default function AdminDashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center justify-between animate-fade-up-fast">
+            <div className="flex animate-fade-up-fast items-center justify-between">
               <div className="space-y-1">
                 <p className="text-sm font-medium">{t('revenueBreakdown.creditPurchases')}</p>
-                <p className="text-xs text-muted-foreground">{t('revenueBreakdown.oneTimePayments')}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t('revenueBreakdown.oneTimePayments')}
+                </p>
               </div>
               <p className="text-lg font-bold">
                 ${revenue?.revenueBySource?.oneTimePurchases?.toLocaleString() || '0'}
               </p>
             </div>
-            <div className="flex items-center justify-between animate-fade-up-light-slow">
+            <div className="flex animate-fade-up-light-slow items-center justify-between">
               <div className="space-y-1">
                 <p className="text-sm font-medium">{t('revenueBreakdown.subscriptions')}</p>
-                <p className="text-xs text-muted-foreground">{t('revenueBreakdown.recurringRevenue')}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t('revenueBreakdown.recurringRevenue')}
+                </p>
               </div>
               <p className="text-lg font-bold">
                 ${revenue?.revenueBySource?.subscriptions?.toLocaleString() || '0'}
@@ -206,44 +212,55 @@ export default function AdminDashboardPage() {
       {/* Campaign Sections - Healthy, Delayed, Issues */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Healthy Campaigns Section */}
-        <Card className="border-green-200 bg-green-50/50 dark:border-green-900 dark:bg-green-950/20 animate-fade-up">
+        <Card className="animate-fade-up border-green-200 bg-green-50/50 dark:border-green-900 dark:bg-green-950/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-600" />
               {t('campaigns.healthy.title')}
             </CardTitle>
             <CardDescription>
-              {t('campaigns.healthy.description', { count: dashboard?.healthyCampaigns?.length || 0 })}
+              {t('campaigns.healthy.description', {
+                count: dashboard?.healthyCampaigns?.length || 0,
+              })}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="max-h-80 space-y-3 overflow-y-auto">
               {dashboard?.healthyCampaigns && dashboard.healthyCampaigns.length > 0 ? (
-                dashboard.healthyCampaigns.map((campaign: CampaignSectionItemDto, index: number) => (
-                  <div key={campaign.id} className={`rounded-lg border bg-background p-3 animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}>
-                    <div className="mb-2 flex items-start justify-between">
-                      <div>
-                        <p className="text-sm font-medium">{campaign.bookTitle}</p>
-                        <p className="text-xs text-muted-foreground">{campaign.authorName}</p>
+                dashboard.healthyCampaigns.map(
+                  (campaign: CampaignSectionItemDto, index: number) => (
+                    <div
+                      key={campaign.id}
+                      className={`rounded-lg border bg-background p-3 animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}
+                    >
+                      <div className="mb-2 flex items-start justify-between">
+                        <div>
+                          <p className="text-sm font-medium">{campaign.bookTitle}</p>
+                          <p className="text-xs text-muted-foreground">{campaign.authorName}</p>
+                        </div>
+                        <Badge variant="outline" className="border-green-600 text-green-600">
+                          {t('campaigns.healthy.onTrack')}
+                        </Badge>
                       </div>
-                      <Badge variant="outline" className="border-green-600 text-green-600">
-                        {t('campaigns.healthy.onTrack')}
-                      </Badge>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-xs">
-                        <span>
-                          {campaign.reviewsDelivered}/{campaign.targetReviews} {t('campaigns.reviews')}
-                        </span>
-                        <span>{campaign.completionPercentage.toFixed(0)}%</span>
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs">
+                          <span>
+                            {campaign.reviewsDelivered}/{campaign.targetReviews}{' '}
+                            {t('campaigns.reviews')}
+                          </span>
+                          <span>{campaign.completionPercentage.toFixed(0)}%</span>
+                        </div>
+                        <Progress value={campaign.completionPercentage} className="h-1.5" />
+                        <p className="text-xs text-muted-foreground">
+                          {t('campaigns.weekOf', {
+                            current: campaign.currentWeek,
+                            total: campaign.totalWeeks,
+                          })}
+                        </p>
                       </div>
-                      <Progress value={campaign.completionPercentage} className="h-1.5" />
-                      <p className="text-xs text-muted-foreground">
-                        {t('campaigns.weekOf', { current: campaign.currentWeek, total: campaign.totalWeeks })}
-                      </p>
                     </div>
-                  </div>
-                ))
+                  ),
+                )
               ) : (
                 <p className="py-4 text-center text-sm text-muted-foreground">
                   {t('campaigns.healthy.empty')}
@@ -254,49 +271,61 @@ export default function AdminDashboardPage() {
         </Card>
 
         {/* Delayed Campaigns Section */}
-        <Card className="border-yellow-200 bg-yellow-50/50 dark:border-yellow-900 dark:bg-yellow-950/20 animate-fade-up-slow">
+        <Card className="animate-fade-up-slow border-yellow-200 bg-yellow-50/50 dark:border-yellow-900 dark:bg-yellow-950/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Clock className="h-5 w-5 text-yellow-600" />
               {t('campaigns.delayed.title')}
             </CardTitle>
             <CardDescription>
-              {t('campaigns.delayed.description', { count: dashboard?.delayedCampaigns?.length || 0 })}
+              {t('campaigns.delayed.description', {
+                count: dashboard?.delayedCampaigns?.length || 0,
+              })}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="max-h-80 space-y-3 overflow-y-auto">
               {dashboard?.delayedCampaigns && dashboard.delayedCampaigns.length > 0 ? (
-                dashboard.delayedCampaigns.map((campaign: CampaignSectionItemDto, index: number) => (
-                  <div key={campaign.id} className={`rounded-lg border bg-background p-3 animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}>
-                    <div className="mb-2 flex items-start justify-between">
-                      <div>
-                        <p className="text-sm font-medium">{campaign.bookTitle}</p>
-                        <p className="text-xs text-muted-foreground">{campaign.authorName}</p>
+                dashboard.delayedCampaigns.map(
+                  (campaign: CampaignSectionItemDto, index: number) => (
+                    <div
+                      key={campaign.id}
+                      className={`rounded-lg border bg-background p-3 animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}
+                    >
+                      <div className="mb-2 flex items-start justify-between">
+                        <div>
+                          <p className="text-sm font-medium">{campaign.bookTitle}</p>
+                          <p className="text-xs text-muted-foreground">{campaign.authorName}</p>
+                        </div>
+                        <Badge
+                          variant={campaign.severity === 'HIGH' ? 'destructive' : 'default'}
+                          className="bg-yellow-100 text-yellow-800"
+                        >
+                          {campaign.severity}
+                        </Badge>
                       </div>
-                      <Badge
-                        variant={campaign.severity === 'HIGH' ? 'destructive' : 'default'}
-                        className="bg-yellow-100 text-yellow-800"
-                      >
-                        {campaign.severity}
-                      </Badge>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-xs">
-                        <span>
-                          {campaign.reviewsDelivered}/{campaign.targetReviews} {t('campaigns.reviews')}
-                        </span>
-                        <span className="text-yellow-600">{campaign.variance} {t('campaigns.behind')}</span>
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs">
+                          <span>
+                            {campaign.reviewsDelivered}/{campaign.targetReviews}{' '}
+                            {t('campaigns.reviews')}
+                          </span>
+                          <span className="text-yellow-600">
+                            {campaign.variance} {t('campaigns.behind')}
+                          </span>
+                        </div>
+                        <Progress value={campaign.completionPercentage} className="h-1.5" />
+                        <p className="text-xs text-muted-foreground">{campaign.issue}</p>
                       </div>
-                      <Progress value={campaign.completionPercentage} className="h-1.5" />
-                      <p className="text-xs text-muted-foreground">{campaign.issue}</p>
                     </div>
-                  </div>
-                ))
+                  ),
+                )
               ) : (
                 <div className="flex flex-col items-center gap-2 py-4">
                   <CheckCircle className="h-6 w-6 text-green-500" />
-                  <p className="text-center text-sm text-muted-foreground">{t('campaigns.delayed.empty')}</p>
+                  <p className="text-center text-sm text-muted-foreground">
+                    {t('campaigns.delayed.empty')}
+                  </p>
                 </div>
               )}
             </div>
@@ -304,21 +333,26 @@ export default function AdminDashboardPage() {
         </Card>
 
         {/* Issues Section */}
-        <Card className="border-red-200 bg-red-50/50 dark:border-red-900 dark:bg-red-950/20 animate-fade-up-extra-slow">
+        <Card className="animate-fade-up-extra-slow border-red-200 bg-red-50/50 dark:border-red-900 dark:bg-red-950/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-red-600" />
               {t('campaigns.issues.title')}
             </CardTitle>
             <CardDescription>
-              {t('campaigns.issues.description', { count: dashboard?.issuesCampaigns?.length || 0 })}
+              {t('campaigns.issues.description', {
+                count: dashboard?.issuesCampaigns?.length || 0,
+              })}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="max-h-80 space-y-3 overflow-y-auto">
               {dashboard?.issuesCampaigns && dashboard.issuesCampaigns.length > 0 ? (
                 dashboard.issuesCampaigns.map((campaign: CampaignSectionItemDto, index: number) => (
-                  <div key={campaign.id} className={`rounded-lg border bg-background p-3 animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}>
+                  <div
+                    key={campaign.id}
+                    className={`rounded-lg border bg-background p-3 animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}
+                  >
                     <div className="mb-2 flex items-start justify-between">
                       <div>
                         <p className="text-sm font-medium">{campaign.bookTitle}</p>
@@ -331,7 +365,8 @@ export default function AdminDashboardPage() {
                     <div className="space-y-1">
                       <div className="flex justify-between text-xs">
                         <span>
-                          {campaign.reviewsDelivered}/{campaign.targetReviews} {t('campaigns.reviews')}
+                          {campaign.reviewsDelivered}/{campaign.targetReviews}{' '}
+                          {t('campaigns.reviews')}
                         </span>
                         <span>{campaign.completionPercentage.toFixed(0)}%</span>
                       </div>
@@ -420,7 +455,10 @@ export default function AdminDashboardPage() {
           <div className="space-y-4">
             {dashboard?.recentAdminActions && dashboard.recentAdminActions.length > 0 ? (
               dashboard.recentAdminActions.map((action, index) => (
-                <div key={action.id} className={`flex items-start gap-4 animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}>
+                <div
+                  key={action.id}
+                  className={`flex items-start gap-4 animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}
+                >
                   <div className="mt-1">
                     <Clock className="h-5 w-5 text-blue-500" />
                   </div>

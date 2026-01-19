@@ -121,9 +121,7 @@ export default function CustomPackageCheckoutPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Package: {packageData.packageName}
-          </p>
+          <p className="text-sm text-muted-foreground">Package: {packageData.packageName}</p>
           {packageData.expiresAt && (
             <p className="text-sm text-muted-foreground">
               Expired on: {formatDate(packageData.expiresAt)}
@@ -147,17 +145,11 @@ export default function CustomPackageCheckoutPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Package: {packageData.packageName}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Credits: {packageData.credits}
-          </p>
+          <p className="text-sm text-muted-foreground">Package: {packageData.packageName}</p>
+          <p className="text-sm text-muted-foreground">Credits: {packageData.credits}</p>
         </CardContent>
         <CardFooter>
-          <Button onClick={() => router.push('/login')}>
-            Go to Login
-          </Button>
+          <Button onClick={() => router.push('/login')}>Go to Login</Button>
         </CardFooter>
       </Card>
     );
@@ -170,9 +162,7 @@ export default function CustomPackageCheckoutPage() {
           <Package className="h-6 w-6 text-primary" />
           <CardTitle>Complete Your Purchase</CardTitle>
         </div>
-        <CardDescription>
-          Review your custom package details and proceed to payment
-        </CardDescription>
+        <CardDescription>Review your custom package details and proceed to payment</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6">
@@ -243,12 +233,7 @@ export default function CustomPackageCheckoutPage() {
       </CardContent>
 
       <CardFooter className="flex flex-col gap-4">
-        <Button
-          className="w-full"
-          size="lg"
-          onClick={handleCheckout}
-          disabled={isProcessing}
-        >
+        <Button className="w-full" size="lg" onClick={handleCheckout} disabled={isProcessing}>
           {isProcessing ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

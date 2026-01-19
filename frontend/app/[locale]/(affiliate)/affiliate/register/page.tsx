@@ -243,7 +243,12 @@ export default function AffiliateRegisterPage() {
                 )}
               />
 
-              <Button type="button" className="w-full" onClick={handleSubmit} disabled={registerMutation.isPending}>
+              <Button
+                type="button"
+                className="w-full"
+                onClick={handleSubmit}
+                disabled={registerMutation.isPending}
+              >
                 {registerMutation.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

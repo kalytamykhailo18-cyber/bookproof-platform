@@ -192,7 +192,10 @@ export default function AffiliateCommissionsPage() {
               </TableHeader>
               <TableBody>
                 {commissions.map((commission, index) => (
-                  <TableRow key={commission.id} className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}>
+                  <TableRow
+                    key={commission.id}
+                    className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
+                  >
                     <TableCell>${commission.purchaseAmount.toFixed(2)}</TableCell>
                     <TableCell className="font-semibold">
                       ${commission.commissionAmount.toFixed(2)}

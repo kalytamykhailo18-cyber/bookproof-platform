@@ -184,7 +184,8 @@ export default function TransactionsPage() {
       <div className="animate-fade-up">
         <h1 className="text-3xl font-bold">{t('title') || 'Transaction History'}</h1>
         <p className="text-muted-foreground">
-          {t('subtitle') || 'View all your credit purchases, subscription payments, and credit usage'}
+          {t('subtitle') ||
+            'View all your credit purchases, subscription payments, and credit usage'}
         </p>
       </div>
 
@@ -203,34 +204,46 @@ export default function TransactionsPage() {
 
         <Card className="animate-fade-up-light-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.totalPurchases') || 'Total Purchases'}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t('stats.totalPurchases') || 'Total Purchases'}
+            </CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{purchaseCount}</div>
-            <p className="text-xs text-muted-foreground">{t('stats.oneTime') || 'One-time payments'}</p>
+            <p className="text-xs text-muted-foreground">
+              {t('stats.oneTime') || 'One-time payments'}
+            </p>
           </CardContent>
         </Card>
 
         <Card className="animate-fade-up-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.subscriptionPayments') || 'Subscription Payments'}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t('stats.subscriptionPayments') || 'Subscription Payments'}
+            </CardTitle>
             <RefreshCw className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{subscriptionCount}</div>
-            <p className="text-xs text-muted-foreground">{t('stats.recurring') || 'Recurring charges'}</p>
+            <p className="text-xs text-muted-foreground">
+              {t('stats.recurring') || 'Recurring charges'}
+            </p>
           </CardContent>
         </Card>
 
         <Card className="animate-fade-up-very-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.creditsUsed') || 'Credits Used'}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t('stats.creditsUsed') || 'Credits Used'}
+            </CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{creditsUsed}</div>
-            <p className="text-xs text-muted-foreground">{t('stats.totalAllocated') || 'Total allocated'}</p>
+            <p className="text-xs text-muted-foreground">
+              {t('stats.totalAllocated') || 'Total allocated'}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -242,7 +255,9 @@ export default function TransactionsPage() {
             <TrendingUp className="h-5 w-5" />
             {t('spendingOverview.title') || 'Spending Overview'}
           </CardTitle>
-          <CardDescription>{t('spendingOverview.description') || 'Your spending by category'}</CardDescription>
+          <CardDescription>
+            {t('spendingOverview.description') || 'Your spending by category'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -277,7 +292,9 @@ export default function TransactionsPage() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>{t('history.title') || 'Transaction History'}</CardTitle>
-              <CardDescription>{t('history.description') || 'All your financial transactions'}</CardDescription>
+              <CardDescription>
+                {t('history.description') || 'All your financial transactions'}
+              </CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-muted-foreground" />
@@ -417,7 +434,9 @@ export default function TransactionsPage() {
             <CreditCard className="h-5 w-5" />
             {t('recentPurchases.title') || 'Recent Credit Purchases'}
           </CardTitle>
-          <CardDescription>{t('recentPurchases.description') || 'Your latest credit package purchases via Stripe'}</CardDescription>
+          <CardDescription>
+            {t('recentPurchases.description') || 'Your latest credit package purchases via Stripe'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
