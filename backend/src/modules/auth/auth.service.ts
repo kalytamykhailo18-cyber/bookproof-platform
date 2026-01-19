@@ -170,11 +170,15 @@ export class AuthService {
           data: {
             userId: user.id,
             action: 'ACCOUNT_UNLOCKED',
-            details: JSON.stringify({
+            entity: 'User',
+            entityId: user.id,
+            changes: JSON.stringify({
               unlockedBy: adminUserId,
               reason: reason || 'Admin manual unlock',
               timestamp: new Date().toISOString(),
             }),
+            description: `Account unlocked by admin ${adminUserId}`,
+            severity: 'INFO',
           },
         });
       }
