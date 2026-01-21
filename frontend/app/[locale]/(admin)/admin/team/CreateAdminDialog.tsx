@@ -127,7 +127,7 @@ export function CreateAdminDialog() {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-4">
             {/* Email Field */}
             <FormField
               control={form.control}
@@ -293,7 +293,7 @@ export function CreateAdminDialog() {
               >
                 {t('createAdmin.cancel')}
               </Button>
-              <Button type="submit" disabled={createAdminMutation.isPending}>
+              <Button type="button" disabled={createAdminMutation.isPending} onClick={form.handleSubmit(onSubmit)}>
                 {createAdminMutation.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -304,7 +304,7 @@ export function CreateAdminDialog() {
                 )}
               </Button>
             </DialogFooter>
-          </form>
+          </div>
         </Form>
       </DialogContent>
     </Dialog>

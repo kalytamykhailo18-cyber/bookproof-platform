@@ -114,7 +114,7 @@ export default function NotificationSettingsPage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div className="space-y-6">
         {/* Email Notifications */}
         <Card className="animate-fade-up-fast">
           <CardHeader>
@@ -225,7 +225,7 @@ export default function NotificationSettingsPage() {
 
         {/* Save Button */}
         <div className="flex justify-end animate-fade-up-slow">
-          <Button type="submit" disabled={isPending} size="lg">
+          <Button type="button" disabled={isPending} size="lg" onClick={handleSubmit(onSubmit)}>
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -239,7 +239,7 @@ export default function NotificationSettingsPage() {
             )}
           </Button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
