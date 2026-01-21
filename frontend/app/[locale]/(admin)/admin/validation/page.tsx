@@ -303,7 +303,7 @@ export default function AdminValidationPage() {
                               )}
                               <span
                                 className="flex cursor-pointer items-center gap-1 text-blue-600 hover:underline"
-                                onClick={() => window.open(review.amazonProfile.profileUrl, '_blank', 'noopener,noreferrer')}
+                                onClick={() => window.open(review.amazonProfile?.profileUrl, '_blank', 'noopener,noreferrer')}
                               >
                                 {t('review.viewProfile')}
                                 <ExternalLink className="h-3 w-3" />

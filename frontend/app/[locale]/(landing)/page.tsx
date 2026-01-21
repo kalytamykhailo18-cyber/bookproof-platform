@@ -696,6 +696,7 @@ function ContactSection() {
 // Footer Component
 function Footer({ locale }: { locale: string }) {
   const t = useTranslations('footer');
+  const router = useRouter();
 
   return (
     <footer className="border-t bg-background py-12">
@@ -736,7 +737,7 @@ function Footer({ locale }: { locale: string }) {
               <li>
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
                 >
                   {t('links.company.about')}
                 </span>
@@ -749,14 +750,6 @@ function Footer({ locale }: { locale: string }) {
                   {t('links.company.contact')}
                 </span>
               </li>
-              <li>
-                <span
-                  className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => document.getElementById('blog')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  {t('links.company.blog')}
-                </span>
-              </li>
             </ul>
           </div>
           <div className="animate-fade-down">
@@ -765,7 +758,7 @@ function Footer({ locale }: { locale: string }) {
               <li>
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => document.getElementById('privacy')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => router.push('/privacy')}
                 >
                   {t('links.legal.privacy')}
                 </span>
@@ -773,17 +766,9 @@ function Footer({ locale }: { locale: string }) {
               <li>
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => document.getElementById('terms')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => router.push('/terms')}
                 >
                   {t('links.legal.terms')}
-                </span>
-              </li>
-              <li>
-                <span
-                  className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => document.getElementById('cookies')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  {t('links.legal.cookies')}
                 </span>
               </li>
             </ul>
