@@ -3,7 +3,62 @@ import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import { EmailTemplateService, EmailVariables } from './email-template.service';
 import { PrismaService } from '@common/prisma/prisma.service';
-import { EmailType, EmailStatus, Language } from '@prisma/client';
+import { EmailType, EmailStatus, Language, NotificationType } from '@prisma/client';
+
+/**
+ * Transactional email types that MUST always be sent regardless of user preferences
+ * These are critical for account security and service delivery
+ */
+const TRANSACTIONAL_EMAIL_TYPES: EmailType[] = [
+  EmailType.EMAIL_VERIFICATION,
+  EmailType.PASSWORD_RESET,
+  EmailType.PASSWORD_CHANGED,
+  EmailType.WELCOME,
+  EmailType.PAYMENT_RECEIVED,
+  EmailType.PAYMENT_FAILED,
+  EmailType.REFUND_PROCESSED,
+  EmailType.AUTHOR_PAYMENT_RECEIVED,
+  EmailType.AUTHOR_PAYMENT_FAILED,
+  EmailType.READER_PAYOUT_COMPLETED,
+  EmailType.READER_ASSIGNMENT_EXPIRED,
+  EmailType.READER_MATERIALS_READY,
+  EmailType.CLOSER_PAYMENT_RECEIVED,
+  EmailType.CLOSER_ACCOUNT_CREATED,
+  EmailType.AUTHOR_ACCOUNT_CREATED_BY_CLOSER,
+];
+
+/**
+ * Marketing email types that require explicit marketing consent
+ */
+const MARKETING_EMAIL_TYPES: EmailType[] = [
+  EmailType.AFFILIATE_NEW_REFERRAL,
+  EmailType.LANDING_PAGE_WELCOME,
+];
+
+/**
+ * Map email types to notification types for preference checking
+ */
+const EMAIL_TO_NOTIFICATION_TYPE: Partial<Record<EmailType, NotificationType>> = {
+  [EmailType.AUTHOR_CAMPAIGN_STARTED]: NotificationType.CAMPAIGN,
+  [EmailType.AUTHOR_CAMPAIGN_COMPLETED]: NotificationType.CAMPAIGN,
+  [EmailType.AUTHOR_REPORT_READY]: NotificationType.CAMPAIGN,
+  [EmailType.AUTHOR_CREDITS_EXPIRING_SOON]: NotificationType.PAYMENT,
+  [EmailType.AUTHOR_CREDITS_EXPIRED]: NotificationType.PAYMENT,
+  [EmailType.AUTHOR_CREDITS_ADDED]: NotificationType.PAYMENT,
+  [EmailType.AUTHOR_CREDITS_REMOVED]: NotificationType.PAYMENT,
+  [EmailType.READER_REVIEW_SUBMITTED]: NotificationType.REVIEW,
+  [EmailType.READER_REVIEW_VALIDATED]: NotificationType.REVIEW,
+  [EmailType.READER_REVIEW_REJECTED]: NotificationType.REVIEW,
+  [EmailType.READER_DEADLINE_24H]: NotificationType.REVIEW,
+  [EmailType.READER_DEADLINE_48H]: NotificationType.REVIEW,
+  [EmailType.READER_DEADLINE_72H]: NotificationType.REVIEW,
+  [EmailType.ADMIN_NEW_ISSUE]: NotificationType.ADMIN,
+  [EmailType.ADMIN_URGENT_ISSUE]: NotificationType.ADMIN,
+  [EmailType.ADMIN_PAYOUT_REQUESTED]: NotificationType.ADMIN,
+  [EmailType.ADMIN_NEW_AFFILIATE_APPLICATION]: NotificationType.ADMIN,
+  [EmailType.ADMIN_CRITICAL_ERROR]: NotificationType.ADMIN,
+  [EmailType.ADMIN_NOTIFICATION]: NotificationType.ADMIN,
+};
 
 /**
  * Email attachment interface for sending PDFs and other files
@@ -38,8 +93,69 @@ export class EmailService {
   }
 
   /**
+   * Check if user has opted out of this email type
+   * Returns true if email should be blocked, false if allowed
+   */
+  private async shouldBlockEmail(userId: string | undefined, type: EmailType): Promise<{ blocked: boolean; reason?: string }> {
+    // Transactional emails are ALWAYS sent
+    if (TRANSACTIONAL_EMAIL_TYPES.includes(type)) {
+      return { blocked: false };
+    }
+
+    // If no userId, we can't check preferences - allow email
+    if (!userId) {
+      return { blocked: false };
+    }
+
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          notificationEmailEnabled: true,
+          notificationDisabledTypes: true,
+          marketingConsent: true,
+        },
+      });
+
+      if (!user) {
+        return { blocked: false };
+      }
+
+      // Check if marketing consent is required
+      if (MARKETING_EMAIL_TYPES.includes(type) && !user.marketingConsent) {
+        return { blocked: true, reason: 'User has not consented to marketing emails' };
+      }
+
+      // Check if email notifications are globally disabled
+      if (!user.notificationEmailEnabled) {
+        return { blocked: true, reason: 'User has disabled email notifications' };
+      }
+
+      // Check if this notification type is disabled
+      const notificationType = EMAIL_TO_NOTIFICATION_TYPE[type];
+      if (notificationType && user.notificationDisabledTypes) {
+        try {
+          const disabledTypes: string[] = JSON.parse(user.notificationDisabledTypes);
+          if (disabledTypes.includes(notificationType)) {
+            return { blocked: true, reason: `User has disabled ${notificationType} notifications` };
+          }
+        } catch {
+          // Invalid JSON, don't block
+        }
+      }
+
+      return { blocked: false };
+    } catch (error) {
+      this.logger.warn(`Failed to check email preferences for user ${userId}:`, error);
+      // On error, don't block the email
+      return { blocked: false };
+    }
+  }
+
+  /**
    * NEW: Send email with template system and logging
    * Supports optional attachments (e.g., PDF files)
+   * Respects user notification preferences (except for transactional emails)
    */
   async sendTemplatedEmail(
     to: string,
@@ -52,6 +168,24 @@ export class EmailService {
     let emailLogId: string | null = null;
 
     try {
+      // 0. Check user notification preferences
+      const preferenceCheck = await this.shouldBlockEmail(userId, type);
+      if (preferenceCheck.blocked) {
+        this.logger.log(`Email ${type} to ${to} blocked: ${preferenceCheck.reason}`);
+        // Log the blocked email for audit trail
+        await this.prisma.emailLog.create({
+          data: {
+            userId,
+            email: to,
+            type,
+            subject: `[BLOCKED] ${type}`,
+            status: EmailStatus.FAILED,
+            error: preferenceCheck.reason,
+          },
+        });
+        return; // Don't send the email
+      }
+
       // 1. Enhance variables with default values
       const enhancedVariables: EmailVariables = {
         ...variables,

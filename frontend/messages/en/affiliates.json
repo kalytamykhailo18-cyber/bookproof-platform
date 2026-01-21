@@ -6,7 +6,7 @@
       "title": "Why Join Our Affiliate Program?",
       "commission": "Earn 20% lifetime commission on all purchases made by your referrals",
       "lifetime": "Lifetime commissions - earn from every purchase your referrals make, forever",
-      "tracking": "Advanced tracking with 30-day cookie window and detailed analytics",
+      "tracking": "Advanced tracking with 90-day cookie window and detailed analytics",
       "payout": "Minimum $50 payout threshold with multiple payment options"
     },
     "form": {
@@ -131,11 +131,11 @@
       },
       "step2": {
         "title": "Users Click Your Link",
-        "description": "When someone clicks your link, a 30-day tracking cookie is set"
+        "description": "When someone clicks your link, a 90-day tracking cookie is set"
       },
       "step3": {
         "title": "User Registers & Purchases",
-        "description": "If they register within 30 days and make a purchase, you earn a commission"
+        "description": "If they register within 90 days and make a purchase, you earn a commission"
       },
       "step4": {
         "title": "Earn Lifetime Commissions",

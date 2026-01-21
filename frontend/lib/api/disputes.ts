@@ -30,6 +30,13 @@ export enum DisputePriority {
   CRITICAL = 'CRITICAL',
 }
 
+export enum AppealStatus {
+  NONE = 'NONE',
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+
 export interface CreateDisputeDto {
   type: DisputeType;
   description: string;
@@ -52,6 +59,28 @@ export interface UpdateDisputeStatusDto {
   adminNotes?: string;
 }
 
+export interface FileAppealDto {
+  reason: string;
+}
+
+export interface ResolveAppealDto {
+  approved: boolean;
+  resolution: string;
+}
+
+export interface SlaStats {
+  totalWithSla: number;
+  breached: number;
+  complianceRate: number;
+  averageResponseTimeHours: number;
+  byPriority: {
+    priority: string;
+    total: number;
+    breached: number;
+    complianceRate: number;
+  }[];
+}
+
 export interface DisputeResponse {
   id: string;
   userId: string;
@@ -69,6 +98,18 @@ export interface DisputeResponse {
   escalatedAt?: string;
   escalationReason?: string;
   adminNotes?: string;
+  // SLA tracking fields
+  firstResponseAt?: string;
+  firstResponseBy?: string;
+  slaDeadline?: string;
+  slaBreached: boolean;
+  // Appeal fields
+  appealedAt?: string;
+  appealReason?: string;
+  appealStatus?: AppealStatus;
+  appealResolvedBy?: string;
+  appealResolvedAt?: string;
+  appealResolution?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -184,6 +225,36 @@ export const disputesApi = {
    */
   async getDisputesByUser(userId: string): Promise<DisputeResponse[]> {
     const response = await apiClient.get<DisputeResponse[]>(`/admin/disputes/user/${userId}`);
+    return response.data;
+  },
+
+  /**
+   * Get SLA compliance statistics
+   */
+  async getSlaStats(): Promise<SlaStats> {
+    const response = await apiClient.get<SlaStats>('/admin/disputes/sla/stats');
+    return response.data;
+  },
+
+  /**
+   * File an appeal on a resolved dispute (one per issue)
+   */
+  async fileAppeal(disputeId: string, data: FileAppealDto): Promise<DisputeResponse> {
+    const response = await apiClient.post<DisputeResponse>(
+      `/admin/disputes/${disputeId}/appeal`,
+      data,
+    );
+    return response.data;
+  },
+
+  /**
+   * Resolve an appeal (admin only)
+   */
+  async resolveAppeal(disputeId: string, data: ResolveAppealDto): Promise<DisputeResponse> {
+    const response = await apiClient.put<DisputeResponse>(
+      `/admin/disputes/${disputeId}/appeal/resolve`,
+      data,
+    );
     return response.data;
   },
 };

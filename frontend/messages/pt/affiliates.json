@@ -6,7 +6,7 @@
       "title": "Por que se juntar ao nosso programa de afiliados?",
       "commission": "Ganhe 20% de comissão vitalícia em todas as compras feitas por suas indicações",
       "lifetime": "Comissões vitalícias - ganhe de cada compra que suas indicações fizerem, para sempre",
-      "tracking": "Rastreamento avançado com janela de cookie de 30 dias e análises detalhadas",
+      "tracking": "Rastreamento avançado com janela de cookie de 90 dias e análises detalhadas",
       "payout": "Limite mínimo de pagamento de $50 com múltiplas opções de pagamento"
     },
     "form": {
@@ -131,11 +131,11 @@
       },
       "step2": {
         "title": "Usuários Clicam no Seu Link",
-        "description": "Quando alguém clica no seu link, um cookie de rastreamento de 30 dias é definido"
+        "description": "Quando alguém clica no seu link, um cookie de rastreamento de 90 dias é definido"
       },
       "step3": {
         "title": "Usuário se Registra e Compra",
-        "description": "Se eles se registrarem dentro de 30 dias e fizerem uma compra, você ganha uma comissão"
+        "description": "Se eles se registrarem dentro de 90 dias e fizerem uma compra, você ganha uma comissão"
       },
       "step4": {
         "title": "Ganhe Comissões Vitalícias",

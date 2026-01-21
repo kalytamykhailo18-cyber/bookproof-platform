@@ -8,10 +8,15 @@ import {
   cancelAccountDeletion,
   updateConsent,
   getUserConsents,
+  getLanguage,
+  updateLanguage,
   type DeleteAccountRequest,
   type UpdateConsentRequest,
+  type UpdateLanguageRequest,
   type DataExportResponse,
   type ConsentResponse,
+  type LanguageResponse,
+  Language,
 } from '@/lib/api/users';
 
 /**
@@ -114,6 +119,33 @@ export function useUserData() {
     staleTime: 60000, // 1 minute
   });
 
+  // Get language preference query
+  const {
+    data: languagePreference,
+    isLoading: isLoadingLanguage,
+    error: languageError,
+  } = useQuery<LanguageResponse, Error>({
+    queryKey: ['user-language'],
+    queryFn: getLanguage,
+    staleTime: 60000, // 1 minute
+  });
+
+  // Update language preference
+  const updateLanguageMutation = useMutation({
+    mutationFn: (request: UpdateLanguageRequest) => updateLanguage(request),
+    onSuccess: (data) => {
+      toast.success('Language updated', {
+        description: `Your preferred language has been changed to ${data.preferredLanguage}`,
+      });
+      queryClient.invalidateQueries({ queryKey: ['user-language'] });
+    },
+    onError: (error: Error) => {
+      toast.error('Failed to update language', {
+        description: error.message || 'Please try again later',
+      });
+    },
+  });
+
   return {
     // Export data
     exportData: exportDataMutation.mutate,
@@ -133,5 +165,13 @@ export function useUserData() {
     consents,
     isLoadingConsents,
     consentsError,
+
+    // Language preference
+    updateLanguage: updateLanguageMutation.mutate,
+    isUpdatingLanguage: updateLanguageMutation.isPending,
+    languagePreference: languagePreference?.preferredLanguage,
+    isLoadingLanguage,
+    languageError,
+    Language,
   };
 }

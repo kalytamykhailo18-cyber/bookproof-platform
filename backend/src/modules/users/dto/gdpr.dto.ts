@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsOptional, IsEnum } from 'class-validator';
+import { Language } from '@prisma/client';
 
 /**
  * GDPR Data Export Response DTO
@@ -220,4 +221,38 @@ export class ConsentResponseDto {
     description: 'When consent was withdrawn (if applicable)',
   })
   withdrawnAt?: Date;
+}
+
+/**
+ * Update Language Preference DTO
+ *
+ * Allows users to change their preferred language for the platform interface
+ * and email notifications.
+ */
+export class UpdateLanguageDto {
+  @ApiProperty({
+    enum: Language,
+    description: 'Preferred language for the platform',
+    example: 'EN',
+  })
+  @IsEnum(Language)
+  preferredLanguage: Language;
+}
+
+/**
+ * Language Update Response DTO
+ */
+export class UpdateLanguageResponseDto {
+  @ApiProperty({
+    description: 'Confirmation message',
+    example: 'Language preference updated successfully',
+  })
+  message: string;
+
+  @ApiProperty({
+    enum: Language,
+    description: 'New preferred language',
+    example: 'EN',
+  })
+  preferredLanguage: Language;
 }

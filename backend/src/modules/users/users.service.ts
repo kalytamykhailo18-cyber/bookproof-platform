@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
-import { DataExportResponseDto, DeleteAccountDto, DeleteAccountResponseDto, UpdateConsentDto, ConsentResponseDto, ConsentType } from './dto/gdpr.dto';
-import { UserRole } from '@prisma/client';
+import { DataExportResponseDto, DeleteAccountDto, DeleteAccountResponseDto, UpdateConsentDto, ConsentResponseDto, ConsentType, UpdateLanguageDto, UpdateLanguageResponseDto } from './dto/gdpr.dto';
+import { UserRole, Language } from '@prisma/client';
 
 /**
  * Users Service
@@ -440,5 +440,79 @@ export class UsersService {
         withdrawnAt: !user.marketingConsent ? user.updatedAt : undefined,
       },
     ];
+  }
+
+  /**
+   * Update user's preferred language
+   *
+   * Per requirements.md Section 7.4:
+   * - User can change language in settings
+   * - Interface and emails update to new language
+   *
+   * @param userId - ID of the user
+   * @param dto - Language update details
+   * @returns Updated language confirmation
+   */
+  async updateLanguage(userId: string, dto: UpdateLanguageDto): Promise<UpdateLanguageResponseDto> {
+    this.logger.log(`Language update requested by user ${userId}: ${dto.preferredLanguage}`);
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Update the user's preferred language
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        preferredLanguage: dto.preferredLanguage,
+      },
+    });
+
+    // Create audit log for language change
+    await this.prisma.auditLog.create({
+      data: {
+        userId,
+        action: 'LANGUAGE_UPDATED',
+        entity: 'User',
+        entityId: userId,
+        changes: JSON.stringify({
+          previousLanguage: user.preferredLanguage,
+          newLanguage: dto.preferredLanguage,
+          timestamp: new Date().toISOString(),
+        }),
+        description: `User updated preferred language from ${user.preferredLanguage} to ${dto.preferredLanguage}`,
+        severity: 'INFO',
+      },
+    });
+
+    this.logger.log(`Language updated for user ${userId}: ${user.preferredLanguage} → ${dto.preferredLanguage}`);
+
+    return {
+      message: 'Language preference updated successfully',
+      preferredLanguage: dto.preferredLanguage,
+    };
+  }
+
+  /**
+   * Get user's current language preference
+   *
+   * @param userId - ID of the user
+   * @returns Current language preference
+   */
+  async getLanguage(userId: string): Promise<{ preferredLanguage: Language }> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { preferredLanguage: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return { preferredLanguage: user.preferredLanguage };
   }
 }

@@ -2135,6 +2135,13 @@ enum DisputePriority {
   CRITICAL
 }
 
+enum AppealStatus {
+  NONE       // No appeal filed
+  PENDING    // Appeal filed, awaiting review
+  APPROVED   // Appeal approved, decision reversed
+  REJECTED   // Appeal rejected, original decision stands
+}
+
 model Dispute {
   id String @id @default(cuid())
 
@@ -2162,8 +2169,22 @@ model Dispute {
   escalatedAt      DateTime?
   escalationReason String?   @db.Text
 
+  // Response Time Tracking (SLA Compliance)
+  firstResponseAt  DateTime? // When admin first responded
+  firstResponseBy  String?   // Which admin responded first
+  slaDeadline      DateTime? // Deadline for first response based on priority
+  slaBreached      Boolean   @default(false) // Whether SLA was breached
+
   // Admin notes
   adminNotes String? @db.Text
+
+  // Appeals (one per issue)
+  appealedAt       DateTime? // When user appealed
+  appealReason     String?   @db.Text
+  appealStatus     AppealStatus? @default(NONE)
+  appealResolvedBy String?   // Admin who resolved the appeal
+  appealResolvedAt DateTime?
+  appealResolution String?   @db.Text
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -2175,6 +2196,8 @@ model Dispute {
   @@index([priority])
   @@index([relatedEntityType, relatedEntityId])
   @@index([createdAt])
+  @@index([slaBreached])
+  @@index([appealStatus])
 }
 
 // ============================================

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { AuditService } from '../../audit/audit.service';
 import {
@@ -11,35 +11,80 @@ import {
   DisputeStatus,
   DisputePriority,
 } from '../dto/dispute.dto';
-import { UserRole } from '@prisma/client';
+import { UserRole, AppealStatus } from '@prisma/client';
+
+/**
+ * SLA deadlines by priority (in hours)
+ * Per requirements: 24 hours for standard, 4 hours for critical
+ */
+const SLA_HOURS_BY_PRIORITY: Record<string, number> = {
+  LOW: 48,      // 48 hours for low priority
+  MEDIUM: 24,   // 24 hours for standard
+  HIGH: 8,      // 8 hours for high priority
+  CRITICAL: 4,  // 4 hours for critical
+};
 
 @Injectable()
 export class DisputeService {
+  private readonly logger = new Logger(DisputeService.name);
+
   constructor(
     private prisma: PrismaService,
     private auditService: AuditService,
   ) {}
 
   /**
-   * Create a new dispute
+   * Calculate SLA deadline based on priority
+   */
+  private calculateSlaDeadline(priority: string): Date {
+    const hours = SLA_HOURS_BY_PRIORITY[priority] || 24;
+    const deadline = new Date();
+    deadline.setHours(deadline.getHours() + hours);
+    return deadline;
+  }
+
+  /**
+   * Track first response and check SLA breach
+   */
+  private async trackFirstResponse(dispute: any, adminUserId: string): Promise<{ firstResponseAt: Date; slaBreached: boolean }> {
+    // If already responded, don't update
+    if (dispute.firstResponseAt) {
+      return { firstResponseAt: dispute.firstResponseAt, slaBreached: dispute.slaBreached };
+    }
+
+    const now = new Date();
+    const slaBreached = dispute.slaDeadline ? now > dispute.slaDeadline : false;
+
+    return { firstResponseAt: now, slaBreached };
+  }
+
+  /**
+   * Create a new dispute with SLA deadline tracking
    */
   async createDispute(
     dto: CreateDisputeDto,
     userId: string,
     userRole: UserRole,
   ): Promise<DisputeResponseDto> {
+    const priority = dto.priority || DisputePriority.MEDIUM;
+    const slaDeadline = this.calculateSlaDeadline(priority);
+
     const dispute = await this.prisma.dispute.create({
       data: {
         userId,
         userRole,
         type: dto.type as any,
         description: dto.description,
-        priority: (dto.priority || DisputePriority.MEDIUM) as any,
+        priority: priority as any,
         relatedEntityType: dto.relatedEntityType,
         relatedEntityId: dto.relatedEntityId,
         status: 'OPEN' as any,
+        slaDeadline,
+        appealStatus: AppealStatus.NONE,
       },
     });
+
+    this.logger.log(`Dispute ${dispute.id} created with SLA deadline: ${slaDeadline.toISOString()}`);
 
     // Log audit trail
     await this.auditService.logAdminAction({
@@ -240,8 +285,14 @@ export class DisputeService {
       throw new NotFoundException('Dispute not found');
     }
 
+    // Track first response time and SLA breach
+    const { firstResponseAt, slaBreached } = await this.trackFirstResponse(dispute, adminUserId);
+
     const updateData: any = {
       status: dto.status as any,
+      firstResponseAt: dispute.firstResponseAt || firstResponseAt,
+      firstResponseBy: dispute.firstResponseBy || adminUserId,
+      slaBreached: dispute.slaBreached || slaBreached,
     };
 
     if (dto.adminNotes) {
@@ -252,6 +303,11 @@ export class DisputeService {
       where: { id: disputeId },
       data: updateData,
     });
+
+    // Log if SLA was breached
+    if (slaBreached && !dispute.slaBreached) {
+      this.logger.warn(`SLA breached for dispute ${disputeId}`);
+    }
 
     // Log audit trail
     await this.auditService.logAdminAction({
@@ -338,6 +394,197 @@ export class DisputeService {
   }
 
   /**
+   * File an appeal for a resolved dispute (one per issue)
+   * Per requirements: User appeals allowed (one per issue)
+   */
+  async fileAppeal(
+    disputeId: string,
+    userId: string,
+    appealReason: string,
+  ): Promise<DisputeResponseDto> {
+    const dispute = await this.prisma.dispute.findUnique({
+      where: { id: disputeId },
+    });
+
+    if (!dispute) {
+      throw new NotFoundException('Dispute not found');
+    }
+
+    // Verify the user owns this dispute
+    if (dispute.userId !== userId) {
+      throw new BadRequestException('You can only appeal your own disputes');
+    }
+
+    // Check if dispute is resolved or rejected (can only appeal closed disputes)
+    if (dispute.status !== 'RESOLVED' && dispute.status !== 'REJECTED') {
+      throw new BadRequestException('Can only appeal resolved or rejected disputes');
+    }
+
+    // Check if user has already filed an appeal (one per issue)
+    if (dispute.appealStatus && dispute.appealStatus !== AppealStatus.NONE) {
+      throw new BadRequestException('You have already filed an appeal for this dispute. Only one appeal is allowed per issue.');
+    }
+
+    const updatedDispute = await this.prisma.dispute.update({
+      where: { id: disputeId },
+      data: {
+        appealedAt: new Date(),
+        appealReason,
+        appealStatus: AppealStatus.PENDING,
+      },
+    });
+
+    // Log audit trail
+    await this.auditService.logAdminAction({
+      action: 'dispute.appeal_filed',
+      entity: 'Dispute',
+      entityId: disputeId,
+      userId,
+      userEmail: '',
+      userRole: dispute.userRole,
+      description: `Appeal filed for dispute`,
+      changes: {
+        appealReason,
+        previousAppealStatus: dispute.appealStatus,
+      },
+    });
+
+    this.logger.log(`Appeal filed for dispute ${disputeId} by user ${userId}`);
+
+    return this.mapToResponseDto(updatedDispute);
+  }
+
+  /**
+   * Resolve an appeal (admin only)
+   */
+  async resolveAppeal(
+    disputeId: string,
+    adminUserId: string,
+    approved: boolean,
+    resolution: string,
+  ): Promise<DisputeResponseDto> {
+    const dispute = await this.prisma.dispute.findUnique({
+      where: { id: disputeId },
+    });
+
+    if (!dispute) {
+      throw new NotFoundException('Dispute not found');
+    }
+
+    if (dispute.appealStatus !== AppealStatus.PENDING) {
+      throw new BadRequestException('No pending appeal found for this dispute');
+    }
+
+    const newStatus = approved ? AppealStatus.APPROVED : AppealStatus.REJECTED;
+
+    const updateData: any = {
+      appealStatus: newStatus,
+      appealResolvedBy: adminUserId,
+      appealResolvedAt: new Date(),
+      appealResolution: resolution,
+    };
+
+    // If appeal is approved, reopen the dispute
+    if (approved) {
+      updateData.status = 'IN_PROGRESS';
+      updateData.resolution = null;
+      updateData.resolvedAt = null;
+      updateData.resolvedBy = null;
+    }
+
+    const updatedDispute = await this.prisma.dispute.update({
+      where: { id: disputeId },
+      data: updateData,
+    });
+
+    // Log audit trail
+    await this.auditService.logAdminAction({
+      action: approved ? 'dispute.appeal_approved' : 'dispute.appeal_rejected',
+      entity: 'Dispute',
+      entityId: disputeId,
+      userId: adminUserId,
+      userEmail: '',
+      userRole: UserRole.ADMIN,
+      description: `Appeal ${approved ? 'approved' : 'rejected'}: ${resolution}`,
+      changes: {
+        appealStatus: newStatus,
+        appealResolution: resolution,
+        disputeReopened: approved,
+      },
+    });
+
+    this.logger.log(`Appeal for dispute ${disputeId} ${approved ? 'approved' : 'rejected'} by admin ${adminUserId}`);
+
+    return this.mapToResponseDto(updatedDispute);
+  }
+
+  /**
+   * Get SLA statistics
+   */
+  async getSlaStats(): Promise<{
+    totalWithSla: number;
+    breached: number;
+    complianceRate: number;
+    averageResponseTimeHours: number;
+    byPriority: {
+      priority: string;
+      total: number;
+      breached: number;
+      complianceRate: number;
+    }[];
+  }> {
+    const priorities = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
+
+    const [totalWithSla, breached, responseTimes, priorityStats] = await Promise.all([
+      this.prisma.dispute.count({
+        where: { firstResponseAt: { not: null } },
+      }),
+      this.prisma.dispute.count({
+        where: { slaBreached: true },
+      }),
+      this.prisma.dispute.findMany({
+        where: { firstResponseAt: { not: null } },
+        select: { createdAt: true, firstResponseAt: true },
+      }),
+      Promise.all(priorities.map(async (priority) => {
+        const [total, priorityBreached] = await Promise.all([
+          this.prisma.dispute.count({
+            where: { priority: priority as any, firstResponseAt: { not: null } },
+          }),
+          this.prisma.dispute.count({
+            where: { priority: priority as any, slaBreached: true },
+          }),
+        ]);
+        return {
+          priority,
+          total,
+          breached: priorityBreached,
+          complianceRate: total > 0 ? Math.round(((total - priorityBreached) / total) * 100 * 100) / 100 : 100,
+        };
+      })),
+    ]);
+
+    const complianceRate = totalWithSla > 0
+      ? ((totalWithSla - breached) / totalWithSla) * 100
+      : 100;
+
+    const averageResponseTimeHours = responseTimes.length > 0
+      ? responseTimes.reduce((sum, d) => {
+          const diff = (d.firstResponseAt!.getTime() - d.createdAt.getTime()) / (1000 * 60 * 60);
+          return sum + diff;
+        }, 0) / responseTimes.length
+      : 0;
+
+    return {
+      totalWithSla,
+      breached,
+      complianceRate: Math.round(complianceRate * 100) / 100,
+      averageResponseTimeHours: Math.round(averageResponseTimeHours * 100) / 100,
+      byPriority: priorityStats,
+    };
+  }
+
+  /**
    * Map Prisma dispute to response DTO
    */
   private mapToResponseDto(dispute: any): DisputeResponseDto {
@@ -358,6 +605,18 @@ export class DisputeService {
       escalatedAt: dispute.escalatedAt,
       escalationReason: dispute.escalationReason,
       adminNotes: dispute.adminNotes,
+      // SLA tracking fields
+      firstResponseAt: dispute.firstResponseAt,
+      firstResponseBy: dispute.firstResponseBy,
+      slaDeadline: dispute.slaDeadline,
+      slaBreached: dispute.slaBreached,
+      // Appeal fields
+      appealedAt: dispute.appealedAt,
+      appealReason: dispute.appealReason,
+      appealStatus: dispute.appealStatus,
+      appealResolvedBy: dispute.appealResolvedBy,
+      appealResolvedAt: dispute.appealResolvedAt,
+      appealResolution: dispute.appealResolution,
       createdAt: dispute.createdAt,
       updatedAt: dispute.updatedAt,
     };

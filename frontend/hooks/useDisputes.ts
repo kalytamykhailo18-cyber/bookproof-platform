@@ -11,12 +11,16 @@ import type {
   GetDisputesQuery,
   DisputeResponse,
   DisputeStats,
+  FileAppealDto,
+  ResolveAppealDto,
+  SlaStats,
 } from '@/lib/api/disputes';
 
 // Query keys
 const DISPUTES_KEY = 'disputes';
 const DISPUTES_STATS_KEY = 'disputes-stats';
 const DISPUTES_OPEN_KEY = 'disputes-open';
+const SLA_STATS_KEY = 'sla-stats';
 
 /**
  * Hook for managing disputes
@@ -154,6 +158,57 @@ export function useUpdateDisputeStatus() {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Failed to update dispute status');
+    },
+  });
+}
+
+/**
+ * Hook for getting SLA compliance statistics
+ */
+export function useSlaStats() {
+  return useQuery<SlaStats>({
+    queryKey: [SLA_STATS_KEY],
+    queryFn: () => disputesApi.getSlaStats(),
+    staleTime: 60000,
+  });
+}
+
+/**
+ * Hook for filing an appeal on a dispute (one per issue)
+ */
+export function useFileAppeal() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ disputeId, data }: { disputeId: string; data: FileAppealDto }) =>
+      disputesApi.fileAppeal(disputeId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [DISPUTES_KEY] });
+      queryClient.invalidateQueries({ queryKey: [DISPUTES_STATS_KEY] });
+      toast.success('Appeal filed successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to file appeal');
+    },
+  });
+}
+
+/**
+ * Hook for resolving an appeal (admin only)
+ */
+export function useResolveAppeal() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ disputeId, data }: { disputeId: string; data: ResolveAppealDto }) =>
+      disputesApi.resolveAppeal(disputeId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [DISPUTES_KEY] });
+      queryClient.invalidateQueries({ queryKey: [DISPUTES_STATS_KEY] });
+      toast.success('Appeal resolved');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to resolve appeal');
     },
   });
 }

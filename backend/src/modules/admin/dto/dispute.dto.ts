@@ -3,6 +3,7 @@ import {
   IsEnum,
   IsOptional,
   IsNotEmpty,
+  IsBoolean,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -33,6 +34,13 @@ export enum DisputePriority {
   MEDIUM = 'MEDIUM',
   HIGH = 'HIGH',
   CRITICAL = 'CRITICAL',
+}
+
+export enum AppealStatus {
+  NONE = 'NONE',
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
 }
 
 // DTO for creating a dispute
@@ -170,6 +178,62 @@ export class GetDisputesQueryDto {
   userId?: string;
 }
 
+// DTO for filing an appeal
+export class FileAppealDto {
+  @ApiProperty({
+    description: 'Reason for the appeal',
+    example: 'I believe the resolution was unfair because...',
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(20)
+  @MaxLength(2000)
+  reason: string;
+}
+
+// DTO for resolving an appeal
+export class ResolveAppealDto {
+  @ApiProperty({
+    description: 'Whether to approve the appeal',
+    example: true,
+  })
+  @IsBoolean()
+  approved: boolean;
+
+  @ApiProperty({
+    description: 'Resolution explanation',
+    example: 'After reviewing the evidence, we have decided to...',
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(10)
+  @MaxLength(2000)
+  resolution: string;
+}
+
+// Response DTO for SLA statistics
+export class SlaStatsResponseDto {
+  @ApiProperty({ description: 'Total disputes with SLA' })
+  totalWithSla: number;
+
+  @ApiProperty({ description: 'Number of SLA breaches' })
+  breached: number;
+
+  @ApiProperty({ description: 'SLA compliance percentage' })
+  complianceRate: number;
+
+  @ApiProperty({ description: 'Average first response time in hours' })
+  averageResponseTimeHours: number;
+
+  @ApiProperty({ description: 'SLA stats by priority' })
+  byPriority: {
+    priority: string;
+    total: number;
+    breached: number;
+    complianceRate: number;
+  }[];
+}
+
 // Response DTO for dispute
 export class DisputeResponseDto {
   @ApiProperty()
@@ -219,6 +283,38 @@ export class DisputeResponseDto {
 
   @ApiPropertyOptional()
   adminNotes?: string;
+
+  // SLA tracking fields
+  @ApiPropertyOptional({ description: 'When the first response was made' })
+  firstResponseAt?: Date;
+
+  @ApiPropertyOptional({ description: 'Admin who made the first response' })
+  firstResponseBy?: string;
+
+  @ApiPropertyOptional({ description: 'SLA deadline for first response' })
+  slaDeadline?: Date;
+
+  @ApiProperty({ description: 'Whether SLA was breached', default: false })
+  slaBreached: boolean;
+
+  // Appeal fields
+  @ApiPropertyOptional({ description: 'When the appeal was filed' })
+  appealedAt?: Date;
+
+  @ApiPropertyOptional({ description: 'Reason for the appeal' })
+  appealReason?: string;
+
+  @ApiPropertyOptional({ description: 'Status of the appeal', enum: AppealStatus })
+  appealStatus?: AppealStatus;
+
+  @ApiPropertyOptional({ description: 'Admin who resolved the appeal' })
+  appealResolvedBy?: string;
+
+  @ApiPropertyOptional({ description: 'When the appeal was resolved' })
+  appealResolvedAt?: Date;
+
+  @ApiPropertyOptional({ description: 'Resolution of the appeal' })
+  appealResolution?: string;
 
   @ApiProperty()
   createdAt: Date;

@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Delete, Body, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { DataExportResponseDto, DeleteAccountDto, DeleteAccountResponseDto, UpdateConsentDto, ConsentResponseDto } from './dto/gdpr.dto';
+import { DataExportResponseDto, DeleteAccountDto, DeleteAccountResponseDto, UpdateConsentDto, ConsentResponseDto, UpdateLanguageDto, UpdateLanguageResponseDto } from './dto/gdpr.dto';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
 import { CurrentUser, CurrentUserData } from '@common/decorators/current-user.decorator';
 
@@ -141,5 +141,60 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   async getConsents(@CurrentUser() user: CurrentUserData): Promise<ConsentResponseDto[]> {
     return this.usersService.getUserConsents(user.id);
+  }
+
+  /**
+   * Get user's current language preference
+   *
+   * Per requirements.md Section 7.4:
+   * - Language preference stored in profile
+   */
+  @Get('me/language')
+  @ApiOperation({
+    summary: 'Get current language preference',
+    description: 'Returns the user\'s current language setting',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Language preference retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        preferredLanguage: { type: 'string', enum: ['EN', 'PT', 'ES'] },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async getLanguage(@CurrentUser() user: CurrentUserData): Promise<{ preferredLanguage: string }> {
+    return this.usersService.getLanguage(user.id);
+  }
+
+  /**
+   * Update user's preferred language
+   *
+   * Per requirements.md Section 7.4:
+   * - User can change language in settings
+   * - Interface updates immediately
+   */
+  @Patch('me/language')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Update language preference',
+    description: 'Change the user\'s preferred language for the platform and email notifications',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Language preference updated successfully',
+    type: UpdateLanguageResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Invalid language' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async updateLanguage(
+    @CurrentUser() user: CurrentUserData,
+    @Body() dto: UpdateLanguageDto,
+  ): Promise<UpdateLanguageResponseDto> {
+    return this.usersService.updateLanguage(user.id, dto);
   }
 }
