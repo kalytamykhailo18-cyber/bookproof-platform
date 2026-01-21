@@ -67,7 +67,7 @@ export default function AdminReadersPage() {
     return readers;
   }, [readers]);
 
-  const getStatusBadge = (reader: (typeof readers)[0]) => {
+  const getStatusBadge = (reader: NonNullable<typeof readers>[number]) => {
     if (!reader.isActive) {
       return (
         <Badge className="bg-red-100 text-red-800 hover:bg-red-200">{t('status.suspended')}</Badge>

@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsOptional, IsNotEmpty, IsUUID, MaxLength } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsNotEmpty, IsUUID, MaxLength, IsIn, IsNumber } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PaymentStatus } from '@prisma/client';
 
@@ -27,7 +27,7 @@ export class CreateRefundRequestDto {
     description: 'ID of the credit purchase to refund',
     example: 'cm1abc123xyz',
   })
-  @IsUUID()
+  @IsString()
   @IsNotEmpty()
   creditPurchaseId: string;
 
@@ -60,7 +60,7 @@ export class AdminRefundDecisionDto {
     enum: ['approve', 'approve_partial', 'reject'],
     example: 'approve',
   })
-  @IsEnum(['approve', 'approve_partial', 'reject'])
+  @IsIn(['approve', 'approve_partial', 'reject'])
   @IsNotEmpty()
   decision: 'approve' | 'approve_partial' | 'reject';
 
@@ -78,6 +78,7 @@ export class AdminRefundDecisionDto {
     description: 'Refund amount for partial refunds',
     example: 50.00,
   })
+  @IsNumber()
   @IsOptional()
   refundAmount?: number;
 }

@@ -6,7 +6,9 @@ import { PaymentsService } from './payments.service';
 import { StripePaymentsService } from './services/stripe-payments.service';
 import { StripeSubscriptionsService } from './services/stripe-subscriptions.service';
 import { PaymentPdfService } from './services/payment-pdf.service';
+import { RefundsService } from './services/refunds.service';
 import { SubscriptionsController } from './subscriptions.controller';
+import { RefundsController } from './refunds.controller';
 import { PrismaModule } from '../../common/prisma/prisma.module';
 import { EmailModule } from '../email/email.module';
 import { NotificationsModule } from '../notifications/notifications.module';
@@ -30,8 +32,8 @@ import { FilesModule } from '../files/files.module';
     FilesModule, // For PDF storage
     forwardRef(() => KeywordsModule), // For keyword research payment handling
   ],
-  controllers: [PaymentsController, SubscriptionsController],
-  providers: [PaymentsService, StripePaymentsService, StripeSubscriptionsService, PaymentPdfService],
-  exports: [PaymentsService, StripePaymentsService, StripeSubscriptionsService, PaymentPdfService],
+  controllers: [PaymentsController, SubscriptionsController, RefundsController],
+  providers: [PaymentsService, StripePaymentsService, StripeSubscriptionsService, PaymentPdfService, RefundsService],
+  exports: [PaymentsService, StripePaymentsService, StripeSubscriptionsService, PaymentPdfService, RefundsService],
 })
 export class PaymentsModule {}

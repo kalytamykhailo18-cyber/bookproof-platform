@@ -137,10 +137,12 @@ export default function AdminReaderDetailPage() {
   const handleWalletAdjust = () => {
     const amount = parseFloat(walletAmount);
     if (isNaN(amount) || amount <= 0 || !actionReason.trim()) return;
+    // Amount is positive for addition, negative for deduction
+    const adjustedAmount = walletType === 'ADD' ? amount : -amount;
     adjustWallet.mutate(
       {
         readerProfileId: readerId,
-        data: { amount, type: walletType, reason: actionReason, notes: actionNotes || undefined },
+        data: { amount: adjustedAmount, reason: actionReason, notes: actionNotes || undefined },
       },
       {
         onSuccess: () => {
