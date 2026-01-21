@@ -3,7 +3,10 @@ import { Request } from 'express';
 import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
+import { AdminRolesGuard } from '../../common/guards/admin-roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { AdminRoles } from '../../common/decorators/admin-roles.decorator';
+import { AdminRole } from '@prisma/client';
 import { DashboardService } from './dashboard.service';
 import {
   AdminDashboardDto,
@@ -60,9 +63,15 @@ export class DashboardController {
     return this.dashboardService.getTransactionHistory(req.user.authorProfileId);
   }
 
+  /**
+   * Get admin revenue analytics
+   * Per Milestone 5.5: Financial data is SUPER_ADMIN only
+   */
   @Get('admin/revenue')
   @Roles('ADMIN' as any)
-  @ApiOperation({ summary: 'Get admin revenue analytics' })
+  @UseGuards(AdminRolesGuard)
+  @AdminRoles(AdminRole.SUPER_ADMIN)
+  @ApiOperation({ summary: 'Get admin revenue analytics (SUPER_ADMIN only)' })
   @ApiResponse({ status: 200, description: 'Revenue analytics retrieved', type: AdminRevenueAnalyticsDto })
   async getRevenueAnalytics(): Promise<AdminRevenueAnalyticsDto> {
     return this.dashboardService.getAdminRevenueAnalytics();

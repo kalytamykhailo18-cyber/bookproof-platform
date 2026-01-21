@@ -9,8 +9,10 @@ import {
 import { Response } from 'express';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
 import { RolesGuard } from '@common/guards/roles.guard';
+import { AdminRolesGuard } from '@common/guards/admin-roles.guard';
 import { Roles } from '@common/decorators/roles.decorator';
-import { UserRole } from '@prisma/client';
+import { AdminRoles } from '@common/decorators/admin-roles.decorator';
+import { UserRole, AdminRole } from '@prisma/client';
 import { FinancialReportService } from './services/financial-report.service';
 import { OperationalReportService } from './services/operational-report.service';
 import { AffiliateReportService } from './services/affiliate-report.service';
@@ -36,8 +38,12 @@ export class AdminReportsController {
   /**
    * Get Financial Report
    * GET /admin/reports/financial?startDate=2024-01-01&endDate=2024-12-31
+   *
+   * Per Milestone 5.5: Financial Oversight is SUPER_ADMIN only
    */
   @Get('financial')
+  @UseGuards(AdminRolesGuard)
+  @AdminRoles(AdminRole.SUPER_ADMIN)
   async getFinancialReport(
     @Query() query: DateRangeQueryDto,
   ): Promise<FinancialReportDto> {
@@ -53,8 +59,12 @@ export class AdminReportsController {
   /**
    * Export Financial Report as CSV
    * GET /admin/reports/financial/export/csv?startDate=2024-01-01&endDate=2024-12-31
+   *
+   * Per Milestone 5.5: Financial Oversight is SUPER_ADMIN only
    */
   @Get('financial/export/csv')
+  @UseGuards(AdminRolesGuard)
+  @AdminRoles(AdminRole.SUPER_ADMIN)
   async exportFinancialReportCsv(
     @Query() query: DateRangeQueryDto,
     @Res() res: Response,

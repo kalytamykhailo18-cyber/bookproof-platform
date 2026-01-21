@@ -6,7 +6,7 @@ import { ReviewsService } from './reviews.service';
 import { AuditService } from '../audit/audit.service';
 import { EmailService } from '../email/email.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import { IssueResolutionStatus, AssignmentStatus, UserRole, LogSeverity, Prisma } from '@prisma/client';
+import { IssueResolutionStatus, AssignmentStatus, UserRole, LogSeverity, Prisma, EmailType } from '@prisma/client';
 
 @Injectable()
 export class ValidationService {
@@ -344,8 +344,71 @@ export class ValidationService {
       this.logger.error(`Failed to send review rejected email: ${emailError.message}`);
     }
 
-    // TODO: Trigger automatic reassignment to next reader in queue
-    // This will be handled by queue service
+    // Trigger automatic reassignment to next reader in queue
+    try {
+      const assignment = await this.prisma.readerAssignment.findUnique({
+        where: { id: review.readerAssignmentId },
+        select: { bookId: true },
+      });
+
+      if (assignment) {
+        const nextReaderInQueue = await this.prisma.readerAssignment.findFirst({
+          where: {
+            bookId: assignment.bookId,
+            status: AssignmentStatus.WAITING,
+          },
+          orderBy: {
+            queuePosition: 'asc',
+          },
+          include: {
+            readerProfile: {
+              include: {
+                user: true,
+              },
+            },
+            book: true,
+          },
+        });
+
+        if (nextReaderInQueue) {
+          // Schedule next reader for immediate material release
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          await this.prisma.readerAssignment.update({
+            where: { id: nextReaderInQueue.id },
+            data: {
+              status: AssignmentStatus.SCHEDULED,
+              scheduledDate: today,
+              isReassignment: true,
+              originalAssignmentId: review.readerAssignmentId,
+            },
+          });
+
+          this.logger.log(`Scheduled replacement reader ${nextReaderInQueue.readerProfile.user.email} for book ${nextReaderInQueue.book.title}`);
+
+          // Notify the new reader that they've been selected as a replacement
+          if (nextReaderInQueue.readerProfile.user?.email) {
+            await this.emailService.sendTemplatedEmail(
+              nextReaderInQueue.readerProfile.user.email,
+              EmailType.READER_REPLACEMENT_ASSIGNED,
+              {
+                userName: nextReaderInQueue.readerProfile.user.name || 'Reader',
+                bookTitle: nextReaderInQueue.book.title,
+                dashboardUrl: '/reader/assignments',
+              },
+              nextReaderInQueue.readerProfile.userId,
+              nextReaderInQueue.readerProfile.user.preferredLanguage,
+            );
+          }
+        } else {
+          this.logger.log(`No waiting readers available for reassignment on book ${assignment.bookId}`);
+        }
+      }
+    } catch (reassignError) {
+      // Log error but don't fail the rejection
+      this.logger.error(`Failed to trigger reassignment: ${reassignError.message}`);
+    }
 
     return this.reviewsService.getReviewByIdForAdmin(review.id);
   }
@@ -521,10 +584,20 @@ export class ValidationService {
       const readerUser = readerAssignment.readerProfile.user;
 
       if (readerUser?.email) {
-        // Note: READER_RESUBMISSION_REQUESTED email type may not exist yet in templates
-        // This is a placeholder implementation that should be completed when email template is added
-        this.logger.log(`Would send resubmission request email to reader ${readerUser.email}, but email template not yet implemented`);
-        this.logger.log(`Details: Book=${readerAssignment.book.title}, Issue=${dto.issueType}, Deadline=${newDeadline.toLocaleDateString()}`);
+        await this.emailService.sendTemplatedEmail(
+          readerUser.email,
+          EmailType.READER_RESUBMISSION_REQUESTED,
+          {
+            userName: readerUser.name || 'Reader',
+            bookTitle: readerAssignment.book.title,
+            resubmissionInstructions: dto.notes || 'Please review and fix the issues mentioned by our team.',
+            resubmissionDeadline: newDeadline.toLocaleDateString(),
+            dashboardUrl: '/reader/assignments',
+          },
+          readerAssignment.readerProfile.userId,
+          readerUser.preferredLanguage,
+        );
+        this.logger.log(`Resubmission request email sent to reader ${readerUser.email}`);
       }
     } catch (emailError) {
       // Log error but don't fail the request

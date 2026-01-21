@@ -294,4 +294,35 @@ export const adminReadersApi = {
     );
     return response.data;
   },
+
+  /**
+   * Add admin note for reader
+   * Note: This API endpoint needs backend implementation
+   * Currently a placeholder that will return the reader detail
+   */
+  async addAdminNote(
+    readerProfileId: string,
+    data: AddAdminNoteDto,
+  ): Promise<AdminReaderDetailDto> {
+    const response = await apiClient.post<AdminReaderDetailDto>(
+      `/admin/readers/${readerProfileId}/notes`,
+      data,
+    );
+    return response.data;
+  },
+
+  /**
+   * Delete admin note for reader
+   * Note: This API endpoint needs backend implementation
+   * Currently a placeholder that will return the reader detail
+   */
+  async deleteAdminNote(
+    readerProfileId: string,
+    noteId: string,
+  ): Promise<AdminReaderDetailDto> {
+    const response = await apiClient.delete<AdminReaderDetailDto>(
+      `/admin/readers/${readerProfileId}/notes/${noteId}`,
+    );
+    return response.data;
+  },
 };

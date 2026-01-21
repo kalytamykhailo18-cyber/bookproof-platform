@@ -116,7 +116,7 @@ export default function AdminCampaignsPage() {
     }
   };
 
-  const getHealthBadge = (campaign: (typeof campaigns)[0]) => {
+  const getHealthBadge = (campaign: NonNullable<typeof campaigns>[number]) => {
     const percentage = campaign.progress.completionPercentage;
     const currentWeek = campaign.distribution.currentWeek;
     const totalWeeks = campaign.distribution.totalWeeks;

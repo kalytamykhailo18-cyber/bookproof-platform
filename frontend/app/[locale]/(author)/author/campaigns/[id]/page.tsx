@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useCampaign, useCampaigns } from '@/hooks/useCampaigns';
+import { Language } from '@/lib/api/campaigns';
 import { useCredits } from '@/hooks/useCredits';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -582,7 +583,7 @@ export default function CampaignDetailPage() {
 
                   {/* Per-language breakdown */}
                   <div className="grid grid-cols-3 gap-4 rounded-lg border p-4">
-                    {campaign.landingPageLanguages?.includes('EN') && (
+                    {campaign.landingPageLanguages?.includes(Language.EN) && (
                       <div className="text-center">
                         <p className="text-sm text-muted-foreground">English</p>
                         <p className="text-xl font-bold text-blue-600">
@@ -593,7 +594,7 @@ export default function CampaignDetailPage() {
                         </p>
                       </div>
                     )}
-                    {campaign.landingPageLanguages?.includes('PT') && (
+                    {campaign.landingPageLanguages?.includes(Language.PT) && (
                       <div className="text-center">
                         <p className="text-sm text-muted-foreground">Portuguese</p>
                         <p className="text-xl font-bold text-green-600">
@@ -604,7 +605,7 @@ export default function CampaignDetailPage() {
                         </p>
                       </div>
                     )}
-                    {campaign.landingPageLanguages?.includes('ES') && (
+                    {campaign.landingPageLanguages?.includes(Language.ES) && (
                       <div className="text-center">
                         <p className="text-sm text-muted-foreground">Spanish</p>
                         <p className="text-xl font-bold text-orange-600">

@@ -13,6 +13,7 @@ import { KeywordsService } from '../keywords/keywords.service';
 import { StripePaymentsService } from './services/stripe-payments.service';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { EmailService } from '../email/email.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class PaymentsService {
@@ -25,6 +26,7 @@ export class PaymentsService {
     private eventEmitter: EventEmitter2, // Event-driven architecture - no circular dependency!
     private prisma: PrismaService,
     private emailService: EmailService,
+    private notificationsService: NotificationsService,
     @Inject(forwardRef(() => KeywordsService))
     private keywordsService: KeywordsService,
     @Inject(forwardRef(() => StripePaymentsService))
@@ -197,12 +199,12 @@ export class PaymentsService {
       });
 
       if (authorProfile?.user) {
+        const packageTier = packageTierId
+          ? await this.prisma.packageTier.findUnique({ where: { id: packageTierId } })
+          : null;
+
         // Send payment failed notification email
         try {
-          const packageTier = packageTierId
-            ? await this.prisma.packageTier.findUnique({ where: { id: packageTierId } })
-            : null;
-
           await this.emailService.sendTemplatedEmail(
             authorProfile.user.email,
             'PAYMENT_FAILED' as any,
@@ -220,6 +222,26 @@ export class PaymentsService {
           this.logger.log(`Payment failed notification sent to ${authorProfile.user.email}`);
         } catch (error) {
           this.logger.error(`Failed to send payment failed notification: ${error.message}`);
+        }
+
+        // Send in-app payment failure notification (Milestone 6.1 requirement)
+        try {
+          await this.notificationsService.createNotification({
+            userId: authorProfile.userId,
+            type: 'PAYMENT' as any,
+            title: 'Payment Failed',
+            message: `Your payment of $${((session.amount_total || 0) / 100).toFixed(2)} for ${packageTier?.name || 'credit package'} could not be processed. Please try again or use a different payment method.`,
+            actionUrl: '/author/credits/purchase',
+            metadata: {
+              amount: (session.amount_total || 0) / 100,
+              currency: session.currency?.toUpperCase() || 'USD',
+              packageName: packageTier?.name || 'Credit Package',
+              sessionId: session.id,
+            },
+          });
+          this.logger.log(`In-app payment failure notification created for user ${authorProfile.userId}`);
+        } catch (notifError) {
+          this.logger.error(`Failed to create in-app payment failure notification: ${notifError.message}`);
         }
       }
 

@@ -241,18 +241,33 @@ export class StripePaymentsService {
     if (couponCode) {
       const coupon = await this.prisma.coupon.findUnique({ where: { code: couponCode } });
       if (coupon) {
+        // Calculate the discount amount
+        const basePrice = parseFloat(packageTier.basePrice.toString());
+        const amountPaid = session.amount_total! / 100;
+        const discountAmount = basePrice - amountPaid;
+
         await this.prisma.coupon.update({
           where: { id: coupon.id },
           data: { currentUses: { increment: 1 } },
         });
 
+        const user = await this.prisma.user.findUnique({ where: { id: authorProfile!.userId } });
         await this.prisma.couponUsage.create({
           data: {
             couponId: coupon.id,
             userId: authorProfile!.userId,
-            userEmail: (await this.prisma.user.findUnique({ where: { id: authorProfile!.userId } }))!.email,
+            userEmail: user!.email,
             creditPurchaseId: creditPurchase.id,
-            discountApplied: 0, // Calculate from session
+            discountApplied: Math.max(0, discountAmount),
+          },
+        });
+
+        // Update credit purchase with discount info
+        await this.prisma.creditPurchase.update({
+          where: { id: creditPurchase.id },
+          data: {
+            baseAmount: basePrice,
+            discountAmount: Math.max(0, discountAmount),
           },
         });
       }

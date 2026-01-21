@@ -9,6 +9,7 @@ import { AffiliateReportService } from './services/affiliate-report.service';
 import { CsvExportService } from './services/csv-export.service';
 import { PrismaModule } from '@common/prisma/prisma.module';
 import { FilesModule } from '@modules/files/files.module';
+import { AdminRolesGuard } from '@common/guards/admin-roles.guard';
 
 @Module({
   imports: [PrismaModule, FilesModule],
@@ -20,6 +21,7 @@ import { FilesModule } from '@modules/files/files.module';
     OperationalReportService,
     AffiliateReportService,
     CsvExportService,
+    AdminRolesGuard, // Required for SUPER_ADMIN role check on financial endpoints
   ],
   exports: [ReportsService],
 })
