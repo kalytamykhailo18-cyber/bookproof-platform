@@ -404,6 +404,25 @@ export class NotificationsService {
   }
 
   /**
+   * Notify author when campaign credits are running low (below 10)
+   * Per Milestone 3.4: "Low credit warning when campaign allocation below 10 credits"
+   */
+  async notifyAuthorLowCampaignCredits(
+    userId: string,
+    bookTitle: string,
+    creditsRemaining: number,
+  ): Promise<void> {
+    await this.createNotification({
+      userId,
+      type: NotificationType.CAMPAIGN,
+      title: 'Low Campaign Credits',
+      message: `Your campaign "${bookTitle}" has only ${creditsRemaining} credits remaining. Consider adding more credits to avoid campaign interruption.`,
+      actionUrl: '/author/credits',
+      metadata: { bookTitle, creditsRemaining },
+    });
+  }
+
+  /**
    * Notify affiliate of new referral
    */
   async notifyAffiliateNewReferral(

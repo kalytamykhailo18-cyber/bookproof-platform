@@ -4,12 +4,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { creditsApi, PurchaseCreditRequest } from '@/lib/api/credits';
 import { useLoading } from '@/components/providers/LoadingProvider';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 export function useCredits() {
   const queryClient = useQueryClient();
   const { startLoading, stopLoading } = useLoading();
   const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
 
   // Get all package tiers
   const { data: packageTiers, isLoading: isLoadingPackages } = useQuery({
@@ -67,8 +69,8 @@ export function useCredits() {
     couponCode?: string,
     includeKeywordResearch?: boolean
   ) => {
-    const successUrl = `${window.location.origin}/author/credits/success`;
-    const cancelUrl = `${window.location.origin}/author/credits/cancel`;
+    const successUrl = `${window.location.origin}/${locale}/author/credits/success`;
+    const cancelUrl = `${window.location.origin}/${locale}/author/credits/cancel`;
 
     createCheckoutMutation.mutate({
       packageTierId,

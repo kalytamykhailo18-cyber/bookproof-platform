@@ -212,6 +212,43 @@ export class MaterialReleaseProcessor {
       `Deducted ${creditsToDeduct} credit(s) for ${assignment.formatAssigned} access. Campaign "${book.title}" now has ${book.creditsRemaining - creditsToDeduct} credits remaining.`,
     );
 
+    // LOW CREDIT WARNING: Per Milestone 3.4 - "Low credit warning when campaign allocation below 10 credits"
+    // Send warning notification if credits fall below 10 but are still above 0
+    const newCreditsRemaining = book.creditsRemaining - creditsToDeduct;
+    if (newCreditsRemaining > 0 && newCreditsRemaining < 10) {
+      try {
+        const authorProfile = await this.prisma.authorProfile.findUnique({
+          where: { id: book.authorProfileId },
+          include: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                name: true,
+              },
+            },
+          },
+        });
+
+        if (authorProfile) {
+          await this.notificationsService.notifyAuthorLowCampaignCredits(
+            authorProfile.user.id,
+            book.title,
+            newCreditsRemaining,
+          );
+          this.logger.log(
+            `Low credit warning sent for campaign "${book.title}" (${newCreditsRemaining} credits remaining)`,
+          );
+        }
+      } catch (warnError) {
+        this.logger.error(
+          `Failed to send low credit warning for book ${book.id}:`,
+          warnError,
+        );
+        // Don't throw - warning is not critical
+      }
+    }
+
     // Create reminder records per Milestone 4.3:
     // - Hour 24: First reminder ("48 hours remaining")
     // - Hour 48: Second reminder ("24 hours remaining")

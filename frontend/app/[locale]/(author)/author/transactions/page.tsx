@@ -404,6 +404,7 @@ export default function TransactionsPage() {
               <Filter className="h-4 w-4 text-muted-foreground" />
               <div className="flex gap-2">
                 <Button
+                  type="button"
                   variant={filterType === 'all' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setFilterType('all')}
@@ -411,6 +412,7 @@ export default function TransactionsPage() {
                   {t('filter.all') || 'All'}
                 </Button>
                 <Button
+                  type="button"
                   variant={filterType === 'purchase' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setFilterType('purchase')}
@@ -418,6 +420,7 @@ export default function TransactionsPage() {
                   {t('filter.purchases') || 'Purchases'}
                 </Button>
                 <Button
+                  type="button"
                   variant={filterType === 'subscription' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setFilterType('subscription')}
@@ -425,6 +428,7 @@ export default function TransactionsPage() {
                   {t('filter.subscriptions') || 'Subscriptions'}
                 </Button>
                 <Button
+                  type="button"
                   variant={filterType === 'usage' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setFilterType('usage')}
@@ -507,7 +511,7 @@ export default function TransactionsPage() {
                     <TableCell>
                       <div className="flex gap-1">
                         {transaction.type !== 'usage' && (
-                          <Button variant="ghost" size="sm">
+                          <Button type="button" variant="ghost" size="sm">
                             <Receipt className="h-4 w-4" />
                           </Button>
                         )}
@@ -519,6 +523,7 @@ export default function TransactionsPage() {
                                 {getRefundStatusBadge(existingRefund.status)}
                                 {existingRefund.status === RefundRequestStatus.PENDING && (
                                   <Button
+                                    type="button"
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => handleCancelRefundRequest(existingRefund.id)}
@@ -532,6 +537,7 @@ export default function TransactionsPage() {
                           }
                           return (
                             <Button
+                              type="button"
                               variant="ghost"
                               size="sm"
                               onClick={() => handleOpenRefundDialog(transaction.id)}
@@ -622,7 +628,7 @@ export default function TransactionsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button variant="ghost" size="sm">
+                        <Button type="button" variant="ghost" size="sm">
                           <Receipt className="h-4 w-4" />
                         </Button>
                         {(() => {
@@ -633,6 +639,7 @@ export default function TransactionsPage() {
                                 {getRefundStatusBadge(existingRefund.status)}
                                 {existingRefund.status === RefundRequestStatus.PENDING && (
                                   <Button
+                                    type="button"
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => handleCancelRefundRequest(existingRefund.id)}
@@ -646,6 +653,7 @@ export default function TransactionsPage() {
                           }
                           return (
                             <Button
+                              type="button"
                               variant="ghost"
                               size="sm"
                               onClick={() => handleOpenRefundDialog(transaction.id)}
@@ -712,6 +720,7 @@ export default function TransactionsPage() {
                     <TableCell>
                       {request.status === RefundRequestStatus.PENDING && (
                         <Button
+                          type="button"
                           variant="ghost"
                           size="sm"
                           onClick={() => handleCancelRefundRequest(request.id)}
@@ -837,10 +846,11 @@ export default function TransactionsPage() {
           )}
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setRefundDialogOpen(false)}>
+            <Button type="button" variant="outline" onClick={() => setRefundDialogOpen(false)}>
               Cancel
             </Button>
             <Button
+              type="button"
               onClick={handleSubmitRefund}
               disabled={
                 !eligibility?.isEligible ||

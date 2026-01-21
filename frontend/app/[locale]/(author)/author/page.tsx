@@ -63,6 +63,7 @@ export default function AuthorDashboardPage() {
         </div>
         <div className="flex gap-3">
           <Button
+            type="button"
             variant="outline"
             className="animate-fade-left"
             onClick={() => router.push(`/${locale}/author/credits`)}
@@ -71,6 +72,7 @@ export default function AuthorDashboardPage() {
             {t('buttons.buyCredits')}
           </Button>
           <Button
+            type="button"
             className="animate-fade-left-fast"
             disabled={!creditBalance?.availableCredits || creditBalance.availableCredits <= 0}
             title={
@@ -263,7 +265,7 @@ export default function AuthorDashboardPage() {
               <BookOpen className="mb-4 h-12 w-12 text-muted-foreground" />
               <p className="mb-2 text-lg font-medium">{t('campaigns.noCampaigns')}</p>
               <p className="mb-4 text-sm text-muted-foreground">{t('campaigns.createFirst')}</p>
-              <Button onClick={() => router.push(`/${locale}/author/campaigns/new`)}>
+              <Button type="button" onClick={() => router.push(`/${locale}/author/campaigns/new`)}>
                 <Plus className="mr-2 h-4 w-4" />
                 {t('buttons.newCampaign')}
               </Button>
