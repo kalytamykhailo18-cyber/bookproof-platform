@@ -52,6 +52,8 @@ export interface UserData {
   country?: string;
   termsAccepted?: boolean; // For authors - whether they've accepted terms of service
   accountCreatedByCloser?: boolean; // For authors - whether account was created by Closer
+  adminRole?: 'SUPER_ADMIN' | 'ADMIN' | 'MODERATOR' | 'SUPPORT'; // For admin users only (Section 5.1, 5.5)
+  adminPermissions?: string[]; // Granular permissions for admins
 }
 
 export interface AuthResponse {

@@ -13,6 +13,8 @@ import {
   UpdateKeywordResearchFeatureData,
   ReviewPaymentRatesResponse,
   UpdateReviewPaymentRatesData,
+  SystemConfigurationResponse,
+  UpdateSystemConfigurationData,
 } from '@/lib/api/settings';
 
 // ============================================
@@ -193,6 +195,41 @@ export function useUpdateKeywordResearchFeature() {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Failed to update feature status');
+    },
+  });
+}
+
+// ============================================
+// SYSTEM CONFIGURATION HOOKS (Section 5.6)
+// ============================================
+
+/**
+ * Get system configuration settings (admin)
+ * Includes: distribution schedule, overbooking %, deadline hours, min word count, min payout threshold
+ */
+export function useSystemConfiguration() {
+  return useQuery<SystemConfigurationResponse>({
+    queryKey: ['settings', 'system-config'],
+    queryFn: () => settingsApi.getSystemConfiguration(),
+    staleTime: 60000,
+  });
+}
+
+/**
+ * Update system configuration settings (admin)
+ */
+export function useUpdateSystemConfiguration() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: UpdateSystemConfigurationData) =>
+      settingsApi.updateSystemConfiguration(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['settings', 'system-config'] });
+      toast.success('System configuration updated successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to update system configuration');
     },
   });
 }

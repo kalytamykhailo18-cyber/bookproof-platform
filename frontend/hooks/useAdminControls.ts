@@ -21,6 +21,9 @@ import type {
   ReassignReaderDto,
   CancelAssignmentDto,
   RequestResubmissionDto,
+  ForceCompleteCampaignDto,
+  ManualGrantAccessDto,
+  RemoveReaderFromCampaignDto,
 } from '@/lib/api/admin-controls';
 import type {
   SuspendAuthorDto,
@@ -369,6 +372,66 @@ export function useAdminControls() {
     },
   });
 
+  // ============================================
+  // SECTION 5.3 - CAMPAIGN CONTROL FEATURES
+  // ============================================
+
+  // Force complete campaign mutation
+  const forceCompleteCampaign = useMutation({
+    mutationFn: ({ bookId, data }: { bookId: string; data: ForceCompleteCampaignDto }) =>
+      adminControlsApi.forceCompleteCampaign(bookId, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['campaign-analytics', variables.bookId] });
+      queryClient.invalidateQueries({ queryKey: ['campaign-health', variables.bookId] });
+      queryClient.invalidateQueries({ queryKey: ['admin-campaigns'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-credit-transactions'] });
+      toast.success('Campaign force completed successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to force complete campaign');
+    },
+  });
+
+  // Manual grant access mutation
+  const manualGrantAccess = useMutation({
+    mutationFn: ({ bookId, data }: { bookId: string; data: ManualGrantAccessDto }) =>
+      adminControlsApi.manualGrantAccess(bookId, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['campaign-analytics', variables.bookId] });
+      queryClient.invalidateQueries({ queryKey: ['admin-campaigns'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-assignments'] });
+      toast.success('Access granted to reader successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to grant access');
+    },
+  });
+
+  // Remove reader from campaign mutation
+  const removeReaderFromCampaign = useMutation({
+    mutationFn: ({ bookId, data }: { bookId: string; data: RemoveReaderFromCampaignDto }) =>
+      adminControlsApi.removeReaderFromCampaign(bookId, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['campaign-analytics', variables.bookId] });
+      queryClient.invalidateQueries({ queryKey: ['admin-campaigns'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-assignments'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-credit-transactions'] });
+      toast.success('Reader removed from campaign successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to remove reader');
+    },
+  });
+
+  // Get campaign report data query
+  const useCampaignReportData = (bookId: string, enabled = false) =>
+    useQuery({
+      queryKey: ['campaign-report', bookId],
+      queryFn: () => adminControlsApi.generateCampaignReport(bookId),
+      staleTime: 60000,
+      enabled: !!bookId && enabled,
+    });
+
   return {
     useCampaignHealth,
     useCampaignAnalytics,
@@ -396,5 +459,10 @@ export function useAdminControls() {
     suspendAuthor,
     unsuspendAuthor,
     updateAuthorNotes,
+    // Section 5.3 - Campaign control features
+    forceCompleteCampaign,
+    manualGrantAccess,
+    removeReaderFromCampaign,
+    useCampaignReportData,
   };
 }

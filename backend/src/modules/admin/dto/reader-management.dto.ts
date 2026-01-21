@@ -80,3 +80,56 @@ export class UpdateReaderNotesDto {
   @IsNotEmpty()
   adminNotes: string;
 }
+
+/**
+ * DTO for flagging a reader
+ */
+export class FlagReaderDto {
+  @ApiProperty({
+    description: 'Reason for flagging the reader',
+    example: 'Suspicious review patterns detected',
+  })
+  @IsString()
+  @IsNotEmpty()
+  reason: string;
+
+  @ApiPropertyOptional({
+    description: 'Additional notes for audit trail',
+  })
+  @IsString()
+  @IsOptional()
+  notes?: string;
+}
+
+/**
+ * DTO for unflagging a reader
+ */
+export class UnflagReaderDto {
+  @ApiProperty({
+    description: 'Reason for removing the flag',
+    example: 'Investigation completed, no issues found',
+  })
+  @IsString()
+  @IsNotEmpty()
+  reason: string;
+
+  @ApiPropertyOptional({
+    description: 'Additional notes for audit trail',
+  })
+  @IsString()
+  @IsOptional()
+  notes?: string;
+}
+
+/**
+ * DTO for adding admin note to reader
+ */
+export class AddAdminNoteDto {
+  @ApiProperty({
+    description: 'Note content',
+    example: 'Contacted reader about review quality improvements',
+  })
+  @IsString()
+  @IsNotEmpty()
+  content: string;
+}

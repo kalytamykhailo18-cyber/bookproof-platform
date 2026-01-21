@@ -31,7 +31,12 @@ export interface AdminDashboardDto {
     completedCampaigns: number;
     totalAuthors: number;
     totalReaders: number;
+    totalClosers: number;
+    totalAffiliates: number;
     totalReviewsPendingValidation: number;
+    reviewsInProgress: number;
+    overdueReviews: number;
+    creditsInCirculation: number;
     totalIssuesFlagged: number;
   };
   healthyCampaigns: CampaignSectionItemDto[];
@@ -65,6 +70,19 @@ export interface AdminDashboardDto {
     averageReaderReliabilityScore: number;
     averageReviewValidationTime: number;
     amazonRemovalRate: number;
+  };
+  systemHealth: {
+    databaseStatus: 'healthy' | 'degraded' | 'down';
+    cacheStatus: 'healthy' | 'degraded' | 'down';
+    queueStatus: 'healthy' | 'degraded' | 'down';
+    lastHealthCheck: string;
+  };
+  quickActions: {
+    flaggedReviewsCount: number;
+    pendingDisputesCount: number;
+    pendingAffiliateApplicationsCount: number;
+    pendingSupportTicketsCount: number;
+    pendingPayoutRequestsCount: number;
   };
 }
 

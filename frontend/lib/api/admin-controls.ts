@@ -94,6 +94,74 @@ export interface RequestResubmissionDto {
   adminNotes?: string;
 }
 
+// Section 5.3 - Campaign Control DTOs
+export interface ForceCompleteCampaignDto {
+  reason: string;
+  refundUnusedCredits?: boolean;
+  notes?: string;
+}
+
+export interface ManualGrantAccessDto {
+  readerProfileId: string;
+  reason: string;
+  preferredFormat?: string;
+  notes?: string;
+}
+
+export interface RemoveReaderFromCampaignDto {
+  assignmentId: string;
+  reason: string;
+  notifyReader?: boolean;
+  refundCredit?: boolean;
+  notes?: string;
+}
+
+export interface CampaignReportDataDto {
+  campaign: {
+    id: string;
+    title: string;
+    author: string;
+    status: string;
+    startDate: string;
+    endDate: string;
+    targetReviews: number;
+  };
+  progress: {
+    totalAssignments: number;
+    completedReviews: number;
+    validatedReviews: number;
+    rejectedReviews: number;
+    pendingReviews: number;
+    expiredReviews: number;
+    completionRate: number;
+    validationRate: number;
+  };
+  credits: {
+    allocated: number;
+    used: number;
+    remaining: number;
+  };
+  timeline: {
+    weeksElapsed: number;
+    totalWeeks: number;
+    reviewsPerWeek: number;
+    onSchedule: boolean;
+    daysRemaining: number;
+  };
+  readers: Array<{
+    id: string;
+    name: string;
+    email: string;
+    status: string;
+    assignedAt: string;
+    reviewSubmittedAt?: string;
+    validatedAt?: string;
+    rating?: number;
+  }>;
+  generatedAt: string;
+  generatedBy: string;
+}
+
 export interface CampaignHealthDto {
   status: 'on-track' | 'delayed' | 'issues' | 'ahead-of-schedule';
   completionPercentage: number;
@@ -459,6 +527,53 @@ export const adminControlsApi = {
    */
   async requestResubmission(issueId: string, data: RequestResubmissionDto): Promise<unknown> {
     const response = await apiClient.post(`/reviews/issues/${issueId}/request-resubmission`, data);
+    return response.data;
+  },
+
+  // ============================================
+  // SECTION 5.3 - CAMPAIGN CONTROL FEATURES
+  // ============================================
+
+  /**
+   * Force complete a campaign (Section 5.3)
+   */
+  async forceCompleteCampaign(
+    bookId: string,
+    data: ForceCompleteCampaignDto,
+  ): Promise<CampaignAnalyticsDto> {
+    const response = await apiClient.post<CampaignAnalyticsDto>(
+      `/admin/campaigns/${bookId}/force-complete`,
+      data,
+    );
+    return response.data;
+  },
+
+  /**
+   * Manually grant material access to a reader (Section 5.3)
+   */
+  async manualGrantAccess(bookId: string, data: ManualGrantAccessDto): Promise<unknown> {
+    const response = await apiClient.post(`/admin/campaigns/${bookId}/grant-access`, data);
+    return response.data;
+  },
+
+  /**
+   * Remove a reader from a campaign (Section 5.3)
+   */
+  async removeReaderFromCampaign(
+    bookId: string,
+    data: RemoveReaderFromCampaignDto,
+  ): Promise<unknown> {
+    const response = await apiClient.post(`/admin/campaigns/${bookId}/remove-reader`, data);
+    return response.data;
+  },
+
+  /**
+   * Generate campaign report data for PDF (Section 5.3)
+   */
+  async generateCampaignReport(bookId: string): Promise<CampaignReportDataDto> {
+    const response = await apiClient.get<CampaignReportDataDto>(
+      `/admin/campaigns/${bookId}/report`,
+    );
     return response.data;
   },
 };

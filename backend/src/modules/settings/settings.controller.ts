@@ -24,6 +24,8 @@ import {
   KeywordResearchFeatureStatusDto,
   ReviewPaymentRatesDto,
   UpdateReviewPaymentRatesDto,
+  SystemConfigurationResponseDto,
+  UpdateSystemConfigurationDto,
 } from './dto';
 
 @ApiTags('Settings')
@@ -255,6 +257,52 @@ export class SettingsController {
       req.ip,
     );
     return this.getKeywordResearchFeatureStatus();
+  }
+
+  // ============================================
+  // SYSTEM CONFIGURATION ENDPOINTS (Admin only - Section 5.6)
+  // ============================================
+
+  /**
+   * Get system configuration settings (Admin only)
+   */
+  @Get('admin/system-config')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get system configuration settings (Admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'System configuration settings',
+    type: SystemConfigurationResponseDto,
+  })
+  async getSystemConfiguration(): Promise<SystemConfigurationResponseDto> {
+    return this.settingsService.getSystemConfiguration();
+  }
+
+  /**
+   * Update system configuration settings (Admin only)
+   */
+  @Put('admin/system-config')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update system configuration settings (Admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'System configuration updated successfully',
+    type: SystemConfigurationResponseDto,
+  })
+  async updateSystemConfiguration(
+    @Body() dto: UpdateSystemConfigurationDto,
+    @Req() req: Request,
+  ): Promise<SystemConfigurationResponseDto> {
+    return this.settingsService.updateSystemConfiguration(
+      dto,
+      req.user!.id,
+      req.user!.email,
+      req.ip,
+    );
   }
 
   // ============================================

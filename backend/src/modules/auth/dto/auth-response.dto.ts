@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole, Language } from '@prisma/client';
+import { UserRole, Language, AdminRole } from '@prisma/client';
 
 export class UserDataDto {
   @ApiProperty()
@@ -34,6 +34,12 @@ export class UserDataDto {
 
   @ApiProperty({ description: 'Whether the account was created by a Closer (sales team)', required: false })
   accountCreatedByCloser?: boolean;
+
+  @ApiProperty({ enum: AdminRole, description: 'Admin role level for access control (Section 5.1, 5.5)', required: false })
+  adminRole?: AdminRole;
+
+  @ApiProperty({ type: [String], description: 'Granular permissions for admins', required: false })
+  adminPermissions?: string[];
 }
 
 export class AuthResponseDto {

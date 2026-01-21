@@ -58,6 +58,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         authorProfile: true,
         readerProfile: true,
         affiliateProfile: true,
+        adminProfile: true, // Include admin profile for role-based access control (Section 5.1, 5.5)
       },
     });
 
@@ -83,10 +84,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       authorProfileId: user.authorProfile?.id,
       readerProfileId: user.readerProfile?.id,
       affiliateProfileId: user.affiliateProfile?.id,
-      profileId: user.authorProfile?.id || user.readerProfile?.id || user.affiliateProfile?.id,
+      adminProfileId: user.adminProfile?.id,
+      profileId: user.authorProfile?.id || user.readerProfile?.id || user.affiliateProfile?.id || user.adminProfile?.id,
       // Terms acceptance for authors (especially those created by Closers)
       termsAccepted: user.authorProfile?.termsAccepted ?? true, // Default true for non-authors
       accountCreatedByCloser: user.authorProfile?.accountCreatedByCloser ?? false,
+      // Admin role for role-based access control (Section 5.1, 5.5)
+      // SUPER_ADMIN can access financial data, Regular ADMIN cannot
+      adminRole: user.adminProfile?.role,
+      adminPermissions: user.adminProfile?.permissions || [],
     };
   }
 }

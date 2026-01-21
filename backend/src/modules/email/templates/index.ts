@@ -2925,6 +2925,55 @@ export function getEmailTemplateContent(
       `,
     },
 
+    // Admin notification to user (Section 5.2)
+    ADMIN_NOTIFICATION: {
+      EN: `
+        <h1>Message from BookProof Support</h1>
+        <p>Hi {{userName}},</p>
+        <p>You've received a message from the BookProof support team:</p>
+        <div class="info-box">
+          <h3 style="margin-top: 0;">{{subject}}</h3>
+          <p style="white-space: pre-wrap;">{{message}}</p>
+        </div>
+        <p style="margin-top: 20px; font-size: 14px; color: #6b7280;">
+          If you have any questions, you can reply to this email or contact our support team.
+        </p>
+        <p style="font-size: 12px; color: #6b7280;">
+          Sent by: {{adminEmail}}
+        </p>
+      `,
+      ES: `
+        <h1>Mensaje del soporte de BookProof</h1>
+        <p>Hola {{userName}},</p>
+        <p>Has recibido un mensaje del equipo de soporte de BookProof:</p>
+        <div class="info-box">
+          <h3 style="margin-top: 0;">{{subject}}</h3>
+          <p style="white-space: pre-wrap;">{{message}}</p>
+        </div>
+        <p style="margin-top: 20px; font-size: 14px; color: #6b7280;">
+          Si tienes alguna pregunta, puedes responder a este correo o contactar a nuestro equipo de soporte.
+        </p>
+        <p style="font-size: 12px; color: #6b7280;">
+          Enviado por: {{adminEmail}}
+        </p>
+      `,
+      PT: `
+        <h1>Mensagem do suporte BookProof</h1>
+        <p>Olá {{userName}},</p>
+        <p>Você recebeu uma mensagem da equipe de suporte da BookProof:</p>
+        <div class="info-box">
+          <h3 style="margin-top: 0;">{{subject}}</h3>
+          <p style="white-space: pre-wrap;">{{message}}</p>
+        </div>
+        <p style="margin-top: 20px; font-size: 14px; color: #6b7280;">
+          Se você tiver alguma dúvida, pode responder a este email ou entrar em contato com nossa equipe de suporte.
+        </p>
+        <p style="font-size: 12px; color: #6b7280;">
+          Enviado por: {{adminEmail}}
+        </p>
+      `,
+    },
+
     // Affiliate application received
     AFFILIATE_APPLICATION_RECEIVED: {
       EN: `

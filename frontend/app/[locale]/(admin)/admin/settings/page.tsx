@@ -14,6 +14,11 @@ import {
   ToggleLeft,
   ToggleRight,
   Power,
+  Clock,
+  Calendar,
+  Users,
+  FileText,
+  Wallet,
 } from 'lucide-react';
 
 import {
@@ -25,6 +30,8 @@ import {
   useUpdateReviewPaymentRates,
   useAllSettings,
   useUpdateSetting,
+  useSystemConfiguration,
+  useUpdateSystemConfiguration,
 } from '@/hooks/useSettings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -69,6 +76,28 @@ const reviewRatesSchema = z.object({
 
 type ReviewRatesFormData = z.infer<typeof reviewRatesSchema>;
 
+const systemConfigSchema = z.object({
+  distributionDay: z.number().min(1).max(7),
+  distributionHour: z.number().min(0).max(23),
+  overbookingPercentage: z.number().min(0).max(100),
+  reviewDeadlineHours: z.number().min(1).max(720),
+  minReviewWordCount: z.number().min(0).max(10000),
+  minPayoutThreshold: z.number().min(0).max(10000),
+  reason: z.string().optional(),
+});
+
+type SystemConfigFormData = z.infer<typeof systemConfigSchema>;
+
+const DAYS_OF_WEEK = [
+  { value: 1, label: 'Monday' },
+  { value: 2, label: 'Tuesday' },
+  { value: 3, label: 'Wednesday' },
+  { value: 4, label: 'Thursday' },
+  { value: 5, label: 'Friday' },
+  { value: 6, label: 'Saturday' },
+  { value: 7, label: 'Sunday' },
+];
+
 export default function AdminSettingsPage() {
   const t = useTranslations('adminSettings');
   const { data: pricingSettings, isLoading, refetch } = usePricingSettings();
@@ -83,8 +112,15 @@ export default function AdminSettingsPage() {
   const updateReviewRatesMutation = useUpdateReviewPaymentRates();
   const { data: allSettings, isLoading: allSettingsLoading } = useAllSettings();
   const updateSettingMutation = useUpdateSetting();
+  const {
+    data: systemConfig,
+    isLoading: systemConfigLoading,
+    refetch: refetchSystemConfig,
+  } = useSystemConfiguration();
+  const updateSystemConfigMutation = useUpdateSystemConfiguration();
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingSystemConfig, setIsEditingSystemConfig] = useState(false);
   const [isEditingReviewRates, setIsEditingReviewRates] = useState(false);
   const [featureToggleReason, setFeatureToggleReason] = useState('');
   const [editingSettingKey, setEditingSettingKey] = useState<string | null>(null);
@@ -107,6 +143,19 @@ export default function AdminSettingsPage() {
     },
   });
 
+  const systemConfigForm = useForm<SystemConfigFormData>({
+    resolver: zodResolver(systemConfigSchema),
+    defaultValues: {
+      distributionDay: systemConfig?.distributionDay || 1,
+      distributionHour: systemConfig?.distributionHour || 0,
+      overbookingPercentage: systemConfig?.overbookingPercentage || 20,
+      reviewDeadlineHours: systemConfig?.reviewDeadlineHours || 72,
+      minReviewWordCount: systemConfig?.minReviewWordCount || 50,
+      minPayoutThreshold: systemConfig?.minPayoutThreshold || 10,
+      reason: '',
+    },
+  });
+
   // Update form when data loads
   if (pricingSettings?.keywordResearch && !isEditing) {
     const currentPrice = pricingSettings.keywordResearch.price;
@@ -122,6 +171,28 @@ export default function AdminSettingsPage() {
     }
     if (reviewRatesForm.getValues('audiobookRate') !== reviewRates.audiobookRate) {
       reviewRatesForm.setValue('audiobookRate', reviewRates.audiobookRate);
+    }
+  }
+
+  // Update system config form when data loads
+  if (systemConfig && !isEditingSystemConfig) {
+    if (systemConfigForm.getValues('distributionDay') !== systemConfig.distributionDay) {
+      systemConfigForm.setValue('distributionDay', systemConfig.distributionDay);
+    }
+    if (systemConfigForm.getValues('distributionHour') !== systemConfig.distributionHour) {
+      systemConfigForm.setValue('distributionHour', systemConfig.distributionHour);
+    }
+    if (systemConfigForm.getValues('overbookingPercentage') !== systemConfig.overbookingPercentage) {
+      systemConfigForm.setValue('overbookingPercentage', systemConfig.overbookingPercentage);
+    }
+    if (systemConfigForm.getValues('reviewDeadlineHours') !== systemConfig.reviewDeadlineHours) {
+      systemConfigForm.setValue('reviewDeadlineHours', systemConfig.reviewDeadlineHours);
+    }
+    if (systemConfigForm.getValues('minReviewWordCount') !== systemConfig.minReviewWordCount) {
+      systemConfigForm.setValue('minReviewWordCount', systemConfig.minReviewWordCount);
+    }
+    if (systemConfigForm.getValues('minPayoutThreshold') !== systemConfig.minPayoutThreshold) {
+      systemConfigForm.setValue('minPayoutThreshold', systemConfig.minPayoutThreshold);
     }
   }
 
@@ -175,6 +246,37 @@ export default function AdminSettingsPage() {
       reviewRatesForm.setValue('audiobookRate', reviewRates.audiobookRate);
     }
     reviewRatesForm.setValue('reason', '');
+  };
+
+  const handleSystemConfigSubmit = async () => {
+    const isValid = await systemConfigForm.trigger();
+    if (!isValid) return;
+
+    const data = systemConfigForm.getValues();
+    await updateSystemConfigMutation.mutateAsync({
+      distributionDay: data.distributionDay,
+      distributionHour: data.distributionHour,
+      overbookingPercentage: data.overbookingPercentage,
+      reviewDeadlineHours: data.reviewDeadlineHours,
+      minReviewWordCount: data.minReviewWordCount,
+      minPayoutThreshold: data.minPayoutThreshold,
+      reason: data.reason || undefined,
+    });
+    setIsEditingSystemConfig(false);
+    systemConfigForm.setValue('reason', '');
+  };
+
+  const handleSystemConfigCancel = () => {
+    setIsEditingSystemConfig(false);
+    if (systemConfig) {
+      systemConfigForm.setValue('distributionDay', systemConfig.distributionDay);
+      systemConfigForm.setValue('distributionHour', systemConfig.distributionHour);
+      systemConfigForm.setValue('overbookingPercentage', systemConfig.overbookingPercentage);
+      systemConfigForm.setValue('reviewDeadlineHours', systemConfig.reviewDeadlineHours);
+      systemConfigForm.setValue('minReviewWordCount', systemConfig.minReviewWordCount);
+      systemConfigForm.setValue('minPayoutThreshold', systemConfig.minPayoutThreshold);
+    }
+    systemConfigForm.setValue('reason', '');
   };
 
   if (isLoading || featureLoading) {
@@ -575,6 +677,370 @@ export default function AdminSettingsPage() {
               </div>
             </div>
           </Form>
+        </CardContent>
+      </Card>
+
+      {/* System Configuration Section (Section 5.6) */}
+      <Card className="animate-fade-up-slow">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Clock className="h-5 w-5 text-orange-600" />
+              <CardTitle>System Configuration</CardTitle>
+            </div>
+            <Button type="button" variant="outline" size="sm" onClick={() => refetchSystemConfig()}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Refresh
+            </Button>
+          </div>
+          <CardDescription>
+            Configure distribution schedules, review settings, and payment thresholds
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {systemConfigLoading ? (
+            <div className="space-y-4">
+              <Skeleton className="h-12 animate-pulse" />
+              <Skeleton className="h-12 animate-pulse" />
+              <Skeleton className="h-12 animate-pulse" />
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Edit / View Mode Toggle */}
+              <div className="flex justify-end">
+                {!isEditingSystemConfig ? (
+                  <Button type="button" variant="outline" onClick={() => setIsEditingSystemConfig(true)}>
+                    Edit Configuration
+                  </Button>
+                ) : null}
+              </div>
+
+              {isEditingSystemConfig ? (
+                <Form {...systemConfigForm}>
+                  <div className="space-y-6">
+                    {/* Distribution Schedule */}
+                    <div className="rounded-lg border p-4">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Calendar className="h-5 w-5 text-blue-600" />
+                        <h3 className="text-lg font-semibold">Distribution Schedule</h3>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={systemConfigForm.control}
+                          name="distributionDay"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Distribution Day</FormLabel>
+                              <FormControl>
+                                <select
+                                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                  value={field.value}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
+                                >
+                                  {DAYS_OF_WEEK.map((day) => (
+                                    <option key={day.value} value={day.value}>
+                                      {day.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </FormControl>
+                              <FormDescription>
+                                Day when weekly distribution runs
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={systemConfigForm.control}
+                          name="distributionHour"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Distribution Hour (UTC)</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  max="23"
+                                  {...field}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                Hour in UTC (0-23) when distribution runs
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Reader Slot Settings */}
+                    <div className="rounded-lg border p-4">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Users className="h-5 w-5 text-green-600" />
+                        <h3 className="text-lg font-semibold">Reader Slot Settings</h3>
+                      </div>
+                      <FormField
+                        control={systemConfigForm.control}
+                        name="overbookingPercentage"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Overbooking Percentage</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  max="100"
+                                  className="pr-8"
+                                  {...field}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                                />
+                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                  %
+                                </span>
+                              </div>
+                            </FormControl>
+                            <FormDescription>
+                              Percentage of extra reader slots to allow for no-shows (recommended: 20%)
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Review Settings */}
+                    <div className="rounded-lg border p-4">
+                      <div className="flex items-center gap-2 mb-4">
+                        <FileText className="h-5 w-5 text-purple-600" />
+                        <h3 className="text-lg font-semibold">Review Settings</h3>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={systemConfigForm.control}
+                          name="reviewDeadlineHours"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Review Deadline (Hours)</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  min="1"
+                                  max="720"
+                                  {...field}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 72)}
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                Hours readers have to submit reviews after material access
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={systemConfigForm.control}
+                          name="minReviewWordCount"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Minimum Review Word Count</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  max="10000"
+                                  {...field}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 50)}
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                Minimum words required in review feedback
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Payment Settings */}
+                    <div className="rounded-lg border p-4">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Wallet className="h-5 w-5 text-yellow-600" />
+                        <h3 className="text-lg font-semibold">Payment Settings</h3>
+                      </div>
+                      <FormField
+                        control={systemConfigForm.control}
+                        name="minPayoutThreshold"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Minimum Payout Threshold (USD)</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                                  $
+                                </span>
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  max="10000"
+                                  step="0.01"
+                                  className="pl-8"
+                                  {...field}
+                                  onChange={(e) => field.onChange(parseFloat(e.target.value) || 10)}
+                                />
+                              </div>
+                            </FormControl>
+                            <FormDescription>
+                              Minimum wallet balance required for readers to request payout
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Reason Field */}
+                    <FormField
+                      control={systemConfigForm.control}
+                      name="reason"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Reason for Changes (Optional)</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Explain why you are changing these settings (for audit trail)"
+                              className="resize-none"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            This will be logged in the audit trail for all changed settings
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        onClick={handleSystemConfigSubmit}
+                        disabled={updateSystemConfigMutation.isPending}
+                      >
+                        {updateSystemConfigMutation.isPending ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Saving...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="mr-2 h-4 w-4" />
+                            Save Configuration
+                          </>
+                        )}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleSystemConfigCancel}
+                        disabled={updateSystemConfigMutation.isPending}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                </Form>
+              ) : (
+                <div className="space-y-6">
+                  {/* Distribution Schedule Display */}
+                  <div className="rounded-lg border p-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Calendar className="h-5 w-5 text-blue-600" />
+                      <h3 className="text-lg font-semibold">Distribution Schedule</h3>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-sm text-muted-foreground">Distribution Day</Label>
+                        <p className="text-lg font-medium">
+                          {DAYS_OF_WEEK.find((d) => d.value === systemConfig?.distributionDay)?.label || 'Monday'}
+                        </p>
+                      </div>
+                      <div>
+                        <Label className="text-sm text-muted-foreground">Distribution Hour (UTC)</Label>
+                        <p className="text-lg font-medium">
+                          {systemConfig?.distributionHour !== undefined
+                            ? `${systemConfig.distributionHour.toString().padStart(2, '0')}:00 UTC`
+                            : '00:00 UTC'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Reader Slot Settings Display */}
+                  <div className="rounded-lg border p-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Users className="h-5 w-5 text-green-600" />
+                      <h3 className="text-lg font-semibold">Reader Slot Settings</h3>
+                    </div>
+                    <div>
+                      <Label className="text-sm text-muted-foreground">Overbooking Percentage</Label>
+                      <p className="text-2xl font-bold text-green-600">
+                        {systemConfig?.overbookingPercentage ?? 20}%
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Review Settings Display */}
+                  <div className="rounded-lg border p-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <FileText className="h-5 w-5 text-purple-600" />
+                      <h3 className="text-lg font-semibold">Review Settings</h3>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-sm text-muted-foreground">Review Deadline</Label>
+                        <p className="text-2xl font-bold text-purple-600">
+                          {systemConfig?.reviewDeadlineHours ?? 72} hours
+                        </p>
+                      </div>
+                      <div>
+                        <Label className="text-sm text-muted-foreground">Min Word Count</Label>
+                        <p className="text-2xl font-bold text-purple-600">
+                          {systemConfig?.minReviewWordCount ?? 50} words
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Payment Settings Display */}
+                  <div className="rounded-lg border p-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Wallet className="h-5 w-5 text-yellow-600" />
+                      <h3 className="text-lg font-semibold">Payment Settings</h3>
+                    </div>
+                    <div>
+                      <Label className="text-sm text-muted-foreground">Minimum Payout Threshold</Label>
+                      <p className="text-2xl font-bold text-yellow-600">
+                        ${systemConfig?.minPayoutThreshold?.toFixed(2) ?? '10.00'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Last Updated */}
+                  {systemConfig?.updatedAt && (
+                    <div className="text-sm text-muted-foreground">
+                      Last updated: {formatDate(systemConfig.updatedAt)}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 

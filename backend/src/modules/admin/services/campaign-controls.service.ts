@@ -18,6 +18,9 @@ import {
   CreditTransactionDto,
   UpdateCampaignSettingsDto,
   TransferCreditsDto,
+  ForceCompleteCampaignDto,
+  ManualGrantAccessDto,
+  RemoveReaderFromCampaignDto,
 } from '../dto/campaign-controls.dto';
 import { CampaignStatus, CreditTransactionType, EmailType, Language, UserRole } from '@prisma/client';
 
@@ -1171,5 +1174,453 @@ export class CampaignControlsService {
     });
 
     return this.getCampaignAnalytics(bookId);
+  }
+
+  /**
+   * Force complete a campaign (Section 5.3)
+   */
+  async forceCompleteCampaign(
+    bookId: string,
+    dto: ForceCompleteCampaignDto,
+    adminUserId: string,
+    adminEmail: string,
+    ipAddress?: string,
+  ): Promise<CampaignAnalyticsDto> {
+    const book = await this.prisma.book.findUnique({
+      where: { id: bookId },
+      include: { authorProfile: { include: { user: true } } },
+    });
+
+    if (!book) {
+      throw new NotFoundException('Campaign not found');
+    }
+
+    if (book.status === CampaignStatus.COMPLETED) {
+      throw new BadRequestException('Campaign is already completed');
+    }
+
+    const now = new Date();
+    const refundUnusedCredits = dto.refundUnusedCredits !== false;
+    let creditsRefunded = 0;
+
+    // Calculate unused credits if refunding
+    if (refundUnusedCredits && book.creditsRemaining > 0) {
+      creditsRefunded = book.creditsRemaining;
+
+      // Return credits to author
+      await this.prisma.authorProfile.update({
+        where: { id: book.authorProfileId },
+        data: {
+          availableCredits: { increment: creditsRefunded },
+          totalCreditsUsed: { decrement: creditsRefunded },
+        },
+      });
+
+      // Create refund transaction
+      await this.prisma.creditTransaction.create({
+        data: {
+          authorProfileId: book.authorProfileId,
+          bookId: bookId,
+          amount: creditsRefunded,
+          type: CreditTransactionType.REFUND,
+          description: `Force completion refund. Reason: ${dto.reason}`,
+          balanceAfter: book.authorProfile.availableCredits + creditsRefunded,
+          performedBy: adminUserId,
+          notes: dto.notes,
+        },
+      });
+    }
+
+    // Update campaign to COMPLETED
+    await this.prisma.book.update({
+      where: { id: bookId },
+      data: {
+        status: CampaignStatus.COMPLETED,
+        campaignEndDate: now,
+        creditsRemaining: 0,
+      },
+    });
+
+    // Log audit trail
+    await this.auditService.logAdminAction({
+      action: 'campaign.force_completed',
+      entity: 'Book',
+      entityId: bookId,
+      description: `Campaign "${book.title}" force completed. Reason: ${dto.reason}${creditsRefunded > 0 ? `. ${creditsRefunded} credits refunded.` : ''}`,
+      changes: {
+        status: { from: book.status, to: CampaignStatus.COMPLETED },
+        creditsRefunded,
+        reason: dto.reason,
+      },
+      userId: adminUserId,
+      userEmail: adminEmail,
+      userRole: UserRole.ADMIN,
+      ipAddress,
+    });
+
+    this.logger.log(`Campaign ${bookId} force completed by ${adminEmail}`);
+
+    return this.getCampaignAnalytics(bookId);
+  }
+
+  /**
+   * Manually grant material access to a reader (Section 5.3)
+   */
+  async manualGrantAccess(
+    bookId: string,
+    dto: ManualGrantAccessDto,
+    adminUserId: string,
+    adminEmail: string,
+    ipAddress?: string,
+  ): Promise<any> {
+    const book = await this.prisma.book.findUnique({
+      where: { id: bookId },
+      include: { authorProfile: true },
+    });
+
+    if (!book) {
+      throw new NotFoundException('Campaign not found');
+    }
+
+    if (book.status !== CampaignStatus.ACTIVE && book.status !== CampaignStatus.PAUSED) {
+      throw new BadRequestException('Can only grant access to active or paused campaigns');
+    }
+
+    // Verify reader exists
+    const readerProfile = await this.prisma.readerProfile.findUnique({
+      where: { id: dto.readerProfileId },
+      include: { user: true },
+    });
+
+    if (!readerProfile) {
+      throw new NotFoundException('Reader profile not found');
+    }
+
+    if (!readerProfile.isActive || readerProfile.isSuspended) {
+      throw new BadRequestException('Reader account is not active');
+    }
+
+    // Check if reader already has an active assignment for this book
+    const existingAssignment = await this.prisma.readerAssignment.findFirst({
+      where: {
+        bookId,
+        readerProfileId: dto.readerProfileId,
+        status: { in: ['PENDING', 'IN_PROGRESS'] },
+      },
+    });
+
+    if (existingAssignment) {
+      throw new BadRequestException('Reader already has an active assignment for this campaign');
+    }
+
+    // Check if campaign has remaining credits
+    if (book.creditsRemaining <= 0) {
+      throw new BadRequestException('Campaign has no remaining credits');
+    }
+
+    const now = new Date();
+    const deadline = new Date(now.getTime() + 72 * 60 * 60 * 1000); // 72 hours default
+
+    // Create assignment
+    const assignment = await this.prisma.readerAssignment.create({
+      data: {
+        bookId,
+        readerProfileId: dto.readerProfileId,
+        status: 'IN_PROGRESS',
+        materialAccessGrantedAt: now,
+        deadlineAt: deadline,
+        assignedFormat: dto.preferredFormat || 'ebook',
+        isManualGrant: true,
+        manualGrantBy: adminUserId,
+        manualGrantReason: dto.reason,
+      },
+      include: {
+        book: { select: { title: true } },
+        readerProfile: { include: { user: true } },
+      },
+    });
+
+    // Deduct credit from campaign
+    await this.prisma.book.update({
+      where: { id: bookId },
+      data: {
+        creditsRemaining: { decrement: 1 },
+      },
+    });
+
+    // Send notification email to reader
+    try {
+      await this.emailService.sendTemplatedEmail(
+        readerProfile.user.email,
+        EmailType.READER_MATERIALS_READY,
+        {
+          userName: readerProfile.user.name,
+          bookTitle: book.title,
+          deadlineAt: deadline,
+          assignmentUrl: `${this.configService.get<string>('FRONTEND_URL')}/reader/assignments/${assignment.id}`,
+        },
+        readerProfile.userId,
+        readerProfile.user.preferredLanguage || Language.EN,
+      );
+    } catch (error) {
+      this.logger.error(`Failed to send material access email: ${error.message}`);
+    }
+
+    // Log audit trail
+    await this.auditService.logAdminAction({
+      action: 'campaign.manual_access_granted',
+      entity: 'ReaderAssignment',
+      entityId: assignment.id,
+      description: `Manual access granted to reader ${readerProfile.user.email} for "${book.title}". Reason: ${dto.reason}`,
+      changes: {
+        bookId,
+        readerProfileId: dto.readerProfileId,
+        assignmentId: assignment.id,
+        reason: dto.reason,
+      },
+      userId: adminUserId,
+      userEmail: adminEmail,
+      userRole: UserRole.ADMIN,
+      ipAddress,
+    });
+
+    this.logger.log(`Manual access granted to reader ${dto.readerProfileId} for campaign ${bookId} by ${adminEmail}`);
+
+    return {
+      success: true,
+      assignment: {
+        id: assignment.id,
+        bookId,
+        bookTitle: book.title,
+        readerProfileId: dto.readerProfileId,
+        readerEmail: readerProfile.user.email,
+        status: assignment.status,
+        materialAccessGrantedAt: assignment.materialAccessGrantedAt,
+        deadlineAt: assignment.deadlineAt,
+      },
+    };
+  }
+
+  /**
+   * Remove a reader from a campaign (Section 5.3)
+   */
+  async removeReaderFromCampaign(
+    bookId: string,
+    dto: RemoveReaderFromCampaignDto,
+    adminUserId: string,
+    adminEmail: string,
+    ipAddress?: string,
+  ): Promise<any> {
+    const assignment = await this.prisma.readerAssignment.findUnique({
+      where: { id: dto.assignmentId },
+      include: {
+        book: { include: { authorProfile: true } },
+        readerProfile: { include: { user: true } },
+      },
+    });
+
+    if (!assignment) {
+      throw new NotFoundException('Assignment not found');
+    }
+
+    if (assignment.bookId !== bookId) {
+      throw new BadRequestException('Assignment does not belong to this campaign');
+    }
+
+    if (assignment.status === 'COMPLETED' || assignment.status === 'CANCELLED') {
+      throw new BadRequestException('Cannot remove reader from completed or cancelled assignment');
+    }
+
+    const notifyReader = dto.notifyReader !== false;
+    const refundCredit = dto.refundCredit !== false;
+
+    // Update assignment to CANCELLED
+    await this.prisma.readerAssignment.update({
+      where: { id: dto.assignmentId },
+      data: {
+        status: 'CANCELLED',
+        cancelledAt: new Date(),
+        cancelledBy: adminUserId,
+        cancellationReason: dto.reason,
+      },
+    });
+
+    // Refund credit to campaign if requested
+    if (refundCredit) {
+      await this.prisma.book.update({
+        where: { id: bookId },
+        data: {
+          creditsRemaining: { increment: 1 },
+        },
+      });
+    }
+
+    // Notify reader if requested
+    if (notifyReader && assignment.readerProfile.user.email) {
+      try {
+        await this.emailService.sendTemplatedEmail(
+          assignment.readerProfile.user.email,
+          EmailType.READER_ASSIGNMENT_CANCELLED,
+          {
+            userName: assignment.readerProfile.user.name,
+            bookTitle: assignment.book.title,
+            reason: dto.reason,
+            dashboardUrl: `${this.configService.get<string>('FRONTEND_URL')}/reader/dashboard`,
+          },
+          assignment.readerProfile.userId,
+          assignment.readerProfile.user.preferredLanguage || Language.EN,
+        );
+      } catch (error) {
+        this.logger.error(`Failed to send cancellation email: ${error.message}`);
+      }
+    }
+
+    // Log audit trail
+    await this.auditService.logAdminAction({
+      action: 'campaign.reader_removed',
+      entity: 'ReaderAssignment',
+      entityId: dto.assignmentId,
+      description: `Reader ${assignment.readerProfile.user.email} removed from "${assignment.book.title}". Reason: ${dto.reason}`,
+      changes: {
+        bookId,
+        assignmentId: dto.assignmentId,
+        readerProfileId: assignment.readerProfileId,
+        status: { from: assignment.status, to: 'CANCELLED' },
+        creditRefunded: refundCredit,
+        notified: notifyReader,
+        reason: dto.reason,
+      },
+      userId: adminUserId,
+      userEmail: adminEmail,
+      userRole: UserRole.ADMIN,
+      ipAddress,
+    });
+
+    this.logger.log(`Reader ${assignment.readerProfileId} removed from campaign ${bookId} by ${adminEmail}`);
+
+    return {
+      success: true,
+      message: `Reader removed from campaign${notifyReader ? ' and notified' : ''}${refundCredit ? '. Credit refunded to campaign.' : ''}`,
+      assignment: {
+        id: dto.assignmentId,
+        status: 'CANCELLED',
+        creditRefunded: refundCredit,
+        notified: notifyReader,
+      },
+    };
+  }
+
+  /**
+   * Generate PDF report for a campaign (Section 5.3)
+   * Returns data for PDF generation (actual PDF rendering handled by frontend or separate PDF service)
+   */
+  async generateCampaignReportData(
+    bookId: string,
+    adminUserId: string,
+    adminEmail: string,
+    ipAddress?: string,
+  ): Promise<any> {
+    const book = await this.prisma.book.findUnique({
+      where: { id: bookId },
+      include: {
+        authorProfile: { include: { user: true } },
+        assignments: {
+          include: {
+            readerProfile: { include: { user: true } },
+            review: true,
+          },
+        },
+        reviews: true,
+      },
+    });
+
+    if (!book) {
+      throw new NotFoundException('Campaign not found');
+    }
+
+    // Calculate metrics
+    const totalAssignments = book.assignments.length;
+    const completedAssignments = book.assignments.filter((a) => a.status === 'COMPLETED').length;
+    const expiredAssignments = book.assignments.filter((a) => a.status === 'EXPIRED').length;
+    const inProgressAssignments = book.assignments.filter((a) => a.status === 'IN_PROGRESS').length;
+    const cancelledAssignments = book.assignments.filter((a) => a.status === 'CANCELLED').length;
+
+    const validatedReviews = book.reviews.filter((r) => r.status === 'VALIDATED').length;
+    const rejectedReviews = book.reviews.filter((r) => r.status === 'REJECTED').length;
+    const pendingReviews = book.reviews.filter((r) => r.status === 'PENDING').length;
+
+    // Average internal rating
+    const ratingsSum = book.reviews
+      .filter((r) => r.internalRating)
+      .reduce((sum, r) => sum + r.internalRating!, 0);
+    const ratingsCount = book.reviews.filter((r) => r.internalRating).length;
+    const averageRating = ratingsCount > 0 ? ratingsSum / ratingsCount : 0;
+
+    // Amazon review stats
+    const amazonReviewsPosted = book.reviews.filter((r) => r.amazonReviewUrl).length;
+    const avgAmazonRating = book.reviews
+      .filter((r) => r.amazonStarRating)
+      .reduce((sum, r, _, arr) => sum + r.amazonStarRating! / arr.length, 0);
+
+    // Log audit trail
+    await this.auditService.logAdminAction({
+      action: 'campaign.report_generated',
+      entity: 'Book',
+      entityId: bookId,
+      description: `Campaign report generated for "${book.title}"`,
+      userId: adminUserId,
+      userEmail: adminEmail,
+      userRole: UserRole.ADMIN,
+      ipAddress,
+    });
+
+    return {
+      reportGeneratedAt: new Date().toISOString(),
+      campaign: {
+        id: book.id,
+        title: book.title,
+        author: book.authorProfile.user.name,
+        status: book.status,
+        targetReviews: book.targetReviews,
+        startDate: book.campaignStartDate?.toISOString(),
+        endDate: book.campaignEndDate?.toISOString(),
+        creditsAllocated: book.creditsAllocated,
+        creditsRemaining: book.creditsRemaining,
+      },
+      assignmentMetrics: {
+        total: totalAssignments,
+        completed: completedAssignments,
+        inProgress: inProgressAssignments,
+        expired: expiredAssignments,
+        cancelled: cancelledAssignments,
+        completionRate: totalAssignments > 0 ? (completedAssignments / totalAssignments) * 100 : 0,
+      },
+      reviewMetrics: {
+        totalReviews: book.reviews.length,
+        validated: validatedReviews,
+        rejected: rejectedReviews,
+        pending: pendingReviews,
+        averageInternalRating: averageRating.toFixed(2),
+        amazonReviewsPosted,
+        averageAmazonRating: avgAmazonRating.toFixed(2),
+      },
+      timeline: {
+        weeksElapsed: book.currentWeek || 1,
+        reviewsPerWeek: book.reviewsPerWeek,
+        totalWeeksPlanned: Math.ceil(book.targetReviews / book.reviewsPerWeek),
+      },
+      readerBreakdown: book.assignments.map((a) => ({
+        readerName: a.readerProfile.user.name,
+        readerEmail: a.readerProfile.user.email,
+        status: a.status,
+        assignedAt: a.createdAt?.toISOString(),
+        completedAt: a.completedAt?.toISOString(),
+        deadlineAt: a.deadlineAt?.toISOString(),
+        hasReview: !!a.review,
+        reviewStatus: a.review?.status,
+        internalRating: a.review?.internalRating,
+        amazonPosted: !!a.review?.amazonReviewUrl,
+      })),
+    };
   }
 }

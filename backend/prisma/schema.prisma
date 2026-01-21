@@ -49,6 +49,12 @@ model User {
   emailVerifiedAt   DateTime?
   tokenVersion      Int       @default(0) // Incremented on password reset to invalidate all sessions
 
+  // Admin user management fields (Section 5.2)
+  isBanned        Boolean   @default(false)
+  bannedAt        DateTime?
+  bannedBy        String?
+  banReason       String?   @db.Text
+
   // GDPR compliance fields (requirements.md Section 15.3)
   deletionScheduledAt DateTime? // When account deletion is scheduled
   deletionReason      String?   @db.Text // Reason for deletion request
@@ -1941,6 +1947,7 @@ enum EmailType {
   ADMIN_PAYOUT_REQUESTED
   ADMIN_NEW_AFFILIATE_APPLICATION // When new affiliate applies
   ADMIN_CRITICAL_ERROR // Section 16.2: Critical errors trigger admin email
+  ADMIN_NOTIFICATION // Custom admin email to user (Section 5.2)
 
   // Payments
   PAYMENT_RECEIVED

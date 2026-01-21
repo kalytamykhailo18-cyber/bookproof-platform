@@ -126,6 +126,11 @@ export interface EmailVariables {
   newBalance?: number;
   reason?: string;
 
+  // Admin notifications (Section 5.2)
+  subject?: string; // Email subject for admin notifications
+  message?: string; // Email message body
+  adminEmail?: string; // Admin sender email
+
   // Deadline changes
   extensionHours?: number;
   oldDeadline?: string;
@@ -322,6 +327,11 @@ export class EmailTemplateService {
         EN: `🚨 CRITICAL ERROR: ${variables.issueType || 'System Error'} [ID: ${variables.issueId}]`,
         ES: `🚨 ERROR CRÍTICO: ${variables.issueType || 'Error del sistema'} [ID: ${variables.issueId}]`,
         PT: `🚨 ERRO CRÍTICO: ${variables.issueType || 'Erro do sistema'} [ID: ${variables.issueId}]`,
+      },
+      ADMIN_NOTIFICATION: {
+        EN: variables.subject ?? 'Message from BookProof Support',
+        ES: variables.subject ?? 'Mensaje del soporte de BookProof',
+        PT: variables.subject ?? 'Mensagem do suporte BookProof',
       },
 
       // Payments

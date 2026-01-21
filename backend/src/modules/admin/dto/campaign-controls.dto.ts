@@ -529,3 +529,109 @@ export class TransferCreditsDto {
   @IsOptional()
   notes?: string;
 }
+
+/**
+ * DTO for force completing a campaign (Section 5.3)
+ */
+export class ForceCompleteCampaignDto {
+  @ApiProperty({
+    description: 'Reason for force completing the campaign',
+    example: 'Author requested early completion due to book release',
+  })
+  @IsString()
+  @IsNotEmpty()
+  reason: string;
+
+  @ApiPropertyOptional({
+    description: 'Whether to refund unused credits to author',
+    default: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  refundUnusedCredits?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Additional notes for audit trail',
+  })
+  @IsString()
+  @IsOptional()
+  notes?: string;
+}
+
+/**
+ * DTO for manually granting material access to a reader (Section 5.3)
+ */
+export class ManualGrantAccessDto {
+  @ApiProperty({
+    description: 'Reader profile ID to grant access',
+  })
+  @IsString()
+  @IsNotEmpty()
+  readerProfileId: string;
+
+  @ApiProperty({
+    description: 'Reason for manual access grant',
+    example: 'Priority reviewer, bypassing normal queue',
+  })
+  @IsString()
+  @IsNotEmpty()
+  reason: string;
+
+  @ApiPropertyOptional({
+    description: 'Format preference (ebook or audiobook)',
+    default: 'ebook',
+  })
+  @IsString()
+  @IsOptional()
+  preferredFormat?: string;
+
+  @ApiPropertyOptional({
+    description: 'Additional notes for audit trail',
+  })
+  @IsString()
+  @IsOptional()
+  notes?: string;
+}
+
+/**
+ * DTO for removing a reader from a campaign (Section 5.3)
+ */
+export class RemoveReaderFromCampaignDto {
+  @ApiProperty({
+    description: 'Assignment ID to remove',
+  })
+  @IsString()
+  @IsNotEmpty()
+  assignmentId: string;
+
+  @ApiProperty({
+    description: 'Reason for removing the reader',
+    example: 'Reader violated terms of service',
+  })
+  @IsString()
+  @IsNotEmpty()
+  reason: string;
+
+  @ApiPropertyOptional({
+    description: 'Whether to notify the reader',
+    default: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  notifyReader?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Whether to refund the credit',
+    default: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  refundCredit?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Additional notes for audit trail',
+  })
+  @IsString()
+  @IsOptional()
+  notes?: string;
+}

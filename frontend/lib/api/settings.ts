@@ -65,6 +65,27 @@ export interface UpdateKeywordResearchFeatureData {
   reason?: string;
 }
 
+// System configuration types (Section 5.6)
+export interface SystemConfigurationResponse {
+  distributionDay: number; // 1-7 (Monday=1)
+  distributionHour: number; // 0-23 UTC
+  overbookingPercentage: number;
+  reviewDeadlineHours: number;
+  minReviewWordCount: number;
+  minPayoutThreshold: number;
+  updatedAt?: string;
+}
+
+export interface UpdateSystemConfigurationData {
+  distributionDay?: number;
+  distributionHour?: number;
+  overbookingPercentage?: number;
+  reviewDeadlineHours?: number;
+  minReviewWordCount?: number;
+  minPayoutThreshold?: number;
+  reason?: string;
+}
+
 // ============================================
 // API CLIENT METHODS
 // ============================================
@@ -138,6 +159,24 @@ export const settingsApi = {
   ): Promise<KeywordResearchFeatureStatusResponse> {
     const response = await apiClient.put<KeywordResearchFeatureStatusResponse>(
       '/settings/admin/features/keyword-research',
+      data,
+    );
+    return response.data;
+  },
+
+  // System configuration endpoints (Admin only - Section 5.6)
+  async getSystemConfiguration(): Promise<SystemConfigurationResponse> {
+    const response = await apiClient.get<SystemConfigurationResponse>(
+      '/settings/admin/system-config',
+    );
+    return response.data;
+  },
+
+  async updateSystemConfiguration(
+    data: UpdateSystemConfigurationData,
+  ): Promise<SystemConfigurationResponse> {
+    const response = await apiClient.put<SystemConfigurationResponse>(
+      '/settings/admin/system-config',
       data,
     );
     return response.data;

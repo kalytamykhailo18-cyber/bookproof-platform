@@ -173,3 +173,87 @@ export class KeywordResearchFeatureStatusDto {
   @ApiPropertyOptional({ description: 'Last updated by admin' })
   updatedBy?: string;
 }
+
+/**
+ * Response DTO for system configuration (Section 5.6)
+ */
+export class SystemConfigurationResponseDto {
+  @ApiProperty({ description: 'Day of weekly distribution (1=Monday, 7=Sunday)', example: 1 })
+  distributionDay: number;
+
+  @ApiProperty({ description: 'Hour of distribution in UTC (0-23)', example: 0 })
+  distributionHour: number;
+
+  @ApiProperty({ description: 'Overbooking percentage for reader slots', example: 20 })
+  overbookingPercentage: number;
+
+  @ApiProperty({ description: 'Review submission deadline in hours', example: 72 })
+  reviewDeadlineHours: number;
+
+  @ApiProperty({ description: 'Minimum word count for reviews', example: 50 })
+  minReviewWordCount: number;
+
+  @ApiProperty({ description: 'Minimum payout threshold in USD', example: 10 })
+  minPayoutThreshold: number;
+
+  @ApiPropertyOptional({ description: 'Last updated date' })
+  updatedAt?: Date;
+}
+
+/**
+ * DTO for updating system configuration (Section 5.6)
+ */
+export class UpdateSystemConfigurationDto {
+  @ApiPropertyOptional({ description: 'Day of weekly distribution (1=Monday, 7=Sunday)', example: 1 })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @Min(1)
+  @Max(7)
+  distributionDay?: number;
+
+  @ApiPropertyOptional({ description: 'Hour of distribution in UTC (0-23)', example: 0 })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @Min(0)
+  @Max(23)
+  distributionHour?: number;
+
+  @ApiPropertyOptional({ description: 'Overbooking percentage for reader slots', example: 20 })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @Min(0)
+  @Max(100)
+  overbookingPercentage?: number;
+
+  @ApiPropertyOptional({ description: 'Review submission deadline in hours', example: 72 })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @Min(1)
+  @Max(720) // Max 30 days
+  reviewDeadlineHours?: number;
+
+  @ApiPropertyOptional({ description: 'Minimum word count for reviews', example: 50 })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @Min(0)
+  @Max(10000)
+  minReviewWordCount?: number;
+
+  @ApiPropertyOptional({ description: 'Minimum payout threshold in USD', example: 10 })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @Min(0)
+  @Max(10000)
+  minPayoutThreshold?: number;
+
+  @ApiPropertyOptional({ description: 'Reason for the configuration change' })
+  @IsOptional()
+  @IsString()
+  reason?: string;
+}

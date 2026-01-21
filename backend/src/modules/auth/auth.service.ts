@@ -576,6 +576,9 @@ export class AuthService {
       country: user.country,
       termsAccepted: user.authorProfile?.termsAccepted ?? true, // Default true for non-authors
       accountCreatedByCloser: user.authorProfile?.accountCreatedByCloser ?? false,
+      // Admin role for role-based access control (Section 5.1, 5.5)
+      adminRole: user.adminProfile?.role,
+      adminPermissions: user.adminProfile?.permissions || [],
     };
   }
 
@@ -587,6 +590,7 @@ export class AuthService {
       where: { id: userId },
       include: {
         authorProfile: true,
+        adminProfile: true, // Include admin profile for role-based access control
       },
     });
 

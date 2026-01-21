@@ -24,15 +24,40 @@ import {
   Clock,
   FileText,
   AlertTriangle,
+  Flag,
+  MessageSquare,
+  UserPlus,
+  CreditCard,
+  Database,
+  Server,
+  Layers,
+  Coins,
+  ClipboardList,
+  Timer,
 } from 'lucide-react';
+import { useRouter, useParams } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import { CampaignSectionItemDto } from '@/lib/api/dashboards';
+import { useAuthStore } from '@/store/authStore';
 
 export default function AdminDashboardPage() {
   const t = useTranslations('admin.dashboard');
+  const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { useAdminDashboard, useAdminRevenueAnalytics } = useDashboards();
+  const { isSuperAdmin } = useAuthStore();
 
   const { data: dashboard, isLoading: dashboardLoading } = useAdminDashboard();
+  // Only fetch revenue data for Super Admins (Section 5.5)
   const { data: revenue } = useAdminRevenueAnalytics();
+
+  // Check if current admin has access to financial data
+  const canViewFinancials = isSuperAdmin();
+
+  const navigateTo = (path: string) => {
+    router.push(`/${locale}/admin/${path}`);
+  };
 
   if (dashboardLoading) {
     return (
@@ -61,8 +86,91 @@ export default function AdminDashboardPage() {
         <p className="text-muted-foreground">{t('subtitle')}</p>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {/* Quick Action Buttons */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6 animate-fade-up-fast">
+        <Button
+          type="button"
+          variant="outline"
+          className="flex flex-col h-auto py-3 gap-1 relative"
+          onClick={() => navigateTo('validation')}
+        >
+          <Flag className="h-5 w-5 text-red-500" />
+          <span className="text-xs">Flagged Reviews</span>
+          {dashboard?.quickActions?.flaggedReviewsCount ? (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {dashboard.quickActions.flaggedReviewsCount}
+            </span>
+          ) : null}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="flex flex-col h-auto py-3 gap-1 relative"
+          onClick={() => navigateTo('disputes')}
+        >
+          <MessageSquare className="h-5 w-5 text-orange-500" />
+          <span className="text-xs">Disputes</span>
+          {dashboard?.quickActions?.pendingDisputesCount ? (
+            <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {dashboard.quickActions.pendingDisputesCount}
+            </span>
+          ) : null}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="flex flex-col h-auto py-3 gap-1 relative"
+          onClick={() => navigateTo('affiliates')}
+        >
+          <UserPlus className="h-5 w-5 text-blue-500" />
+          <span className="text-xs">Affiliate Apps</span>
+          {dashboard?.quickActions?.pendingAffiliateApplicationsCount ? (
+            <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {dashboard.quickActions.pendingAffiliateApplicationsCount}
+            </span>
+          ) : null}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="flex flex-col h-auto py-3 gap-1 relative"
+          onClick={() => navigateTo('payouts')}
+        >
+          <CreditCard className="h-5 w-5 text-green-500" />
+          <span className="text-xs">Payout Requests</span>
+          {dashboard?.quickActions?.pendingPayoutRequestsCount ? (
+            <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {dashboard.quickActions.pendingPayoutRequestsCount}
+            </span>
+          ) : null}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="flex flex-col h-auto py-3 gap-1"
+          onClick={() => navigateTo('reports/financial')}
+        >
+          <FileText className="h-5 w-5 text-purple-500" />
+          <span className="text-xs">Financial Reports</span>
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="flex flex-col h-auto py-3 gap-1"
+          onClick={() => navigateTo('notifications')}
+        >
+          <AlertCircle className="h-5 w-5 text-yellow-500" />
+          <span className="text-xs">Announcements</span>
+        </Button>
+      </div>
+
+      {/* Summary Cards - User Metrics */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         <Card className="animate-fade-up-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('stats.totalCampaigns')}</CardTitle>
@@ -100,6 +208,28 @@ export default function AdminDashboardPage() {
 
         <Card className="animate-fade-up-heavy-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Closers</CardTitle>
+            <Users className="h-4 w-4 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{dashboard?.summary.totalClosers || 0}</div>
+            <p className="text-xs text-muted-foreground">Sales team</p>
+          </CardContent>
+        </Card>
+
+        <Card className="animate-fade-left-fast">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Affiliates</CardTitle>
+            <UserPlus className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{dashboard?.summary.totalAffiliates || 0}</div>
+            <p className="text-xs text-muted-foreground">Approved affiliates</p>
+          </CardContent>
+        </Card>
+
+        <Card className="animate-fade-left-slow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('stats.pendingReviews')}</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -112,102 +242,153 @@ export default function AdminDashboardPage() {
         </Card>
       </div>
 
-      {/* Revenue Overview */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Card className="animate-zoom-in">
+      {/* Summary Cards - Review & Credit Metrics */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="animate-zoom-in-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('revenue.thisMonth')}</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Reviews In Progress</CardTitle>
+            <Timer className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              ${dashboard?.revenue.thisMonth.toLocaleString() || '0'}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {(dashboard?.revenue?.percentageChange ?? 0) >= 0 ? (
-                <span className="flex items-center gap-1 text-green-600">
-                  <TrendingUp className="h-3 w-3" />+{dashboard?.revenue?.percentageChange ?? 0}%
-                  {t('revenue.fromLastMonth')}
-                </span>
-              ) : (
-                <span className="flex items-center gap-1 text-red-600">
-                  {dashboard?.revenue?.percentageChange ?? 0}% {t('revenue.fromLastMonth')}
-                </span>
-              )}
-            </p>
+            <div className="text-2xl font-bold">{dashboard?.summary.reviewsInProgress || 0}</div>
+            <p className="text-xs text-muted-foreground">Within 72-hour window</p>
           </CardContent>
         </Card>
 
         <Card className="animate-zoom-in-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('revenue.totalAllTime')}</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Overdue Reviews</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              $
-              {(
-                (revenue?.revenueBySource?.oneTimePurchases || 0) +
-                (revenue?.revenueBySource?.subscriptions || 0) +
-                (revenue?.revenueBySource?.keywordResearch || 0)
-              ).toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">{t('revenue.lifetimeEarnings')}</p>
+            <div className="text-2xl font-bold text-red-600">{dashboard?.summary.overdueReviews || 0}</div>
+            <p className="text-xs text-muted-foreground">Past deadline</p>
           </CardContent>
         </Card>
 
         <Card className="animate-zoom-in-medium-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('revenue.activeSubscriptions')}
-            </CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Credits in Circulation</CardTitle>
+            <Coins className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {revenue?.subscriptionMetrics?.activeSubscriptions || 0}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              ${revenue?.subscriptionMetrics?.monthlyRecurringRevenue?.toLocaleString() || '0'}
-              /month MRR
-            </p>
+            <div className="text-2xl font-bold">{dashboard?.summary.creditsInCirculation || 0}</div>
+            <p className="text-xs text-muted-foreground">Purchased but not consumed</p>
+          </CardContent>
+        </Card>
+
+        <Card className="animate-zoom-in-heavy-slow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Issues Flagged</CardTitle>
+            <Flag className="h-4 w-4 text-orange-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{dashboard?.summary.totalIssuesFlagged || 0}</div>
+            <p className="text-xs text-muted-foreground">Open issues</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Revenue Breakdown */}
-      <Card className="animate-zoom-in-slow">
-        <CardHeader>
-          <CardTitle>{t('revenueBreakdown.title')}</CardTitle>
-          <CardDescription>{t('revenueBreakdown.description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex animate-fade-up-fast items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-sm font-medium">{t('revenueBreakdown.creditPurchases')}</p>
-                <p className="text-xs text-muted-foreground">
-                  {t('revenueBreakdown.oneTimePayments')}
+      {/* Revenue Overview - Only visible to Super Admins (Section 5.5) */}
+      {canViewFinancials && (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <Card className="animate-zoom-in">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{t('revenue.thisMonth')}</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                ${dashboard?.revenue.thisMonth.toLocaleString() || '0'}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {(dashboard?.revenue?.percentageChange ?? 0) >= 0 ? (
+                  <span className="flex items-center gap-1 text-green-600">
+                    <TrendingUp className="h-3 w-3" />+{dashboard?.revenue?.percentageChange ?? 0}%
+                    {t('revenue.fromLastMonth')}
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1 text-red-600">
+                    {dashboard?.revenue?.percentageChange ?? 0}% {t('revenue.fromLastMonth')}
+                  </span>
+                )}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="animate-zoom-in-slow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{t('revenue.totalAllTime')}</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                $
+                {(
+                  (revenue?.revenueBySource?.oneTimePurchases || 0) +
+                  (revenue?.revenueBySource?.subscriptions || 0) +
+                  (revenue?.revenueBySource?.keywordResearch || 0)
+                ).toLocaleString()}
+              </div>
+              <p className="text-xs text-muted-foreground">{t('revenue.lifetimeEarnings')}</p>
+            </CardContent>
+          </Card>
+
+          <Card className="animate-zoom-in-medium-slow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {t('revenue.activeSubscriptions')}
+              </CardTitle>
+              <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {revenue?.subscriptionMetrics?.activeSubscriptions || 0}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                ${revenue?.subscriptionMetrics?.monthlyRecurringRevenue?.toLocaleString() || '0'}
+                /month MRR
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Revenue Breakdown - Only visible to Super Admins (Section 5.5) */}
+      {canViewFinancials && (
+        <Card className="animate-zoom-in-slow">
+          <CardHeader>
+            <CardTitle>{t('revenueBreakdown.title')}</CardTitle>
+            <CardDescription>{t('revenueBreakdown.description')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex animate-fade-up-fast items-center justify-between">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium">{t('revenueBreakdown.creditPurchases')}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t('revenueBreakdown.oneTimePayments')}
+                  </p>
+                </div>
+                <p className="text-lg font-bold">
+                  ${revenue?.revenueBySource?.oneTimePurchases?.toLocaleString() || '0'}
                 </p>
               </div>
-              <p className="text-lg font-bold">
-                ${revenue?.revenueBySource?.oneTimePurchases?.toLocaleString() || '0'}
-              </p>
-            </div>
-            <div className="flex animate-fade-up-light-slow items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-sm font-medium">{t('revenueBreakdown.subscriptions')}</p>
-                <p className="text-xs text-muted-foreground">
-                  {t('revenueBreakdown.recurringRevenue')}
+              <div className="flex animate-fade-up-light-slow items-center justify-between">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium">{t('revenueBreakdown.subscriptions')}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t('revenueBreakdown.recurringRevenue')}
+                  </p>
+                </div>
+                <p className="text-lg font-bold">
+                  ${revenue?.revenueBySource?.subscriptions?.toLocaleString() || '0'}
                 </p>
               </div>
-              <p className="text-lg font-bold">
-                ${revenue?.revenueBySource?.subscriptions?.toLocaleString() || '0'}
-              </p>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Campaign Sections - Healthy, Delayed, Issues */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -536,6 +717,75 @@ export default function AdminDashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* System Health Indicators */}
+      <Card className="animate-flip-up">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Server className="h-5 w-5 text-purple-500" />
+            System Health
+          </CardTitle>
+          <CardDescription>
+            Real-time status of critical system components
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="flex items-center justify-between p-4 rounded-lg border animate-fade-up-fast">
+              <div className="flex items-center gap-3">
+                <Database className="h-5 w-5 text-blue-500" />
+                <div>
+                  <p className="font-medium">Database</p>
+                  <p className="text-xs text-muted-foreground">PostgreSQL</p>
+                </div>
+              </div>
+              <Badge
+                variant={dashboard?.systemHealth?.databaseStatus === 'healthy' ? 'default' : 'destructive'}
+                className={dashboard?.systemHealth?.databaseStatus === 'healthy' ? 'bg-green-500' : ''}
+              >
+                {dashboard?.systemHealth?.databaseStatus || 'checking'}
+              </Badge>
+            </div>
+
+            <div className="flex items-center justify-between p-4 rounded-lg border animate-fade-up-slow">
+              <div className="flex items-center gap-3">
+                <Layers className="h-5 w-5 text-red-500" />
+                <div>
+                  <p className="font-medium">Cache</p>
+                  <p className="text-xs text-muted-foreground">Redis</p>
+                </div>
+              </div>
+              <Badge
+                variant={dashboard?.systemHealth?.cacheStatus === 'healthy' ? 'default' : 'destructive'}
+                className={dashboard?.systemHealth?.cacheStatus === 'healthy' ? 'bg-green-500' : ''}
+              >
+                {dashboard?.systemHealth?.cacheStatus || 'checking'}
+              </Badge>
+            </div>
+
+            <div className="flex items-center justify-between p-4 rounded-lg border animate-fade-up-medium-slow">
+              <div className="flex items-center gap-3">
+                <ClipboardList className="h-5 w-5 text-orange-500" />
+                <div>
+                  <p className="font-medium">Job Queue</p>
+                  <p className="text-xs text-muted-foreground">BullMQ</p>
+                </div>
+              </div>
+              <Badge
+                variant={dashboard?.systemHealth?.queueStatus === 'healthy' ? 'default' : 'destructive'}
+                className={dashboard?.systemHealth?.queueStatus === 'healthy' ? 'bg-green-500' : ''}
+              >
+                {dashboard?.systemHealth?.queueStatus || 'checking'}
+              </Badge>
+            </div>
+          </div>
+          {dashboard?.systemHealth?.lastHealthCheck && (
+            <p className="mt-4 text-xs text-muted-foreground text-center">
+              Last health check: {new Date(dashboard.systemHealth.lastHealthCheck).toLocaleString()}
+            </p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
