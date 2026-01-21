@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import { useAdminReaders } from '@/hooks/useAdminReaders';
 import { ContentPreference } from '@/lib/api/readers';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -292,11 +291,9 @@ export default function AdminReaderDetailPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" asChild>
-          <Link href="/admin/readers">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('detail.backToReaders')}
-          </Link>
+        <Button type="button" variant="ghost" size="sm" onClick={() => router.push('/admin/readers')}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          {t('detail.backToReaders')}
         </Button>
       </div>
 
@@ -817,15 +814,13 @@ export default function AdminReaderDetailPage() {
                           ) : (
                             <XCircle className="h-5 w-5 flex-shrink-0 text-red-600" />
                           )}
-                          <a
-                            href={profile.profileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 truncate text-sm hover:underline"
+                          <span
+                            className="flex cursor-pointer items-center gap-1 truncate text-sm hover:underline"
+                            onClick={() => window.open(profile.profileUrl, '_blank', 'noopener,noreferrer')}
                           >
                             {profile.profileUrl}
                             <ExternalLink className="h-3 w-3 flex-shrink-0" />
-                          </a>
+                          </span>
                         </div>
                         <div className="ml-7 mt-1">
                           {profile.isVerified ? (

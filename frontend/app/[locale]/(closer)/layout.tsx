@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/lib/api/auth';
 import { Loader2 } from 'lucide-react';
 
 export default function CloserLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
   const { user, isLoadingProfile: isLoading } = useAuth();
 
   useEffect(() => {
@@ -18,19 +20,19 @@ export default function CloserLayout({ children }: { children: React.ReactNode }
       } else if (user.role !== UserRole.CLOSER) {
         // Authenticated but not a closer - redirect to appropriate dashboard
         if (user.role === UserRole.ADMIN) {
-          router.push('/admin/dashboard');
+          router.push(`/${locale}/admin/dashboard`);
         } else if (user.role === UserRole.AFFILIATE) {
-          router.push('/affiliate/dashboard');
+          router.push(`/${locale}/affiliate/dashboard`);
         } else if (user.role === UserRole.AUTHOR) {
-          router.push('/author/dashboard');
+          router.push(`/${locale}/author`);
         } else if (user.role === UserRole.READER) {
-          router.push('/reader/dashboard');
+          router.push(`/${locale}/reader`);
         } else {
-          router.push('/');
+          router.push(`/${locale}`);
         }
       }
     }
-  }, [user, isLoading, router]);
+  }, [user, isLoading, router, locale]);
 
   // Show loading state while checking authentication
   if (isLoading) {

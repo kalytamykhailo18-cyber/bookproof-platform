@@ -666,9 +666,12 @@ function ContactSection() {
               <div>
                 <h3 className="mb-1 text-lg font-semibold">{t('email.title')}</h3>
                 <p className="mb-2 text-sm text-muted-foreground">{t('email.description')}</p>
-                <a href="mailto:support@bookproof.com" className="text-primary hover:underline">
+                <span
+                  className="cursor-pointer text-primary hover:underline"
+                  onClick={() => (window.location.href = 'mailto:support@bookproof.com')}
+                >
                   support@bookproof.com
-                </a>
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -702,19 +705,28 @@ function Footer({ locale }: { locale: string }) {
             <h3 className="mb-4 text-lg font-bold">{t('links.product.title')}</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#features" className="text-muted-foreground hover:text-foreground">
+                <span
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   {t('links.product.features')}
-                </a>
+                </span>
               </li>
               <li>
-                <a href="#pricing" className="text-muted-foreground hover:text-foreground">
+                <span
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   {t('links.product.pricing')}
-                </a>
+                </span>
               </li>
               <li>
-                <a href="#faq" className="text-muted-foreground hover:text-foreground">
+                <span
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   {t('links.product.faq')}
-                </a>
+                </span>
               </li>
             </ul>
           </div>
@@ -722,19 +734,28 @@ function Footer({ locale }: { locale: string }) {
             <h3 className="mb-4 text-lg font-bold">{t('links.company.title')}</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#about" className="text-muted-foreground hover:text-foreground">
+                <span
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   {t('links.company.about')}
-                </a>
+                </span>
               </li>
               <li>
-                <a href="#contact" className="text-muted-foreground hover:text-foreground">
+                <span
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   {t('links.company.contact')}
-                </a>
+                </span>
               </li>
               <li>
-                <a href="#blog" className="text-muted-foreground hover:text-foreground">
+                <span
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => document.getElementById('blog')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   {t('links.company.blog')}
-                </a>
+                </span>
               </li>
             </ul>
           </div>
@@ -742,19 +763,28 @@ function Footer({ locale }: { locale: string }) {
             <h3 className="mb-4 text-lg font-bold">{t('links.legal.title')}</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#privacy" className="text-muted-foreground hover:text-foreground">
+                <span
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => document.getElementById('privacy')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   {t('links.legal.privacy')}
-                </a>
+                </span>
               </li>
               <li>
-                <a href="#terms" className="text-muted-foreground hover:text-foreground">
+                <span
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => document.getElementById('terms')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   {t('links.legal.terms')}
-                </a>
+                </span>
               </li>
               <li>
-                <a href="#cookies" className="text-muted-foreground hover:text-foreground">
+                <span
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => document.getElementById('cookies')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   {t('links.legal.cookies')}
-                </a>
+                </span>
               </li>
             </ul>
           </div>

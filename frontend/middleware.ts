@@ -12,12 +12,11 @@ export default function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Skip middleware for static files, API routes, and Next.js internals
-  // This prevents 400 errors on _next/static files
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/_vercel') ||
-    /\.(.*)$/.test(pathname) // Files with extensions (favicon.ico, images, etc.)
+    /\.(.*)$/.test(pathname)
   ) {
     return NextResponse.next();
   }
@@ -26,8 +25,6 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Only match paths that should go through i18n middleware
-  // Explicitly exclude static files and API routes
   matcher: [
     '/',
     '/(en|pt|es)/:path*',

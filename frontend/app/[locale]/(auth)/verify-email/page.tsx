@@ -7,7 +7,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, XCircle, Loader2 } from 'lucide-react';
-import Link from 'next/link';
 
 export default function VerifyEmailPage() {
   const t = useTranslations('auth.verifyEmail');
@@ -91,9 +90,9 @@ export default function VerifyEmailPage() {
 
       <CardFooter className="flex flex-col space-y-2">
         {status === 'success' && (
-          <Link href="/login" className="w-full">
-            <Button className="w-full">{t('loginButton')}</Button>
-          </Link>
+          <Button className="w-full" onClick={() => router.push('/login')}>
+            {t('loginButton')}
+          </Button>
         )}
 
         {status === 'error' && (

@@ -6,10 +6,11 @@ import { useCredits } from '@/hooks/useCredits';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2 } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function CreditPurchaseSuccessPage() {
   const t = useTranslations('author.credits.success');
+  const router = useRouter();
   const { refetchBalance } = useCredits();
 
   useEffect(() => {
@@ -34,12 +35,12 @@ export default function CreditPurchaseSuccessPage() {
           </div>
 
           <div className="flex animate-fade-up flex-col justify-center gap-4 sm:flex-row">
-            <Link href="/author/campaigns/new">
-              <Button>{t('createCampaign')}</Button>
-            </Link>
-            <Link href="/author">
-              <Button variant="outline">{t('backToDashboard')}</Button>
-            </Link>
+            <Button onClick={() => router.push('/author/campaigns/new')}>
+              {t('createCampaign')}
+            </Button>
+            <Button variant="outline" onClick={() => router.push('/author')}>
+              {t('backToDashboard')}
+            </Button>
           </div>
         </CardContent>
       </Card>

@@ -8,11 +8,12 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { NotificationList } from '@/components/shared/NotificationList';
 import { Settings, CheckCheck, Loader2 } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { NotificationType } from '@/lib/api/notifications';
 
 export default function NotificationsPage() {
   const t = useTranslations('notifications');
+  const router = useRouter();
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [typeFilter, setTypeFilter] = useState<NotificationType | 'ALL'>('ALL');
 
@@ -49,12 +50,14 @@ export default function NotificationsPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Link href="/author/notifications/settings">
-            <Button variant="outline" className="animate-fade-left">
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            className="animate-fade-left"
+            onClick={() => router.push('/author/notifications/settings')}
+          >
+            <Settings className="mr-2 h-4 w-4" />
+            Settings
+          </Button>
           {notificationData && notificationData.unreadCount > 0 && (
             <Button
               onClick={handleMarkAllAsRead}

@@ -16,11 +16,12 @@ import {
   Activity,
   CheckCircle2,
 } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { CampaignStatus } from '@/lib/api/campaigns';
 
 export default function AuthorDashboardPage() {
   const t = useTranslations('author.dashboard');
+  const router = useRouter();
   const { creditBalance, isLoadingBalance } = useCredits();
   const { campaigns, isLoadingCampaigns } = useCampaigns();
 
@@ -59,26 +60,27 @@ export default function AuthorDashboardPage() {
           <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
         </div>
         <div className="flex gap-3">
-          <Link href="/author/credits">
-            <Button variant="outline" className="animate-fade-left">
-              <CreditCard className="mr-2 h-4 w-4" />
-              {t('buttons.buyCredits')}
-            </Button>
-          </Link>
-          <Link href="/author/campaigns/new">
-            <Button
-              className="animate-fade-left-fast"
-              disabled={!creditBalance?.availableCredits || creditBalance.availableCredits <= 0}
-              title={
-                !creditBalance?.availableCredits || creditBalance.availableCredits <= 0
-                  ? t('buttons.noCreditsTooltip') || 'Purchase credits to create campaigns'
-                  : undefined
-              }
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              {t('buttons.newCampaign')}
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            className="animate-fade-left"
+            onClick={() => router.push('/author/credits')}
+          >
+            <CreditCard className="mr-2 h-4 w-4" />
+            {t('buttons.buyCredits')}
+          </Button>
+          <Button
+            className="animate-fade-left-fast"
+            disabled={!creditBalance?.availableCredits || creditBalance.availableCredits <= 0}
+            title={
+              !creditBalance?.availableCredits || creditBalance.availableCredits <= 0
+                ? t('buttons.noCreditsTooltip') || 'Purchase credits to create campaigns'
+                : undefined
+            }
+            onClick={() => router.push('/author/campaigns/new')}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            {t('buttons.newCampaign')}
+          </Button>
         </div>
       </div>
 
@@ -207,49 +209,49 @@ export default function AuthorDashboardPage() {
               const animationClass = index % 2 === 0 ? 'animate-fade-left' : 'animate-fade-right';
 
               return (
-                <Link key={campaign.id} href={`/author/campaigns/${campaign.id}`}>
-                  <Card
-                    className={`cursor-pointer transition-shadow hover:shadow-md ${animationClass}`}
-                  >
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <CardTitle className="text-xl">{campaign.title}</CardTitle>
-                          <CardDescription className="mt-1">
-                            {campaign.authorName} • {campaign.language}
-                          </CardDescription>
-                        </div>
-                        <Badge className={getStatusColor(campaign.status)}>{campaign.status}</Badge>
+                <Card
+                  key={campaign.id}
+                  className={`cursor-pointer transition-shadow hover:shadow-md ${animationClass}`}
+                  onClick={() => router.push(`/author/campaigns/${campaign.id}`)}
+                >
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="text-xl">{campaign.title}</CardTitle>
+                        <CardDescription className="mt-1">
+                          {campaign.authorName} • {campaign.language}
+                        </CardDescription>
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-5">
-                        <div>
-                          <p className="text-muted-foreground">{t('campaigns.targetReviews')}</p>
-                          <p className="font-semibold">{campaign.targetReviews}</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">{t('campaigns.delivered')}</p>
-                          <p className="font-semibold">{campaign.totalReviewsDelivered}</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">{t('campaigns.pending')}</p>
-                          <p className="font-semibold text-yellow-600">
-                            {campaign.totalReviewsPending}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">{t('campaigns.creditsAllocated')}</p>
-                          <p className="font-semibold">{campaign.creditsAllocated}</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">{t('campaigns.format')}</p>
-                          <p className="font-semibold">{campaign.availableFormats}</p>
-                        </div>
+                      <Badge className={getStatusColor(campaign.status)}>{campaign.status}</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-5">
+                      <div>
+                        <p className="text-muted-foreground">{t('campaigns.targetReviews')}</p>
+                        <p className="font-semibold">{campaign.targetReviews}</p>
                       </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+                      <div>
+                        <p className="text-muted-foreground">{t('campaigns.delivered')}</p>
+                        <p className="font-semibold">{campaign.totalReviewsDelivered}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">{t('campaigns.pending')}</p>
+                        <p className="font-semibold text-yellow-600">
+                          {campaign.totalReviewsPending}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">{t('campaigns.creditsAllocated')}</p>
+                        <p className="font-semibold">{campaign.creditsAllocated}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">{t('campaigns.format')}</p>
+                        <p className="font-semibold">{campaign.availableFormats}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               );
             })}
           </div>
@@ -259,12 +261,10 @@ export default function AuthorDashboardPage() {
               <BookOpen className="mb-4 h-12 w-12 text-muted-foreground" />
               <p className="mb-2 text-lg font-medium">{t('campaigns.noCampaigns')}</p>
               <p className="mb-4 text-sm text-muted-foreground">{t('campaigns.createFirst')}</p>
-              <Link href="/author/campaigns/new">
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  {t('buttons.newCampaign')}
-                </Button>
-              </Link>
+              <Button onClick={() => router.push('/author/campaigns/new')}>
+                <Plus className="mr-2 h-4 w-4" />
+                {t('buttons.newCampaign')}
+              </Button>
             </CardContent>
           </Card>
         )}

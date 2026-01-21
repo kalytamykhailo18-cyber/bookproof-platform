@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, DollarSign, Users, Hash, BarChart3 } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCoupon, useCouponUsageStats } from '@/hooks/useCoupons';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +22,7 @@ import { formatDate } from '@/lib/utils';
 export default function CouponUsagePage() {
   const t = useTranslations('admin.coupons');
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
 
   const { data: coupon, isLoading: couponLoading } = useCoupon(id);
@@ -55,11 +56,9 @@ export default function CouponUsagePage() {
     <div className="container mx-auto max-w-6xl space-y-6 py-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href={`/admin/coupons/${id}`}>
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
+        <Button variant="ghost" size="icon" onClick={() => router.push(`/admin/coupons/${id}`)}>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
         <div>
           <h1 className="text-3xl font-bold">
             {t('usage.title')}: <span className="font-mono">{coupon.code}</span>

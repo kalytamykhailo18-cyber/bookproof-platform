@@ -3,7 +3,6 @@
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Edit, TrendingUp, Trash2 } from 'lucide-react';
-import Link from 'next/link';
 import { useCoupon, useDeleteCoupon } from '@/hooks/useCoupons';
 import { CouponType, CouponAppliesTo } from '@/lib/api/coupons';
 import { Button } from '@/components/ui/button';
@@ -28,13 +27,14 @@ export default function CouponDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const locale = params.locale as string;
 
   const { data: coupon, isLoading } = useCoupon(id);
   const deleteMutation = useDeleteCoupon();
 
   const handleDelete = async () => {
     await deleteMutation.mutateAsync(id);
-    router.push('/admin/coupons');
+    router.push(`/${locale}/admin/coupons`);
   };
 
   const getCouponTypeBadge = (type: CouponType) => {
@@ -114,10 +114,8 @@ export default function CouponDetailPage() {
       {/* Header */}
       <div className="flex animate-fade-up items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button type="button" variant="ghost" size="icon" asChild>
-            <Link href="/admin/coupons">
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
+          <Button type="button" variant="ghost" size="icon" onClick={() => router.push(`/${locale}/admin/coupons`)}>
+            <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
             <h1 className="font-mono text-3xl font-bold">{coupon.code}</h1>
@@ -125,17 +123,13 @@ export default function CouponDetailPage() {
           </div>
         </div>
         <div className="flex animate-fade-left gap-2">
-          <Button type="button" variant="outline" asChild>
-            <Link href={`/admin/coupons/${id}/usage`}>
-              <TrendingUp className="mr-2 h-4 w-4" />
-              {t('actions.viewUsage')}
-            </Link>
+          <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/admin/coupons/${id}/usage`)}>
+            <TrendingUp className="mr-2 h-4 w-4" />
+            {t('actions.viewUsage')}
           </Button>
-          <Button type="button" variant="outline" asChild>
-            <Link href={`/admin/coupons/${id}/edit`}>
-              <Edit className="mr-2 h-4 w-4" />
-              {t('actions.edit')}
-            </Link>
+          <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/admin/coupons/${id}/edit`)}>
+            <Edit className="mr-2 h-4 w-4" />
+            {t('actions.edit')}
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>

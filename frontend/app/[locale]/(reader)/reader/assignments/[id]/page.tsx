@@ -19,7 +19,7 @@ import {
 import { AssignmentStatus, BookFormat } from '@/lib/api/queue';
 import { formatDistanceToNow } from 'date-fns';
 import { AudiobookPlayer } from '@/components/reader/AudiobookPlayer';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,6 +35,7 @@ import { useTranslations } from 'next-intl';
 
 export default function AssignmentDetailPage({ params }: { params: { id: string } }) {
   const t = useTranslations('reader.assignment');
+  const router = useRouter();
   const { assignment, isLoading } = useAssignment(params.id);
   const { withdrawFromAssignment, isWithdrawing, trackEbookDownload, trackAudiobookAccess } =
     useMyAssignments();
@@ -65,8 +66,8 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
             <XCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="mb-2 text-lg font-semibold">{t('notFound.title')}</h3>
             <p className="mb-4 text-muted-foreground">{t('notFound.description')}</p>
-            <Button asChild>
-              <Link href="/reader">{t('backToDashboard')}</Link>
+            <Button onClick={() => router.push('/reader')}>
+              {t('backToDashboard')}
             </Button>
           </CardContent>
         </Card>
@@ -169,11 +170,9 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href="/reader">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('backToDashboard')}
-          </Link>
+        <Button variant="ghost" size="sm" onClick={() => router.push('/reader')}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          {t('backToDashboard')}
         </Button>
       </div>
 
@@ -545,11 +544,12 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button asChild className="w-full">
-                  <Link href={`/reader/assignments/${assignment.id}/submit-review`}>
-                    <Send className="mr-2 h-4 w-4" />
-                    Submit Review
-                  </Link>
+                <Button
+                  className="w-full"
+                  onClick={() => router.push(`/reader/assignments/${assignment.id}/submit-review`)}
+                >
+                  <Send className="mr-2 h-4 w-4" />
+                  Submit Review
                 </Button>
               </CardContent>
             </Card>

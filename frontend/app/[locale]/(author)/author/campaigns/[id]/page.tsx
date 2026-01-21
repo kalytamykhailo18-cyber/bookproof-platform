@@ -33,7 +33,6 @@ import {
   Globe,
   Eye,
 } from 'lucide-react';
-import Link from 'next/link';
 import { CampaignStatus, BookFormat } from '@/lib/api/campaigns';
 import {
   Dialog,
@@ -250,12 +249,14 @@ export default function CampaignDetailPage() {
             <Card className="animate-fade-up">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>{t('progress.title')}</CardTitle>
-                <Link href={`/author/campaigns/${campaign.id}/analytics`}>
-                  <Button variant="outline" size="sm">
-                    <BarChart3 className="mr-2 h-4 w-4" />
-                    {t('progress.viewAnalytics')}
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push(`/author/campaigns/${campaign.id}/analytics`)}
+                >
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  {t('progress.viewAnalytics')}
+                </Button>
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Weekly Progress Indicator */}
@@ -732,12 +733,14 @@ export default function CampaignDetailPage() {
                   {t('actions.pause') || 'Pause Campaign'}
                 </Button>
 
-                <Link href={`/author/campaigns/${campaign.id}/analytics`} className="block">
-                  <Button variant="outline" className="w-full">
-                    <BarChart3 className="mr-2 h-4 w-4" />
-                    {t('actions.viewAnalytics') || 'View Analytics'}
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => router.push(`/author/campaigns/${campaign.id}/analytics`)}
+                >
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  {t('actions.viewAnalytics') || 'View Analytics'}
+                </Button>
 
                 <Button variant="outline" className="w-full" onClick={() => window.print()}>
                   <Download className="mr-2 h-4 w-4" />
@@ -771,12 +774,14 @@ export default function CampaignDetailPage() {
                   {t('actions.resume') || 'Resume Campaign'}
                 </Button>
 
-                <Link href={`/author/campaigns/${campaign.id}/analytics`} className="block">
-                  <Button variant="outline" className="w-full">
-                    <BarChart3 className="mr-2 h-4 w-4" />
-                    {t('actions.viewAnalytics') || 'View Analytics'}
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => router.push(`/author/campaigns/${campaign.id}/analytics`)}
+                >
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  {t('actions.viewAnalytics') || 'View Analytics'}
+                </Button>
               </CardContent>
             </Card>
           )}
@@ -788,12 +793,14 @@ export default function CampaignDetailPage() {
                 <CardTitle>{t('actions.title') || 'Actions'}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Link href={`/author/campaigns/${campaign.id}/analytics`} className="block">
-                  <Button variant="outline" className="w-full">
-                    <BarChart3 className="mr-2 h-4 w-4" />
-                    {t('actions.viewFinalReport') || 'View Final Report'}
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => router.push(`/author/campaigns/${campaign.id}/analytics`)}
+                >
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  {t('actions.viewFinalReport') || 'View Final Report'}
+                </Button>
 
                 <Button variant="outline" className="w-full" onClick={() => window.print()}>
                   <Download className="mr-2 h-4 w-4" />

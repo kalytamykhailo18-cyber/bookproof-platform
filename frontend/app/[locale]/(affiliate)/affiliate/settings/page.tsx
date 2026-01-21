@@ -353,10 +353,11 @@ export default function SettingsPage() {
                 Learn more about how we protect your data
               </p>
             </div>
-            <Button variant="outline" asChild>
-              <a href="/privacy" target="_blank" rel="noopener noreferrer">
-                Read Policy
-              </a>
+            <Button
+              variant="outline"
+              onClick={() => window.open('/privacy', '_blank', 'noopener,noreferrer')}
+            >
+              Read Policy
             </Button>
           </div>
         </CardContent>

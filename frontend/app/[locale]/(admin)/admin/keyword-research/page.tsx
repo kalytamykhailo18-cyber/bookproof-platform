@@ -42,13 +42,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, MoreHorizontal, Download, RefreshCw, Eye } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import { KeywordResearchStatus } from '@/lib/api/keywords';
 
 export default function AdminKeywordResearchPage() {
   const t = useTranslations('keyword-research.admin');
   const tCommon = useTranslations('keyword-research');
+  const router = useRouter();
 
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -249,11 +250,9 @@ export default function AdminKeywordResearchPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link href={`/author/keyword-research/${research.id}`}>
-                              <Eye className="mr-2 h-4 w-4" />
-                              {t('actions.view')}
-                            </Link>
+                          <DropdownMenuItem onClick={() => router.push(`/author/keyword-research/${research.id}`)}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            {t('actions.view')}
                           </DropdownMenuItem>
                           {research.status === KeywordResearchStatus.COMPLETED &&
                             research.pdfUrl && (

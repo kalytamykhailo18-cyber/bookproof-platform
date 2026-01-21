@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import {
   Card,
@@ -29,6 +29,7 @@ type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
   const t = useTranslations('auth.forgotPassword');
+  const router = useRouter();
   const { requestPasswordResetAsync, isRequestingReset } = useAuth();
   const [emailSent, setEmailSent] = useState(false);
 
@@ -72,12 +73,14 @@ export default function ForgotPasswordPage() {
           <p className="animate-fade-up text-center text-muted-foreground">{t('successMessage')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
-          <Link href="/login" className="w-full">
-            <Button variant="outline" className="w-full">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              {t('backToLogin')}
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => router.push('/login')}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {t('backToLogin')}
+          </Button>
         </CardFooter>
       </Card>
     );
@@ -118,12 +121,15 @@ export default function ForgotPasswordPage() {
           {isRequestingReset ? t('submitting') : t('submitButton')}
         </Button>
 
-        <Link href="/login" className="w-full">
-          <Button variant="ghost" className="w-full animate-fade-up-slow" type="button">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('backToLogin')}
-          </Button>
-        </Link>
+        <Button
+          variant="ghost"
+          className="w-full animate-fade-up-slow"
+          type="button"
+          onClick={() => router.push('/login')}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          {t('backToLogin')}
+        </Button>
       </CardFooter>
     </Card>
   );

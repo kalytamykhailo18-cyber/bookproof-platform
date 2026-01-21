@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { ContentPreference } from '@/lib/api/readers';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const GENRE_OPTIONS = [
   'Science Fiction',
@@ -53,6 +53,7 @@ const GENRE_OPTIONS = [
 
 export default function ReaderProfilePage() {
   const t = useTranslations('reader.profile');
+  const router = useRouter();
   const {
     profile,
     isLoadingProfile,
@@ -149,11 +150,9 @@ export default function ReaderProfilePage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href="/reader">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('backToDashboard')}
-          </Link>
+        <Button variant="ghost" size="sm" onClick={() => router.push('/reader')}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          {t('backToDashboard')}
         </Button>
       </div>
 
@@ -289,14 +288,12 @@ export default function ReaderProfilePage() {
                         ) : (
                           <AlertCircle className="h-4 w-4 flex-shrink-0 text-yellow-500" />
                         )}
-                        <a
-                          href={amazonProfile.profileUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="truncate text-sm hover:underline"
+                        <span
+                          className="cursor-pointer truncate text-sm hover:underline"
+                          onClick={() => window.open(amazonProfile.profileUrl, '_blank', 'noopener,noreferrer')}
                         >
                           {amazonProfile.profileUrl}
-                        </a>
+                        </span>
                       </div>
                       <p className="ml-6 text-xs text-muted-foreground">
                         {amazonProfile.isVerified
@@ -431,11 +428,9 @@ export default function ReaderProfilePage() {
                 {/* Payout Request Button */}
                 {profile.walletBalance > 0 && (
                   <div className="pt-4">
-                    <Button asChild className="w-full">
-                      <Link href="/reader/payouts">
-                        <TrendingUp className="mr-2 h-4 w-4" />
-                        Request Payout
-                      </Link>
+                    <Button className="w-full" onClick={() => router.push('/reader/payouts')}>
+                      <TrendingUp className="mr-2 h-4 w-4" />
+                      Request Payout
                     </Button>
                   </div>
                 )}

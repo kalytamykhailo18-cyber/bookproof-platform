@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { DollarSign, Wallet, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { useReaderStats } from '@/hooks/useReaders';
@@ -211,13 +210,13 @@ export default function RequestPayoutPage() {
   return (
     <div className="container mx-auto max-w-3xl px-4 py-8">
       {/* Back Button */}
-      <Link
-        href="/reader/wallet"
-        className="mb-6 inline-flex animate-fade-right-fast items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+      <span
+        onClick={() => router.push('/reader/wallet')}
+        className="mb-6 inline-flex animate-fade-right-fast items-center gap-2 text-sm text-muted-foreground hover:text-foreground cursor-pointer"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Wallet
-      </Link>
+      </span>
 
       {/* Page Header */}
       <div className="mb-8 animate-fade-down-fast">
