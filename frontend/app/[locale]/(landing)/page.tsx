@@ -771,6 +771,14 @@ function Footer({ locale }: { locale: string }) {
                   {t('links.legal.terms')}
                 </span>
               </li>
+              <li>
+                <span
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => router.push('/cookies')}
+                >
+                  {t('links.legal.cookies')}
+                </span>
+              </li>
             </ul>
           </div>
           <div className="animate-fade-left">

@@ -325,24 +325,18 @@ export default function PrivacyPolicyPage() {
             <section className="mt-12 pt-8 border-t border-gray-200">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Related Documents</h2>
               <div className="flex flex-col gap-3">
-                <button
+                <span
                   onClick={() => router.push('/terms')}
-                  className="text-blue-600 hover:text-blue-800 hover:underline text-left"
+                  className="text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer"
                 >
                   Terms of Service
-                </button>
-                <button
+                </span>
+                <span
                   onClick={() => router.push('/cookies')}
-                  className="text-blue-600 hover:text-blue-800 hover:underline text-left"
+                  className="text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer"
                 >
                   Cookie Policy
-                </button>
-                <button
-                  onClick={() => router.push('/security')}
-                  className="text-blue-600 hover:text-blue-800 hover:underline text-left"
-                >
-                  Security Practices
-                </button>
+                </span>
               </div>
             </section>
           </div>
