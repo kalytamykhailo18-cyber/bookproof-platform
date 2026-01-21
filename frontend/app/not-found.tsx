@@ -1,4 +1,6 @@
-import Link from 'next/link';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { FileQuestion, Home, Search } from 'lucide-react';
 
@@ -7,6 +9,8 @@ import { FileQuestion, Home, Search } from 'lucide-react';
  * Section 16.1: Friendly page with navigation options and search suggestion
  */
 export default function NotFound() {
+  const router = useRouter();
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted px-4">
       <div className="mx-auto max-w-md text-center">
@@ -32,18 +36,14 @@ export default function NotFound() {
 
         {/* Navigation Options */}
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-          <Button asChild size="lg" className="gap-2">
-            <Link href="/">
-              <Home className="h-4 w-4" />
-              Go Home
-            </Link>
+          <Button size="lg" className="gap-2" onClick={() => router.push('/')}>
+            <Home className="h-4 w-4" />
+            Go Home
           </Button>
 
-          <Button asChild variant="outline" size="lg" className="gap-2">
-            <Link href="/search">
-              <Search className="h-4 w-4" />
-              Search
-            </Link>
+          <Button variant="outline" size="lg" className="gap-2" onClick={() => router.push('/search')}>
+            <Search className="h-4 w-4" />
+            Search
           </Button>
         </div>
 
@@ -53,27 +53,30 @@ export default function NotFound() {
             You might be looking for:
           </p>
           <div className="flex flex-col gap-2 text-sm">
-            <Link
-              href="/author/campaigns"
+            <button
+              onClick={() => router.push('/author/campaigns')}
               className="text-primary hover:underline"
             >
               My Campaigns
-            </Link>
-            <Link
-              href="/reader/assignments"
+            </button>
+            <button
+              onClick={() => router.push('/reader/assignments')}
               className="text-primary hover:underline"
             >
               My Assignments
-            </Link>
-            <Link
-              href="/admin/dashboard"
+            </button>
+            <button
+              onClick={() => router.push('/admin/dashboard')}
               className="text-primary hover:underline"
             >
               Admin Dashboard
-            </Link>
-            <Link href="/help" className="text-primary hover:underline">
+            </button>
+            <button
+              onClick={() => router.push('/help')}
+              className="text-primary hover:underline"
+            >
               Help Center
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -81,9 +84,12 @@ export default function NotFound() {
         <div className="mt-8 text-sm text-muted-foreground">
           <p>
             Still having trouble?{' '}
-            <Link href="/contact" className="text-primary hover:underline">
+            <button
+              onClick={() => router.push('/contact')}
+              className="text-primary hover:underline"
+            >
               Contact Support
-            </Link>
+            </button>
           </p>
         </div>
       </div>

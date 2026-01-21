@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import { useAdminControls } from '@/hooks/useAdminControls';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -441,10 +440,8 @@ export default function AdminAuthorsPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button type="button" variant="ghost" size="sm" asChild>
-                          <Link href={`/admin/authors/${author.id}/transactions`}>
-                            <History className="h-4 w-4" />
-                          </Link>
+                        <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/admin/authors/${author.id}/transactions`)}>
+                          <History className="h-4 w-4" />
                         </Button>
                         <Button
                           type="button"

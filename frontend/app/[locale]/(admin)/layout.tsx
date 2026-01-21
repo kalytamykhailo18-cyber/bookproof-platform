@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/lib/api/auth';
 import { Loader2 } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
   const { user, isLoadingProfile: isLoading } = useAuth();
 
   useEffect(() => {
@@ -18,15 +20,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       } else if (user.role !== UserRole.ADMIN) {
         // Authenticated but not an admin - redirect to appropriate dashboard
         if (user.role === UserRole.AFFILIATE) {
-          router.push('/affiliate/dashboard');
+          router.push(`/${locale}/affiliate/dashboard`);
         } else if (user.role === UserRole.AUTHOR) {
-          router.push('/author/dashboard');
+          router.push(`/${locale}/author`);
         } else {
-          router.push('/');
+          router.push(`/${locale}`);
         }
       }
     }
-  }, [user, isLoading, router]);
+  }, [user, isLoading, router, locale]);
 
   // Show loading state while checking authentication
   if (isLoading) {

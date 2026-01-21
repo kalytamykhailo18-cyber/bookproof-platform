@@ -16,7 +16,7 @@ import {
   RefreshCw,
   Gift,
 } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { useReaderStats } from '@/hooks/useReaders';
 import { useMyPayouts, useWalletTransactions } from '@/hooks/usePayouts';
@@ -63,6 +63,7 @@ const transactionColors: Record<WalletTransactionType, string> = {
 
 export default function WalletPage() {
   const t = useTranslations('payouts');
+  const router = useRouter();
   const { stats, isLoadingStats: statsLoading } = useReaderStats();
   const { data: payouts, isLoading: payoutsLoading } = useMyPayouts();
   const { data: transactions, isLoading: transactionsLoading } = useWalletTransactions();
@@ -95,12 +96,10 @@ export default function WalletPage() {
           <h1 className="mb-2 text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">Manage your earnings and request payouts</p>
         </div>
-        <Link href="/reader/wallet/payout">
-          <Button disabled={availableBalance < 50} className="animate-fade-left-fast">
-            <Plus className="mr-2 h-4 w-4" />
-            {t('requestPayout')}
-          </Button>
-        </Link>
+        <Button disabled={availableBalance < 50} className="animate-fade-left-fast" onClick={() => router.push('/reader/wallet/payout')}>
+          <Plus className="mr-2 h-4 w-4" />
+          {t('requestPayout')}
+        </Button>
       </div>
 
       {/* Stats Cards */}
@@ -220,12 +219,10 @@ export default function WalletPage() {
             <div className="animate-fade-up-fast py-12 text-center">
               <DollarSign className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <p className="mb-4 text-muted-foreground">{t('history.noPayouts')}</p>
-              <Link href="/reader/wallet/payout">
-                <Button disabled={availableBalance < 50}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  {t('requestPayout')}
-                </Button>
-              </Link>
+              <Button disabled={availableBalance < 50} onClick={() => router.push('/reader/wallet/payout')}>
+                <Plus className="mr-2 h-4 w-4" />
+                {t('requestPayout')}
+              </Button>
             </div>
           ) : (
             <div className="space-y-4">

@@ -1,12 +1,11 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 import { useCreateCoupon } from '@/hooks/useCoupons';
 import { CreateCouponDto, CouponType, CouponAppliesTo } from '@/lib/api/coupons';
 import { Button } from '@/components/ui/button';
@@ -78,6 +77,8 @@ type FormValues = z.infer<typeof formSchema>;
 export default function NewCouponPage() {
   const t = useTranslations('admin.coupons');
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
   const createMutation = useCreateCoupon();
 
   const form = useForm<FormValues>({
@@ -105,18 +106,16 @@ export default function NewCouponPage() {
     };
 
     await createMutation.mutateAsync(data);
-    router.push('/admin/coupons');
+    router.push(`/${locale}/admin/coupons`);
   };
 
   return (
     <div className="container mx-auto max-w-4xl space-y-6 py-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/admin/coupons">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
+        <Button variant="ghost" size="icon" onClick={() => router.push(`/${locale}/admin/coupons`)}>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
         <div>
           <h1 className="text-3xl font-bold">{t('new.title')}</h1>
           <p className="text-muted-foreground">{t('new.description')}</p>
@@ -461,11 +460,9 @@ export default function NewCouponPage() {
 
           {/* Actions */}
           <div className="flex justify-end gap-4">
-            <Link href="/admin/coupons">
-              <Button type="button" variant="outline">
-                {t('new.actions.cancel')}
-              </Button>
-            </Link>
+            <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/admin/coupons`)}>
+              {t('new.actions.cancel')}
+            </Button>
             <Button type="button" onClick={handleSubmit} disabled={createMutation.isPending}>
               {createMutation.isPending ? t('new.actions.creating') : t('new.actions.create')}
             </Button>

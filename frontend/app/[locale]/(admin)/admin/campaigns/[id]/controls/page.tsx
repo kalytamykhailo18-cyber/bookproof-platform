@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAdminControls } from '@/hooks/useAdminControls';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,10 +20,10 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Pause, Play, Settings, TrendingUp, AlertCircle, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 
 export default function CampaignControlsPage() {
   const params = useParams();
+  const router = useRouter();
   const bookId = params.id as string;
   const t = useTranslations('adminControls');
 
@@ -184,11 +184,9 @@ export default function CampaignControlsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button variant="ghost" asChild className="mb-4">
-          <Link href={`/admin/campaigns/${bookId}`}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('backToCampaign')}
-          </Link>
+        <Button variant="ghost" className="mb-4" onClick={() => router.push(`/admin/campaigns/${bookId}`)}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          {t('backToCampaign')}
         </Button>
         <div className="flex items-center justify-between">
           <div>

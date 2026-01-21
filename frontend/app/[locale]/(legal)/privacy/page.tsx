@@ -1,9 +1,6 @@
-import Link from 'next/link';
+'use client';
 
-export const metadata = {
-  title: 'Privacy Policy | BookProof',
-  description: 'BookProof Privacy Policy - How we collect, use, and protect your data',
-};
+import { useRouter } from 'next/navigation';
 
 /**
  * Privacy Policy Page
@@ -20,6 +17,8 @@ export const metadata = {
  * - GDPR compliance
  */
 export default function PrivacyPolicyPage() {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -326,15 +325,24 @@ export default function PrivacyPolicyPage() {
             <section className="mt-12 pt-8 border-t border-gray-200">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Related Documents</h2>
               <div className="flex flex-col gap-3">
-                <Link href="/terms" className="text-blue-600 hover:text-blue-800 hover:underline">
+                <button
+                  onClick={() => router.push('/terms')}
+                  className="text-blue-600 hover:text-blue-800 hover:underline text-left"
+                >
                   Terms of Service
-                </Link>
-                <Link href="/cookies" className="text-blue-600 hover:text-blue-800 hover:underline">
+                </button>
+                <button
+                  onClick={() => router.push('/cookies')}
+                  className="text-blue-600 hover:text-blue-800 hover:underline text-left"
+                >
                   Cookie Policy
-                </Link>
-                <Link href="/security" className="text-blue-600 hover:text-blue-800 hover:underline">
+                </button>
+                <button
+                  onClick={() => router.push('/security')}
+                  className="text-blue-600 hover:text-blue-800 hover:underline text-left"
+                >
                   Security Practices
-                </Link>
+                </button>
               </div>
             </section>
           </div>

@@ -46,11 +46,12 @@ import {
   XCircle,
 } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function CreditPurchasePage() {
   const _t = useTranslations('credits');
   void _t; // Will use later for translations
+  const router = useRouter();
   const { packageTiers, isLoadingPackages, purchaseCredits, isPurchasing } = useCredits();
   const { useTransactions } = useStripePayments();
   const { data: transactions, isLoading: transactionsLoading } = useTransactions();
@@ -275,9 +276,12 @@ export default function CreditPurchasePage() {
             <div className="rounded-md bg-primary/10 p-3 text-sm">
               <strong>Note:</strong> After purchasing credits, you&apos;ll be redirected to select
               which book to apply keyword research to, or you can{' '}
-              <Link href="/author/keyword-research/new" className="text-primary underline">
+              <span
+                className="cursor-pointer text-primary underline"
+                onClick={() => router.push('/author/keyword-research/new')}
+              >
                 order keyword research separately
-              </Link>
+              </span>
               .
             </div>
           )}

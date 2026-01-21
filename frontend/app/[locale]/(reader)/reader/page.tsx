@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import {
   BookOpen,
   Clock,
@@ -230,12 +229,10 @@ export default function ReaderDashboard() {
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <Button asChild className="animate-fade-left">
-          <Link href="/reader/campaigns">
-            <BookOpen className="mr-2 h-4 w-4" />
-            {t('browseBooks')}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
+        <Button className="animate-fade-left" onClick={() => router.push('/reader/campaigns')}>
+          <BookOpen className="mr-2 h-4 w-4" />
+          {t('browseBooks')}
+          <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </div>
 
@@ -348,11 +345,9 @@ export default function ReaderDashboard() {
             <BookOpen className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-muted-foreground" />
             <h3 className="mb-2 text-lg font-semibold">{t('empty.title')}</h3>
             <p className="mb-4 text-muted-foreground">{t('empty.description')}</p>
-            <Button asChild>
-              <Link href="/reader/campaigns">
-                {t('browseBooks')}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
+            <Button onClick={() => router.push('/reader/campaigns')}>
+              {t('browseBooks')}
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </CardContent>
         </Card>

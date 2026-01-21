@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 import { useCoupon, useUpdateCoupon } from '@/hooks/useCoupons';
 import { UpdateCouponDto, CouponType, CouponAppliesTo } from '@/lib/api/coupons';
 import { Button } from '@/components/ui/button';
@@ -151,11 +150,9 @@ export default function EditCouponPage() {
     <div className="container mx-auto max-w-4xl space-y-6 py-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href={`/admin/coupons/${id}`}>
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
+        <Button variant="ghost" size="icon" onClick={() => router.push(`/admin/coupons/${id}`)}>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
         <div>
           <h1 className="text-3xl font-bold">
             Edit Coupon: <span className="font-mono">{coupon.code}</span>
@@ -496,11 +493,9 @@ export default function EditCouponPage() {
 
           {/* Actions */}
           <div className="flex justify-end gap-4">
-            <Link href={`/admin/coupons/${id}`}>
-              <Button type="button" variant="outline">
-                {t('new.actions.cancel')}
-              </Button>
-            </Link>
+            <Button type="button" variant="outline" onClick={() => router.push(`/admin/coupons/${id}`)}>
+              {t('new.actions.cancel')}
+            </Button>
             <Button type="button" onClick={handleSubmit} disabled={updateMutation.isPending}>
               {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
             </Button>

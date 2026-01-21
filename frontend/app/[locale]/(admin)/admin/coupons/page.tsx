@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Plus, Edit, Trash2, Eye, TrendingUp, Filter, Tag, AlertCircle } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCoupons, useDeleteCoupon } from '@/hooks/useCoupons';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -45,6 +45,7 @@ import { formatDate } from '@/lib/utils';
 
 export default function CouponsPage() {
   const t = useTranslations('adminCoupons');
+  const router = useRouter();
   const [filterActive, setFilterActive] = useState<string>('all');
   const [filterAppliesTo, setFilterAppliesTo] = useState<string>('all');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -141,11 +142,9 @@ export default function CouponsPage() {
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <Button type="button" asChild className="animate-fade-left">
-          <Link href="/admin/coupons/new">
-            <Plus className="mr-2 h-4 w-4" />
-            {t('createNew')}
-          </Link>
+        <Button type="button" className="animate-fade-left" onClick={() => router.push('/admin/coupons/new')}>
+          <Plus className="mr-2 h-4 w-4" />
+          {t('createNew')}
         </Button>
       </div>
 
@@ -255,23 +254,17 @@ export default function CouponsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link href={`/admin/coupons/${coupon.id}`}>
-                              <Eye className="mr-2 h-4 w-4" />
-                              {t('actions.view')}
-                            </Link>
+                          <DropdownMenuItem onClick={() => router.push(`/admin/coupons/${coupon.id}`)}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            {t('actions.view')}
                           </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link href={`/admin/coupons/${coupon.id}/edit`}>
-                              <Edit className="mr-2 h-4 w-4" />
-                              {t('actions.edit')}
-                            </Link>
+                          <DropdownMenuItem onClick={() => router.push(`/admin/coupons/${coupon.id}/edit`)}>
+                            <Edit className="mr-2 h-4 w-4" />
+                            {t('actions.edit')}
                           </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link href={`/admin/coupons/${coupon.id}/usage`}>
-                              <TrendingUp className="mr-2 h-4 w-4" />
-                              {t('actions.viewUsage')}
-                            </Link>
+                          <DropdownMenuItem onClick={() => router.push(`/admin/coupons/${coupon.id}/usage`)}>
+                            <TrendingUp className="mr-2 h-4 w-4" />
+                            {t('actions.viewUsage')}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleDeleteClick(coupon.id)}

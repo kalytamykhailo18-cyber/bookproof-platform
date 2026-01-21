@@ -10,7 +10,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, BookOpen, Headphones, Clock, FileText, ExternalLink, CheckCircle, XCircle, AlertCircle, Users } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 
 /**
  * Public Campaign Landing Page - Milestone 2.2
@@ -186,9 +185,9 @@ export default function PublicCampaignPage() {
       <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href={`/${lang}`} className="text-xl font-bold">
+            <button onClick={() => router.push(`/${lang}`)} className="text-xl font-bold">
               BookProof
-            </Link>
+            </button>
 
             {campaign.availableLanguages.length > 1 && (
               <div className="flex gap-2">
@@ -392,15 +391,13 @@ export default function PublicCampaignPage() {
 
               {/* Amazon link */}
               <div className="flex items-center justify-center">
-                <a
-                  href={campaign.amazonLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+                <span
+                  className="inline-flex cursor-pointer items-center gap-2 text-sm text-primary hover:underline"
+                  onClick={() => window.open(campaign.amazonLink, '_blank', 'noopener,noreferrer')}
                 >
                   {t('viewOnAmazon')}
                   <ExternalLink className="h-4 w-4" />
-                </a>
+                </span>
               </div>
             </div>
           </div>

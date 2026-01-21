@@ -378,14 +378,12 @@ export default function AdminIssuesPage() {
 
                             {/* Amazon Link */}
                             <div>
-                              <a
-                                href={monitor.amazonReviewLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-blue-600 hover:underline"
+                              <span
+                                className="cursor-pointer text-sm text-blue-600 hover:underline"
+                                onClick={() => window.open(monitor.amazonReviewLink, '_blank', 'noopener,noreferrer')}
                               >
                                 Check on Amazon →
-                              </a>
+                              </span>
                             </div>
 
                             {/* Mark as Removed Button */}

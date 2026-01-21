@@ -20,7 +20,7 @@ import { BookOpen, Search, Filter, CheckCircle, ArrowLeft, Clock } from 'lucide-
 import { BookFormat } from '@/lib/api/campaigns';
 import { AvailableCampaign } from '@/lib/api/queue';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 function CampaignCard({
   campaign,
@@ -166,6 +166,7 @@ function CampaignCard({
 
 export default function CampaignsPage() {
   const t = useTranslations('reader.campaigns');
+  const router = useRouter();
   const { campaigns, isLoadingCampaigns } = useAvailableCampaigns();
   const { profile, isLoadingProfile } = useReaderProfile();
 
@@ -223,11 +224,14 @@ export default function CampaignsPage() {
       <div className="flex animate-fade-up items-center justify-between">
         <div>
           <div className="mb-2 flex items-center gap-4">
-            <Button variant="ghost" size="sm" asChild className="animate-fade-right">
-              <Link href="/reader">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                {t('backToDashboard')}
-              </Link>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="animate-fade-right"
+              onClick={() => router.push('/reader')}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              {t('backToDashboard')}
             </Button>
           </div>
           <h1 className="text-3xl font-bold">{t('title')}</h1>

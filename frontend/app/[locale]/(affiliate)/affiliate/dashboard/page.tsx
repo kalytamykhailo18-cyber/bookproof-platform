@@ -29,12 +29,13 @@ import {
   Link as LinkIcon,
   Wallet,
 } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import { CommissionStatus, PayoutRequestStatus } from '@/lib/api/affiliates';
 
 export default function AffiliateDashboardPage() {
   const t = useTranslations('affiliates.dashboard');
+  const router = useRouter();
   const { data: profile, isLoading: profileLoading } = useAffiliateProfile();
   const { data: stats, isLoading: statsLoading } = useAffiliateStats();
   const { data: commissions, isLoading: commissionsLoading } = useCommissions();
@@ -103,11 +104,14 @@ export default function AffiliateDashboardPage() {
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             {t('noProfile')}
-            <Link href="/affiliate/register">
-              <Button type="button" variant="link" className="ml-2 h-auto p-0">
-                {t('register')}
-              </Button>
-            </Link>
+            <Button
+              type="button"
+              variant="link"
+              className="ml-2 h-auto p-0"
+              onClick={() => router.push('/affiliate/register')}
+            >
+              {t('register')}
+            </Button>
           </AlertDescription>
         </Alert>
       </div>
@@ -140,18 +144,14 @@ export default function AffiliateDashboardPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href="/affiliate/referral-links">
-            <Button type="button">
-              <LinkIcon className="mr-2 h-4 w-4" />
-              {t('getReferralLink')}
-            </Button>
-          </Link>
-          <Link href="/affiliate/payouts">
-            <Button type="button" variant="outline">
-              <Wallet className="mr-2 h-4 w-4" />
-              {t('requestPayout')}
-            </Button>
-          </Link>
+          <Button type="button" onClick={() => router.push('/affiliate/referral-links')}>
+            <LinkIcon className="mr-2 h-4 w-4" />
+            {t('getReferralLink')}
+          </Button>
+          <Button type="button" variant="outline" onClick={() => router.push('/affiliate/payouts')}>
+            <Wallet className="mr-2 h-4 w-4" />
+            {t('requestPayout')}
+          </Button>
         </div>
       </div>
 
@@ -217,11 +217,14 @@ export default function AffiliateDashboardPage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>{t('recentCommissions.title')}</CardTitle>
-            <Link href="/affiliate/commissions">
-              <Button type="button" variant="outline" size="sm">
-                {t('viewAll')}
-              </Button>
-            </Link>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => router.push('/affiliate/commissions')}
+            >
+              {t('viewAll')}
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -270,11 +273,14 @@ export default function AffiliateDashboardPage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>{t('recentPayouts.title')}</CardTitle>
-            <Link href="/affiliate/payouts">
-              <Button type="button" variant="outline" size="sm">
-                {t('viewAll')}
-              </Button>
-            </Link>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => router.push('/affiliate/payouts')}
+            >
+              {t('viewAll')}
+            </Button>
           </div>
         </CardHeader>
         <CardContent>

@@ -301,15 +301,13 @@ export default function AdminValidationPage() {
                               {review.amazonProfile.profileName && (
                                 <span>{review.amazonProfile.profileName}</span>
                               )}
-                              <a
-                                href={review.amazonProfile.profileUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-1 text-blue-600 hover:underline"
+                              <span
+                                className="flex cursor-pointer items-center gap-1 text-blue-600 hover:underline"
+                                onClick={() => window.open(review.amazonProfile.profileUrl, '_blank', 'noopener,noreferrer')}
                               >
                                 {t('review.viewProfile')}
                                 <ExternalLink className="h-3 w-3" />
-                              </a>
+                              </span>
                               {review.amazonProfile.isVerified ? (
                                 <Badge
                                   variant="outline"
@@ -350,15 +348,13 @@ export default function AdminValidationPage() {
 
                         {/* Amazon Link */}
                         <div>
-                          <a
-                            href={review.amazonReviewLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                          <span
+                            className="flex cursor-pointer items-center gap-1 text-sm text-blue-600 hover:underline"
+                            onClick={() => window.open(review.amazonReviewLink, '_blank', 'noopener,noreferrer')}
                           >
                             {t('review.viewOnAmazon')}
                             <ExternalLink className="h-3 w-3" />
-                          </a>
+                          </span>
                         </div>
 
                         {/* Submitted Time */}

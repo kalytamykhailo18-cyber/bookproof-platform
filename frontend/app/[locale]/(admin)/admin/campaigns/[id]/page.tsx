@@ -45,7 +45,6 @@ import {
   ExternalLink,
   RefreshCw,
 } from 'lucide-react';
-import Link from 'next/link';
 
 export default function AdminCampaignDetailPage() {
   const params = useParams();
@@ -167,8 +166,8 @@ export default function AdminCampaignDetailPage() {
             <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="text-lg font-semibold">{t('notFound.title')}</h3>
             <p className="text-muted-foreground">{t('notFound.description')}</p>
-            <Button asChild className="mt-4">
-              <Link href="/admin/campaigns">{t('backToCampaigns')}</Link>
+            <Button className="mt-4" onClick={() => router.push('/admin/campaigns')}>
+              {t('backToCampaigns')}
             </Button>
           </CardContent>
         </Card>
@@ -180,11 +179,9 @@ export default function AdminCampaignDetailPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button variant="ghost" asChild className="mb-4">
-          <Link href="/admin/campaigns">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('backToCampaigns')}
-          </Link>
+        <Button variant="ghost" className="mb-4" onClick={() => router.push('/admin/campaigns')}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          {t('backToCampaigns')}
         </Button>
         <div className="flex items-center justify-between">
           <div>
@@ -284,11 +281,9 @@ export default function AdminCampaignDetailPage() {
                 </DialogContent>
               </Dialog>
             ) : null}
-            <Button variant="outline" asChild>
-              <Link href={`/admin/campaigns/${campaignId}/controls`}>
-                <Settings className="mr-2 h-4 w-4" />
-                {t('actions.controls')}
-              </Link>
+            <Button variant="outline" onClick={() => router.push(`/admin/campaigns/${campaignId}/controls`)}>
+              <Settings className="mr-2 h-4 w-4" />
+              {t('actions.controls')}
             </Button>
           </div>
         </div>

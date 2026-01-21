@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAffiliatesForAdmin } from '@/hooks/useAffiliates';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -42,6 +42,7 @@ import { formatDate } from '@/lib/utils';
 
 export default function AdminAffiliatesPage() {
   const t = useTranslations('adminAffiliates');
+  const router = useRouter();
   const [approvalFilter, setApprovalFilter] = useState<string>('all');
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -305,10 +306,8 @@ export default function AdminAffiliatesPage() {
                     </TableCell>
                     <TableCell>{formatDate(affiliate.createdAt)}</TableCell>
                     <TableCell className="text-right">
-                      <Button type="button" variant="ghost" size="sm" asChild>
-                        <Link href={`/admin/affiliates/${affiliate.id}`}>
-                          <Eye className="h-4 w-4" />
-                        </Link>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/admin/affiliates/${affiliate.id}`)}>
+                        <Eye className="h-4 w-4" />
                       </Button>
                     </TableCell>
                   </TableRow>

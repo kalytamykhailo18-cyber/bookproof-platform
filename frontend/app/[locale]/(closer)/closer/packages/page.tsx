@@ -44,13 +44,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Plus, MoreHorizontal, Send, Trash2, Eye, Copy, ExternalLink } from 'lucide-react';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { CustomPackageStatus } from '@/lib/api/closer';
 import { toast } from 'sonner';
 
 export default function PackagesPage() {
   const t = useTranslations('closer');
+  const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
   const [statusFilter, setStatusFilter] = useState<CustomPackageStatus | 'ALL'>('ALL');
@@ -158,12 +158,10 @@ export default function PackagesPage() {
           <h1 className="text-3xl font-bold">{t('packages.title')}</h1>
           <p className="text-muted-foreground">{t('packages.description')}</p>
         </div>
-        <Link href={`/${locale}/closer/packages/new`}>
-          <Button type="button">
-            <Plus className="mr-2 h-4 w-4" />
-            {t('packages.createPackage')}
-          </Button>
-        </Link>
+        <Button type="button" onClick={() => router.push(`/${locale}/closer/packages/new`)}>
+          <Plus className="mr-2 h-4 w-4" />
+          {t('packages.createPackage')}
+        </Button>
       </div>
 
       {/* Stats Cards */}
@@ -317,12 +315,10 @@ export default function PackagesPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <Link href={`/${locale}/closer/packages/${pkg.id}`}>
-                            <DropdownMenuItem>
-                              <Eye className="mr-2 h-4 w-4" />
-                              {t('packages.viewDetails')}
-                            </DropdownMenuItem>
-                          </Link>
+                          <DropdownMenuItem onClick={() => router.push(`/${locale}/closer/packages/${pkg.id}`)}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            {t('packages.viewDetails')}
+                          </DropdownMenuItem>
                           {pkg.paymentLink && (
                             <>
                               <DropdownMenuItem onClick={() => copyPaymentLink(pkg.paymentLink!)}>
@@ -370,12 +366,10 @@ export default function PackagesPage() {
           ) : (
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <p className="text-muted-foreground">{t('packages.noPackagesFound')}</p>
-              <Link href={`/${locale}/closer/packages/new`}>
-                <Button type="button" variant="outline" className="mt-4">
-                  <Plus className="mr-2 h-4 w-4" />
-                  {t('packages.createFirstPackage')}
-                </Button>
-              </Link>
+              <Button type="button" variant="outline" className="mt-4" onClick={() => router.push(`/${locale}/closer/packages/new`)}>
+                <Plus className="mr-2 h-4 w-4" />
+                {t('packages.createFirstPackage')}
+              </Button>
             </div>
           )}
         </CardContent>

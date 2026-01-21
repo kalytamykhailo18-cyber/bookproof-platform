@@ -12,7 +12,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { AlertCircle, CheckCircle, ArrowLeft, Star, Send } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -96,8 +95,8 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
           <CardContent className="py-16 text-center">
             <AlertCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="mb-2 text-lg font-semibold">{t('notFound.title')}</h3>
-            <Button asChild className="mt-4">
-              <Link href="/reader">{t('backToDashboard')}</Link>
+            <Button className="mt-4" onClick={() => router.push('/reader')}>
+              {t('backToDashboard')}
             </Button>
           </CardContent>
         </Card>
@@ -109,11 +108,9 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
   if (review) {
     return (
       <div className="container mx-auto space-y-6 p-6">
-        <Button variant="ghost" asChild className="animate-fade-right">
-          <Link href={`/reader/assignments/${assignmentId}`}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('backToAssignment')}
-          </Link>
+        <Button variant="ghost" className="animate-fade-right" onClick={() => router.push(`/reader/assignments/${assignmentId}`)}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          {t('backToAssignment')}
         </Button>
 
         <Card className="animate-zoom-in border-green-300 bg-green-50 dark:bg-green-950">
@@ -126,11 +123,11 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
               {t('success.description')}
             </p>
             <div className="flex justify-center gap-2">
-              <Button asChild>
-                <Link href="/reader">{t('backToDashboard')}</Link>
+              <Button onClick={() => router.push('/reader')}>
+                {t('backToDashboard')}
               </Button>
-              <Button variant="outline" asChild>
-                <Link href="/reader/profile">{t('viewWallet')}</Link>
+              <Button variant="outline" onClick={() => router.push('/reader/profile')}>
+                {t('viewWallet')}
               </Button>
             </div>
           </CardContent>
@@ -143,11 +140,9 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button variant="ghost" asChild className="mb-4">
-          <Link href={`/reader/assignments/${assignmentId}`}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('backToAssignment')}
-          </Link>
+        <Button variant="ghost" className="mb-4" onClick={() => router.push(`/reader/assignments/${assignmentId}`)}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          {t('backToAssignment')}
         </Button>
         <h1 className="text-3xl font-bold">{t('title')}</h1>
         <p className="text-muted-foreground">{t('subtitle', { title: assignment.book.title })}</p>

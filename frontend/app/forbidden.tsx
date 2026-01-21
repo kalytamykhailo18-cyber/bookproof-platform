@@ -1,4 +1,6 @@
-import Link from 'next/link';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ShieldX, Home, ArrowLeft } from 'lucide-react';
 
@@ -7,6 +9,8 @@ import { ShieldX, Home, ArrowLeft } from 'lucide-react';
  * Section 16.1: Clear message with link to dashboard
  */
 export default function Forbidden() {
+  const router = useRouter();
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted px-4">
       <div className="mx-auto max-w-md text-center">
@@ -32,24 +36,19 @@ export default function Forbidden() {
 
         {/* Navigation Options */}
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-          <Button asChild size="lg" className="gap-2">
-            <Link href="/">
-              <Home className="h-4 w-4" />
-              Go to Dashboard
-            </Link>
+          <Button size="lg" className="gap-2" onClick={() => router.push('/')}>
+            <Home className="h-4 w-4" />
+            Go to Dashboard
           </Button>
 
           <Button
-            asChild
             variant="outline"
             size="lg"
             className="gap-2"
-            onClick={() => window.history.back()}
+            onClick={() => router.back()}
           >
-            <button type="button">
-              <ArrowLeft className="h-4 w-4" />
-              Go Back
-            </button>
+            <ArrowLeft className="h-4 w-4" />
+            Go Back
           </Button>
         </div>
 
@@ -72,9 +71,12 @@ export default function Forbidden() {
         <div className="mt-8 text-sm text-muted-foreground">
           <p>
             Think this is a mistake?{' '}
-            <Link href="/contact" className="text-primary hover:underline">
+            <button
+              onClick={() => router.push('/contact')}
+              className="text-primary hover:underline"
+            >
               Contact Support
-            </Link>
+            </button>
           </p>
         </div>
       </div>

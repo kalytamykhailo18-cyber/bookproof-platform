@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -92,6 +91,7 @@ type CommissionRateFormData = z.infer<typeof commissionRateSchema>;
 export default function AdminAffiliateDetailsPage() {
   const t = useTranslations('adminAffiliateDetails');
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
 
   const [approveDialogOpen, setApproveDialogOpen] = useState(false);
@@ -215,11 +215,9 @@ export default function AdminAffiliateDetailsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" asChild>
-          <Link href="/admin/affiliates">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('backToAffiliates')}
-          </Link>
+        <Button type="button" variant="ghost" size="sm" onClick={() => router.push('/admin/affiliates')}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          {t('backToAffiliates')}
         </Button>
       </div>
 
@@ -520,15 +518,13 @@ export default function AdminAffiliateDetailsPage() {
               <p className="text-sm font-medium text-muted-foreground">
                 {t('application.websiteUrl')}
               </p>
-              <a
-                href={affiliate.websiteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1 text-blue-600 hover:underline"
+              <span
+                className="flex cursor-pointer items-center gap-1 text-blue-600 hover:underline"
+                onClick={() => window.open(affiliate.websiteUrl, '_blank', 'noopener,noreferrer')}
               >
                 {affiliate.websiteUrl}
                 <LinkIcon className="h-3 w-3" />
-              </a>
+              </span>
             </div>
           )}
 

@@ -41,10 +41,15 @@ class ApiClient {
         if (error.response?.status === 401) {
           this.clearToken();
           if (typeof window !== 'undefined') {
-            // Preserve the current URL as the return URL
-            const currentPath = window.location.pathname + window.location.search;
-            const returnUrl = encodeURIComponent(currentPath);
-            window.location.href = `/login?returnUrl=${returnUrl}`;
+            const currentPath = window.location.pathname;
+            // Don't redirect if already on auth pages to prevent loops
+            const authPages = ['/login', '/register', '/forgot-password', '/reset-password', '/verify-email'];
+            const isAuthPage = authPages.some(page => currentPath.endsWith(page));
+            if (!isAuthPage) {
+              const fullPath = currentPath + window.location.search;
+              const returnUrl = encodeURIComponent(fullPath);
+              window.location.href = `/login?returnUrl=${returnUrl}`;
+            }
           }
         }
         return Promise.reject(error);

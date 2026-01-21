@@ -8,7 +8,6 @@ import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import Link from 'next/link';
 import { toast } from 'sonner';
 import {
   Card,
@@ -126,9 +125,12 @@ export default function LoginPage() {
               {t('rememberMe')}
             </Label>
           </div>
-          <Link href="/forgot-password" className="text-sm text-primary hover:underline">
+          <span
+            className="cursor-pointer text-sm text-primary hover:underline"
+            onClick={() => router.push('/forgot-password')}
+          >
             {t('forgotPassword')}
-          </Link>
+          </span>
         </div>
       </CardContent>
 
@@ -139,9 +141,12 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-muted-foreground">
           {t('noAccount')}{' '}
-          <Link href="/register" className="font-medium text-primary hover:underline">
+          <span
+            className="cursor-pointer font-medium text-primary hover:underline"
+            onClick={() => router.push('/register')}
+          >
             {t('signUp')}
-          </Link>
+          </span>
         </p>
       </CardFooter>
     </Card>

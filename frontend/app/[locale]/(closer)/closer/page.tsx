@@ -28,11 +28,11 @@ import {
   ArrowDownRight,
   Plus,
 } from 'lucide-react';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 export default function CloserDashboardPage() {
   const t = useTranslations('closer');
+  const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
   const { data: stats, isLoading: statsLoading } = useCloserDashboardStats();
@@ -79,12 +79,10 @@ export default function CloserDashboardPage() {
           <h1 className="text-3xl font-bold">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground">{t('dashboard.description')}</p>
         </div>
-        <Link href={`/${locale}/closer/packages/new`}>
-          <Button type="button">
-            <Plus className="mr-2 h-4 w-4" />
-            {t('dashboard.createPackage')}
-          </Button>
-        </Link>
+        <Button type="button" onClick={() => router.push(`/${locale}/closer/packages/new`)}>
+          <Plus className="mr-2 h-4 w-4" />
+          {t('dashboard.createPackage')}
+        </Button>
       </div>
 
       {/* Stats Cards */}
@@ -247,11 +245,9 @@ export default function CloserDashboardPage() {
             <CardTitle>{t('dashboard.recentSales')}</CardTitle>
             <CardDescription>{t('dashboard.latestCompletedSales')}</CardDescription>
           </div>
-          <Link href={`/${locale}/closer/sales`}>
-            <Button type="button" variant="outline" size="sm">
-              {t('dashboard.viewAll')}
-            </Button>
-          </Link>
+          <Button type="button" variant="outline" size="sm" onClick={() => router.push(`/${locale}/closer/sales`)}>
+            {t('dashboard.viewAll')}
+          </Button>
         </CardHeader>
         <CardContent>
           {salesLoading ? (

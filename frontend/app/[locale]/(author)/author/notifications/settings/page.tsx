@@ -14,7 +14,7 @@ import { Switch } from '@/components/ui/switch';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2, ArrowLeft, Save } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { NotificationType } from '@/lib/api/notifications';
 
 interface SettingsFormData {
@@ -48,6 +48,7 @@ const notificationTypes = [
 
 export default function NotificationSettingsPage() {
   const t = useTranslations('notifications.settings');
+  const router = useRouter();
   const { data: settings, isLoading } = useNotificationSettings();
   const { mutate: updateSettings, isPending } = useUpdateNotificationSettings();
 
@@ -102,12 +103,15 @@ export default function NotificationSettingsPage() {
     <div className="container mx-auto px-4 py-8 max-w-3xl">
       {/* Header */}
       <div className="mb-8 animate-fade-up">
-        <Link href="/author/notifications">
-          <Button variant="ghost" size="sm" className="mb-4">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Notifications
-          </Button>
-        </Link>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="mb-4"
+          onClick={() => router.push('/author/notifications')}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Notifications
+        </Button>
         <h1 className="text-3xl font-bold">Notification Settings</h1>
         <p className="mt-2 text-muted-foreground">
           Manage how you receive notifications and which types you want to get

@@ -18,12 +18,13 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Plus, Download, Eye, FileText } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import { KeywordResearchStatus } from '@/lib/api/keywords';
 
 export default function KeywordResearchListPage() {
   const t = useTranslations('keyword-research');
+  const router = useRouter();
   const { data: researches, isLoading } = useKeywordResearchForAuthor();
   const { data: pricing } = usePublicKeywordResearchPricing();
   const downloadMutation = useDownloadKeywordResearchPdf();
@@ -59,12 +60,10 @@ export default function KeywordResearchListPage() {
           <h1 className="text-3xl font-bold">{t('list.title')}</h1>
           <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <Link href="/author/keyword-research/new">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            {t('createNew')}
-          </Button>
-        </Link>
+        <Button onClick={() => router.push('/author/keyword-research/new')}>
+          <Plus className="mr-2 h-4 w-4" />
+          {t('createNew')}
+        </Button>
       </div>
 
       {/* Pricing Info */}
@@ -99,12 +98,10 @@ export default function KeywordResearchListPage() {
               <FileText className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="mb-2 text-lg font-semibold">{t('list.empty')}</h3>
               <p className="mb-6 text-muted-foreground">{t('list.emptyDescription')}</p>
-              <Link href="/author/keyword-research/new">
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  {t('createNew')}
-                </Button>
-              </Link>
+              <Button onClick={() => router.push('/author/keyword-research/new')}>
+                <Plus className="mr-2 h-4 w-4" />
+                {t('createNew')}
+              </Button>
             </div>
           ) : (
             <Table>
@@ -152,12 +149,14 @@ export default function KeywordResearchListPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Link href={`/author/keyword-research/${research.id}`}>
-                          <Button variant="outline" size="sm">
-                            <Eye className="mr-1 h-4 w-4" />
-                            {t('list.actions.view')}
-                          </Button>
-                        </Link>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => router.push(`/author/keyword-research/${research.id}`)}
+                        >
+                          <Eye className="mr-1 h-4 w-4" />
+                          {t('list.actions.view')}
+                        </Button>
                         {research.status === KeywordResearchStatus.COMPLETED && research.pdfUrl && (
                           <Button
                             variant="outline"

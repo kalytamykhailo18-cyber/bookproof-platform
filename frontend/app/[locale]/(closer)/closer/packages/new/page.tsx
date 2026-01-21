@@ -17,7 +17,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ArrowLeft, Save } from 'lucide-react';
-import Link from 'next/link';
 
 export default function CreatePackagePage() {
   const t = useTranslations('closer');
@@ -73,11 +72,9 @@ export default function CreatePackagePage() {
     <div className="container mx-auto max-w-3xl space-y-6 px-4 py-8">
       {/* Header */}
       <div className="flex animate-fade-up items-center gap-4">
-        <Link href={`/${locale}/closer/packages`}>
-          <Button type="button" variant="ghost" size="icon">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <Button type="button" variant="ghost" size="icon" onClick={() => router.push(`/${locale}/closer/packages`)}>
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
         <div>
           <h1 className="text-3xl font-bold">{t('createPackage.title')}</h1>
           <p className="text-muted-foreground">{t('createPackage.description')}</p>
@@ -253,11 +250,9 @@ export default function CreatePackagePage() {
 
           {/* Actions */}
           <div className="flex animate-fade-up justify-end gap-4">
-            <Link href={`/${locale}/closer/packages`}>
-              <Button type="button" variant="outline">
-                {t('createPackage.cancel')}
-              </Button>
-            </Link>
+            <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/closer/packages`)}>
+              {t('createPackage.cancel')}
+            </Button>
             <Button type="button" onClick={handleFormSubmit} disabled={createPackage.isPending}>
               <Save className="mr-2 h-4 w-4" />
               {createPackage.isPending ? t('createPackage.creating') : t('createPackage.create')}
