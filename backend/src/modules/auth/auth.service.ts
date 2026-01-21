@@ -314,7 +314,7 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto, request?: Request): Promise<AuthResponseDto> {
-    const { email, password, captchaToken } = loginDto;
+    const { email, password, captchaToken, rememberMe } = loginDto;
 
     // Verify CAPTCHA for bot protection
     const clientIp = request?.ip || request?.headers?.['x-forwarded-for']?.toString().split(',')[0];
@@ -363,10 +363,11 @@ export class AuthService {
     // Clear failed attempts on successful login
     await this.clearFailedAttempts(email);
 
-    this.logger.log(`User logged in: ${email}`);
+    this.logger.log(`User logged in: ${email}${rememberMe ? ' (remember me enabled)' : ''}`);
 
     // Generate JWT token with tokenVersion for session invalidation support
-    const accessToken = this.generateToken(user.id, user.email, user.role, user.tokenVersion || 0);
+    // Per requirements.md Section 1.1: "Remember Me" extends session to 7 days
+    const accessToken = this.generateToken(user.id, user.email, user.role, user.tokenVersion || 0, rememberMe);
 
     return {
       accessToken,
@@ -538,8 +539,27 @@ export class AuthService {
     return user;
   }
 
-  private generateToken(userId: string, email: string, role: UserRole, tokenVersion: number = 0): string {
+  /**
+   * Generate JWT token with configurable expiration
+   *
+   * Per requirements.md Section 1.1:
+   * - Default session: 24 hours
+   * - "Remember Me" enabled: 7 days
+   */
+  private generateToken(
+    userId: string,
+    email: string,
+    role: UserRole,
+    tokenVersion: number = 0,
+    rememberMe: boolean = false,
+  ): string {
     const payload = { sub: userId, email, role, tokenVersion };
+
+    // Use 7 days for "remember me", otherwise use default (24h from config)
+    if (rememberMe) {
+      return this.jwtService.sign(payload, { expiresIn: '7d' });
+    }
+
     return this.jwtService.sign(payload);
   }
 
