@@ -208,7 +208,7 @@ export default function CampaignDetailPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p>{t('notFound')}</p>
-            <Button onClick={() => router.push(`/${locale}/author`)} className="mt-4">
+            <Button type="button" onClick={() => router.push(`/${locale}/author`)} className="mt-4">
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -227,7 +227,7 @@ export default function CampaignDetailPage() {
     <div className="container mx-auto max-w-6xl px-4 py-8">
       {/* Header */}
       <div className="mb-8 animate-fade-up">
-        <Button variant="ghost" onClick={() => router.push(`/${locale}/author`)} className="mb-4">
+        <Button type="button" variant="ghost" onClick={() => router.push(`/${locale}/author`)} className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToDashboard')}
         </Button>
@@ -251,6 +251,7 @@ export default function CampaignDetailPage() {
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>{t('progress.title')}</CardTitle>
                 <Button
+                  type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
@@ -350,6 +351,7 @@ export default function CampaignDetailPage() {
                         </div>
                       </div>
                       <Button
+                        type="button"
                         variant="outline"
                         size="sm"
                         onClick={() => ebookInputRef.current?.click()}
@@ -397,6 +399,7 @@ export default function CampaignDetailPage() {
                         </div>
                       </div>
                       <Button
+                        type="button"
                         variant="outline"
                         size="sm"
                         onClick={() => audiobookInputRef.current?.click()}
@@ -448,6 +451,7 @@ export default function CampaignDetailPage() {
                       </div>
                     </div>
                     <Button
+                      type="button"
                       variant="outline"
                       size="sm"
                       onClick={() => coverInputRef.current?.click()}
@@ -490,6 +494,7 @@ export default function CampaignDetailPage() {
                       </div>
                     </div>
                     <Button
+                      type="button"
                       variant="outline"
                       size="sm"
                       onClick={() => synopsisInputRef.current?.click()}
@@ -631,6 +636,7 @@ export default function CampaignDetailPage() {
                       </Badge>
                       <Input value={url} readOnly className="font-mono text-sm" />
                       <Button
+                        type="button"
                         size="sm"
                         variant="outline"
                         onClick={() => {
@@ -641,6 +647,7 @@ export default function CampaignDetailPage() {
                         <Copy className="h-4 w-4" />
                       </Button>
                       <Button
+                        type="button"
                         size="sm"
                         variant="outline"
                         onClick={() => window.open(url, '_blank')}
@@ -676,6 +683,7 @@ export default function CampaignDetailPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button
+                  type="button"
                   className="w-full"
                   disabled={!canActivate()}
                   onClick={() => {
@@ -688,6 +696,7 @@ export default function CampaignDetailPage() {
                 </Button>
 
                 <Button
+                  type="button"
                   variant="outline"
                   className="w-full"
                   onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/edit`)}
@@ -697,6 +706,7 @@ export default function CampaignDetailPage() {
                 </Button>
 
                 <Button
+                  type="button"
                   variant="destructive"
                   className="w-full"
                   onClick={() => setShowDeleteDialog(true)}
@@ -717,6 +727,7 @@ export default function CampaignDetailPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button
+                  type="button"
                   variant="outline"
                   className="w-full"
                   onClick={() => {
@@ -735,6 +746,7 @@ export default function CampaignDetailPage() {
                 </Button>
 
                 <Button
+                  type="button"
                   variant="outline"
                   className="w-full"
                   onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
@@ -743,7 +755,7 @@ export default function CampaignDetailPage() {
                   {t('actions.viewAnalytics') || 'View Analytics'}
                 </Button>
 
-                <Button variant="outline" className="w-full" onClick={() => window.print()}>
+                <Button type="button" variant="outline" className="w-full" onClick={() => window.print()}>
                   <Download className="mr-2 h-4 w-4" />
                   {t('actions.downloadReport') || 'Download Report'}
                 </Button>
@@ -759,6 +771,7 @@ export default function CampaignDetailPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button
+                  type="button"
                   className="w-full"
                   onClick={() => {
                     resumeCampaign(campaign.id, {
@@ -776,6 +789,7 @@ export default function CampaignDetailPage() {
                 </Button>
 
                 <Button
+                  type="button"
                   variant="outline"
                   className="w-full"
                   onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
@@ -795,6 +809,7 @@ export default function CampaignDetailPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button
+                  type="button"
                   variant="outline"
                   className="w-full"
                   onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
@@ -803,7 +818,7 @@ export default function CampaignDetailPage() {
                   {t('actions.viewFinalReport') || 'View Final Report'}
                 </Button>
 
-                <Button variant="outline" className="w-full" onClick={() => window.print()}>
+                <Button type="button" variant="outline" className="w-full" onClick={() => window.print()}>
                   <Download className="mr-2 h-4 w-4" />
                   {t('actions.downloadReport') || 'Download Report'}
                 </Button>
@@ -876,13 +891,14 @@ export default function CampaignDetailPage() {
 
           <DialogFooter>
             <Button
+              type="button"
               variant="outline"
               onClick={() => setShowActivateDialog(false)}
               disabled={isActivating}
             >
               {t('activate.cancel')}
             </Button>
-            <Button onClick={handleActivate} disabled={isActivating}>
+            <Button type="button" onClick={handleActivate} disabled={isActivating}>
               {isActivating ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -906,13 +922,14 @@ export default function CampaignDetailPage() {
 
           <DialogFooter>
             <Button
+              type="button"
               variant="outline"
               onClick={() => setShowDeleteDialog(false)}
               disabled={isDeleting}
             >
               {t('delete.cancel')}
             </Button>
-            <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+            <Button type="button" variant="destructive" onClick={handleDelete} disabled={isDeleting}>
               {isDeleting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

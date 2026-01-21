@@ -92,7 +92,8 @@ const campaignSchema = z.object({
   genre: z.string().min(1, 'Genre is required').max(100),
   category: z.string().min(1, 'Category is required').max(100),
   availableFormats: z.nativeEnum(BookFormat),
-  creditsToAllocate: z.number().min(10, 'Minimum 10 credits required'),
+  creditsToAllocate: z.number().min(25, 'Minimum 25 credits required'),
+  readingInstructions: z.string().max(2000, 'Reading instructions must not exceed 2000 characters').optional(),
   ebookCredits: z.number().min(0).optional(),
   audiobookCredits: z.number().min(0).optional(),
   amazonCouponCode: z.string().max(50).optional(),
@@ -159,8 +160,8 @@ export default function NewCampaignPage() {
     defaultValues: {
       language: Language.EN,
       availableFormats: BookFormat.EBOOK,
-      creditsToAllocate: 10,
-      ebookCredits: 10,
+      creditsToAllocate: 25,
+      ebookCredits: 25,
       audiobookCredits: 0,
       landingPageEnabled: false,
       landingPageLanguages: [],
@@ -183,7 +184,7 @@ export default function NewCampaignPage() {
   // Calculate estimated duration
   const estimatedWeeks = useMemo(() => {
     const target = creditsToAllocate;
-    if (target < 10) return 0;
+    if (target < 25) return 0;
     let reviewsPerWeek: number;
     if (target <= 25) reviewsPerWeek = Math.ceil(target / 5);
     else if (target <= 50) reviewsPerWeek = Math.ceil(target / 6);
@@ -304,6 +305,7 @@ export default function NewCampaignPage() {
       wordCount: data.wordCount,
       seriesName: data.seriesName,
       seriesNumber: data.seriesNumber,
+      readingInstructions: data.readingInstructions || undefined,
       // Landing page fields - Milestone 2.2
       landingPageEnabled: data.landingPageEnabled,
       landingPageLanguages: data.landingPageLanguages,
@@ -345,7 +347,7 @@ export default function NewCampaignPage() {
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Header */}
       <div className="mb-8 animate-fade-up">
-        <Button variant="ghost" onClick={() => router.back()} className="mb-4">
+        <Button type="button" variant="ghost" onClick={() => router.back()} className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('back') || 'Back'}
         </Button>
@@ -708,6 +710,30 @@ export default function NewCampaignPage() {
                       'If you have a coupon code for readers to get the book at a discount'}
                   </p>
                 </div>
+
+                {/* Reading Instructions */}
+                <div className="animate-zoom-in">
+                  <Label htmlFor="readingInstructions">
+                    {t('files.readingInstructions') || 'Reading Instructions'} ({t('optional') || 'Optional'})
+                  </Label>
+                  <Textarea
+                    id="readingInstructions"
+                    {...register('readingInstructions')}
+                    placeholder={
+                      t('files.readingInstructionsPlaceholder') ||
+                      'Special instructions for readers (e.g., specific chapters to focus on, reading order for series, etc.)'
+                    }
+                    rows={4}
+                    className="resize-none"
+                  />
+                  {errors.readingInstructions && (
+                    <p className="mt-1 text-sm text-red-500">{errors.readingInstructions.message}</p>
+                  )}
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {watch('readingInstructions')?.length || 0} / 2000{' '}
+                    {t('bookInfo.characters') || 'characters'}
+                  </p>
+                </div>
               </div>
             )}
 
@@ -946,7 +972,7 @@ export default function NewCampaignPage() {
                   <Input
                     id="creditsToAllocate"
                     type="number"
-                    min={10}
+                    min={25}
                     max={availableCredits}
                     value={creditsToAllocate}
                     onChange={(e) => handleCreditChange(parseInt(e.target.value) || 0)}
@@ -955,7 +981,7 @@ export default function NewCampaignPage() {
                     <p className="mt-1 text-sm text-red-500">{errors.creditsToAllocate.message}</p>
                   )}
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {t('credits.minimumRequired') || 'Minimum 10 credits required'} •{' '}
+                    {t('credits.minimumRequired') || 'Minimum 25 credits required'} •{' '}
                     {selectedFormat === BookFormat.AUDIOBOOK
                       ? '2 credits = 1 audiobook review'
                       : selectedFormat === BookFormat.BOTH
@@ -1034,7 +1060,7 @@ export default function NewCampaignPage() {
                 )}
 
                 {/* Estimated Duration */}
-                {creditsToAllocate >= 10 && (
+                {creditsToAllocate >= 25 && (
                   <div className="animate-fade-up-slow rounded-lg bg-primary/10 p-4">
                     <h4 className="font-medium">
                       {t('credits.estimatedDuration') || 'Estimated Campaign Duration'}

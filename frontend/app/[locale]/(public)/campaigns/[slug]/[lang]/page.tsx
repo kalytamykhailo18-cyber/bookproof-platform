@@ -99,7 +99,7 @@ export default function PublicCampaignPage() {
               <p className="text-muted-foreground mb-4">
                 {error || t('notFound.message')}
               </p>
-              <Button onClick={() => router.push(`/${lang}`)}>
+              <Button type="button" onClick={() => router.push(`/${lang}`)}>
                 {t('notFound.goHome')}
               </Button>
             </div>
@@ -193,6 +193,7 @@ export default function PublicCampaignPage() {
               <div className="flex gap-2">
                 {campaign.availableLanguages.map((l) => (
                   <Button
+                    type="button"
                     key={l}
                     variant={l === campaign.viewingLanguage ? 'default' : 'outline'}
                     size="sm"
@@ -236,6 +237,7 @@ export default function PublicCampaignPage() {
 
               {/* CTA Button */}
               <Button
+                type="button"
                 size="lg"
                 className="w-full max-w-[300px]"
                 onClick={handleGetFreeBook}
@@ -409,8 +411,15 @@ export default function PublicCampaignPage() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="mb-4 text-2xl font-semibold">{t('footer.title')}</h2>
           <p className="mb-6 text-muted-foreground">{t('footer.subtitle')}</p>
-          <Button size="lg" onClick={handleGetFreeBook}>
-            {isAuthenticated ? t('cta.apply') : t('cta.getFreeBook')}
+          <Button
+            type="button"
+            size="lg"
+            onClick={handleGetFreeBook}
+            disabled={!campaign.acceptingRegistrations}
+          >
+            {campaign.acceptingRegistrations
+              ? (isAuthenticated ? t('cta.apply') : t('cta.getFreeBook'))
+              : 'Campaign Full'}
           </Button>
         </div>
       </div>
