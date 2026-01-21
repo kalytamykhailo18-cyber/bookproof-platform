@@ -27,6 +27,10 @@ import {
   BarChart3,
   Calendar,
   Download,
+  Copy,
+  ExternalLink,
+  Globe,
+  Eye,
 } from 'lucide-react';
 import Link from 'next/link';
 import { CampaignStatus, BookFormat } from '@/lib/api/campaigns';
@@ -541,6 +545,122 @@ export default function CampaignDetailPage() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Public Landing Pages - Milestone 2.2 */}
+          {campaign.landingPageEnabled && campaign.publicUrls && (
+            <Card className="animate-fade-up-very-slow">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Globe className="h-5 w-5" />
+                      Public Landing Pages
+                    </CardTitle>
+                    <CardDescription>
+                      Share these links to let readers discover your campaign
+                    </CardDescription>
+                  </div>
+                  <Badge variant="outline" className="bg-green-50 text-green-700">
+                    <Eye className="mr-1 h-3 w-3" />
+                    {campaign.totalPublicViews || 0} views
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* View Statistics */}
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-4 rounded-lg bg-muted/50 p-4">
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground">Total Views</p>
+                      <p className="text-2xl font-bold">{campaign.totalPublicViews || 0}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground">Unique Visitors</p>
+                      <p className="text-2xl font-bold text-primary">{campaign.totalUniqueVisitors || 0}</p>
+                    </div>
+                  </div>
+
+                  {/* Per-language breakdown */}
+                  <div className="grid grid-cols-3 gap-4 rounded-lg border p-4">
+                    {campaign.landingPageLanguages?.includes('EN') && (
+                      <div className="text-center">
+                        <p className="text-sm text-muted-foreground">English</p>
+                        <p className="text-xl font-bold text-blue-600">
+                          {campaign.totalENViews || 0}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {campaign.uniqueENVisitors || 0} unique
+                        </p>
+                      </div>
+                    )}
+                    {campaign.landingPageLanguages?.includes('PT') && (
+                      <div className="text-center">
+                        <p className="text-sm text-muted-foreground">Portuguese</p>
+                        <p className="text-xl font-bold text-green-600">
+                          {campaign.totalPTViews || 0}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {campaign.uniquePTVisitors || 0} unique
+                        </p>
+                      </div>
+                    )}
+                    {campaign.landingPageLanguages?.includes('ES') && (
+                      <div className="text-center">
+                        <p className="text-sm text-muted-foreground">Spanish</p>
+                        <p className="text-xl font-bold text-orange-600">
+                          {campaign.totalESViews || 0}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {campaign.uniqueESVisitors || 0} unique
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Public URLs */}
+                <div className="space-y-3">
+                  <h4 className="font-medium">Shareable Links</h4>
+                  {Object.entries(campaign.publicUrls).map(([lang, url]) => (
+                    <div key={lang} className="flex items-center gap-2">
+                      <Badge variant="outline" className="shrink-0">
+                        {lang}
+                      </Badge>
+                      <Input value={url} readOnly className="font-mono text-sm" />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          navigator.clipboard.writeText(url);
+                        }}
+                        title="Copy to clipboard"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => window.open(url, '_blank')}
+                        title="Open in new tab"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+
+                {campaign.lastViewedAt && (
+                  <p className="text-xs text-muted-foreground">
+                    Last viewed:{' '}
+                    {new Date(campaign.lastViewedAt).toLocaleString(undefined, {
+                      dateStyle: 'medium',
+                      timeStyle: 'short',
+                    })}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Sidebar */}

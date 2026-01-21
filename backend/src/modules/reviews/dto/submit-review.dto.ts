@@ -1,6 +1,15 @@
-import { IsString, IsInt, IsBoolean, Min, Max, IsNotEmpty, IsUrl } from 'class-validator';
+import { IsString, IsInt, IsBoolean, Min, Max, MinLength, IsNotEmpty, IsUrl } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
+/**
+ * DTO for review submission
+ * Per Milestone 4.4 - Review Submission Process:
+ * - Review text must be 150+ characters minimum
+ * - Star rating must be 1-5
+ * - Reader must agree to Amazon TOS compliance
+ * - Reader must confirm review guidelines acknowledgement
+ * - Reader must confirm review is published on Amazon
+ */
 export class SubmitReviewDto {
   @ApiProperty({
     description: 'Amazon review link (only visible to admin)',
@@ -22,11 +31,13 @@ export class SubmitReviewDto {
   internalRating: number;
 
   @ApiProperty({
-    description: 'Internal feedback text (anonymized for author report)',
-    example: 'Great book with engaging characters and plot twists.',
+    description: 'Internal feedback text (anonymized for author report). Minimum 150 characters required.',
+    example: 'This book had an incredible storyline that kept me engaged from start to finish. The author has a unique way of developing characters that made me feel deeply connected to their journeys.',
+    minLength: 150,
   })
   @IsString()
   @IsNotEmpty()
+  @MinLength(150, { message: 'Review feedback must be at least 150 characters' })
   internalFeedback: string;
 
   @ApiProperty({
@@ -35,4 +46,18 @@ export class SubmitReviewDto {
   })
   @IsBoolean()
   publishedOnAmazon: boolean;
+
+  @ApiProperty({
+    description: 'Agreement to Amazon Terms of Service compliance',
+    example: true,
+  })
+  @IsBoolean()
+  agreedToAmazonTos: boolean;
+
+  @ApiProperty({
+    description: 'Acknowledgement of review guidelines',
+    example: true,
+  })
+  @IsBoolean()
+  acknowledgedGuidelines: boolean;
 }

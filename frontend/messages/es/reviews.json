@@ -23,9 +23,13 @@
       "ratingNote": "Esta calificación es solo para seguimiento interno y no se mostrará al autor",
       "feedback": "Comentario Escrito",
       "feedbackPlaceholder": "Comparte tus pensamientos honestos sobre el libro...",
-      "minCharacters": "Mínimo 20 caracteres",
+      "minCharacters": "Mínimo {minChars} caracteres requeridos",
       "characters": "caracteres",
       "feedbackNote": "Este comentario será anonimizado e incluido en el informe final del autor",
+      "agreedToTos": "Acepto los Términos de Servicio de Amazon para reseñas",
+      "agreedToTosNote": "Debes cumplir con las directrices de la comunidad y políticas de reseñas de Amazon",
+      "acknowledgedGuidelines": "Confirmo que he leído y entiendo las directrices de reseñas",
+      "acknowledgedGuidelinesNote": "Las reseñas deben ser honestas, útiles y no contener contenido prohibido",
       "confirmPublished": "Confirmo que he publicado esta reseña en Amazon",
       "confirmPublishedNote": "Tu reseña debe estar en vivo en Amazon antes de enviar este formulario",
       "submit": "Enviar Reseña",
@@ -35,8 +39,10 @@
     "errors": {
       "amazonLinkRequired": "El enlace de reseña de Amazon es obligatorio",
       "invalidAmazonUrl": "Por favor, ingresa una URL válida de reseña de Amazon",
-      "feedbackTooShort": "El comentario debe tener al menos 20 caracteres",
-      "confirmPublished": "Debes confirmar que la reseña está publicada en Amazon"
+      "feedbackTooShort": "El comentario debe tener al menos {minChars} caracteres",
+      "confirmPublished": "Debes confirmar que la reseña está publicada en Amazon",
+      "tosRequired": "Debes aceptar el cumplimiento de los Términos de Servicio de Amazon",
+      "guidelinesRequired": "Debes reconocer las directrices de reseñas"
     },
     "success": {
       "title": "¡Reseña Enviada con Éxito!",

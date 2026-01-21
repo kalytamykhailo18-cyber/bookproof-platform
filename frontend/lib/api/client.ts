@@ -37,10 +37,14 @@ class ApiClient {
     this.client.interceptors.response.use(
       (response) => response,
       async (error) => {
+        // Section 16.1: Unauthorized (401) - Redirect to login and preserve intended destination
         if (error.response?.status === 401) {
           this.clearToken();
           if (typeof window !== 'undefined') {
-            window.location.href = '/login';
+            // Preserve the current URL as the return URL
+            const currentPath = window.location.pathname + window.location.search;
+            const returnUrl = encodeURIComponent(currentPath);
+            window.location.href = `/login?returnUrl=${returnUrl}`;
           }
         }
         return Promise.reject(error);

@@ -5,10 +5,14 @@ import { UpdateReaderProfileDto } from './dto/update-reader-profile.dto';
 import { ReaderProfileResponseDto, AmazonProfileDto } from './dto/reader-profile-response.dto';
 import { ReaderStatsResponseDto } from './dto/reader-stats-response.dto';
 import { AssignmentStatus } from '@prisma/client';
+import { SettingsService } from '../settings/settings.service';
 
 @Injectable()
 export class ReadersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private settingsService: SettingsService,
+  ) {}
 
   /**
    * Create or update reader profile
@@ -164,12 +168,15 @@ export class ReadersService {
     };
 
     // Calculate pending earnings (submitted but not validated)
-    // Compensation: $1.00 for ebook, $2.00 for audiobook
+    // Compensation rates from settings (per requirements.md Section 3.8)
+    const ebookRate = await this.settingsService.getEbookReviewRate();
+    const audiobookRate = await this.settingsService.getAudiobookReviewRate();
+
     const submittedAssignments = assignments.filter(
       (a) => a.status === AssignmentStatus.SUBMITTED,
     );
     const pendingEarnings = submittedAssignments.reduce(
-      (sum, a) => sum + (a.formatAssigned === 'AUDIOBOOK' ? 2.0 : 1.0),
+      (sum, a) => sum + (a.formatAssigned === 'AUDIOBOOK' ? audiobookRate : ebookRate),
       0,
     );
 

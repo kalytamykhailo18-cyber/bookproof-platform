@@ -22,6 +22,8 @@ import {
   PricingSettingsResponseDto,
   UpdateKeywordResearchFeatureDto,
   KeywordResearchFeatureStatusDto,
+  ReviewPaymentRatesDto,
+  UpdateReviewPaymentRatesDto,
 } from './dto';
 
 @ApiTags('Settings')
@@ -152,6 +154,48 @@ export class SettingsController {
     @Req() req: Request,
   ): Promise<KeywordPricingResponseDto> {
     return this.settingsService.updateKeywordResearchPricing(
+      dto,
+      req.user!.id,
+      req.user!.email,
+      req.ip,
+    );
+  }
+
+  /**
+   * Get review payment rates (Admin only)
+   */
+  @Get('admin/pricing/review-rates')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get review payment rates (Admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Review payment rates',
+    type: ReviewPaymentRatesDto,
+  })
+  async getReviewPaymentRates(): Promise<ReviewPaymentRatesDto> {
+    return this.settingsService.getReviewPaymentRates();
+  }
+
+  /**
+   * Update review payment rates (Admin only)
+   */
+  @Put('admin/pricing/review-rates')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update review payment rates (Admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Payment rates updated successfully',
+    type: ReviewPaymentRatesDto,
+  })
+  async updateReviewPaymentRates(
+    @Body() dto: UpdateReviewPaymentRatesDto,
+    @Req() req: Request,
+  ): Promise<ReviewPaymentRatesDto> {
+    return this.settingsService.updateReviewPaymentRates(
       dto,
       req.user!.id,
       req.user!.email,

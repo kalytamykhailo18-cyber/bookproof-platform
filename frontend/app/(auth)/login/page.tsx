@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useForm } from 'react-hook-form';
@@ -31,9 +32,14 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const t = useTranslations('auth.login');
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { loginAsync, isLoggingIn } = useAuth();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
   const [rememberMe, setRememberMe] = useState(false);
+
+  // Section 16.1: Get return URL from query params
+  const returnUrl = searchParams.get('returnUrl');
 
   const {
     register,
@@ -58,6 +64,12 @@ export default function LoginPage() {
 
       await loginAsync({ ...data, captchaToken });
       toast.success(t('success'));
+
+      // Section 16.1: Redirect to intended destination after successful login
+      if (returnUrl) {
+        router.push(decodeURIComponent(returnUrl));
+      }
+      // Otherwise, useAuth hook will handle default redirect based on role
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } }; message?: string };
       const errorMessage = err?.response?.data?.message || err?.message || t('error');

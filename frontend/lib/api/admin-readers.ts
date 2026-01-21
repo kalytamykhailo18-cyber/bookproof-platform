@@ -97,8 +97,7 @@ export interface UnsuspendReaderDto {
 }
 
 export interface AdjustWalletDto {
-  amount: number;
-  type: 'ADD' | 'DEDUCT';
+  amount: number; // Positive for addition, negative for deduction
   reason: string;
   notes?: string;
 }
@@ -209,7 +208,7 @@ export const adminReadersApi = {
     data: AdjustWalletDto,
   ): Promise<AdminReaderDetailDto> {
     const response = await apiClient.post<AdminReaderDetailDto>(
-      `/admin/readers/${readerProfileId}/wallet/adjust`,
+      `/admin/readers/${readerProfileId}/adjust-wallet`,
       data,
     );
     return response.data;
@@ -241,24 +240,17 @@ export const adminReadersApi = {
   },
 
   /**
-   * Add admin note to reader
+   * Update admin notes for reader
    */
-  async addAdminNote(
+  async updateAdminNotes(
     readerProfileId: string,
-    data: AddAdminNoteDto,
+    data: { adminNotes: string },
   ): Promise<AdminReaderDetailDto> {
-    const response = await apiClient.post<AdminReaderDetailDto>(
+    const response = await apiClient.patch<AdminReaderDetailDto>(
       `/admin/readers/${readerProfileId}/notes`,
       data,
     );
     return response.data;
-  },
-
-  /**
-   * Delete admin note
-   */
-  async deleteAdminNote(readerProfileId: string, noteId: string): Promise<void> {
-    await apiClient.delete(`/admin/readers/${readerProfileId}/notes/${noteId}`);
   },
 
   /**

@@ -164,6 +164,71 @@ export class CampaignResponseDto {
   @ApiProperty({ required: false, description: 'Reading instructions for reviewers (optional)' })
   readingInstructions?: string;
 
+  // ======================================
+  // PUBLIC LANDING PAGE FIELDS - Milestone 2.2
+  // ======================================
+
+  @ApiProperty({ required: false, description: 'URL-safe slug for public landing page' })
+  slug?: string;
+
+  @ApiProperty({ required: false, description: 'Whether public landing page is enabled' })
+  landingPageEnabled?: boolean;
+
+  @ApiProperty({
+    required: false,
+    description: 'Languages enabled for landing page',
+    type: [String],
+  })
+  landingPageLanguages?: Language[];
+
+  @ApiProperty({ required: false, description: 'Public URLs for each enabled language' })
+  publicUrls?: Record<string, string>; // { EN: 'https://...', PT: 'https://...' }
+
+  @ApiProperty({ required: false, description: 'English title for landing page' })
+  titleEN?: string;
+
+  @ApiProperty({ required: false, description: 'Portuguese title for landing page' })
+  titlePT?: string;
+
+  @ApiProperty({ required: false, description: 'Spanish title for landing page' })
+  titleES?: string;
+
+  @ApiProperty({ required: false, description: 'English synopsis for landing page' })
+  synopsisEN?: string;
+
+  @ApiProperty({ required: false, description: 'Portuguese synopsis for landing page' })
+  synopsisPT?: string;
+
+  @ApiProperty({ required: false, description: 'Spanish synopsis for landing page' })
+  synopsisES?: string;
+
+  @ApiProperty({ required: false, description: 'Total public views across all languages' })
+  totalPublicViews?: number;
+
+  @ApiProperty({ required: false, description: 'English page views' })
+  totalENViews?: number;
+
+  @ApiProperty({ required: false, description: 'Portuguese page views' })
+  totalPTViews?: number;
+
+  @ApiProperty({ required: false, description: 'Spanish page views' })
+  totalESViews?: number;
+
+  @ApiProperty({ required: false, description: 'Total unique visitors across all languages' })
+  totalUniqueVisitors?: number;
+
+  @ApiProperty({ required: false, description: 'Unique English visitors' })
+  uniqueENVisitors?: number;
+
+  @ApiProperty({ required: false, description: 'Unique Portuguese visitors' })
+  uniquePTVisitors?: number;
+
+  @ApiProperty({ required: false, description: 'Unique Spanish visitors' })
+  uniqueESVisitors?: number;
+
+  @ApiProperty({ required: false, description: 'Last time landing page was viewed' })
+  lastViewedAt?: Date;
+
   // NOTE: Buffer/overbooking fields intentionally excluded per Rule 2
   // overBookingEnabled, overBookingPercent, totalAssignedReaders are ADMIN-ONLY
 

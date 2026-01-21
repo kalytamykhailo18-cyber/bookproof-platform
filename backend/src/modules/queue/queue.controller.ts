@@ -199,4 +199,117 @@ export class QueueController {
       range,
     );
   }
+
+  /**
+   * Secure ebook streaming endpoint
+   *
+   * SECURITY: This endpoint implements all ebook security requirements (Section 11.2):
+   * 1. Access restricted to logged-in readers only (JWT auth)
+   * 2. Validates user owns the assignment
+   * 3. Validates 72-hour deadline hasn't expired
+   * 4. Validates assignment status is valid (APPROVED, IN_PROGRESS, SUBMITTED)
+   * 5. Streams ebook without exposing the actual file URL
+   * 6. Supports Range headers for large files
+   *
+   * Per requirements:
+   * - Only granted readers can access
+   * - URL signed with reader ID and expiration (via JWT)
+   * - Expires when deadline passes (72 hours)
+   * - Download allowed
+   */
+  @Get('assignments/:assignmentId/stream-ebook')
+  @Roles(UserRole.READER)
+  @ApiOperation({
+    summary: 'Stream ebook content securely',
+    description:
+      'Streams ebook content directly without exposing the file URL. ' +
+      'Validates user authorization, assignment ownership, and 72-hour deadline. ' +
+      'Supports Range headers for large files. Download is allowed.',
+  })
+  @ApiHeader({
+    name: 'Range',
+    description: 'Byte range for partial content requests (e.g., bytes=0-1000)',
+    required: false,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Ebook content streamed successfully',
+  })
+  @ApiResponse({
+    status: 206,
+    description: 'Partial ebook content streamed (Range request)',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Access denied - ebook access has expired or assignment not approved',
+  })
+  async streamEbook(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('assignmentId') assignmentId: string,
+    @Headers('range') range?: string,
+  ): Promise<void> {
+    return this.queueService.streamEbook(
+      req.user!.userId!,
+      assignmentId,
+      res,
+      range,
+    );
+  }
+
+  /**
+   * Secure synopsis streaming endpoint
+   *
+   * SECURITY: This endpoint implements synopsis security requirements (Section 11.2):
+   * 1. Access restricted to logged-in readers only (JWT auth)
+   * 2. Validates user owns the assignment
+   * 3. Validates materials have been released
+   * 4. Validates assignment status is valid
+   * 5. Streams synopsis without exposing the actual file URL
+   * 6. Available for both ebook and audiobook formats
+   *
+   * Per requirements:
+   * - Same as ebook (only granted readers)
+   * - Available alongside main content
+   * - Follows format-specific expiration rules
+   */
+  @Get('assignments/:assignmentId/stream-synopsis')
+  @Roles(UserRole.READER)
+  @ApiOperation({
+    summary: 'Stream synopsis content securely',
+    description:
+      'Streams synopsis content directly without exposing the file URL. ' +
+      'Validates user authorization and assignment ownership. ' +
+      'Available for both ebook and audiobook formats.',
+  })
+  @ApiHeader({
+    name: 'Range',
+    description: 'Byte range for partial content requests (e.g., bytes=0-1000)',
+    required: false,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Synopsis content streamed successfully',
+  })
+  @ApiResponse({
+    status: 206,
+    description: 'Partial synopsis content streamed (Range request)',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Access denied - synopsis access has expired or assignment not approved',
+  })
+  async streamSynopsis(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('assignmentId') assignmentId: string,
+    @Headers('range') range?: string,
+  ): Promise<void> {
+    return this.queueService.streamSynopsis(
+      req.user!.userId!,
+      assignmentId,
+      res,
+      range,
+    );
+  }
 }

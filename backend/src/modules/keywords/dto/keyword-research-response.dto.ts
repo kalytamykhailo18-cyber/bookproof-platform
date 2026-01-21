@@ -45,6 +45,9 @@ export class KeywordResearchResponseDto {
   @ApiPropertyOptional()
   competingBooks?: string;
 
+  @ApiPropertyOptional()
+  specificKeywords?: string;
+
   @ApiProperty({ enum: Language })
   bookLanguage: Language;
 

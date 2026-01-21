@@ -7,13 +7,15 @@ import {
   MarkAsRemovedResponseDto,
 } from './dto/review-response.dto';
 import { AuditService } from '../audit/audit.service';
-import { AssignmentStatus, UserRole, LogSeverity } from '@prisma/client';
+import { AssignmentStatus, UserRole, LogSeverity, EmailType } from '@prisma/client';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AmazonMonitoringService {
   constructor(
     private prisma: PrismaService,
     private auditService: AuditService,
+    private emailService: EmailService,
   ) {}
 
   /**
@@ -208,7 +210,7 @@ export class AmazonMonitoringService {
         // Schedule next reader for immediate release (today)
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-        await this.prisma.readerAssignment.update({
+        const updatedAssignment = await this.prisma.readerAssignment.update({
           where: { id: nextReaderInQueue.id },
           data: {
             status: AssignmentStatus.SCHEDULED,
@@ -216,10 +218,39 @@ export class AmazonMonitoringService {
             scheduledWeek: this.getWeekNumber(today),
             isBufferAssignment: false,
           },
+          include: {
+            readerProfile: {
+              include: {
+                user: true,
+              },
+            },
+            book: true,
+          },
         });
 
         replacementAssigned = true;
         replacementAssignmentId = nextReaderInQueue.id;
+
+        // Send replacement notification email to reader
+        try {
+          const appUrl = process.env.APP_URL || 'http://localhost:3000';
+          await this.emailService.sendTemplatedEmail(
+            updatedAssignment.readerProfile.user.email,
+            EmailType.READER_REPLACEMENT_ASSIGNED,
+            {
+              userName: updatedAssignment.readerProfile.user.name,
+              bookTitle: updatedAssignment.book.title,
+              bookAuthor: updatedAssignment.book.authorName,
+              assignmentUrl: `${appUrl}/${updatedAssignment.readerProfile.user.preferredLanguage.toLowerCase()}/reader/assignments/${updatedAssignment.id}`,
+              dashboardUrl: `${appUrl}/${updatedAssignment.readerProfile.user.preferredLanguage.toLowerCase()}/reader/dashboard`,
+            },
+            updatedAssignment.readerProfile.userId,
+            updatedAssignment.readerProfile.user.preferredLanguage,
+          );
+        } catch (emailError) {
+          // Log email error but don't fail the replacement process
+          console.error('Failed to send replacement notification email:', emailError);
+        }
       } else {
         // No readers in queue - admin will need to manually recruit more readers
         // or wait for new readers to join the campaign queue

@@ -253,6 +253,11 @@ export class EmailService {
 
   /**
    * LEGACY: Send deadline reminder
+   * Per Milestone 4.3 - Deadline Timeline:
+   * - Hour 24: First reminder ("48 hours remaining")
+   * - Hour 48: Second reminder ("24 hours remaining")
+   * - Hour 60: Urgent reminder ("12 hours remaining")
+   * - Hour 69: Final reminder ("3 hours remaining")
    */
   async sendDeadlineReminder(data: {
     to: string;
@@ -261,11 +266,18 @@ export class EmailService {
     deadline: Date;
     hoursRemaining: number;
     assignmentId: string;
+    isUrgent?: boolean;
+    isFinal?: boolean;
   }): Promise<void> {
     const assignmentUrl = `${this.appUrl}/reader/assignments/${data.assignmentId}`;
 
+    // Determine email type based on hours remaining
+    // Maps to specific email templates for different urgency levels
     let emailType: EmailType;
-    if (data.hoursRemaining <= 24) {
+    if (data.hoursRemaining <= 12) {
+      // 12 hours or less remaining - urgent reminder
+      emailType = EmailType.READER_DEADLINE_24H; // Use most urgent template
+    } else if (data.hoursRemaining <= 24) {
       emailType = EmailType.READER_DEADLINE_24H;
     } else if (data.hoursRemaining <= 48) {
       emailType = EmailType.READER_DEADLINE_48H;
@@ -282,6 +294,8 @@ export class EmailService {
         deadlineAt: data.deadline,
         hoursRemaining: data.hoursRemaining,
         assignmentUrl,
+        isUrgent: data.isUrgent || false,
+        isFinal: data.isFinal || false,
       },
       undefined,
       Language.EN,

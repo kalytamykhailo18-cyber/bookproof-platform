@@ -105,17 +105,64 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
   const canSubmitReview =
     assignment.status === AssignmentStatus.APPROVED ||
     assignment.status === AssignmentStatus.IN_PROGRESS;
-  const isUrgent = assignment.hoursRemaining && assignment.hoursRemaining < 24;
+
+  // 3-tier countdown urgency levels per requirements.md Section 3.7
+  const getDeadlineUrgency = (hoursRemaining?: number) => {
+    if (!hoursRemaining) return 'none';
+    if (hoursRemaining < 1) return 'critical'; // <1h: Flashing
+    if (hoursRemaining < 12) return 'urgent';   // <12h: Red
+    if (hoursRemaining < 24) return 'warning';  // 12-24h: Yellow
+    return 'normal'; // >24h: Green
+  };
+
+  const deadlineUrgency = getDeadlineUrgency(assignment.hoursRemaining);
+  const isUrgent = deadlineUrgency === 'urgent' || deadlineUrgency === 'critical';
 
   const handleEbookDownload = () => {
-    if (assignment.ebookFileUrl) {
+    // SECURITY: Use secure streaming endpoint with JWT token
+    if (assignment.ebookStreamUrl) {
+      // Track download and mark as IN_PROGRESS
       trackEbookDownload(assignment.id);
-      window.open(assignment.ebookFileUrl, '_blank');
+
+      // Build authenticated URL with JWT token
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        alert('Authentication required. Please log in again.');
+        return;
+      }
+
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const authenticatedUrl = assignment.ebookStreamUrl.startsWith('/api/')
+        ? `${baseUrl}/api/v1${assignment.ebookStreamUrl.replace('/api', '')}?token=${encodeURIComponent(token)}`
+        : `${assignment.ebookStreamUrl}?token=${encodeURIComponent(token)}`;
+
+      // Open in new tab for download
+      window.open(authenticatedUrl, '_blank');
     }
   };
 
   const handleWithdraw = () => {
     withdrawFromAssignment(assignment.id);
+  };
+
+  const handleSynopsisDownload = () => {
+    // SECURITY: Use secure streaming endpoint with JWT token
+    if (assignment.synopsisStreamUrl) {
+      // Build authenticated URL with JWT token
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        alert('Authentication required. Please log in again.');
+        return;
+      }
+
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const authenticatedUrl = assignment.synopsisStreamUrl.startsWith('/api/')
+        ? `${baseUrl}/api/v1${assignment.synopsisStreamUrl.replace('/api', '')}?token=${encodeURIComponent(token)}`
+        : `${assignment.synopsisStreamUrl}?token=${encodeURIComponent(token)}`;
+
+      // Open in new tab for download
+      window.open(authenticatedUrl, '_blank');
+    }
   };
 
   return (
@@ -162,24 +209,65 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
           {assignment.deadlineAt && materialsAvailable && (
             <Card
               className={`animate-fade-up-fast ${
-                isUrgent
-                  ? 'border-red-300 bg-red-50 dark:bg-red-950'
-                  : 'border-yellow-300 bg-yellow-50 dark:bg-yellow-950'
+                deadlineUrgency === 'critical'
+                  ? 'border-red-500 bg-red-100 dark:bg-red-950'
+                  : deadlineUrgency === 'urgent'
+                    ? 'border-red-300 bg-red-50 dark:bg-red-950'
+                    : deadlineUrgency === 'warning'
+                      ? 'border-yellow-300 bg-yellow-50 dark:bg-yellow-950'
+                      : 'border-green-300 bg-green-50 dark:bg-green-950'
               }`}
             >
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
                   <AlertCircle
-                    className={`h-8 w-8 ${isUrgent ? 'animate-pulse text-red-600' : 'text-yellow-600'}`}
+                    className={`h-8 w-8 ${
+                      deadlineUrgency === 'critical'
+                        ? 'animate-pulse text-red-600'
+                        : deadlineUrgency === 'urgent'
+                          ? 'animate-pulse text-red-600'
+                          : deadlineUrgency === 'warning'
+                            ? 'text-yellow-600'
+                            : 'text-green-600'
+                    }`}
+                    style={
+                      deadlineUrgency === 'critical'
+                        ? {
+                            animation: 'pulse 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                          }
+                        : undefined
+                    }
                   />
                   <div className="flex-1">
                     <h3
-                      className={`font-semibold ${isUrgent ? 'text-red-900 dark:text-red-100' : 'text-yellow-900 dark:text-yellow-100'}`}
+                      className={`font-semibold ${
+                        deadlineUrgency === 'critical'
+                          ? 'text-red-900 dark:text-red-100'
+                          : deadlineUrgency === 'urgent'
+                            ? 'text-red-900 dark:text-red-100'
+                            : deadlineUrgency === 'warning'
+                              ? 'text-yellow-900 dark:text-yellow-100'
+                              : 'text-green-900 dark:text-green-100'
+                      }`}
                     >
-                      {isUrgent ? t('deadline.urgent') : t('deadline.reminder')}
+                      {deadlineUrgency === 'critical'
+                        ? t('deadline.critical')
+                        : isUrgent
+                          ? t('deadline.urgent')
+                          : deadlineUrgency === 'warning'
+                            ? t('deadline.warning')
+                            : t('deadline.reminder')}
                     </h3>
                     <p
-                      className={`text-sm ${isUrgent ? 'text-red-800 dark:text-red-200' : 'text-yellow-800 dark:text-yellow-200'}`}
+                      className={`text-sm ${
+                        deadlineUrgency === 'critical'
+                          ? 'text-red-800 dark:text-red-200'
+                          : deadlineUrgency === 'urgent'
+                            ? 'text-red-800 dark:text-red-200'
+                            : deadlineUrgency === 'warning'
+                              ? 'text-yellow-800 dark:text-yellow-200'
+                              : 'text-green-800 dark:text-green-200'
+                      }`}
                     >
                       {t('deadline.due', {
                         time: formatDistanceToNow(new Date(assignment.deadlineAt), {
@@ -199,7 +287,7 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
           <Card className="animate-zoom-in">
             <CardHeader>
               <CardTitle>{t('sections.synopsis')}</CardTitle>
-              {assignment.book.synopsisFileUrl && (
+              {assignment.synopsisStreamUrl && (
                 <CardDescription>
                   A detailed synopsis document is also available for download.
                 </CardDescription>
@@ -207,13 +295,13 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="whitespace-pre-wrap text-sm">{assignment.book.synopsis}</p>
-              {/* Synopsis PDF download if available */}
-              {assignment.book.synopsisFileUrl && (
+              {/* Secure synopsis download if available */}
+              {assignment.synopsisStreamUrl && (
                 <div className="rounded-md border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950">
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-medium text-blue-900 dark:text-blue-100">
-                        Synopsis Document (PDF)
+                        Synopsis Document
                       </h4>
                       <p className="text-sm text-blue-700 dark:text-blue-300">
                         Download the full synopsis document provided by the author
@@ -222,10 +310,10 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => window.open(assignment.book.synopsisFileUrl, '_blank')}
+                      onClick={handleSynopsisDownload}
                     >
                       <Download className="mr-2 h-4 w-4" />
-                      Download PDF
+                      Download
                     </Button>
                   </div>
                 </div>
@@ -237,7 +325,7 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
           {materialsAvailable && (
             <>
               {/* Ebook Download */}
-              {assignment.formatAssigned === BookFormat.EBOOK && assignment.ebookFileUrl && (
+              {assignment.formatAssigned === BookFormat.EBOOK && assignment.ebookStreamUrl && (
                 <Card className="animate-zoom-in-slow">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -260,6 +348,21 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
                         })}
                       </p>
                     )}
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Ebook Access Expired */}
+              {assignment.formatAssigned === BookFormat.EBOOK && !assignment.ebookStreamUrl && (
+                <Card className="animate-zoom-in-slow border-red-300 bg-red-50 dark:bg-red-950">
+                  <CardContent className="py-8 text-center">
+                    <AlertCircle className="mx-auto mb-3 h-12 w-12 text-red-500" />
+                    <h3 className="font-semibold text-red-900 dark:text-red-100">
+                      Ebook Access Expired
+                    </h3>
+                    <p className="mt-2 text-sm text-red-700 dark:text-red-300">
+                      The 72-hour deadline has passed. Ebook access is no longer available.
+                    </p>
                   </CardContent>
                 </Card>
               )}
@@ -396,7 +499,24 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
                 {assignment.deadlineAt && (
                   <div className="flex items-start gap-2">
                     <Clock
-                      className={`mt-0.5 h-4 w-4 ${isUrgent ? 'text-red-500' : 'text-gray-300'}`}
+                      className={`mt-0.5 h-4 w-4 ${
+                        deadlineUrgency === 'critical'
+                          ? 'text-red-600'
+                          : deadlineUrgency === 'urgent'
+                            ? 'text-red-500'
+                            : deadlineUrgency === 'warning'
+                              ? 'text-yellow-500'
+                              : deadlineUrgency === 'normal'
+                                ? 'text-green-500'
+                                : 'text-gray-300'
+                      }`}
+                      style={
+                        deadlineUrgency === 'critical'
+                          ? {
+                              animation: 'pulse 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                            }
+                          : undefined
+                      }
                     />
                     <div>
                       <p className="font-medium">{t('timeline.deadline')}</p>

@@ -13,6 +13,12 @@ import {
   PayoutResponseDto,
   CommissionStatus,
   PayoutRequestStatus,
+  MarketingMaterialResponseDto,
+  CreateMarketingMaterialDto,
+  UpdateMarketingMaterialDto,
+  GetMarketingMaterialsQueryDto,
+  MarketingMaterialType,
+  Language,
 } from '@/lib/api/affiliates';
 
 // Query keys
@@ -29,6 +35,11 @@ export const affiliateKeys = {
   commissionsAdmin: (id: string, status?: CommissionStatus) =>
     [...affiliateKeys.all, 'commissions-admin', id, status] as const,
   payoutsAdmin: (status?: PayoutRequestStatus) => [...affiliateKeys.all, 'payouts-admin', status] as const,
+  marketingMaterials: (query?: GetMarketingMaterialsQueryDto) =>
+    [...affiliateKeys.all, 'marketing-materials', query] as const,
+  marketingMaterialsAdmin: (query?: GetMarketingMaterialsQueryDto) =>
+    [...affiliateKeys.all, 'marketing-materials-admin', query] as const,
+  marketingMaterialsStats: () => [...affiliateKeys.all, 'marketing-materials-stats'] as const,
 };
 
 // Affiliate hooks
@@ -198,6 +209,113 @@ export function useUpdateCommissionRate() {
     },
     onError: (error: any) => {
       const message = error.response?.data?.message || 'Failed to update commission rate';
+      toast.error(message);
+    },
+  });
+}
+
+// Marketing Materials hooks (Affiliate)
+export function useMarketingMaterials(query?: GetMarketingMaterialsQueryDto) {
+  return useQuery({
+    queryKey: affiliateKeys.marketingMaterials(query),
+    queryFn: () => affiliatesApi.getMarketingMaterials(query),
+  });
+}
+
+export function useTrackMaterialDownload() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => affiliatesApi.trackMaterialDownload(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: affiliateKeys.marketingMaterials() });
+      queryClient.invalidateQueries({ queryKey: affiliateKeys.marketingMaterialsAdmin() });
+    },
+    onError: (error: any) => {
+      const message = error.response?.data?.message || 'Failed to track download';
+      toast.error(message);
+    },
+  });
+}
+
+// Marketing Materials hooks (Admin)
+export function useMarketingMaterialsForAdmin(query?: GetMarketingMaterialsQueryDto) {
+  return useQuery({
+    queryKey: affiliateKeys.marketingMaterialsAdmin(query),
+    queryFn: () => affiliatesApi.getMarketingMaterialsForAdmin(query),
+  });
+}
+
+export function useMarketingMaterialsStats() {
+  return useQuery({
+    queryKey: affiliateKeys.marketingMaterialsStats(),
+    queryFn: () => affiliatesApi.getMarketingMaterialsStats(),
+  });
+}
+
+export function useCreateMarketingMaterial() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateMarketingMaterialDto) => affiliatesApi.createMarketingMaterial(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: affiliateKeys.marketingMaterialsAdmin() });
+      queryClient.invalidateQueries({ queryKey: affiliateKeys.marketingMaterialsStats() });
+      toast.success('Marketing material created successfully');
+    },
+    onError: (error: any) => {
+      const message = error.response?.data?.message || 'Failed to create marketing material';
+      toast.error(message);
+    },
+  });
+}
+
+export function useUpdateMarketingMaterial() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateMarketingMaterialDto }) =>
+      affiliatesApi.updateMarketingMaterial(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: affiliateKeys.marketingMaterialsAdmin() });
+      toast.success('Marketing material updated successfully');
+    },
+    onError: (error: any) => {
+      const message = error.response?.data?.message || 'Failed to update marketing material';
+      toast.error(message);
+    },
+  });
+}
+
+export function useToggleMarketingMaterialActive() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => affiliatesApi.toggleMarketingMaterialActive(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: affiliateKeys.marketingMaterialsAdmin() });
+      queryClient.invalidateQueries({ queryKey: affiliateKeys.marketingMaterialsStats() });
+      toast.success('Marketing material status toggled successfully');
+    },
+    onError: (error: any) => {
+      const message = error.response?.data?.message || 'Failed to toggle status';
+      toast.error(message);
+    },
+  });
+}
+
+export function useDeleteMarketingMaterial() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => affiliatesApi.deleteMarketingMaterial(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: affiliateKeys.marketingMaterialsAdmin() });
+      queryClient.invalidateQueries({ queryKey: affiliateKeys.marketingMaterialsStats() });
+      toast.success('Marketing material deleted successfully');
+    },
+    onError: (error: any) => {
+      const message = error.response?.data?.message || 'Failed to delete marketing material';
       toast.error(message);
     },
   });

@@ -293,11 +293,11 @@ export function getEmailTemplateContent(
 
     READER_DEADLINE_24H: {
       EN: `
-        <h1 style="color: #f59e0b;">⏰ Reminder: 24 Hours Remaining</h1>
+        <h1 style="color: #f59e0b;">⏰ Reminder: {{hoursRemaining}} Hours Remaining</h1>
         <p>Hi {{userName}},</p>
         <p>This is a friendly reminder that your review deadline for <strong>"{{bookTitle}}"</strong> is approaching.</p>
         <div style="background-color: #fef3c7; padding: 30px; border-radius: 6px; text-align: center; margin: 30px 0;">
-          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">24h</h2>
+          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">{{hoursRemaining}}h</h2>
           <p style="margin: 10px 0; color: #92400e;">Remaining until deadline</p>
         </div>
         <p><strong>Please complete your review as soon as possible to avoid expiration.</strong></p>
@@ -309,11 +309,11 @@ export function getEmailTemplateContent(
         </p>
       `,
       ES: `
-        <h1 style="color: #f59e0b;">⏰ Recordatorio: 24 horas restantes</h1>
+        <h1 style="color: #f59e0b;">⏰ Recordatorio: {{hoursRemaining}} horas restantes</h1>
         <p>Hola {{userName}},</p>
         <p>Este es un recordatorio amistoso de que la fecha límite de tu reseña para <strong>"{{bookTitle}}"</strong> se está acercando.</p>
         <div style="background-color: #fef3c7; padding: 30px; border-radius: 6px; text-align: center; margin: 30px 0;">
-          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">24h</h2>
+          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">{{hoursRemaining}}h</h2>
           <p style="margin: 10px 0; color: #92400e;">Restantes hasta la fecha límite</p>
         </div>
         <p><strong>Por favor completa tu reseña lo antes posible para evitar la expiración.</strong></p>
@@ -325,11 +325,11 @@ export function getEmailTemplateContent(
         </p>
       `,
       PT: `
-        <h1 style="color: #f59e0b;">⏰ Lembrete: 24 horas restantes</h1>
+        <h1 style="color: #f59e0b;">⏰ Lembrete: {{hoursRemaining}} horas restantes</h1>
         <p>Olá {{userName}},</p>
         <p>Este é um lembrete amigável de que o prazo da sua avaliação para <strong>"{{bookTitle}}"</strong> está se aproximando.</p>
         <div style="background-color: #fef3c7; padding: 30px; border-radius: 6px; text-align: center; margin: 30px 0;">
-          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">24h</h2>
+          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">{{hoursRemaining}}h</h2>
           <p style="margin: 10px 0; color: #92400e;">Restantes até o prazo</p>
         </div>
         <p><strong>Por favor, complete sua avaliação o mais rápido possível para evitar expiração.</strong></p>
@@ -344,11 +344,11 @@ export function getEmailTemplateContent(
 
     READER_DEADLINE_48H: {
       EN: `
-        <h1 style="color: #f59e0b;">⏰ Reminder: 48 Hours Remaining</h1>
+        <h1 style="color: #f59e0b;">⏰ Reminder: {{hoursRemaining}} Hours Remaining</h1>
         <p>Hi {{userName}},</p>
         <p>This is a reminder that your review deadline for <strong>"{{bookTitle}}"</strong> is approaching.</p>
         <div style="background-color: #fef3c7; padding: 30px; border-radius: 6px; text-align: center; margin: 30px 0;">
-          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">48h</h2>
+          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">{{hoursRemaining}}h</h2>
           <p style="margin: 10px 0; color: #92400e;">Remaining until deadline</p>
         </div>
         <p>Please make sure to complete your review before the deadline to maintain your reliability score.</p>
@@ -357,11 +357,11 @@ export function getEmailTemplateContent(
         </div>
       `,
       ES: `
-        <h1 style="color: #f59e0b;">⏰ Recordatorio: 48 horas restantes</h1>
+        <h1 style="color: #f59e0b;">⏰ Recordatorio: {{hoursRemaining}} horas restantes</h1>
         <p>Hola {{userName}},</p>
         <p>Este es un recordatorio de que la fecha límite de tu reseña para <strong>"{{bookTitle}}"</strong> se está acercando.</p>
         <div style="background-color: #fef3c7; padding: 30px; border-radius: 6px; text-align: center; margin: 30px 0;">
-          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">48h</h2>
+          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">{{hoursRemaining}}h</h2>
           <p style="margin: 10px 0; color: #92400e;">Restantes hasta la fecha límite</p>
         </div>
         <p>Por favor asegúrate de completar tu reseña antes de la fecha límite para mantener tu puntuación de confiabilidad.</p>
@@ -370,11 +370,11 @@ export function getEmailTemplateContent(
         </div>
       `,
       PT: `
-        <h1 style="color: #f59e0b;">⏰ Lembrete: 48 horas restantes</h1>
+        <h1 style="color: #f59e0b;">⏰ Lembrete: {{hoursRemaining}} horas restantes</h1>
         <p>Olá {{userName}},</p>
         <p>Este é um lembrete de que o prazo da sua avaliação para <strong>"{{bookTitle}}"</strong> está se aproximando.</p>
         <div style="background-color: #fef3c7; padding: 30px; border-radius: 6px; text-align: center; margin: 30px 0;">
-          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">48h</h2>
+          <h2 style="color: #f59e0b; margin: 0; font-size: 48px;">{{hoursRemaining}}h</h2>
           <p style="margin: 10px 0; color: #92400e;">Restantes até o prazo</p>
         </div>
         <p>Por favor, certifique-se de completar sua avaliação antes do prazo para manter sua pontuação de confiabilidade.</p>
@@ -498,6 +498,63 @@ export function getEmailTemplateContent(
         <div style="text-align: center;">
           <a href="{{dashboardUrl}}" class="button">Procurar livros disponíveis</a>
         </div>
+      `,
+    },
+
+    READER_REVIEW_SUBMITTED: {
+      EN: `
+        <h1 style="color: #2563eb;">📝 Review Submitted!</h1>
+        <p>Hi {{userName}},</p>
+        <p>Thank you for submitting your review for <strong>"{{bookTitle}}"</strong>!</p>
+        <div class="info-box">
+          <h3 style="margin-top: 0;">What Happens Next:</h3>
+          <p style="margin: 5px 0;">1. Our team will verify your Amazon review</p>
+          <p style="margin: 5px 0;">2. Once approved, payment will be added to your wallet</p>
+          <p style="margin: 5px 0;">3. You'll receive an email confirmation</p>
+        </div>
+        <p>Validation typically takes 24-48 hours. You don't need to do anything else!</p>
+        <div style="text-align: center;">
+          <a href="{{dashboardUrl}}" class="button">View My Reviews</a>
+        </div>
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          Thank you for being part of the BookProof community!
+        </p>
+      `,
+      ES: `
+        <h1 style="color: #2563eb;">📝 ¡Reseña Enviada!</h1>
+        <p>Hola {{userName}},</p>
+        <p>¡Gracias por enviar tu reseña de <strong>"{{bookTitle}}"</strong>!</p>
+        <div class="info-box">
+          <h3 style="margin-top: 0;">Qué Sigue:</h3>
+          <p style="margin: 5px 0;">1. Nuestro equipo verificará tu reseña en Amazon</p>
+          <p style="margin: 5px 0;">2. Una vez aprobada, el pago se agregará a tu billetera</p>
+          <p style="margin: 5px 0;">3. Recibirás un correo de confirmación</p>
+        </div>
+        <p>La validación generalmente toma 24-48 horas. ¡No necesitas hacer nada más!</p>
+        <div style="text-align: center;">
+          <a href="{{dashboardUrl}}" class="button">Ver Mis Reseñas</a>
+        </div>
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          ¡Gracias por ser parte de la comunidad BookProof!
+        </p>
+      `,
+      PT: `
+        <h1 style="color: #2563eb;">📝 Avaliação Enviada!</h1>
+        <p>Olá {{userName}},</p>
+        <p>Obrigado por enviar sua avaliação de <strong>"{{bookTitle}}"</strong>!</p>
+        <div class="info-box">
+          <h3 style="margin-top: 0;">Próximos Passos:</h3>
+          <p style="margin: 5px 0;">1. Nossa equipe verificará sua avaliação na Amazon</p>
+          <p style="margin: 5px 0;">2. Após aprovação, o pagamento será adicionado à sua carteira</p>
+          <p style="margin: 5px 0;">3. Você receberá um email de confirmação</p>
+        </div>
+        <p>A validação geralmente leva 24-48 horas. Você não precisa fazer mais nada!</p>
+        <div style="text-align: center;">
+          <a href="{{dashboardUrl}}" class="button">Ver Minhas Avaliações</a>
+        </div>
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          Obrigado por fazer parte da comunidade BookProof!
+        </p>
       `,
     },
 
@@ -2414,6 +2471,100 @@ export function getEmailTemplateContent(
       `,
     },
 
+    // Reader replacement assignment (14-day guarantee)
+    READER_REPLACEMENT_ASSIGNED: {
+      EN: `
+        <h1 style="color: #10b981;">New Review Opportunity Available!</h1>
+        <p>Hi {{userName}},</p>
+        <p>Good news! You've been assigned a replacement review for <strong>{{bookTitle}}</strong> by {{bookAuthor}}.</p>
+
+        <div class="info-box">
+          <h3 style="margin-top: 0;">What This Means</h3>
+          <p>A previously validated review for this book was removed from Amazon within the 14-day guarantee period. As the next reader in the queue, you've been selected to provide a replacement review.</p>
+        </div>
+
+        <div class="success-box" style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #059669;">Your Assignment</h3>
+          <p><strong>Book:</strong> {{bookTitle}}</p>
+          <p><strong>Author:</strong> {{bookAuthor}}</p>
+          <p><strong>Status:</strong> Scheduled for immediate access</p>
+        </div>
+
+        <p>You'll receive another email when your book materials are ready to access. This replacement review follows the same process as regular assignments:</p>
+        <ul>
+          <li>72-hour deadline after receiving materials</li>
+          <li>Same compensation as regular reviews</li>
+          <li>Full access to book materials</li>
+        </ul>
+
+        <p>Thank you for being an active and reliable reader on BookProof!</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{{dashboardUrl}}" class="button">View Assignment</a>
+        </div>
+      `,
+      ES: `
+        <h1 style="color: #10b981;">¡Nueva Oportunidad de Reseña Disponible!</h1>
+        <p>Hola {{userName}},</p>
+        <p>¡Buenas noticias! Se te ha asignado una reseña de reemplazo para <strong>{{bookTitle}}</strong> de {{bookAuthor}}.</p>
+
+        <div class="info-box">
+          <h3 style="margin-top: 0;">Qué Significa Esto</h3>
+          <p>Una reseña previamente validada para este libro fue eliminada de Amazon dentro del período de garantía de 14 días. Como el próximo lector en la cola, has sido seleccionado para proporcionar una reseña de reemplazo.</p>
+        </div>
+
+        <div class="success-box" style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #059669;">Tu Asignación</h3>
+          <p><strong>Libro:</strong> {{bookTitle}}</p>
+          <p><strong>Autor:</strong> {{bookAuthor}}</p>
+          <p><strong>Estado:</strong> Programado para acceso inmediato</p>
+        </div>
+
+        <p>Recibirás otro correo cuando los materiales del libro estén listos para acceder. Esta reseña de reemplazo sigue el mismo proceso que las asignaciones regulares:</p>
+        <ul>
+          <li>Plazo de 72 horas después de recibir los materiales</li>
+          <li>Misma compensación que las reseñas regulares</li>
+          <li>Acceso completo a los materiales del libro</li>
+        </ul>
+
+        <p>¡Gracias por ser un lector activo y confiable en BookProof!</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{{dashboardUrl}}" class="button">Ver Asignación</a>
+        </div>
+      `,
+      PT: `
+        <h1 style="color: #10b981;">Nova Oportunidade de Avaliação Disponível!</h1>
+        <p>Olá {{userName}},</p>
+        <p>Boas notícias! Você foi designado para uma avaliação de substituição para <strong>{{bookTitle}}</strong> de {{bookAuthor}}.</p>
+
+        <div class="info-box">
+          <h3 style="margin-top: 0;">O Que Isso Significa</h3>
+          <p>Uma avaliação previamente validada para este livro foi removida da Amazon dentro do período de garantia de 14 dias. Como o próximo leitor na fila, você foi selecionado para fornecer uma avaliação de substituição.</p>
+        </div>
+
+        <div class="success-box" style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #059669;">Sua Atribuição</h3>
+          <p><strong>Livro:</strong> {{bookTitle}}</p>
+          <p><strong>Autor:</strong> {{bookAuthor}}</p>
+          <p><strong>Status:</strong> Agendado para acesso imediato</p>
+        </div>
+
+        <p>Você receberá outro e-mail quando os materiais do livro estiverem prontos para acessar. Esta avaliação de substituição segue o mesmo processo que as atribuições regulares:</p>
+        <ul>
+          <li>Prazo de 72 horas após receber os materiais</li>
+          <li>Mesma compensação que as avaliações regulares</li>
+          <li>Acesso completo aos materiais do livro</li>
+        </ul>
+
+        <p>Obrigado por ser um leitor ativo e confiável no BookProof!</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{{dashboardUrl}}" class="button">Ver Atribuição</a>
+        </div>
+      `,
+    },
+
     // Author credits added
     AUTHOR_CREDITS_ADDED: {
       EN: `
@@ -2713,6 +2864,64 @@ export function getEmailTemplateContent(
         <div style="text-align: center;">
           <a href="{{dashboardUrl}}" class="button">Revisar Inscrição</a>
         </div>
+      `,
+    },
+
+    // Admin - critical error notification (Section 16.2)
+    ADMIN_CRITICAL_ERROR: {
+      EN: `
+        <h1 style="color: #dc2626;">🚨 CRITICAL ERROR</h1>
+        <p>Hi Admin,</p>
+        <p style="color: #dc2626; font-weight: bold;">A critical error has occurred in the system that requires immediate attention.</p>
+        <div class="info-box" style="background-color: #fee2e2; border-left: 4px solid #dc2626;">
+          <p><strong>Error ID:</strong> <code>{{issueId}}</code></p>
+          <p><strong>Error Type:</strong> {{issueType}}</p>
+          <p><strong>Error Message:</strong> {{issueDescription}}</p>
+          <p><strong>Path:</strong> <code>{{actionUrl}}</code></p>
+          <p><strong>User Context:</strong> {{userEmail}} ({{userName}})</p>
+        </div>
+        <p><strong>Stack Trace:</strong></p>
+        <pre style="background-color: #1f2937; color: #f3f4f6; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 12px;">{{reason}}</pre>
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="{{dashboardUrl}}" class="button" style="background-color: #dc2626;">View Error Logs</a>
+        </div>
+        <p style="margin-top: 20px; font-size: 12px; color: #6b7280;">This is an automated alert. Reference Error ID <code>{{issueId}}</code> when investigating.</p>
+      `,
+      ES: `
+        <h1 style="color: #dc2626;">🚨 ERROR CRÍTICO</h1>
+        <p>Hola Admin,</p>
+        <p style="color: #dc2626; font-weight: bold;">Ha ocurrido un error crítico en el sistema que requiere atención inmediata.</p>
+        <div class="info-box" style="background-color: #fee2e2; border-left: 4px solid #dc2626;">
+          <p><strong>ID de Error:</strong> <code>{{issueId}}</code></p>
+          <p><strong>Tipo de Error:</strong> {{issueType}}</p>
+          <p><strong>Mensaje de Error:</strong> {{issueDescription}}</p>
+          <p><strong>Ruta:</strong> <code>{{actionUrl}}</code></p>
+          <p><strong>Contexto del Usuario:</strong> {{userEmail}} ({{userName}})</p>
+        </div>
+        <p><strong>Trazabilidad de Pila:</strong></p>
+        <pre style="background-color: #1f2937; color: #f3f4f6; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 12px;">{{reason}}</pre>
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="{{dashboardUrl}}" class="button" style="background-color: #dc2626;">Ver Registros de Errores</a>
+        </div>
+        <p style="margin-top: 20px; font-size: 12px; color: #6b7280;">Esta es una alerta automatizada. Referencia ID de Error <code>{{issueId}}</code> al investigar.</p>
+      `,
+      PT: `
+        <h1 style="color: #dc2626;">🚨 ERRO CRÍTICO</h1>
+        <p>Olá Admin,</p>
+        <p style="color: #dc2626; font-weight: bold;">Ocorreu um erro crítico no sistema que requer atenção imediata.</p>
+        <div class="info-box" style="background-color: #fee2e2; border-left: 4px solid #dc2626;">
+          <p><strong>ID do Erro:</strong> <code>{{issueId}}</code></p>
+          <p><strong>Tipo de Erro:</strong> {{issueType}}</p>
+          <p><strong>Mensagem de Erro:</strong> {{issueDescription}}</p>
+          <p><strong>Caminho:</strong> <code>{{actionUrl}}</code></p>
+          <p><strong>Contexto do Usuário:</strong> {{userEmail}} ({{userName}})</p>
+        </div>
+        <p><strong>Rastreamento de Pilha:</strong></p>
+        <pre style="background-color: #1f2937; color: #f3f4f6; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 12px;">{{reason}}</pre>
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="{{dashboardUrl}}" class="button" style="background-color: #dc2626;">Ver Registros de Erros</a>
+        </div>
+        <p style="margin-top: 20px; font-size: 12px; color: #6b7280;">Este é um alerta automatizado. Referencie o ID do Erro <code>{{issueId}}</code> ao investigar.</p>
       `,
     },
 

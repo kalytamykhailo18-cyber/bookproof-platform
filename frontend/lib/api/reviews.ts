@@ -260,6 +260,8 @@ export interface SubmitReviewRequest {
   internalRating: number;
   internalFeedback: string;
   publishedOnAmazon: boolean;
+  agreedToAmazonTos: boolean;
+  acknowledgedGuidelines: boolean;
 }
 
 export interface ValidateReviewRequest {

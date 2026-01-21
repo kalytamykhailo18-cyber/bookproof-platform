@@ -42,6 +42,18 @@ export interface CreateCampaignRequest {
   wordCount?: number;
   seriesName?: string;
   seriesNumber?: number;
+  readingInstructions?: string;
+
+  // Landing page fields - Milestone 2.2
+  slug?: string;
+  landingPageEnabled?: boolean;
+  landingPageLanguages?: Language[];
+  titleEN?: string;
+  titlePT?: string;
+  titleES?: string;
+  synopsisEN?: string;
+  synopsisPT?: string;
+  synopsisES?: string;
 }
 
 export interface UpdateCampaignRequest extends Partial<CreateCampaignRequest> {}
@@ -113,6 +125,29 @@ export interface Campaign {
   manualDistributionOverride?: boolean;
   distributionPausedAt?: Date;
   distributionResumedAt?: Date;
+  readingInstructions?: string;
+
+  // Landing page fields - Milestone 2.2
+  slug?: string;
+  landingPageEnabled?: boolean;
+  landingPageLanguages?: Language[];
+  publicUrls?: Record<string, string>; // { EN: 'https://...', PT: '...' }
+  titleEN?: string;
+  titlePT?: string;
+  titleES?: string;
+  synopsisEN?: string;
+  synopsisPT?: string;
+  synopsisES?: string;
+  totalPublicViews?: number;
+  totalENViews?: number;
+  totalPTViews?: number;
+  totalESViews?: number;
+  totalUniqueVisitors?: number;
+  uniqueENVisitors?: number;
+  uniquePTVisitors?: number;
+  uniqueESVisitors?: number;
+  lastViewedAt?: Date;
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -301,5 +336,58 @@ export const campaignsApi = {
         : undefined,
     });
     return response.data;
+  },
+};
+
+// ===============================================
+// PUBLIC CAMPAIGNS API - Milestone 2.2 & 2.3
+// ===============================================
+
+/**
+ * Public Campaign interface (for public landing pages)
+ */
+export interface PublicCampaign {
+  id: string;
+  title: string;
+  authorName: string;
+  synopsis: string;
+  genre: string;
+  category: string;
+  availableFormats: BookFormat;
+  coverImageUrl?: string;
+  pageCount?: number;
+  audiobookDurationMinutes?: number;
+  seriesName?: string;
+  seriesNumber?: number;
+  status: CampaignStatus;
+  slug: string;
+  viewingLanguage: Language;
+  availableLanguages: Language[];
+  amazonLink: string;
+  asin?: string;
+  readingInstructions?: string;
+  // Availability information - Milestone 2.2
+  totalSpots: number;
+  spotsTaken: number;
+  spotsRemaining: number;
+  acceptingRegistrations: boolean;
+}
+
+export const publicCampaignsApi = {
+  /**
+   * Get public campaign by slug and language
+   * No authentication required
+   */
+  getPublicCampaign: async (slug: string, language: string): Promise<PublicCampaign> => {
+    const response = await apiClient.get<PublicCampaign>(`/public/campaigns/${slug}/${language}`);
+    return response.data;
+  },
+
+  /**
+   * Track view on campaign landing page
+   * No authentication required
+   */
+  trackView: async (slug: string, language: Language): Promise<void> => {
+    await apiClient.post(`/public/campaigns/${slug}/track-view`, { language });
   },
 };

@@ -23,9 +23,13 @@
       "ratingNote": "This rating is for internal tracking only and will not be shown to the author",
       "feedback": "Written Feedback",
       "feedbackPlaceholder": "Share your honest thoughts about the book...",
-      "minCharacters": "Minimum 20 characters",
+      "minCharacters": "Minimum {minChars} characters required",
       "characters": "characters",
       "feedbackNote": "This feedback will be anonymized and included in the author's final report",
+      "agreedToTos": "I agree to Amazon's Terms of Service for reviews",
+      "agreedToTosNote": "You must comply with Amazon's community guidelines and review policies",
+      "acknowledgedGuidelines": "I confirm I have read and understand the review guidelines",
+      "acknowledgedGuidelinesNote": "Reviews must be honest, helpful, and not contain prohibited content",
       "confirmPublished": "I confirm that I have published this review on Amazon",
       "confirmPublishedNote": "Your review must be live on Amazon before submitting this form",
       "submit": "Submit Review",
@@ -35,8 +39,10 @@
     "errors": {
       "amazonLinkRequired": "Amazon review link is required",
       "invalidAmazonUrl": "Please enter a valid Amazon review URL",
-      "feedbackTooShort": "Feedback must be at least 20 characters",
-      "confirmPublished": "You must confirm the review is published on Amazon"
+      "feedbackTooShort": "Feedback must be at least {minChars} characters",
+      "confirmPublished": "You must confirm the review is published on Amazon",
+      "tosRequired": "You must agree to Amazon Terms of Service compliance",
+      "guidelinesRequired": "You must acknowledge the review guidelines"
     },
     "success": {
       "title": "Review Submitted Successfully!",

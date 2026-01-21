@@ -40,7 +40,7 @@ export class QueueService implements OnModuleInit {
     }
 
     const queue = new Queue(queueName, {
-      connection: this.connection,
+      connection: this.connection as any, // Type assertion needed due to ioredis version mismatch
     });
 
     this.queues.set(queueName, queue);
@@ -66,7 +66,7 @@ export class QueueService implements OnModuleInit {
         await processor(job as { data: T });
       },
       {
-        connection: this.connection,
+        connection: this.connection as any, // Type assertion needed due to ioredis version mismatch
         concurrency,
       },
     );

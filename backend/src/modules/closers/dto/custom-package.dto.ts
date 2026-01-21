@@ -10,13 +10,13 @@ import {
   IsDateString,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CustomPackageStatus } from '@prisma/client';
+import { CustomPackageStatus, PackageApprovalStatus } from '@prisma/client';
 
 // ============================================
 // ENUMS (for frontend/backend alignment)
 // ============================================
 
-export { CustomPackageStatus };
+export { CustomPackageStatus, PackageApprovalStatus };
 
 // ============================================
 // CREATE CUSTOM PACKAGE
@@ -239,6 +239,22 @@ export class CustomPackageResponseDto {
   @ApiProperty({ enum: CustomPackageStatus, description: 'Package status' })
   status: CustomPackageStatus;
 
+  // Approval workflow fields
+  @ApiProperty({ description: 'Whether this package requires Super Admin approval (pricing below 80% threshold)' })
+  approvalRequired: boolean;
+
+  @ApiProperty({ enum: PackageApprovalStatus, description: 'Approval status' })
+  approvalStatus: PackageApprovalStatus;
+
+  @ApiPropertyOptional({ description: 'Admin user ID who approved/rejected' })
+  approvedBy?: string;
+
+  @ApiPropertyOptional({ description: 'When the package was approved/rejected' })
+  approvedAt?: Date;
+
+  @ApiPropertyOptional({ description: 'Reason for rejection (if rejected)' })
+  rejectionReason?: string;
+
   @ApiPropertyOptional({ description: 'Payment link URL' })
   paymentLink?: string;
 
@@ -267,6 +283,9 @@ export class PackageStatsDto {
 
   @ApiProperty({ description: 'Packages in draft' })
   draft: number;
+
+  @ApiProperty({ description: 'Packages pending Super Admin approval' })
+  pendingApproval: number;
 
   @ApiProperty({ description: 'Packages sent to clients' })
   sent: number;

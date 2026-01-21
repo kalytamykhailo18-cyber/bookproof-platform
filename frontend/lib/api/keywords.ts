@@ -28,6 +28,7 @@ export interface CreateKeywordResearchDto {
   description: string;
   targetAudience: string;
   competingBooks?: string;
+  specificKeywords?: string;
   bookLanguage: Language;
   targetMarket: TargetMarket;
   additionalNotes?: string;
@@ -41,6 +42,7 @@ export interface UpdateKeywordResearchDto {
   description?: string;
   targetAudience?: string;
   competingBooks?: string;
+  specificKeywords?: string;
   bookLanguage?: Language;
   targetMarket?: TargetMarket;
   additionalNotes?: string;
@@ -67,6 +69,7 @@ export interface KeywordResearchResponseDto {
   description: string;
   targetAudience: string;
   competingBooks?: string;
+  specificKeywords?: string;
   bookLanguage: Language;
   targetMarket: TargetMarket;
   additionalNotes?: string;

@@ -25,6 +25,10 @@ export interface AssignmentBook {
   genre: string;
   coverImageUrl?: string;
   synopsis: string;
+  /**
+   * @deprecated Direct synopsis file URL no longer exposed for security.
+   * Use synopsisStreamUrl from Assignment instead.
+   */
   synopsisFileUrl?: string;
   availableFormats: BookFormat;
 }
@@ -51,8 +55,34 @@ export interface Assignment {
   deadlineAt?: Date;
   hoursRemaining?: number;
   // NOTE: isBufferAssignment intentionally NOT included per Rule 2
+
+  // SECURITY: Section 11 File Storage and Security Compliance
+  // All file access now goes through secure streaming endpoints with server-side validation
+
+  /**
+   * @deprecated Direct ebook file URL no longer exposed for security.
+   * Use ebookStreamUrl instead.
+   */
   ebookFileUrl?: string;
+
+  /**
+   * Secure ebook streaming endpoint (requires auth, 72-hour deadline enforced)
+   * Example: '/api/queue/assignments/cuid123/stream-ebook'
+   */
+  ebookStreamUrl?: string;
+
+  /**
+   * Secure audiobook streaming endpoint (requires auth, 7-day access window enforced)
+   * Example: '/api/queue/assignments/cuid123/stream-audio'
+   */
   audioBookStreamUrl?: string;
+
+  /**
+   * Secure synopsis streaming endpoint (requires auth, follows format expiration rules)
+   * Example: '/api/queue/assignments/cuid123/stream-synopsis'
+   */
+  synopsisStreamUrl?: string;
+
   ebookDownloadedAt?: Date;
   createdAt: Date;
   updatedAt: Date;

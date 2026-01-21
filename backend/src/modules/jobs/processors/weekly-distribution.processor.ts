@@ -22,8 +22,10 @@ export class WeeklyDistributionProcessor {
 
   /**
    * Main scheduler - runs every Monday at midnight UTC
+   * Cron: 0 0 0 * * 1 = At 00:00:00 on Monday
+   * Per Milestone 4.1: "Distribution runs exactly once per week (Monday 00:00 UTC)"
    */
-  @Cron(CronExpression.EVERY_WEEK, {
+  @Cron('0 0 0 * * 1', {
     name: 'weekly-distribution',
     timeZone: 'UTC',
   })

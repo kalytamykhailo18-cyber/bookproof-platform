@@ -17,6 +17,9 @@ import {
 import { PaymentStatus, CreditTransactionType, CustomPackageStatus, UserRole } from '@prisma/client';
 import { PasswordUtil } from '@common/utils/password.util';
 import { EmailService } from '@modules/email/email.service';
+import { NotificationsService } from '@modules/notifications/notifications.service';
+import { PaymentPdfService } from './payment-pdf.service';
+import { FilesService } from '@modules/files/files.service';
 
 @Injectable()
 export class StripePaymentsService {
@@ -26,6 +29,9 @@ export class StripePaymentsService {
     private prisma: PrismaService,
     private configService: ConfigService,
     private emailService: EmailService,
+    private notificationsService: NotificationsService,
+    private paymentPdfService: PaymentPdfService,
+    private filesService: FilesService,
   ) {
     const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
@@ -255,6 +261,32 @@ export class StripePaymentsService {
     // Generate invoice and receipt (to be implemented)
     await this.generateInvoice(creditPurchase.id);
     await this.generateReceipt(creditPurchase.id);
+
+    // Send in-app payment confirmation notification (Requirements Section 13.2)
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id: authorProfile!.userId },
+      });
+
+      if (user) {
+        await this.notificationsService.createNotification({
+          userId: user.id,
+          type: 'PAYMENT' as any,
+          title: 'Payment Confirmed',
+          message: `Your payment of $${(session.amount_total! / 100).toFixed(2)} has been confirmed. ${packageTier.credits} credits added to your account.`,
+          actionUrl: '/author/credits',
+          metadata: {
+            amount: session.amount_total! / 100,
+            credits: packageTier.credits,
+            transactionId: creditPurchase.id,
+            packageName: packageTier.name,
+          },
+        });
+      }
+    } catch (notifError) {
+      // Don't fail the payment if notification fails
+      console.error(`Failed to send payment confirmation notification: ${notifError.message}`);
+    }
   }
 
   /**
@@ -305,7 +337,7 @@ export class StripePaymentsService {
   async generateInvoice(creditPurchaseId: string): Promise<InvoiceResponseDto> {
     const purchase = await this.prisma.creditPurchase.findUnique({
       where: { id: creditPurchaseId },
-      include: { authorProfile: { include: { user: true } }, packageTier: true },
+      include: { authorProfile: { include: { user: true } }, packageTier: true, coupon: true },
     });
 
     if (!purchase) {
@@ -315,6 +347,34 @@ export class StripePaymentsService {
     // Generate invoice number
     const invoiceNumber = `INV-${new Date().getFullYear()}-${String(Date.now()).slice(-8)}`;
 
+    // Generate PDF invoice
+    const pdfBuffer = await this.paymentPdfService.generateInvoicePdf({
+      invoiceNumber,
+      customerName: purchase.authorProfile.user.name || purchase.authorProfile.user.email,
+      customerEmail: purchase.authorProfile.user.email,
+      customerCompany: purchase.authorProfile.user.companyName || undefined,
+      packageName: purchase.packageTier?.name || 'Custom Package',
+      credits: purchase.credits,
+      baseAmount: parseFloat(purchase.baseAmount?.toString() || purchase.amountPaid.toString()),
+      discountAmount: purchase.discountAmount ? parseFloat(purchase.discountAmount.toString()) : undefined,
+      finalAmount: parseFloat(purchase.amountPaid.toString()),
+      currency: purchase.currency,
+      activationWindowDays: purchase.activationWindowDays || 30,
+      couponCode: purchase.coupon?.code || undefined,
+      purchaseDate: purchase.purchaseDate,
+      paymentMethod: 'Credit Card (Stripe)',
+      stripePaymentId: purchase.stripePaymentId || undefined,
+    });
+
+    // Upload PDF to storage
+    const pdfKey = `invoices/${invoiceNumber}.pdf`;
+    const { url: pdfUrl } = await this.filesService.uploadFile(
+      pdfBuffer,
+      pdfKey,
+      'application/pdf',
+    );
+
+    // Create invoice record
     const invoice = await this.prisma.invoice.create({
       data: {
         authorProfileId: purchase.authorProfileId,
@@ -325,10 +385,9 @@ export class StripePaymentsService {
         paymentStatus: purchase.paymentStatus,
         paidAt: purchase.paymentStatus === PaymentStatus.COMPLETED ? purchase.purchaseDate : null,
         stripePaymentId: purchase.stripePaymentId,
+        pdfUrl,
       },
     });
-
-    // TODO: Generate PDF invoice
 
     return {
       id: invoice.id,
@@ -356,14 +415,38 @@ export class StripePaymentsService {
       throw new NotFoundException('Purchase not found');
     }
 
-    // TODO: Generate PDF receipt
+    // Generate receipt number
+    const receiptNumber = `REC-${new Date().getFullYear()}-${String(Date.now()).slice(-8)}`;
+
+    // Generate PDF receipt
+    const pdfBuffer = await this.paymentPdfService.generateReceiptPdf({
+      receiptNumber,
+      customerName: purchase.authorProfile.user.name || purchase.authorProfile.user.email,
+      customerEmail: purchase.authorProfile.user.email,
+      customerCompany: purchase.authorProfile.user.companyName || undefined,
+      packageName: purchase.packageTier?.name || 'Custom Package',
+      credits: purchase.credits,
+      amount: parseFloat(purchase.amountPaid.toString()),
+      currency: purchase.currency,
+      paymentDate: purchase.purchaseDate,
+      paymentMethod: 'Credit Card (Stripe)',
+      transactionId: purchase.stripePaymentId || purchase.id,
+    });
+
+    // Upload PDF to storage
+    const pdfKey = `receipts/${receiptNumber}.pdf`;
+    const { url: pdfUrl } = await this.filesService.uploadFile(
+      pdfBuffer,
+      pdfKey,
+      'application/pdf',
+    );
 
     const transaction = await this.mapToPaymentTransactionDto(purchase);
 
     return {
       id: purchase.id,
       transaction,
-      receiptPdfUrl: '', // TODO: Generate PDF
+      receiptPdfUrl: pdfUrl,
       emailSent: false,
       emailSentAt: undefined,
     };

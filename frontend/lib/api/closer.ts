@@ -6,11 +6,19 @@ import { apiClient } from './client';
 
 export enum CustomPackageStatus {
   DRAFT = 'DRAFT',
+  PENDING_APPROVAL = 'PENDING_APPROVAL', // Waiting for Super Admin approval (custom pricing below 80% threshold)
   SENT = 'SENT',
   VIEWED = 'VIEWED',
   PAID = 'PAID',
   EXPIRED = 'EXPIRED',
   CANCELLED = 'CANCELLED',
+}
+
+export enum PackageApprovalStatus {
+  NOT_REQUIRED = 'NOT_REQUIRED',   // Price meets minimum threshold, no approval needed
+  PENDING = 'PENDING',             // Awaiting Super Admin approval
+  APPROVED = 'APPROVED',           // Super Admin approved
+  REJECTED = 'REJECTED',           // Super Admin rejected
 }
 
 export enum PaymentStatus {
@@ -80,6 +88,13 @@ export interface CustomPackageResponse {
   clientEmail: string;
   clientCompany?: string;
   status: CustomPackageStatus;
+  // Approval workflow fields
+  approvalRequired: boolean;
+  approvalStatus: PackageApprovalStatus;
+  approvedBy?: string;
+  approvedAt?: string;
+  rejectionReason?: string;
+  // Payment and tracking
   paymentLink?: string;
   paymentLinkExpiresAt?: string;
   sentAt?: string;
@@ -92,6 +107,7 @@ export interface CustomPackageResponse {
 export interface PackageStats {
   totalPackages: number;
   draft: number;
+  pendingApproval: number; // Packages waiting for Super Admin approval
   sent: number;
   viewed: number;
   paid: number;
@@ -395,5 +411,43 @@ export const closerApi = {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+  },
+
+  // ============================================
+  // ADMIN PACKAGE APPROVAL (Super Admin only)
+  // ============================================
+
+  /**
+   * Get packages pending Super Admin approval
+   */
+  async getPackagesPendingApproval(): Promise<CustomPackageResponse[]> {
+    const response = await apiClient.get<CustomPackageResponse[]>(
+      '/admin/packages/pending-approval',
+    );
+    return response.data;
+  },
+
+  /**
+   * Approve a custom package (Super Admin only)
+   */
+  async approvePackage(packageId: string): Promise<CustomPackageResponse> {
+    const response = await apiClient.post<CustomPackageResponse>(
+      `/admin/packages/${packageId}/approve`,
+    );
+    return response.data;
+  },
+
+  /**
+   * Reject a custom package (Super Admin only)
+   */
+  async rejectPackage(
+    packageId: string,
+    rejectionReason: string,
+  ): Promise<CustomPackageResponse> {
+    const response = await apiClient.post<CustomPackageResponse>(
+      `/admin/packages/${packageId}/reject`,
+      { rejectionReason },
+    );
+    return response.data;
   },
 };

@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { adminControlsApi } from '@/lib/api/admin-controls';
+import { adminAuthorsApi } from '@/lib/api/admin-authors';
 import type {
   PauseCampaignDto,
   ResumeCampaignDto,
@@ -21,6 +22,11 @@ import type {
   CancelAssignmentDto,
   RequestResubmissionDto,
 } from '@/lib/api/admin-controls';
+import type {
+  SuspendAuthorDto,
+  UnsuspendAuthorDto,
+  UpdateAuthorNotesDto,
+} from '@/lib/api/admin-authors';
 
 export function useAdminControls() {
   const queryClient = useQueryClient();
@@ -321,6 +327,48 @@ export function useAdminControls() {
       staleTime: 30000,
     });
 
+  // Suspend author mutation
+  const suspendAuthor = useMutation({
+    mutationFn: ({ authorProfileId, data }: { authorProfileId: string; data: SuspendAuthorDto }) =>
+      adminAuthorsApi.suspendAuthor(authorProfileId, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-authors'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-author', variables.authorProfileId] });
+      toast.success('Author suspended successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to suspend author');
+    },
+  });
+
+  // Unsuspend author mutation
+  const unsuspendAuthor = useMutation({
+    mutationFn: ({ authorProfileId, data }: { authorProfileId: string; data: UnsuspendAuthorDto }) =>
+      adminAuthorsApi.unsuspendAuthor(authorProfileId, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-authors'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-author', variables.authorProfileId] });
+      toast.success('Author unsuspended successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to unsuspend author');
+    },
+  });
+
+  // Update author admin notes mutation
+  const updateAuthorNotes = useMutation({
+    mutationFn: ({ authorProfileId, data }: { authorProfileId: string; data: UpdateAuthorNotesDto }) =>
+      adminAuthorsApi.updateAdminNotes(authorProfileId, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-authors'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-author', variables.authorProfileId] });
+      toast.success('Admin notes updated successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to update admin notes');
+    },
+  });
+
   return {
     useCampaignHealth,
     useCampaignAnalytics,
@@ -345,5 +393,8 @@ export function useAdminControls() {
     reassignReader,
     cancelAssignment,
     requestResubmission,
+    suspendAuthor,
+    unsuspendAuthor,
+    updateAuthorNotes,
   };
 }

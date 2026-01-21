@@ -89,11 +89,60 @@ export class KeywordPricingResponseDto {
 }
 
 /**
+ * Response DTO for review payment rates
+ */
+export class ReviewPaymentRatesDto {
+  @ApiProperty({ description: 'Payment rate for ebook reviews in USD', example: 1.00 })
+  ebookRate: number;
+
+  @ApiProperty({ description: 'Payment rate for audiobook reviews in USD', example: 2.00 })
+  audiobookRate: number;
+
+  @ApiProperty({ description: 'Currency code', example: 'USD' })
+  currency: string;
+
+  @ApiProperty({ description: 'Last updated date' })
+  updatedAt: Date;
+
+  @ApiPropertyOptional({ description: 'Last updated by admin' })
+  updatedBy?: string;
+}
+
+/**
+ * DTO for updating review payment rates
+ */
+export class UpdateReviewPaymentRatesDto {
+  @ApiPropertyOptional({ description: 'Ebook review payment rate', example: 1.00 })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @Min(0)
+  @Max(999.99)
+  ebookRate?: number;
+
+  @ApiPropertyOptional({ description: 'Audiobook review payment rate', example: 2.00 })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @Min(0)
+  @Max(999.99)
+  audiobookRate?: number;
+
+  @ApiPropertyOptional({ description: 'Reason for the change' })
+  @IsOptional()
+  @IsString()
+  reason?: string;
+}
+
+/**
  * Response DTO for all pricing settings
  */
 export class PricingSettingsResponseDto {
   @ApiProperty({ description: 'Keyword research pricing' })
   keywordResearch: KeywordPricingResponseDto;
+
+  @ApiProperty({ description: 'Review payment rates' })
+  reviewPaymentRates: ReviewPaymentRatesDto;
 }
 
 /**
