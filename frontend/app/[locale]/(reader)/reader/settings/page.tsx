@@ -10,9 +10,18 @@ import {
   XCircle,
   AlertTriangle,
   Loader2,
+  Globe,
 } from 'lucide-react';
 import { useUserData } from '@/hooks/useUserData';
-import { ConsentType } from '@/lib/api/users';
+import { ConsentType, Language } from '@/lib/api/users';
+import { useRouter, useParams } from 'next/navigation';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,6 +50,9 @@ import {
  */
 export default function SettingsPage() {
   const t = useTranslations('settings');
+  const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const {
     exportData,
     isExporting,
@@ -50,6 +62,10 @@ export default function SettingsPage() {
     isUpdatingConsent,
     consents,
     isLoadingConsents,
+    updateLanguage,
+    isUpdatingLanguage,
+    languagePreference,
+    isLoadingLanguage,
   } = useUserData();
 
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
@@ -85,6 +101,13 @@ export default function SettingsPage() {
     return consents?.find((c) => c.consentType === consentType)?.granted ?? false;
   };
 
+  const handleLanguageChange = (newLanguage: Language) => {
+    updateLanguage({ preferredLanguage: newLanguage });
+    // Also update the URL locale to match the new language
+    const newLocale = newLanguage.toLowerCase();
+    router.push(`/${newLocale}/reader/settings`);
+  };
+
   return (
     <div className="container mx-auto p-6 max-w-4xl space-y-6">
       <div className="space-y-2">
@@ -93,6 +116,49 @@ export default function SettingsPage() {
           Manage your privacy, data, and account preferences
         </p>
       </div>
+
+      {/* Language Preference Section */}
+      <Card className="animate-fade-up">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Globe className="h-5 w-5" />
+            <CardTitle>Language Preference</CardTitle>
+          </div>
+          <CardDescription>
+            Choose your preferred language for the platform and email notifications
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between space-x-4 p-4 rounded-lg border">
+            <div className="flex-1 space-y-1">
+              <Label htmlFor="language" className="text-base font-medium">
+                Interface Language
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                This will change the language of the entire platform
+              </p>
+            </div>
+            {isLoadingLanguage ? (
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            ) : (
+              <Select
+                value={languagePreference || 'EN'}
+                onValueChange={(value) => handleLanguageChange(value as Language)}
+                disabled={isUpdatingLanguage}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select language" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={Language.EN}>English</SelectItem>
+                  <SelectItem value={Language.PT}>Português</SelectItem>
+                  <SelectItem value={Language.ES}>Español</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Data Export Section */}
       <Card className="animate-fade-up-fast">

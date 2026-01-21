@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/lib/i18n';
+import { CookieConsent } from '@/components/shared/CookieConsent';
 
 // Force dynamic rendering for all locale routes (authenticated pages)
 export const dynamic = 'force-dynamic';
@@ -26,6 +27,7 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       {children}
+      <CookieConsent />
     </NextIntlClientProvider>
   );
 }

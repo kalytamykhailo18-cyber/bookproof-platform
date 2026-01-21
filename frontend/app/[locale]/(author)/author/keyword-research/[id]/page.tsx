@@ -69,8 +69,8 @@ export default function KeywordResearchDetailsPage() {
     checkoutMutation.mutate({
       id,
       data: {
-        successUrl: `${baseUrl}/author/keyword-research/${id}?success=true`,
-        cancelUrl: `${baseUrl}/author/keyword-research/${id}?cancelled=true`,
+        successUrl: `${baseUrl}/${locale}/author/keyword-research/${id}?success=true`,
+        cancelUrl: `${baseUrl}/${locale}/author/keyword-research/${id}?cancelled=true`,
       },
     });
   };

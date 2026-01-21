@@ -130,6 +130,25 @@ export interface ConsentResponse {
   withdrawnAt?: string;
 }
 
+export enum Language {
+  EN = 'EN',
+  PT = 'PT',
+  ES = 'ES',
+}
+
+export interface UpdateLanguageRequest {
+  preferredLanguage: Language;
+}
+
+export interface UpdateLanguageResponse {
+  message: string;
+  preferredLanguage: Language;
+}
+
+export interface LanguageResponse {
+  preferredLanguage: Language;
+}
+
 // API methods
 
 /**
@@ -172,5 +191,27 @@ export const updateConsent = async (request: UpdateConsentRequest): Promise<Cons
  */
 export const getUserConsents = async (): Promise<ConsentResponse[]> => {
   const { data } = await apiClient.get<ConsentResponse[]>('/users/me/consents');
+  return data;
+};
+
+/**
+ * Get user's current language preference
+ *
+ * Per requirements.md Section 7.4
+ */
+export const getLanguage = async (): Promise<LanguageResponse> => {
+  const { data } = await apiClient.get<LanguageResponse>('/users/me/language');
+  return data;
+};
+
+/**
+ * Update user's preferred language
+ *
+ * Per requirements.md Section 7.4:
+ * - User can change language in settings
+ * - Interface updates immediately
+ */
+export const updateLanguage = async (request: UpdateLanguageRequest): Promise<UpdateLanguageResponse> => {
+  const { data } = await apiClient.patch<UpdateLanguageResponse>('/users/me/language', request);
   return data;
 };

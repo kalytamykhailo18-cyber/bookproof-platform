@@ -35,6 +35,9 @@ import {
   DisputeStatus,
   DisputeType,
   DisputePriority,
+  FileAppealDto,
+  ResolveAppealDto,
+  SlaStatsResponseDto,
 } from '../dto/dispute.dto';
 
 @ApiTags('Admin - Disputes')
@@ -98,6 +101,33 @@ export class DisputeController {
   })
   async getDisputeStats() {
     return this.disputeService.getDisputeStats();
+  }
+
+  @Get('sla/stats')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Get SLA compliance statistics' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'SLA statistics',
+    type: SlaStatsResponseDto,
+  })
+  async getSlaStats(): Promise<SlaStatsResponseDto> {
+    return this.disputeService.getSlaStats();
+  }
+
+  @Get('user/:userId')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Get disputes by user' })
+  @ApiParam({ name: 'userId', description: 'User ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User disputes',
+    type: [DisputeResponseDto],
+  })
+  async getDisputesByUser(
+    @Param('userId') userId: string,
+  ): Promise<DisputeResponseDto[]> {
+    return this.disputeService.getDisputesByUser(userId);
   }
 
   @Get(':id')
@@ -169,18 +199,39 @@ export class DisputeController {
     return this.disputeService.updateDisputeStatus(disputeId, dto, req.user!.id);
   }
 
-  @Get('user/:userId')
-  @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Get disputes by user' })
-  @ApiParam({ name: 'userId', description: 'User ID' })
+  @Post(':id/appeal')
+  @Roles(UserRole.ADMIN, UserRole.AUTHOR, UserRole.READER)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'File an appeal on a resolved dispute (one per issue)' })
+  @ApiParam({ name: 'id', description: 'Dispute ID' })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'User disputes',
-    type: [DisputeResponseDto],
+    description: 'Appeal filed successfully',
+    type: DisputeResponseDto,
   })
-  async getDisputesByUser(
-    @Param('userId') userId: string,
-  ): Promise<DisputeResponseDto[]> {
-    return this.disputeService.getDisputesByUser(userId);
+  async fileAppeal(
+    @Param('id') disputeId: string,
+    @Body() dto: FileAppealDto,
+    @Req() req: Request,
+  ): Promise<DisputeResponseDto> {
+    return this.disputeService.fileAppeal(disputeId, req.user!.id, dto.reason);
+  }
+
+  @Put(':id/appeal/resolve')
+  @Roles(UserRole.ADMIN)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Resolve an appeal (admin only)' })
+  @ApiParam({ name: 'id', description: 'Dispute ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Appeal resolved',
+    type: DisputeResponseDto,
+  })
+  async resolveAppeal(
+    @Param('id') disputeId: string,
+    @Body() dto: ResolveAppealDto,
+    @Req() req: Request,
+  ): Promise<DisputeResponseDto> {
+    return this.disputeService.resolveAppeal(disputeId, req.user!.id, dto.approved, dto.resolution);
   }
 }

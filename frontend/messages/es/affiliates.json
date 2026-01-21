@@ -6,7 +6,7 @@
       "title": "¿Por qué unirse a nuestro programa de afiliados?",
       "commission": "Gana un 20% de comisión de por vida en todas las compras realizadas por tus referidos",
       "lifetime": "Comisiones de por vida - gana de cada compra que hagan tus referidos, para siempre",
-      "tracking": "Seguimiento avanzado con ventana de cookies de 30 días y análisis detallados",
+      "tracking": "Seguimiento avanzado con ventana de cookies de 90 días y análisis detallados",
       "payout": "Umbral mínimo de pago de $50 con múltiples opciones de pago"
     },
     "form": {
@@ -131,11 +131,11 @@
       },
       "step2": {
         "title": "Los Usuarios Hacen Clic en Tu Enlace",
-        "description": "Cuando alguien hace clic en tu enlace, se establece una cookie de seguimiento de 30 días"
+        "description": "Cuando alguien hace clic en tu enlace, se establece una cookie de seguimiento de 90 días"
       },
       "step3": {
         "title": "El Usuario se Registra y Compra",
-        "description": "Si se registran dentro de 30 días y realizan una compra, ganas una comisión"
+        "description": "Si se registran dentro de 90 días y realizan una compra, ganas una comisión"
       },
       "step4": {
         "title": "Gana Comisiones de Por Vida",
