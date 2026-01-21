@@ -11,7 +11,7 @@ import {
 } from '@/lib/api/campaigns';
 import { useLoading } from '@/components/providers/LoadingProvider';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 // Hook to track upload progress state
 export function useUploadProgress() {
@@ -56,6 +56,8 @@ export function useCampaigns() {
   const queryClient = useQueryClient();
   const { startLoading, stopLoading } = useLoading();
   const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
 
   // Get all campaigns
   const {
@@ -78,7 +80,7 @@ export function useCampaigns() {
       stopLoading();
       queryClient.invalidateQueries({ queryKey: ['campaigns'] });
       toast.success('Campaign created successfully!');
-      router.push(`/author/campaigns/${newCampaign.id}`);
+      router.push(`/${locale}/author/campaigns/${newCampaign.id}`);
     },
     onError: (error: any) => {
       stopLoading();
@@ -120,7 +122,7 @@ export function useCampaigns() {
       stopLoading();
       queryClient.invalidateQueries({ queryKey: ['campaigns'] });
       toast.success('Campaign deleted successfully!');
-      router.push('/author/campaigns');
+      router.push(`/${locale}/author/campaigns`);
     },
     onError: (error: any) => {
       stopLoading();

@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import {
   Card,
@@ -30,6 +30,8 @@ type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export default function ForgotPasswordPage() {
   const t = useTranslations('auth.forgotPassword');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { requestPasswordResetAsync, isRequestingReset } = useAuth();
   const [emailSent, setEmailSent] = useState(false);
 
@@ -76,7 +78,7 @@ export default function ForgotPasswordPage() {
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => router.push('/login')}
+            onClick={() => router.push(`/${locale}/login`)}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t('backToLogin')}
@@ -125,7 +127,7 @@ export default function ForgotPasswordPage() {
           variant="ghost"
           className="w-full animate-fade-up-slow"
           type="button"
-          onClick={() => router.push('/login')}
+          onClick={() => router.push(`/${locale}/login`)}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToLogin')}

@@ -52,6 +52,7 @@ export default function EditKeywordResearchPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const locale = (params.locale as string) || 'en';
 
   const { data: research, isLoading } = useKeywordResearch(id);
   const updateMutation = useUpdateKeywordResearch();
@@ -95,7 +96,7 @@ export default function EditKeywordResearchPage() {
     const data = form.getValues();
     try {
       await updateMutation.mutateAsync({ id, data });
-      router.push(`/author/keyword-research/${id}`);
+      router.push(`/${locale}/author/keyword-research/${id}`);
     } catch (error) {
       console.error('Failed to update keyword research:', error);
     }
@@ -139,7 +140,7 @@ export default function EditKeywordResearchPage() {
           <AlertDescription>{tEdit('cannotEdit')}</AlertDescription>
         </Alert>
         <div className="mt-4">
-          <Button variant="outline" onClick={() => router.push(`/author/keyword-research/${id}`)}>
+          <Button variant="outline" onClick={() => router.push(`/${locale}/author/keyword-research/${id}`)}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Details
           </Button>
@@ -154,7 +155,7 @@ export default function EditKeywordResearchPage() {
       <div className="mb-8">
         <Button
           variant="ghost"
-          onClick={() => router.push(`/author/keyword-research/${id}`)}
+          onClick={() => router.push(`/${locale}/author/keyword-research/${id}`)}
           className="mb-4"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -359,7 +360,7 @@ export default function EditKeywordResearchPage() {
             <Button
               type="button"
               variant="outline"
-              onClick={() => router.push(`/author/keyword-research/${id}`)}
+              onClick={() => router.push(`/${locale}/author/keyword-research/${id}`)}
             >
               Cancel
             </Button>

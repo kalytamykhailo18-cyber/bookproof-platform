@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAdminControls } from '@/hooks/useAdminControls';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -42,6 +42,8 @@ import {
 export default function AdminCampaignsPage() {
   const t = useTranslations('adminCampaigns');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { useAllCampaigns } = useAdminControls();
   const { data: campaigns, isLoading } = useAllCampaigns();
 
@@ -326,7 +328,7 @@ export default function AdminCampaignsPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => router.push(`/admin/campaigns/${campaign.campaign.id}`)}
+                          onClick={() => router.push(`/${locale}/admin/campaigns/${campaign.campaign.id}`)}
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -334,7 +336,7 @@ export default function AdminCampaignsPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() =>
-                            router.push(`/admin/campaigns/${campaign.campaign.id}/controls`)
+                            router.push(`/${locale}/admin/campaigns/${campaign.campaign.id}/controls`)
                           }
                         >
                           <Settings className="h-4 w-4" />

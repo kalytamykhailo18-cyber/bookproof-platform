@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { DollarSign, Wallet, ArrowLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 import { useReaderStats } from '@/hooks/useReaders';
 import { useRequestPayout } from '@/hooks/usePayouts';
@@ -49,6 +49,8 @@ type PayoutFormData = z.infer<typeof payoutSchema>;
 export default function RequestPayoutPage() {
   const t = useTranslations('payouts');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { stats, isLoadingStats: statsLoading } = useReaderStats();
   const { mutate: requestPayout, isPending } = useRequestPayout();
 
@@ -88,7 +90,7 @@ export default function RequestPayoutPage() {
       },
       {
         onSuccess: () => {
-          router.push('/reader/wallet');
+          router.push(`/${locale}/reader/wallet`);
         },
       },
     );
@@ -211,7 +213,7 @@ export default function RequestPayoutPage() {
     <div className="container mx-auto max-w-3xl px-4 py-8">
       {/* Back Button */}
       <span
-        onClick={() => router.push('/reader/wallet')}
+        onClick={() => router.push(`/${locale}/reader/wallet`)}
         className="mb-6 inline-flex animate-fade-right-fast items-center gap-2 text-sm text-muted-foreground hover:text-foreground cursor-pointer"
       >
         <ArrowLeft className="h-4 w-4" />

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +12,8 @@ export default function VerifyEmailPage() {
   const t = useTranslations('auth.verifyEmail');
   const searchParams = useSearchParams();
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { verifyEmail } = useAuth();
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
   const [errorMessage, setErrorMessage] = useState('');
@@ -90,13 +92,13 @@ export default function VerifyEmailPage() {
 
       <CardFooter className="flex flex-col space-y-2">
         {status === 'success' && (
-          <Button className="w-full" onClick={() => router.push('/login')}>
+          <Button className="w-full" onClick={() => router.push(`/${locale}/login`)}>
             {t('loginButton')}
           </Button>
         )}
 
         {status === 'error' && (
-          <Button onClick={() => router.push('/register')} variant="outline" className="w-full">
+          <Button onClick={() => router.push(`/${locale}/register`)} variant="outline" className="w-full">
             {t('resendButton')}
           </Button>
         )}

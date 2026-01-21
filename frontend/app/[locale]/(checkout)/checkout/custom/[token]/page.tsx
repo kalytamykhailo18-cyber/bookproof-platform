@@ -20,6 +20,7 @@ export default function CustomPackageCheckoutPage() {
   const params = useParams();
   const router = useRouter();
   const token = params.token as string;
+  const locale = (params.locale as string) || 'en';
 
   const [packageData, setPackageData] = useState<CustomPackagePublicDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -100,7 +101,7 @@ export default function CustomPackageCheckoutPage() {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button variant="outline" onClick={() => router.push('/')}>
+          <Button variant="outline" onClick={() => router.push(`/${locale}`)}>
             Go to Homepage
           </Button>
         </CardFooter>
@@ -149,7 +150,7 @@ export default function CustomPackageCheckoutPage() {
           <p className="text-sm text-muted-foreground">Credits: {packageData.credits}</p>
         </CardContent>
         <CardFooter>
-          <Button onClick={() => router.push('/login')}>Go to Login</Button>
+          <Button onClick={() => router.push(`/${locale}/login`)}>Go to Login</Button>
         </CardFooter>
       </Card>
     );

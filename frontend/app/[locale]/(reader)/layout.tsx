@@ -16,7 +16,7 @@ export default function ReaderLayout({ children }: { children: React.ReactNode }
     if (!isLoading) {
       if (!user) {
         // Not authenticated - redirect to login
-        router.push('/login');
+        router.push(`/${locale}/login`);
       } else if (user.role !== UserRole.READER) {
         // Authenticated but not a reader - redirect to appropriate dashboard
         if (user.role === UserRole.ADMIN) {

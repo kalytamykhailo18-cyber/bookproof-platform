@@ -20,7 +20,7 @@ import { BookOpen, Search, Filter, CheckCircle, ArrowLeft, Clock } from 'lucide-
 import { BookFormat } from '@/lib/api/campaigns';
 import { AvailableCampaign } from '@/lib/api/queue';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 function CampaignCard({
   campaign,
@@ -167,6 +167,8 @@ function CampaignCard({
 export default function CampaignsPage() {
   const t = useTranslations('reader.campaigns');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { campaigns, isLoadingCampaigns } = useAvailableCampaigns();
   const { profile, isLoadingProfile } = useReaderProfile();
 
@@ -178,7 +180,7 @@ export default function CampaignsPage() {
   // Redirect to profile creation if no profile
   if (!isLoadingProfile && !profile) {
     if (typeof window !== 'undefined') {
-      window.location.href = '/reader/profile';
+      window.location.href = `/${locale}/reader/profile`;
     }
     return null;
   }
@@ -228,7 +230,7 @@ export default function CampaignsPage() {
               variant="ghost"
               size="sm"
               className="animate-fade-right"
-              onClick={() => router.push('/reader')}
+              onClick={() => router.push(`/${locale}/reader`)}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               {t('backToDashboard')}

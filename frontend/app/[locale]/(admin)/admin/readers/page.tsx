@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAdminReaders } from '@/hooks/useAdminReaders';
 import { ContentPreference } from '@/lib/api/readers';
@@ -44,6 +44,8 @@ import {
 export default function AdminReadersPage() {
   const t = useTranslations('adminReaders');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { useAllReaders, useReaderStats } = useAdminReaders();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -385,7 +387,7 @@ export default function AdminReadersPage() {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          onClick={() => router.push(`/admin/readers/${reader.id}`)}
+                          onClick={() => router.push(`/${locale}/admin/readers/${reader.id}`)}
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -393,7 +395,7 @@ export default function AdminReadersPage() {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          onClick={() => router.push(`/admin/readers/${reader.id}?tab=actions`)}
+                          onClick={() => router.push(`/${locale}/admin/readers/${reader.id}?tab=actions`)}
                         >
                           <Settings className="h-4 w-4" />
                         </Button>

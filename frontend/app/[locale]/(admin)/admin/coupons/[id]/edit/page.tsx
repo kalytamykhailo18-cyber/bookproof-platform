@@ -80,6 +80,7 @@ export default function EditCouponPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const locale = (params.locale as string) || 'en';
 
   const { data: coupon, isLoading } = useCoupon(id);
   const updateMutation = useUpdateCoupon();
@@ -126,7 +127,7 @@ export default function EditCouponPage() {
     const values = form.getValues();
     const data: UpdateCouponDto = values;
     await updateMutation.mutateAsync({ id, data });
-    router.push(`/admin/coupons/${id}`);
+    router.push(`/${locale}/admin/coupons/${id}`);
   };
 
   if (isLoading) {

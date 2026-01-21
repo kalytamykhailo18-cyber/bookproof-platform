@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { authApi } from '@/lib/api/auth';
@@ -24,6 +24,8 @@ import { FileText, Shield, CheckCircle } from 'lucide-react';
 export default function AcceptTermsPage() {
   const t = useTranslations('auth.acceptTerms');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const queryClient = useQueryClient();
   const { user, logout } = useAuth();
   const { startLoading, stopLoading } = useLoading();
@@ -40,7 +42,7 @@ export default function AcceptTermsPage() {
       // Invalidate user query to refresh profile data
       queryClient.invalidateQueries({ queryKey: ['user'] });
       // Redirect to author dashboard
-      router.push('/author');
+      router.push(`/${locale}/author`);
     },
     onError: (error: unknown) => {
       stopLoading();
@@ -60,7 +62,7 @@ export default function AcceptTermsPage() {
 
   // If user already accepted terms, redirect to dashboard
   if (user?.termsAccepted) {
-    router.push('/author');
+    router.push(`/${locale}/author`);
     return null;
   }
 

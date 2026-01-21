@@ -8,12 +8,14 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { NotificationList } from '@/components/shared/NotificationList';
 import { Settings, CheckCheck, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { NotificationType } from '@/lib/api/notifications';
 
 export default function NotificationsPage() {
   const t = useTranslations('notifications');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [typeFilter, setTypeFilter] = useState<NotificationType | 'ALL'>('ALL');
 
@@ -53,7 +55,7 @@ export default function NotificationsPage() {
           <Button
             variant="outline"
             className="animate-fade-left"
-            onClick={() => router.push('/affiliate/notifications/settings')}
+            onClick={() => router.push(`/${locale}/affiliate/notifications/settings`)}
           >
             <Settings className="mr-2 h-4 w-4" />
             Settings

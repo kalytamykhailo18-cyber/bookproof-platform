@@ -64,6 +64,7 @@ export default function AdminReaderDetailPage() {
   const t = useTranslations('adminReaders');
   const params = useParams();
   const router = useRouter();
+  const locale = (params.locale as string) || 'en';
   const searchParams = useSearchParams();
   const readerId = params.id as string;
   const initialTab = searchParams.get('tab') || 'overview';
@@ -278,7 +279,7 @@ export default function AdminReaderDetailPage() {
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-semibold">{t('notFound.title')}</h3>
             <p className="text-muted-foreground">{t('notFound.description')}</p>
-            <Button type="button" className="mt-4" onClick={() => router.push('/admin/readers')}>
+            <Button type="button" className="mt-4" onClick={() => router.push(`/${locale}/admin/readers`)}>
               {t('notFound.backToList')}
             </Button>
           </CardContent>
@@ -291,7 +292,7 @@ export default function AdminReaderDetailPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" onClick={() => router.push('/admin/readers')}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/${locale}/admin/readers`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('detail.backToReaders')}
         </Button>

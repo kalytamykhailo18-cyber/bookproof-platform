@@ -29,13 +29,15 @@ import {
   Link as LinkIcon,
   Wallet,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import { CommissionStatus, PayoutRequestStatus } from '@/lib/api/affiliates';
 
 export default function AffiliateDashboardPage() {
   const t = useTranslations('affiliates.dashboard');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { data: profile, isLoading: profileLoading } = useAffiliateProfile();
   const { data: stats, isLoading: statsLoading } = useAffiliateStats();
   const { data: commissions, isLoading: commissionsLoading } = useCommissions();
@@ -108,7 +110,7 @@ export default function AffiliateDashboardPage() {
               type="button"
               variant="link"
               className="ml-2 h-auto p-0"
-              onClick={() => router.push('/affiliate/register')}
+              onClick={() => router.push(`/${locale}/affiliate/register`)}
             >
               {t('register')}
             </Button>
@@ -144,11 +146,11 @@ export default function AffiliateDashboardPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button type="button" onClick={() => router.push('/affiliate/referral-links')}>
+          <Button type="button" onClick={() => router.push(`/${locale}/affiliate/referral-links`)}>
             <LinkIcon className="mr-2 h-4 w-4" />
             {t('getReferralLink')}
           </Button>
-          <Button type="button" variant="outline" onClick={() => router.push('/affiliate/payouts')}>
+          <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/affiliate/payouts`)}>
             <Wallet className="mr-2 h-4 w-4" />
             {t('requestPayout')}
           </Button>
@@ -221,7 +223,7 @@ export default function AffiliateDashboardPage() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => router.push('/affiliate/commissions')}
+              onClick={() => router.push(`/${locale}/affiliate/commissions`)}
             >
               {t('viewAll')}
             </Button>
@@ -277,7 +279,7 @@ export default function AffiliateDashboardPage() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => router.push('/affiliate/payouts')}
+              onClick={() => router.push(`/${locale}/affiliate/payouts`)}
             >
               {t('viewAll')}
             </Button>
