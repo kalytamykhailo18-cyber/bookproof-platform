@@ -77,6 +77,7 @@ const campaignSchema = z.object({
   wordCount: z.number().min(1).optional().nullable(),
   seriesName: z.string().max(255).optional().nullable(),
   seriesNumber: z.number().min(1).optional().nullable(),
+  readingInstructions: z.string().max(2000, 'Reading instructions must not exceed 2000 characters').optional().nullable(),
 });
 
 type CampaignFormData = z.infer<typeof campaignSchema>;
@@ -134,6 +135,7 @@ export default function EditCampaignPage() {
         wordCount: campaign.wordCount ?? undefined,
         seriesName: campaign.seriesName ?? undefined,
         seriesNumber: campaign.seriesNumber ?? undefined,
+        readingInstructions: campaign.readingInstructions ?? undefined,
       });
     }
   }, [campaign, reset]);
@@ -167,6 +169,7 @@ export default function EditCampaignPage() {
       wordCount: data.wordCount || undefined,
       seriesName: data.seriesName || undefined,
       seriesNumber: data.seriesNumber || undefined,
+      readingInstructions: data.readingInstructions || undefined,
     };
 
     updateCampaign(
@@ -193,7 +196,7 @@ export default function EditCampaignPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p>{t('notFound')}</p>
-            <Button onClick={() => router.push(`/${locale}/author`)} className="mt-4">
+            <Button type="button" onClick={() => router.push(`/${locale}/author`)} className="mt-4">
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -209,7 +212,7 @@ export default function EditCampaignPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p>{t('cannotEdit')}</p>
-            <Button onClick={() => router.push(`/${locale}/author/campaigns/${campaignId}`)} className="mt-4">
+            <Button type="button" onClick={() => router.push(`/${locale}/author/campaigns/${campaignId}`)} className="mt-4">
               {t('backToCampaign')}
             </Button>
           </CardContent>
@@ -223,6 +226,7 @@ export default function EditCampaignPage() {
       {/* Header */}
       <div className="mb-8 animate-fade-up">
         <Button
+          type="button"
           variant="ghost"
           onClick={() => router.push(`/${locale}/author/campaigns/${campaignId}`)}
           className="mb-4"
@@ -481,6 +485,25 @@ export default function EditCampaignPage() {
                   />
                   <p className="mt-1 text-sm text-muted-foreground">
                     {tNew('settings.couponCodeHelp')}
+                  </p>
+                </div>
+
+                <div className="animate-fade-up-slow">
+                  <Label htmlFor="readingInstructions">
+                    Reading Instructions ({tNew('settings.optional')})
+                  </Label>
+                  <Textarea
+                    id="readingInstructions"
+                    {...register('readingInstructions')}
+                    placeholder="Special instructions for readers (e.g., specific chapters to focus on, reading order for series, etc.)"
+                    rows={4}
+                    className="resize-none"
+                  />
+                  {errors.readingInstructions && (
+                    <p className="mt-1 text-sm text-red-500">{errors.readingInstructions.message}</p>
+                  )}
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {watch('readingInstructions')?.length || 0} / 2000 characters
                   </p>
                 </div>
               </div>

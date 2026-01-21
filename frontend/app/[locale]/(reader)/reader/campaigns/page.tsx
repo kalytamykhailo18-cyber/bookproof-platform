@@ -145,16 +145,16 @@ function CampaignCard({
         {/* Apply Button */}
         <div className="pt-2">
           {campaign.hasApplied ? (
-            <Button variant="secondary" className="w-full" disabled>
+            <Button type="button" variant="secondary" className="w-full" disabled>
               <CheckCircle className="mr-2 h-4 w-4" />
               {t('campaign.alreadyApplied')}
             </Button>
           ) : !canApplyBasedOnFormat ? (
-            <Button variant="secondary" className="w-full" disabled>
+            <Button type="button" variant="secondary" className="w-full" disabled>
               {t('campaign.formatNotAvailable')}
             </Button>
           ) : (
-            <Button onClick={handleApply} disabled={isApplying} className="w-full">
+            <Button type="button" onClick={handleApply} disabled={isApplying} className="w-full">
               {isApplying ? t('campaign.applying') : t('campaign.applyToReview')}
             </Button>
           )}
@@ -227,6 +227,7 @@ export default function CampaignsPage() {
         <div>
           <div className="mb-2 flex items-center gap-4">
             <Button
+              type="button"
               variant="ghost"
               size="sm"
               className="animate-fade-right"
