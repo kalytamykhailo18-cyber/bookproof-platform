@@ -21,7 +21,7 @@ import {
 export class WalletPayoutService {
   private readonly logger = new Logger(WalletPayoutService.name);
   private readonly encryptionKey: string;
-  private readonly minPayoutAmount = 50;
+  private readonly minPayoutAmount: number;
 
   constructor(
     private prisma: PrismaService,
@@ -33,6 +33,9 @@ export class WalletPayoutService {
     if (!this.encryptionKey || this.encryptionKey.length < 32) {
       this.logger.error('ENCRYPTION_KEY not configured or too short. Must be at least 32 characters.');
     }
+    // Use configurable minimum payout amount (default $10 per requirements)
+    this.minPayoutAmount = this.configService.get<number>('MINIMUM_PAYOUT_AMOUNT') || 10;
+    this.logger.log(`Minimum payout amount configured: $${this.minPayoutAmount}`);
   }
 
   /**

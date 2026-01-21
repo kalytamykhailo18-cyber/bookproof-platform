@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 import { useDashboards } from '@/hooks/useDashboards';
 import { useStripePayments } from '@/hooks/useStripePayments';
 import {
@@ -11,6 +12,7 @@ import {
   useCancelRefundRequest,
 } from '@/hooks/useRefunds';
 import { RefundReason, RefundRequestStatus } from '@/lib/api/refunds';
+import { stripeApi } from '@/lib/api/stripe';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -97,6 +99,31 @@ export default function TransactionsPage() {
   const [filterType, setFilterType] = useState<'all' | 'purchase' | 'subscription' | 'usage'>(
     'all',
   );
+
+  // Invoice download state
+  const [downloadingInvoiceId, setDownloadingInvoiceId] = useState<string | null>(null);
+
+  // Handle receipt/invoice download
+  const handleDownloadReceipt = useCallback(async (creditPurchaseId: string) => {
+    try {
+      setDownloadingInvoiceId(creditPurchaseId);
+      const invoice = await stripeApi.payments.getInvoice(creditPurchaseId);
+
+      if (invoice.pdfUrl) {
+        // Open PDF in new tab
+        window.open(invoice.pdfUrl, '_blank');
+        toast.success('Receipt opened successfully');
+      } else {
+        // If no PDF URL, show invoice details
+        toast.info(`Invoice #${invoice.invoiceNumber}: ${invoice.currency} ${invoice.amount.toFixed(2)}`);
+      }
+    } catch (error: any) {
+      console.error('Failed to fetch invoice:', error);
+      toast.error(error.response?.data?.message || 'Failed to download receipt');
+    } finally {
+      setDownloadingInvoiceId(null);
+    }
+  }, []);
 
   // Refund dialog state
   const [refundDialogOpen, setRefundDialogOpen] = useState(false);
@@ -511,8 +538,19 @@ export default function TransactionsPage() {
                     <TableCell>
                       <div className="flex gap-1">
                         {transaction.type !== 'usage' && (
-                          <Button type="button" variant="ghost" size="sm">
-                            <Receipt className="h-4 w-4" />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDownloadReceipt(transaction.id)}
+                            disabled={downloadingInvoiceId === transaction.id}
+                            title="Download Receipt"
+                          >
+                            {downloadingInvoiceId === transaction.id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Receipt className="h-4 w-4" />
+                            )}
                           </Button>
                         )}
                         {transaction.type === 'purchase' && (() => {
@@ -628,8 +666,19 @@ export default function TransactionsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button type="button" variant="ghost" size="sm">
-                          <Receipt className="h-4 w-4" />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDownloadReceipt(transaction.id)}
+                          disabled={downloadingInvoiceId === transaction.id}
+                          title="Download Receipt"
+                        >
+                          {downloadingInvoiceId === transaction.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Receipt className="h-4 w-4" />
+                          )}
                         </Button>
                         {(() => {
                           const existingRefund = getRefundForPurchase(transaction.id);

@@ -151,7 +151,7 @@ export default function EditCouponPage() {
     <div className="container mx-auto max-w-4xl space-y-6 py-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button type="button" variant="ghost" size="icon" onClick={() => router.push(`/admin/coupons/${id}`)}>
+        <Button type="button" variant="ghost" size="icon" onClick={() => router.push(`/${locale}/admin/coupons/${id}`)}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
@@ -494,7 +494,7 @@ export default function EditCouponPage() {
 
           {/* Actions */}
           <div className="flex justify-end gap-4">
-            <Button type="button" variant="outline" onClick={() => router.push(`/admin/coupons/${id}`)}>
+            <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/admin/coupons/${id}`)}>
               {t('new.actions.cancel')}
             </Button>
             <Button type="button" onClick={handleSubmit} disabled={updateMutation.isPending}>

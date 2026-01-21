@@ -1,13 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 import { useCredits } from '@/hooks/useCredits';
 import { useStripePayments } from '@/hooks/useStripePayments';
 import { usePublicKeywordResearchPricing } from '@/hooks/useSettings';
 import { useValidateCoupon } from '@/hooks/useCoupons';
 import { PackageTier } from '@/lib/api/credits';
 import { CouponValidationResponseDto } from '@/lib/api/coupons';
+import { stripeApi } from '@/lib/api/stripe';
 import {
   Card,
   CardContent,
@@ -63,6 +65,27 @@ export default function CreditPurchasePage() {
   const [couponCode, setCouponCode] = useState('');
   const [includeKeywordResearch, setIncludeKeywordResearch] = useState(false);
   const [validatedCoupon, setValidatedCoupon] = useState<CouponValidationResponseDto | null>(null);
+  const [downloadingReceiptId, setDownloadingReceiptId] = useState<string | null>(null);
+
+  // Handle receipt download
+  const handleDownloadReceipt = useCallback(async (transactionId: string) => {
+    try {
+      setDownloadingReceiptId(transactionId);
+      const invoice = await stripeApi.payments.getInvoice(transactionId);
+
+      if (invoice.pdfUrl) {
+        window.open(invoice.pdfUrl, '_blank');
+        toast.success('Receipt opened successfully');
+      } else {
+        toast.info(`Invoice #${invoice.invoiceNumber}: ${invoice.currency} ${invoice.amount.toFixed(2)}`);
+      }
+    } catch (error: any) {
+      console.error('Failed to fetch invoice:', error);
+      toast.error(error.response?.data?.message || 'Failed to download receipt');
+    } finally {
+      setDownloadingReceiptId(null);
+    }
+  }, []);
 
   // Keyword research pricing
   const keywordPrice = keywordPricing?.price ?? 49.99;
@@ -444,8 +467,19 @@ export default function CreditPurchasePage() {
                       )}
                     </TableCell>
                     <TableCell>
-                      <Button type="button" variant="ghost" size="sm">
-                        <Receipt className="h-4 w-4" />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDownloadReceipt(transaction.id)}
+                        disabled={downloadingReceiptId === transaction.id}
+                        title="Download Receipt"
+                      >
+                        {downloadingReceiptId === transaction.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Receipt className="h-4 w-4" />
+                        )}
                       </Button>
                     </TableCell>
                   </TableRow>

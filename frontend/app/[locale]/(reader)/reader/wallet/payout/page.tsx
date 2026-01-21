@@ -24,8 +24,11 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
+// Minimum payout amount - configurable via backend (default $10 per requirements)
+const MIN_PAYOUT_AMOUNT = 10;
+
 const payoutSchema = z.object({
-  amount: z.number().min(50, 'Minimum amount is $50'),
+  amount: z.number().min(MIN_PAYOUT_AMOUNT, `Minimum amount is $${MIN_PAYOUT_AMOUNT}`),
   paymentMethod: z.enum(['PayPal', 'Bank Transfer', 'Wise', 'Crypto']),
   notes: z.string().optional(),
   paymentDetails: z.object({
@@ -66,7 +69,7 @@ export default function RequestPayoutPage() {
   } = useForm<PayoutFormData>({
     resolver: zodResolver(payoutSchema),
     defaultValues: {
-      amount: 50,
+      amount: MIN_PAYOUT_AMOUNT,
       paymentMethod: 'PayPal',
       notes: '',
       paymentDetails: {},
@@ -242,10 +245,10 @@ export default function RequestPayoutPage() {
             <span className="text-4xl font-bold">${availableBalance.toFixed(2)}</span>
             <span className="text-muted-foreground">USD</span>
           </div>
-          {availableBalance < 50 && (
+          {availableBalance < MIN_PAYOUT_AMOUNT && (
             <Alert className="mt-4" variant="destructive">
               <AlertDescription>
-                You need at least $50 to request a payout. Current balance: $
+                You need at least ${MIN_PAYOUT_AMOUNT} to request a payout. Current balance: $
                 {availableBalance.toFixed(2)}
               </AlertDescription>
             </Alert>
@@ -275,11 +278,11 @@ export default function RequestPayoutPage() {
                   id="amount"
                   type="number"
                   step="0.01"
-                  min="50"
+                  min={MIN_PAYOUT_AMOUNT}
                   max={availableBalance}
                   {...register('amount', { valueAsNumber: true })}
                   className="pl-8"
-                  disabled={availableBalance < 50}
+                  disabled={availableBalance < MIN_PAYOUT_AMOUNT}
                 />
               </div>
               {errors.amount && (
@@ -304,7 +307,7 @@ export default function RequestPayoutPage() {
                     value as 'PayPal' | 'Bank Transfer' | 'Wise' | 'Crypto',
                   );
                 }}
-                disabled={availableBalance < 50}
+                disabled={availableBalance < MIN_PAYOUT_AMOUNT}
               >
                 <SelectTrigger className="mt-1.5">
                   <SelectValue placeholder="Select payment method" />
@@ -337,7 +340,7 @@ export default function RequestPayoutPage() {
                 {...register('notes')}
                 placeholder="Any additional notes..."
                 className="mt-1.5 min-h-[100px]"
-                disabled={availableBalance < 50}
+                disabled={availableBalance < MIN_PAYOUT_AMOUNT}
               />
             </div>
 
@@ -355,7 +358,7 @@ export default function RequestPayoutPage() {
               <Button
                 type="button"
                 onClick={handleFormSubmit}
-                disabled={isPending || availableBalance < 50 || amount > availableBalance}
+                disabled={isPending || availableBalance < MIN_PAYOUT_AMOUNT || amount > availableBalance}
                 className="flex-1"
               >
                 {isPending ? t('submitting') : t('submit')}
