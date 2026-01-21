@@ -67,14 +67,14 @@ export class DashboardService {
       this.prisma.readerAssignment.count({
         where: {
           status: AssignmentStatus.IN_PROGRESS,
-          deadline: { gte: now },
+          deadlineAt: { gte: now },
         }
       }),
       // Overdue reviews (past deadline but not completed)
       this.prisma.readerAssignment.count({
         where: {
           status: { in: [AssignmentStatus.IN_PROGRESS, AssignmentStatus.SCHEDULED] },
-          deadline: { lt: now },
+          deadlineAt: { lt: now },
         }
       }),
       this.prisma.reviewIssue.count({ where: { status: 'OPEN' as any } }),
@@ -82,10 +82,10 @@ export class DashboardService {
       this.prisma.review.count({ where: { status: 'FLAGGED' as any } }),
       // Pending disputes
       this.prisma.dispute.count({ where: { status: 'OPEN' as any } }),
-      // Pending affiliate applications
-      this.prisma.affiliateProfile.count({ where: { isApproved: false, applicationStatus: 'PENDING' as any } }),
-      // Pending payout requests
-      this.prisma.payoutRequest.count({ where: { status: 'PENDING' as any } }),
+      // Pending affiliate applications (not approved and not rejected)
+      this.prisma.affiliateProfile.count({ where: { isApproved: false, rejectedAt: null } }),
+      // Pending payout requests (REQUESTED or PENDING_REVIEW status)
+      this.prisma.payoutRequest.count({ where: { status: { in: ['REQUESTED', 'PENDING_REVIEW'] } } }),
       // Credits in circulation (purchased but not consumed)
       this.prisma.authorProfile.aggregate({
         _sum: { availableCredits: true },

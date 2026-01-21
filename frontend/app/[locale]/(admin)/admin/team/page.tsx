@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useClosersList, useAdminsList } from '@/hooks/useAdminTeam';
 import { CreateCloserDialog } from './CreateCloserDialog';
 import { CreateAdminDialog } from './CreateAdminDialog';
+import { UnlockAccountDialog } from './UnlockAccountDialog';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -134,6 +135,7 @@ export default function AdminTeamPage() {
           <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
         <div className="flex gap-2">
+          <UnlockAccountDialog />
           <CreateAdminDialog />
           <CreateCloserDialog />
         </div>

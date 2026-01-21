@@ -140,5 +140,22 @@
     "allStatus": "Todos los Estados",
     "active": "Activo",
     "inactive": "Inactivo"
+  },
+  "unlockAccount": {
+    "button": "Desbloquear Cuenta",
+    "title": "Desbloquear Cuenta Bloqueada",
+    "description": "Desbloquear una cuenta que ha sido temporalmente bloqueada debido a demasiados intentos de inicio de sesión fallidos",
+    "fields": {
+      "email": "Correo del Usuario",
+      "emailPlaceholder": "usuario@ejemplo.com",
+      "emailDescription": "Ingresa el correo electrónico de la cuenta bloqueada",
+      "reason": "Razón (Opcional)",
+      "reasonPlaceholder": "ej: Usuario confirmó su identidad por teléfono",
+      "reasonDescription": "Nota opcional para propósitos de auditoría"
+    },
+    "info": "Esto desbloqueará inmediatamente la cuenta si está actualmente bloqueada. Las cuentas se bloquean automáticamente después de 5 intentos de inicio de sesión fallidos (15 min) o 10 intentos fallidos (1 hora).",
+    "submit": "Desbloquear Cuenta",
+    "cancel": "Cancelar",
+    "unlocking": "Desbloqueando..."
   }
 }

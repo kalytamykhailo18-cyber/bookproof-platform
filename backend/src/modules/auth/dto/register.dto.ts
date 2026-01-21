@@ -1,7 +1,18 @@
-import { IsEmail, IsString, IsEnum, IsOptional, IsBoolean, Equals, IsArray, IsUrl, MaxLength, MinLength, ArrayMaxSize, ValidateIf, Matches } from 'class-validator';
+import { IsEmail, IsString, IsEnum, IsOptional, IsBoolean, Equals, IsArray, IsUrl, MaxLength, MinLength, ArrayMaxSize, ValidateIf, Matches, IsIn } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserRole, Language, ContentPreference } from '@prisma/client';
 import { IsStrongPassword } from '@common/decorators/strong-password.decorator';
+
+/**
+ * Allowed roles for self-registration.
+ * Per requirements.md:
+ * - Section 1.1: Authors can self-register
+ * - Section 1.2: Readers can self-register
+ * - Section 1.3: Admins are created by Super Admin ONLY (not self-registration)
+ * - Section 1.4: Closers are created by Admin ONLY (not self-registration)
+ * - Section 1.5: Affiliates can self-register (pending approval)
+ */
+const ALLOWED_REGISTRATION_ROLES = [UserRole.AUTHOR, UserRole.READER, UserRole.AFFILIATE] as const;
 
 /**
  * Registration DTO matching requirements.md Sections 1.1, 1.2, and 1.5
@@ -62,8 +73,14 @@ export class RegisterDto {
   @MaxLength(100, { message: 'Name must not exceed 100 characters' })
   name: string;
 
-  @ApiProperty({ enum: UserRole, example: UserRole.AUTHOR })
-  @IsEnum(UserRole)
+  @ApiProperty({
+    enum: [UserRole.AUTHOR, UserRole.READER, UserRole.AFFILIATE],
+    example: UserRole.AUTHOR,
+    description: 'User role (AUTHOR, READER, or AFFILIATE only - ADMIN and CLOSER cannot self-register)'
+  })
+  @IsIn(ALLOWED_REGISTRATION_ROLES, {
+    message: 'Role must be AUTHOR, READER, or AFFILIATE. Admin and Closer accounts must be created by administrators.',
+  })
   role: UserRole;
 
   @ApiPropertyOptional({

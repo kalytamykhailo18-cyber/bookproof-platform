@@ -217,6 +217,14 @@ export class AuthService {
       captchaToken
     } = registerDto;
 
+    // Defense-in-depth: Reject ADMIN and CLOSER roles for self-registration
+    // Per requirements.md Section 1.3 and 1.4: These roles cannot self-register
+    if (role === UserRole.ADMIN || role === UserRole.CLOSER) {
+      throw new BadRequestException(
+        'Admin and Closer accounts cannot be created through self-registration. Please contact an administrator.',
+      );
+    }
+
     // Verify CAPTCHA for bot protection
     const clientIp = request?.ip || request?.headers?.['x-forwarded-for']?.toString().split(',')[0];
     await this.captchaService.verify(captchaToken, 'register', clientIp);
@@ -688,6 +696,9 @@ export class AuthService {
         return readerProfile;
 
       case UserRole.ADMIN:
+        // NOTE: This code should never be reached - admins cannot self-register
+        // Per requirements.md Section 1.3: "Created By: Super admin only (not self-registration)"
+        // Defense-in-depth check at start of register() should prevent this
         return await this.prisma.adminProfile.create({
           data: {
             userId,
@@ -696,11 +707,14 @@ export class AuthService {
         });
 
       case UserRole.CLOSER:
+        // NOTE: This code should never be reached - closers cannot self-register
+        // Per requirements.md Section 1.4: "Created By: Admin only (not self-registration)"
+        // Defense-in-depth check at start of register() should prevent this
         return await this.prisma.closerProfile.create({
           data: {
             userId,
-            commissionEnabled: true,
-            commissionRate: 10.0,
+            commissionEnabled: false, // 0% commission, disabled
+            commissionRate: 0, // Per requirements.md: default 0%
           },
         });
 

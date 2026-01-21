@@ -73,9 +73,10 @@ model User {
   passwordResets PasswordReset[]
 
   // Activity tracking
-  notifications Notification[]
-  emailLogs     EmailLog[]
-  auditLogs     AuditLog[]
+  notifications    Notification[]
+  emailLogs        EmailLog[]
+  auditLogs        AuditLog[]
+  readerAdminNotes ReaderAdminNote[] // Admin notes created by this user
 
   // Notification settings
   notificationEmailEnabled   Boolean @default(true)
@@ -683,6 +684,7 @@ model ReaderProfile {
   reviews            Review[]
   walletTransactions WalletTransaction[]
   payoutRequests     PayoutRequest[]
+  adminNoteRecords   ReaderAdminNote[] // Admin notes as separate records
 
   @@index([userId])
   @@index([isActive])
@@ -699,6 +701,7 @@ model AmazonProfile {
   profileName String?
   isVerified  Boolean   @default(false)
   verifiedAt  DateTime?
+  verifiedBy  String? // Admin user ID who verified
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -708,6 +711,25 @@ model AmazonProfile {
   reviews     Review[]
 
   @@index([readerProfileId])
+}
+
+// Admin notes for readers (Section 5.2 - Reader management)
+model ReaderAdminNote {
+  id              String        @id @default(cuid())
+  readerProfileId String
+  readerProfile   ReaderProfile @relation(fields: [readerProfileId], references: [id], onDelete: Cascade)
+
+  content   String @db.Text
+  createdBy String // Admin user ID
+
+  // Relation to admin user for display
+  createdByUser User? @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([readerProfileId])
+  @@index([createdBy])
+  @@index([createdAt])
 }
 
 // ============================================
@@ -783,8 +805,17 @@ model ReaderAssignment {
   reassignedAt         DateTime?
 
   // Cancellation tracking
+  cancelledAt        DateTime?
   cancelledBy        String? // Admin user ID
   cancellationReason String? @db.Text
+
+  // Manual grant tracking (for admin-created assignments)
+  isManualGrant      Boolean   @default(false)
+  manualGrantBy      String? // Admin user ID who granted access
+  manualGrantReason  String?   @db.Text
+
+  // Completion tracking
+  completedAt DateTime?
 
   // Reader self-withdrawal
   withdrawnByReader Boolean   @default(false)
@@ -1210,9 +1241,9 @@ model CloserProfile {
   totalClients      Int     @default(0)
   totalPackagesSold Int     @default(0)
 
-  // Commission - Closers earn 30% commission on enterprise deals (vs 20% for affiliates)
+  // Commission - Per requirements.md Section 1.4: "Commission rate (percentage, default 0%)"
   commissionEnabled Boolean @default(true)
-  commissionRate    Decimal @default(30) @db.Decimal(5, 2) // 30% default for enterprise closers
+  commissionRate    Decimal @default(0) @db.Decimal(5, 2) // Per requirements.md: default 0%
   commissionEarned  Decimal @default(0) @db.Decimal(10, 2)
   commissionPaid    Decimal @default(0) @db.Decimal(10, 2)
 

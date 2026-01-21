@@ -22,7 +22,7 @@ import {
   ManualGrantAccessDto,
   RemoveReaderFromCampaignDto,
 } from '../dto/campaign-controls.dto';
-import { CampaignStatus, CreditTransactionType, EmailType, Language, UserRole } from '@prisma/client';
+import { BookFormat, CampaignStatus, CreditTransactionType, EmailType, Language, UserRole } from '@prisma/client';
 
 @Injectable()
 export class CampaignControlsService {
@@ -1305,7 +1305,7 @@ export class CampaignControlsService {
       where: {
         bookId,
         readerProfileId: dto.readerProfileId,
-        status: { in: ['PENDING', 'IN_PROGRESS'] },
+        status: { in: ['WAITING', 'SCHEDULED', 'APPROVED', 'IN_PROGRESS'] },
       },
     });
 
@@ -1327,9 +1327,10 @@ export class CampaignControlsService {
         bookId,
         readerProfileId: dto.readerProfileId,
         status: 'IN_PROGRESS',
-        materialAccessGrantedAt: now,
+        materialsReleasedAt: now,
         deadlineAt: deadline,
-        assignedFormat: dto.preferredFormat || 'ebook',
+        formatAssigned: (dto.preferredFormat as BookFormat) || BookFormat.EBOOK,
+        creditsValue: 1, // Default for ebook, adjust for audiobook
         isManualGrant: true,
         manualGrantBy: adminUserId,
         manualGrantReason: dto.reason,
@@ -1395,7 +1396,7 @@ export class CampaignControlsService {
         readerProfileId: dto.readerProfileId,
         readerEmail: readerProfile.user.email,
         status: assignment.status,
-        materialAccessGrantedAt: assignment.materialAccessGrantedAt,
+        materialsReleasedAt: assignment.materialsReleasedAt,
         deadlineAt: assignment.deadlineAt,
       },
     };
@@ -1524,7 +1525,7 @@ export class CampaignControlsService {
       where: { id: bookId },
       include: {
         authorProfile: { include: { user: true } },
-        assignments: {
+        readerAssignments: {
           include: {
             readerProfile: { include: { user: true } },
             review: true,
@@ -1539,15 +1540,15 @@ export class CampaignControlsService {
     }
 
     // Calculate metrics
-    const totalAssignments = book.assignments.length;
-    const completedAssignments = book.assignments.filter((a) => a.status === 'COMPLETED').length;
-    const expiredAssignments = book.assignments.filter((a) => a.status === 'EXPIRED').length;
-    const inProgressAssignments = book.assignments.filter((a) => a.status === 'IN_PROGRESS').length;
-    const cancelledAssignments = book.assignments.filter((a) => a.status === 'CANCELLED').length;
+    const totalAssignments = book.readerAssignments.length;
+    const completedAssignments = book.readerAssignments.filter((a) => a.status === 'COMPLETED').length;
+    const expiredAssignments = book.readerAssignments.filter((a) => a.status === 'EXPIRED').length;
+    const inProgressAssignments = book.readerAssignments.filter((a) => a.status === 'IN_PROGRESS').length;
+    const cancelledAssignments = book.readerAssignments.filter((a) => a.status === 'CANCELLED').length;
 
     const validatedReviews = book.reviews.filter((r) => r.status === 'VALIDATED').length;
     const rejectedReviews = book.reviews.filter((r) => r.status === 'REJECTED').length;
-    const pendingReviews = book.reviews.filter((r) => r.status === 'PENDING').length;
+    const pendingReviews = book.reviews.filter((r) => r.status === 'PENDING_VALIDATION' || r.status === 'SUBMITTED').length;
 
     // Average internal rating
     const ratingsSum = book.reviews
@@ -1557,10 +1558,9 @@ export class CampaignControlsService {
     const averageRating = ratingsCount > 0 ? ratingsSum / ratingsCount : 0;
 
     // Amazon review stats
-    const amazonReviewsPosted = book.reviews.filter((r) => r.amazonReviewUrl).length;
-    const avgAmazonRating = book.reviews
-      .filter((r) => r.amazonStarRating)
-      .reduce((sum, r, _, arr) => sum + r.amazonStarRating! / arr.length, 0);
+    const amazonReviewsPosted = book.reviews.filter((r) => r.amazonReviewLink && r.publishedOnAmazon).length;
+    // Using internal rating as proxy since amazonStarRating doesn't exist in schema
+    const avgAmazonRating = averageRating;
 
     // Log audit trail
     await this.auditService.logAdminAction({
@@ -1609,7 +1609,7 @@ export class CampaignControlsService {
         reviewsPerWeek: book.reviewsPerWeek,
         totalWeeksPlanned: Math.ceil(book.targetReviews / book.reviewsPerWeek),
       },
-      readerBreakdown: book.assignments.map((a) => ({
+      readerBreakdown: book.readerAssignments.map((a) => ({
         readerName: a.readerProfile.user.name,
         readerEmail: a.readerProfile.user.email,
         status: a.status,
@@ -1619,7 +1619,7 @@ export class CampaignControlsService {
         hasReview: !!a.review,
         reviewStatus: a.review?.status,
         internalRating: a.review?.internalRating,
-        amazonPosted: !!a.review?.amazonReviewUrl,
+        amazonPosted: !!a.review?.amazonReviewLink && a.review?.publishedOnAmazon,
       })),
     };
   }
