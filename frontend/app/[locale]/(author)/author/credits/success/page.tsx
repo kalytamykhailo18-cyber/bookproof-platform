@@ -37,10 +37,10 @@ export default function CreditPurchaseSuccessPage() {
           </div>
 
           <div className="flex animate-fade-up flex-col justify-center gap-4 sm:flex-row">
-            <Button onClick={() => router.push(`/${locale}/author/campaigns/new`)}>
+            <Button type="button" onClick={() => router.push(`/${locale}/author/campaigns/new`)}>
               {t('createCampaign')}
             </Button>
-            <Button variant="outline" onClick={() => router.push(`/${locale}/author`)}>
+            <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/author`)}>
               {t('backToDashboard')}
             </Button>
           </div>

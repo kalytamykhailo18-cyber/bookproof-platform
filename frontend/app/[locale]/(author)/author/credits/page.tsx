@@ -157,7 +157,7 @@ export default function CreditPurchasePage() {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button className="w-full" variant={isSelected ? 'default' : 'outline'}>
+                    <Button type="button" className="w-full" variant={isSelected ? 'default' : 'outline'}>
                       {isSelected ? t('packages.selected') : t('packages.select')}
                     </Button>
                   </CardFooter>
@@ -295,7 +295,7 @@ export default function CreditPurchasePage() {
       {/* Purchase Button */}
       {selectedPackage && (
         <div className="flex animate-fade-left justify-end">
-          <Button size="lg" onClick={handlePurchase} disabled={isPurchasing}>
+          <Button type="button" size="lg" onClick={handlePurchase} disabled={isPurchasing}>
             {isPurchasing ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

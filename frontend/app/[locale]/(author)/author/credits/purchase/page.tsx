@@ -79,7 +79,7 @@ export default function CreditPurchasePage() {
   const popularIndex = getPopularIndex(packages);
 
   const handlePurchase = (packageId: string) => {
-    purchaseCredits(packageId, validatedCoupon?.valid ? couponCode : undefined);
+    purchaseCredits(packageId, validatedCoupon?.valid ? couponCode : undefined, includeKeywordResearch || undefined);
   };
 
   const handleApplyCoupon = async () => {
@@ -191,6 +191,7 @@ export default function CreditPurchasePage() {
                 </CardContent>
                 <CardFooter>
                   <Button
+                    type="button"
                     className="w-full"
                     variant={isPopular ? 'default' : 'outline'}
                     onClick={() => handlePurchase(pkg.id)}
@@ -278,12 +279,14 @@ export default function CreditPurchasePage() {
             <div className="rounded-md bg-primary/10 p-3 text-sm">
               <strong>Note:</strong> After purchasing credits, you&apos;ll be redirected to select
               which book to apply keyword research to, or you can{' '}
-              <span
-                className="cursor-pointer text-primary underline"
+              <Button
+                type="button"
+                variant="link"
+                className="h-auto p-0 text-primary underline"
                 onClick={() => router.push(`/${locale}/author/keyword-research/new`)}
               >
                 order keyword research separately
-              </span>
+              </Button>
               .
             </div>
           )}
@@ -319,12 +322,13 @@ export default function CreditPurchasePage() {
             </div>
             <div className="flex items-end">
               {validatedCoupon?.valid ? (
-                <Button variant="outline" onClick={handleRemoveCoupon}>
+                <Button type="button" variant="outline" onClick={handleRemoveCoupon}>
                   <X className="mr-2 h-4 w-4" />
                   Remove
                 </Button>
               ) : (
                 <Button
+                  type="button"
                   variant="outline"
                   disabled={!couponCode || validateCouponMutation.isPending}
                   onClick={handleApplyCoupon}
@@ -440,7 +444,7 @@ export default function CreditPurchasePage() {
                       )}
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="sm">
+                      <Button type="button" variant="ghost" size="sm">
                         <Receipt className="h-4 w-4" />
                       </Button>
                     </TableCell>

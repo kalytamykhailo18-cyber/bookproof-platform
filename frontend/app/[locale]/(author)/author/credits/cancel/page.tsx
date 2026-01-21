@@ -25,10 +25,10 @@ export default function CreditPurchaseCancelPage() {
           <p className="animate-fade-up-slow text-muted-foreground">{t('message')}</p>
 
           <div className="flex animate-fade-up-very-slow flex-col justify-center gap-4 sm:flex-row">
-            <Button onClick={() => router.push(`/${locale}/author/credits`)}>
+            <Button type="button" onClick={() => router.push(`/${locale}/author/credits`)}>
               {t('tryAgain')}
             </Button>
-            <Button variant="outline" onClick={() => router.push(`/${locale}/author`)}>
+            <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/author`)}>
               {t('backToDashboard')}
             </Button>
           </div>

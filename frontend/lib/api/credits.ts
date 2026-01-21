@@ -10,7 +10,7 @@ export interface PackageTier {
   validityDays: number;
   description?: string;
   isActive: boolean;
-  isPopular?: boolean;
+  isPopular: boolean; // Required - backend always provides this
   displayOrder: number;
   features?: string[];
   createdAt: Date;
