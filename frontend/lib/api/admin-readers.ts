@@ -31,6 +31,11 @@ export interface AdminReaderListItemDto {
 }
 
 export interface AdminReaderDetailDto extends AdminReaderListItemDto {
+  // User-level fields (Section 5.2)
+  isBanned: boolean;
+  bannedAt?: string;
+  banReason?: string;
+  emailVerified: boolean;
   preferredGenres: string[];
   amazonProfiles: {
     id: string;

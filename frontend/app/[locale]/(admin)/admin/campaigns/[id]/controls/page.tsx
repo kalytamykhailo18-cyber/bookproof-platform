@@ -19,7 +19,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Pause, Play, Settings, TrendingUp, AlertCircle, ArrowLeft } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Pause,
+  Play,
+  Settings,
+  TrendingUp,
+  AlertCircle,
+  ArrowLeft,
+  XCircle,
+  UserPlus,
+  FileText,
+  CheckCircle2,
+} from 'lucide-react';
 
 export default function CampaignControlsPage() {
   const params = useParams();
@@ -31,15 +49,23 @@ export default function CampaignControlsPage() {
   const {
     useCampaignHealth,
     useCampaignAnalytics,
+    useCampaignReportData,
     pauseCampaign,
     resumeCampaign,
     adjustDistribution,
     allocateCredits,
     adjustOverbooking,
+    forceCompleteCampaign,
+    manualGrantAccess,
+    removeReaderFromCampaign,
   } = useAdminControls();
 
   const { data: health, isLoading: healthLoading } = useCampaignHealth(bookId);
   const { data: analytics, isLoading: analyticsLoading } = useCampaignAnalytics(bookId);
+
+  // Report data state
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const { data: reportData, isLoading: reportLoading } = useCampaignReportData(bookId, reportDialogOpen);
 
   const [pauseReason, setPauseReason] = useState('');
   const [pauseNotes, setPauseNotes] = useState('');
@@ -58,6 +84,25 @@ export default function CampaignControlsPage() {
   const [distributionDialogOpen, setDistributionDialogOpen] = useState(false);
   const [creditDialogOpen, setCreditDialogOpen] = useState(false);
   const [overbookingDialogOpen, setOverbookingDialogOpen] = useState(false);
+
+  // Section 5.3 - New campaign control dialogs
+  const [forceCompleteDialogOpen, setForceCompleteDialogOpen] = useState(false);
+  const [forceCompleteReason, setForceCompleteReason] = useState('');
+  const [forceCompleteRefund, setForceCompleteRefund] = useState(true);
+  const [forceCompleteNotes, setForceCompleteNotes] = useState('');
+
+  const [grantAccessDialogOpen, setGrantAccessDialogOpen] = useState(false);
+  const [grantAccessReaderId, setGrantAccessReaderId] = useState('');
+  const [grantAccessReason, setGrantAccessReason] = useState('');
+  const [grantAccessFormat, setGrantAccessFormat] = useState('ebook');
+  const [grantAccessNotes, setGrantAccessNotes] = useState('');
+
+  const [removeReaderDialogOpen, setRemoveReaderDialogOpen] = useState(false);
+  const [removeAssignmentId, setRemoveAssignmentId] = useState('');
+  const [removeReaderReason, setRemoveReaderReason] = useState('');
+  const [removeReaderNotify, setRemoveReaderNotify] = useState(true);
+  const [removeReaderRefund, setRemoveReaderRefund] = useState(true);
+  const [removeReaderNotes, setRemoveReaderNotes] = useState('');
 
   const handlePause = () => {
     pauseCampaign.mutate(
@@ -153,6 +198,143 @@ export default function CampaignControlsPage() {
         },
       },
     );
+  };
+
+  // Section 5.3 - New campaign control handlers
+  const handleForceComplete = () => {
+    forceCompleteCampaign.mutate(
+      {
+        bookId,
+        data: {
+          reason: forceCompleteReason,
+          refundUnusedCredits: forceCompleteRefund,
+          notes: forceCompleteNotes || undefined,
+        },
+      },
+      {
+        onSuccess: () => {
+          setForceCompleteDialogOpen(false);
+          setForceCompleteReason('');
+          setForceCompleteRefund(true);
+          setForceCompleteNotes('');
+        },
+      },
+    );
+  };
+
+  const handleGrantAccess = () => {
+    manualGrantAccess.mutate(
+      {
+        bookId,
+        data: {
+          readerProfileId: grantAccessReaderId,
+          reason: grantAccessReason,
+          preferredFormat: grantAccessFormat,
+          notes: grantAccessNotes || undefined,
+        },
+      },
+      {
+        onSuccess: () => {
+          setGrantAccessDialogOpen(false);
+          setGrantAccessReaderId('');
+          setGrantAccessReason('');
+          setGrantAccessFormat('ebook');
+          setGrantAccessNotes('');
+        },
+      },
+    );
+  };
+
+  const handleRemoveReader = () => {
+    removeReaderFromCampaign.mutate(
+      {
+        bookId,
+        data: {
+          assignmentId: removeAssignmentId,
+          reason: removeReaderReason,
+          notifyReader: removeReaderNotify,
+          refundCredit: removeReaderRefund,
+          notes: removeReaderNotes || undefined,
+        },
+      },
+      {
+        onSuccess: () => {
+          setRemoveReaderDialogOpen(false);
+          setRemoveAssignmentId('');
+          setRemoveReaderReason('');
+          setRemoveReaderNotify(true);
+          setRemoveReaderRefund(true);
+          setRemoveReaderNotes('');
+        },
+      },
+    );
+  };
+
+  const handleDownloadReport = () => {
+    if (!reportData) return;
+
+    // Generate a text-based report for download
+    const reportContent = `
+CAMPAIGN REPORT
+===============
+Generated: ${new Date().toISOString()}
+
+CAMPAIGN INFORMATION
+--------------------
+Title: ${reportData.campaign.title}
+Author: ${reportData.campaign.author}
+Status: ${reportData.campaign.status}
+Start Date: ${reportData.campaign.startDate}
+End Date: ${reportData.campaign.endDate}
+Target Reviews: ${reportData.campaign.targetReviews}
+
+PROGRESS
+--------
+Total Assignments: ${reportData.progress.totalAssignments}
+Completed Reviews: ${reportData.progress.completedReviews}
+Validated Reviews: ${reportData.progress.validatedReviews}
+Rejected Reviews: ${reportData.progress.rejectedReviews}
+Pending Reviews: ${reportData.progress.pendingReviews}
+Expired Reviews: ${reportData.progress.expiredReviews}
+Completion Rate: ${reportData.progress.completionRate.toFixed(1)}%
+Validation Rate: ${reportData.progress.validationRate.toFixed(1)}%
+
+CREDITS
+-------
+Allocated: ${reportData.credits.allocated}
+Used: ${reportData.credits.used}
+Remaining: ${reportData.credits.remaining}
+
+TIMELINE
+--------
+Weeks Elapsed: ${reportData.timeline.weeksElapsed}
+Total Weeks: ${reportData.timeline.totalWeeks}
+Reviews Per Week: ${reportData.timeline.reviewsPerWeek}
+On Schedule: ${reportData.timeline.onSchedule ? 'Yes' : 'No'}
+Days Remaining: ${reportData.timeline.daysRemaining}
+
+READERS (${reportData.readers.length})
+${'='.repeat(40)}
+${reportData.readers.map((r) => `
+Name: ${r.name}
+Email: ${r.email}
+Status: ${r.status}
+Assigned: ${r.assignedAt}
+${r.reviewSubmittedAt ? `Submitted: ${r.reviewSubmittedAt}` : ''}
+${r.validatedAt ? `Validated: ${r.validatedAt}` : ''}
+${r.rating ? `Rating: ${r.rating}` : ''}
+---`).join('\n')}
+    `.trim();
+
+    const blob = new Blob([reportContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `campaign-report-${bookId}-${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   if (healthLoading || analyticsLoading) {
@@ -541,6 +723,348 @@ export default function CampaignControlsPage() {
                     className="w-full"
                   >
                     {adjustOverbooking.isPending ? t('actions.adjusting') : t('actions.confirm')}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Section 5.3 - Advanced Campaign Controls */}
+      <Card className="animate-zoom-in-slow">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Settings className="h-5 w-5" />
+            Advanced Controls
+          </CardTitle>
+          <CardDescription>
+            Force completion, manual access grants, reader removal, and reporting
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {/* Force Complete Campaign */}
+            <Dialog open={forceCompleteDialogOpen} onOpenChange={setForceCompleteDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="destructive"
+                  className="w-full"
+                  disabled={analytics?.campaign.status === 'COMPLETED'}
+                >
+                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                  Force Complete
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Force Complete Campaign</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    This will mark the campaign as completed regardless of its current progress.
+                    All pending assignments will be cancelled.
+                  </p>
+                  <div>
+                    <Label htmlFor="force-complete-reason">Reason *</Label>
+                    <Input
+                      id="force-complete-reason"
+                      value={forceCompleteReason}
+                      onChange={(e) => setForceCompleteReason(e.target.value)}
+                      placeholder="Enter reason for force completion"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="forceCompleteRefund"
+                      checked={forceCompleteRefund}
+                      onCheckedChange={(checked) => setForceCompleteRefund(checked as boolean)}
+                    />
+                    <Label htmlFor="forceCompleteRefund">Refund unused credits to author</Label>
+                  </div>
+                  <div>
+                    <Label htmlFor="force-complete-notes">Additional Notes</Label>
+                    <Textarea
+                      id="force-complete-notes"
+                      value={forceCompleteNotes}
+                      onChange={(e) => setForceCompleteNotes(e.target.value)}
+                      placeholder="Optional notes for audit trail"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={handleForceComplete}
+                    disabled={!forceCompleteReason || forceCompleteCampaign.isPending}
+                    variant="destructive"
+                    className="w-full"
+                  >
+                    {forceCompleteCampaign.isPending ? 'Processing...' : 'Force Complete Campaign'}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Manual Grant Access */}
+            <Dialog open={grantAccessDialogOpen} onOpenChange={setGrantAccessDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  disabled={analytics?.campaign.status === 'COMPLETED'}
+                >
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Grant Access
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Manually Grant Reader Access</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    Bypass the normal queue to grant a specific reader immediate access to this
+                    campaign.
+                  </p>
+                  <div>
+                    <Label htmlFor="grant-access-reader">Reader Profile ID *</Label>
+                    <Input
+                      id="grant-access-reader"
+                      value={grantAccessReaderId}
+                      onChange={(e) => setGrantAccessReaderId(e.target.value)}
+                      placeholder="Enter reader profile ID"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="grant-access-format">Preferred Format</Label>
+                    <Select value={grantAccessFormat} onValueChange={setGrantAccessFormat}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select format" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ebook">E-book</SelectItem>
+                        <SelectItem value="audiobook">Audiobook</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="grant-access-reason">Reason *</Label>
+                    <Input
+                      id="grant-access-reason"
+                      value={grantAccessReason}
+                      onChange={(e) => setGrantAccessReason(e.target.value)}
+                      placeholder="e.g., Priority reviewer, special request"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="grant-access-notes">Additional Notes</Label>
+                    <Textarea
+                      id="grant-access-notes"
+                      value={grantAccessNotes}
+                      onChange={(e) => setGrantAccessNotes(e.target.value)}
+                      placeholder="Optional notes for audit trail"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={handleGrantAccess}
+                    disabled={
+                      !grantAccessReaderId || !grantAccessReason || manualGrantAccess.isPending
+                    }
+                    className="w-full"
+                  >
+                    {manualGrantAccess.isPending ? 'Granting Access...' : 'Grant Access'}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Remove Reader from Campaign */}
+            <Dialog open={removeReaderDialogOpen} onOpenChange={setRemoveReaderDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="w-full">
+                  <XCircle className="mr-2 h-4 w-4" />
+                  Remove Reader
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Remove Reader from Campaign</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    Remove a reader's assignment from this campaign. This action can be logged and
+                    optionally notify the reader.
+                  </p>
+                  <div>
+                    <Label htmlFor="remove-assignment-id">Assignment ID *</Label>
+                    <Input
+                      id="remove-assignment-id"
+                      value={removeAssignmentId}
+                      onChange={(e) => setRemoveAssignmentId(e.target.value)}
+                      placeholder="Enter assignment ID to remove"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="remove-reader-reason">Reason *</Label>
+                    <Input
+                      id="remove-reader-reason"
+                      value={removeReaderReason}
+                      onChange={(e) => setRemoveReaderReason(e.target.value)}
+                      placeholder="e.g., Violation of terms, reader request"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="removeReaderNotify"
+                      checked={removeReaderNotify}
+                      onCheckedChange={(checked) => setRemoveReaderNotify(checked as boolean)}
+                    />
+                    <Label htmlFor="removeReaderNotify">Notify reader via email</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="removeReaderRefund"
+                      checked={removeReaderRefund}
+                      onCheckedChange={(checked) => setRemoveReaderRefund(checked as boolean)}
+                    />
+                    <Label htmlFor="removeReaderRefund">Refund credit to campaign pool</Label>
+                  </div>
+                  <div>
+                    <Label htmlFor="remove-reader-notes">Additional Notes</Label>
+                    <Textarea
+                      id="remove-reader-notes"
+                      value={removeReaderNotes}
+                      onChange={(e) => setRemoveReaderNotes(e.target.value)}
+                      placeholder="Optional notes for audit trail"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={handleRemoveReader}
+                    disabled={
+                      !removeAssignmentId ||
+                      !removeReaderReason ||
+                      removeReaderFromCampaign.isPending
+                    }
+                    variant="destructive"
+                    className="w-full"
+                  >
+                    {removeReaderFromCampaign.isPending ? 'Removing...' : 'Remove Reader'}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            {/* Generate Report */}
+            <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="w-full">
+                  <FileText className="mr-2 h-4 w-4" />
+                  Generate Report
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Campaign Report</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  {reportLoading ? (
+                    <div className="space-y-4">
+                      <Skeleton className="h-20 w-full" />
+                      <Skeleton className="h-20 w-full" />
+                      <Skeleton className="h-20 w-full" />
+                    </div>
+                  ) : reportData ? (
+                    <div className="max-h-96 space-y-4 overflow-y-auto">
+                      <div className="rounded-lg bg-muted p-4">
+                        <h4 className="font-semibold">Campaign Information</h4>
+                        <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                          <p>
+                            <strong>Title:</strong> {reportData.campaign.title}
+                          </p>
+                          <p>
+                            <strong>Author:</strong> {reportData.campaign.author}
+                          </p>
+                          <p>
+                            <strong>Status:</strong> {reportData.campaign.status}
+                          </p>
+                          <p>
+                            <strong>Target:</strong> {reportData.campaign.targetReviews} reviews
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="rounded-lg bg-muted p-4">
+                        <h4 className="font-semibold">Progress</h4>
+                        <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
+                          <p>
+                            <strong>Completed:</strong> {reportData.progress.completedReviews}
+                          </p>
+                          <p>
+                            <strong>Validated:</strong> {reportData.progress.validatedReviews}
+                          </p>
+                          <p>
+                            <strong>Rejected:</strong> {reportData.progress.rejectedReviews}
+                          </p>
+                          <p>
+                            <strong>Pending:</strong> {reportData.progress.pendingReviews}
+                          </p>
+                          <p>
+                            <strong>Expired:</strong> {reportData.progress.expiredReviews}
+                          </p>
+                          <p>
+                            <strong>Rate:</strong> {reportData.progress.completionRate.toFixed(1)}%
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="rounded-lg bg-muted p-4">
+                        <h4 className="font-semibold">Credits</h4>
+                        <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
+                          <p>
+                            <strong>Allocated:</strong> {reportData.credits.allocated}
+                          </p>
+                          <p>
+                            <strong>Used:</strong> {reportData.credits.used}
+                          </p>
+                          <p>
+                            <strong>Remaining:</strong> {reportData.credits.remaining}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="rounded-lg bg-muted p-4">
+                        <h4 className="font-semibold">Readers ({reportData.readers.length})</h4>
+                        <div className="mt-2 max-h-40 overflow-y-auto">
+                          {reportData.readers.map((reader) => (
+                            <div
+                              key={reader.id}
+                              className="border-b py-2 text-sm last:border-b-0"
+                            >
+                              <p>
+                                <strong>{reader.name}</strong> ({reader.email})
+                              </p>
+                              <p className="text-muted-foreground">
+                                Status: {reader.status} | Assigned: {reader.assignedAt}
+                                {reader.rating && ` | Rating: ${reader.rating}`}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground">Failed to load report data</p>
+                  )}
+
+                  <Button
+                    type="button"
+                    onClick={handleDownloadReport}
+                    disabled={reportLoading || !reportData}
+                    className="w-full"
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Download Report
                   </Button>
                 </div>
               </DialogContent>

@@ -65,7 +65,12 @@ export class AdminDashboardDto {
     completedCampaigns: number;
     totalAuthors: number;
     totalReaders: number;
+    totalClosers: number;
+    totalAffiliates: number;
     totalReviewsPendingValidation: number;
+    reviewsInProgress: number; // Reviews within 72-hour window
+    overdueReviews: number; // Reviews past deadline
+    creditsInCirculation: number; // Credits purchased but not consumed
     totalIssuesFlagged: number;
   };
 
@@ -115,6 +120,23 @@ export class AdminDashboardDto {
     averageReaderReliabilityScore: number;
     averageReviewValidationTime: number; // in hours
     amazonRemovalRate: number;
+  };
+
+  @ApiProperty({ description: 'System health indicators' })
+  systemHealth: {
+    databaseStatus: 'healthy' | 'degraded' | 'down';
+    cacheStatus: 'healthy' | 'degraded' | 'down';
+    queueStatus: 'healthy' | 'degraded' | 'down';
+    lastHealthCheck: string;
+  };
+
+  @ApiProperty({ description: 'Quick action counts for navigation badges' })
+  quickActions: {
+    flaggedReviewsCount: number;
+    pendingDisputesCount: number;
+    pendingAffiliateApplicationsCount: number;
+    pendingSupportTicketsCount: number;
+    pendingPayoutRequestsCount: number;
   };
 }
 

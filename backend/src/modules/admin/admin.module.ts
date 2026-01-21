@@ -11,6 +11,7 @@ import { TeamManagementService } from './services/team-management.service';
 import { LogsService } from './services/logs.service';
 import { ReaderManagementService } from './services/reader-management.service';
 import { AuthorManagementService } from './services/author-management.service';
+import { UserManagementService } from './services/user-management.service';
 import { CampaignControlsController } from './controllers/campaign-controls.controller';
 import { ExceptionHandlingController } from './controllers/exception-handling.controller';
 import { DisputeController } from './controllers/dispute.controller';
@@ -21,6 +22,7 @@ import { LogsController } from './controllers/logs.controller';
 import { ReaderManagementController } from './controllers/reader-management.controller';
 import { AuthorManagementController } from './controllers/author-management.controller';
 import { PackageApprovalController } from './controllers/package-approval.controller';
+import { UserManagementController } from './controllers/user-management.controller';
 
 @Module({
   imports: [
@@ -39,6 +41,7 @@ import { PackageApprovalController } from './controllers/package-approval.contro
     ReaderManagementController,
     AuthorManagementController,
     PackageApprovalController, // Super Admin package approval
+    UserManagementController, // User management (Section 5.2)
   ],
   providers: [
     CampaignControlsService,
@@ -50,6 +53,7 @@ import { PackageApprovalController } from './controllers/package-approval.contro
     LogsService,
     ReaderManagementService,
     AuthorManagementService,
+    UserManagementService,
   ],
   exports: [
     CampaignControlsService,
@@ -61,6 +65,7 @@ import { PackageApprovalController } from './controllers/package-approval.contro
     LogsService,
     ReaderManagementService,
     AuthorManagementService,
+    UserManagementService,
   ],
 })
 export class AdminModule {}

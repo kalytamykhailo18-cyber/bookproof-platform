@@ -32,6 +32,8 @@ export class DashboardService {
    * Get admin dashboard overview
    */
   async getAdminDashboard(): Promise<AdminDashboardDto> {
+    const now = new Date();
+
     // Get summary statistics
     const [
       totalCampaigns,
@@ -40,8 +42,17 @@ export class DashboardService {
       completedCampaigns,
       totalAuthors,
       totalReaders,
+      totalClosers,
+      totalAffiliates,
       totalReviewsPendingValidation,
+      reviewsInProgress,
+      overdueReviews,
       totalIssuesFlagged,
+      flaggedReviewsCount,
+      pendingDisputesCount,
+      pendingAffiliateApplicationsCount,
+      pendingPayoutRequestsCount,
+      creditsData,
     ] = await Promise.all([
       this.prisma.book.count(),
       this.prisma.book.count({ where: { status: CampaignStatus.ACTIVE } }),
@@ -49,9 +60,39 @@ export class DashboardService {
       this.prisma.book.count({ where: { status: CampaignStatus.COMPLETED } }),
       this.prisma.authorProfile.count(),
       this.prisma.readerProfile.count(),
+      this.prisma.closerProfile.count(),
+      this.prisma.affiliateProfile.count({ where: { isApproved: true } }),
       this.prisma.review.count({ where: { status: 'SUBMITTED' as any } }),
+      // Reviews in progress (within 72-hour window)
+      this.prisma.readerAssignment.count({
+        where: {
+          status: AssignmentStatus.IN_PROGRESS,
+          deadline: { gte: now },
+        }
+      }),
+      // Overdue reviews (past deadline but not completed)
+      this.prisma.readerAssignment.count({
+        where: {
+          status: { in: [AssignmentStatus.IN_PROGRESS, AssignmentStatus.SCHEDULED] },
+          deadline: { lt: now },
+        }
+      }),
       this.prisma.reviewIssue.count({ where: { status: 'OPEN' as any } }),
+      // Flagged reviews requiring admin attention
+      this.prisma.review.count({ where: { status: 'FLAGGED' as any } }),
+      // Pending disputes
+      this.prisma.dispute.count({ where: { status: 'OPEN' as any } }),
+      // Pending affiliate applications
+      this.prisma.affiliateProfile.count({ where: { isApproved: false, applicationStatus: 'PENDING' as any } }),
+      // Pending payout requests
+      this.prisma.payoutRequest.count({ where: { status: 'PENDING' as any } }),
+      // Credits in circulation (purchased but not consumed)
+      this.prisma.authorProfile.aggregate({
+        _sum: { availableCredits: true },
+      }),
     ]);
+
+    const creditsInCirculation = creditsData._sum.availableCredits || 0;
 
     // Get all active campaigns with author details for categorization
     const allActiveCampaigns = await this.prisma.book.findMany({
@@ -83,7 +124,6 @@ export class DashboardService {
     const booksWithOpenIssues = new Set(reviewsWithIssues.map((r) => r.bookId));
 
     // Categorize campaigns into healthy, delayed, and issues
-    const now = new Date();
     const healthyCampaigns: CampaignSectionItemDto[] = [];
     const delayedCampaigns: CampaignSectionItemDto[] = [];
     const issuesCampaigns: CampaignSectionItemDto[] = [];
@@ -231,7 +271,12 @@ export class DashboardService {
         completedCampaigns,
         totalAuthors,
         totalReaders,
+        totalClosers,
+        totalAffiliates,
         totalReviewsPendingValidation,
+        reviewsInProgress,
+        overdueReviews,
+        creditsInCirculation,
         totalIssuesFlagged,
       },
       healthyCampaigns,
@@ -268,6 +313,19 @@ export class DashboardService {
         averageReaderReliabilityScore: avgReliabilityScore,
         averageReviewValidationTime: 24, // Stub - would calculate from review data
         amazonRemovalRate: avgRemovalRate,
+      },
+      systemHealth: {
+        databaseStatus: 'healthy', // In production, would check actual connection health
+        cacheStatus: 'healthy', // In production, would check Redis connection
+        queueStatus: 'healthy', // In production, would check BullMQ health
+        lastHealthCheck: new Date().toISOString(),
+      },
+      quickActions: {
+        flaggedReviewsCount,
+        pendingDisputesCount,
+        pendingAffiliateApplicationsCount,
+        pendingSupportTicketsCount: 0, // No support ticket model yet
+        pendingPayoutRequestsCount,
       },
     };
   }

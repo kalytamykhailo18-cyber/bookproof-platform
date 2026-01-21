@@ -21,6 +21,9 @@ import {
   CreditTransactionDto,
   UpdateCampaignSettingsDto,
   TransferCreditsDto,
+  ForceCompleteCampaignDto,
+  ManualGrantAccessDto,
+  RemoveReaderFromCampaignDto,
 } from '../dto/campaign-controls.dto';
 
 @ApiTags('Admin - Campaign Controls')
@@ -291,6 +294,84 @@ export class CampaignControlsController {
     return this.campaignControlsService.resumeCampaignWithCatchUp(
       bookId,
       dto,
+      req.user!.id,
+      req.user!.email,
+      req.ip,
+    );
+  }
+
+  /**
+   * Force complete a campaign (Section 5.3)
+   */
+  @Post(':id/force-complete')
+  @ApiOperation({ summary: 'Force complete a campaign' })
+  @ApiResponse({ status: 200, description: 'Campaign force completed', type: CampaignAnalyticsDto })
+  async forceCompleteCampaign(
+    @Param('id') bookId: string,
+    @Body() dto: ForceCompleteCampaignDto,
+    @Req() req: Request,
+  ): Promise<CampaignAnalyticsDto> {
+    return this.campaignControlsService.forceCompleteCampaign(
+      bookId,
+      dto,
+      req.user!.id,
+      req.user!.email,
+      req.ip,
+    );
+  }
+
+  /**
+   * Manually grant material access to a reader (Section 5.3)
+   */
+  @Post(':id/grant-access')
+  @ApiOperation({ summary: 'Manually grant material access to a reader' })
+  @ApiResponse({ status: 200, description: 'Access granted successfully' })
+  async manualGrantAccess(
+    @Param('id') bookId: string,
+    @Body() dto: ManualGrantAccessDto,
+    @Req() req: Request,
+  ) {
+    return this.campaignControlsService.manualGrantAccess(
+      bookId,
+      dto,
+      req.user!.id,
+      req.user!.email,
+      req.ip,
+    );
+  }
+
+  /**
+   * Remove a reader from a campaign (Section 5.3)
+   */
+  @Post(':id/remove-reader')
+  @ApiOperation({ summary: 'Remove a reader from a campaign' })
+  @ApiResponse({ status: 200, description: 'Reader removed successfully' })
+  async removeReaderFromCampaign(
+    @Param('id') bookId: string,
+    @Body() dto: RemoveReaderFromCampaignDto,
+    @Req() req: Request,
+  ) {
+    return this.campaignControlsService.removeReaderFromCampaign(
+      bookId,
+      dto,
+      req.user!.id,
+      req.user!.email,
+      req.ip,
+    );
+  }
+
+  /**
+   * Generate campaign report data for PDF (Section 5.3)
+   */
+  @Get(':id/report')
+  @ApiOperation({ summary: 'Generate campaign report data for PDF' })
+  @ApiResponse({ status: 200, description: 'Campaign report data' })
+  async generateCampaignReport(
+    @Param('id') bookId: string,
+    @Req() req: Request,
+  ) {
+    return this.campaignControlsService.generateCampaignReportData(
+      bookId,
       req.user!.id,
       req.user!.email,
       req.ip,
