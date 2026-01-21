@@ -37,6 +37,7 @@ export interface LoginRequest {
   email: string;
   password: string;
   captchaToken?: string; // reCAPTCHA v3 token for bot protection
+  rememberMe?: boolean; // Per requirements.md Section 1.1: extends session to 7 days
 }
 
 export interface UserData {

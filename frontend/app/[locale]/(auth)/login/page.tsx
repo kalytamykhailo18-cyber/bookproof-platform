@@ -63,7 +63,7 @@ export default function LoginPage() {
         captchaToken = await executeRecaptcha('login');
       }
 
-      await loginAsync({ ...data, captchaToken });
+      await loginAsync({ ...data, captchaToken, rememberMe });
       toast.success(t('success'));
 
       // Section 16.1: Redirect to intended destination after successful login

@@ -86,7 +86,7 @@ const registerSchema = z
       .optional(),
     preferredSlug: z
       .string()
-      .regex(/^[a-z0-9-]*$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
+      .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
       .min(3, 'Slug must be at least 3 characters')
       .max(50, 'Slug must not exceed 50 characters')
       .optional()
@@ -326,6 +326,22 @@ export default function RegisterPage() {
             </SelectContent>
           </Select>
           {errors.country && <p className="text-sm text-destructive">{errors.country.message}</p>}
+        </div>
+
+        <div className="animate-fade-right-fast space-y-2">
+          <Label htmlFor="phone">{t('phone') || 'Phone Number'}</Label>
+          <Input
+            id="phone"
+            type="tel"
+            placeholder={t('phonePlaceholder') || '+1 (555) 123-4567'}
+            {...register('phone')}
+            className={errors.phone ? 'border-destructive' : ''}
+            disabled={isRegistering}
+          />
+          <p className="text-xs text-muted-foreground">
+            {t('phoneHint') || 'Optional - for account recovery and support'}
+          </p>
+          {errors.phone && <p className="text-sm text-destructive">{errors.phone.message}</p>}
         </div>
 
         {selectedRole === 'READER' && (

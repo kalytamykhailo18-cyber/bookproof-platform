@@ -92,13 +92,13 @@ export default function VerifyEmailPage() {
 
       <CardFooter className="flex flex-col space-y-2">
         {status === 'success' && (
-          <Button className="w-full" onClick={() => router.push(`/${locale}/login`)}>
+          <Button type="button" className="w-full" onClick={() => router.push(`/${locale}/login`)}>
             {t('loginButton')}
           </Button>
         )}
 
         {status === 'error' && (
-          <Button onClick={() => router.push(`/${locale}/register`)} variant="outline" className="w-full">
+          <Button type="button" onClick={() => router.push(`/${locale}/register`)} variant="outline" className="w-full">
             {t('resendButton')}
           </Button>
         )}
