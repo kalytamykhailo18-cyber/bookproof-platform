@@ -2,7 +2,7 @@
 
 import { useState, createContext, useContext } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -705,6 +705,8 @@ function CtaSettingsTabContent() {
 export default function AdminLandingPagesPage() {
   const t = useTranslations('admin-landing-pages');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
 
   return (
     <TranslationContext.Provider value={t as TFunction}>
@@ -768,7 +770,7 @@ export default function AdminLandingPagesPage() {
                         Changes are saved per language and can be previewed before publishing.
                       </p>
                       <div className="flex gap-2">
-                        <Button onClick={() => router.push('/admin/landing-pages/content')}>
+                        <Button onClick={() => router.push(`/${locale}/admin/landing-pages/content`)}>
                           <FileEdit className="mr-2 h-4 w-4" />
                           Open Content Editor
                         </Button>

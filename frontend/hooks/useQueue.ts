@@ -9,7 +9,7 @@ import {
 } from '@/lib/api/queue';
 import { useLoading } from '@/components/providers/LoadingProvider';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 export function useAvailableCampaigns() {
   const {
@@ -33,6 +33,8 @@ export function useMyAssignments() {
   const queryClient = useQueryClient();
   const { startLoading, stopLoading } = useLoading();
   const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
 
   // Get all my assignments
   const {
@@ -57,7 +59,7 @@ export function useMyAssignments() {
       queryClient.invalidateQueries({ queryKey: ['available-campaigns'] });
       queryClient.invalidateQueries({ queryKey: ['reader-stats'] });
       toast.success('Successfully applied to campaign!');
-      router.push(`/reader/assignments/${newAssignment.id}`);
+      router.push(`/${locale}/reader/assignments/${newAssignment.id}`);
     },
     onError: (error: any) => {
       stopLoading();
@@ -78,7 +80,7 @@ export function useMyAssignments() {
       queryClient.invalidateQueries({ queryKey: ['available-campaigns'] });
       queryClient.invalidateQueries({ queryKey: ['reader-stats'] });
       toast.success('Successfully withdrawn from assignment');
-      router.push('/reader');
+      router.push(`/${locale}/reader`);
     },
     onError: (error: any) => {
       stopLoading();

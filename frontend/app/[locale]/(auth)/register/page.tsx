@@ -7,7 +7,7 @@ import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { Plus, X } from 'lucide-react';
 import {
@@ -122,6 +122,8 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export default function RegisterPage() {
   const t = useTranslations('auth.register');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { registerAsync, isRegistering } = useAuth();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
 
@@ -614,7 +616,7 @@ export default function RegisterPage() {
           {t('hasAccount')}{' '}
           <span
             className="cursor-pointer font-medium text-primary hover:underline"
-            onClick={() => router.push('/login')}
+            onClick={() => router.push(`/${locale}/login`)}
           >
             {t('signIn')}
           </span>

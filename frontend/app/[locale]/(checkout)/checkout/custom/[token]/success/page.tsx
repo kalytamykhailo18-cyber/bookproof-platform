@@ -15,6 +15,7 @@ import { CheckCircle, Mail, ArrowRight } from 'lucide-react';
 export default function CustomPackageSuccessPage() {
   const params = useParams();
   const router = useRouter();
+  const locale = (params.locale as string) || 'en';
 
   return (
     <Card className="border-green-200 bg-gradient-to-br from-green-50 to-white">
@@ -80,7 +81,7 @@ export default function CustomPackageSuccessPage() {
       </CardContent>
 
       <CardFooter className="flex flex-col gap-3">
-        <Button className="w-full" size="lg" onClick={() => router.push('/login')}>
+        <Button className="w-full" size="lg" onClick={() => router.push(`/${locale}/login`)}>
           Go to Login
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>

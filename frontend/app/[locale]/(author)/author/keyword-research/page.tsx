@@ -18,13 +18,15 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Plus, Download, Eye, FileText } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import { KeywordResearchStatus } from '@/lib/api/keywords';
 
 export default function KeywordResearchListPage() {
   const t = useTranslations('keyword-research');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { data: researches, isLoading } = useKeywordResearchForAuthor();
   const { data: pricing } = usePublicKeywordResearchPricing();
   const downloadMutation = useDownloadKeywordResearchPdf();
@@ -60,7 +62,7 @@ export default function KeywordResearchListPage() {
           <h1 className="text-3xl font-bold">{t('list.title')}</h1>
           <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <Button onClick={() => router.push('/author/keyword-research/new')}>
+        <Button onClick={() => router.push(`/${locale}/author/keyword-research/new`)}>
           <Plus className="mr-2 h-4 w-4" />
           {t('createNew')}
         </Button>
@@ -98,7 +100,7 @@ export default function KeywordResearchListPage() {
               <FileText className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="mb-2 text-lg font-semibold">{t('list.empty')}</h3>
               <p className="mb-6 text-muted-foreground">{t('list.emptyDescription')}</p>
-              <Button onClick={() => router.push('/author/keyword-research/new')}>
+              <Button onClick={() => router.push(`/${locale}/author/keyword-research/new`)}>
                 <Plus className="mr-2 h-4 w-4" />
                 {t('createNew')}
               </Button>
@@ -152,7 +154,7 @@ export default function KeywordResearchListPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => router.push(`/author/keyword-research/${research.id}`)}
+                          onClick={() => router.push(`/${locale}/author/keyword-research/${research.id}`)}
                         >
                           <Eye className="mr-1 h-4 w-4" />
                           {t('list.actions.view')}

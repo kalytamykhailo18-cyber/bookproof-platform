@@ -24,6 +24,7 @@ export default function CouponUsagePage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const locale = (params.locale as string) || 'en';
 
   const { data: coupon, isLoading: couponLoading } = useCoupon(id);
   const { data: stats, isLoading: statsLoading } = useCouponUsageStats(id);
@@ -56,7 +57,7 @@ export default function CouponUsagePage() {
     <div className="container mx-auto max-w-6xl space-y-6 py-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => router.push(`/admin/coupons/${id}`)}>
+        <Button variant="ghost" size="icon" onClick={() => router.push(`/${locale}/admin/coupons/${id}`)}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>

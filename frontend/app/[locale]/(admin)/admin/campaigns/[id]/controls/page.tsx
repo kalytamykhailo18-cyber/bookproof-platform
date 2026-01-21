@@ -24,6 +24,7 @@ import { Pause, Play, Settings, TrendingUp, AlertCircle, ArrowLeft } from 'lucid
 export default function CampaignControlsPage() {
   const params = useParams();
   const router = useRouter();
+  const locale = (params.locale as string) || 'en';
   const bookId = params.id as string;
   const t = useTranslations('adminControls');
 
@@ -184,7 +185,7 @@ export default function CampaignControlsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button variant="ghost" className="mb-4" onClick={() => router.push(`/admin/campaigns/${bookId}`)}>
+        <Button variant="ghost" className="mb-4" onClick={() => router.push(`/${locale}/admin/campaigns/${bookId}`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToCampaign')}
         </Button>

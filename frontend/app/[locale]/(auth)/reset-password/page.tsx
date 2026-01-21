@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/useAuth';
 import { useForm } from 'react-hook-form';
@@ -37,6 +37,8 @@ export default function ResetPasswordPage() {
   const t = useTranslations('auth.resetPassword');
   const searchParams = useSearchParams();
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { resetPasswordAsync, isResettingPassword } = useAuth();
   const [resetSuccess, setResetSuccess] = useState(false);
   const token = searchParams.get('token');
@@ -93,7 +95,7 @@ export default function ResetPasswordPage() {
           <p className="text-muted-foreground">{t('errorInvalidToken')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
-          <Button type="button" onClick={() => router.push('/forgot-password')} className="w-full">
+          <Button type="button" onClick={() => router.push(`/${locale}/forgot-password`)} className="w-full">
             Request New Link
           </Button>
         </CardFooter>
@@ -116,7 +118,7 @@ export default function ResetPasswordPage() {
           <p className="animate-fade-up text-center text-muted-foreground">{t('successMessage')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
-          <Button type="button" onClick={() => router.push('/login')} className="w-full">
+          <Button type="button" onClick={() => router.push(`/${locale}/login`)} className="w-full">
             {t('loginButton')}
           </Button>
         </CardFooter>

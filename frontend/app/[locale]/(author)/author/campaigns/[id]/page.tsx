@@ -47,6 +47,7 @@ export default function CampaignDetailPage() {
   const params = useParams();
   const router = useRouter();
   const campaignId = params.id as string;
+  const locale = (params.locale as string) || 'en';
   const t = useTranslations('author.campaigns.detail');
 
   const { campaign, isLoading, refetch } = useCampaign(campaignId);
@@ -207,7 +208,7 @@ export default function CampaignDetailPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p>{t('notFound')}</p>
-            <Button onClick={() => router.push('/author')} className="mt-4">
+            <Button onClick={() => router.push(`/${locale}/author`)} className="mt-4">
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -226,7 +227,7 @@ export default function CampaignDetailPage() {
     <div className="container mx-auto max-w-6xl px-4 py-8">
       {/* Header */}
       <div className="mb-8 animate-fade-up">
-        <Button variant="ghost" onClick={() => router.push('/author')} className="mb-4">
+        <Button variant="ghost" onClick={() => router.push(`/${locale}/author`)} className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToDashboard')}
         </Button>
@@ -252,7 +253,7 @@ export default function CampaignDetailPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => router.push(`/author/campaigns/${campaign.id}/analytics`)}
+                  onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
                 >
                   <BarChart3 className="mr-2 h-4 w-4" />
                   {t('progress.viewAnalytics')}
@@ -689,7 +690,7 @@ export default function CampaignDetailPage() {
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => router.push(`/author/campaigns/${campaign.id}/edit`)}
+                  onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/edit`)}
                 >
                   <Edit className="mr-2 h-4 w-4" />
                   {t('actions.edit') || 'Edit'}
@@ -736,7 +737,7 @@ export default function CampaignDetailPage() {
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => router.push(`/author/campaigns/${campaign.id}/analytics`)}
+                  onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
                 >
                   <BarChart3 className="mr-2 h-4 w-4" />
                   {t('actions.viewAnalytics') || 'View Analytics'}
@@ -777,7 +778,7 @@ export default function CampaignDetailPage() {
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => router.push(`/author/campaigns/${campaign.id}/analytics`)}
+                  onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
                 >
                   <BarChart3 className="mr-2 h-4 w-4" />
                   {t('actions.viewAnalytics') || 'View Analytics'}
@@ -796,7 +797,7 @@ export default function CampaignDetailPage() {
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => router.push(`/author/campaigns/${campaign.id}/analytics`)}
+                  onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
                 >
                   <BarChart3 className="mr-2 h-4 w-4" />
                   {t('actions.viewFinalReport') || 'View Final Report'}

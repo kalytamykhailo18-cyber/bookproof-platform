@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import {
   BookOpen,
   Clock,
@@ -51,6 +51,8 @@ function StatsCard({
 
 function AssignmentCard({ assignment, className }: { assignment: Assignment; className?: string }) {
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const t = useTranslations('reader.dashboard');
 
   const getStatusVariant = (
@@ -102,7 +104,7 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
   return (
     <Card
       className={`cursor-pointer transition-all hover:scale-[1.02] hover:shadow-md ${className || ''}`}
-      onClick={() => router.push(`/reader/assignments/${assignment.id}`)}
+      onClick={() => router.push(`/${locale}/reader/assignments/${assignment.id}`)}
     >
       <CardHeader>
         <div className="flex items-start justify-between">
@@ -181,10 +183,12 @@ export default function ReaderDashboard() {
   const { stats, isLoadingStats } = useReaderStats();
   const { assignments, groupedAssignments, isLoadingAssignments } = useMyAssignments();
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
 
   // Redirect to profile creation if no profile exists
   if (!isLoadingProfile && !hasProfile) {
-    router.push('/reader/profile');
+    router.push(`/${locale}/reader/profile`);
     return null;
   }
 
@@ -229,7 +233,7 @@ export default function ReaderDashboard() {
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <Button className="animate-fade-left" onClick={() => router.push('/reader/campaigns')}>
+        <Button className="animate-fade-left" onClick={() => router.push(`/${locale}/reader/campaigns`)}>
           <BookOpen className="mr-2 h-4 w-4" />
           {t('browseBooks')}
           <ArrowRight className="ml-2 h-4 w-4" />
@@ -345,7 +349,7 @@ export default function ReaderDashboard() {
             <BookOpen className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-muted-foreground" />
             <h3 className="mb-2 text-lg font-semibold">{t('empty.title')}</h3>
             <p className="mb-4 text-muted-foreground">{t('empty.description')}</p>
-            <Button onClick={() => router.push('/reader/campaigns')}>
+            <Button onClick={() => router.push(`/${locale}/reader/campaigns`)}>
               {t('browseBooks')}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>

@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { ContentPreference } from '@/lib/api/readers';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 const GENRE_OPTIONS = [
   'Science Fiction',
@@ -54,6 +54,8 @@ const GENRE_OPTIONS = [
 export default function ReaderProfilePage() {
   const t = useTranslations('reader.profile');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const {
     profile,
     isLoadingProfile,
@@ -150,7 +152,7 @@ export default function ReaderProfilePage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button variant="ghost" size="sm" onClick={() => router.push('/reader')}>
+        <Button variant="ghost" size="sm" onClick={() => router.push(`/${locale}/reader`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToDashboard')}
         </Button>
@@ -428,7 +430,7 @@ export default function ReaderProfilePage() {
                 {/* Payout Request Button */}
                 {profile.walletBalance > 0 && (
                   <div className="pt-4">
-                    <Button className="w-full" onClick={() => router.push('/reader/payouts')}>
+                    <Button className="w-full" onClick={() => router.push(`/${locale}/reader/wallet`)}>
                       <TrendingUp className="mr-2 h-4 w-4" />
                       Request Payout
                     </Button>

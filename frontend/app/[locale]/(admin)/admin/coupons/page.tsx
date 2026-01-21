@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Plus, Edit, Trash2, Eye, TrendingUp, Filter, Tag, AlertCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useCoupons, useDeleteCoupon } from '@/hooks/useCoupons';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -46,6 +46,8 @@ import { formatDate } from '@/lib/utils';
 export default function CouponsPage() {
   const t = useTranslations('adminCoupons');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const [filterActive, setFilterActive] = useState<string>('all');
   const [filterAppliesTo, setFilterAppliesTo] = useState<string>('all');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -142,7 +144,7 @@ export default function CouponsPage() {
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <Button type="button" className="animate-fade-left" onClick={() => router.push('/admin/coupons/new')}>
+        <Button type="button" className="animate-fade-left" onClick={() => router.push(`/${locale}/admin/coupons/new`)}>
           <Plus className="mr-2 h-4 w-4" />
           {t('createNew')}
         </Button>
@@ -254,15 +256,15 @@ export default function CouponsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => router.push(`/admin/coupons/${coupon.id}`)}>
+                          <DropdownMenuItem onClick={() => router.push(`/${locale}/admin/coupons/${coupon.id}`)}>
                             <Eye className="mr-2 h-4 w-4" />
                             {t('actions.view')}
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push(`/admin/coupons/${coupon.id}/edit`)}>
+                          <DropdownMenuItem onClick={() => router.push(`/${locale}/admin/coupons/${coupon.id}/edit`)}>
                             <Edit className="mr-2 h-4 w-4" />
                             {t('actions.edit')}
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push(`/admin/coupons/${coupon.id}/usage`)}>
+                          <DropdownMenuItem onClick={() => router.push(`/${locale}/admin/coupons/${coupon.id}/usage`)}>
                             <TrendingUp className="mr-2 h-4 w-4" />
                             {t('actions.viewUsage')}
                           </DropdownMenuItem>

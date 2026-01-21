@@ -20,11 +20,16 @@ export default function PrivacyPolicyPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow-lg rounded-lg p-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Privacy Policy</h1>
-          <p className="text-sm text-gray-600 mb-8">Last updated: January 21, 2026</p>
+        <div className="bg-card shadow-xl rounded-2xl p-8 border border-border/50">
+          <div className="mb-8">
+            <div className="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4">
+              Legal
+            </div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent mb-2">Privacy Policy</h1>
+            <p className="text-sm text-muted-foreground">Last updated: January 21, 2026</p>
+          </div>
 
           <div className="prose prose-lg max-w-none">
             {/* Introduction */}

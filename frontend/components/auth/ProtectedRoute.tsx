@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams, useParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Loader2 } from 'lucide-react';
 
@@ -22,35 +22,37 @@ export function ProtectedRoute({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
 
   // Section 16.1: Unauthorized (401) - Preserve intended destination
   useEffect(() => {
     if (!isLoadingProfile && !isAuthenticated) {
       const currentPath = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '');
       const returnUrl = encodeURIComponent(currentPath);
-      router.push(`/login?returnUrl=${returnUrl}`);
+      router.push(`/${locale}/login?returnUrl=${returnUrl}`);
     }
-  }, [isAuthenticated, isLoadingProfile, router, pathname, searchParams]);
+  }, [isAuthenticated, isLoadingProfile, router, pathname, searchParams, locale]);
 
   // Section 16.1: Forbidden (403) - Redirect to forbidden page
   useEffect(() => {
     if (user && allowedRoles && !allowedRoles.includes(user.role)) {
-      router.push('/forbidden');
+      router.push(`/${locale}/forbidden`);
     }
-  }, [user, allowedRoles, router]);
+  }, [user, allowedRoles, router, locale]);
 
   useEffect(() => {
     if (user && requireEmailVerified && !user.emailVerified) {
-      router.push('/verify-email-required');
+      router.push(`/${locale}/verify-email-required`);
     }
-  }, [user, requireEmailVerified, router]);
+  }, [user, requireEmailVerified, router, locale]);
 
   // Check if author needs to accept terms of service
   useEffect(() => {
     if (user && requireTermsAccepted && user.role === 'AUTHOR' && user.termsAccepted === false) {
-      router.push('/accept-terms');
+      router.push(`/${locale}/accept-terms`);
     }
-  }, [user, requireTermsAccepted, router]);
+  }, [user, requireTermsAccepted, router, locale]);
 
   if (isLoadingProfile) {
     return (

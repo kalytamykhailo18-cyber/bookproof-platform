@@ -33,6 +33,7 @@ export default function KeywordResearchDetailsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = params.id as string;
+  const locale = (params.locale as string) || 'en';
 
   const { data: research, isLoading, refetch } = useKeywordResearch(id);
   const downloadMutation = useDownloadKeywordResearchPdf();
@@ -48,10 +49,10 @@ export default function KeywordResearchDetailsPage() {
       // Refetch to get updated status
       refetch();
       // Clean up URL
-      router.replace(`/author/keyword-research/${id}`);
+      router.replace(`/${locale}/author/keyword-research/${id}`);
     } else if (cancelled === 'true') {
       toast.error('Payment was cancelled. Please try again.');
-      router.replace(`/author/keyword-research/${id}`);
+      router.replace(`/${locale}/author/keyword-research/${id}`);
     }
   }, [searchParams, id, router, refetch]);
 
@@ -60,7 +61,7 @@ export default function KeywordResearchDetailsPage() {
   };
 
   const handleEdit = () => {
-    router.push(`/author/keyword-research/${id}/edit`);
+    router.push(`/${locale}/author/keyword-research/${id}/edit`);
   };
 
   const handlePayNow = () => {

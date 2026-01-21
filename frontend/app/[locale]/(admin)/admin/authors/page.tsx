@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAdminControls } from '@/hooks/useAdminControls';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -58,6 +58,8 @@ import type { AuthorListItemDto } from '@/lib/api/admin-controls';
 export default function AdminAuthorsPage() {
   const t = useTranslations('adminAuthors');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { useAllAuthors, addCredits, removeCredits, suspendAuthor, unsuspendAuthor, updateAuthorNotes } = useAdminControls();
 
   const { data: authors, isLoading } = useAllAuthors();
@@ -440,7 +442,7 @@ export default function AdminAuthorsPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/admin/authors/${author.id}/transactions`)}>
+                        <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/${locale}/admin/authors/${author.id}/transactions`)}>
                           <History className="h-4 w-4" />
                         </Button>
                         <Button

@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { AlertCircle, CheckCircle, ArrowLeft, Star, Send } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 export default function SubmitReviewPage({ params }: { params: { id: string } }) {
@@ -21,6 +21,8 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
   const { assignment, isLoading: isLoadingAssignment } = useAssignment(assignmentId);
   const { review, isLoadingReview, submitReview, isSubmitting } = useReviewSubmission(assignmentId);
   const router = useRouter();
+  const routeParams = useParams();
+  const locale = (routeParams.locale as string) || 'en';
 
   const [amazonReviewLink, setAmazonReviewLink] = useState('');
   const [internalRating, setInternalRating] = useState(5);
@@ -95,7 +97,7 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
           <CardContent className="py-16 text-center">
             <AlertCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="mb-2 text-lg font-semibold">{t('notFound.title')}</h3>
-            <Button className="mt-4" onClick={() => router.push('/reader')}>
+            <Button className="mt-4" onClick={() => router.push(`/${locale}/reader`)}>
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -108,7 +110,7 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
   if (review) {
     return (
       <div className="container mx-auto space-y-6 p-6">
-        <Button variant="ghost" className="animate-fade-right" onClick={() => router.push(`/reader/assignments/${assignmentId}`)}>
+        <Button variant="ghost" className="animate-fade-right" onClick={() => router.push(`/${locale}/reader/assignments/${assignmentId}`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToAssignment')}
         </Button>
@@ -123,10 +125,10 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
               {t('success.description')}
             </p>
             <div className="flex justify-center gap-2">
-              <Button onClick={() => router.push('/reader')}>
+              <Button onClick={() => router.push(`/${locale}/reader`)}>
                 {t('backToDashboard')}
               </Button>
-              <Button variant="outline" onClick={() => router.push('/reader/profile')}>
+              <Button variant="outline" onClick={() => router.push(`/${locale}/reader/profile`)}>
                 {t('viewWallet')}
               </Button>
             </div>
@@ -140,7 +142,7 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button variant="ghost" className="mb-4" onClick={() => router.push(`/reader/assignments/${assignmentId}`)}>
+        <Button variant="ghost" className="mb-4" onClick={() => router.push(`/${locale}/reader/assignments/${assignmentId}`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToAssignment')}
         </Button>

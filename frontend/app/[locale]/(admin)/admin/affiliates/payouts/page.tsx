@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -83,6 +83,8 @@ type ProcessPayoutFormData = z.infer<typeof processPayoutSchema>;
 export default function AdminAffiliatePayoutsPage() {
   const t = useTranslations('adminAffiliatePayouts');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const [statusFilter, setStatusFilter] = useState<PayoutRequestStatus | undefined>(undefined);
   const [selectedPayout, setSelectedPayout] = useState<PayoutResponseDto | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -177,7 +179,7 @@ export default function AdminAffiliatePayoutsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" onClick={() => router.push('/admin/affiliates')}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/${locale}/admin/affiliates`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToAffiliates')}
         </Button>

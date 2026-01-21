@@ -16,7 +16,7 @@ export default function CloserLayout({ children }: { children: React.ReactNode }
     if (!isLoading) {
       if (!user) {
         // Not authenticated - redirect to login
-        router.push('/login');
+        router.push(`/${locale}/login`);
       } else if (user.role !== UserRole.CLOSER) {
         // Authenticated but not a closer - redirect to appropriate dashboard
         if (user.role === UserRole.ADMIN) {

@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { reviewsApi, Review, PendingReviewsStats, ReviewIssue, SubmitReviewRequest, ValidateReviewRequest, BulkValidateReviewsRequest, CreateIssueRequest, ResolveIssueRequest, MarkAsRemovedRequest } from '@/lib/api/reviews';
 import { toast } from 'sonner';
 import { useLoading } from '@/components/providers/LoadingProvider';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 /**
  * Hook for reader review operations
@@ -11,6 +11,8 @@ export function useReviewSubmission(assignmentId: string) {
   const queryClient = useQueryClient();
   const { startLoading, stopLoading } = useLoading();
   const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
 
   // Get review for assignment
   const {
@@ -37,7 +39,7 @@ export function useReviewSubmission(assignmentId: string) {
       queryClient.invalidateQueries({ queryKey: ['my-assignments'] });
       queryClient.invalidateQueries({ queryKey: ['reader-stats'] });
       toast.success('Review submitted successfully! It will be validated by our team.');
-      router.push('/reader');
+      router.push(`/${locale}/reader`);
     },
     onError: (error: any) => {
       stopLoading();

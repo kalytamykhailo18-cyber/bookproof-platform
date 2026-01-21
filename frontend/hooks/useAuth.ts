@@ -12,13 +12,15 @@ import {
 } from '@/lib/api/auth';
 import { tokenManager } from '@/lib/api/client';
 import { useAuthStore } from '@/store/authStore';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useLoading } from '@/components/providers/LoadingProvider';
 import { toast } from 'sonner';
 
 export function useAuth() {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
   const { setUser, clearUser, user, isAuthenticated } = useAuthStore();
   const { startLoading, stopLoading } = useLoading();
 
@@ -55,22 +57,22 @@ export function useAuth() {
       // Redirect based on role
       switch (response.user.role) {
         case 'AUTHOR':
-          router.push('/author');
+          router.push(`/${locale}/author`);
           break;
         case 'READER':
-          router.push('/reader');
+          router.push(`/${locale}/reader`);
           break;
         case 'ADMIN':
-          router.push('/admin');
+          router.push(`/${locale}/admin`);
           break;
         case 'CLOSER':
-          router.push('/closer');
+          router.push(`/${locale}/closer`);
           break;
         case 'AFFILIATE':
-          router.push('/affiliate');
+          router.push(`/${locale}/affiliate`);
           break;
         default:
-          router.push('/');
+          router.push(`/${locale}`);
       }
     },
     onError: (error: any) => {
@@ -156,7 +158,7 @@ export function useAuth() {
     tokenManager.clearToken();
     clearUser();
     queryClient.clear();
-    router.push('/login');
+    router.push(`/${locale}/login`);
     toast.success('Logged out successfully');
   };
 

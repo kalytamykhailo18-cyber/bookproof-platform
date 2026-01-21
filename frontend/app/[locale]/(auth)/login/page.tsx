@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useForm } from 'react-hook-form';
@@ -33,6 +33,8 @@ export default function LoginPage() {
   const t = useTranslations('auth.login');
   const router = useRouter();
   const searchParams = useSearchParams();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { loginAsync, isLoggingIn } = useAuth();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
   const [rememberMe, setRememberMe] = useState(false);
@@ -127,7 +129,7 @@ export default function LoginPage() {
           </div>
           <span
             className="cursor-pointer text-sm text-primary hover:underline"
-            onClick={() => router.push('/forgot-password')}
+            onClick={() => router.push(`/${locale}/forgot-password`)}
           >
             {t('forgotPassword')}
           </span>
@@ -143,7 +145,7 @@ export default function LoginPage() {
           {t('noAccount')}{' '}
           <span
             className="cursor-pointer font-medium text-primary hover:underline"
-            onClick={() => router.push('/register')}
+            onClick={() => router.push(`/${locale}/register`)}
           >
             {t('signUp')}
           </span>

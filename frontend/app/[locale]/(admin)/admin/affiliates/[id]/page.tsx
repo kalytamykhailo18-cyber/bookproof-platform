@@ -93,6 +93,7 @@ export default function AdminAffiliateDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const locale = (params.locale as string) || 'en';
 
   const [approveDialogOpen, setApproveDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
@@ -215,7 +216,7 @@ export default function AdminAffiliateDetailsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" onClick={() => router.push('/admin/affiliates')}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/${locale}/admin/affiliates`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToAffiliates')}
         </Button>

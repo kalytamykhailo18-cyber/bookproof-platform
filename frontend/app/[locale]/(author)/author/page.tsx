@@ -16,12 +16,14 @@ import {
   Activity,
   CheckCircle2,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { CampaignStatus } from '@/lib/api/campaigns';
 
 export default function AuthorDashboardPage() {
   const t = useTranslations('author.dashboard');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { creditBalance, isLoadingBalance } = useCredits();
   const { campaigns, isLoadingCampaigns } = useCampaigns();
 
@@ -63,7 +65,7 @@ export default function AuthorDashboardPage() {
           <Button
             variant="outline"
             className="animate-fade-left"
-            onClick={() => router.push('/author/credits')}
+            onClick={() => router.push(`/${locale}/author/credits`)}
           >
             <CreditCard className="mr-2 h-4 w-4" />
             {t('buttons.buyCredits')}
@@ -76,7 +78,7 @@ export default function AuthorDashboardPage() {
                 ? t('buttons.noCreditsTooltip') || 'Purchase credits to create campaigns'
                 : undefined
             }
-            onClick={() => router.push('/author/campaigns/new')}
+            onClick={() => router.push(`/${locale}/author/campaigns/new`)}
           >
             <Plus className="mr-2 h-4 w-4" />
             {t('buttons.newCampaign')}
@@ -212,7 +214,7 @@ export default function AuthorDashboardPage() {
                 <Card
                   key={campaign.id}
                   className={`cursor-pointer transition-shadow hover:shadow-md ${animationClass}`}
-                  onClick={() => router.push(`/author/campaigns/${campaign.id}`)}
+                  onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}`)}
                 >
                   <CardHeader>
                     <div className="flex items-start justify-between">
@@ -261,7 +263,7 @@ export default function AuthorDashboardPage() {
               <BookOpen className="mb-4 h-12 w-12 text-muted-foreground" />
               <p className="mb-2 text-lg font-medium">{t('campaigns.noCampaigns')}</p>
               <p className="mb-4 text-sm text-muted-foreground">{t('campaigns.createFirst')}</p>
-              <Button onClick={() => router.push('/author/campaigns/new')}>
+              <Button onClick={() => router.push(`/${locale}/author/campaigns/new`)}>
                 <Plus className="mr-2 h-4 w-4" />
                 {t('buttons.newCampaign')}
               </Button>

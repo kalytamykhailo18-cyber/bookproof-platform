@@ -72,10 +72,10 @@ function Header({ locale }: { locale: string }) {
         </div>
         <div className="flex items-center gap-4">
           <LanguageSelector currentLocale={locale} />
-          <Button variant="ghost" className="animate-fade-left-fast" onClick={() => router.push('/login')}>
+          <Button variant="ghost" className="animate-fade-left-fast" onClick={() => router.push(`/${locale}/login`)}>
             {t('nav.login')}
           </Button>
-          <Button className="animate-fade-left" onClick={() => router.push('/register')}>
+          <Button className="animate-fade-left" onClick={() => router.push(`/${locale}/register`)}>
             {t('nav.signup')}
           </Button>
         </div>
@@ -85,7 +85,7 @@ function Header({ locale }: { locale: string }) {
 }
 
 // Hero Section
-function HeroSection() {
+function HeroSection({ locale }: { locale: string }) {
   const t = useTranslations('hero');
   const router = useRouter();
 
@@ -101,10 +101,10 @@ function HeroSection() {
               {t('subtitle')}
             </p>
             <div className="flex animate-fade-up-slow flex-col gap-4 sm:flex-row">
-              <Button size="lg" className="text-lg" onClick={() => router.push('/register')}>
+              <Button size="lg" className="text-lg" onClick={() => router.push(`/${locale}/register`)}>
                 {t('cta.primary')}
               </Button>
-              <Button size="lg" variant="outline" className="text-lg" onClick={() => router.push('/login')}>
+              <Button size="lg" variant="outline" className="text-lg" onClick={() => router.push(`/${locale}/login`)}>
                 {t('cta.secondary')}
               </Button>
             </div>
@@ -115,11 +115,12 @@ function HeroSection() {
             </div>
           </div>
           <div className="relative animate-zoom-in-slow">
-            <div className="flex aspect-square items-center justify-center rounded-md bg-gradient-to-br from-primary/20 to-primary/5">
-              <div className="p-8 text-center">
-                <Star className="mx-auto mb-4 h-24 w-24 animate-fade-down text-primary" />
-                <p className="animate-fade-up text-2xl font-semibold">{t('heroImage')}</p>
-              </div>
+            <div className="relative aspect-square overflow-hidden rounded-2xl">
+              <img
+                src="https://res.cloudinary.com/dcfjvxt5h/image/upload/v1769013154/Frame_39-removebg-preview_ybrxls.png"
+                alt="BookProof Hero"
+                className="h-full w-full object-contain"
+              />
             </div>
           </div>
         </div>
@@ -310,7 +311,7 @@ function ReaderBenefitsSection() {
 }
 
 // Pricing Section
-function PricingSection() {
+function PricingSection({ locale }: { locale: string }) {
   const t = useTranslations('pricing');
   const router = useRouter();
 
@@ -405,7 +406,7 @@ function PricingSection() {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full" variant={pkg.popular ? 'default' : 'outline'} onClick={() => router.push('/register')}>
+                <Button className="w-full" variant={pkg.popular ? 'default' : 'outline'} onClick={() => router.push(`/${locale}/register`)}>
                   {t('cta')}
                 </Button>
               </CardContent>
@@ -758,7 +759,7 @@ function Footer({ locale }: { locale: string }) {
               <li>
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => router.push('/privacy')}
+                  onClick={() => router.push(`/${locale}/privacy`)}
                 >
                   {t('links.legal.privacy')}
                 </span>
@@ -766,7 +767,7 @@ function Footer({ locale }: { locale: string }) {
               <li>
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => router.push('/terms')}
+                  onClick={() => router.push(`/${locale}/terms`)}
                 >
                   {t('links.legal.terms')}
                 </span>
@@ -774,7 +775,7 @@ function Footer({ locale }: { locale: string }) {
               <li>
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => router.push('/cookies')}
+                  onClick={() => router.push(`/${locale}/cookies`)}
                 >
                   {t('links.legal.cookies')}
                 </span>
@@ -804,11 +805,11 @@ export default function LandingPage() {
     <>
       <Header locale={locale} />
       <main>
-        <HeroSection />
+        <HeroSection locale={locale} />
         <HowItWorksSection />
         <FeaturesSection />
         <ReaderBenefitsSection />
-        <PricingSection />
+        <PricingSection locale={locale} />
         <FAQSection />
         <LeadCaptureForm />
         <ContactSection />

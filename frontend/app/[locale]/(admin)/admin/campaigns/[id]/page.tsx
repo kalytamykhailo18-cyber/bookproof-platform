@@ -49,6 +49,7 @@ import {
 export default function AdminCampaignDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const locale = (params.locale as string) || 'en';
   const t = useTranslations('adminCampaigns.detail');
   const campaignId = params.id as string;
 
@@ -166,7 +167,7 @@ export default function AdminCampaignDetailPage() {
             <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="text-lg font-semibold">{t('notFound.title')}</h3>
             <p className="text-muted-foreground">{t('notFound.description')}</p>
-            <Button className="mt-4" onClick={() => router.push('/admin/campaigns')}>
+            <Button className="mt-4" onClick={() => router.push(`/${locale}/admin/campaigns`)}>
               {t('backToCampaigns')}
             </Button>
           </CardContent>
@@ -179,7 +180,7 @@ export default function AdminCampaignDetailPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button variant="ghost" className="mb-4" onClick={() => router.push('/admin/campaigns')}>
+        <Button variant="ghost" className="mb-4" onClick={() => router.push(`/${locale}/admin/campaigns`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToCampaigns')}
         </Button>
@@ -281,7 +282,7 @@ export default function AdminCampaignDetailPage() {
                 </DialogContent>
               </Dialog>
             ) : null}
-            <Button variant="outline" onClick={() => router.push(`/admin/campaigns/${campaignId}/controls`)}>
+            <Button variant="outline" onClick={() => router.push(`/${locale}/admin/campaigns/${campaignId}/controls`)}>
               <Settings className="mr-2 h-4 w-4" />
               {t('actions.controls')}
             </Button>

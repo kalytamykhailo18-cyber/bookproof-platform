@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -58,6 +58,8 @@ type FormValues = z.infer<typeof formSchema>;
 export default function NewKeywordResearchPage() {
   const t = useTranslations('keyword-research.new');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const createMutation = useCreateKeywordResearch();
   const validateCouponMutation = useValidateCoupon();
   const { data: pricing } = usePublicKeywordResearchPricing();
@@ -212,7 +214,7 @@ export default function NewKeywordResearchPage() {
       const result = await createMutation.mutateAsync(data);
       // Clear draft on successful submission
       localStorage.removeItem(DRAFT_STORAGE_KEY);
-      router.push(`/author/keyword-research/${result.id}`);
+      router.push(`/${locale}/author/keyword-research/${result.id}`);
     } catch (error) {
       console.error('Failed to create keyword research:', error);
     }

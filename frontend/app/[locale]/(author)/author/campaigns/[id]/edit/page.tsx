@@ -88,6 +88,7 @@ export default function EditCampaignPage() {
   const params = useParams();
   const router = useRouter();
   const campaignId = params.id as string;
+  const locale = (params.locale as string) || 'en';
   const t = useTranslations('author.campaigns.edit');
   const tNew = useTranslations('author.campaigns.new');
 
@@ -172,7 +173,7 @@ export default function EditCampaignPage() {
       { id: campaignId, data: cleanData },
       {
         onSuccess: () => {
-          router.push(`/author/campaigns/${campaignId}`);
+          router.push(`/${locale}/author/campaigns/${campaignId}`);
         },
       },
     );
@@ -192,7 +193,7 @@ export default function EditCampaignPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p>{t('notFound')}</p>
-            <Button onClick={() => router.push('/author')} className="mt-4">
+            <Button onClick={() => router.push(`/${locale}/author`)} className="mt-4">
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -208,7 +209,7 @@ export default function EditCampaignPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p>{t('cannotEdit')}</p>
-            <Button onClick={() => router.push(`/author/campaigns/${campaignId}`)} className="mt-4">
+            <Button onClick={() => router.push(`/${locale}/author/campaigns/${campaignId}`)} className="mt-4">
               {t('backToCampaign')}
             </Button>
           </CardContent>
@@ -223,7 +224,7 @@ export default function EditCampaignPage() {
       <div className="mb-8 animate-fade-up">
         <Button
           variant="ghost"
-          onClick={() => router.push(`/author/campaigns/${campaignId}`)}
+          onClick={() => router.push(`/${locale}/author/campaigns/${campaignId}`)}
           className="mb-4"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />

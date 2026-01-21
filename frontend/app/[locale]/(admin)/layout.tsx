@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (!isLoading) {
       if (!user) {
         // Not authenticated - redirect to login
-        router.push('/login');
+        router.push(`/${locale}/login`);
       } else if (user.role !== UserRole.ADMIN) {
         // Authenticated but not an admin - redirect to appropriate dashboard
         if (user.role === UserRole.AFFILIATE) {

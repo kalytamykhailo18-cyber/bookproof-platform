@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -45,6 +45,8 @@ type RegisterAffiliateFormData = z.infer<typeof registerAffiliateSchema>;
 export default function AffiliateRegisterPage() {
   const t = useTranslations('affiliates.register');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const { data: existingProfile, isLoading: checkingProfile } = useAffiliateProfile();
   const registerMutation = useRegisterAffiliate();
 
@@ -65,7 +67,7 @@ export default function AffiliateRegisterPage() {
 
     const data = form.getValues();
     await registerMutation.mutateAsync(data);
-    router.push('/affiliate/dashboard');
+    router.push(`/${locale}/affiliate/dashboard`);
   };
 
   // If user already has profile, show status
@@ -108,7 +110,7 @@ export default function AffiliateRegisterPage() {
                 <AlertDescription>{t('existingApplication.pending')}</AlertDescription>
               </Alert>
             )}
-            <Button type="button" onClick={() => router.push('/affiliate/dashboard')}>
+            <Button type="button" onClick={() => router.push(`/${locale}/affiliate/dashboard`)}>
               {t('existingApplication.goToDashboard')}
             </Button>
           </CardContent>
