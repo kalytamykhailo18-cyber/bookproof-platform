@@ -113,7 +113,7 @@ export default function NewCouponPage() {
     <div className="container mx-auto max-w-4xl space-y-6 py-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => router.push(`/${locale}/admin/coupons`)}>
+        <Button type="button" variant="ghost" size="icon" onClick={() => router.push(`/${locale}/admin/coupons`)}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>

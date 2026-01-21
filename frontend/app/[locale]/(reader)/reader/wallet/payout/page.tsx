@@ -212,13 +212,16 @@ export default function RequestPayoutPage() {
   return (
     <div className="container mx-auto max-w-3xl px-4 py-8">
       {/* Back Button */}
-      <span
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
         onClick={() => router.push(`/${locale}/reader/wallet`)}
-        className="mb-6 inline-flex animate-fade-right-fast items-center gap-2 text-sm text-muted-foreground hover:text-foreground cursor-pointer"
+        className="mb-6 animate-fade-right-fast"
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Wallet
-      </span>
+      </Button>
 
       {/* Page Header */}
       <div className="mb-8 animate-fade-down-fast">

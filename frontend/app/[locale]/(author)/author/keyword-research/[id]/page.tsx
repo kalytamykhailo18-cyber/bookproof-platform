@@ -144,7 +144,7 @@ export default function KeywordResearchDetailsPage() {
         <div className="flex gap-2">
           {/* Edit button - only for PENDING status */}
           {research.status === KeywordResearchStatus.PENDING && (
-            <Button variant="outline" onClick={handleEdit}>
+            <Button type="button" variant="outline" onClick={handleEdit}>
               <Edit className="mr-2 h-4 w-4" />
               {t('edit')}
             </Button>
@@ -153,7 +153,7 @@ export default function KeywordResearchDetailsPage() {
           {research.status === KeywordResearchStatus.PENDING &&
             !research.paid &&
             research.price > 0 && (
-              <Button onClick={handlePayNow} disabled={checkoutMutation.isPending}>
+              <Button type="button" onClick={handlePayNow} disabled={checkoutMutation.isPending}>
                 {checkoutMutation.isPending ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -164,7 +164,7 @@ export default function KeywordResearchDetailsPage() {
             )}
           {/* Download button - only for COMPLETED status */}
           {research.status === KeywordResearchStatus.COMPLETED && research.pdfUrl && (
-            <Button onClick={handleDownload} disabled={downloadMutation.isPending}>
+            <Button type="button" onClick={handleDownload} disabled={downloadMutation.isPending}>
               {downloadMutation.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (

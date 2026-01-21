@@ -815,13 +815,16 @@ export default function AdminReaderDetailPage() {
                           ) : (
                             <XCircle className="h-5 w-5 flex-shrink-0 text-red-600" />
                           )}
-                          <span
-                            className="flex cursor-pointer items-center gap-1 truncate text-sm hover:underline"
+                          <Button
+                            type="button"
+                            variant="link"
+                            size="sm"
+                            className="h-auto truncate p-0 text-sm"
                             onClick={() => window.open(profile.profileUrl, '_blank', 'noopener,noreferrer')}
                           >
                             {profile.profileUrl}
-                            <ExternalLink className="h-3 w-3 flex-shrink-0" />
-                          </span>
+                            <ExternalLink className="ml-1 h-3 w-3 flex-shrink-0" />
+                          </Button>
                         </div>
                         <div className="ml-7 mt-1">
                           {profile.isVerified ? (

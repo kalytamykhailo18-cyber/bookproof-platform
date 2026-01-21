@@ -72,10 +72,10 @@ function Header({ locale }: { locale: string }) {
         </div>
         <div className="flex items-center gap-4">
           <LanguageSelector currentLocale={locale} />
-          <Button variant="ghost" className="animate-fade-left-fast" onClick={() => router.push(`/${locale}/login`)}>
+          <Button type="button" variant="ghost" className="animate-fade-left-fast" onClick={() => router.push(`/${locale}/login`)}>
             {t('nav.login')}
           </Button>
-          <Button className="animate-fade-left" onClick={() => router.push(`/${locale}/register`)}>
+          <Button type="button" className="animate-fade-left" onClick={() => router.push(`/${locale}/register`)}>
             {t('nav.signup')}
           </Button>
         </div>
@@ -101,10 +101,10 @@ function HeroSection({ locale }: { locale: string }) {
               {t('subtitle')}
             </p>
             <div className="flex animate-fade-up-slow flex-col gap-4 sm:flex-row">
-              <Button size="lg" className="text-lg" onClick={() => router.push(`/${locale}/register`)}>
+              <Button type="button" size="lg" className="text-lg" onClick={() => router.push(`/${locale}/register`)}>
                 {t('cta.primary')}
               </Button>
-              <Button size="lg" variant="outline" className="text-lg" onClick={() => router.push(`/${locale}/login`)}>
+              <Button type="button" size="lg" variant="outline" className="text-lg" onClick={() => router.push(`/${locale}/login`)}>
                 {t('cta.secondary')}
               </Button>
             </div>
@@ -667,12 +667,14 @@ function ContactSection() {
               <div>
                 <h3 className="mb-1 text-lg font-semibold">{t('email.title')}</h3>
                 <p className="mb-2 text-sm text-muted-foreground">{t('email.description')}</p>
-                <span
-                  className="cursor-pointer text-primary hover:underline"
-                  onClick={() => (window.location.href = 'mailto:support@bookproof.com')}
+                <Button
+                  type="button"
+                  variant="link"
+                  className="h-auto p-0 text-primary hover:underline"
+                  onClick={() => window.open('mailto:support@bookproof.com', '_self')}
                 >
                   support@bookproof.com
-                </span>
+                </Button>
               </div>
             </CardContent>
           </Card>

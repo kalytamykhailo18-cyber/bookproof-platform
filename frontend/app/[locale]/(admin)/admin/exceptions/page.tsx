@@ -252,10 +252,11 @@ export default function ExceptionsPage() {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setBulkReassignDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setBulkReassignDialogOpen(false)}>
                   Cancel
                 </Button>
                 <Button
+                  type="button"
                   onClick={handleBulkReassign}
                   disabled={!bulkTargetBookId || !bulkReassignReason || bulkReassign.isPending}
                 >
@@ -447,10 +448,11 @@ export default function ExceptionsPage() {
                               </div>
                             </div>
                             <DialogFooter>
-                              <Button variant="outline" onClick={() => setExtendDialogOpen(false)}>
+                              <Button type="button" variant="outline" onClick={() => setExtendDialogOpen(false)}>
                                 Cancel
                               </Button>
                               <Button
+                                type="button"
                                 onClick={handleExtendDeadline}
                                 disabled={!extendReason || extendDeadline.isPending}
                               >
@@ -570,10 +572,11 @@ export default function ExceptionsPage() {
                               </div>
                             </div>
                             <DialogFooter>
-                              <Button variant="outline" onClick={() => setCancelDialogOpen(false)}>
+                              <Button type="button" variant="outline" onClick={() => setCancelDialogOpen(false)}>
                                 Cancel
                               </Button>
                               <Button
+                                type="button"
                                 variant="destructive"
                                 onClick={handleCancelAssignment}
                                 disabled={!cancelReason || cancelAssignment.isPending}

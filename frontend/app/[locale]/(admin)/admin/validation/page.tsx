@@ -203,6 +203,7 @@ export default function AdminValidationPage() {
               </p>
               <div className="flex gap-2">
                 <Button
+                  type="button"
                   size="sm"
                   onClick={handleBulkApprove}
                   disabled={isBulkValidating}
@@ -211,7 +212,7 @@ export default function AdminValidationPage() {
                   <CheckCircle className="mr-2 h-4 w-4" />
                   {t('bulk.approve')}
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => setSelectedReviews([])}>
+                <Button type="button" size="sm" variant="outline" onClick={() => setSelectedReviews([])}>
                   {t('bulk.clear')}
                 </Button>
               </div>
@@ -301,13 +302,16 @@ export default function AdminValidationPage() {
                               {review.amazonProfile.profileName && (
                                 <span>{review.amazonProfile.profileName}</span>
                               )}
-                              <span
-                                className="flex cursor-pointer items-center gap-1 text-blue-600 hover:underline"
+                              <Button
+                                type="button"
+                                variant="link"
+                                size="sm"
+                                className="h-auto p-0 text-blue-600"
                                 onClick={() => window.open(review.amazonProfile?.profileUrl, '_blank', 'noopener,noreferrer')}
                               >
                                 {t('review.viewProfile')}
-                                <ExternalLink className="h-3 w-3" />
-                              </span>
+                                <ExternalLink className="ml-1 h-3 w-3" />
+                              </Button>
                               {review.amazonProfile.isVerified ? (
                                 <Badge
                                   variant="outline"
@@ -348,13 +352,16 @@ export default function AdminValidationPage() {
 
                         {/* Amazon Link */}
                         <div>
-                          <span
-                            className="flex cursor-pointer items-center gap-1 text-sm text-blue-600 hover:underline"
+                          <Button
+                            type="button"
+                            variant="link"
+                            size="sm"
+                            className="h-auto p-0 text-sm text-blue-600"
                             onClick={() => window.open(review.amazonReviewLink, '_blank', 'noopener,noreferrer')}
                           >
                             {t('review.viewOnAmazon')}
-                            <ExternalLink className="h-3 w-3" />
-                          </span>
+                            <ExternalLink className="ml-1 h-3 w-3" />
+                          </Button>
                         </div>
 
                         {/* Submitted Time */}
@@ -369,6 +376,7 @@ export default function AdminValidationPage() {
                         {/* Action Buttons */}
                         <div className="flex gap-2 pt-2">
                           <Button
+                            type="button"
                             size="sm"
                             onClick={() => openValidationDialog(review, ValidationAction.APPROVE)}
                             disabled={isValidating}
@@ -378,6 +386,7 @@ export default function AdminValidationPage() {
                             {t('actions.approve')}
                           </Button>
                           <Button
+                            type="button"
                             size="sm"
                             variant="outline"
                             onClick={() => openValidationDialog(review, ValidationAction.REJECT)}
@@ -388,6 +397,7 @@ export default function AdminValidationPage() {
                             {t('actions.reject')}
                           </Button>
                           <Button
+                            type="button"
                             size="sm"
                             variant="outline"
                             onClick={() => openValidationDialog(review, ValidationAction.FLAG)}
@@ -398,6 +408,7 @@ export default function AdminValidationPage() {
                             {t('actions.flag')}
                           </Button>
                           <Button
+                            type="button"
                             size="sm"
                             variant="outline"
                             onClick={() =>
@@ -493,10 +504,10 @@ export default function AdminValidationPage() {
           )}
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setValidationDialogOpen(false)}>
+            <Button type="button" variant="outline" onClick={() => setValidationDialogOpen(false)}>
               {t('dialog.cancel')}
             </Button>
-            <Button onClick={handleValidate} disabled={isValidating}>
+            <Button type="button" onClick={handleValidate} disabled={isValidating}>
               {isValidating ? t('dialog.processing') : t('dialog.confirm')}
             </Button>
           </DialogFooter>

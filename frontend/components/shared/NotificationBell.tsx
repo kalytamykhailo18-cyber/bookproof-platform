@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,6 +24,9 @@ import { useQueryClient } from '@tanstack/react-query';
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
 
   // Get unread count
   const { data: unreadCount = 0 } = useUnreadCount();
@@ -55,7 +59,7 @@ export function NotificationBell() {
 
     // Navigate if actionUrl exists
     if (actionUrl) {
-      window.location.href = actionUrl;
+      router.push(actionUrl);
     }
   };
 
@@ -67,7 +71,7 @@ export function NotificationBell() {
   // Handle view all click
   const handleViewAll = () => {
     setIsOpen(false);
-    window.location.href = '/notifications'; // Navigate to full notifications page
+    router.push(`/${locale}/reader/notifications`); // Navigate to full notifications page
   };
 
   return (
@@ -100,6 +104,7 @@ export function NotificationBell() {
             <h3 className="font-semibold text-sm">Notifications</h3>
             {unreadCount > 0 && (
               <Button
+                type="button"
                 variant="ghost"
                 size="sm"
                 onClick={handleMarkAllAsRead}
@@ -122,6 +127,7 @@ export function NotificationBell() {
 
         <div className="sticky bottom-0 z-10 bg-background border-t">
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={handleViewAll}

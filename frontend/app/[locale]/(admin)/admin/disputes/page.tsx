@@ -323,10 +323,11 @@ export default function DisputesPage() {
                               </div>
                             </div>
                             <DialogFooter>
-                              <Button variant="outline" onClick={() => setStatusDialogOpen(false)}>
+                              <Button type="button" variant="outline" onClick={() => setStatusDialogOpen(false)}>
                                 Cancel
                               </Button>
                               <Button
+                                type="button"
                                 onClick={handleUpdateStatus}
                                 disabled={updateStatus.isPending}
                               >
@@ -441,10 +442,11 @@ export default function DisputesPage() {
                               </div>
                             </div>
                             <DialogFooter>
-                              <Button variant="outline" onClick={() => setResolveDialogOpen(false)}>
+                              <Button type="button" variant="outline" onClick={() => setResolveDialogOpen(false)}>
                                 Cancel
                               </Button>
                               <Button
+                                type="button"
                                 onClick={handleResolve}
                                 disabled={!resolution || resolveDispute.isPending}
                               >

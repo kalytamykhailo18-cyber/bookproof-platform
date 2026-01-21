@@ -117,6 +117,7 @@ export default function SettingsPage() {
           </div>
 
           <Button
+            type="button"
             onClick={handleExportData}
             disabled={isExporting}
             className="w-full sm:w-auto"
@@ -253,7 +254,7 @@ export default function SettingsPage() {
         <CardContent>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" className="w-full sm:w-auto">
+              <Button type="button" variant="destructive" className="w-full sm:w-auto">
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete My Account
               </Button>
@@ -354,6 +355,7 @@ export default function SettingsPage() {
               </p>
             </div>
             <Button
+              type="button"
               variant="outline"
               onClick={() => window.open('/privacy', '_blank', 'noopener,noreferrer')}
             >

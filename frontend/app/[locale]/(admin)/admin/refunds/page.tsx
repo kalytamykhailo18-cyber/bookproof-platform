@@ -524,10 +524,11 @@ export default function AdminRefundsPage() {
           )}
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>
+            <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
               Cancel
             </Button>
             <Button
+              type="button"
               onClick={handleProcessRefund}
               disabled={processRefund.isPending || (decision === 'approve_partial' && partialAmount <= 0)}
               variant={decision === 'reject' ? 'destructive' : 'default'}

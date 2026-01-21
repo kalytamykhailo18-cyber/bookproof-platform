@@ -140,7 +140,7 @@ export default function EditKeywordResearchPage() {
           <AlertDescription>{tEdit('cannotEdit')}</AlertDescription>
         </Alert>
         <div className="mt-4">
-          <Button variant="outline" onClick={() => router.push(`/${locale}/author/keyword-research/${id}`)}>
+          <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/author/keyword-research/${id}`)}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Details
           </Button>

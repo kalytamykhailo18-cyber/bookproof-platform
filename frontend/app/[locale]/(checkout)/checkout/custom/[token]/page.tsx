@@ -101,7 +101,7 @@ export default function CustomPackageCheckoutPage() {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button variant="outline" onClick={() => router.push(`/${locale}`)}>
+          <Button type="button" variant="outline" onClick={() => router.push(`/${locale}`)}>
             Go to Homepage
           </Button>
         </CardFooter>
@@ -150,7 +150,7 @@ export default function CustomPackageCheckoutPage() {
           <p className="text-sm text-muted-foreground">Credits: {packageData.credits}</p>
         </CardContent>
         <CardFooter>
-          <Button onClick={() => router.push(`/${locale}/login`)}>Go to Login</Button>
+          <Button type="button" onClick={() => router.push(`/${locale}/login`)}>Go to Login</Button>
         </CardFooter>
       </Card>
     );

@@ -185,7 +185,7 @@ export default function CampaignControlsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button variant="ghost" className="mb-4" onClick={() => router.push(`/${locale}/admin/campaigns/${bookId}`)}>
+        <Button type="button" variant="ghost" className="mb-4" onClick={() => router.push(`/${locale}/admin/campaigns/${bookId}`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToCampaign')}
         </Button>

@@ -33,7 +33,7 @@ export default function NotificationsPage() {
   const handleNotificationClick = (notificationId: string, actionUrl?: string) => {
     markAsRead([notificationId]);
     if (actionUrl) {
-      window.location.href = actionUrl;
+      router.push(actionUrl);
     }
   };
 
@@ -52,12 +52,13 @@ export default function NotificationsPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" className="animate-fade-left" onClick={() => router.push(`/${locale}/reader/notifications/settings`)}>
+          <Button type="button" variant="outline" className="animate-fade-left" onClick={() => router.push(`/${locale}/reader/notifications/settings`)}>
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
           {notificationData && notificationData.unreadCount > 0 && (
             <Button
+              type="button"
               onClick={handleMarkAllAsRead}
               disabled={isMarkingAll}
               className="animate-fade-left-fast"
@@ -92,6 +93,7 @@ export default function NotificationsPage() {
             {/* Type Filter */}
             <div className="flex gap-2">
               <Button
+                type="button"
                 variant={typeFilter === 'ALL' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setTypeFilter('ALL')}
@@ -99,6 +101,7 @@ export default function NotificationsPage() {
                 All Types
               </Button>
               <Button
+                type="button"
                 variant={typeFilter === NotificationType.CAMPAIGN ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setTypeFilter(NotificationType.CAMPAIGN)}
@@ -106,6 +109,7 @@ export default function NotificationsPage() {
                 Campaigns
               </Button>
               <Button
+                type="button"
                 variant={typeFilter === NotificationType.REVIEW ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setTypeFilter(NotificationType.REVIEW)}
@@ -113,6 +117,7 @@ export default function NotificationsPage() {
                 Reviews
               </Button>
               <Button
+                type="button"
                 variant={typeFilter === NotificationType.PAYMENT ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setTypeFilter(NotificationType.PAYMENT)}

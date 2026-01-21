@@ -36,12 +36,12 @@ export default function NotFound() {
 
         {/* Navigation Options */}
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-          <Button size="lg" className="gap-2" onClick={() => router.push('/')}>
+          <Button type="button" size="lg" className="gap-2" onClick={() => router.push('/')}>
             <Home className="h-4 w-4" />
             Go Home
           </Button>
 
-          <Button variant="outline" size="lg" className="gap-2" onClick={() => router.push('/search')}>
+          <Button type="button" variant="outline" size="lg" className="gap-2" onClick={() => router.push('/search')}>
             <Search className="h-4 w-4" />
             Search
           </Button>
