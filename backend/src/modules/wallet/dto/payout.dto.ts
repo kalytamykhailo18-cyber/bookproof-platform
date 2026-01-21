@@ -51,8 +51,8 @@ export class PayoutPaymentDetailsDto {
 
 export class RequestPayoutDto {
   @IsNumber()
-  @Min(50, { message: 'Minimum payout amount is $50' })
-  amount: number;
+  @Min(1, { message: 'Amount must be positive' })
+  amount: number; // Actual minimum enforced by service based on MINIMUM_PAYOUT_AMOUNT config
 
   @IsEnum(['PayPal', 'Bank Transfer', 'Wise', 'Crypto'], {
     message: 'Payment method must be one of: PayPal, Bank Transfer, Wise, Crypto',
