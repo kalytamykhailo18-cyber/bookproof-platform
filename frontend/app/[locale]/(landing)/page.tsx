@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { LanguageSelector } from '@/components/shared/LanguageSelector';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -60,6 +60,7 @@ type LeadFormData = z.infer<typeof leadFormSchema>;
 // Header Component
 function Header({ locale }: { locale: string }) {
   const t = useTranslations();
+  const router = useRouter();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -71,10 +72,12 @@ function Header({ locale }: { locale: string }) {
         </div>
         <div className="flex items-center gap-4">
           <LanguageSelector currentLocale={locale} />
-          <Button variant="ghost" className="animate-fade-left-fast">
+          <Button variant="ghost" className="animate-fade-left-fast" onClick={() => router.push('/login')}>
             {t('nav.login')}
           </Button>
-          <Button className="animate-fade-left">{t('nav.signup')}</Button>
+          <Button className="animate-fade-left" onClick={() => router.push('/register')}>
+            {t('nav.signup')}
+          </Button>
         </div>
       </div>
     </header>
@@ -84,6 +87,7 @@ function Header({ locale }: { locale: string }) {
 // Hero Section
 function HeroSection() {
   const t = useTranslations('hero');
+  const router = useRouter();
 
   return (
     <section className="py-20 md:py-32">
@@ -97,10 +101,10 @@ function HeroSection() {
               {t('subtitle')}
             </p>
             <div className="flex animate-fade-up-slow flex-col gap-4 sm:flex-row">
-              <Button size="lg" className="text-lg">
+              <Button size="lg" className="text-lg" onClick={() => router.push('/register')}>
                 {t('cta.primary')}
               </Button>
-              <Button size="lg" variant="outline" className="text-lg">
+              <Button size="lg" variant="outline" className="text-lg" onClick={() => router.push('/login')}>
                 {t('cta.secondary')}
               </Button>
             </div>
@@ -308,6 +312,7 @@ function ReaderBenefitsSection() {
 // Pricing Section
 function PricingSection() {
   const t = useTranslations('pricing');
+  const router = useRouter();
 
   const packages = [
     {
@@ -400,7 +405,7 @@ function PricingSection() {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full" variant={pkg.popular ? 'default' : 'outline'}>
+                <Button className="w-full" variant={pkg.popular ? 'default' : 'outline'} onClick={() => router.push('/register')}>
                   {t('cta')}
                 </Button>
               </CardContent>
