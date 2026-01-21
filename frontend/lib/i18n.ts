@@ -38,6 +38,8 @@ const messageLoaders: Record<string, (locale: Locale) => Promise<Record<string, 
     import(`../messages/${locale}/keyword-research.json`).then((m) => m.default),
   'admin-landing-pages': (locale) =>
     import(`../messages/${locale}/admin-landing-pages.json`).then((m) => m.default),
+  'admin-team': (locale) =>
+    import(`../messages/${locale}/admin-team.json`).then((m) => m.default),
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -88,6 +90,7 @@ export default getRequestConfig(async ({ locale }) => {
     reports,
     keywordResearch,
     adminLandingPages,
+    adminTeam,
   ] = await Promise.all([
     import(`../messages/${locale}/common.json`).then((m) => m.default),
     import(`../messages/${locale}/auth.json`).then((m) => m.default),
@@ -110,6 +113,7 @@ export default getRequestConfig(async ({ locale }) => {
     import(`../messages/${locale}/reports.json`).then((m) => m.default),
     import(`../messages/${locale}/keyword-research.json`).then((m) => m.default),
     import(`../messages/${locale}/admin-landing-pages.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-team.json`).then((m) => m.default),
   ]);
 
   return {
@@ -136,6 +140,7 @@ export default getRequestConfig(async ({ locale }) => {
       ...reports,
       ...keywordResearch,
       ...adminLandingPages,
+      adminTeam,
     },
   };
 });

@@ -87,6 +87,8 @@ export class ReaderManagementService {
             id: true,
             email: true,
             name: true,
+            country: true,
+            preferredLanguage: true,
             isBanned: true,
             bannedAt: true,
             banReason: true,
@@ -107,8 +109,8 @@ export class ReaderManagementService {
       userId: reader.userId,
       email: reader.user.email,
       name: reader.user.name,
-      country: reader.country,
-      language: reader.language,
+      country: reader.user.country,
+      language: reader.user.preferredLanguage,
       contentPreference: reader.contentPreference,
       walletBalance: Number(reader.walletBalance),
       totalEarned: Number(reader.totalEarned),
@@ -126,7 +128,7 @@ export class ReaderManagementService {
       amazonProfilesCount: reader.amazonProfiles.length,
       verifiedAmazonProfiles: reader.amazonProfiles.filter((p) => p.isVerified).length,
       createdAt: reader.createdAt,
-      lastActiveAt: reader.lastActiveAt,
+      lastActiveAt: reader.lastLoginAt,
     }));
   }
 
@@ -159,9 +161,9 @@ export class ReaderManagementService {
       }),
     ]);
 
-    // Get pending payouts
+    // Get pending payouts (REQUESTED or PENDING_REVIEW)
     const pendingPayouts = await this.prisma.payoutRequest.count({
-      where: { status: 'PENDING' },
+      where: { status: { in: ['REQUESTED', 'PENDING_REVIEW'] } },
     });
 
     return {
@@ -189,6 +191,8 @@ export class ReaderManagementService {
             id: true,
             email: true,
             name: true,
+            country: true,
+            preferredLanguage: true,
             isBanned: true,
             bannedAt: true,
             banReason: true,
@@ -211,7 +215,7 @@ export class ReaderManagementService {
           take: 10,
           orderBy: { createdAt: 'desc' },
         },
-        adminNotes: {
+        adminNoteRecords: {
           orderBy: { createdAt: 'desc' },
           include: {
             createdByUser: { select: { name: true, email: true } },
@@ -229,8 +233,8 @@ export class ReaderManagementService {
       userId: reader.userId,
       email: reader.user.email,
       name: reader.user.name,
-      country: reader.country,
-      language: reader.language,
+      country: reader.user.country,
+      language: reader.user.preferredLanguage,
       contentPreference: reader.contentPreference,
       preferredGenres: reader.preferredGenres,
       walletBalance: Number(reader.walletBalance),
@@ -266,8 +270,8 @@ export class ReaderManagementService {
         format: a.formatAssigned,
         status: a.status,
         assignedAt: a.createdAt,
-        submittedAt: a.submittedAt,
-        deadline: a.reviewDeadline,
+        materialsReleasedAt: a.materialsReleasedAt,
+        deadline: a.deadlineAt,
       })),
       walletTransactions: reader.walletTransactions.map((t) => ({
         id: t.id,
@@ -284,7 +288,7 @@ export class ReaderManagementService {
         requestedAt: p.createdAt,
         processedAt: p.processedAt,
       })),
-      adminNotes: reader.adminNotes.map((n) => ({
+      adminNotes: reader.adminNoteRecords.map((n) => ({
         id: n.id,
         content: n.content,
         createdBy: n.createdBy,
@@ -292,7 +296,7 @@ export class ReaderManagementService {
         createdAt: n.createdAt,
       })),
       createdAt: reader.createdAt,
-      lastActiveAt: reader.lastActiveAt,
+      lastActiveAt: reader.lastLoginAt,
     };
   }
 
@@ -313,26 +317,26 @@ export class ReaderManagementService {
     }
 
     const [reviews, total] = await Promise.all([
-      this.prisma.queueAssignment.findMany({
+      this.prisma.readerAssignment.findMany({
         where: {
           readerProfileId,
           status: {
-            in: ['SUBMITTED', 'VALIDATED', 'REJECTED', 'COMPLETED'],
+            in: ['SUBMITTED', 'VALIDATED', 'COMPLETED'],
           },
         },
         include: {
           book: { select: { id: true, title: true } },
-          review: { select: { id: true, rating: true } },
+          review: { select: { id: true, internalRating: true, validatedAt: true, submittedAt: true } },
         },
-        orderBy: { submittedAt: 'desc' },
+        orderBy: { updatedAt: 'desc' },
         take: limit,
         skip: offset,
       }),
-      this.prisma.queueAssignment.count({
+      this.prisma.readerAssignment.count({
         where: {
           readerProfileId,
           status: {
-            in: ['SUBMITTED', 'VALIDATED', 'REJECTED', 'COMPLETED'],
+            in: ['SUBMITTED', 'VALIDATED', 'COMPLETED'],
           },
         },
       }),
@@ -343,10 +347,10 @@ export class ReaderManagementService {
         id: r.id,
         bookId: r.book.id,
         bookTitle: r.book.title,
-        rating: r.review?.rating || 0,
+        rating: r.review?.internalRating || 0,
         status: r.status,
-        submittedAt: r.submittedAt,
-        validatedAt: r.validatedAt,
+        submittedAt: r.review?.submittedAt,
+        validatedAt: r.review?.validatedAt,
       })),
       total,
     };

@@ -196,6 +196,7 @@ export class UserManagementService {
       await this.prisma.readerProfile.create({
         data: {
           userId: userId,
+          contentPreference: 'BOTH', // Default to both ebook and audiobook
         },
       });
     }

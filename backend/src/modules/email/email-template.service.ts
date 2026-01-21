@@ -120,6 +120,10 @@ export interface EmailVariables {
   temporaryPassword?: string;
   loginUrl?: string;
 
+  // Authentication links
+  verificationLink?: string; // Email verification link
+  resetLink?: string; // Password reset link
+
   // Admin credit adjustments
   creditsAdded?: number;
   creditsRemoved?: number;

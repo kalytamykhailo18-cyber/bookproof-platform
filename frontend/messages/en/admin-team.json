@@ -140,5 +140,22 @@
     "allStatus": "All Status",
     "active": "Active",
     "inactive": "Inactive"
+  },
+  "unlockAccount": {
+    "button": "Unlock Account",
+    "title": "Unlock Locked Account",
+    "description": "Unlock an account that has been temporarily locked due to too many failed login attempts",
+    "fields": {
+      "email": "User Email",
+      "emailPlaceholder": "user@example.com",
+      "emailDescription": "Enter the email address of the locked account",
+      "reason": "Reason (Optional)",
+      "reasonPlaceholder": "e.g., User confirmed identity via phone call",
+      "reasonDescription": "Optional note for audit purposes"
+    },
+    "info": "This will immediately unlock the account if it is currently locked. Accounts are automatically locked after 5 failed login attempts (15 min) or 10 failed attempts (1 hour).",
+    "submit": "Unlock Account",
+    "cancel": "Cancel",
+    "unlocking": "Unlocking..."
   }
 }

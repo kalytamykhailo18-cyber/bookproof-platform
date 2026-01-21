@@ -140,5 +140,22 @@
     "allStatus": "Todos os Status",
     "active": "Ativo",
     "inactive": "Inativo"
+  },
+  "unlockAccount": {
+    "button": "Desbloquear Conta",
+    "title": "Desbloquear Conta Bloqueada",
+    "description": "Desbloquear uma conta que foi temporariamente bloqueada devido a muitas tentativas de login falhas",
+    "fields": {
+      "email": "Email do Usuário",
+      "emailPlaceholder": "usuario@exemplo.com",
+      "emailDescription": "Digite o endereço de email da conta bloqueada",
+      "reason": "Motivo (Opcional)",
+      "reasonPlaceholder": "ex: Usuário confirmou identidade por telefone",
+      "reasonDescription": "Nota opcional para fins de auditoria"
+    },
+    "info": "Isso desbloqueará imediatamente a conta se ela estiver bloqueada. Contas são automaticamente bloqueadas após 5 tentativas de login falhas (15 min) ou 10 tentativas falhas (1 hora).",
+    "submit": "Desbloquear Conta",
+    "cancel": "Cancelar",
+    "unlocking": "Desbloqueando..."
   }
 }
