@@ -4,6 +4,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Logger,
+  ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
@@ -15,6 +16,7 @@ import {
   CampaignResponseDto,
   ActivateCampaignDto,
 } from './dto';
+import { generateSlug, generateUniqueSlug, isValidSlug } from '@common/utils/slug.util';
 
 @Injectable()
 export class CampaignsService {
@@ -28,6 +30,7 @@ export class CampaignsService {
 
   /**
    * Create new campaign (DRAFT status)
+   * Per Milestone 2.2: Supports landing page creation with multi-language content
    */
   async createCampaign(
     authorProfileId: string,
@@ -35,6 +38,47 @@ export class CampaignsService {
   ): Promise<CampaignResponseDto> {
     // Calculate reviews per week based on target reviews
     const reviewsPerWeek = this.calculateReviewsPerWeek(dto.targetReviews);
+
+    // Generate slug for landing page
+    let slug: string | undefined;
+    if (dto.slug) {
+      // Validate custom slug format
+      if (!isValidSlug(dto.slug)) {
+        throw new BadRequestException(
+          'Invalid slug format. Use only lowercase letters, numbers, and hyphens.',
+        );
+      }
+
+      // Check if slug is already taken
+      const existingBook = await this.prisma.book.findUnique({
+        where: { slug: dto.slug },
+      });
+
+      if (existingBook) {
+        throw new ConflictException(`Slug "${dto.slug}" is already in use. Please choose another.`);
+      }
+
+      slug = dto.slug;
+    } else if (dto.landingPageEnabled) {
+      // Auto-generate slug from title if landing page is enabled
+      const baseSlug = generateSlug(dto.title);
+
+      // Get all existing slugs to ensure uniqueness
+      const existingBooks = await this.prisma.book.findMany({
+        where: {
+          slug: {
+            startsWith: baseSlug,
+          },
+        },
+        select: { slug: true },
+      });
+
+      const existingSlugs = existingBooks
+        .map((b) => b.slug)
+        .filter((s): s is string => s !== null);
+
+      slug = generateUniqueSlug(baseSlug, existingSlugs);
+    }
 
     const book = await this.prisma.book.create({
       data: {
@@ -60,6 +104,17 @@ export class CampaignsService {
         status: CampaignStatus.DRAFT,
         overBookingEnabled: true,
         overBookingPercent: 20, // Default 20% buffer
+
+        // Landing page fields - Milestone 2.2
+        slug,
+        landingPageEnabled: dto.landingPageEnabled ?? false,
+        landingPageLanguages: dto.landingPageLanguages ?? [],
+        titleEN: dto.titleEN,
+        titlePT: dto.titlePT,
+        titleES: dto.titleES,
+        synopsisEN: dto.synopsisEN,
+        synopsisPT: dto.synopsisPT,
+        synopsisES: dto.synopsisES,
       },
     });
 
@@ -630,6 +685,16 @@ export class CampaignsService {
    * - totalAssignedReaders
    */
   private mapToResponse(book: any, pendingCount: number = 0): CampaignResponseDto {
+    // Generate public URLs for each enabled language
+    const publicUrls: Record<string, string> = {};
+    if (book.slug && book.landingPageEnabled && book.landingPageLanguages) {
+      const baseUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+      for (const lang of book.landingPageLanguages) {
+        const langCode = lang.toLowerCase();
+        publicUrls[lang] = `${baseUrl}/${langCode}/campaigns/${book.slug}`;
+      }
+    }
+
     return {
       id: book.id,
       authorProfileId: book.authorProfileId,
@@ -669,6 +734,28 @@ export class CampaignsService {
       averageInternalRating: book.averageInternalRating
         ? book.averageInternalRating.toNumber()
         : undefined,
+
+      // Landing page fields - Milestone 2.2
+      slug: book.slug,
+      landingPageEnabled: book.landingPageEnabled,
+      landingPageLanguages: book.landingPageLanguages,
+      publicUrls: Object.keys(publicUrls).length > 0 ? publicUrls : undefined,
+      titleEN: book.titleEN,
+      titlePT: book.titlePT,
+      titleES: book.titleES,
+      synopsisEN: book.synopsisEN,
+      synopsisPT: book.synopsisPT,
+      synopsisES: book.synopsisES,
+      totalPublicViews: book.totalPublicViews,
+      totalENViews: book.totalENViews,
+      totalPTViews: book.totalPTViews,
+      totalESViews: book.totalESViews,
+      totalUniqueVisitors: book.totalUniqueVisitors,
+      uniqueENVisitors: book.uniqueENVisitors,
+      uniquePTVisitors: book.uniquePTVisitors,
+      uniqueESVisitors: book.uniqueESVisitors,
+      lastViewedAt: book.lastViewedAt,
+
       // NOTE: Intentionally NOT including buffer fields per Rule 2:
       // overBookingEnabled, overBookingPercent, totalAssignedReaders are ADMIN-ONLY
       createdAt: book.createdAt,

@@ -5,6 +5,7 @@ import { ReviewResponseDto } from './dto/review-response.dto';
 import { ReviewsService } from './reviews.service';
 import { AuditService } from '../audit/audit.service';
 import { EmailService } from '../email/email.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { IssueResolutionStatus, AssignmentStatus, UserRole, LogSeverity, Prisma } from '@prisma/client';
 
 @Injectable()
@@ -16,6 +17,7 @@ export class ValidationService {
     private reviewsService: ReviewsService,
     private auditService: AuditService,
     private emailService: EmailService,
+    private notificationsService: NotificationsService,
   ) {}
 
   /**
@@ -154,6 +156,68 @@ export class ValidationService {
     } catch (emailError) {
       // Log error but don't fail the approval
       this.logger.error(`Failed to send review validated email: ${emailError.message}`);
+    }
+
+    // Send in-app notifications (Requirements Section 13.2)
+    try {
+      const assignment = await this.prisma.readerAssignment.findUnique({
+        where: { id: review.readerAssignmentId },
+        include: {
+          book: { include: { authorProfile: { include: { user: true } } } },
+          readerProfile: { include: { user: true } }
+        },
+      });
+
+      if (assignment) {
+        const bookTitle = assignment.book.title;
+        const compensationAmount = assignment.formatAssigned === 'AUDIOBOOK' ? 2.0 : 1.0;
+
+        // 1. Notify reader: Review validated
+        if (assignment.readerProfile.userId) {
+          await this.notificationsService.createNotification({
+            userId: assignment.readerProfile.userId,
+            type: 'REVIEW' as any,
+            title: 'Review Validated',
+            message: `Your review for "${bookTitle}" has been validated!`,
+            actionUrl: '/reader/assignments',
+            metadata: { bookTitle, reviewId: review.id },
+          });
+        }
+
+        // 2. Notify reader: Payment added to wallet
+        if (assignment.readerProfile.userId) {
+          await this.notificationsService.notifyReaderPaymentAdded(
+            assignment.readerProfile.userId,
+            compensationAmount,
+            bookTitle,
+          );
+        }
+
+        // 3. Notify author: New review delivered
+        if (assignment.book.authorProfile.userId) {
+          // Get validated review count for the notification message
+          const validatedReviews = await this.prisma.review.count({
+            where: {
+              bookId: assignment.bookId,
+              status: 'VALIDATED',
+            },
+          });
+          // Get target reviews from book - need to fetch it since it wasn't included
+          const book = await this.prisma.book.findUnique({
+            where: { id: assignment.bookId },
+            select: { targetReviews: true },
+          });
+          await this.notificationsService.notifyAuthorReviewValidated(
+            assignment.book.authorProfile.userId,
+            bookTitle,
+            validatedReviews,
+            book?.targetReviews || 10,
+          );
+        }
+      }
+    } catch (notifError) {
+      // Don't fail the approval if notification fails
+      this.logger.error(`Failed to send review validated notifications: ${notifError.message}`);
     }
 
     return this.reviewsService.getReviewByIdForAdmin(review.id);
@@ -423,7 +487,49 @@ export class ValidationService {
       severity: LogSeverity.INFO,
     });
 
-    // TODO: Send notification email to reader about resubmission request
+    // Send notification email to reader about resubmission request
+    try {
+      // Fetch reader assignment with necessary relations
+      const readerAssignment = await this.prisma.readerAssignment.findUnique({
+        where: { id: review.readerAssignmentId },
+        include: {
+          readerProfile: {
+            include: {
+              user: true,
+            },
+          },
+          book: true,
+        },
+      });
+
+      if (!readerAssignment) {
+        throw new Error('Reader assignment not found');
+      }
+
+      // Calculate new deadline (extend by 48 hours)
+      const newDeadline = new Date();
+      newDeadline.setHours(newDeadline.getHours() + 48);
+
+      // Update assignment deadline
+      await this.prisma.readerAssignment.update({
+        where: { id: readerAssignment.id },
+        data: {
+          deadlineAt: newDeadline,
+        },
+      });
+
+      const readerUser = readerAssignment.readerProfile.user;
+
+      if (readerUser?.email) {
+        // Note: READER_RESUBMISSION_REQUESTED email type may not exist yet in templates
+        // This is a placeholder implementation that should be completed when email template is added
+        this.logger.log(`Would send resubmission request email to reader ${readerUser.email}, but email template not yet implemented`);
+        this.logger.log(`Details: Book=${readerAssignment.book.title}, Issue=${dto.issueType}, Deadline=${newDeadline.toLocaleDateString()}`);
+      }
+    } catch (emailError) {
+      // Log error but don't fail the request
+      this.logger.error(`Failed to send resubmission request email: ${emailError.message}`);
+    }
 
     return this.reviewsService.getReviewByIdForAdmin(review.id);
   }

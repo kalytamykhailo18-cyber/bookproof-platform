@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Loader2 } from 'lucide-react';
 
@@ -20,16 +20,22 @@ export function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { user, isAuthenticated, isLoadingProfile } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
+  // Section 16.1: Unauthorized (401) - Preserve intended destination
   useEffect(() => {
     if (!isLoadingProfile && !isAuthenticated) {
-      router.push('/login');
+      const currentPath = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '');
+      const returnUrl = encodeURIComponent(currentPath);
+      router.push(`/login?returnUrl=${returnUrl}`);
     }
-  }, [isAuthenticated, isLoadingProfile, router]);
+  }, [isAuthenticated, isLoadingProfile, router, pathname, searchParams]);
 
+  // Section 16.1: Forbidden (403) - Redirect to forbidden page
   useEffect(() => {
     if (user && allowedRoles && !allowedRoles.includes(user.role)) {
-      router.push('/unauthorized');
+      router.push('/forbidden');
     }
   }, [user, allowedRoles, router]);
 

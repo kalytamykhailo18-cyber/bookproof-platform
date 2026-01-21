@@ -50,13 +50,16 @@ import {
   Settings,
   TrendingUp,
   AlertCircle,
+  Ban,
+  ShieldCheck,
+  FileText,
 } from 'lucide-react';
 import type { AuthorListItemDto } from '@/lib/api/admin-controls';
 
 export default function AdminAuthorsPage() {
   const t = useTranslations('adminAuthors');
   const router = useRouter();
-  const { useAllAuthors, addCredits, removeCredits } = useAdminControls();
+  const { useAllAuthors, addCredits, removeCredits, suspendAuthor, unsuspendAuthor, updateAuthorNotes } = useAdminControls();
 
   const { data: authors, isLoading } = useAllAuthors();
 
@@ -68,6 +71,12 @@ export default function AdminAuthorsPage() {
   const [creditsAmount, setCreditsAmount] = useState('');
   const [creditReason, setCreditReason] = useState('');
   const [creditNotes, setCreditNotes] = useState('');
+  const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
+  const [unsuspendDialogOpen, setUnsuspendDialogOpen] = useState(false);
+  const [notesDialogOpen, setNotesDialogOpen] = useState(false);
+  const [suspendReason, setSuspendReason] = useState('');
+  const [suspendNotes, setSuspendNotes] = useState('');
+  const [adminNotes, setAdminNotes] = useState('');
 
   const filteredAuthors = useMemo(() => {
     if (!authors) return [];
@@ -158,6 +167,86 @@ export default function AdminAuthorsPage() {
   const openRemoveCreditsDialog = (author: AuthorListItemDto) => {
     setSelectedAuthor(author);
     setRemoveCreditsDialogOpen(true);
+  };
+
+  const handleSuspendAuthor = () => {
+    if (selectedAuthor && suspendReason) {
+      suspendAuthor.mutate(
+        {
+          authorProfileId: selectedAuthor.id,
+          data: {
+            reason: suspendReason,
+            notes: suspendNotes || undefined,
+          },
+        },
+        {
+          onSuccess: () => {
+            setSuspendDialogOpen(false);
+            setSuspendReason('');
+            setSuspendNotes('');
+            setSelectedAuthor(null);
+          },
+        },
+      );
+    }
+  };
+
+  const handleUnsuspendAuthor = () => {
+    if (selectedAuthor && suspendReason) {
+      unsuspendAuthor.mutate(
+        {
+          authorProfileId: selectedAuthor.id,
+          data: {
+            reason: suspendReason,
+            notes: suspendNotes || undefined,
+          },
+        },
+        {
+          onSuccess: () => {
+            setUnsuspendDialogOpen(false);
+            setSuspendReason('');
+            setSuspendNotes('');
+            setSelectedAuthor(null);
+          },
+        },
+      );
+    }
+  };
+
+  const handleUpdateNotes = () => {
+    if (selectedAuthor) {
+      updateAuthorNotes.mutate(
+        {
+          authorProfileId: selectedAuthor.id,
+          data: {
+            adminNotes: adminNotes,
+          },
+        },
+        {
+          onSuccess: () => {
+            setNotesDialogOpen(false);
+            setAdminNotes('');
+            setSelectedAuthor(null);
+          },
+        },
+      );
+    }
+  };
+
+  const openSuspendDialog = (author: AuthorListItemDto) => {
+    setSelectedAuthor(author);
+    setSuspendDialogOpen(true);
+  };
+
+  const openUnsuspendDialog = (author: AuthorListItemDto) => {
+    setSelectedAuthor(author);
+    setUnsuspendDialogOpen(true);
+  };
+
+  const openNotesDialog = (author: AuthorListItemDto) => {
+    setSelectedAuthor(author);
+    setAdminNotes(''); // Could pre-fill with existing notes if available
+    setNotesDialogOpen(true);
   };
 
   if (isLoading) {
@@ -362,6 +451,7 @@ export default function AdminAuthorsPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => openAddCreditsDialog(author)}
+                          title="Add Credits"
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
@@ -371,8 +461,36 @@ export default function AdminAuthorsPage() {
                           size="sm"
                           onClick={() => openRemoveCreditsDialog(author)}
                           disabled={author.availableCredits === 0}
+                          title="Remove Credits"
                         >
                           <Minus className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openNotesDialog(author)}
+                          title="Admin Notes"
+                        >
+                          <FileText className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openSuspendDialog(author)}
+                          title="Suspend Author"
+                        >
+                          <Ban className="h-4 w-4 text-red-600" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openUnsuspendDialog(author)}
+                          title="Unsuspend Author"
+                        >
+                          <ShieldCheck className="h-4 w-4 text-green-600" />
                         </Button>
                       </div>
                     </TableCell>
@@ -513,6 +631,148 @@ export default function AdminAuthorsPage() {
               {removeCredits.isPending
                 ? t('dialogs.processing')
                 : t('dialogs.removeCredits.confirm')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Suspend Author Dialog */}
+      <Dialog open={suspendDialogOpen} onOpenChange={setSuspendDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Suspend Author</DialogTitle>
+            <DialogDescription>
+              Suspend this author account. This will prevent them from creating new campaigns or
+              accessing certain features.
+              {selectedAuthor && (
+                <span className="mt-2 block font-semibold">
+                  {selectedAuthor.name} ({selectedAuthor.email})
+                </span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="suspend-reason">Reason *</Label>
+              <Input
+                id="suspend-reason"
+                value={suspendReason}
+                onChange={(e) => setSuspendReason(e.target.value)}
+                placeholder="Enter reason for suspension"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="suspend-notes">Notes</Label>
+              <Textarea
+                id="suspend-notes"
+                value={suspendNotes}
+                onChange={(e) => setSuspendNotes(e.target.value)}
+                placeholder="Additional notes (optional)"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setSuspendDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleSuspendAuthor}
+              disabled={!suspendReason || suspendAuthor.isPending}
+            >
+              {suspendAuthor.isPending ? 'Suspending...' : 'Suspend Author'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Unsuspend Author Dialog */}
+      <Dialog open={unsuspendDialogOpen} onOpenChange={setUnsuspendDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Unsuspend Author</DialogTitle>
+            <DialogDescription>
+              Restore this author account. They will regain full access to the platform.
+              {selectedAuthor && (
+                <span className="mt-2 block font-semibold">
+                  {selectedAuthor.name} ({selectedAuthor.email})
+                </span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="unsuspend-reason">Reason *</Label>
+              <Input
+                id="unsuspend-reason"
+                value={suspendReason}
+                onChange={(e) => setSuspendReason(e.target.value)}
+                placeholder="Enter reason for unsuspension"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="unsuspend-notes">Notes</Label>
+              <Textarea
+                id="unsuspend-notes"
+                value={suspendNotes}
+                onChange={(e) => setSuspendNotes(e.target.value)}
+                placeholder="Additional notes (optional)"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setUnsuspendDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={handleUnsuspendAuthor}
+              disabled={!suspendReason || unsuspendAuthor.isPending}
+            >
+              {unsuspendAuthor.isPending ? 'Unsuspending...' : 'Unsuspend Author'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Admin Notes Dialog */}
+      <Dialog open={notesDialogOpen} onOpenChange={setNotesDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Admin Notes</DialogTitle>
+            <DialogDescription>
+              Add or update internal admin notes for this author. These notes are only visible to
+              administrators.
+              {selectedAuthor && (
+                <span className="mt-2 block font-semibold">
+                  {selectedAuthor.name} ({selectedAuthor.email})
+                </span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="admin-notes">Admin Notes</Label>
+              <Textarea
+                id="admin-notes"
+                value={adminNotes}
+                onChange={(e) => setAdminNotes(e.target.value)}
+                placeholder="Enter admin notes..."
+                rows={6}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setNotesDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={handleUpdateNotes}
+              disabled={!adminNotes.trim() || updateAuthorNotes.isPending}
+            >
+              {updateAuthorNotes.isPending ? 'Updating...' : 'Update Notes'}
             </Button>
           </DialogFooter>
         </DialogContent>

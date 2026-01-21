@@ -8,7 +8,13 @@ import { PrismaService } from '@common/prisma/prisma.service';
 import { AuditService } from '../../audit/audit.service';
 import { EmailService } from '../../email/email.service';
 import { ConfigService } from '@nestjs/config';
-import { CustomPackageStatus, PaymentStatus, UserRole, EmailType } from '@prisma/client';
+import {
+  CustomPackageStatus,
+  PaymentStatus,
+  UserRole,
+  EmailType,
+  PackageApprovalStatus,
+} from '@prisma/client';
 import { randomBytes } from 'crypto';
 import {
   CreateCustomPackageDto,
@@ -37,6 +43,13 @@ import {
 export class ClosersService {
   private appUrl: string;
 
+  // Standard pricing: Professional package = $179 for 300 credits = $0.5967/credit
+  // Minimum threshold: 80% of standard rate
+  // Enterprise defined as 500+ credits
+  private readonly STANDARD_PRICE_PER_CREDIT = 0.60; // Based on Professional package rate
+  private readonly MINIMUM_PRICE_THRESHOLD = 0.80; // 80% of standard rate
+  private readonly ENTERPRISE_CREDIT_THRESHOLD = 500; // Enterprise defined as 500+ credits
+
   constructor(
     private prisma: PrismaService,
     private auditService: AuditService,
@@ -44,6 +57,25 @@ export class ClosersService {
     private configService: ConfigService,
   ) {
     this.appUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+  }
+
+  /**
+   * Calculate if the package price requires Super Admin approval
+   * Approval is required if price per credit is below 80% of standard rate
+   */
+  private calculateApprovalRequirement(
+    credits: number,
+    price: number,
+  ): { approvalRequired: boolean; pricePerCredit: number; minimumPrice: number } {
+    const pricePerCredit = price / credits;
+    const minimumPricePerCredit = this.STANDARD_PRICE_PER_CREDIT * this.MINIMUM_PRICE_THRESHOLD;
+    const minimumPrice = credits * minimumPricePerCredit;
+
+    return {
+      approvalRequired: pricePerCredit < minimumPricePerCredit,
+      pricePerCredit,
+      minimumPrice,
+    };
   }
 
   // ============================================
@@ -250,6 +282,8 @@ export class ClosersService {
 
   /**
    * Create a new custom package
+   * Validates pricing against 80% minimum threshold
+   * Sets approval requirement if below threshold
    */
   async createCustomPackage(
     userId: string,
@@ -267,6 +301,19 @@ export class ClosersService {
       throw new ForbiddenException('Closer profile is not active');
     }
 
+    // Enterprise is defined as 500+ credits
+    if (dto.credits < this.ENTERPRISE_CREDIT_THRESHOLD) {
+      throw new BadRequestException(
+        `Enterprise packages require a minimum of ${this.ENTERPRISE_CREDIT_THRESHOLD} credits`,
+      );
+    }
+
+    // Calculate if approval is required based on pricing
+    const { approvalRequired, minimumPrice } = this.calculateApprovalRequirement(
+      dto.credits,
+      dto.price,
+    );
+
     const pkg = await this.prisma.customPackage.create({
       data: {
         closerProfileId: profile.id,
@@ -282,6 +329,11 @@ export class ClosersService {
         clientEmail: dto.clientEmail,
         clientCompany: dto.clientCompany,
         status: CustomPackageStatus.DRAFT,
+        // Approval workflow
+        approvalRequired,
+        approvalStatus: approvalRequired
+          ? PackageApprovalStatus.PENDING
+          : PackageApprovalStatus.NOT_REQUIRED,
       },
     });
 
@@ -293,12 +345,14 @@ export class ClosersService {
       userId,
       userEmail: '',
       userRole: UserRole.CLOSER,
-      description: `Custom package created: ${dto.packageName} for ${dto.clientName}`,
+      description: `Custom package created: ${dto.packageName} for ${dto.clientName}${approvalRequired ? ' (requires Super Admin approval due to pricing below 80% threshold)' : ''}`,
       changes: {
         packageName: dto.packageName,
         credits: dto.credits,
         price: dto.price,
         clientEmail: dto.clientEmail,
+        approvalRequired,
+        minimumPrice: approvalRequired ? minimumPrice : undefined,
       },
     });
 
@@ -465,6 +519,18 @@ export class ClosersService {
       throw new BadRequestException('Package is already paid');
     }
 
+    // Check if package requires approval and hasn't been approved yet
+    if (pkg.approvalRequired && pkg.approvalStatus !== PackageApprovalStatus.APPROVED) {
+      if (pkg.approvalStatus === PackageApprovalStatus.REJECTED) {
+        throw new BadRequestException(
+          `Package was rejected by Super Admin. Reason: ${pkg.rejectionReason || 'No reason provided'}`,
+        );
+      }
+      throw new BadRequestException(
+        'Package requires Super Admin approval before it can be sent. Please wait for approval.',
+      );
+    }
+
     // Generate unique payment link token
     const token = randomBytes(32).toString('hex');
     const paymentLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/checkout/custom/${token}`;
@@ -628,6 +694,7 @@ export class ClosersService {
     return {
       totalPackages: Object.values(statusCounts).reduce((a, b) => a + b, 0),
       draft: statusCounts[CustomPackageStatus.DRAFT] || 0,
+      pendingApproval: statusCounts[CustomPackageStatus.PENDING_APPROVAL] || 0,
       sent: statusCounts[CustomPackageStatus.SENT] || 0,
       viewed: statusCounts[CustomPackageStatus.VIEWED] || 0,
       paid: statusCounts[CustomPackageStatus.PAID] || 0,
@@ -841,6 +908,143 @@ export class ClosersService {
   }
 
   // ============================================
+  // ADMIN APPROVAL METHODS (Super Admin only)
+  // ============================================
+
+  /**
+   * Get all packages pending approval (Super Admin only)
+   */
+  async getPackagesPendingApproval(): Promise<CustomPackageResponseDto[]> {
+    const packages = await this.prisma.customPackage.findMany({
+      where: {
+        approvalRequired: true,
+        approvalStatus: PackageApprovalStatus.PENDING,
+      },
+      orderBy: { createdAt: 'asc' },
+      include: {
+        closerProfile: {
+          include: {
+            user: {
+              select: { name: true, email: true },
+            },
+          },
+        },
+      },
+    });
+
+    return packages.map((p) => this.mapPackageToDto(p));
+  }
+
+  /**
+   * Approve a custom package (Super Admin only)
+   */
+  async approvePackage(
+    adminUserId: string,
+    packageId: string,
+  ): Promise<CustomPackageResponseDto> {
+    const pkg = await this.prisma.customPackage.findUnique({
+      where: { id: packageId },
+    });
+
+    if (!pkg) {
+      throw new NotFoundException('Package not found');
+    }
+
+    if (!pkg.approvalRequired) {
+      throw new BadRequestException('Package does not require approval');
+    }
+
+    if (pkg.approvalStatus !== PackageApprovalStatus.PENDING) {
+      throw new BadRequestException(
+        `Package already has approval status: ${pkg.approvalStatus}`,
+      );
+    }
+
+    const updatedPkg = await this.prisma.customPackage.update({
+      where: { id: packageId },
+      data: {
+        approvalStatus: PackageApprovalStatus.APPROVED,
+        approvedBy: adminUserId,
+        approvedAt: new Date(),
+      },
+    });
+
+    // Audit log
+    await this.auditService.logAdminAction({
+      action: 'admin.package_approved',
+      entity: 'CustomPackage',
+      entityId: packageId,
+      userId: adminUserId,
+      userEmail: '',
+      userRole: UserRole.ADMIN,
+      description: `Custom package approved: ${pkg.packageName} - ${pkg.credits} credits at $${Number(pkg.price).toFixed(2)}`,
+      changes: {
+        approvalStatus: PackageApprovalStatus.APPROVED,
+      },
+    });
+
+    return this.mapPackageToDto(updatedPkg);
+  }
+
+  /**
+   * Reject a custom package (Super Admin only)
+   */
+  async rejectPackage(
+    adminUserId: string,
+    packageId: string,
+    rejectionReason: string,
+  ): Promise<CustomPackageResponseDto> {
+    if (!rejectionReason || rejectionReason.trim().length === 0) {
+      throw new BadRequestException('Rejection reason is required');
+    }
+
+    const pkg = await this.prisma.customPackage.findUnique({
+      where: { id: packageId },
+    });
+
+    if (!pkg) {
+      throw new NotFoundException('Package not found');
+    }
+
+    if (!pkg.approvalRequired) {
+      throw new BadRequestException('Package does not require approval');
+    }
+
+    if (pkg.approvalStatus !== PackageApprovalStatus.PENDING) {
+      throw new BadRequestException(
+        `Package already has approval status: ${pkg.approvalStatus}`,
+      );
+    }
+
+    const updatedPkg = await this.prisma.customPackage.update({
+      where: { id: packageId },
+      data: {
+        approvalStatus: PackageApprovalStatus.REJECTED,
+        approvedBy: adminUserId,
+        approvedAt: new Date(),
+        rejectionReason: rejectionReason.trim(),
+      },
+    });
+
+    // Audit log
+    await this.auditService.logAdminAction({
+      action: 'admin.package_rejected',
+      entity: 'CustomPackage',
+      entityId: packageId,
+      userId: adminUserId,
+      userEmail: '',
+      userRole: UserRole.ADMIN,
+      description: `Custom package rejected: ${pkg.packageName} - Reason: ${rejectionReason}`,
+      changes: {
+        approvalStatus: PackageApprovalStatus.REJECTED,
+        rejectionReason,
+      },
+    });
+
+    return this.mapPackageToDto(updatedPkg);
+  }
+
+  // ============================================
   // HELPER METHODS
   // ============================================
 
@@ -887,6 +1091,13 @@ export class ClosersService {
       clientEmail: pkg.clientEmail,
       clientCompany: pkg.clientCompany || undefined,
       status: pkg.status,
+      // Approval fields
+      approvalRequired: pkg.approvalRequired,
+      approvalStatus: pkg.approvalStatus,
+      approvedBy: pkg.approvedBy || undefined,
+      approvedAt: pkg.approvedAt || undefined,
+      rejectionReason: pkg.rejectionReason || undefined,
+      // Other fields
       paymentLink: pkg.paymentLink || undefined,
       paymentLinkExpiresAt: pkg.paymentLinkExpiresAt || undefined,
       sentAt: pkg.sentAt || undefined,

@@ -5,6 +5,8 @@ import {
   InternalServerErrorException,
   Optional,
   Logger,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
@@ -31,6 +33,9 @@ export class CreditsService {
     private emailService: EmailService,
     @Optional() // CommissionService is optional - no forwardRef needed!
     private commissionService?: CommissionService,
+    @Optional() // KeywordsService is optional to avoid circular dependency
+    @Inject(forwardRef(() => 'KeywordsService'))
+    private keywordsService?: any,
   ) {
     const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
@@ -270,26 +275,68 @@ export class CreditsService {
       }
     }
 
+    // Get keyword research price if included
+    let keywordResearchPrice = 0;
+    if (dto.includeKeywordResearch) {
+      const keywordResearchSetting = await this.prisma.systemSetting.findUnique({
+        where: { key: 'keywordResearchPrice' },
+      });
+      keywordResearchPrice = keywordResearchSetting?.value
+        ? parseFloat(keywordResearchSetting.value)
+        : 49.99; // Default price
+    }
+
+    // Build line items
+    const lineItems = [
+      {
+        price_data: {
+          currency: packageTier.currency.toLowerCase(),
+          product_data: {
+            name: `${packageTier.name} - ${packageTier.credits} Credits`,
+            description: packageTier.description || undefined,
+          },
+          unit_amount: Math.round(finalPrice * 100), // Stripe uses cents
+        },
+        quantity: 1,
+      },
+    ];
+
+    // Add keyword research line item if included
+    if (dto.includeKeywordResearch) {
+      lineItems.push({
+        price_data: {
+          currency: packageTier.currency.toLowerCase(),
+          product_data: {
+            name: 'Keyword Research Service',
+            description: 'Professional keyword analysis for Amazon KDP optimization',
+          },
+          unit_amount: Math.round(keywordResearchPrice * 100),
+        },
+        quantity: 1,
+      });
+    }
+
     // Create checkout session
+    // Per Milestone 3.2.9: "Tax calculations based on customer location"
     try {
       const session = await this.stripe.checkout.sessions.create({
         customer: stripeCustomerId,
         mode: 'payment',
-        line_items: [
-          {
-            price_data: {
-              currency: packageTier.currency.toLowerCase(),
-              product_data: {
-                name: `${packageTier.name} - ${packageTier.credits} Credits`,
-                description: packageTier.description || undefined,
-              },
-              unit_amount: Math.round(finalPrice * 100), // Stripe uses cents
-            },
-            quantity: 1,
-          },
-        ],
+        line_items: lineItems,
         success_url: dto.successUrl,
         cancel_url: dto.cancelUrl,
+        // Enable automatic tax calculation via Stripe Tax
+        // This will calculate taxes based on customer location
+        automatic_tax: {
+          enabled: true,
+        },
+        // Collect customer address for tax calculation
+        customer_update: {
+          address: 'auto',
+          name: 'auto',
+        },
+        // Allow Stripe to collect billing address for tax compliance
+        billing_address_collection: 'required',
         metadata: {
           authorProfileId,
           packageTierId: packageTier.id,
@@ -298,6 +345,8 @@ export class CreditsService {
           couponCode: dto.couponCode || '',
           couponId: couponId || '',
           discountAmount: discountAmount.toString(),
+          includeKeywordResearch: dto.includeKeywordResearch ? 'true' : 'false',
+          keywordResearchPrice: keywordResearchPrice.toString(),
         },
       });
 
@@ -330,6 +379,8 @@ export class CreditsService {
       couponCode,
       couponId,
       discountAmount,
+      includeKeywordResearch,
+      keywordResearchPrice,
     } = session.metadata!;
 
     // Check if purchase already recorded
@@ -490,6 +541,32 @@ export class CreditsService {
       this.logger.error(
         `Failed to send purchase receipt email for credit purchase ${creditPurchase.id}: ${error.message}`,
       );
+    }
+
+    // Create keyword research order if included in purchase
+    if (includeKeywordResearch === 'true' && this.keywordsService) {
+      try {
+        // Create a placeholder keyword research order that will be filled later
+        await this.keywordsService.create(
+          {
+            bookTitle: 'Pending - To be filled',
+            genre: 'To be specified',
+            category: 'To be specified',
+            description: 'Created from credit purchase. Please update with book details.',
+            targetAudience: 'To be specified',
+            bookLanguage: 'EN',
+            targetMarket: 'US',
+            additionalNotes: 'Created automatically from credit purchase upsell',
+          },
+          authorProfileId,
+        );
+        this.logger.log(`Keyword research order created for author ${authorProfileId} from credit purchase`);
+      } catch (error) {
+        // Log error but don't fail the payment processing
+        this.logger.error(
+          `Failed to create keyword research order for credit purchase ${creditPurchase.id}: ${error.message}`,
+        );
+      }
     }
   }
 

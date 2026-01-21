@@ -6,6 +6,7 @@ import {
   Logger,
   Inject,
   forwardRef,
+  Optional,
 } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
@@ -24,6 +25,7 @@ import { KeywordPdfService } from './services/keyword-pdf.service';
 import { FilesService } from '../files/files.service';
 import { EmailService } from '../email/email.service';
 import { SettingsService } from '../settings/settings.service';
+import { QueueService } from '../jobs/queue.service';
 
 @Injectable()
 export class KeywordsService {
@@ -40,6 +42,8 @@ export class KeywordsService {
     private emailService: EmailService,
     @Inject(forwardRef(() => SettingsService))
     private settingsService: SettingsService,
+    @Optional()
+    private queueService?: QueueService,
   ) {
     this.appUrl = this.configService.get<string>('APP_URL') || 'http://localhost:3000';
 
@@ -143,6 +147,7 @@ export class KeywordsService {
         description: dto.description,
         targetAudience: dto.targetAudience,
         competingBooks: dto.competingBooks,
+        specificKeywords: dto.specificKeywords, // User-specified keywords to include
         bookLanguage: dto.bookLanguage,
         targetMarket: dto.targetMarket,
         additionalNotes: dto.additionalNotes,
@@ -157,11 +162,28 @@ export class KeywordsService {
     // If paid (or free), trigger processing
     if (research.paid) {
       // Queue background job to process
-      // TODO: Add to BullMQ queue when queue system is ready
-      // For now, process immediately (not recommended for production)
-      this.processKeywordResearch(research.id).catch((error) => {
-        console.error('Error processing keyword research:', error);
-      });
+      if (this.queueService) {
+        // Use BullMQ queue for asynchronous processing
+        await this.queueService.addJob(
+          'keyword-generation-queue',
+          'generate-keywords',
+          { keywordResearchId: research.id },
+          {
+            attempts: 3, // Retry up to 3 times
+            backoff: {
+              type: 'exponential',
+              delay: 5000, // Start with 5 seconds
+            },
+          },
+        );
+        this.logger.log(`Queued keyword generation job for research ${research.id}`);
+      } else {
+        // Fallback: Process immediately if queue service not available
+        this.logger.warn('QueueService not available, processing keywords immediately');
+        this.processKeywordResearch(research.id).catch((error) => {
+          console.error('Error processing keyword research:', error);
+        });
+      }
     }
 
     return this.toResponseDto(research);
@@ -288,6 +310,7 @@ export class KeywordsService {
         ...(dto.description && { description: dto.description }),
         ...(dto.targetAudience && { targetAudience: dto.targetAudience }),
         ...(dto.competingBooks !== undefined && { competingBooks: dto.competingBooks }),
+        ...(dto.specificKeywords !== undefined && { specificKeywords: dto.specificKeywords }),
         ...(dto.bookLanguage && { bookLanguage: dto.bookLanguage }),
         ...(dto.targetMarket && { targetMarket: dto.targetMarket }),
         ...(dto.additionalNotes !== undefined && { additionalNotes: dto.additionalNotes }),
@@ -391,6 +414,7 @@ export class KeywordsService {
         description: research.description,
         targetAudience: research.targetAudience,
         competingBooks: research.competingBooks || undefined,
+        specificKeywords: research.specificKeywords || undefined, // User-specified keywords to include
         language: research.bookLanguage,
         targetMarket: research.targetMarket,
         additionalNotes: research.additionalNotes || undefined,
@@ -640,9 +664,28 @@ export class KeywordsService {
     this.logger.log(`Keyword research ${keywordResearchId} marked as paid, starting processing`);
 
     // Trigger keyword generation processing
-    this.processKeywordResearch(keywordResearchId).catch((error) => {
-      this.logger.error(`Error processing keyword research after payment: ${error.message}`);
-    });
+    if (this.queueService) {
+      // Use BullMQ queue for asynchronous processing
+      await this.queueService.addJob(
+        'keyword-generation-queue',
+        'generate-keywords',
+        { keywordResearchId },
+        {
+          attempts: 3, // Retry up to 3 times
+          backoff: {
+            type: 'exponential',
+            delay: 5000, // Start with 5 seconds
+          },
+        },
+      );
+      this.logger.log(`Queued keyword generation job for research ${keywordResearchId}`);
+    } else {
+      // Fallback: Process immediately if queue service not available
+      this.logger.warn('QueueService not available, processing keywords immediately');
+      this.processKeywordResearch(keywordResearchId).catch((error) => {
+        this.logger.error(`Error processing keyword research after payment: ${error.message}`);
+      });
+    }
   }
 
   /**
@@ -659,6 +702,7 @@ export class KeywordsService {
       description: research.description,
       targetAudience: research.targetAudience,
       competingBooks: research.competingBooks || undefined,
+      specificKeywords: research.specificKeywords || undefined,
       bookLanguage: research.bookLanguage,
       targetMarket: research.targetMarket,
       additionalNotes: research.additionalNotes || undefined,

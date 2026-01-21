@@ -11,6 +11,8 @@ import {
   UpdateKeywordPricingData,
   KeywordResearchFeatureStatusResponse,
   UpdateKeywordResearchFeatureData,
+  ReviewPaymentRatesResponse,
+  UpdateReviewPaymentRatesData,
 } from '@/lib/api/settings';
 
 // ============================================
@@ -96,6 +98,36 @@ export function useUpdateKeywordResearchPricing() {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Failed to update pricing');
+    },
+  });
+}
+
+/**
+ * Get review payment rates (admin)
+ */
+export function useReviewPaymentRates() {
+  return useQuery<ReviewPaymentRatesResponse>({
+    queryKey: ['settings', 'pricing', 'review-rates'],
+    queryFn: () => settingsApi.getReviewPaymentRates(),
+    staleTime: 60000,
+  });
+}
+
+/**
+ * Update review payment rates (admin)
+ */
+export function useUpdateReviewPaymentRates() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: UpdateReviewPaymentRatesData) =>
+      settingsApi.updateReviewPaymentRates(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['settings', 'pricing'] });
+      toast.success('Review payment rates updated successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to update payment rates');
     },
   });
 }

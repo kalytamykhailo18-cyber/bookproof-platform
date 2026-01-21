@@ -25,12 +25,27 @@ export interface KeywordPricingResponse {
   updatedBy?: string;
 }
 
+export interface ReviewPaymentRatesResponse {
+  ebookRate: number;
+  audiobookRate: number;
+  currency: string;
+  updatedAt: string;
+  updatedBy?: string;
+}
+
 export interface PricingSettingsResponse {
   keywordResearch: KeywordPricingResponse;
+  reviewPaymentRates: ReviewPaymentRatesResponse;
 }
 
 export interface UpdateSettingData {
   value: string;
+  reason?: string;
+}
+
+export interface UpdateReviewPaymentRatesData {
+  ebookRate?: number;
+  audiobookRate?: number;
   reason?: string;
 }
 
@@ -88,6 +103,23 @@ export const settingsApi = {
   ): Promise<KeywordPricingResponse> {
     const response = await apiClient.put<KeywordPricingResponse>(
       '/settings/admin/pricing/keyword-research',
+      data,
+    );
+    return response.data;
+  },
+
+  async getReviewPaymentRates(): Promise<ReviewPaymentRatesResponse> {
+    const response = await apiClient.get<ReviewPaymentRatesResponse>(
+      '/settings/admin/pricing/review-rates',
+    );
+    return response.data;
+  },
+
+  async updateReviewPaymentRates(
+    data: UpdateReviewPaymentRatesData,
+  ): Promise<ReviewPaymentRatesResponse> {
+    const response = await apiClient.put<ReviewPaymentRatesResponse>(
+      '/settings/admin/pricing/review-rates',
       data,
     );
     return response.data;

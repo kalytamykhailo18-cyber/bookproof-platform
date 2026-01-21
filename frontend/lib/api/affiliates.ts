@@ -31,6 +31,22 @@ export enum PayoutAction {
   COMPLETE = 'COMPLETE',
 }
 
+export enum MarketingMaterialType {
+  BANNER_IMAGE = 'BANNER_IMAGE',
+  SOCIAL_POST = 'SOCIAL_POST',
+  EMAIL_TEMPLATE = 'EMAIL_TEMPLATE',
+  PROMOTIONAL_COPY = 'PROMOTIONAL_COPY',
+  VIDEO = 'VIDEO',
+  INFOGRAPHIC = 'INFOGRAPHIC',
+  LANDING_PAGE_TEMPLATE = 'LANDING_PAGE_TEMPLATE',
+}
+
+export enum Language {
+  EN = 'EN',
+  PT = 'PT',
+  ES = 'ES',
+}
+
 // DTOs
 export interface RegisterAffiliateDto {
   websiteUrl: string;
@@ -182,6 +198,52 @@ export interface PayoutListItemDto {
   paidAt?: Date;
 }
 
+// Marketing Materials DTOs
+export interface MarketingMaterialResponseDto {
+  id: string;
+  title: string;
+  description?: string;
+  type: MarketingMaterialType;
+  fileUrl?: string;
+  thumbnailUrl?: string;
+  content?: string;
+  language: Language;
+  isActive: boolean;
+  displayOrder: number;
+  downloadCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateMarketingMaterialDto {
+  title: string;
+  description?: string;
+  type: MarketingMaterialType;
+  fileUrl?: string;
+  thumbnailUrl?: string;
+  content?: string;
+  language: Language;
+  displayOrder?: number;
+}
+
+export interface UpdateMarketingMaterialDto {
+  title?: string;
+  description?: string;
+  type?: MarketingMaterialType;
+  fileUrl?: string;
+  thumbnailUrl?: string;
+  content?: string;
+  language?: Language;
+  isActive?: boolean;
+  displayOrder?: number;
+}
+
+export interface GetMarketingMaterialsQueryDto {
+  type?: MarketingMaterialType;
+  language?: Language;
+  includeInactive?: boolean;
+}
+
 // API Client
 export const affiliatesApi = {
   // Public/Authenticated endpoints
@@ -301,5 +363,84 @@ export const affiliatesApi = {
       { commissionRate },
     );
     return response.data;
+  },
+
+  // Marketing Materials endpoints (Affiliate)
+  getMarketingMaterials: async (
+    query?: GetMarketingMaterialsQueryDto,
+  ): Promise<MarketingMaterialResponseDto[]> => {
+    const response = await apiClient.get<MarketingMaterialResponseDto[]>(
+      '/affiliates/marketing-materials',
+      { params: query },
+    );
+    return response.data;
+  },
+
+  getMarketingMaterialById: async (id: string): Promise<MarketingMaterialResponseDto> => {
+    const response = await apiClient.get<MarketingMaterialResponseDto>(
+      `/affiliates/marketing-materials/${id}`,
+    );
+    return response.data;
+  },
+
+  trackMaterialDownload: async (id: string): Promise<{ success: boolean; message: string }> => {
+    const response = await apiClient.post<{ success: boolean; message: string }>(
+      `/affiliates/marketing-materials/${id}/track-download`,
+    );
+    return response.data;
+  },
+
+  // Marketing Materials endpoints (Admin)
+  getMarketingMaterialsForAdmin: async (
+    query?: GetMarketingMaterialsQueryDto,
+  ): Promise<MarketingMaterialResponseDto[]> => {
+    const response = await apiClient.get<MarketingMaterialResponseDto[]>(
+      '/affiliates/admin/marketing-materials',
+      { params: query },
+    );
+    return response.data;
+  },
+
+  getMarketingMaterialsStats: async (): Promise<{
+    totalMaterials: number;
+    activeMaterials: number;
+    totalDownloads: number;
+    byType: Record<MarketingMaterialType, number>;
+    byLanguage: Record<Language, number>;
+  }> => {
+    const response = await apiClient.get('/affiliates/admin/marketing-materials/stats');
+    return response.data;
+  },
+
+  createMarketingMaterial: async (
+    data: CreateMarketingMaterialDto,
+  ): Promise<MarketingMaterialResponseDto> => {
+    const response = await apiClient.post<MarketingMaterialResponseDto>(
+      '/affiliates/admin/marketing-materials',
+      data,
+    );
+    return response.data;
+  },
+
+  updateMarketingMaterial: async (
+    id: string,
+    data: UpdateMarketingMaterialDto,
+  ): Promise<MarketingMaterialResponseDto> => {
+    const response = await apiClient.put<MarketingMaterialResponseDto>(
+      `/affiliates/admin/marketing-materials/${id}`,
+      data,
+    );
+    return response.data;
+  },
+
+  toggleMarketingMaterialActive: async (id: string): Promise<MarketingMaterialResponseDto> => {
+    const response = await apiClient.put<MarketingMaterialResponseDto>(
+      `/affiliates/admin/marketing-materials/${id}/toggle-active`,
+    );
+    return response.data;
+  },
+
+  deleteMarketingMaterial: async (id: string): Promise<void> => {
+    await apiClient.delete(`/affiliates/admin/marketing-materials/${id}`);
   },
 };

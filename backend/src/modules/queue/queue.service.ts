@@ -10,6 +10,7 @@ import { Response } from 'express';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { FilesService } from '@modules/files/files.service';
 import { EmailService } from '@modules/email/email.service';
+import { NotificationsService } from '@modules/notifications/notifications.service';
 import { ApplyToCampaignDto } from './dto/apply-to-campaign.dto';
 import { AssignmentResponseDto } from './dto/assignment-response.dto';
 import { AvailableCampaignDto } from './dto/available-campaigns-response.dto';
@@ -29,6 +30,7 @@ export class QueueService {
     private prisma: PrismaService,
     private filesService: FilesService,
     private emailService: EmailService,
+    private notificationsService: NotificationsService,
   ) {}
 
   /**
@@ -271,6 +273,18 @@ export class QueueService {
       } catch (emailError) {
         // Don't fail the application if email fails
         this.logger.error(`Failed to send application email: ${emailError.message}`);
+      }
+
+      // Create in-app notification (Requirements Section 13.2)
+      try {
+        await this.notificationsService.notifyReaderApplicationAccepted(
+          userId,
+          assignment.book.title,
+          queuePosition,
+        );
+      } catch (notifError) {
+        // Don't fail the application if notification fails
+        this.logger.error(`Failed to send notification: ${notifError.message}`);
       }
     }
 
@@ -638,6 +652,342 @@ export class QueueService {
   }
 
   /**
+   * Secure ebook streaming
+   *
+   * SECURITY: Implements all ebook security requirements:
+   * 1. Access restricted to logged-in readers only
+   * 2. Validates user owns the assignment
+   * 3. Validates 72-hour deadline hasn't expired
+   * 4. Validates assignment is in valid state (APPROVED, IN_PROGRESS, SUBMITTED)
+   * 5. Streams ebook without exposing the actual file URL
+   * 6. Supports Range headers for large files
+   *
+   * Per requirements Section 11.2:
+   * - Only granted readers can access
+   * - URL signed with reader ID and expiration
+   * - Expires when deadline passes (72 hours)
+   * - Download allowed
+   */
+  async streamEbook(
+    userId: string,
+    assignmentId: string,
+    res: Response,
+    rangeHeader?: string,
+  ): Promise<void> {
+    const readerProfile = await this.prisma.readerProfile.findUnique({
+      where: { userId },
+    });
+
+    if (!readerProfile) {
+      throw new NotFoundException('Reader profile not found');
+    }
+
+    const assignment = await this.prisma.readerAssignment.findFirst({
+      where: {
+        id: assignmentId,
+        readerProfileId: readerProfile.id,
+      },
+      include: {
+        book: {
+          select: {
+            ebookFileUrl: true,
+            ebookFileName: true,
+            title: true,
+          },
+        },
+      },
+    });
+
+    if (!assignment) {
+      throw new NotFoundException('Assignment not found');
+    }
+
+    // Validate assignment is ebook format
+    if (assignment.formatAssigned !== BookFormat.EBOOK) {
+      throw new ForbiddenException('This assignment is not for an ebook');
+    }
+
+    // Validate materials have been released
+    if (!assignment.materialsReleasedAt) {
+      throw new ForbiddenException('Materials have not been released yet');
+    }
+
+    // Validate assignment status allows access
+    const allowedStatuses: AssignmentStatus[] = [
+      AssignmentStatus.APPROVED,
+      AssignmentStatus.IN_PROGRESS,
+      AssignmentStatus.SUBMITTED,
+    ];
+    if (!allowedStatuses.includes(assignment.status)) {
+      throw new ForbiddenException(
+        `Ebook access denied. Assignment status is ${assignment.status}`,
+      );
+    }
+
+    // Validate 72-hour deadline hasn't expired
+    if (assignment.deadlineAt) {
+      const now = new Date();
+      const deadline = new Date(assignment.deadlineAt);
+      if (now > deadline) {
+        throw new ForbiddenException(
+          'Ebook access has expired. The 72-hour deadline has passed.',
+        );
+      }
+    }
+
+    // Validate ebook file exists
+    if (!assignment.book.ebookFileUrl) {
+      throw new NotFoundException('Ebook file not found');
+    }
+
+    // Extract file key from URL
+    const fileKey = this.filesService.extractKeyFromUrl(assignment.book.ebookFileUrl);
+    if (!fileKey) {
+      this.logger.error(`Failed to extract key from URL: ${assignment.book.ebookFileUrl}`);
+      throw new NotFoundException('Ebook file configuration error');
+    }
+
+    // Track access (update status to IN_PROGRESS if APPROVED)
+    const now = new Date();
+    if (assignment.status === AssignmentStatus.APPROVED) {
+      await this.prisma.readerAssignment.update({
+        where: { id: assignmentId },
+        data: {
+          status: AssignmentStatus.IN_PROGRESS,
+          ebookDownloadedAt: now,
+        },
+      });
+    } else if (!assignment.ebookDownloadedAt) {
+      // Just track first download time
+      await this.prisma.readerAssignment.update({
+        where: { id: assignmentId },
+        data: {
+          ebookDownloadedAt: now,
+        },
+      });
+    }
+
+    try {
+      // Get file metadata for content-length
+      const metadata = await this.filesService.getFileMetadata(fileKey);
+      const fileSize = metadata.contentLength;
+
+      // Parse Range header if present
+      let range: { start: number; end?: number } | undefined;
+      let statusCode = 200;
+
+      if (rangeHeader) {
+        const parts = rangeHeader.replace(/bytes=/, '').split('-');
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+
+        if (!isNaN(start) && start < fileSize) {
+          range = { start, end: Math.min(end, fileSize - 1) };
+          statusCode = 206; // Partial Content
+        }
+      }
+
+      // Stream the file
+      const { stream, contentLength, contentType, contentRange } =
+        await this.filesService.streamFile(fileKey, range);
+
+      // Set response headers
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Accept-Ranges', 'bytes');
+      // SECURITY: Prevent caching of ebook content
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+      res.setHeader('Pragma', 'no-cache');
+      // Allow download (unlike audiobook)
+      const fileName = assignment.book.ebookFileName || 'ebook.pdf';
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+
+      if (statusCode === 206 && range) {
+        res.setHeader('Content-Length', range.end! - range.start + 1);
+        res.setHeader(
+          'Content-Range',
+          contentRange || `bytes ${range.start}-${range.end}/${fileSize}`,
+        );
+      } else {
+        res.setHeader('Content-Length', fileSize);
+      }
+
+      res.status(statusCode);
+
+      // Pipe the stream to response
+      stream.pipe(res);
+
+      this.logger.log(
+        `Streaming ebook for assignment ${assignmentId}: ${assignment.book.title}`,
+      );
+    } catch (error) {
+      this.logger.error(`Failed to stream ebook: ${error}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Secure synopsis streaming
+   *
+   * SECURITY: Implements synopsis security requirements:
+   * 1. Access restricted to logged-in readers only
+   * 2. Validates user owns the assignment
+   * 3. Validates materials have been released
+   * 4. Validates assignment is in valid state
+   * 5. Streams synopsis without exposing the actual file URL
+   * 6. Available for both ebook and audiobook formats
+   *
+   * Per requirements Section 11.2:
+   * - Same as ebook (only granted readers)
+   * - Available alongside main content
+   */
+  async streamSynopsis(
+    userId: string,
+    assignmentId: string,
+    res: Response,
+    rangeHeader?: string,
+  ): Promise<void> {
+    const readerProfile = await this.prisma.readerProfile.findUnique({
+      where: { userId },
+    });
+
+    if (!readerProfile) {
+      throw new NotFoundException('Reader profile not found');
+    }
+
+    const assignment = await this.prisma.readerAssignment.findFirst({
+      where: {
+        id: assignmentId,
+        readerProfileId: readerProfile.id,
+      },
+      include: {
+        book: {
+          select: {
+            synopsisFileUrl: true,
+            synopsisFileName: true,
+            title: true,
+          },
+        },
+      },
+    });
+
+    if (!assignment) {
+      throw new NotFoundException('Assignment not found');
+    }
+
+    // Validate materials have been released
+    if (!assignment.materialsReleasedAt) {
+      throw new ForbiddenException('Materials have not been released yet');
+    }
+
+    // Validate assignment status allows access
+    const allowedStatuses: AssignmentStatus[] = [
+      AssignmentStatus.APPROVED,
+      AssignmentStatus.IN_PROGRESS,
+      AssignmentStatus.SUBMITTED,
+    ];
+    if (!allowedStatuses.includes(assignment.status)) {
+      throw new ForbiddenException(
+        `Synopsis access denied. Assignment status is ${assignment.status}`,
+      );
+    }
+
+    // For ebook format: Validate 72-hour deadline hasn't expired
+    if (assignment.formatAssigned === BookFormat.EBOOK && assignment.deadlineAt) {
+      const now = new Date();
+      const deadline = new Date(assignment.deadlineAt);
+      if (now > deadline) {
+        throw new ForbiddenException(
+          'Synopsis access has expired. The 72-hour deadline has passed.',
+        );
+      }
+    }
+
+    // For audiobook format: Validate 7-day access window
+    if (assignment.formatAssigned === BookFormat.AUDIOBOOK && assignment.materialsReleasedAt) {
+      const now = new Date();
+      const materialsReleasedAt = new Date(assignment.materialsReleasedAt);
+      const accessExpiresAt = assignment.materialsExpiresAt
+        ? new Date(assignment.materialsExpiresAt)
+        : new Date(materialsReleasedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+      if (now > accessExpiresAt) {
+        throw new ForbiddenException(
+          'Synopsis access has expired. The 7-day access window has passed.',
+        );
+      }
+    }
+
+    // Validate synopsis file exists
+    if (!assignment.book.synopsisFileUrl) {
+      throw new NotFoundException('Synopsis file not found');
+    }
+
+    // Extract file key from URL
+    const fileKey = this.filesService.extractKeyFromUrl(assignment.book.synopsisFileUrl);
+    if (!fileKey) {
+      this.logger.error(`Failed to extract key from URL: ${assignment.book.synopsisFileUrl}`);
+      throw new NotFoundException('Synopsis file configuration error');
+    }
+
+    try {
+      // Get file metadata for content-length
+      const metadata = await this.filesService.getFileMetadata(fileKey);
+      const fileSize = metadata.contentLength;
+
+      // Parse Range header if present
+      let range: { start: number; end?: number } | undefined;
+      let statusCode = 200;
+
+      if (rangeHeader) {
+        const parts = rangeHeader.replace(/bytes=/, '').split('-');
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+
+        if (!isNaN(start) && start < fileSize) {
+          range = { start, end: Math.min(end, fileSize - 1) };
+          statusCode = 206; // Partial Content
+        }
+      }
+
+      // Stream the file
+      const { stream, contentLength, contentType, contentRange } =
+        await this.filesService.streamFile(fileKey, range);
+
+      // Set response headers
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Accept-Ranges', 'bytes');
+      // SECURITY: Prevent caching
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+      res.setHeader('Pragma', 'no-cache');
+      // Display inline in browser
+      const fileName = assignment.book.synopsisFileName || 'synopsis.pdf';
+      res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
+
+      if (statusCode === 206 && range) {
+        res.setHeader('Content-Length', range.end! - range.start + 1);
+        res.setHeader(
+          'Content-Range',
+          contentRange || `bytes ${range.start}-${range.end}/${fileSize}`,
+        );
+      } else {
+        res.setHeader('Content-Length', fileSize);
+      }
+
+      res.status(statusCode);
+
+      // Pipe the stream to response
+      stream.pipe(res);
+
+      this.logger.log(
+        `Streaming synopsis for assignment ${assignmentId}: ${assignment.book.title}`,
+      );
+    } catch (error) {
+      this.logger.error(`Failed to stream synopsis: ${error}`);
+      throw error;
+    }
+  }
+
+  /**
    * Map assignment to response DTO
    *
    * IMPORTANT: Per Rule 2 - "Buffer is completely invisible to authors"
@@ -659,27 +1009,78 @@ export class QueueService {
       hoursRemaining = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60)));
     }
 
-    // For audiobooks: Return the secure streaming endpoint URL (not direct file URL)
+    // SECURITY: Return secure streaming endpoint URLs for all content types
     // This ensures all security checks are enforced on each access
+    // Per Section 11.2 requirements:
+    // - Audiobook: 7-day access window
+    // - Ebook: 72-hour deadline
+    // - Synopsis: Same expiration as format (7 days for audiobook, 72h for ebook)
+
     let audioBookStreamUrl: string | undefined;
+    let ebookStreamUrl: string | undefined;
+    let synopsisStreamUrl: string | undefined;
+
+    const now = new Date();
+
+    // For audiobooks: Return the secure streaming endpoint URL
     if (
       assignment.materialsReleasedAt &&
       assignment.formatAssigned === BookFormat.AUDIOBOOK &&
       book.audioBookFileUrl
     ) {
       // Validate 7-day access window hasn't expired
-      const now = new Date();
       const materialsReleasedAt = new Date(assignment.materialsReleasedAt);
       const accessExpiresAt = assignment.materialsExpiresAt
         ? new Date(assignment.materialsExpiresAt)
         : new Date(materialsReleasedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
 
       if (now <= accessExpiresAt) {
-        // Return the secure streaming endpoint URL
-        // The frontend will use this URL which requires authentication
         audioBookStreamUrl = `/api/queue/assignments/${assignment.id}/stream-audio`;
       }
       // If expired, audioBookStreamUrl remains undefined (no access)
+    }
+
+    // For ebooks: Return the secure streaming endpoint URL
+    if (
+      assignment.materialsReleasedAt &&
+      assignment.formatAssigned === BookFormat.EBOOK &&
+      book.ebookFileUrl
+    ) {
+      // Validate 72-hour deadline hasn't expired
+      if (assignment.deadlineAt) {
+        const deadline = new Date(assignment.deadlineAt);
+        if (now <= deadline) {
+          ebookStreamUrl = `/api/queue/assignments/${assignment.id}/stream-ebook`;
+        }
+        // If expired, ebookStreamUrl remains undefined (no access)
+      } else {
+        // No deadline set yet - still allow access
+        ebookStreamUrl = `/api/queue/assignments/${assignment.id}/stream-ebook`;
+      }
+    }
+
+    // For synopsis: Available for both formats with their respective expiration rules
+    if (assignment.materialsReleasedAt && book.synopsisFileUrl) {
+      let synopsisExpired = false;
+
+      if (assignment.formatAssigned === BookFormat.AUDIOBOOK) {
+        // 7-day access window for audiobook
+        const materialsReleasedAt = new Date(assignment.materialsReleasedAt);
+        const accessExpiresAt = assignment.materialsExpiresAt
+          ? new Date(assignment.materialsExpiresAt)
+          : new Date(materialsReleasedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
+        synopsisExpired = now > accessExpiresAt;
+      } else if (assignment.formatAssigned === BookFormat.EBOOK) {
+        // 72-hour deadline for ebook
+        if (assignment.deadlineAt) {
+          const deadline = new Date(assignment.deadlineAt);
+          synopsisExpired = now > deadline;
+        }
+      }
+
+      if (!synopsisExpired) {
+        synopsisStreamUrl = `/api/queue/assignments/${assignment.id}/stream-synopsis`;
+      }
     }
 
     return {
@@ -692,7 +1093,9 @@ export class QueueService {
         genre: book.genre,
         coverImageUrl: book.coverImageUrl || undefined,
         synopsis: book.synopsis,
-        synopsisFileUrl: book.synopsisFileUrl || undefined,
+        // DEPRECATED: Direct synopsisFileUrl no longer exposed for security
+        // Use synopsisStreamUrl instead (secure streaming endpoint)
+        synopsisFileUrl: undefined,
         availableFormats: book.availableFormats,
       },
       readerProfileId: assignment.readerProfileId,
@@ -707,11 +1110,15 @@ export class QueueService {
       hoursRemaining,
       // NOTE: isBufferAssignment intentionally NOT included per Rule 2
       // Buffer assignments are completely invisible to both authors AND readers
-      ebookFileUrl:
-        assignment.materialsReleasedAt && assignment.formatAssigned === BookFormat.EBOOK
-          ? book.ebookFileUrl
-          : undefined,
+
+      // SECURITY: All file access now goes through secure streaming endpoints
+      // DEPRECATED: Direct ebookFileUrl no longer exposed
+      ebookFileUrl: undefined,
+      // NEW: Secure streaming endpoints (Section 11 compliance)
+      ebookStreamUrl,
       audioBookStreamUrl,
+      synopsisStreamUrl,
+      // Track first access
       ebookDownloadedAt: assignment.ebookDownloadedAt || undefined,
       createdAt: assignment.createdAt,
       updatedAt: assignment.updatedAt,

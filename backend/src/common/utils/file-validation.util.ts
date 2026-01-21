@@ -12,16 +12,19 @@ import { BadRequestException } from '@nestjs/common';
 
 export class FileValidationUtil {
   /**
-   * Validate ebook file (PDF, EPUB)
+   * Validate ebook file (PDF, EPUB, MOBI)
+   * Per Section 11.1: "Formats: EPUB, PDF, MOBI"
    */
   static validateEbook(file: Express.Multer.File): void {
     const allowedMimeTypes = [
       'application/pdf',
       'application/epub+zip',
       'application/x-epub+zip',
+      'application/x-mobipocket-ebook', // MOBI format
+      'application/vnd.amazon.ebook', // Alternative MOBI MIME type
     ];
-    const allowedExtensions = ['.pdf', '.epub'];
-    const maxSize = 50 * 1024 * 1024; // 50MB
+    const allowedExtensions = ['.pdf', '.epub', '.mobi'];
+    const maxSize = 50 * 1024 * 1024; // 50MB (Section 11 requirement)
 
     this.validateFile(
       file,
@@ -80,6 +83,29 @@ export class FileValidationUtil {
       allowedExtensions,
       maxSize,
       'profile avatar',
+    );
+  }
+
+  /**
+   * Validate synopsis file (PDF, DOC, DOCX, TXT)
+   * Per Section 11.1: "Formats: PDF, DOC, DOCX, TXT"
+   */
+  static validateSynopsis(file: Express.Multer.File): void {
+    const allowedMimeTypes = [
+      'application/pdf',
+      'application/msword', // DOC
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // DOCX
+      'text/plain', // TXT
+    ];
+    const allowedExtensions = ['.pdf', '.doc', '.docx', '.txt'];
+    const maxSize = 10 * 1024 * 1024; // 10MB (Section 11 requirement)
+
+    this.validateFile(
+      file,
+      allowedMimeTypes,
+      allowedExtensions,
+      maxSize,
+      'synopsis',
     );
   }
 

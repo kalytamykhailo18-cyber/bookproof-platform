@@ -48,6 +48,7 @@ import { SettingsModule } from '@modules/settings/settings.module';
 import { ClosersModule } from '@modules/closers/closers.module';
 import { RealtimeModule } from '@modules/realtime/realtime.module';
 import { NotificationsModule } from '@modules/notifications/notifications.module';
+import { UsersModule } from '@modules/users/users.module';
 
 @Module({
   imports: [
@@ -157,6 +158,7 @@ import { NotificationsModule } from '@modules/notifications/notifications.module
 
     // Feature modules
     AuthModule,
+    UsersModule, // GDPR compliance (requirements.md Section 15.3)
     LandingPagesModule,
     CreditsModule,
     CampaignsModule,

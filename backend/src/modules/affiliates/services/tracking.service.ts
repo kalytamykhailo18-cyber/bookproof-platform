@@ -7,7 +7,7 @@ import { randomBytes } from 'crypto';
 export class TrackingService {
   private readonly logger = new Logger(TrackingService.name);
   private readonly COOKIE_NAME = 'bp_aff_ref';
-  private readonly COOKIE_EXPIRY_DAYS = 30;
+  private readonly COOKIE_EXPIRY_DAYS = 90; // 90-day cookie duration per business requirements
 
   constructor(private readonly prisma: PrismaService) {}
 
@@ -85,7 +85,7 @@ export class TrackingService {
 
       if (!click) return null;
 
-      // Check if cookie is still valid (not older than 30 days)
+      // Check if cookie is still valid (not older than 90 days per business requirements)
       const now = new Date();
       const clickAge = now.getTime() - click.clickedAt.getTime();
       const maxAge = this.COOKIE_EXPIRY_DAYS * 24 * 60 * 60 * 1000;

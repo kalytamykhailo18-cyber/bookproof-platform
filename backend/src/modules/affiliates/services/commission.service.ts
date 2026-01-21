@@ -7,7 +7,7 @@ import { Decimal } from '@prisma/client/runtime/library';
 @Injectable()
 export class CommissionService {
   private readonly logger = new Logger(CommissionService.name);
-  private readonly PENDING_DAYS = 14; // Commission pending period (refund window)
+  private readonly PENDING_DAYS = 30; // Commission holds for 30 days to account for refunds (per requirements)
 
   constructor(
     private readonly prisma: PrismaService,

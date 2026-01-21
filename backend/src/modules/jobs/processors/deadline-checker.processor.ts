@@ -116,6 +116,12 @@ export class DeadlineCheckerProcessor {
 
   /**
    * Send reminder email based on type
+   * Per Milestone 4.3 - Deadline Timeline:
+   * - Hour 24: First reminder ("48 hours remaining")
+   * - Hour 48: Second reminder ("24 hours remaining")
+   * - Hour 60: Urgent reminder ("12 hours remaining")
+   * - Hour 69: Final reminder ("3 hours remaining")
+   * - Hour 72: Deadline expires
    */
   private async sendReminderEmail(reminder: any) {
     const assignment = reminder.readerAssignment;
@@ -144,6 +150,33 @@ export class DeadlineCheckerProcessor {
           deadline,
           hoursRemaining: 24, // 24 hours remaining when 48h has passed
           assignmentId: assignment.id,
+        });
+        break;
+
+      case 'DEADLINE_60H':
+        // Urgent reminder - 12 hours remaining
+        await this.emailService.sendDeadlineReminder({
+          to: readerEmail,
+          readerName,
+          bookTitle,
+          deadline,
+          hoursRemaining: 12,
+          assignmentId: assignment.id,
+          isUrgent: true,
+        });
+        break;
+
+      case 'DEADLINE_69H':
+        // Final reminder - 3 hours remaining
+        await this.emailService.sendDeadlineReminder({
+          to: readerEmail,
+          readerName,
+          bookTitle,
+          deadline,
+          hoursRemaining: 3,
+          assignmentId: assignment.id,
+          isUrgent: true,
+          isFinal: true,
         });
         break;
 

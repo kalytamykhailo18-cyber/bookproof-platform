@@ -20,7 +20,11 @@ export class AssignmentBookDto {
   @ApiProperty({ description: 'Synopsis text content' })
   synopsis: string;
 
-  @ApiProperty({ required: false, description: 'Synopsis PDF file URL (if provided by author)' })
+  @ApiProperty({
+    required: false,
+    description: 'DEPRECATED: Direct synopsis file URL no longer exposed for security. Use synopsisStreamUrl from assignment instead.',
+    deprecated: true
+  })
   synopsisFileUrl?: string;
 
   @ApiProperty({ enum: BookFormat })
@@ -78,13 +82,38 @@ export class AssignmentResponseDto {
   // NOTE: isBufferAssignment intentionally NOT exposed per Rule 2
   // Buffer assignments are completely invisible to both authors AND readers
 
-  @ApiProperty({ description: 'Ebook file URL (only available after materials released)', required: false })
+  // SECURITY: Section 11 File Storage and Security Compliance
+  // All file access now goes through secure streaming endpoints with server-side validation
+
+  @ApiProperty({
+    description: 'DEPRECATED: Direct ebook file URL no longer exposed for security. Use ebookStreamUrl instead.',
+    required: false,
+    deprecated: true
+  })
   ebookFileUrl?: string;
 
-  @ApiProperty({ description: 'Audiobook streaming URL (signed, 7-day expiry)', required: false })
+  @ApiProperty({
+    description: 'Secure ebook streaming endpoint (requires auth, 72-hour deadline enforced)',
+    required: false,
+    example: '/api/queue/assignments/cuid123/stream-ebook'
+  })
+  ebookStreamUrl?: string;
+
+  @ApiProperty({
+    description: 'Secure audiobook streaming endpoint (requires auth, 7-day access window enforced)',
+    required: false,
+    example: '/api/queue/assignments/cuid123/stream-audio'
+  })
   audioBookStreamUrl?: string;
 
-  @ApiProperty({ description: 'When ebook was downloaded', required: false })
+  @ApiProperty({
+    description: 'Secure synopsis streaming endpoint (requires auth, follows format expiration rules)',
+    required: false,
+    example: '/api/queue/assignments/cuid123/stream-synopsis'
+  })
+  synopsisStreamUrl?: string;
+
+  @ApiProperty({ description: 'When ebook was first downloaded', required: false })
   ebookDownloadedAt?: Date;
 
   @ApiProperty()

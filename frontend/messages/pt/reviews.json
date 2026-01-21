@@ -23,9 +23,13 @@
       "ratingNote": "Esta classificação é apenas para rastreamento interno e não será mostrada ao autor",
       "feedback": "Feedback Escrito",
       "feedbackPlaceholder": "Compartilhe seus pensamentos honestos sobre o livro...",
-      "minCharacters": "Mínimo de 20 caracteres",
+      "minCharacters": "Mínimo de {minChars} caracteres necessários",
       "characters": "caracteres",
       "feedbackNote": "Este feedback será anonimizado e incluído no relatório final do autor",
+      "agreedToTos": "Concordo com os Termos de Serviço da Amazon para avaliações",
+      "agreedToTosNote": "Você deve cumprir as diretrizes da comunidade e políticas de avaliação da Amazon",
+      "acknowledgedGuidelines": "Confirmo que li e entendo as diretrizes de avaliação",
+      "acknowledgedGuidelinesNote": "Avaliações devem ser honestas, úteis e não conter conteúdo proibido",
       "confirmPublished": "Confirmo que publiquei esta avaliação na Amazon",
       "confirmPublishedNote": "Sua avaliação deve estar ao vivo na Amazon antes de enviar este formulário",
       "submit": "Enviar Avaliação",
@@ -35,8 +39,10 @@
     "errors": {
       "amazonLinkRequired": "O link da avaliação da Amazon é obrigatório",
       "invalidAmazonUrl": "Por favor, insira uma URL válida de avaliação da Amazon",
-      "feedbackTooShort": "O feedback deve ter pelo menos 20 caracteres",
-      "confirmPublished": "Você deve confirmar que a avaliação está publicada na Amazon"
+      "feedbackTooShort": "O feedback deve ter pelo menos {minChars} caracteres",
+      "confirmPublished": "Você deve confirmar que a avaliação está publicada na Amazon",
+      "tosRequired": "Você deve concordar com o cumprimento dos Termos de Serviço da Amazon",
+      "guidelinesRequired": "Você deve reconhecer as diretrizes de avaliação"
     },
     "success": {
       "title": "Avaliação Enviada com Sucesso!",

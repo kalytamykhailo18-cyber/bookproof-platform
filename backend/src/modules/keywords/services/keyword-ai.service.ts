@@ -10,6 +10,7 @@ export interface KeywordGenerationInput {
   description: string;
   targetAudience: string;
   competingBooks?: string;
+  specificKeywords?: string; // User-specified keywords that should be included
   language: Language;
   targetMarket: TargetMarket;
   additionalNotes?: string;
@@ -109,6 +110,7 @@ export class KeywordAiService {
 - Target Audience: ${input.targetAudience}
 - Target Market: ${marketInstructions}
 ${input.competingBooks ? `- Competing Books: ${input.competingBooks}` : ''}
+${input.specificKeywords ? `- Author's Preferred Keywords (MUST be included in results): ${input.specificKeywords}` : ''}
 ${input.additionalNotes ? `- Additional Notes: ${input.additionalNotes}` : ''}
 
 **Instructions:**

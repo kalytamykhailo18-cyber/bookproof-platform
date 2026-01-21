@@ -16,6 +16,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
   ValidationArguments,
+  IsArray,
 } from 'class-validator';
 import { BookFormat, Language } from '@prisma/client';
 
@@ -146,4 +147,78 @@ export class CreateCampaignDto {
   @IsOptional()
   @MaxLength(2000, { message: 'Reading instructions must not exceed 2000 characters' })
   readingInstructions?: string;
+
+  // ======================================
+  // LANDING PAGE FIELDS - Milestone 2.2
+  // ======================================
+
+  @ApiProperty({
+    description: 'Custom URL slug for public landing page (optional, auto-generated from title if not provided)',
+    example: 'my-awesome-thriller',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  @MinLength(3, { message: 'Slug must be at least 3 characters' })
+  @MaxLength(100, { message: 'Slug must not exceed 100 characters' })
+  @Matches(/^[a-z0-9-]+$/, {
+    message: 'Slug must contain only lowercase letters, numbers, and hyphens',
+  })
+  slug?: string;
+
+  @ApiProperty({
+    description: 'Enable public landing page for this campaign',
+    required: false,
+    default: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  landingPageEnabled?: boolean;
+
+  @ApiProperty({
+    description: 'Languages to enable for landing page (EN, PT, ES)',
+    example: ['EN', 'PT'],
+    required: false,
+    type: [String],
+  })
+  @IsArray()
+  @IsOptional()
+  @IsEnum(Language, { each: true })
+  landingPageLanguages?: Language[];
+
+  @ApiProperty({ description: 'English title (if different from main title)', required: false })
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  titleEN?: string;
+
+  @ApiProperty({ description: 'Portuguese title', required: false })
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  titlePT?: string;
+
+  @ApiProperty({ description: 'Spanish title', required: false })
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  titleES?: string;
+
+  @ApiProperty({ description: 'English synopsis for landing page', required: false })
+  @IsString()
+  @IsOptional()
+  @MaxLength(7500)
+  synopsisEN?: string;
+
+  @ApiProperty({ description: 'Portuguese synopsis for landing page', required: false })
+  @IsString()
+  @IsOptional()
+  @MaxLength(7500)
+  synopsisPT?: string;
+
+  @ApiProperty({ description: 'Spanish synopsis for landing page', required: false })
+  @IsString()
+  @IsOptional()
+  @MaxLength(7500)
+  synopsisES?: string;
 }

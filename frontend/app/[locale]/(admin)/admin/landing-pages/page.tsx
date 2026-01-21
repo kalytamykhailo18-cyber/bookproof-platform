@@ -20,6 +20,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  FileEdit,
+  ExternalLink,
 } from 'lucide-react';
 
 import {
@@ -718,7 +720,7 @@ export default function AdminLandingPagesPage() {
 
         {/* Tabs */}
         <Tabs defaultValue="analytics" className="animate-fade-up">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="analytics" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               {t('tabs.analytics')}
@@ -726,6 +728,10 @@ export default function AdminLandingPagesPage() {
             <TabsTrigger value="leads" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               {t('tabs.leads')}
+            </TabsTrigger>
+            <TabsTrigger value="content" className="flex items-center gap-2">
+              <FileEdit className="h-4 w-4" />
+              Content Editor
             </TabsTrigger>
             <TabsTrigger value="settings" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
@@ -739,6 +745,98 @@ export default function AdminLandingPagesPage() {
 
           <TabsContent value="leads" className="mt-6">
             <LeadsTabContent />
+          </TabsContent>
+
+          <TabsContent value="content" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Content Management System</CardTitle>
+                <CardDescription>
+                  Edit landing page sections without touching code: Hero, Features, Testimonials, FAQs
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="rounded-lg border p-6 space-y-4">
+                  <div className="flex items-start gap-4">
+                    <FileEdit className="h-8 w-8 text-primary" />
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg mb-2">Visual Content Editor</h3>
+                      <p className="text-muted-foreground mb-4">
+                        Edit all landing page content blocks including hero section, features, testimonials, and FAQs.
+                        Changes are saved per language and can be previewed before publishing.
+                      </p>
+                      <div className="flex gap-2">
+                        <Button asChild>
+                          <a href="/admin/landing-pages/content">
+                            <FileEdit className="mr-2 h-4 w-4" />
+                            Open Content Editor
+                          </a>
+                        </Button>
+                        <Button variant="outline" asChild>
+                          <a href="/" target="_blank">
+                            <ExternalLink className="mr-2 h-4 w-4" />
+                            Preview Landing Page
+                          </a>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base">Editable Sections</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2 text-sm">
+                        <li className="flex items-center gap-2">
+                          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                          Hero section (headline, subtitle, CTAs, image)
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                          Features list (add/edit/remove/reorder)
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                          Testimonials (quotes, authors, ratings)
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                          FAQs (questions and answers)
+                        </li>
+                      </ul>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base">Multi-Language Support</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Content is managed separately for each language:
+                      </p>
+                      <ul className="space-y-2 text-sm">
+                        <li className="flex items-center gap-2">
+                          <Badge variant="outline">EN</Badge>
+                          <span>English</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Badge variant="outline">PT</Badge>
+                          <span>Portuguese</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Badge variant="outline">ES</Badge>
+                          <span>Spanish</span>
+                        </li>
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="settings" className="mt-6">

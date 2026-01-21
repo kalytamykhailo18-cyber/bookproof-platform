@@ -46,6 +46,7 @@ const formSchema = z.object({
   description: z.string().min(10, 'Description must be at least 10 characters'),
   targetAudience: z.string().min(5, 'Target audience is required'),
   competingBooks: z.string().optional(),
+  specificKeywords: z.string().optional(),
   bookLanguage: z.nativeEnum(Language),
   targetMarket: z.nativeEnum(TargetMarket),
   additionalNotes: z.string().optional(),
@@ -104,6 +105,7 @@ export default function NewKeywordResearchPage() {
       description: '',
       targetAudience: '',
       competingBooks: '',
+      specificKeywords: '',
       additionalNotes: '',
       couponCode: '',
     },
@@ -449,6 +451,33 @@ export default function NewKeywordResearchPage() {
                       />
                     </FormControl>
                     <FormDescription>{t('fields.competingBooks.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="specificKeywords"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('fields.specificKeywords.label') || 'Specific Keywords to Include'}
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={
+                          t('fields.specificKeywords.placeholder') ||
+                          'e.g., self-publishing, book marketing, Amazon KDP'
+                        }
+                        rows={2}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {t('fields.specificKeywords.description') ||
+                        'Optional: Specific keywords you want to include in the research'}
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

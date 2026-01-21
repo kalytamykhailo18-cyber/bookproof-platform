@@ -59,6 +59,14 @@ export class CreateKeywordResearchDto {
   @IsString()
   competingBooks?: string;
 
+  @ApiPropertyOptional({
+    description: 'Specific keywords author wants to include',
+    example: 'self-publishing, book marketing, Amazon KDP',
+  })
+  @IsOptional()
+  @IsString()
+  specificKeywords?: string;
+
   @ApiProperty({
     description: 'Book language',
     enum: Language,

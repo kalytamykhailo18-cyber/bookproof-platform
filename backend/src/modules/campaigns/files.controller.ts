@@ -25,6 +25,7 @@ import { RolesGuard } from '@common/guards/roles.guard';
 import { Roles } from '@common/decorators/roles.decorator';
 import { UserRole } from '@prisma/client';
 import { FilesService } from '@modules/files/files.service';
+import { FileValidationUtil } from '@common/utils/file-validation.util';
 import { CampaignsService } from './campaigns.service';
 import { CampaignResponseDto } from './dto';
 
@@ -163,7 +164,7 @@ export class CampaignFilesController {
 
   @Post('ebook')
   @UseInterceptors(FileInterceptor('file'))
-  @ApiOperation({ summary: 'Upload ebook file (PDF/EPUB)' })
+  @ApiOperation({ summary: 'Upload ebook file (PDF/EPUB/MOBI)' })
   @ApiConsumes('multipart/form-data')
   @ApiParam({ name: 'id', description: 'Campaign ID' })
   @ApiBody({
@@ -173,6 +174,7 @@ export class CampaignFilesController {
         file: {
           type: 'string',
           format: 'binary',
+          description: 'Ebook file: PDF, EPUB, or MOBI (max 50MB)',
         },
       },
     },
@@ -379,7 +381,7 @@ export class CampaignFilesController {
    */
   @Post('synopsis')
   @UseInterceptors(FileInterceptor('file'))
-  @ApiOperation({ summary: 'Upload synopsis document (PDF)' })
+  @ApiOperation({ summary: 'Upload synopsis document (PDF, DOC, DOCX, TXT)' })
   @ApiConsumes('multipart/form-data')
   @ApiParam({ name: 'id', description: 'Campaign ID' })
   @ApiBody({
@@ -389,14 +391,14 @@ export class CampaignFilesController {
         file: {
           type: 'string',
           format: 'binary',
-          description: 'PDF synopsis document (max 3 pages)',
+          description: 'Synopsis document: PDF, DOC, DOCX, or TXT (max 10MB, max 3 pages)',
         },
       },
     },
   })
   @ApiResponse({
     status: 200,
-    description: 'Synopsis PDF uploaded successfully',
+    description: 'Synopsis document uploaded successfully',
     type: CampaignResponseDto,
   })
   async uploadSynopsis(
@@ -408,19 +410,8 @@ export class CampaignFilesController {
       throw new BadRequestException('No file uploaded');
     }
 
-    // Validate file type - only PDF allowed for synopsis
-    if (file.mimetype !== 'application/pdf') {
-      throw new BadRequestException(
-        'Invalid file type. Only PDF is allowed for synopsis documents.',
-      );
-    }
-
-    // Validate file size (10MB max for a 3-page PDF)
-    if (file.size > this.maxSynopsisSize) {
-      throw new BadRequestException(
-        `File too large. Maximum size is ${this.maxSynopsisSize / 1024 / 1024}MB`,
-      );
-    }
+    // Validate file type - PDF, DOC, DOCX, TXT allowed (Section 11.1)
+    FileValidationUtil.validateSynopsis(file);
 
     // Generate file key and upload
     const fileKey = this.filesService.generateFileKey('synopsis', file.originalname);
@@ -430,7 +421,7 @@ export class CampaignFilesController {
       file.mimetype,
     );
 
-    this.logger.log(`Synopsis PDF uploaded for campaign ${campaignId}: ${file.originalname}`);
+    this.logger.log(`Synopsis document uploaded for campaign ${campaignId}: ${file.originalname}`);
 
     // Update campaign with synopsis file URL
     return this.campaignsService.updateCampaignFiles(

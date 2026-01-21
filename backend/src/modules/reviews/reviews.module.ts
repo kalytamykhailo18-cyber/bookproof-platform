@@ -6,9 +6,11 @@ import { IssueManagementService } from './issue-management.service';
 import { AmazonMonitoringService } from './amazon-monitoring.service';
 import { PrismaModule } from '@common/prisma/prisma.module';
 import { EmailModule } from '../email/email.module';
+import { NotificationsModule } from '../notifications/notifications.module';
+import { AuditModule } from '../audit/audit.module';
 
 @Module({
-  imports: [PrismaModule, EmailModule],
+  imports: [PrismaModule, EmailModule, NotificationsModule, AuditModule],
   controllers: [ReviewsController],
   providers: [
     ReviewsService,

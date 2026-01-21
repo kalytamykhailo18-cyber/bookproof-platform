@@ -311,6 +311,24 @@ export class NotificationsService {
   }
 
   /**
+   * Notify reader when their review is submitted
+   * Per Milestone 4.4: Reader receives confirmation after submission
+   */
+  async notifyReaderReviewSubmitted(
+    userId: string,
+    bookTitle: string,
+  ): Promise<void> {
+    await this.createNotification({
+      userId,
+      type: NotificationType.REVIEW,
+      title: 'Review Submitted',
+      message: `Your review for "${bookTitle}" has been submitted and is pending validation.`,
+      actionUrl: '/reader/dashboard',
+      metadata: { bookTitle },
+    });
+  }
+
+  /**
    * Notify author when review is validated
    */
   async notifyAuthorReviewValidated(
@@ -326,6 +344,25 @@ export class NotificationsService {
       message: `A new review for "${bookTitle}" has been validated. Progress: ${reviewCount}/${targetReviews} reviews.`,
       actionUrl: '/author/campaigns',
       metadata: { bookTitle, reviewCount, targetReviews },
+    });
+  }
+
+  /**
+   * Notify author when campaign is automatically paused
+   * Per Milestone 3.4.6: "Notification when campaign is automatically paused"
+   */
+  async notifyAuthorCampaignPaused(
+    userId: string,
+    bookTitle: string,
+    reason: string,
+  ): Promise<void> {
+    await this.createNotification({
+      userId,
+      type: NotificationType.CAMPAIGN,
+      title: 'Campaign Paused',
+      message: `Your campaign "${bookTitle}" has been automatically paused due to: ${reason}. Please add more credits to resume.`,
+      actionUrl: '/author/campaigns',
+      metadata: { bookTitle, reason },
     });
   }
 

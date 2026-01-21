@@ -27,8 +27,13 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
   const [internalRating, setInternalRating] = useState(5);
   const [internalFeedback, setInternalFeedback] = useState('');
   const [publishedOnAmazon, setPublishedOnAmazon] = useState(false);
+  const [agreedToAmazonTos, setAgreedToAmazonTos] = useState(false);
+  const [acknowledgedGuidelines, setAcknowledgedGuidelines] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Minimum character count for review feedback (per Milestone 4.4)
+  const MIN_FEEDBACK_CHARACTERS = 150;
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -39,12 +44,20 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
       newErrors.amazonReviewLink = t('errors.invalidAmazonUrl');
     }
 
-    if (internalFeedback.trim().length < 20) {
-      newErrors.internalFeedback = t('errors.feedbackTooShort');
+    if (internalFeedback.trim().length < MIN_FEEDBACK_CHARACTERS) {
+      newErrors.internalFeedback = t('errors.feedbackTooShort', { minChars: MIN_FEEDBACK_CHARACTERS });
     }
 
     if (!publishedOnAmazon) {
       newErrors.publishedOnAmazon = t('errors.confirmPublished');
+    }
+
+    if (!agreedToAmazonTos) {
+      newErrors.agreedToAmazonTos = t('errors.tosRequired');
+    }
+
+    if (!acknowledgedGuidelines) {
+      newErrors.acknowledgedGuidelines = t('errors.guidelinesRequired');
     }
 
     setErrors(newErrors);
@@ -61,6 +74,8 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
       internalRating,
       internalFeedback: internalFeedback.trim(),
       publishedOnAmazon,
+      agreedToAmazonTos,
+      acknowledgedGuidelines,
     });
   };
 
@@ -233,13 +248,57 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
                 onChange={(e) => setInternalFeedback(e.target.value)}
                 className={errors.internalFeedback ? 'border-red-500' : ''}
               />
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>{errors.internalFeedback || t('form.minCharacters')}</span>
-                <span>
-                  {internalFeedback.length} {t('form.characters')}
+              <div className="flex justify-between text-xs">
+                <span className={errors.internalFeedback ? 'text-red-500' : 'text-muted-foreground'}>
+                  {errors.internalFeedback || t('form.minCharacters', { minChars: MIN_FEEDBACK_CHARACTERS })}
+                </span>
+                <span className={internalFeedback.length < MIN_FEEDBACK_CHARACTERS ? 'text-amber-500' : 'text-green-500'}>
+                  {internalFeedback.length} / {MIN_FEEDBACK_CHARACTERS} {t('form.characters')}
                 </span>
               </div>
               <p className="text-xs text-muted-foreground">{t('form.feedbackNote')}</p>
+            </div>
+
+            {/* Amazon TOS Agreement */}
+            <div className="animate-fade-up-heavy-slow space-y-2">
+              <div className="flex items-start gap-2">
+                <Checkbox
+                  id="agreedToAmazonTos"
+                  checked={agreedToAmazonTos}
+                  onCheckedChange={(checked) => setAgreedToAmazonTos(checked as boolean)}
+                  className={errors.agreedToAmazonTos ? 'border-red-500' : ''}
+                />
+                <div className="space-y-1">
+                  <Label htmlFor="agreedToAmazonTos" className="cursor-pointer">
+                    {t('form.agreedToTos')} <span className="text-red-500">*</span>
+                  </Label>
+                  <p className="text-xs text-muted-foreground">{t('form.agreedToTosNote')}</p>
+                  {errors.agreedToAmazonTos && (
+                    <p className="text-xs text-red-500">{errors.agreedToAmazonTos}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Review Guidelines Acknowledgement */}
+            <div className="animate-fade-up-heavy-slow space-y-2">
+              <div className="flex items-start gap-2">
+                <Checkbox
+                  id="acknowledgedGuidelines"
+                  checked={acknowledgedGuidelines}
+                  onCheckedChange={(checked) => setAcknowledgedGuidelines(checked as boolean)}
+                  className={errors.acknowledgedGuidelines ? 'border-red-500' : ''}
+                />
+                <div className="space-y-1">
+                  <Label htmlFor="acknowledgedGuidelines" className="cursor-pointer">
+                    {t('form.acknowledgedGuidelines')} <span className="text-red-500">*</span>
+                  </Label>
+                  <p className="text-xs text-muted-foreground">{t('form.acknowledgedGuidelinesNote')}</p>
+                  {errors.acknowledgedGuidelines && (
+                    <p className="text-xs text-red-500">{errors.acknowledgedGuidelines}</p>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Published Confirmation */}

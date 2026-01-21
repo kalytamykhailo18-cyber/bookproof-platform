@@ -100,11 +100,27 @@ const campaignSchema = z.object({
   wordCount: z.number().min(1).optional(),
   seriesName: z.string().max(255).optional(),
   seriesNumber: z.number().min(1).optional(),
+  // Landing page fields - Milestone 2.2
+  landingPageEnabled: z.boolean().optional(),
+  landingPageLanguages: z.array(z.nativeEnum(Language)).optional(),
+  slug: z
+    .string()
+    .min(3, 'Slug must be at least 3 characters')
+    .max(100, 'Slug must not exceed 100 characters')
+    .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
+    .optional()
+    .or(z.literal('')),
+  titleEN: z.string().max(255).optional().or(z.literal('')),
+  titlePT: z.string().max(255).optional().or(z.literal('')),
+  titleES: z.string().max(255).optional().or(z.literal('')),
+  synopsisEN: z.string().max(7500).optional().or(z.literal('')),
+  synopsisPT: z.string().max(7500).optional().or(z.literal('')),
+  synopsisES: z.string().max(7500).optional().or(z.literal('')),
 });
 
 type CampaignFormData = z.infer<typeof campaignSchema>;
 
-const STEPS = ['bookInfo', 'files', 'credits', 'review'] as const;
+const STEPS = ['bookInfo', 'files', 'landingPage', 'credits', 'review'] as const;
 type Step = (typeof STEPS)[number];
 
 export default function NewCampaignPage() {
@@ -146,6 +162,15 @@ export default function NewCampaignPage() {
       creditsToAllocate: 10,
       ebookCredits: 10,
       audiobookCredits: 0,
+      landingPageEnabled: false,
+      landingPageLanguages: [],
+      slug: '',
+      titleEN: '',
+      titlePT: '',
+      titleES: '',
+      synopsisEN: '',
+      synopsisPT: '',
+      synopsisES: '',
     },
   });
 
@@ -188,6 +213,20 @@ export default function NewCampaignPage() {
       ];
       const isValid = await trigger(fieldsToValidate);
       if (!isValid) return;
+    } else if (currentStep === 'landingPage') {
+      // Validate landing page configuration
+      if (watch('landingPageEnabled')) {
+        const languages = watch('landingPageLanguages');
+        if (!languages || languages.length === 0) {
+          return; // At least one language required
+        }
+      }
+      // Validate slug format if provided
+      const slug = watch('slug');
+      if (slug && slug.trim() !== '') {
+        const isValid = await trigger('slug');
+        if (!isValid) return;
+      }
     } else if (currentStep === 'credits') {
       const isValid = await trigger(['creditsToAllocate', 'ebookCredits', 'audiobookCredits']);
       if (!isValid) return;
@@ -248,7 +287,7 @@ export default function NewCampaignPage() {
 
     const data = getValues();
 
-    // Create campaign with credits allocation
+    // Create campaign with credits allocation and landing page data
     createCampaign({
       title: data.title,
       authorName: data.authorName,
@@ -265,6 +304,16 @@ export default function NewCampaignPage() {
       wordCount: data.wordCount,
       seriesName: data.seriesName,
       seriesNumber: data.seriesNumber,
+      // Landing page fields - Milestone 2.2
+      landingPageEnabled: data.landingPageEnabled,
+      landingPageLanguages: data.landingPageLanguages,
+      slug: data.slug || undefined,
+      titleEN: data.titleEN || undefined,
+      titlePT: data.titlePT || undefined,
+      titleES: data.titleES || undefined,
+      synopsisEN: data.synopsisEN || undefined,
+      synopsisPT: data.synopsisPT || undefined,
+      synopsisES: data.synopsisES || undefined,
     });
   };
 
@@ -662,7 +711,218 @@ export default function NewCampaignPage() {
               </div>
             )}
 
-            {/* Step 3: Credit Allocation */}
+            {/* Step 3: Landing Page Configuration */}
+            {currentStep === 'landingPage' && (
+              <div className="space-y-6">
+                {/* Enable Landing Page */}
+                <div className="animate-fade-up">
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      id="landingPageEnabled"
+                      checked={watch('landingPageEnabled')}
+                      onCheckedChange={(checked) => setValue('landingPageEnabled', checked === true)}
+                    />
+                    <div>
+                      <Label htmlFor="landingPageEnabled" className="cursor-pointer font-medium">
+                        Enable Public Landing Page
+                      </Label>
+                      <p className="text-sm text-muted-foreground">
+                        Allow readers to discover your campaign through a public shareable link
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {watch('landingPageEnabled') && (
+                  <>
+                    {/* Language Selection */}
+                    <div className="animate-fade-up-fast space-y-3">
+                      <Label>Select Languages for Landing Page *</Label>
+                      <div className="flex flex-wrap gap-3">
+                        {[Language.EN, Language.PT, Language.ES].map((lang) => (
+                          <div key={lang} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`lang-${lang}`}
+                              checked={watch('landingPageLanguages')?.includes(lang)}
+                              onCheckedChange={(checked) => {
+                                const currentLangs = watch('landingPageLanguages') || [];
+                                if (checked) {
+                                  setValue('landingPageLanguages', [...currentLangs, lang]);
+                                } else {
+                                  setValue(
+                                    'landingPageLanguages',
+                                    currentLangs.filter((l) => l !== lang),
+                                  );
+                                }
+                              }}
+                            />
+                            <Label htmlFor={`lang-${lang}`} className="cursor-pointer">
+                              {lang === Language.EN && 'English'}
+                              {lang === Language.PT && 'Portuguese'}
+                              {lang === Language.ES && 'Spanish'}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                      {watch('landingPageLanguages')?.length === 0 && watch('landingPageEnabled') && (
+                        <p className="text-sm text-red-500">
+                          Please select at least one language
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Custom Slug (Optional) */}
+                    <div className="animate-fade-up-light-slow">
+                      <Label htmlFor="slug">
+                        Custom URL Slug (Optional)
+                      </Label>
+                      <Input
+                        id="slug"
+                        {...register('slug')}
+                        placeholder="my-awesome-book"
+                      />
+                      {errors.slug && (
+                        <p className="mt-1 text-sm text-red-500">{errors.slug.message}</p>
+                      )}
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Leave empty to auto-generate from title. Only lowercase letters, numbers, and hyphens.
+                      </p>
+                    </div>
+
+                    {/* Language-specific titles */}
+                    {watch('landingPageLanguages')?.includes(Language.EN) && (
+                      <div className="animate-fade-up-slow">
+                        <Label htmlFor="titleEN">
+                          English Title (Optional)
+                        </Label>
+                        <Input
+                          id="titleEN"
+                          {...register('titleEN')}
+                          placeholder="Leave empty to use main title"
+                        />
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          Only fill if different from main title
+                        </p>
+                      </div>
+                    )}
+
+                    {watch('landingPageLanguages')?.includes(Language.PT) && (
+                      <div className="animate-fade-up-slow">
+                        <Label htmlFor="titlePT">
+                          Portuguese Title (Optional)
+                        </Label>
+                        <Input
+                          id="titlePT"
+                          {...register('titlePT')}
+                          placeholder="Título em português"
+                        />
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          Only fill if different from main title
+                        </p>
+                      </div>
+                    )}
+
+                    {watch('landingPageLanguages')?.includes(Language.ES) && (
+                      <div className="animate-fade-up-slow">
+                        <Label htmlFor="titleES">
+                          Spanish Title (Optional)
+                        </Label>
+                        <Input
+                          id="titleES"
+                          {...register('titleES')}
+                          placeholder="Título en español"
+                        />
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          Only fill if different from main title
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Language-specific synopsis */}
+                    {watch('landingPageLanguages')?.includes(Language.EN) && (
+                      <div className="animate-fade-up-very-slow">
+                        <Label htmlFor="synopsisEN">
+                          English Synopsis (Optional)
+                        </Label>
+                        <Textarea
+                          id="synopsisEN"
+                          {...register('synopsisEN')}
+                          placeholder="Leave empty to use main synopsis"
+                          rows={4}
+                          className="resize-none"
+                        />
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {watch('synopsisEN')?.length || 0} / 7500 characters
+                        </p>
+                      </div>
+                    )}
+
+                    {watch('landingPageLanguages')?.includes(Language.PT) && (
+                      <div className="animate-fade-up-very-slow">
+                        <Label htmlFor="synopsisPT">
+                          Portuguese Synopsis (Optional)
+                        </Label>
+                        <Textarea
+                          id="synopsisPT"
+                          {...register('synopsisPT')}
+                          placeholder="Sinopse em português"
+                          rows={4}
+                          className="resize-none"
+                        />
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {watch('synopsisPT')?.length || 0} / 7500 characters
+                        </p>
+                      </div>
+                    )}
+
+                    {watch('landingPageLanguages')?.includes(Language.ES) && (
+                      <div className="animate-fade-up-very-slow">
+                        <Label htmlFor="synopsisES">
+                          Spanish Synopsis (Optional)
+                        </Label>
+                        <Textarea
+                          id="synopsisES"
+                          {...register('synopsisES')}
+                          placeholder="Sinopsis en español"
+                          rows={4}
+                          className="resize-none"
+                        />
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {watch('synopsisES')?.length || 0} / 7500 characters
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Public URL Preview */}
+                    {watch('landingPageLanguages') && watch('landingPageLanguages')!.length > 0 && (
+                      <div className="animate-zoom-in rounded-lg bg-primary/10 p-4">
+                        <h4 className="mb-2 font-medium">Public Landing Page URLs</h4>
+                        <p className="mb-3 text-sm text-muted-foreground">
+                          These URLs will be generated for your campaign:
+                        </p>
+                        <div className="space-y-2">
+                          {watch('landingPageLanguages')!.map((lang) => {
+                            const slugPreview = watch('slug') || 'auto-generated-slug';
+                            const langCode = lang.toLowerCase();
+                            const url = `${window.location.origin}/${langCode}/campaigns/${slugPreview}`;
+                            return (
+                              <div key={lang} className="flex items-center gap-2 text-sm">
+                                <Badge variant="outline">{lang}</Badge>
+                                <code className="flex-1 rounded bg-muted px-2 py-1">
+                                  {url}
+                                </code>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* Step 4: Credit Allocation */}
             {currentStep === 'credits' && (
               <div className="space-y-6">
                 {/* Available Credits */}
@@ -696,7 +956,11 @@ export default function NewCampaignPage() {
                   )}
                   <p className="mt-1 text-sm text-muted-foreground">
                     {t('credits.minimumRequired') || 'Minimum 10 credits required'} •{' '}
-                    {t('credits.each') || 'Each credit = 1 review'}
+                    {selectedFormat === BookFormat.AUDIOBOOK
+                      ? '2 credits = 1 audiobook review'
+                      : selectedFormat === BookFormat.BOTH
+                        ? '1 credit = 1 ebook review, 2 credits = 1 audiobook review'
+                        : '1 credit = 1 ebook review'}
                   </p>
                 </div>
 
@@ -706,11 +970,14 @@ export default function NewCampaignPage() {
                     <h4 className="font-medium">
                       {t('credits.splitCredits') || 'Split Credits Between Formats'}
                     </h4>
+                    <p className="text-sm text-muted-foreground">
+                      Note: Ebook reviews cost 1 credit each. Audiobook reviews cost 2 credits each.
+                    </p>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="ebookCredits">
                           <Book className="mr-1 inline h-4 w-4" />
-                          {t('credits.ebookCredits') || 'Ebook Reviews'}
+                          {t('credits.ebookCredits') || 'Credits for Ebook'}
                         </Label>
                         <Input
                           id="ebookCredits"
@@ -724,16 +991,20 @@ export default function NewCampaignPage() {
                             setValue('audiobookCredits', creditsToAllocate - value);
                           }}
                         />
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          = {ebookCredits} ebook reviews
+                        </p>
                       </div>
                       <div>
                         <Label htmlFor="audiobookCredits">
                           <Music className="mr-1 inline h-4 w-4" />
-                          {t('credits.audiobookCredits') || 'Audiobook Reviews'}
+                          {t('credits.audiobookCredits') || 'Credits for Audiobook'}
                         </Label>
                         <Input
                           id="audiobookCredits"
                           type="number"
                           min={0}
+                          step={2}
                           max={creditsToAllocate}
                           value={audiobookCredits}
                           onChange={(e) => {
@@ -742,12 +1013,21 @@ export default function NewCampaignPage() {
                             setValue('ebookCredits', creditsToAllocate - value);
                           }}
                         />
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          = {Math.floor(audiobookCredits / 2)} audiobook reviews (2 credits each)
+                        </p>
                       </div>
                     </div>
                     {ebookCredits + audiobookCredits !== creditsToAllocate && (
                       <div className="flex items-center gap-2 text-sm text-red-500">
                         <AlertCircle className="h-4 w-4" />
                         {t('credits.splitError') || 'Total must equal allocated credits'}
+                      </div>
+                    )}
+                    {audiobookCredits % 2 !== 0 && (
+                      <div className="flex items-center gap-2 text-sm text-amber-600">
+                        <AlertCircle className="h-4 w-4" />
+                        Audiobook credits should be even (2 credits per review). You have 1 credit that won't be used for audiobook reviews.
                       </div>
                     )}
                   </div>
@@ -782,7 +1062,7 @@ export default function NewCampaignPage() {
               </div>
             )}
 
-            {/* Step 4: Review & Confirm */}
+            {/* Step 5: Review & Confirm */}
             {currentStep === 'review' && (
               <div className="space-y-6">
                 {/* Book Information Summary */}
@@ -872,15 +1152,31 @@ export default function NewCampaignPage() {
                       <span>{t('review.totalCredits') || 'Total Credits'}:</span>
                       <span className="font-bold">{creditsToAllocate}</span>
                     </div>
+                    {selectedFormat === BookFormat.EBOOK && (
+                      <div className="flex justify-between">
+                        <span>Ebook Reviews:</span>
+                        <span>{creditsToAllocate} reviews (1 credit each)</span>
+                      </div>
+                    )}
+                    {selectedFormat === BookFormat.AUDIOBOOK && (
+                      <div className="flex justify-between">
+                        <span>Audiobook Reviews:</span>
+                        <span>{Math.floor(creditsToAllocate / 2)} reviews (2 credits each)</span>
+                      </div>
+                    )}
                     {selectedFormat === BookFormat.BOTH && (
                       <>
                         <div className="flex justify-between">
-                          <span>{t('review.ebookReviews') || 'Ebook Reviews'}:</span>
-                          <span>{ebookCredits}</span>
+                          <span>Ebook Reviews:</span>
+                          <span>{ebookCredits} reviews ({ebookCredits} credits)</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>{t('review.audiobookReviews') || 'Audiobook Reviews'}:</span>
-                          <span>{audiobookCredits}</span>
+                          <span>Audiobook Reviews:</span>
+                          <span>{Math.floor(audiobookCredits / 2)} reviews ({audiobookCredits} credits)</span>
+                        </div>
+                        <div className="flex justify-between text-muted-foreground">
+                          <span>Total Reviews:</span>
+                          <span>{ebookCredits + Math.floor(audiobookCredits / 2)} reviews</span>
                         </div>
                       </>
                     )}

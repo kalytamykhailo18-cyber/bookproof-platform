@@ -171,25 +171,43 @@ export class CreditExpirationProcessor {
   }
 
   /**
-   * Send warning emails for credits expiring in the next 7 days
+   * Send warning emails for credits expiring in the next 7, 3, and 1 days
+   * Per requirements.md Milestone 3: "Authors receive warnings at 7 days, 3 days, and 1 day before expiration"
    */
   private async sendExpirationWarnings(now: Date) {
-    const sevenDaysFromNow = new Date(now);
-    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+    // Send warnings for multiple timeframes: 7 days, 3 days, 1 day
+    await this.sendWarningsForDays(now, 7, '[WARNING_7D_SENT]');
+    await this.sendWarningsForDays(now, 3, '[WARNING_3D_SENT]');
+    await this.sendWarningsForDays(now, 1, '[WARNING_1D_SENT]');
+  }
 
-    // Find purchases expiring within 7 days that haven't had a warning sent
+  /**
+   * Send warning emails for credits expiring in N days
+   */
+  private async sendWarningsForDays(now: Date, days: number, warningMarker: string) {
+    const targetDate = new Date(now);
+    targetDate.setDate(targetDate.getDate() + days);
+
+    // Calculate date range (same day +/- 12 hours to account for cron timing)
+    const rangeStart = new Date(targetDate);
+    rangeStart.setHours(0, 0, 0, 0);
+
+    const rangeEnd = new Date(targetDate);
+    rangeEnd.setHours(23, 59, 59, 999);
+
+    // Find purchases expiring in N days that haven't had THIS warning sent
     const expiringPurchases = await this.prisma.creditPurchase.findMany({
       where: {
         activated: false,
         paymentStatus: 'COMPLETED',
         activationWindowExpiresAt: {
-          gte: now,
-          lte: sevenDaysFromNow,
+          gte: rangeStart,
+          lte: rangeEnd,
         },
-        // Not already warned (adminNotes does not contain 'WARNING_SENT')
+        // Not already warned with THIS specific warning marker
         NOT: {
           adminNotes: {
-            contains: '[WARNING_SENT]',
+            contains: warningMarker,
           },
         },
       },
@@ -213,17 +231,17 @@ export class CreditExpirationProcessor {
       },
     });
 
-    this.logger.log(`Found ${expiringPurchases.length} purchases expiring within 7 days`);
+    this.logger.log(`Found ${expiringPurchases.length} purchases expiring in ${days} day(s)`);
 
     for (const purchase of expiringPurchases) {
       try {
-        await this.sendExpirationWarning(purchase, now);
+        await this.sendExpirationWarning(purchase, now, days, warningMarker);
         this.logger.log(
-          `Sent expiration warning for ${purchase.credits} credits to ${purchase.authorProfile.user.email}`,
+          `Sent ${days}-day expiration warning for ${purchase.credits} credits to ${purchase.authorProfile.user.email}`,
         );
       } catch (error) {
         this.logger.error(
-          `Failed to send expiration warning for purchase ${purchase.id}:`,
+          `Failed to send ${days}-day warning for purchase ${purchase.id}:`,
           error,
         );
       }
@@ -233,11 +251,13 @@ export class CreditExpirationProcessor {
   /**
    * Send expiration warning for a single purchase
    */
-  private async sendExpirationWarning(purchase: any, now: Date) {
+  private async sendExpirationWarning(
+    purchase: any,
+    now: Date,
+    daysUntilExpiration: number,
+    warningMarker: string,
+  ) {
     const authorProfile = purchase.authorProfile;
-    const daysUntilExpiration = Math.ceil(
-      (purchase.activationWindowExpiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
-    );
 
     // Send warning email
     try {
@@ -250,13 +270,13 @@ export class CreditExpirationProcessor {
         language: authorProfile.user.preferredLanguage || 'EN',
       });
 
-      // Mark purchase as warned
+      // Mark purchase as warned with the specific warning marker
       await this.prisma.creditPurchase.update({
         where: { id: purchase.id },
         data: {
           adminNotes: purchase.adminNotes
-            ? `${purchase.adminNotes} | [WARNING_SENT] ${now.toISOString()}`
-            : `[WARNING_SENT] ${now.toISOString()}`,
+            ? `${purchase.adminNotes} | ${warningMarker} ${now.toISOString()}`
+            : `${warningMarker} ${now.toISOString()}`,
         },
       });
     } catch (error) {

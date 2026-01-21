@@ -6,67 +6,60 @@ async function main() {
   console.log('Starting database seeding...');
 
   // Create package tiers
+  // Per Milestone 3.1 requirements:
+  // - Starter: 50 credits, $49, 30-day validity
+  // - Growth: 150 credits, $99, 90-day validity
+  // - Professional: 300 credits, $179, 120-day validity
+  // - Enterprise: 500+ credits, custom (via Closer panel)
   const packageTiers = [
     {
       name: 'Starter',
-      credits: 25,
-      basePrice: 49.99,
+      credits: 50,
+      basePrice: 49.00,
       currency: 'USD',
       validityDays: 30,
       description: 'Perfect for testing the waters with your first book',
       displayOrder: 1,
-      features: JSON.stringify([
-        '25 verified reviews',
-        '30 days to activate',
-        '~5 reviews per week',
-        '20% overbooking buffer included',
-      ]),
-    },
-    {
-      name: 'Professional',
-      credits: 50,
-      basePrice: 89.99,
-      currency: 'USD',
-      validityDays: 30, // Up to 200 credits = 30 days
-      description: 'Ideal for authors launching a new book',
-      displayOrder: 2,
+      isPopular: false,
       features: JSON.stringify([
         '50 verified reviews',
         '30 days to activate',
-        '~10 reviews per week',
+        '~8-10 reviews per week',
         '20% overbooking buffer included',
-        'Priority support',
+        'Email support',
       ]),
     },
     {
       name: 'Growth',
-      credits: 100,
-      basePrice: 159.99,
+      credits: 150,
+      basePrice: 99.00,
       currency: 'USD',
-      validityDays: 30, // Up to 200 credits = 30 days
-      description: 'Great for building momentum and visibility',
-      displayOrder: 3,
+      validityDays: 90,
+      description: 'Ideal for authors launching a new book',
+      displayOrder: 2,
+      isPopular: true, // Mark as recommended package
       features: JSON.stringify([
-        '100 verified reviews',
-        '30 days to activate',
-        '~20 reviews per week',
+        '150 verified reviews',
+        '90 days to activate',
+        '~20-25 reviews per week',
         '20% overbooking buffer included',
         'Priority support',
         'Dedicated account manager',
       ]),
     },
     {
-      name: 'Bestseller',
-      credits: 200,
-      basePrice: 299.99,
+      name: 'Professional',
+      credits: 300,
+      basePrice: 179.00,
       currency: 'USD',
-      validityDays: 30, // Up to 200 credits = 30 days
-      description: 'Maximum impact for serious authors',
-      displayOrder: 4,
+      validityDays: 120,
+      description: 'Great for building momentum and visibility',
+      displayOrder: 3,
+      isPopular: false,
       features: JSON.stringify([
-        '200 verified reviews',
-        '30 days to activate',
-        'Flexible weekly distribution',
+        '300 verified reviews',
+        '120 days to activate',
+        '~20-25 reviews per week',
         '20% overbooking buffer included',
         'Priority support',
         'Dedicated account manager',
@@ -76,40 +69,22 @@ async function main() {
     {
       name: 'Enterprise',
       credits: 500,
-      basePrice: 649.99,
+      basePrice: 299.00,
       currency: 'USD',
-      validityDays: 90, // 201-500 credits = 90 days
-      description: 'For publishers and high-volume authors',
-      displayOrder: 5,
+      validityDays: 120,
+      description: 'For publishers and high-volume authors (Custom packages available via sales)',
+      displayOrder: 4,
+      isPopular: false,
       features: JSON.stringify([
         '500 verified reviews',
-        '90 days to activate',
+        '120 days to activate',
         'Fully customizable distribution',
         '20% overbooking buffer included',
         '24/7 priority support',
         'Dedicated account manager',
         'Amazon ranking optimization tips',
         'Multi-book campaign planning',
-      ]),
-    },
-    {
-      name: 'Ultimate',
-      credits: 1000,
-      basePrice: 1199.99,
-      currency: 'USD',
-      validityDays: 120,
-      description: 'Ultimate package for maximum reach',
-      displayOrder: 6,
-      features: JSON.stringify([
-        '1000 verified reviews',
-        '120 days to activate',
-        'Fully customizable distribution',
-        '20% overbooking buffer included',
-        '24/7 VIP support',
-        'Dedicated account manager',
-        'Amazon ranking optimization tips',
-        'Multi-book campaign planning',
-        'Quarterly strategy sessions',
+        'Contact sales for custom packages',
       ]),
     },
   ];
@@ -120,7 +95,7 @@ async function main() {
       update: tier,
       create: tier,
     });
-    console.log(`✓ Created/Updated package tier: ${created.name} (${created.credits} credits)`);
+    console.log(`✓ Created/Updated package tier: ${created.name} (${created.credits} credits, $${tier.basePrice})`);
   }
 
   console.log('\n✨ Seeding completed successfully!');

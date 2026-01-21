@@ -16,12 +16,17 @@ export interface EmailVariables {
   // Deadline variables
   deadlineAt?: Date;
   hoursRemaining?: number;
+  isUrgent?: boolean;
+  isFinal?: boolean;
 
   // Review variables
+  submittedAt?: Date;
   reviewId?: string;
   rating?: number;
   feedback?: string;
   rejectionReason?: string;
+  instructions?: string;
+  reviewLink?: string;
 
   // Payment variables
   amount?: number;
@@ -215,14 +220,14 @@ export class EmailTemplateService {
         PT: `Seus materiais do livro estão prontos! - ${variables.bookTitle || 'Seu livro'}`,
       },
       READER_DEADLINE_24H: {
-        EN: `Reminder: 24h Remaining - ${variables.bookTitle || 'Your Book'}`,
-        ES: `Recordatorio: 24h restantes - ${variables.bookTitle || 'Tu libro'}`,
-        PT: `Lembrete: 24h restantes - ${variables.bookTitle || 'Seu livro'}`,
+        EN: `Reminder: ${variables.hoursRemaining || '24'}h Remaining - ${variables.bookTitle || 'Your Book'}`,
+        ES: `Recordatorio: ${variables.hoursRemaining || '24'}h restantes - ${variables.bookTitle || 'Tu libro'}`,
+        PT: `Lembrete: ${variables.hoursRemaining || '24'}h restantes - ${variables.bookTitle || 'Seu livro'}`,
       },
       READER_DEADLINE_48H: {
-        EN: `Reminder: 48h Remaining - ${variables.bookTitle || 'Your Book'}`,
-        ES: `Recordatorio: 48h restantes - ${variables.bookTitle || 'Tu libro'}`,
-        PT: `Lembrete: 48h restantes - ${variables.bookTitle || 'Seu livro'}`,
+        EN: `Reminder: ${variables.hoursRemaining || '48'}h Remaining - ${variables.bookTitle || 'Your Book'}`,
+        ES: `Recordatorio: ${variables.hoursRemaining || '48'}h restantes - ${variables.bookTitle || 'Tu libro'}`,
+        PT: `Lembrete: ${variables.hoursRemaining || '48'}h restantes - ${variables.bookTitle || 'Seu livro'}`,
       },
       READER_DEADLINE_72H: {
         EN: `Final Reminder: 72h Deadline - ${variables.bookTitle || 'Your Book'}`,
@@ -233,6 +238,11 @@ export class EmailTemplateService {
         EN: `Assignment Expired - ${variables.bookTitle || 'Your Book'}`,
         ES: `Asignación expirada - ${variables.bookTitle || 'Tu libro'}`,
         PT: `Atribuição expirada - ${variables.bookTitle || 'Seu livro'}`,
+      },
+      READER_REVIEW_SUBMITTED: {
+        EN: `Review Submitted Successfully - ${variables.bookTitle || 'Your Review'}`,
+        ES: `Reseña enviada con éxito - ${variables.bookTitle || 'Tu reseña'}`,
+        PT: `Avaliação enviada com sucesso - ${variables.bookTitle || 'Sua avaliação'}`,
       },
       READER_REVIEW_VALIDATED: {
         EN: `Review Approved - ${variables.bookTitle || 'Your Review'}`,
@@ -307,6 +317,11 @@ export class EmailTemplateService {
         EN: `New Affiliate Application - ${variables.userName || 'Applicant'}`,
         ES: `Nueva solicitud de afiliado - ${variables.userName || 'Solicitante'}`,
         PT: `Nova inscrição de afiliado - ${variables.userName || 'Candidato'}`,
+      },
+      ADMIN_CRITICAL_ERROR: {
+        EN: `🚨 CRITICAL ERROR: ${variables.issueType || 'System Error'} [ID: ${variables.issueId}]`,
+        ES: `🚨 ERROR CRÍTICO: ${variables.issueType || 'Error del sistema'} [ID: ${variables.issueId}]`,
+        PT: `🚨 ERRO CRÍTICO: ${variables.issueType || 'Erro do sistema'} [ID: ${variables.issueId}]`,
       },
 
       // Payments
@@ -411,6 +426,11 @@ export class EmailTemplateService {
         EN: `Please Update Your Review - ${variables.bookTitle || 'Book'}`,
         ES: `Por favor actualiza tu reseña - ${variables.bookTitle || 'Libro'}`,
         PT: `Por favor atualize sua avaliação - ${variables.bookTitle || 'Livro'}`,
+      },
+      READER_REPLACEMENT_ASSIGNED: {
+        EN: `New Opportunity: Replacement Review Available - ${variables.bookTitle || 'Book'}`,
+        ES: `Nueva oportunidad: Reseña de reemplazo disponible - ${variables.bookTitle || 'Libro'}`,
+        PT: `Nova oportunidade: Avaliação de substituição disponível - ${variables.bookTitle || 'Livro'}`,
       },
 
       // Author credit adjustments

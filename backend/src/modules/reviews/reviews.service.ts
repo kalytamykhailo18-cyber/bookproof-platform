@@ -1,5 +1,7 @@
-import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ForbiddenException, Logger } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
+import { NotificationsService } from '../notifications/notifications.service';
+import { EmailService } from '../email/email.service';
 import { SubmitReviewDto } from './dto/submit-review.dto';
 import {
   ReviewResponseDto,
@@ -8,15 +10,28 @@ import {
   ReviewStatus,
   PendingReviewsStatsDto,
 } from './dto/review-response.dto';
-import { AssignmentStatus } from '@prisma/client';
+import { AssignmentStatus, UserRole, EmailType } from '@prisma/client';
 
 @Injectable()
 export class ReviewsService {
-  constructor(private prisma: PrismaService) {}
+  private readonly logger = new Logger(ReviewsService.name);
+
+  constructor(
+    private prisma: PrismaService,
+    private notificationsService: NotificationsService,
+    private emailService: EmailService,
+  ) {}
 
   /**
    * Submit a review for an assignment
    * Reader must have APPROVED or IN_PROGRESS assignment to submit
+   *
+   * Per Milestone 4.4 - Review Submission Process:
+   * - Validates minimum character count (150 characters)
+   * - Validates star rating range (1-5)
+   * - Verifies reader agreement to Amazon TOS
+   * - Verifies reader acknowledged review guidelines
+   * - Checks assignment is within deadline window
    *
    * PRIVACY: Returns ReaderReviewResponseDto which excludes admin-only fields
    */
@@ -67,6 +82,21 @@ export class ReviewsService {
       throw new BadRequestException('Cannot submit review after deadline has passed');
     }
 
+    // Validate TOS agreement (Milestone 4.4 requirement)
+    if (!dto.agreedToAmazonTos) {
+      throw new BadRequestException('You must agree to Amazon Terms of Service compliance');
+    }
+
+    // Validate guidelines acknowledgement (Milestone 4.4 requirement)
+    if (!dto.acknowledgedGuidelines) {
+      throw new BadRequestException('You must acknowledge the review guidelines');
+    }
+
+    // Validate published confirmation
+    if (!dto.publishedOnAmazon) {
+      throw new BadRequestException('You must confirm that your review has been published on Amazon');
+    }
+
     // Create review
     const review = await this.prisma.review.create({
       data: {
@@ -102,6 +132,58 @@ export class ReviewsService {
         status: AssignmentStatus.SUBMITTED,
       },
     });
+
+    // Notify admins about new review pending validation (Requirements Section 13.2)
+    try {
+      // Get all admin user IDs to notify
+      const adminUsers = await this.prisma.user.findMany({
+        where: { role: UserRole.ADMIN },
+        select: { id: true },
+      });
+      const adminUserIds = adminUsers.map((u) => u.id);
+
+      if (adminUserIds.length > 0) {
+        await this.notificationsService.notifyAdminPendingReview(
+          adminUserIds,
+          review.book.title,
+          review.id,
+        );
+      }
+    } catch (notifError) {
+      // Don't fail the submission if notification fails
+      this.logger.error(`Failed to send admin pending review notification: ${notifError.message}`);
+    }
+
+    // Send confirmation email to reader (Milestone 4.4 requirement)
+    try {
+      await this.emailService.sendTemplatedEmail(
+        assignment.readerProfile.user.email,
+        EmailType.READER_REVIEW_SUBMITTED,
+        {
+          userName: assignment.readerProfile.user.name || 'Reader',
+          bookTitle: assignment.book.title,
+          submittedAt: review.submittedAt ?? undefined,
+          dashboardUrl: '/reader/dashboard',
+        },
+        assignment.readerProfile.userId,
+        assignment.readerProfile.user.preferredLanguage,
+      );
+      this.logger.log(`Review submission confirmation email sent to ${assignment.readerProfile.user.email}`);
+    } catch (emailError) {
+      // Don't fail the submission if email fails
+      this.logger.error(`Failed to send review submission confirmation email: ${emailError.message}`);
+    }
+
+    // Send in-app notification to reader
+    try {
+      await this.notificationsService.notifyReaderReviewSubmitted(
+        assignment.readerProfile.userId,
+        assignment.book.title,
+      );
+    } catch (notifError) {
+      // Don't fail the submission if notification fails
+      this.logger.error(`Failed to send reader review submitted notification: ${notifError.message}`);
+    }
 
     return this.mapToReaderReviewResponseDto(review);
   }

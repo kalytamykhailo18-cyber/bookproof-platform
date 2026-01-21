@@ -7,6 +7,8 @@ import {
   SettingResponseDto,
   KeywordPricingResponseDto,
   PricingSettingsResponseDto,
+  ReviewPaymentRatesDto,
+  UpdateReviewPaymentRatesDto,
 } from './dto';
 
 // Setting keys as constants to prevent typos
@@ -14,6 +16,9 @@ export const SETTING_KEYS = {
   KEYWORD_RESEARCH_PRICE: 'keyword_research_price',
   KEYWORD_RESEARCH_CURRENCY: 'keyword_research_currency',
   KEYWORD_RESEARCH_ENABLED: 'keyword_research_enabled',
+  EBOOK_REVIEW_PAYMENT_RATE: 'ebook_review_payment_rate',
+  AUDIOBOOK_REVIEW_PAYMENT_RATE: 'audiobook_review_payment_rate',
+  PAYMENT_CURRENCY: 'payment_currency',
 } as const;
 
 // Default values for settings
@@ -40,6 +45,27 @@ const DEFAULT_SETTINGS: Record<
     dataType: 'boolean',
     category: 'features',
     description: 'Enable or disable keyword research feature globally',
+    isPublic: true,
+  },
+  [SETTING_KEYS.EBOOK_REVIEW_PAYMENT_RATE]: {
+    value: '1.00',
+    dataType: 'number',
+    category: 'pricing',
+    description: 'Payment rate for ebook reviews in USD (per requirements.md Section 3.8)',
+    isPublic: true,
+  },
+  [SETTING_KEYS.AUDIOBOOK_REVIEW_PAYMENT_RATE]: {
+    value: '2.00',
+    dataType: 'number',
+    category: 'pricing',
+    description: 'Payment rate for audiobook reviews in USD (per requirements.md Section 3.8)',
+    isPublic: true,
+  },
+  [SETTING_KEYS.PAYMENT_CURRENCY]: {
+    value: 'USD',
+    dataType: 'string',
+    category: 'pricing',
+    description: 'Currency for reader payment rates',
     isPublic: true,
   },
 };
@@ -213,10 +239,77 @@ export class SettingsService {
    */
   async getPricingSettings(): Promise<PricingSettingsResponseDto> {
     const keywordResearch = await this.getKeywordResearchPricing();
+    const reviewPaymentRates = await this.getReviewPaymentRates();
 
     return {
       keywordResearch,
+      reviewPaymentRates,
     };
+  }
+
+  /**
+   * Get review payment rates
+   */
+  async getReviewPaymentRates(): Promise<ReviewPaymentRatesDto> {
+    const ebookRateSetting = await this.getSetting(SETTING_KEYS.EBOOK_REVIEW_PAYMENT_RATE);
+    const audiobookRateSetting = await this.getSetting(SETTING_KEYS.AUDIOBOOK_REVIEW_PAYMENT_RATE);
+    const currencySetting = await this.getSetting(SETTING_KEYS.PAYMENT_CURRENCY);
+
+    return {
+      ebookRate: ebookRateSetting ? parseFloat(ebookRateSetting.value) : 1.0,
+      audiobookRate: audiobookRateSetting ? parseFloat(audiobookRateSetting.value) : 2.0,
+      currency: currencySetting?.value || 'USD',
+      updatedAt: ebookRateSetting?.updatedAt || new Date(),
+      updatedBy: ebookRateSetting?.updatedBy,
+    };
+  }
+
+  /**
+   * Get ebook review payment rate for use in services
+   */
+  async getEbookReviewRate(): Promise<number> {
+    const setting = await this.getSetting(SETTING_KEYS.EBOOK_REVIEW_PAYMENT_RATE);
+    return setting ? parseFloat(setting.value) : 1.0;
+  }
+
+  /**
+   * Get audiobook review payment rate for use in services
+   */
+  async getAudiobookReviewRate(): Promise<number> {
+    const setting = await this.getSetting(SETTING_KEYS.AUDIOBOOK_REVIEW_PAYMENT_RATE);
+    return setting ? parseFloat(setting.value) : 2.0;
+  }
+
+  /**
+   * Update review payment rates
+   */
+  async updateReviewPaymentRates(
+    dto: UpdateReviewPaymentRatesDto,
+    adminUserId: string,
+    adminEmail: string,
+    ipAddress?: string,
+  ): Promise<ReviewPaymentRatesDto> {
+    if (dto.ebookRate !== undefined) {
+      await this.updateSetting(
+        SETTING_KEYS.EBOOK_REVIEW_PAYMENT_RATE,
+        { value: dto.ebookRate.toFixed(2), reason: dto.reason },
+        adminUserId,
+        adminEmail,
+        ipAddress,
+      );
+    }
+
+    if (dto.audiobookRate !== undefined) {
+      await this.updateSetting(
+        SETTING_KEYS.AUDIOBOOK_REVIEW_PAYMENT_RATE,
+        { value: dto.audiobookRate.toFixed(2), reason: dto.reason },
+        adminUserId,
+        adminEmail,
+        ipAddress,
+      );
+    }
+
+    return this.getReviewPaymentRates();
   }
 
   /**
