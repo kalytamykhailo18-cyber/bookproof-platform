@@ -269,10 +269,11 @@ export default function SubscriptionPage() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setCancelDialogOpen(false)}>
+                  <Button type="button" variant="outline" onClick={() => setCancelDialogOpen(false)}>
                     Keep Subscription
                   </Button>
                   <Button
+                    type="button"
                     variant="destructive"
                     onClick={handleCancelSubscription}
                     disabled={!cancelReason || cancelSubscription.isPending}

@@ -364,10 +364,11 @@ export default function PaymentIssuesPage() {
                               </div>
                             </div>
                             <DialogFooter>
-                              <Button variant="outline" onClick={() => setStatusDialogOpen(false)}>
+                              <Button type="button" variant="outline" onClick={() => setStatusDialogOpen(false)}>
                                 Cancel
                               </Button>
                               <Button
+                                type="button"
                                 onClick={handleUpdateStatus}
                                 disabled={updateStatus.isPending}
                               >
@@ -425,10 +426,11 @@ export default function PaymentIssuesPage() {
                               </div>
                             </div>
                             <DialogFooter>
-                              <Button variant="outline" onClick={() => setRefundDialogOpen(false)}>
+                              <Button type="button" variant="outline" onClick={() => setRefundDialogOpen(false)}>
                                 Cancel
                               </Button>
                               <Button
+                                type="button"
                                 variant="destructive"
                                 onClick={handleProcessRefund}
                                 disabled={
@@ -560,10 +562,11 @@ export default function PaymentIssuesPage() {
                               </div>
                             </div>
                             <DialogFooter>
-                              <Button variant="outline" onClick={() => setResolveDialogOpen(false)}>
+                              <Button type="button" variant="outline" onClick={() => setResolveDialogOpen(false)}>
                                 Cancel
                               </Button>
                               <Button
+                                type="button"
                                 onClick={handleResolve}
                                 disabled={!resolution || resolveIssue.isPending}
                               >

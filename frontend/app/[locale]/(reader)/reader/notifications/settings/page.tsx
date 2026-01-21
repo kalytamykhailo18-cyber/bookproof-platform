@@ -105,7 +105,7 @@ export default function NotificationSettingsPage() {
     <div className="container mx-auto px-4 py-8 max-w-3xl">
       {/* Header */}
       <div className="mb-8 animate-fade-up">
-        <Button variant="ghost" size="sm" className="mb-4" onClick={() => router.push(`/${locale}/reader/notifications`)}>
+        <Button type="button" variant="ghost" size="sm" className="mb-4" onClick={() => router.push(`/${locale}/reader/notifications`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Notifications
         </Button>

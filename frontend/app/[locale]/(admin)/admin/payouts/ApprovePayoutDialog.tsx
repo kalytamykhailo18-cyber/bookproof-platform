@@ -68,10 +68,10 @@ export default function ApprovePayoutDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
             {t('approve.cancelButton')}
           </Button>
-          <Button onClick={handleApprove} disabled={isPending}>
+          <Button type="button" onClick={handleApprove} disabled={isPending}>
             {isPending ? t('approve.confirming') : t('approve.confirmButton')}
           </Button>
         </DialogFooter>

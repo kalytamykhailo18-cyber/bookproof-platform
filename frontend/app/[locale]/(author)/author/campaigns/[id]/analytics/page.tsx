@@ -58,7 +58,7 @@ export default function CampaignAnalyticsPage() {
         <div className="flex h-64 animate-fade-up flex-col items-center justify-center text-center">
           <AlertCircle className="mb-4 h-12 w-12 text-muted-foreground" />
           <p className="text-muted-foreground">{t('notFound') || 'Campaign not found'}</p>
-          <Button variant="outline" className="mt-4" onClick={() => router.back()}>
+          <Button type="button" variant="outline" className="mt-4" onClick={() => router.back()}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t('back') || 'Go Back'}
           </Button>
@@ -113,7 +113,7 @@ export default function CampaignAnalyticsPage() {
     <div className="container mx-auto space-y-6 px-4 py-8">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button variant="ghost" onClick={() => router.back()} className="mb-4">
+        <Button type="button" variant="ghost" onClick={() => router.back()} className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('back') || 'Back to Campaign'}
         </Button>
@@ -126,7 +126,7 @@ export default function CampaignAnalyticsPage() {
                 : t('analyticsSubtitle') || 'Campaign Analytics & Tracking'}
             </p>
           </div>
-          <Button variant="outline" onClick={() => window.print()}>
+          <Button type="button" variant="outline" onClick={() => window.print()}>
             <Download className="mr-2 h-4 w-4" />
             {t('downloadReport') || 'Download Report'}
           </Button>

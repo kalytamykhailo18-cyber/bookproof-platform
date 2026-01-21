@@ -256,7 +256,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
 
           {/* Volume Control */}
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={toggleMute} disabled={!authenticatedUrl}>
+            <Button type="button" variant="ghost" size="icon" onClick={toggleMute} disabled={!authenticatedUrl}>
               {isMuted || volume === 0 ? (
                 <VolumeX className="h-4 w-4" />
               ) : (

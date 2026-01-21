@@ -238,7 +238,7 @@ export default function LandingPageContentEditor() {
               <SelectItem value="ES">Español</SelectItem>
             </SelectContent>
           </Select>
-          <Button onClick={handleSave} disabled={updateMutation.isPending}>
+          <Button type="button" onClick={handleSave} disabled={updateMutation.isPending}>
             <Save className="mr-2 h-4 w-4" />
             Save Changes
           </Button>
@@ -386,7 +386,7 @@ export default function LandingPageContentEditor() {
                   <CardTitle>Features Section</CardTitle>
                   <CardDescription>Highlight key platform features</CardDescription>
                 </div>
-                <Button onClick={addFeature} size="sm">
+                <Button type="button" onClick={addFeature} size="sm">
                   <Plus className="mr-2 h-4 w-4" />
                   Add Feature
                 </Button>
@@ -480,7 +480,7 @@ export default function LandingPageContentEditor() {
                   <CardTitle>Testimonials</CardTitle>
                   <CardDescription>Customer reviews and feedback</CardDescription>
                 </div>
-                <Button onClick={addTestimonial} size="sm">
+                <Button type="button" onClick={addTestimonial} size="sm">
                   <Plus className="mr-2 h-4 w-4" />
                   Add Testimonial
                 </Button>
@@ -594,7 +594,7 @@ export default function LandingPageContentEditor() {
                   <CardTitle>Frequently Asked Questions</CardTitle>
                   <CardDescription>Answer common customer questions</CardDescription>
                 </div>
-                <Button onClick={addFaq} size="sm">
+                <Button type="button" onClick={addFaq} size="sm">
                   <Plus className="mr-2 h-4 w-4" />
                   Add FAQ
                 </Button>

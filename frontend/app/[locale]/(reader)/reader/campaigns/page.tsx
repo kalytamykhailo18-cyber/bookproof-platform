@@ -179,9 +179,7 @@ export default function CampaignsPage() {
 
   // Redirect to profile creation if no profile
   if (!isLoadingProfile && !profile) {
-    if (typeof window !== 'undefined') {
-      window.location.href = `/${locale}/reader/profile`;
-    }
+    router.push(`/${locale}/reader/profile`);
     return null;
   }
 

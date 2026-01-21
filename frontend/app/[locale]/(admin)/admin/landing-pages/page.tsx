@@ -156,7 +156,7 @@ function AnalyticsTabContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{t('analytics.title')}</h3>
-        <Button variant="outline" size="sm" onClick={() => refetch()}>
+        <Button type="button" variant="outline" size="sm" onClick={() => refetch()}>
           <RefreshCw className="mr-2 h-4 w-4" />
           {t('analytics.refresh')}
         </Button>
@@ -321,11 +321,12 @@ function LeadsTabContent() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => refetch()}>
+          <Button type="button" variant="outline" size="sm" onClick={() => refetch()}>
             <RefreshCw className="mr-2 h-4 w-4" />
             {t('analytics.refresh')}
           </Button>
           <Button
+            type="button"
             variant="outline"
             size="sm"
             onClick={() => handleExport('csv')}
@@ -531,7 +532,7 @@ function CtaSettingsTabContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{t('settings.title')}</h3>
-        <Button variant="outline" size="sm" onClick={() => refetch()}>
+        <Button type="button" variant="outline" size="sm" onClick={() => refetch()}>
           <RefreshCw className="mr-2 h-4 w-4" />
           {t('analytics.refresh')}
         </Button>
@@ -770,7 +771,7 @@ export default function AdminLandingPagesPage() {
                         Changes are saved per language and can be previewed before publishing.
                       </p>
                       <div className="flex gap-2">
-                        <Button onClick={() => router.push(`/${locale}/admin/landing-pages/content`)}>
+                        <Button type="button" onClick={() => router.push(`/${locale}/admin/landing-pages/content`)}>
                           <FileEdit className="mr-2 h-4 w-4" />
                           Open Content Editor
                         </Button>

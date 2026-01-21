@@ -62,7 +62,7 @@ export default function KeywordResearchListPage() {
           <h1 className="text-3xl font-bold">{t('list.title')}</h1>
           <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <Button onClick={() => router.push(`/${locale}/author/keyword-research/new`)}>
+        <Button type="button" onClick={() => router.push(`/${locale}/author/keyword-research/new`)}>
           <Plus className="mr-2 h-4 w-4" />
           {t('createNew')}
         </Button>
@@ -100,7 +100,7 @@ export default function KeywordResearchListPage() {
               <FileText className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="mb-2 text-lg font-semibold">{t('list.empty')}</h3>
               <p className="mb-6 text-muted-foreground">{t('list.emptyDescription')}</p>
-              <Button onClick={() => router.push(`/${locale}/author/keyword-research/new`)}>
+              <Button type="button" onClick={() => router.push(`/${locale}/author/keyword-research/new`)}>
                 <Plus className="mr-2 h-4 w-4" />
                 {t('createNew')}
               </Button>

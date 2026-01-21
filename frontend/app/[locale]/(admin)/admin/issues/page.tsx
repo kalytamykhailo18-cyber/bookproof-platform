@@ -503,10 +503,10 @@ export default function AdminIssuesPage() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setResolveDialogOpen(false)}>
+            <Button type="button" variant="outline" onClick={() => setResolveDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleResolve} disabled={isResolvingIssue || !resolutionText.trim()}>
+            <Button type="button" onClick={handleResolve} disabled={isResolvingIssue || !resolutionText.trim()}>
               {isResolvingIssue ? 'Resolving...' : 'Resolve Issue'}
             </Button>
           </DialogFooter>

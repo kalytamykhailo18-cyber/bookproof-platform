@@ -180,7 +180,7 @@ export default function AdminCampaignDetailPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button variant="ghost" className="mb-4" onClick={() => router.push(`/${locale}/admin/campaigns`)}>
+        <Button type="button" variant="ghost" className="mb-4" onClick={() => router.push(`/${locale}/admin/campaigns`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToCampaigns')}
         </Button>
@@ -282,7 +282,7 @@ export default function AdminCampaignDetailPage() {
                 </DialogContent>
               </Dialog>
             ) : null}
-            <Button variant="outline" onClick={() => router.push(`/${locale}/admin/campaigns/${campaignId}/controls`)}>
+            <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/admin/campaigns/${campaignId}/controls`)}>
               <Settings className="mr-2 h-4 w-4" />
               {t('actions.controls')}
             </Button>

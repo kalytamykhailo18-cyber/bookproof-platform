@@ -97,7 +97,7 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
           <CardContent className="py-16 text-center">
             <AlertCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="mb-2 text-lg font-semibold">{t('notFound.title')}</h3>
-            <Button className="mt-4" onClick={() => router.push(`/${locale}/reader`)}>
+            <Button type="button" className="mt-4" onClick={() => router.push(`/${locale}/reader`)}>
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -110,7 +110,7 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
   if (review) {
     return (
       <div className="container mx-auto space-y-6 p-6">
-        <Button variant="ghost" className="animate-fade-right" onClick={() => router.push(`/${locale}/reader/assignments/${assignmentId}`)}>
+        <Button type="button" variant="ghost" className="animate-fade-right" onClick={() => router.push(`/${locale}/reader/assignments/${assignmentId}`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToAssignment')}
         </Button>
@@ -125,10 +125,10 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
               {t('success.description')}
             </p>
             <div className="flex justify-center gap-2">
-              <Button onClick={() => router.push(`/${locale}/reader`)}>
+              <Button type="button" onClick={() => router.push(`/${locale}/reader`)}>
                 {t('backToDashboard')}
               </Button>
-              <Button variant="outline" onClick={() => router.push(`/${locale}/reader/profile`)}>
+              <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/reader/profile`)}>
                 {t('viewWallet')}
               </Button>
             </div>
@@ -142,7 +142,7 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button variant="ghost" className="mb-4" onClick={() => router.push(`/${locale}/reader/assignments/${assignmentId}`)}>
+        <Button type="button" variant="ghost" className="mb-4" onClick={() => router.push(`/${locale}/reader/assignments/${assignmentId}`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToAssignment')}
         </Button>

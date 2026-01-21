@@ -36,12 +36,13 @@ export default function Forbidden() {
 
         {/* Navigation Options */}
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-          <Button size="lg" className="gap-2" onClick={() => router.push('/')}>
+          <Button type="button" size="lg" className="gap-2" onClick={() => router.push('/')}>
             <Home className="h-4 w-4" />
             Go to Dashboard
           </Button>
 
           <Button
+            type="button"
             variant="outline"
             size="lg"
             className="gap-2"

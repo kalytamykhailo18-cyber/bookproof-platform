@@ -96,6 +96,7 @@ export default function CompletePayoutDialog({
 
         <DialogFooter>
           <Button
+            type="button"
             variant="outline"
             onClick={() => {
               setTransactionId('');
@@ -107,7 +108,7 @@ export default function CompletePayoutDialog({
           >
             {t('complete.cancelButton')}
           </Button>
-          <Button onClick={handleComplete} disabled={isPending || transactionId.trim().length < 5}>
+          <Button type="button" onClick={handleComplete} disabled={isPending || transactionId.trim().length < 5}>
             {isPending ? t('complete.confirming') : t('complete.confirmButton')}
           </Button>
         </DialogFooter>

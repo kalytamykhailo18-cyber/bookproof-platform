@@ -152,7 +152,7 @@ export default function ReaderProfilePage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button variant="ghost" size="sm" onClick={() => router.push(`/${locale}/reader`)}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/${locale}/reader`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToDashboard')}
         </Button>
@@ -165,7 +165,7 @@ export default function ReaderProfilePage() {
           <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
         {hasProfile && !isEditing && (
-          <Button onClick={() => setIsEditing(true)} className="animate-fade-left">
+          <Button type="button" onClick={() => setIsEditing(true)} className="animate-fade-left">
             {t('editProfile')}
           </Button>
         )}
@@ -237,7 +237,7 @@ export default function ReaderProfilePage() {
               {/* Save Button */}
               {isEditing && (
                 <div className="animate-fade-up-medium-slow flex gap-2 pt-4">
-                  <Button onClick={handleSave} disabled={isSaving}>
+                  <Button type="button" onClick={handleSave} disabled={isSaving}>
                     {isSaving ? (
                       t('actions.saving')
                     ) : (
@@ -249,6 +249,7 @@ export default function ReaderProfilePage() {
                   </Button>
                   {hasProfile && (
                     <Button
+                      type="button"
                       variant="outline"
                       onClick={() => {
                         setIsEditing(false);
@@ -290,12 +291,15 @@ export default function ReaderProfilePage() {
                         ) : (
                           <AlertCircle className="h-4 w-4 flex-shrink-0 text-yellow-500" />
                         )}
-                        <span
-                          className="cursor-pointer truncate text-sm hover:underline"
+                        <Button
+                          type="button"
+                          variant="link"
+                          size="sm"
+                          className="h-auto truncate p-0 text-sm"
                           onClick={() => window.open(amazonProfile.profileUrl, '_blank', 'noopener,noreferrer')}
                         >
                           {amazonProfile.profileUrl}
-                        </span>
+                        </Button>
                       </div>
                       <p className="ml-6 text-xs text-muted-foreground">
                         {amazonProfile.isVerified
@@ -304,6 +308,7 @@ export default function ReaderProfilePage() {
                       </p>
                     </div>
                     <Button
+                      type="button"
                       variant="ghost"
                       size="icon"
                       onClick={() => handleRemoveAmazonProfile(amazonProfile.id)}
@@ -333,6 +338,7 @@ export default function ReaderProfilePage() {
                         }}
                       />
                       <Button
+                        type="button"
                         onClick={handleAddAmazonProfile}
                         disabled={isAddingAmazonProfile || !newAmazonProfile.trim()}
                       >
@@ -430,7 +436,7 @@ export default function ReaderProfilePage() {
                 {/* Payout Request Button */}
                 {profile.walletBalance > 0 && (
                   <div className="pt-4">
-                    <Button className="w-full" onClick={() => router.push(`/${locale}/reader/wallet`)}>
+                    <Button type="button" className="w-full" onClick={() => router.push(`/${locale}/reader/wallet`)}>
                       <TrendingUp className="mr-2 h-4 w-4" />
                       Request Payout
                     </Button>
