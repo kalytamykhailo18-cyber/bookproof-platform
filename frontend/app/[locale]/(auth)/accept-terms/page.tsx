@@ -165,6 +165,7 @@ export default function AcceptTermsPage() {
 
       <CardFooter className="flex flex-col space-y-3">
         <Button
+          type="button"
           onClick={handleAcceptTerms}
           className="w-full"
           disabled={!termsAccepted || acceptTermsMutation.isPending}
@@ -175,6 +176,7 @@ export default function AcceptTermsPage() {
         </Button>
 
         <Button
+          type="button"
           variant="ghost"
           onClick={logout}
           className="w-full text-muted-foreground"

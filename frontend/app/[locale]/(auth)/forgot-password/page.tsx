@@ -76,6 +76,7 @@ export default function ForgotPasswordPage() {
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
           <Button
+            type="button"
             variant="outline"
             className="w-full"
             onClick={() => router.push(`/${locale}/login`)}
