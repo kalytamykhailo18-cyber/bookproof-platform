@@ -32,6 +32,7 @@ import {
   Gift,
   BookMarked,
   Wallet,
+  Loader2,
 } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -61,6 +62,12 @@ type LeadFormData = z.infer<typeof leadFormSchema>;
 function Header({ locale }: { locale: string }) {
   const t = useTranslations();
   const router = useRouter();
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
+
+  const handleLoginClick = () => {
+    setIsLoginLoading(true);
+    router.push(`/${locale}/login`);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -72,8 +79,8 @@ function Header({ locale }: { locale: string }) {
         </div>
         <div className="flex items-center gap-4">
           <LanguageSelector currentLocale={locale} />
-          <Button type="button" variant="ghost" className="animate-fade-left-fast" onClick={() => router.push(`/${locale}/login`)}>
-            {t('nav.login')}
+          <Button type="button" variant="ghost" className="animate-fade-left-fast" onClick={handleLoginClick} disabled={isLoginLoading}>
+            {isLoginLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('nav.login')}
           </Button>
           <Button type="button" className="animate-fade-left" onClick={() => router.push(`/${locale}/register`)}>
             {t('nav.signup')}
