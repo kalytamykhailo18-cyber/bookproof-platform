@@ -19,7 +19,7 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
   const t = useTranslations('reviews.submit');
   const assignmentId = params.id;
   const { assignment, isLoading: isLoadingAssignment } = useAssignment(assignmentId);
-  const { review, isLoadingReview, submitReview, isSubmitting } = useReviewSubmission(assignmentId);
+  const { review, isLoadingReview, submitReview, isSubmitting, isSubmitSuccess } = useReviewSubmission(assignmentId);
   const router = useRouter();
   const routeParams = useParams();
   const locale = (routeParams.locale as string) || 'en';
@@ -33,20 +33,43 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Minimum character count for review feedback (per Milestone 4.4)
+  // Character count limits for review feedback (per Milestone 4.4)
   const MIN_FEEDBACK_CHARACTERS = 150;
+  const MAX_FEEDBACK_CHARACTERS = 2000;
+
+  // Amazon review URL pattern validation
+  // Valid patterns: amazon.com/review/..., amazon.com/gp/customer-reviews/..., amazon.co.uk/..., etc.
+  const isValidAmazonReviewUrl = (url: string): boolean => {
+    try {
+      const parsed = new URL(url);
+      // Check if host is an Amazon domain (amazon.com, amazon.co.uk, amazon.de, etc.)
+      const isAmazonDomain = /^(www\.)?amazon\.[a-z]{2,3}(\.[a-z]{2})?$/i.test(parsed.hostname);
+      // Check for review-related paths
+      const isReviewPath = /\/(review|gp\/customer-reviews|product-reviews)/i.test(parsed.pathname);
+      return isAmazonDomain && isReviewPath;
+    } catch {
+      return false;
+    }
+  };
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
     if (!amazonReviewLink.trim()) {
       newErrors.amazonReviewLink = t('errors.amazonLinkRequired');
-    } else if (!amazonReviewLink.includes('amazon.com')) {
+    } else if (!isValidAmazonReviewUrl(amazonReviewLink.trim())) {
       newErrors.amazonReviewLink = t('errors.invalidAmazonUrl');
+    }
+
+    // Validate star rating is in valid range
+    if (internalRating < 1 || internalRating > 5) {
+      newErrors.internalRating = t('errors.invalidRating');
     }
 
     if (internalFeedback.trim().length < MIN_FEEDBACK_CHARACTERS) {
       newErrors.internalFeedback = t('errors.feedbackTooShort', { minChars: MIN_FEEDBACK_CHARACTERS });
+    } else if (internalFeedback.trim().length > MAX_FEEDBACK_CHARACTERS) {
+      newErrors.internalFeedback = t('errors.feedbackTooLong', { maxChars: MAX_FEEDBACK_CHARACTERS });
     }
 
     if (!publishedOnAmazon) {
@@ -63,6 +86,18 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  // Check if form is valid for submit button state
+  const isFormValid = (): boolean => {
+    if (!amazonReviewLink.trim() || !isValidAmazonReviewUrl(amazonReviewLink.trim())) return false;
+    if (internalRating < 1 || internalRating > 5) return false;
+    if (internalFeedback.trim().length < MIN_FEEDBACK_CHARACTERS) return false;
+    if (internalFeedback.trim().length > MAX_FEEDBACK_CHARACTERS) return false;
+    if (!publishedOnAmazon) return false;
+    if (!agreedToAmazonTos) return false;
+    if (!acknowledgedGuidelines) return false;
+    return true;
   };
 
   const handleFormSubmit = () => {
@@ -106,8 +141,8 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
     );
   }
 
-  // If review already submitted, show confirmation
-  if (review) {
+  // If review already submitted or just submitted successfully, show confirmation
+  if (review || isSubmitSuccess) {
     return (
       <div className="container mx-auto space-y-6 p-6">
         <Button type="button" variant="ghost" className="animate-fade-right" onClick={() => router.push(`/${locale}/reader/assignments/${assignmentId}`)}>
@@ -229,6 +264,9 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
                   ))}
                 </div>
               </RadioGroup>
+              {errors.internalRating && (
+                <p className="text-xs text-red-500">{errors.internalRating}</p>
+              )}
               <p className="text-xs text-muted-foreground">{t('form.ratingNote')}</p>
             </div>
 
@@ -324,7 +362,7 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
               <Button
                 type="button"
                 onClick={handleFormSubmit}
-                disabled={isSubmitting}
+                disabled={isSubmitting || !isFormValid()}
                 className="flex-1"
               >
                 <Send className="mr-2 h-4 w-4" />

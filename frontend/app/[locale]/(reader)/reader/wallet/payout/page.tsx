@@ -24,8 +24,8 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// Minimum payout amount - configurable via backend (default $10 per requirements)
-const MIN_PAYOUT_AMOUNT = 10;
+// Minimum payout amount - configurable via backend (default $50 per Section 3.9 requirements)
+const MIN_PAYOUT_AMOUNT = 50;
 
 const payoutSchema = z.object({
   amount: z.number().min(MIN_PAYOUT_AMOUNT, `Minimum amount is $${MIN_PAYOUT_AMOUNT}`),
@@ -270,20 +270,32 @@ export default function RequestPayoutPage() {
             {/* Amount */}
             <div className="animate-fade-right-fast">
               <Label htmlFor="amount">{t('amount')}</Label>
-              <div className="relative mt-1.5">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                  $
-                </span>
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  min={MIN_PAYOUT_AMOUNT}
-                  max={availableBalance}
-                  {...register('amount', { valueAsNumber: true })}
-                  className="pl-8"
+              <div className="flex gap-2">
+                <div className="relative mt-1.5 flex-1">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    $
+                  </span>
+                  <Input
+                    id="amount"
+                    type="number"
+                    step="0.01"
+                    min={MIN_PAYOUT_AMOUNT}
+                    max={availableBalance}
+                    {...register('amount', { valueAsNumber: true })}
+                    className="pl-8"
+                    disabled={availableBalance < MIN_PAYOUT_AMOUNT}
+                  />
+                </div>
+                {/* Withdraw Full Balance Button */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mt-1.5 whitespace-nowrap"
+                  onClick={() => setValue('amount', availableBalance)}
                   disabled={availableBalance < MIN_PAYOUT_AMOUNT}
-                />
+                >
+                  {t('withdrawFullBalance') || 'Withdraw Full Balance'}
+                </Button>
               </div>
               {errors.amount && (
                 <p className="mt-1 text-sm text-red-500">{errors.amount.message}</p>

@@ -4,7 +4,7 @@ import { CreateReaderProfileDto } from './dto/create-reader-profile.dto';
 import { UpdateReaderProfileDto } from './dto/update-reader-profile.dto';
 import { ReaderProfileResponseDto, AmazonProfileDto } from './dto/reader-profile-response.dto';
 import { ReaderStatsResponseDto } from './dto/reader-stats-response.dto';
-import { AssignmentStatus } from '@prisma/client';
+import { AssignmentStatus, PayoutRequestStatus } from '@prisma/client';
 import { SettingsService } from '../settings/settings.service';
 
 @Injectable()
@@ -190,6 +190,22 @@ export class ReadersService {
     // Calculate completion rate
     const completionRate = readerProfile.completionRate?.toNumber() || reliabilityScore;
 
+    // Calculate pending payouts (payout requests that are pending processing)
+    const pendingPayoutsSum = await this.prisma.payoutRequest.aggregate({
+      where: {
+        readerProfileId: readerProfile.id,
+        status: {
+          in: [
+            PayoutRequestStatus.REQUESTED,
+            PayoutRequestStatus.PENDING_REVIEW,
+            PayoutRequestStatus.APPROVED,
+            PayoutRequestStatus.PROCESSING,
+          ],
+        },
+      },
+      _sum: { amount: true },
+    });
+
     return {
       totalAssignments: assignments.length,
       waitingAssignments: statusCounts.waiting,
@@ -204,6 +220,7 @@ export class ReadersService {
       pendingEarnings: pendingEarnings,
       reliabilityScore: Math.round(reliabilityScore * 100) / 100,
       completionRate: Math.round(completionRate * 100) / 100,
+      pendingPayouts: pendingPayoutsSum._sum.amount?.toNumber() || 0,
     };
   }
 

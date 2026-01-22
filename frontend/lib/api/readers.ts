@@ -69,6 +69,7 @@ export interface ReaderStats {
   pendingEarnings: number;
   reliabilityScore: number;
   completionRate: number;
+  pendingPayouts: number;
 }
 
 export const readersApi = {
