@@ -8,6 +8,9 @@ import {
   CampaignAnalyticsComparisonDto,
   AdminRevenueAnalyticsDto,
   CampaignSectionItemDto,
+  AuthorActivityFeedDto,
+  AuthorActivityType,
+  AuthorActivityItemDto,
 } from './dto/dashboard.dto';
 import { CampaignStatus, AssignmentStatus } from '@prisma/client';
 
@@ -692,6 +695,126 @@ export class DashboardService {
         newCustomersLastMonth: 0, // Stub
         growthRate: 0,
       },
+    };
+  }
+
+  /**
+   * Get author activity feed (Section 2.1)
+   * Returns last 10 activities including:
+   * - New reviews delivered (with book title, no reader info)
+   * - Campaign status changes
+   * - Credit purchases
+   * - Report generations
+   */
+  async getAuthorActivityFeed(authorProfileId: string): Promise<AuthorActivityFeedDto> {
+    const activities: AuthorActivityItemDto[] = [];
+
+    // Get author's book IDs
+    const authorBooks = await this.prisma.book.findMany({
+      where: { authorProfileId },
+      select: { id: true, title: true },
+    });
+    const bookIds = authorBooks.map((b) => b.id);
+    const bookTitleMap = new Map(authorBooks.map((b) => [b.id, b.title]));
+
+    // 1. Get recent reviews delivered (validated reviews for author's books)
+    const recentReviews = await this.prisma.review.findMany({
+      where: {
+        bookId: { in: bookIds },
+        status: 'VALIDATED',
+      },
+      select: {
+        id: true,
+        bookId: true,
+        validatedAt: true,
+        updatedAt: true,
+      },
+      orderBy: { validatedAt: 'desc' },
+      take: 20,
+    });
+
+    for (const review of recentReviews) {
+      const reviewDate = review.validatedAt || review.updatedAt;
+      activities.push({
+        id: `review-${review.id}`,
+        type: AuthorActivityType.REVIEW_DELIVERED,
+        bookTitle: bookTitleMap.get(review.bookId) || 'Unknown Book',
+        description: 'New review delivered',
+        createdAt: reviewDate.toISOString(),
+      });
+    }
+
+    // 2. Get campaign status changes from audit logs
+    const campaignStatusLogs = await this.prisma.auditLog.findMany({
+      where: {
+        entity: 'Book',
+        entityId: { in: bookIds },
+        action: { in: ['campaign.status_changed', 'campaign.activated', 'campaign.paused', 'campaign.resumed', 'campaign.completed'] },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+    });
+
+    for (const log of campaignStatusLogs) {
+      activities.push({
+        id: `status-${log.id}`,
+        type: AuthorActivityType.CAMPAIGN_STATUS_CHANGE,
+        bookTitle: log.entityId ? (bookTitleMap.get(log.entityId) || 'Unknown Book') : 'Unknown Book',
+        description: log.description || `Campaign status changed`,
+        metadata: log.changes ? (log.changes as unknown as Record<string, any>) : undefined,
+        createdAt: log.createdAt.toISOString(),
+      });
+    }
+
+    // 3. Get recent credit purchases
+    const recentPurchases = await this.prisma.creditPurchase.findMany({
+      where: {
+        authorProfileId,
+        paymentStatus: 'COMPLETED',
+      },
+      include: { packageTier: true },
+      orderBy: { purchaseDate: 'desc' },
+      take: 20,
+    });
+
+    for (const purchase of recentPurchases) {
+      activities.push({
+        id: `purchase-${purchase.id}`,
+        type: AuthorActivityType.CREDIT_PURCHASE,
+        description: `Purchased ${purchase.credits} credits (${purchase.packageTier?.name || 'Custom Package'})`,
+        metadata: {
+          credits: purchase.credits,
+          amount: parseFloat(purchase.amountPaid.toString()),
+          currency: purchase.currency,
+        },
+        createdAt: purchase.purchaseDate.toISOString(),
+      });
+    }
+
+    // 4. Get recent report generations
+    const recentReports = await this.prisma.campaignReport.findMany({
+      where: { bookId: { in: bookIds } },
+      orderBy: { generatedAt: 'desc' },
+      take: 20,
+    });
+
+    for (const report of recentReports) {
+      activities.push({
+        id: `report-${report.id}`,
+        type: AuthorActivityType.REPORT_GENERATED,
+        bookTitle: bookTitleMap.get(report.bookId) || 'Unknown Book',
+        description: 'Campaign report generated',
+        createdAt: report.generatedAt.toISOString(),
+      });
+    }
+
+    // Sort all activities by date (newest first) and take top 10
+    activities.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    const topActivities = activities.slice(0, 10);
+
+    return {
+      activities: topActivities,
+      total: activities.length,
     };
   }
 }

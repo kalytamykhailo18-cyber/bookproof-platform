@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { useCredits } from '@/hooks/useCredits';
 import { useCampaigns } from '@/hooks/useCampaigns';
+import { useDashboards } from '@/hooks/useDashboards';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,9 +16,15 @@ import {
   TrendingUp,
   Activity,
   CheckCircle2,
+  ChevronRight,
+  Star,
+  FileText,
+  RefreshCw,
+  Coins,
 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { CampaignStatus } from '@/lib/api/campaigns';
+import { AuthorActivityType } from '@/lib/api/dashboards';
 
 export default function AuthorDashboardPage() {
   const t = useTranslations('author.dashboard');
@@ -26,6 +33,8 @@ export default function AuthorDashboardPage() {
   const locale = (params.locale as string) || 'en';
   const { creditBalance, isLoadingBalance } = useCredits();
   const { campaigns, isLoadingCampaigns } = useCampaigns();
+  const { useAuthorActivityFeed } = useDashboards();
+  const { data: activityFeed, isLoading: isLoadingActivity } = useAuthorActivityFeed();
 
   // Calculate campaign statistics per requirements.md Section 2.1
   const campaignStats = useMemo(() => {
@@ -50,6 +59,22 @@ export default function AuthorDashboardPage() {
         return 'bg-red-500';
       default:
         return 'bg-gray-500';
+    }
+  };
+
+  // Get icon and color for activity type
+  const getActivityIcon = (type: AuthorActivityType) => {
+    switch (type) {
+      case AuthorActivityType.REVIEW_DELIVERED:
+        return <Star className="h-4 w-4 text-yellow-500" />;
+      case AuthorActivityType.CAMPAIGN_STATUS_CHANGE:
+        return <RefreshCw className="h-4 w-4 text-blue-500" />;
+      case AuthorActivityType.CREDIT_PURCHASE:
+        return <Coins className="h-4 w-4 text-green-500" />;
+      case AuthorActivityType.REPORT_GENERATED:
+        return <FileText className="h-4 w-4 text-purple-500" />;
+      default:
+        return <Activity className="h-4 w-4 text-gray-500" />;
     }
   };
 
@@ -197,10 +222,71 @@ export default function AuthorDashboardPage() {
         </Card>
       </div>
 
+      {/* Recent Activity Feed - Section 2.1 */}
+      <div className="mb-8 animate-fade-up">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="h-5 w-5" />
+              {t('activity.title') || 'Recent Activity'}
+            </CardTitle>
+            <CardDescription>
+              {t('activity.description') || 'Your latest updates and notifications'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoadingActivity ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin" />
+              </div>
+            ) : activityFeed?.activities && activityFeed.activities.length > 0 ? (
+              <div className="space-y-3">
+                {activityFeed.activities.map((activity) => (
+                  <div
+                    key={activity.id}
+                    className="flex items-start gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50"
+                  >
+                    <div className="mt-0.5">{getActivityIcon(activity.type)}</div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{activity.description}</p>
+                      {activity.bookTitle && (
+                        <p className="text-xs text-muted-foreground">{activity.bookTitle}</p>
+                      )}
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(activity.createdAt).toLocaleDateString(undefined, {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-8 text-center text-muted-foreground">
+                <Activity className="mx-auto mb-2 h-8 w-8" />
+                <p>{t('activity.noActivity') || 'No recent activity'}</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Campaigns List */}
       <div className="animate-fade-up-very-slow">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-semibold">{t('campaigns.title')}</h2>
+          <Button
+            type="button"
+            variant="ghost"
+            className="text-primary"
+            onClick={() => router.push(`/${locale}/author/campaigns`)}
+          >
+            {t('campaigns.viewAll') || 'View All Campaigns'}
+            <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
         </div>
 
         {isLoadingCampaigns ? (

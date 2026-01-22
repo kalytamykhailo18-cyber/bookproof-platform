@@ -344,6 +344,50 @@ export class CampaignAnalyticsComparisonDto {
 }
 
 /**
+ * Activity types for author activity feed (Section 2.1)
+ */
+export enum AuthorActivityType {
+  REVIEW_DELIVERED = 'REVIEW_DELIVERED',
+  CAMPAIGN_STATUS_CHANGE = 'CAMPAIGN_STATUS_CHANGE',
+  CREDIT_PURCHASE = 'CREDIT_PURCHASE',
+  REPORT_GENERATED = 'REPORT_GENERATED',
+}
+
+/**
+ * Single activity item for author activity feed
+ */
+export class AuthorActivityItemDto {
+  @ApiProperty({ description: 'Activity ID' })
+  id: string;
+
+  @ApiProperty({ description: 'Activity type', enum: ['REVIEW_DELIVERED', 'CAMPAIGN_STATUS_CHANGE', 'CREDIT_PURCHASE', 'REPORT_GENERATED'] })
+  type: AuthorActivityType;
+
+  @ApiPropertyOptional({ description: 'Book title (for review/campaign activities)' })
+  bookTitle?: string;
+
+  @ApiProperty({ description: 'Activity description' })
+  description: string;
+
+  @ApiPropertyOptional({ description: 'Additional metadata' })
+  metadata?: Record<string, any>;
+
+  @ApiProperty({ description: 'Activity timestamp' })
+  createdAt: string;
+}
+
+/**
+ * Response DTO for author activity feed (Section 2.1)
+ */
+export class AuthorActivityFeedDto {
+  @ApiProperty({ description: 'List of recent activities', type: [AuthorActivityItemDto] })
+  activities: AuthorActivityItemDto[];
+
+  @ApiProperty({ description: 'Total count of activities' })
+  total: number;
+}
+
+/**
  * Response DTO for admin revenue analytics
  */
 export class AdminRevenueAnalyticsDto {

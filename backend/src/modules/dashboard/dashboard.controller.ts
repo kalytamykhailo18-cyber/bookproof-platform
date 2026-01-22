@@ -14,6 +14,7 @@ import {
   ReaderPerformanceStatsDto,
   TransactionHistoryDto,
   AdminRevenueAnalyticsDto,
+  AuthorActivityFeedDto,
 } from './dto/dashboard.dto';
 
 @ApiTags('Dashboard')
@@ -61,6 +62,14 @@ export class DashboardController {
   @ApiResponse({ status: 200, description: 'Transaction history retrieved', type: TransactionHistoryDto })
   async getTransactions(@Req() req: any): Promise<TransactionHistoryDto> {
     return this.dashboardService.getTransactionHistory(req.user.authorProfileId);
+  }
+
+  @Get('author/activity')
+  @Roles('AUTHOR' as any)
+  @ApiOperation({ summary: 'Get recent activity feed for author (Section 2.1)' })
+  @ApiResponse({ status: 200, description: 'Activity feed retrieved', type: AuthorActivityFeedDto })
+  async getAuthorActivityFeed(@Req() req: any): Promise<AuthorActivityFeedDto> {
+    return this.dashboardService.getAuthorActivityFeed(req.user.authorProfileId);
   }
 
   /**

@@ -415,6 +415,7 @@ model Book {
   synopsisFileName String? // Original filename for PDF synopsis
   language         Language
   genre            String
+  secondaryGenre   String? // Optional secondary genre per Section 2.3
   category         String
   publishedDate    DateTime?
   pageCount        Int?
