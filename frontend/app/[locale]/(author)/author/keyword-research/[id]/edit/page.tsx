@@ -32,12 +32,26 @@ import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Language, TargetMarket, KeywordResearchStatus } from '@/lib/api/keywords';
 
 const formSchema = z.object({
-  bookTitle: z.string().min(2, 'Book title is required'),
+  bookTitle: z
+    .string()
+    .min(2, 'Book title is required')
+    .max(200, 'Book title must be 200 characters or less'),
+  bookSubtitle: z
+    .string()
+    .max(200, 'Subtitle must be 200 characters or less')
+    .optional(),
   genre: z.string().min(2, 'Genre is required'),
   category: z.string().min(2, 'Category is required'),
-  description: z.string().min(10, 'Description must be at least 10 characters'),
-  targetAudience: z.string().min(5, 'Target audience is required'),
+  description: z
+    .string()
+    .min(100, 'Short description must be at least 100 characters')
+    .max(500, 'Short description must be 500 characters or less'),
+  targetAudience: z
+    .string()
+    .min(50, 'Target audience description must be at least 50 characters')
+    .max(200, 'Target audience description must be 200 characters or less'),
   competingBooks: z.string().optional(),
+  specificKeywords: z.string().optional(),
   bookLanguage: z.nativeEnum(Language),
   targetMarket: z.nativeEnum(TargetMarket),
   additionalNotes: z.string().optional(),
@@ -61,11 +75,13 @@ export default function EditKeywordResearchPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       bookTitle: '',
+      bookSubtitle: '',
       genre: '',
       category: '',
       description: '',
       targetAudience: '',
       competingBooks: '',
+      specificKeywords: '',
       bookLanguage: Language.EN,
       targetMarket: TargetMarket.US,
       additionalNotes: '',
@@ -77,11 +93,13 @@ export default function EditKeywordResearchPage() {
     if (research) {
       form.reset({
         bookTitle: research.bookTitle,
+        bookSubtitle: research.bookSubtitle || '',
         genre: research.genre,
         category: research.category,
         description: research.description,
         targetAudience: research.targetAudience,
         competingBooks: research.competingBooks || '',
+        specificKeywords: research.specificKeywords || '',
         bookLanguage: research.bookLanguage,
         targetMarket: research.targetMarket,
         additionalNotes: research.additionalNotes || '',
@@ -184,6 +202,21 @@ export default function EditKeywordResearchPage() {
                       <Input placeholder={tNew('fields.bookTitle.placeholder')} {...field} />
                     </FormControl>
                     <FormDescription>{tNew('fields.bookTitle.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="bookSubtitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Subtitle (Optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter book subtitle if applicable" {...field} />
+                    </FormControl>
+                    <FormDescription>Optional subtitle, max 200 characters</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -329,6 +362,27 @@ export default function EditKeywordResearchPage() {
                       />
                     </FormControl>
                     <FormDescription>{tNew('fields.competingBooks.description')}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="specificKeywords"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Specific Keywords (Optional)</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Enter any specific keywords you want included, separated by commas"
+                        rows={3}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Any specific keywords you want us to consider including in the research
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

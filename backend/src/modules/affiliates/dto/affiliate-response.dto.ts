@@ -1,5 +1,48 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+// Chart data DTOs for Section 6.1
+export class ChartDataPointDto {
+  @ApiProperty({ description: 'Date of the data point' })
+  date: string;
+
+  @ApiProperty({ description: 'Value for the date' })
+  value: number;
+}
+
+export class AffiliateChartDataDto {
+  @ApiProperty({ type: [ChartDataPointDto], description: 'Clicks over the last 30 days' })
+  clicks: ChartDataPointDto[];
+
+  @ApiProperty({ type: [ChartDataPointDto], description: 'Conversions over the last 30 days' })
+  conversions: ChartDataPointDto[];
+}
+
+// Referred Authors DTOs for Section 6.3
+export class ReferredAuthorDto {
+  @ApiProperty({ description: 'Referral ID' })
+  id: string;
+
+  @ApiProperty({ description: 'Author identifier (partial email)' })
+  authorIdentifier: string;
+
+  @ApiProperty({ description: 'Sign-up date' })
+  signUpDate: Date;
+
+  @ApiProperty({ description: 'Total purchases by this author' })
+  totalPurchases: number;
+
+  @ApiProperty({ description: 'Total commission earned from this author' })
+  totalCommissionEarned: number;
+
+  @ApiPropertyOptional({ description: 'Last purchase date' })
+  lastPurchaseDate?: Date;
+}
+
+export class ReferredAuthorDetailDto extends ReferredAuthorDto {
+  @ApiProperty({ description: 'Purchase history (amounts only)' })
+  purchaseHistory: { amount: number; date: Date; commission: number }[];
+}
+
 export class AffiliateStatsDto {
   @ApiProperty({ description: 'Total clicks on affiliate links' })
   totalClicks: number;

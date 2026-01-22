@@ -543,28 +543,23 @@ export class CreditsService {
       );
     }
 
-    // Create keyword research order if included in purchase
-    if (includeKeywordResearch === 'true' && this.keywordsService) {
+    // Track keyword research credit if included in purchase
+    // Per Section 9.1: "After payment, prompt appears to fill form"
+    // We don't create the order here - user will be prompted on success page to fill the form
+    if (includeKeywordResearch === 'true') {
       try {
-        // Create a placeholder keyword research order that will be filled later
-        await this.keywordsService.create(
-          {
-            bookTitle: 'Pending - To be filled',
-            genre: 'To be specified',
-            category: 'To be specified',
-            description: 'Created from credit purchase. Please update with book details.',
-            targetAudience: 'To be specified',
-            bookLanguage: 'EN',
-            targetMarket: 'US',
-            additionalNotes: 'Created automatically from credit purchase upsell',
+        // Increment pending keyword research credits for this author
+        await this.prisma.authorProfile.update({
+          where: { id: authorProfileId },
+          data: {
+            pendingKeywordResearchCredits: { increment: 1 },
           },
-          authorProfileId,
-        );
-        this.logger.log(`Keyword research order created for author ${authorProfileId} from credit purchase`);
+        });
+        this.logger.log(`Pending keyword research credit added for author ${authorProfileId} from credit purchase`);
       } catch (error) {
         // Log error but don't fail the payment processing
         this.logger.error(
-          `Failed to create keyword research order for credit purchase ${creditPurchase.id}: ${error.message}`,
+          `Failed to add pending keyword research credit for credit purchase ${creditPurchase.id}: ${error.message}`,
         );
       }
     }

@@ -23,6 +23,7 @@ export enum KeywordResearchStatus {
 export interface CreateKeywordResearchDto {
   bookId?: string; // Optional for standalone purchases
   bookTitle: string;
+  bookSubtitle?: string; // Optional subtitle (max 200 chars)
   genre: string;
   category: string;
   description: string;
@@ -33,10 +34,12 @@ export interface CreateKeywordResearchDto {
   targetMarket: TargetMarket;
   additionalNotes?: string;
   couponCode?: string;
+  usePendingCredit?: boolean; // Use pending credit from credit checkout purchase
 }
 
 export interface UpdateKeywordResearchDto {
   bookTitle?: string;
+  bookSubtitle?: string; // Optional subtitle (max 200 chars)
   genre?: string;
   category?: string;
   description?: string;
@@ -64,6 +67,7 @@ export interface KeywordResearchResponseDto {
   authorProfileId: string;
   bookId?: string; // Optional for standalone purchases
   bookTitle: string;
+  bookSubtitle?: string; // Optional subtitle (max 200 chars)
   genre: string;
   category: string;
   description: string;

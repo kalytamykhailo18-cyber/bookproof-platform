@@ -52,6 +52,8 @@ export default function AdminReadersPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [contentFilter, setContentFilter] = useState<string>('all');
   const [verifiedFilter, setVerifiedFilter] = useState<string>('all');
+  const [countryFilter, setCountryFilter] = useState<string>('all');
+  const [languageFilter, setLanguageFilter] = useState<string>('all');
 
   const { data: readers, isLoading: isLoadingReaders } = useAllReaders({
     search: searchQuery || undefined,
@@ -64,10 +66,31 @@ export default function AdminReadersPage() {
 
   const { data: stats, isLoading: isLoadingStats } = useReaderStats();
 
+  // Get unique countries and languages for filter dropdowns
+  const { countries, languages } = useMemo(() => {
+    if (!readers) return { countries: [], languages: [] };
+    const countrySet = new Set<string>();
+    const languageSet = new Set<string>();
+    readers.forEach((r) => {
+      if (r.country) countrySet.add(r.country);
+      if (r.language) languageSet.add(r.language);
+    });
+    return {
+      countries: Array.from(countrySet).sort(),
+      languages: Array.from(languageSet).sort(),
+    };
+  }, [readers]);
+
   const filteredReaders = useMemo(() => {
     if (!readers) return [];
-    return readers;
-  }, [readers]);
+    return readers.filter((reader) => {
+      // Apply country filter (client-side until backend supports it)
+      if (countryFilter !== 'all' && reader.country !== countryFilter) return false;
+      // Apply language filter (client-side until backend supports it)
+      if (languageFilter !== 'all' && reader.language !== languageFilter) return false;
+      return true;
+    });
+  }, [readers, countryFilter, languageFilter]);
 
   const getStatusBadge = (reader: NonNullable<typeof readers>[number]) => {
     if (!reader.isActive) {
@@ -294,6 +317,39 @@ export default function AdminReadersPage() {
               </Select>
             </div>
           </div>
+          {/* Second row of filters: Country and Language per Section 4.4 */}
+          <div className="mt-4 flex flex-col gap-4 md:flex-row">
+            <div className="animate-fade-left-fast w-full md:w-48">
+              <Select value={countryFilter} onValueChange={setCountryFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('filters.country')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('filters.allCountries')}</SelectItem>
+                  {countries.map((country) => (
+                    <SelectItem key={country} value={country}>
+                      {country}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="animate-fade-left-light-slow w-full md:w-48">
+              <Select value={languageFilter} onValueChange={setLanguageFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('filters.language')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('filters.allLanguages')}</SelectItem>
+                  {languages.map((language) => (
+                    <SelectItem key={language} value={language}>
+                      {language}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -318,6 +374,8 @@ export default function AdminReadersPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t('table.reader')}</TableHead>
+                  <TableHead>{t('table.country')}</TableHead>
+                  <TableHead>{t('table.language')}</TableHead>
                   <TableHead>{t('table.status')}</TableHead>
                   <TableHead>{t('table.preference')}</TableHead>
                   <TableHead>{t('table.amazon')}</TableHead>
@@ -338,6 +396,12 @@ export default function AdminReadersPage() {
                         <div className="font-medium">{reader.name}</div>
                         <div className="text-sm text-muted-foreground">{reader.email}</div>
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm">{reader.country || '-'}</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm">{reader.language || '-'}</span>
                     </TableCell>
                     <TableCell>{getStatusBadge(reader)}</TableCell>
                     <TableCell>{getContentPreferenceBadge(reader.contentPreference)}</TableCell>

@@ -3,6 +3,7 @@ import {
   IsNumber,
   IsEmail,
   IsOptional,
+  IsBoolean,
   Min,
   MinLength,
   IsEnum,
@@ -76,6 +77,22 @@ export class CreateCustomPackageDto {
   @IsString()
   @IsOptional()
   clientCompany?: string;
+
+  @ApiPropertyOptional({ example: '+1-555-123-4567', description: 'Client phone number' })
+  @IsString()
+  @IsOptional()
+  clientPhone?: string;
+
+  @ApiPropertyOptional({ example: true, description: 'Include keyword research credits' })
+  @IsBoolean()
+  @IsOptional()
+  includeKeywordResearch?: boolean;
+
+  @ApiPropertyOptional({ example: 5, description: 'Number of keyword research credits to include' })
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  keywordResearchCredits?: number;
 }
 
 // ============================================
@@ -142,6 +159,22 @@ export class UpdateCustomPackageDto {
   @IsString()
   @IsOptional()
   clientCompany?: string;
+
+  @ApiPropertyOptional({ example: '+1-555-123-4567', description: 'Client phone number' })
+  @IsString()
+  @IsOptional()
+  clientPhone?: string;
+
+  @ApiPropertyOptional({ example: true, description: 'Include keyword research credits' })
+  @IsBoolean()
+  @IsOptional()
+  includeKeywordResearch?: boolean;
+
+  @ApiPropertyOptional({ example: 5, description: 'Number of keyword research credits to include' })
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  keywordResearchCredits?: number;
 }
 
 // ============================================
@@ -149,11 +182,11 @@ export class UpdateCustomPackageDto {
 // ============================================
 
 export class SendPackageDto {
-  @ApiPropertyOptional({ example: 7, description: 'Days until payment link expires' })
+  @ApiPropertyOptional({ example: 30, description: 'Days until payment link expires (default: 30, max: 30)' })
   @IsNumber()
   @Min(1)
   @IsOptional()
-  expirationDays?: number;
+  expirationDays?: number; // Default is 30 days per Section 5.3 requirements
 
   @ApiPropertyOptional({
     example: 'Please review and complete payment at your earliest convenience',
@@ -236,6 +269,15 @@ export class CustomPackageResponseDto {
   @ApiPropertyOptional({ description: 'Client company' })
   clientCompany?: string;
 
+  @ApiPropertyOptional({ description: 'Client phone number' })
+  clientPhone?: string;
+
+  @ApiProperty({ description: 'Include keyword research credits' })
+  includeKeywordResearch: boolean;
+
+  @ApiProperty({ description: 'Number of keyword research credits included' })
+  keywordResearchCredits: number;
+
   @ApiProperty({ enum: CustomPackageStatus, description: 'Package status' })
   status: CustomPackageStatus;
 
@@ -269,6 +311,15 @@ export class CustomPackageResponseDto {
 
   @ApiProperty({ description: 'Number of times viewed' })
   viewCount: number;
+
+  @ApiPropertyOptional({ description: 'When payment was completed' })
+  paidAt?: Date;
+
+  @ApiPropertyOptional({ description: 'Stripe payment/transaction ID' })
+  stripePaymentId?: string;
+
+  @ApiPropertyOptional({ description: 'Whether client account was created after payment' })
+  accountCreated?: boolean;
 
   @ApiProperty({ description: 'Created date' })
   createdAt: Date;

@@ -104,6 +104,9 @@ export class PaymentsController {
             // Check if this is a custom package payment
             if (session.metadata?.type === 'custom_package') {
               await this.stripePaymentsService.handleCustomPackagePaymentSuccess(session.id);
+            } else if (session.metadata?.type === 'keyword_research') {
+              // Keyword research payments are handled by paymentsService.handleWebhook above
+              // Skip processing here to avoid duplicate handling
             } else {
               // Standard package purchase
               await this.stripePaymentsService.handlePaymentSuccess(session.id);

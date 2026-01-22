@@ -29,6 +29,9 @@ import {
   AffiliateProfileResponseDto,
   AffiliateListItemDto,
   AffiliateStatsDto,
+  AffiliateChartDataDto,
+  ReferredAuthorDto,
+  ReferredAuthorDetailDto,
   CommissionResponseDto,
   PayoutResponseDto,
 } from './dto';
@@ -143,6 +146,64 @@ export class AffiliatesController {
   })
   async getStats(@GetUser('affiliateProfileId') affiliateProfileId: string): Promise<AffiliateStatsDto> {
     return this.affiliatesService.getStats(affiliateProfileId);
+  }
+
+  /**
+   * Get chart data (clicks and conversions over last 30 days) - Section 6.1
+   */
+  @Get('chart-data')
+  @Roles(UserRole.AFFILIATE)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get clicks and conversions chart data for last 30 days' })
+  @ApiResponse({
+    status: 200,
+    description: 'Chart data',
+    type: AffiliateChartDataDto,
+  })
+  async getChartData(
+    @GetUser('affiliateProfileId') affiliateProfileId: string,
+  ): Promise<AffiliateChartDataDto> {
+    return this.affiliatesService.getChartData(affiliateProfileId);
+  }
+
+  /**
+   * Get referred authors list - Section 6.3
+   */
+  @Get('referred-authors')
+  @Roles(UserRole.AFFILIATE)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get list of referred authors' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of referred authors',
+    type: [ReferredAuthorDto],
+  })
+  async getReferredAuthors(
+    @GetUser('affiliateProfileId') affiliateProfileId: string,
+  ): Promise<ReferredAuthorDto[]> {
+    return this.affiliatesService.getReferredAuthors(affiliateProfileId);
+  }
+
+  /**
+   * Get referred author detail with purchase history - Section 6.3
+   */
+  @Get('referred-authors/:id')
+  @Roles(UserRole.AFFILIATE)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get referred author detail with purchase history' })
+  @ApiResponse({
+    status: 200,
+    description: 'Referred author detail',
+    type: ReferredAuthorDetailDto,
+  })
+  async getReferredAuthorDetail(
+    @GetUser('affiliateProfileId') affiliateProfileId: string,
+    @Param('id') referralId: string,
+  ): Promise<ReferredAuthorDetailDto> {
+    return this.affiliatesService.getReferredAuthorDetail(affiliateProfileId, referralId);
   }
 
   /**

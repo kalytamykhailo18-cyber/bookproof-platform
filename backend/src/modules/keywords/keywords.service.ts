@@ -101,9 +101,32 @@ export class KeywordsService {
     // Get current price from settings
     const keywordResearchPrice = await this.getKeywordResearchPrice();
 
-    // Calculate price (can be 0 if coupon provides free addon)
+    // Calculate price (can be 0 if coupon provides free addon or using pending credit)
     let finalPrice = keywordResearchPrice;
     let couponId: string | undefined;
+    let usedPendingCredit = false;
+
+    // Check if using pending credit from credit checkout purchase (Section 9.1)
+    if (dto.usePendingCredit) {
+      const authorProfile = await this.prisma.authorProfile.findUnique({
+        where: { id: authorProfileId },
+      });
+
+      if (authorProfile && authorProfile.pendingKeywordResearchCredits > 0) {
+        // Decrement pending credit and mark as free
+        await this.prisma.authorProfile.update({
+          where: { id: authorProfileId },
+          data: {
+            pendingKeywordResearchCredits: { decrement: 1 },
+          },
+        });
+        finalPrice = 0;
+        usedPendingCredit = true;
+        this.logger.log(`Used pending keyword research credit for author ${authorProfileId}`);
+      } else {
+        throw new BadRequestException('No pending keyword research credits available');
+      }
+    }
 
     // Validate and apply coupon if provided
     if (dto.couponCode) {
@@ -142,6 +165,7 @@ export class KeywordsService {
         authorProfileId,
         bookId: dto.bookId || null, // null for standalone purchases
         bookTitle: dto.bookTitle,
+        bookSubtitle: dto.bookSubtitle, // Optional subtitle (max 200 chars)
         genre: dto.genre,
         category: dto.category,
         description: dto.description,
@@ -305,6 +329,7 @@ export class KeywordsService {
       where: { id },
       data: {
         ...(dto.bookTitle && { bookTitle: dto.bookTitle }),
+        ...(dto.bookSubtitle !== undefined && { bookSubtitle: dto.bookSubtitle }),
         ...(dto.genre && { genre: dto.genre }),
         ...(dto.category && { category: dto.category }),
         ...(dto.description && { description: dto.description }),
@@ -409,6 +434,7 @@ export class KeywordsService {
       // Generate keywords using AI
       const keywords = await this.keywordAiService.generateKeywords({
         bookTitle: research.bookTitle,
+        bookSubtitle: research.bookSubtitle || undefined,
         genre: research.genre,
         category: research.category,
         description: research.description,
@@ -435,6 +461,7 @@ export class KeywordsService {
       // Generate PDF
       const pdfBuffer = await this.keywordPdfService.generatePdf({
         bookTitle: research.bookTitle,
+        bookSubtitle: research.bookSubtitle || undefined,
         genre: research.genre,
         category: research.category,
         language: research.bookLanguage,
@@ -697,6 +724,7 @@ export class KeywordsService {
       authorProfileId: research.authorProfileId,
       bookId: research.bookId || undefined, // undefined for standalone purchases
       bookTitle: research.bookTitle,
+      bookSubtitle: research.bookSubtitle || undefined,
       genre: research.genre,
       category: research.category,
       description: research.description,

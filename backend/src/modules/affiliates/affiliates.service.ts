@@ -17,6 +17,10 @@ import {
   AffiliateProfileResponseDto,
   AffiliateListItemDto,
   AffiliateStatsDto,
+  AffiliateChartDataDto,
+  ChartDataPointDto,
+  ReferredAuthorDto,
+  ReferredAuthorDetailDto,
 } from './dto';
 import { randomBytes } from 'crypto';
 import { UserRole, EmailType } from '@prisma/client';
@@ -373,6 +377,211 @@ export class AffiliatesService {
       };
     } catch (error) {
       this.logger.error(`Error getting affiliate stats: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Get chart data (clicks and conversions over last 30 days) - Section 6.1
+   */
+  async getChartData(affiliateProfileId: string): Promise<AffiliateChartDataDto> {
+    try {
+      const profile = await this.prisma.affiliateProfile.findUnique({
+        where: { id: affiliateProfileId },
+      });
+
+      if (!profile) {
+        throw new NotFoundException('Affiliate profile not found');
+      }
+
+      // Get last 30 days
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      // Get clicks grouped by day
+      const clicks = await this.prisma.affiliateClick.groupBy({
+        by: ['clickedAt'],
+        where: {
+          affiliateProfileId,
+          clickedAt: { gte: thirtyDaysAgo },
+        },
+        _count: { id: true },
+      });
+
+      // Get conversions (sign-ups) grouped by day
+      const conversions = await this.prisma.affiliateReferral.groupBy({
+        by: ['convertedAt'],
+        where: {
+          affiliateProfileId,
+          convertedAt: { gte: thirtyDaysAgo },
+        },
+        _count: { id: true },
+      });
+
+      // Create date range for last 30 days
+      const clicksData: ChartDataPointDto[] = [];
+      const conversionsData: ChartDataPointDto[] = [];
+
+      for (let i = 29; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toISOString().split('T')[0];
+
+        // Find clicks for this date
+        const clickCount = clicks
+          .filter((c) => c.clickedAt?.toISOString().split('T')[0] === dateStr)
+          .reduce((sum, c) => sum + c._count.id, 0);
+
+        // Find conversions for this date
+        const conversionCount = conversions
+          .filter((c) => c.convertedAt?.toISOString().split('T')[0] === dateStr)
+          .reduce((sum, c) => sum + c._count.id, 0);
+
+        clicksData.push({ date: dateStr, value: clickCount });
+        conversionsData.push({ date: dateStr, value: conversionCount });
+      }
+
+      return {
+        clicks: clicksData,
+        conversions: conversionsData,
+      };
+    } catch (error) {
+      this.logger.error(`Error getting chart data: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Get referred authors list - Section 6.3
+   */
+  async getReferredAuthors(affiliateProfileId: string): Promise<ReferredAuthorDto[]> {
+    try {
+      const referrals = await this.prisma.affiliateReferral.findMany({
+        where: { affiliateProfileId },
+        include: {
+          referredAuthor: {
+            include: {
+              user: { select: { email: true } },
+            },
+          },
+        },
+        orderBy: { convertedAt: 'desc' },
+      });
+
+      const result: ReferredAuthorDto[] = [];
+
+      for (const referral of referrals) {
+        // Get commissions for this referral
+        const commissions = await this.prisma.affiliateCommission.findMany({
+          where: {
+            affiliateProfileId,
+            referredAuthorId: referral.referredAuthorId,
+          },
+          orderBy: { createdAt: 'desc' },
+        });
+
+        const totalCommissionEarned = commissions.reduce(
+          (sum, c) => sum + parseFloat(c.commissionAmount.toString()),
+          0,
+        );
+        const totalPurchases = commissions.length;
+        const lastPurchaseDate =
+          commissions.length > 0 ? commissions[0].createdAt : undefined;
+
+        // Mask email for privacy (show first 3 chars + *** + domain)
+        const email = referral.referredAuthor?.user?.email || 'unknown';
+        const [localPart, domain] = email.split('@');
+        const maskedEmail =
+          localPart.length > 3
+            ? `${localPart.substring(0, 3)}***@${domain}`
+            : `${localPart}***@${domain}`;
+
+        result.push({
+          id: referral.id,
+          authorIdentifier: maskedEmail,
+          signUpDate: referral.convertedAt || referral.createdAt,
+          totalPurchases,
+          totalCommissionEarned,
+          lastPurchaseDate,
+        });
+      }
+
+      return result;
+    } catch (error) {
+      this.logger.error(`Error getting referred authors: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Get referred author detail with purchase history - Section 6.3
+   */
+  async getReferredAuthorDetail(
+    affiliateProfileId: string,
+    referralId: string,
+  ): Promise<ReferredAuthorDetailDto> {
+    try {
+      const referral = await this.prisma.affiliateReferral.findFirst({
+        where: {
+          id: referralId,
+          affiliateProfileId,
+        },
+        include: {
+          referredAuthor: {
+            include: {
+              user: { select: { email: true } },
+            },
+          },
+        },
+      });
+
+      if (!referral) {
+        throw new NotFoundException('Referral not found');
+      }
+
+      // Get commissions for this referral
+      const commissions = await this.prisma.affiliateCommission.findMany({
+        where: {
+          affiliateProfileId,
+          referredAuthorId: referral.referredAuthorId,
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      const totalCommissionEarned = commissions.reduce(
+        (sum, c) => sum + parseFloat(c.commissionAmount.toString()),
+        0,
+      );
+      const totalPurchases = commissions.length;
+      const lastPurchaseDate =
+        commissions.length > 0 ? commissions[0].createdAt : undefined;
+
+      // Mask email for privacy
+      const email = referral.referredAuthor?.user?.email || 'unknown';
+      const [localPart, domain] = email.split('@');
+      const maskedEmail =
+        localPart.length > 3
+          ? `${localPart.substring(0, 3)}***@${domain}`
+          : `${localPart}***@${domain}`;
+
+      // Purchase history (amounts only, no details per requirements)
+      const purchaseHistory = commissions.map((c) => ({
+        amount: parseFloat(c.purchaseAmount.toString()),
+        date: c.createdAt,
+        commission: parseFloat(c.commissionAmount.toString()),
+      }));
+
+      return {
+        id: referral.id,
+        authorIdentifier: maskedEmail,
+        signUpDate: referral.convertedAt || referral.createdAt,
+        totalPurchases,
+        totalCommissionEarned,
+        lastPurchaseDate,
+        purchaseHistory,
+      };
+    } catch (error) {
+      this.logger.error(`Error getting referred author detail: ${error.message}`, error.stack);
       throw error;
     }
   }

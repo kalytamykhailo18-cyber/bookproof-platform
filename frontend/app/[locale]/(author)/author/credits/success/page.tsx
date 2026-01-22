@@ -5,15 +5,20 @@ import { useTranslations } from 'next-intl';
 import { useCredits } from '@/hooks/useCredits';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2 } from 'lucide-react';
-import { useRouter, useParams } from 'next/navigation';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { CheckCircle2, Search, Sparkles } from 'lucide-react';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 
 export default function CreditPurchaseSuccessPage() {
   const t = useTranslations('author.credits.success');
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const locale = (params.locale as string) || 'en';
   const { refetchBalance } = useCredits();
+
+  // Check if keyword research was included in purchase (Section 9.1)
+  const includeKeywordResearch = searchParams.get('includeKeywordResearch') === 'true';
 
   useEffect(() => {
     // Refetch credit balance after successful purchase
@@ -31,6 +36,30 @@ export default function CreditPurchaseSuccessPage() {
         </CardHeader>
         <CardContent className="space-y-6 text-center">
           <p className="animate-fade-up-slow text-muted-foreground">{t('message')}</p>
+
+          {/* Per Section 9.1: After payment, prompt appears to fill keyword research form */}
+          {includeKeywordResearch && (
+            <Alert className="animate-fade-up border-primary bg-primary/10 text-left">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <AlertDescription className="ml-2">
+                <p className="font-semibold text-primary">Keyword Research Purchased!</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Complete your keyword research order by filling in your book details. This will
+                  generate a professional PDF report with optimized Amazon keywords.
+                </p>
+                <Button
+                  type="button"
+                  className="mt-3"
+                  onClick={() =>
+                    router.push(`/${locale}/author/keyword-research/new?fromCreditPurchase=true`)
+                  }
+                >
+                  <Search className="mr-2 h-4 w-4" />
+                  Fill Keyword Research Form
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
 
           <div className="animate-fade-up-very-slow rounded-md bg-muted p-4">
             <p className="text-sm">{t('info')}</p>

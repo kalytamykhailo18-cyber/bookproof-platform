@@ -69,7 +69,10 @@ export function useCredits() {
     couponCode?: string,
     includeKeywordResearch?: boolean
   ) => {
-    const successUrl = `${window.location.origin}/${locale}/author/credits/success`;
+    // Per Section 9.1: Include flag in success URL so user is prompted to fill keyword research form
+    const successUrl = includeKeywordResearch
+      ? `${window.location.origin}/${locale}/author/credits/success?includeKeywordResearch=true`
+      : `${window.location.origin}/${locale}/author/credits/success`;
     const cancelUrl = `${window.location.origin}/${locale}/author/credits/cancel`;
 
     createCheckoutMutation.mutate({
