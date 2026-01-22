@@ -68,9 +68,10 @@ const campaignSchema = z.object({
     .max(7500, 'Synopsis must not exceed 7500 characters (approximately 3 pages)'),
   language: z.nativeEnum(Language),
   genre: z.string().min(1, 'Genre is required').max(100),
+  secondaryGenre: z.string().max(100).optional().nullable(), // Optional per Section 2.3
   category: z.string().min(1, 'Category is required').max(100),
   availableFormats: z.nativeEnum(BookFormat),
-  targetReviews: z.number().min(25, 'Minimum 25 reviews').max(1000, 'Maximum 1000 reviews'),
+  targetReviews: z.number().min(10, 'Minimum 10 reviews required').max(1000, 'Maximum 1000 reviews'),
   amazonCouponCode: z.string().max(50).optional().nullable(),
   requireVerifiedPurchase: z.boolean().optional(),
   pageCount: z.number().min(1).optional().nullable(),
@@ -165,6 +166,7 @@ export default function EditCampaignPage() {
     const cleanData = {
       ...data,
       amazonCouponCode: data.amazonCouponCode || undefined,
+      secondaryGenre: data.secondaryGenre || undefined, // Optional per Section 2.3
       pageCount: data.pageCount || undefined,
       wordCount: data.wordCount || undefined,
       seriesName: data.seriesName || undefined,
@@ -362,9 +364,9 @@ export default function EditCampaignPage() {
             {/* Step 2: Book Details */}
             {currentStep === 'details' && (
               <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   <div className="animate-fade-up">
-                    <Label htmlFor="genre">{tNew('details.genre')}</Label>
+                    <Label htmlFor="genre">{tNew('details.genre') || 'Primary Genre'}</Label>
                     <Input
                       id="genre"
                       {...register('genre')}
@@ -372,6 +374,18 @@ export default function EditCampaignPage() {
                     />
                     {errors.genre && (
                       <p className="mt-1 text-sm text-red-500">{errors.genre.message}</p>
+                    )}
+                  </div>
+
+                  <div className="animate-fade-up">
+                    <Label htmlFor="secondaryGenre">{tNew('details.secondaryGenre') || 'Secondary Genre'}</Label>
+                    <Input
+                      id="secondaryGenre"
+                      {...register('secondaryGenre')}
+                      placeholder={tNew('details.secondaryGenrePlaceholder') || 'Optional secondary genre'}
+                    />
+                    {errors.secondaryGenre && (
+                      <p className="mt-1 text-sm text-red-500">{errors.secondaryGenre.message}</p>
                     )}
                   </div>
 
@@ -463,7 +477,7 @@ export default function EditCampaignPage() {
                     id="targetReviews"
                     type="number"
                     {...register('targetReviews', { valueAsNumber: true })}
-                    min={25}
+                    min={10}
                     max={1000}
                   />
                   {errors.targetReviews && (

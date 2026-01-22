@@ -224,6 +224,30 @@ export interface TransactionHistoryDto {
   };
 }
 
+/**
+ * Activity types for author activity feed (Section 2.1)
+ */
+export enum AuthorActivityType {
+  REVIEW_DELIVERED = 'REVIEW_DELIVERED',
+  CAMPAIGN_STATUS_CHANGE = 'CAMPAIGN_STATUS_CHANGE',
+  CREDIT_PURCHASE = 'CREDIT_PURCHASE',
+  REPORT_GENERATED = 'REPORT_GENERATED',
+}
+
+export interface AuthorActivityItemDto {
+  id: string;
+  type: AuthorActivityType;
+  bookTitle?: string;
+  description: string;
+  metadata?: Record<string, any>;
+  createdAt: string;
+}
+
+export interface AuthorActivityFeedDto {
+  activities: AuthorActivityItemDto[];
+  total: number;
+}
+
 export interface AdminRevenueAnalyticsDto {
   monthlyRevenue: Array<{
     month: string;
@@ -330,6 +354,14 @@ export const dashboardsApi = {
     const response = await apiClient.get<AuthorCampaignTrackingDto>(
       `/dashboard/admin/campaign/${bookId}`,
     );
+    return response.data;
+  },
+
+  /**
+   * Get author activity feed (Section 2.1)
+   */
+  async getAuthorActivityFeed(): Promise<AuthorActivityFeedDto> {
+    const response = await apiClient.get<AuthorActivityFeedDto>('/dashboard/author/activity');
     return response.data;
   },
 };

@@ -85,11 +85,17 @@ export class CreateCampaignDto {
   @IsEnum(Language)
   language: Language;
 
-  @ApiProperty({ description: 'Book genre' })
+  @ApiProperty({ description: 'Book primary genre' })
   @IsString()
   @IsNotEmpty({ message: 'Genre is required' })
   @MaxLength(100)
   genre: string;
+
+  @ApiProperty({ description: 'Book secondary genre (optional per Section 2.3)', required: false })
+  @IsString()
+  @IsOptional()
+  @MaxLength(100)
+  secondaryGenre?: string;
 
   @ApiProperty({ description: 'Book category' })
   @IsString()
@@ -101,9 +107,9 @@ export class CreateCampaignDto {
   @IsEnum(BookFormat)
   availableFormats: BookFormat;
 
-  @ApiProperty({ description: 'Target number of reviews' })
+  @ApiProperty({ description: 'Target number of reviews (minimum 10)' })
   @IsInt()
-  @Min(25)
+  @Min(10, { message: 'Minimum 10 reviews required per Section 2.3' })
   @Max(1000)
   targetReviews: number;
 

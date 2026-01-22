@@ -33,6 +33,7 @@ export interface CreateCampaignRequest {
   synopsis: string;
   language: Language;
   genre: string;
+  secondaryGenre?: string; // Optional per Section 2.3
   category: string;
   availableFormats: BookFormat;
   targetReviews: number;
@@ -84,6 +85,7 @@ export interface Campaign {
   synopsis: string;
   language: Language;
   genre: string;
+  secondaryGenre?: string; // Optional per Section 2.3
   category: string;
   publishedDate?: Date;
   pageCount?: number;

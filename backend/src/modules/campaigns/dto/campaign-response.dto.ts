@@ -44,6 +44,9 @@ export class CampaignResponseDto {
   @ApiProperty()
   genre: string;
 
+  @ApiProperty({ required: false, description: 'Secondary genre (optional per Section 2.3)' })
+  secondaryGenre?: string;
+
   @ApiProperty()
   category: string;
 

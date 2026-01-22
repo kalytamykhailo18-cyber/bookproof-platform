@@ -90,9 +90,10 @@ const campaignSchema = z.object({
     .max(7500, 'Synopsis must not exceed 7500 characters (approximately 3 pages)'),
   language: z.nativeEnum(Language),
   genre: z.string().min(1, 'Genre is required').max(100),
+  secondaryGenre: z.string().max(100).optional(), // Optional per Section 2.3
   category: z.string().min(1, 'Category is required').max(100),
   availableFormats: z.nativeEnum(BookFormat),
-  creditsToAllocate: z.number().min(25, 'Minimum 25 credits required'),
+  creditsToAllocate: z.number().min(10, 'Minimum 10 credits required'),
   readingInstructions: z.string().max(2000, 'Reading instructions must not exceed 2000 characters').optional(),
   ebookCredits: z.number().min(0).optional(),
   audiobookCredits: z.number().min(0).optional(),
@@ -297,6 +298,7 @@ export default function NewCampaignPage() {
       synopsis: data.synopsis,
       language: data.language,
       genre: data.genre,
+      secondaryGenre: data.secondaryGenre || undefined, // Optional per Section 2.3
       category: data.category,
       availableFormats: data.availableFormats,
       targetReviews: data.creditsToAllocate,
@@ -470,9 +472,9 @@ export default function NewCampaignPage() {
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   <div className="animate-zoom-in-fast">
-                    <Label htmlFor="genre">{t('bookInfo.genre') || 'Genre'} *</Label>
+                    <Label htmlFor="genre">{t('bookInfo.genre') || 'Primary Genre'} *</Label>
                     <Input
                       id="genre"
                       {...register('genre')}
@@ -482,6 +484,22 @@ export default function NewCampaignPage() {
                     />
                     {errors.genre && (
                       <p className="mt-1 text-sm text-red-500">{errors.genre.message}</p>
+                    )}
+                  </div>
+
+                  <div className="animate-fade-left">
+                    <Label htmlFor="secondaryGenre">
+                      {t('bookInfo.secondaryGenre') || 'Secondary Genre'} ({t('optional') || 'Optional'})
+                    </Label>
+                    <Input
+                      id="secondaryGenre"
+                      {...register('secondaryGenre')}
+                      placeholder={
+                        t('bookInfo.secondaryGenrePlaceholder') || 'e.g., Adventure, Mystery'
+                      }
+                    />
+                    {errors.secondaryGenre && (
+                      <p className="mt-1 text-sm text-red-500">{errors.secondaryGenre.message}</p>
                     )}
                   </div>
 
@@ -972,7 +990,7 @@ export default function NewCampaignPage() {
                   <Input
                     id="creditsToAllocate"
                     type="number"
-                    min={25}
+                    min={10}
                     max={availableCredits}
                     value={creditsToAllocate}
                     onChange={(e) => handleCreditChange(parseInt(e.target.value) || 0)}
@@ -981,7 +999,7 @@ export default function NewCampaignPage() {
                     <p className="mt-1 text-sm text-red-500">{errors.creditsToAllocate.message}</p>
                   )}
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {t('credits.minimumRequired') || 'Minimum 25 credits required'} •{' '}
+                    {t('credits.minimumRequired') || 'Minimum 10 credits required'} •{' '}
                     {selectedFormat === BookFormat.AUDIOBOOK
                       ? '2 credits = 1 audiobook review'
                       : selectedFormat === BookFormat.BOTH

@@ -88,6 +88,17 @@ export function useDashboards() {
       staleTime: 30000,
     });
 
+  /**
+   * Get author activity feed (Section 2.1)
+   */
+  const useAuthorActivityFeed = () =>
+    useQuery({
+      queryKey: ['author-activity-feed'],
+      queryFn: () => dashboardsApi.getAuthorActivityFeed(),
+      staleTime: 30000,
+      refetchInterval: 60000, // Refresh every minute
+    });
+
   // ============================================
   // READER DASHBOARD
   // ============================================
@@ -113,6 +124,7 @@ export function useDashboards() {
     // Author
     useCampaignTracking,
     useTransactionHistory,
+    useAuthorActivityFeed,
     // Reader
     useReaderStats,
   };

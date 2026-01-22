@@ -41,6 +41,7 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import {
   DollarSign,
   Receipt,
@@ -56,6 +57,7 @@ import {
   XCircle,
   Clock,
   Loader2,
+  Download,
 } from 'lucide-react';
 
 interface UnifiedTransaction {
@@ -67,6 +69,7 @@ interface UnifiedTransaction {
   currency: string;
   date: string;
   status: string;
+  balanceAfter?: number;
 }
 
 const getRefundStatusBadge = (status: RefundRequestStatus) => {
@@ -99,6 +102,10 @@ export default function TransactionsPage() {
   const [filterType, setFilterType] = useState<'all' | 'purchase' | 'subscription' | 'usage'>(
     'all',
   );
+
+  // Date range filter state (Section 2.6)
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
 
   // Invoice download state
   const [downloadingInvoiceId, setDownloadingInvoiceId] = useState<string | null>(null);
@@ -225,6 +232,7 @@ export default function TransactionsPage() {
         currency: 'USD',
         date: c.createdAt,
         status: 'completed',
+        balanceAfter: c.balanceAfter,
       });
     });
 
@@ -263,9 +271,68 @@ export default function TransactionsPage() {
   };
 
   const filteredTransactions = useMemo(() => {
-    if (filterType === 'all') return unifiedTransactions;
-    return unifiedTransactions.filter((tx) => tx.type === filterType);
-  }, [unifiedTransactions, filterType]);
+    let filtered = unifiedTransactions;
+
+    // Filter by type
+    if (filterType !== 'all') {
+      filtered = filtered.filter((tx) => tx.type === filterType);
+    }
+
+    // Filter by date range (Section 2.6)
+    if (startDate) {
+      const start = new Date(startDate);
+      filtered = filtered.filter((tx) => new Date(tx.date) >= start);
+    }
+    if (endDate) {
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // Include entire end day
+      filtered = filtered.filter((tx) => new Date(tx.date) <= end);
+    }
+
+    return filtered;
+  }, [unifiedTransactions, filterType, startDate, endDate]);
+
+  // CSV Export function (Section 2.6)
+  const handleExportCSV = useCallback(() => {
+    if (filteredTransactions.length === 0) {
+      toast.error('No transactions to export');
+      return;
+    }
+
+    // Create CSV header
+    const headers = ['Date', 'Type', 'Description', 'Credits', 'Balance', 'Amount', 'Currency', 'Status'];
+
+    // Create CSV rows
+    const rows = filteredTransactions.map((tx) => [
+      formatDate(tx.date),
+      tx.type,
+      tx.description.replace(/,/g, ';'), // Escape commas
+      tx.credits || 0,
+      tx.balanceAfter !== undefined ? tx.balanceAfter : '-',
+      tx.amount.toFixed(2),
+      tx.currency,
+      tx.status,
+    ]);
+
+    // Combine headers and rows
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row) => row.join(',')),
+    ].join('\n');
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `transactions-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast.success('Transactions exported successfully');
+  }, [filteredTransactions]);
 
   // Calculate summary stats
   const totalSpent = useMemo(() => {
@@ -420,48 +487,99 @@ export default function TransactionsPage() {
       {/* Filter Section */}
       <Card className="animate-zoom-in-fast">
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>{t('history.title') || 'Transaction History'}</CardTitle>
-              <CardDescription>
-                {t('history.description') || 'All your financial transactions'}
-              </CardDescription>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>{t('history.title') || 'Transaction History'}</CardTitle>
+                <CardDescription>
+                  {t('history.description') || 'All your financial transactions'}
+                </CardDescription>
+              </div>
+              {/* CSV Export Button (Section 2.6) */}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleExportCSV}
+                className="flex items-center gap-2"
+              >
+                <Download className="h-4 w-4" />
+                {t('export.csv') || 'Export CSV'}
+              </Button>
             </div>
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant={filterType === 'all' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilterType('all')}
-                >
-                  {t('filter.all') || 'All'}
-                </Button>
-                <Button
-                  type="button"
-                  variant={filterType === 'purchase' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilterType('purchase')}
-                >
-                  {t('filter.purchases') || 'Purchases'}
-                </Button>
-                <Button
-                  type="button"
-                  variant={filterType === 'subscription' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilterType('subscription')}
-                >
-                  {t('filter.subscriptions') || 'Subscriptions'}
-                </Button>
-                <Button
-                  type="button"
-                  variant={filterType === 'usage' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilterType('usage')}
-                >
-                  {t('filter.usage') || 'Usage'}
-                </Button>
+
+            {/* Filter Controls */}
+            <div className="flex flex-wrap items-center gap-4">
+              {/* Type Filter */}
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4 text-muted-foreground" />
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant={filterType === 'all' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setFilterType('all')}
+                  >
+                    {t('filter.all') || 'All'}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={filterType === 'purchase' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setFilterType('purchase')}
+                  >
+                    {t('filter.purchases') || 'Purchases'}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={filterType === 'subscription' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setFilterType('subscription')}
+                  >
+                    {t('filter.subscriptions') || 'Subscriptions'}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={filterType === 'usage' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setFilterType('usage')}
+                  >
+                    {t('filter.usage') || 'Usage'}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Date Range Filter (Section 2.6) */}
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="h-8 w-36"
+                  placeholder="Start date"
+                />
+                <span className="text-muted-foreground">to</span>
+                <Input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="h-8 w-36"
+                  placeholder="End date"
+                />
+                {(startDate || endDate) && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setStartDate('');
+                      setEndDate('');
+                    }}
+                  >
+                    Clear
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -474,6 +592,7 @@ export default function TransactionsPage() {
                 <TableHead>Type</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Credits</TableHead>
+                <TableHead>Balance</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
@@ -508,6 +627,13 @@ export default function TransactionsPage() {
                         </Badge>
                       ) : (
                         <span className="text-sm text-muted-foreground">N/A</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {transaction.balanceAfter !== undefined ? (
+                        <span className="font-medium">{transaction.balanceAfter}</span>
+                      ) : (
+                        <span className="text-sm text-muted-foreground">-</span>
                       )}
                     </TableCell>
                     <TableCell>
@@ -591,7 +717,7 @@ export default function TransactionsPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground">
+                  <TableCell colSpan={8} className="text-center text-muted-foreground">
                     <div className="flex flex-col items-center gap-2 py-12">
                       <Receipt className="h-12 w-12 text-muted-foreground" />
                       <p>No transactions found</p>
