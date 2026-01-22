@@ -26,6 +26,7 @@ export function useReviewSubmission(assignmentId: string) {
   });
 
   // Submit review mutation
+  // Note: Does NOT auto-redirect - let the page component show success state
   const submitReviewMutation = useMutation({
     mutationFn: (data: SubmitReviewRequest) => {
       startLoading('Submitting review...');
@@ -39,7 +40,7 @@ export function useReviewSubmission(assignmentId: string) {
       queryClient.invalidateQueries({ queryKey: ['my-assignments'] });
       queryClient.invalidateQueries({ queryKey: ['reader-stats'] });
       toast.success('Review submitted successfully! It will be validated by our team.');
-      router.push(`/${locale}/reader`);
+      // Let the page component handle navigation after showing success state
     },
     onError: (error: any) => {
       stopLoading();
@@ -54,6 +55,7 @@ export function useReviewSubmission(assignmentId: string) {
     refetchReview,
     submitReview: submitReviewMutation.mutate,
     isSubmitting: submitReviewMutation.isPending,
+    isSubmitSuccess: submitReviewMutation.isSuccess,
   };
 }
 

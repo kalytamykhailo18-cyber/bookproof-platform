@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   queueApi,
@@ -36,6 +37,9 @@ export function useMyAssignments() {
   const params = useParams();
   const locale = (params?.locale as string) || 'en';
 
+  // Track last applied assignment for success confirmation
+  const [lastAppliedAssignment, setLastAppliedAssignment] = useState<Assignment | null>(null);
+
   // Get all my assignments
   const {
     data: assignments,
@@ -55,11 +59,12 @@ export function useMyAssignments() {
     },
     onSuccess: (newAssignment) => {
       stopLoading();
+      setLastAppliedAssignment(newAssignment);
       queryClient.invalidateQueries({ queryKey: ['my-assignments'] });
       queryClient.invalidateQueries({ queryKey: ['available-campaigns'] });
       queryClient.invalidateQueries({ queryKey: ['reader-stats'] });
       toast.success('Successfully applied to campaign!');
-      router.push(`/${locale}/reader/assignments/${newAssignment.id}`);
+      // Don't auto-redirect - let the modal show success state
     },
     onError: (error: any) => {
       stopLoading();
@@ -127,13 +132,27 @@ export function useMyAssignments() {
     return acc;
   }, {} as Record<string, Assignment[]>);
 
+  // Wrapper for applyToCampaign that accepts onSuccess callback
+  const applyToCampaign = (
+    data: ApplyToCampaignRequest,
+    options?: { onSuccess?: () => void }
+  ) => {
+    applyToCampaignMutation.mutate(data, {
+      onSuccess: (newAssignment) => {
+        setLastAppliedAssignment(newAssignment);
+        options?.onSuccess?.();
+      },
+    });
+  };
+
   return {
     assignments,
     groupedAssignments,
     isLoadingAssignments,
     refetchAssignments,
-    applyToCampaign: applyToCampaignMutation.mutate,
+    applyToCampaign,
     isApplying: applyToCampaignMutation.isPending,
+    lastAppliedAssignment,
     withdrawFromAssignment: withdrawMutation.mutate,
     isWithdrawing: withdrawMutation.isPending,
     trackEbookDownload: trackEbookDownloadMutation.mutate,

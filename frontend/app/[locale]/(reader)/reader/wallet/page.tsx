@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 
-import { useReaderStats } from '@/hooks/useReaders';
+import { useReaderStats, useReaderProfile } from '@/hooks/useReaders';
 import { useMyPayouts, useWalletTransactions } from '@/hooks/usePayouts';
 import { WalletTransactionType } from '@/lib/api/payouts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -67,19 +67,22 @@ export default function WalletPage() {
   const params = useParams();
   const locale = (params.locale as string) || 'en';
   const { stats, isLoadingStats: statsLoading } = useReaderStats();
+  const { profile, isLoadingProfile } = useReaderProfile();
   const { data: payouts, isLoading: payoutsLoading } = useMyPayouts();
   const { data: transactions, isLoading: transactionsLoading } = useWalletTransactions();
 
   const availableBalance = stats?.walletBalance || 0;
   const totalEarned = stats?.totalEarned || 0;
   const pendingEarnings = stats?.pendingEarnings || 0;
+  const totalWithdrawn = profile?.totalWithdrawn || 0;
 
-  if (statsLoading || payoutsLoading || transactionsLoading) {
+  if (statsLoading || isLoadingProfile || payoutsLoading || transactionsLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="animate-pulse space-y-4">
           <div className="h-8 w-1/3 rounded bg-gray-200"></div>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-4">
+            <div className="h-32 rounded bg-gray-200"></div>
             <div className="h-32 rounded bg-gray-200"></div>
             <div className="h-32 rounded bg-gray-200"></div>
             <div className="h-32 rounded bg-gray-200"></div>
@@ -105,7 +108,7 @@ export default function WalletPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="mb-8 grid gap-6 md:grid-cols-3">
+      <div className="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card className="animate-fade-up-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('availableBalance')}</CardTitle>
@@ -123,6 +126,17 @@ export default function WalletPage() {
 
         <Card className="animate-fade-up-normal">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{t('pendingEarnings')}</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${pendingEarnings.toFixed(2)}</div>
+            <p className="mt-1 text-xs text-muted-foreground">Reviews being validated</p>
+          </CardContent>
+        </Card>
+
+        <Card className="animate-fade-up-slow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('totalEarned')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -132,14 +146,14 @@ export default function WalletPage() {
           </CardContent>
         </Card>
 
-        <Card className="animate-fade-up-slow">
+        <Card className="animate-fade-up-light-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('pendingEarnings')}</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">{t('totalWithdrawn')}</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${pendingEarnings.toFixed(2)}</div>
-            <p className="mt-1 text-xs text-muted-foreground">Reviews being validated</p>
+            <div className="text-2xl font-bold">${totalWithdrawn.toFixed(2)}</div>
+            <p className="mt-1 text-xs text-muted-foreground">Total payouts received</p>
           </CardContent>
         </Card>
       </div>

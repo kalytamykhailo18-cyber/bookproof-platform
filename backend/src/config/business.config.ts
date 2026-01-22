@@ -29,7 +29,8 @@ export default registerAs('business', () => ({
     cookieDays: parseInt(process.env.AFFILIATE_COOKIE_DAYS || '30', 10),
   },
   wallet: {
-    minimumPayoutAmount: parseFloat(process.env.MINIMUM_PAYOUT_AMOUNT || '25.00'),
+    // Section 3.9 requirement: $50 minimum payout amount
+    minimumPayoutAmount: parseFloat(process.env.MINIMUM_PAYOUT_AMOUNT || '50.00'),
   },
   features: {
     subscriptions: process.env.FEATURE_SUBSCRIPTIONS === 'true',

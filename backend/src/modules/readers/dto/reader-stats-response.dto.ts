@@ -39,4 +39,7 @@ export class ReaderStatsResponseDto {
 
   @ApiProperty({ description: 'Completion rate (%)' })
   completionRate: number;
+
+  @ApiProperty({ description: 'Pending payout amount (requested but not yet processed)' })
+  pendingPayouts: number;
 }

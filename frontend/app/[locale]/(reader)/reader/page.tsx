@@ -12,10 +12,12 @@ import {
   Clock,
   CheckCircle,
   DollarSign,
-  TrendingUp,
   AlertCircle,
   Calendar,
   ArrowRight,
+  Wallet,
+  Eye,
+  Banknote,
 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 import { AssignmentStatus, Assignment } from '@/lib/api/queue';
@@ -47,6 +49,13 @@ function StatsCard({
       </CardContent>
     </Card>
   );
+}
+
+// Format hours remaining as HH:MM
+function formatTimeRemaining(hoursRemaining: number): string {
+  const hours = Math.floor(hoursRemaining);
+  const minutes = Math.round((hoursRemaining - hours) * 60);
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 }
 
 function AssignmentCard({ assignment, className }: { assignment: Assignment; className?: string }) {
@@ -152,18 +161,21 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
           </div>
         )}
 
-        {/* Deadline */}
+        {/* Deadline with countdown timer */}
         {assignment.deadlineAt && assignment.status === AssignmentStatus.APPROVED && (
           <div
             className={`flex items-center gap-2 text-sm ${isUrgent ? 'font-semibold text-red-600' : 'text-muted-foreground'}`}
           >
-            <Clock className="h-4 w-4" />
+            <Clock className={`h-4 w-4 ${isUrgent ? 'animate-pulse' : ''}`} />
             <span>
               {isUrgent && <AlertCircle className="mr-1 inline h-4 w-4" />}
               {t('deadline')}:{' '}
               {formatDistanceToNow(new Date(assignment.deadlineAt), { addSuffix: true })}
-              {assignment.hoursRemaining &&
-                ` (${Math.floor(assignment.hoursRemaining)}h ${t('remaining')})`}
+              {assignment.hoursRemaining !== undefined && (
+                <span className={`ml-1 font-mono ${assignment.hoursRemaining < 12 ? 'text-red-600' : assignment.hoursRemaining < 24 ? 'text-yellow-600' : 'text-green-600'}`}>
+                  ({formatTimeRemaining(assignment.hoursRemaining)} {t('remaining')})
+                </span>
+              )}
             </span>
           </div>
         )}
@@ -228,16 +240,37 @@ export default function ReaderDashboard() {
   return (
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
-      <div className="flex animate-fade-up items-center justify-between">
+      <div className="flex animate-fade-up flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <Button type="button" className="animate-fade-left" onClick={() => router.push(`/${locale}/reader/campaigns`)}>
-          <BookOpen className="mr-2 h-4 w-4" />
-          {t('browseBooks')}
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" className="animate-fade-left" onClick={() => router.push(`/${locale}/reader/campaigns`)}>
+            <BookOpen className="mr-2 h-4 w-4" />
+            {t('browseBooks')}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="animate-fade-left-slow"
+            onClick={() => router.push(`/${locale}/reader/wallet/payout`)}
+            disabled={(stats?.walletBalance || 0) < 50}
+            title={(stats?.walletBalance || 0) < 50 ? t('payoutMinimumRequired') : undefined}
+          >
+            <Wallet className="mr-2 h-4 w-4" />
+            {t('requestPayout')}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className="animate-fade-left-light-slow"
+            onClick={() => router.push(`/${locale}/reader/stats`)}
+          >
+            <Eye className="mr-2 h-4 w-4" />
+            {t('viewMyReviews')}
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -264,10 +297,10 @@ export default function ReaderDashboard() {
           className="animate-fade-up-medium-slow"
         />
         <StatsCard
-          title={t('stats.reliabilityScore')}
-          value={`${stats?.reliabilityScore.toFixed(0) || 100}%`}
-          icon={TrendingUp}
-          description={t('stats.performanceRating')}
+          title={t('stats.pendingPayouts')}
+          value={`$${stats?.pendingPayouts?.toFixed(2) || '0.00'}`}
+          icon={Banknote}
+          description={t('stats.awaitingProcessing')}
           className="animate-fade-up-heavy-slow"
         />
       </div>

@@ -104,11 +104,12 @@ export function useDashboards() {
   // ============================================
 
   /**
-   * Get reader performance stats
+   * Get reader performance stats (detailed dashboard stats)
+   * Note: Uses different query key than useReaders.useReaderStats() which returns simple stats
    */
   const useReaderStats = () =>
     useQuery({
-      queryKey: ['reader-stats'],
+      queryKey: ['reader-performance-stats'],
       queryFn: () => dashboardsApi.getReaderStats(),
       staleTime: 30000,
       refetchInterval: 60000, // Refresh every minute
