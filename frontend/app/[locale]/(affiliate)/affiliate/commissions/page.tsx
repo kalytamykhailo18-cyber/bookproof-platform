@@ -181,6 +181,7 @@ export default function AffiliateCommissionsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>{t('table.author') || 'Author'}</TableHead>
                   <TableHead>{t('table.purchaseAmount')}</TableHead>
                   <TableHead>{t('table.commissionAmount')}</TableHead>
                   <TableHead>{t('table.rate')}</TableHead>
@@ -196,6 +197,7 @@ export default function AffiliateCommissionsPage() {
                     key={commission.id}
                     className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
                   >
+                    <TableCell className="font-mono text-sm">{commission.authorIdentifier}</TableCell>
                     <TableCell>${commission.purchaseAmount.toFixed(2)}</TableCell>
                     <TableCell className="font-semibold">
                       ${commission.commissionAmount.toFixed(2)}

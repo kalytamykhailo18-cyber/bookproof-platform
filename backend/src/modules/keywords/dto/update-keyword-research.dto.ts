@@ -7,12 +7,22 @@ import { Language, TargetMarket } from '@prisma/client';
  */
 export class UpdateKeywordResearchDto {
   @ApiPropertyOptional({
-    description: 'Book title',
+    description: 'Book title (max 200 characters)',
     example: 'The Complete Guide to Self-Publishing',
+    maxLength: 200,
   })
   @IsOptional()
   @IsString()
   bookTitle?: string;
+
+  @ApiPropertyOptional({
+    description: 'Book subtitle (max 200 characters)',
+    example: 'A Step-by-Step Guide for Authors',
+    maxLength: 200,
+  })
+  @IsOptional()
+  @IsString()
+  bookSubtitle?: string;
 
   @ApiPropertyOptional({
     description: 'Book genre',

@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import {
   useAffiliateProfile,
   useAffiliateStats,
+  useAffiliateChartData,
   useCommissions,
   usePayouts,
 } from '@/hooks/useAffiliates';
@@ -28,7 +29,18 @@ import {
   TrendingUp,
   Link as LinkIcon,
   Wallet,
+  Percent,
 } from 'lucide-react';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from 'recharts';
 import { useRouter, useParams } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import { CommissionStatus, PayoutRequestStatus } from '@/lib/api/affiliates';
@@ -40,10 +52,19 @@ export default function AffiliateDashboardPage() {
   const locale = (params.locale as string) || 'en';
   const { data: profile, isLoading: profileLoading } = useAffiliateProfile();
   const { data: stats, isLoading: statsLoading } = useAffiliateStats();
+  const { data: chartData, isLoading: chartLoading } = useAffiliateChartData();
   const { data: commissions, isLoading: commissionsLoading } = useCommissions();
   const { data: payouts, isLoading: payoutsLoading } = usePayouts();
 
   const isLoading = profileLoading || statsLoading;
+
+  // Prepare chart data for recharts
+  const preparedChartData =
+    chartData?.clicks?.map((click, index) => ({
+      date: new Date(click.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      clicks: click.value,
+      conversions: chartData.conversions?.[index]?.value || 0,
+    })) || [];
 
   const getCommissionStatusBadge = (status: CommissionStatus) => {
     const variants: Record<
@@ -145,10 +166,14 @@ export default function AffiliateDashboardPage() {
             {t('subtitle')}: <span className="font-mono font-semibold">{profile.referralCode}</span>
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button type="button" onClick={() => router.push(`/${locale}/affiliate/referral-links`)}>
             <LinkIcon className="mr-2 h-4 w-4" />
             {t('getReferralLink')}
+          </Button>
+          <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/affiliate/referred-authors`)}>
+            <Users className="mr-2 h-4 w-4" />
+            {t('referredAuthors') || 'Referred Authors'}
           </Button>
           <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/affiliate/payouts`)}>
             <Wallet className="mr-2 h-4 w-4" />
@@ -157,7 +182,7 @@ export default function AffiliateDashboardPage() {
         </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats Cards - Row 1 */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="animate-fade-up-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -210,6 +235,121 @@ export default function AffiliateDashboardPage() {
             <p className="mt-1 text-xs text-muted-foreground">
               {t('stats.activeReferrals')}: {stats?.activeReferrals || 0}
             </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Stats Cards - Row 2: Commission Rate (Section 6.1 requirement) */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <Card className="animate-fade-up">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{t('stats.commissionRate') || 'Your Commission Rate'}</CardTitle>
+            <Percent className="h-4 w-4 text-indigo-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-indigo-600">
+              {profile?.commissionRate || 20}%
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t('stats.commissionRateDescription') || 'You earn this percentage on every sale'}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="animate-fade-up-fast">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{t('stats.availableForPayout') || 'Available for Payout'}</CardTitle>
+            <Wallet className="h-4 w-4 text-emerald-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-emerald-600">
+              ${stats?.approvedEarnings.toFixed(2) || '0.00'}
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t('stats.availableDescription') || 'Ready to withdraw'}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="animate-fade-up-light-slow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{t('stats.totalPaid') || 'Total Paid Out'}</CardTitle>
+            <DollarSign className="h-4 w-4 text-gray-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-600">
+              ${stats?.paidEarnings.toFixed(2) || '0.00'}
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t('stats.totalPaidDescription') || 'Already withdrawn'}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts Section - Section 6.1 requirement */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card className="animate-zoom-in">
+          <CardHeader>
+            <CardTitle>{t('charts.clicksTitle') || 'Clicks Over Last 30 Days'}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {chartLoading ? (
+              <Skeleton className="h-64 animate-pulse" />
+            ) : preparedChartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={preparedChartData}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                  <YAxis tick={{ fontSize: 12 }} />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="clicks"
+                    stroke="#3b82f6"
+                    strokeWidth={2}
+                    dot={false}
+                    name={t('charts.clicks') || 'Clicks'}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex h-64 items-center justify-center text-muted-foreground">
+                {t('charts.noData') || 'No data available yet'}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="animate-zoom-in-light-slow">
+          <CardHeader>
+            <CardTitle>{t('charts.conversionsTitle') || 'Conversions Over Last 30 Days'}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {chartLoading ? (
+              <Skeleton className="h-64 animate-pulse" />
+            ) : preparedChartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={preparedChartData}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                  <YAxis tick={{ fontSize: 12 }} />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="conversions"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    dot={false}
+                    name={t('charts.conversions') || 'Conversions'}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex h-64 items-center justify-center text-muted-foreground">
+                {t('charts.noData') || 'No data available yet'}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

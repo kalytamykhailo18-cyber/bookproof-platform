@@ -271,3 +271,59 @@ export function useDownloadPackageInvoicePdf() {
     },
   });
 }
+
+// ============================================
+// ADMIN PACKAGE APPROVAL HOOKS (Super Admin only)
+// ============================================
+
+const ADMIN_PACKAGES_PENDING_KEY = 'admin-packages-pending';
+
+/**
+ * Hook for getting packages pending Super Admin approval
+ */
+export function usePackagesPendingApproval() {
+  return useQuery<CustomPackageResponse[]>({
+    queryKey: [ADMIN_PACKAGES_PENDING_KEY],
+    queryFn: () => closerApi.getPackagesPendingApproval(),
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook for approving a package (Super Admin only)
+ */
+export function useApprovePackage() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (packageId: string) => closerApi.approvePackage(packageId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [ADMIN_PACKAGES_PENDING_KEY] });
+      queryClient.invalidateQueries({ queryKey: [CLOSER_PACKAGES_KEY] });
+      toast.success('Package approved successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to approve package');
+    },
+  });
+}
+
+/**
+ * Hook for rejecting a package (Super Admin only)
+ */
+export function useRejectPackage() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ packageId, rejectionReason }: { packageId: string; rejectionReason: string }) =>
+      closerApi.rejectPackage(packageId, rejectionReason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [ADMIN_PACKAGES_PENDING_KEY] });
+      queryClient.invalidateQueries({ queryKey: [CLOSER_PACKAGES_KEY] });
+      toast.success('Package rejected');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to reject package');
+    },
+  });
+}

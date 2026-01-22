@@ -117,6 +117,9 @@ model AuthorProfile {
   totalCreditsUsed      Int @default(0) // Lifetime used
   availableCredits      Int @default(0) // Current available
 
+  // Keyword research credits (purchased via credit checkout upsell)
+  pendingKeywordResearchCredits Int @default(0)
+
   // Stripe customer
   stripeCustomerId String? @unique
 
@@ -1288,6 +1291,11 @@ model CustomPackage {
   clientName    String
   clientEmail   String
   clientCompany String?
+  clientPhone   String?
+
+  // Keyword research inclusions (per Section 5.2)
+  includeKeywordResearch  Boolean @default(false)
+  keywordResearchCredits  Int     @default(0)
 
   // Status tracking
   status CustomPackageStatus @default(DRAFT)
@@ -1732,6 +1740,7 @@ model KeywordResearch {
 
   // Input data from author
   bookTitle        String
+  bookSubtitle     String?      // Optional subtitle (max 200 chars)
   genre            String
   category         String
   description      String       @db.Text

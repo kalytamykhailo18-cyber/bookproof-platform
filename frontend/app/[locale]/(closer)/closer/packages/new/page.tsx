@@ -16,7 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ArrowLeft, Save } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ArrowLeft, Save, Search } from 'lucide-react';
 
 export default function CreatePackagePage() {
   const t = useTranslations('closer');
@@ -28,14 +29,18 @@ export default function CreatePackagePage() {
   const [formData, setFormData] = useState({
     packageName: '',
     description: '',
-    credits: 100,
-    price: 500,
+    credits: 500, // Enterprise packages require minimum 500 credits
+    price: 250,
     currency: 'USD',
     validityDays: 90,
     specialTerms: '',
+    internalNotes: '', // Internal notes (not visible to client, per Section 5.2)
     clientName: '',
     clientEmail: '',
     clientCompany: '',
+    clientPhone: '', // Client phone (per Section 5.2)
+    includeKeywordResearch: false, // Include keyword research (per Section 5.2)
+    keywordResearchCredits: 0, // Number of keyword research credits (per Section 5.2)
   });
 
   const handleFormSubmit = () => {
@@ -48,9 +53,13 @@ export default function CreatePackagePage() {
         currency: formData.currency,
         validityDays: formData.validityDays,
         specialTerms: formData.specialTerms || undefined,
+        internalNotes: formData.internalNotes || undefined, // Per Section 5.2
         clientName: formData.clientName,
         clientEmail: formData.clientEmail,
         clientCompany: formData.clientCompany || undefined,
+        clientPhone: formData.clientPhone || undefined, // Per Section 5.2
+        includeKeywordResearch: formData.includeKeywordResearch, // Per Section 5.2
+        keywordResearchCredits: formData.includeKeywordResearch ? formData.keywordResearchCredits : 0, // Per Section 5.2
       },
       {
         onSuccess: () => {
@@ -60,7 +69,7 @@ export default function CreatePackagePage() {
     );
   };
 
-  const updateField = (field: string, value: string | number) => {
+  const updateField = (field: string, value: string | number | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -219,15 +228,70 @@ export default function CreatePackagePage() {
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="clientCompany">{t('createPackage.clientCompany')}</Label>
-                <Input
-                  id="clientCompany"
-                  placeholder="XYZ Publishing House"
-                  value={formData.clientCompany}
-                  onChange={(e) => updateField('clientCompany', e.target.value)}
-                />
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="clientCompany">{t('createPackage.clientCompany')}</Label>
+                  <Input
+                    id="clientCompany"
+                    placeholder="XYZ Publishing House"
+                    value={formData.clientCompany}
+                    onChange={(e) => updateField('clientCompany', e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="clientPhone">{t('createPackage.clientPhone') || 'Phone'}</Label>
+                  <Input
+                    id="clientPhone"
+                    type="tel"
+                    placeholder="+1-555-123-4567"
+                    value={formData.clientPhone}
+                    onChange={(e) => updateField('clientPhone', e.target.value)}
+                  />
+                </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Inclusions - Keyword Research (per Section 5.2) */}
+          <Card className="animate-fade-up-medium-slow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Search className="h-5 w-5" />
+                {t('createPackage.inclusions') || 'Inclusions'}
+              </CardTitle>
+              <CardDescription>{t('createPackage.inclusionsDescription') || 'Additional services to include in this package'}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <Checkbox
+                  id="includeKeywordResearch"
+                  checked={formData.includeKeywordResearch}
+                  onCheckedChange={(checked) => updateField('includeKeywordResearch', checked as boolean)}
+                />
+                <div className="space-y-1">
+                  <Label htmlFor="includeKeywordResearch" className="cursor-pointer font-medium">
+                    {t('createPackage.includeKeywordResearch') || 'Include Keyword Research'}
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    {t('createPackage.includeKeywordResearchHelp') || 'Add keyword research credits for the client'}
+                  </p>
+                </div>
+              </div>
+              {formData.includeKeywordResearch && (
+                <div className="ml-6 space-y-2">
+                  <Label htmlFor="keywordResearchCredits">
+                    {t('createPackage.keywordResearchCredits') || 'Number of Keyword Research Credits'}
+                  </Label>
+                  <Input
+                    id="keywordResearchCredits"
+                    type="number"
+                    min={1}
+                    value={formData.keywordResearchCredits}
+                    onChange={(e) => updateField('keywordResearchCredits', parseInt(e.target.value) || 0)}
+                    className="max-w-[200px]"
+                  />
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -245,6 +309,28 @@ export default function CreatePackagePage() {
                 onChange={(e) => updateField('specialTerms', e.target.value)}
                 rows={4}
               />
+            </CardContent>
+          </Card>
+
+          {/* Internal Notes (not visible to client, per Section 5.2) */}
+          <Card className="animate-fade-up">
+            <CardHeader>
+              <CardTitle>{t('createPackage.internalNotes') || 'Internal Notes'}</CardTitle>
+              <CardDescription>
+                {t('createPackage.internalNotesDescription') || 'Notes for internal use only - not visible to the client'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                id="internalNotes"
+                placeholder={t('createPackage.internalNotesPlaceholder') || 'E.g., Negotiated by John on 01/15/2024, Referred by Partner XYZ...'}
+                value={formData.internalNotes}
+                onChange={(e) => updateField('internalNotes', e.target.value)}
+                rows={3}
+              />
+              <p className="mt-2 text-xs text-muted-foreground">
+                {t('createPackage.internalNotesWarning') || 'These notes are for your reference only and will NOT be shared with the client.'}
+              </p>
             </CardContent>
           </Card>
 

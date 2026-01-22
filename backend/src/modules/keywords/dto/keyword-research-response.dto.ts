@@ -30,6 +30,9 @@ export class KeywordResearchResponseDto {
   @ApiProperty()
   bookTitle: string;
 
+  @ApiPropertyOptional()
+  bookSubtitle?: string;
+
   @ApiProperty()
   genre: string;
 

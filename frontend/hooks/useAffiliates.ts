@@ -9,6 +9,9 @@ import {
   AffiliateProfileResponseDto,
   AffiliateListItemDto,
   AffiliateStatsDto,
+  AffiliateChartData,
+  ReferredAuthorDto,
+  ReferredAuthorDetailDto,
   CommissionResponseDto,
   PayoutResponseDto,
   CommissionStatus,
@@ -26,7 +29,10 @@ export const affiliateKeys = {
   all: ['affiliates'] as const,
   profile: () => [...affiliateKeys.all, 'profile'] as const,
   stats: () => [...affiliateKeys.all, 'stats'] as const,
+  chartData: () => [...affiliateKeys.all, 'chart-data'] as const,
   referralLink: () => [...affiliateKeys.all, 'referral-link'] as const,
+  referredAuthors: () => [...affiliateKeys.all, 'referred-authors'] as const,
+  referredAuthorDetail: (id: string) => [...affiliateKeys.all, 'referred-author-detail', id] as const,
   commissions: () => [...affiliateKeys.all, 'commissions'] as const,
   commissionsByStatus: (status?: CommissionStatus) => [...affiliateKeys.commissions(), status] as const,
   payouts: () => [...affiliateKeys.all, 'payouts'] as const,
@@ -61,6 +67,30 @@ export function useReferralLink() {
   return useQuery({
     queryKey: affiliateKeys.referralLink(),
     queryFn: () => affiliatesApi.getReferralLink(),
+  });
+}
+
+// Chart data hook - Section 6.1
+export function useAffiliateChartData() {
+  return useQuery<AffiliateChartData>({
+    queryKey: affiliateKeys.chartData(),
+    queryFn: () => affiliatesApi.getChartData(),
+  });
+}
+
+// Referred authors hooks - Section 6.3
+export function useReferredAuthors() {
+  return useQuery<ReferredAuthorDto[]>({
+    queryKey: affiliateKeys.referredAuthors(),
+    queryFn: () => affiliatesApi.getReferredAuthors(),
+  });
+}
+
+export function useReferredAuthorDetail(referralId: string) {
+  return useQuery<ReferredAuthorDetailDto>({
+    queryKey: affiliateKeys.referredAuthorDetail(referralId),
+    queryFn: () => affiliatesApi.getReferredAuthorDetail(referralId),
+    enabled: !!referralId,
   });
 }
 

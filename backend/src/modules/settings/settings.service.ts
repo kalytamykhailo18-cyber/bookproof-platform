@@ -112,10 +112,10 @@ const DEFAULT_SETTINGS: Record<
     isPublic: true,
   },
   [SETTING_KEYS.MIN_PAYOUT_THRESHOLD]: {
-    value: '10',
+    value: '50',
     dataType: 'number',
     category: 'payments',
-    description: 'Minimum wallet balance required to request payout (USD)',
+    description: 'Minimum wallet balance required to request payout (USD) - per Section 3.9',
     isPublic: true,
   },
 };
@@ -407,7 +407,7 @@ export class SettingsService {
    */
   async getMinPayoutThreshold(): Promise<number> {
     const setting = await this.getSetting(SETTING_KEYS.MIN_PAYOUT_THRESHOLD);
-    return setting ? parseFloat(setting.value) : 10;
+    return setting ? parseFloat(setting.value) : 50; // Section 3.9: default $50
   }
 
   /**
@@ -437,7 +437,7 @@ export class SettingsService {
       overbookingPercentage: overbookingSetting ? parseInt(overbookingSetting.value, 10) : 20,
       reviewDeadlineHours: deadlineSetting ? parseInt(deadlineSetting.value, 10) : 72,
       minReviewWordCount: wordCountSetting ? parseInt(wordCountSetting.value, 10) : 50,
-      minPayoutThreshold: payoutSetting ? parseFloat(payoutSetting.value) : 10,
+      minPayoutThreshold: payoutSetting ? parseFloat(payoutSetting.value) : 50, // Section 3.9: default $50
       updatedAt: overbookingSetting?.updatedAt,
     };
   }

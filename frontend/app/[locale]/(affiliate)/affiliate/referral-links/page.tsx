@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import { Copy, CheckCircle, MousePointerClick, Users, TrendingUp, Share2 } from 'lucide-react';
+import { Copy, CheckCircle, MousePointerClick, Users, TrendingUp, Share2, QrCode, Download } from 'lucide-react';
 
 export default function AffiliateReferralLinksPage() {
   const t = useTranslations('affiliates.referralLinks');
@@ -142,6 +142,49 @@ export default function AffiliateReferralLinksPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* QR Code Section - Section 6.2 requirement */}
+      {referralLinkData?.referralLink && (
+        <Card className="animate-fade-up">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <QrCode className="h-5 w-5" />
+              {t('qrCode.title') || 'QR Code'}
+            </CardTitle>
+            <CardDescription>
+              {t('qrCode.description') || 'Download and share your referral QR code'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center gap-4">
+            <div className="rounded-lg bg-white p-4">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(referralLinkData.referralLink)}`}
+                alt="Referral QR Code"
+                width={200}
+                height={200}
+              />
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&format=png&data=${encodeURIComponent(referralLinkData.referralLink)}`;
+                const link = document.createElement('a');
+                link.href = qrUrl;
+                link.download = 'referral-qr-code.png';
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                toast.success(t('qrCode.downloaded') || 'QR code downloaded!');
+              }}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              {t('qrCode.download') || 'Download QR Code'}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Performance Stats */}
       <Card className="animate-fade-up-light-slow">

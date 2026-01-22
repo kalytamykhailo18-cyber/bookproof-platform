@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEnum, IsBoolean } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Language, TargetMarket } from '@prisma/client';
 
@@ -12,12 +12,22 @@ export class CreateKeywordResearchDto {
   bookId?: string;
 
   @ApiProperty({
-    description: 'Book title',
+    description: 'Book title (max 200 characters)',
     example: 'The Complete Guide to Self-Publishing',
+    maxLength: 200,
   })
   @IsString()
   @IsNotEmpty()
   bookTitle: string;
+
+  @ApiPropertyOptional({
+    description: 'Book subtitle (max 200 characters)',
+    example: 'A Step-by-Step Guide for Authors',
+    maxLength: 200,
+  })
+  @IsOptional()
+  @IsString()
+  bookSubtitle?: string;
 
   @ApiProperty({
     description: 'Book genre',
@@ -98,4 +108,12 @@ export class CreateKeywordResearchDto {
   @IsOptional()
   @IsString()
   couponCode?: string;
+
+  @ApiPropertyOptional({
+    description: 'Use pending keyword research credit from credit checkout purchase',
+    example: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  usePendingCredit?: boolean;
 }

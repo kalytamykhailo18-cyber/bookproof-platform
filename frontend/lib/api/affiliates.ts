@@ -97,6 +97,31 @@ export interface AffiliateStatsDto {
   activeReferrals: number;
 }
 
+// Chart data DTOs for Section 6.1
+export interface ChartDataPoint {
+  date: string;
+  value: number;
+}
+
+export interface AffiliateChartData {
+  clicks: ChartDataPoint[];
+  conversions: ChartDataPoint[];
+}
+
+// Referred Authors DTOs for Section 6.3
+export interface ReferredAuthorDto {
+  id: string;
+  authorIdentifier: string;
+  signUpDate: Date;
+  totalPurchases: number;
+  totalCommissionEarned: number;
+  lastPurchaseDate?: Date;
+}
+
+export interface ReferredAuthorDetailDto extends ReferredAuthorDto {
+  purchaseHistory: { amount: number; date: Date; commission: number }[];
+}
+
 export interface AffiliateProfileResponseDto {
   id: string;
   userId: string;
@@ -140,6 +165,7 @@ export interface CommissionResponseDto {
   affiliateProfileId: string;
   creditPurchaseId: string;
   referredAuthorId: string;
+  authorIdentifier: string; // Partial email for privacy (Section 6.4)
   purchaseAmount: number;
   commissionAmount: number;
   commissionRate: number;
@@ -276,6 +302,25 @@ export const affiliatesApi = {
 
   getReferralLink: async (): Promise<{ referralLink: string }> => {
     const response = await apiClient.get<{ referralLink: string }>('/affiliates/referral-link');
+    return response.data;
+  },
+
+  // Chart data for dashboard - Section 6.1
+  getChartData: async (): Promise<AffiliateChartData> => {
+    const response = await apiClient.get<AffiliateChartData>('/affiliates/chart-data');
+    return response.data;
+  },
+
+  // Referred authors - Section 6.3
+  getReferredAuthors: async (): Promise<ReferredAuthorDto[]> => {
+    const response = await apiClient.get<ReferredAuthorDto[]>('/affiliates/referred-authors');
+    return response.data;
+  },
+
+  getReferredAuthorDetail: async (referralId: string): Promise<ReferredAuthorDetailDto> => {
+    const response = await apiClient.get<ReferredAuthorDetailDto>(
+      `/affiliates/referred-authors/${referralId}`,
+    );
     return response.data;
   },
 

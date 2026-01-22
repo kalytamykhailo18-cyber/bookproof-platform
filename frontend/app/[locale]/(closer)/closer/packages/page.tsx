@@ -66,7 +66,7 @@ export default function PackagesPage() {
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedPackageId, setSelectedPackageId] = useState<string>('');
-  const [expirationDays, setExpirationDays] = useState(7);
+  const [expirationDays, setExpirationDays] = useState(30); // Default 30 days per Section 5.3
   const [customMessage, setCustomMessage] = useState('');
 
   const handleSend = () => {
@@ -81,7 +81,7 @@ export default function PackagesPage() {
       {
         onSuccess: () => {
           setSendDialogOpen(false);
-          setExpirationDays(7);
+          setExpirationDays(30); // Default 30 days per Section 5.3
           setCustomMessage('');
         },
       },

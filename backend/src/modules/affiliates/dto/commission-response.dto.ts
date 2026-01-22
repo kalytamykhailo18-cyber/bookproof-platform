@@ -14,6 +14,9 @@ export class CommissionResponseDto {
   @ApiProperty({ description: 'Referred author ID' })
   referredAuthorId: string;
 
+  @ApiProperty({ description: 'Author identifier (partial email for privacy)' })
+  authorIdentifier: string;
+
   @ApiProperty({ description: 'Purchase amount' })
   purchaseAmount: number;
 

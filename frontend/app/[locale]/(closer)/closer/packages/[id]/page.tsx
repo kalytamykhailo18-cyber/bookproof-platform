@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ArrowLeft, Save, Send, Copy, ExternalLink, Clock, Eye, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Save, Send, Copy, ExternalLink, Clock, Eye, CheckCircle, QrCode, CreditCard, User } from 'lucide-react';
 import { CustomPackageStatus } from '@/lib/api/closer';
 import { toast } from 'sonner';
 
@@ -43,7 +43,7 @@ export default function PackageDetailPage() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
-  const [expirationDays, setExpirationDays] = useState(7);
+  const [expirationDays, setExpirationDays] = useState(30); // Default 30 days per Section 5.3
   const [customMessage, setCustomMessage] = useState('');
 
   const [formData, setFormData] = useState({
@@ -112,7 +112,7 @@ export default function PackageDetailPage() {
       {
         onSuccess: () => {
           setSendDialogOpen(false);
-          setExpirationDays(7);
+          setExpirationDays(30); // Default 30 days per Section 5.3
           setCustomMessage('');
         },
       },
@@ -288,39 +288,112 @@ export default function PackageDetailPage() {
         </CardContent>
       </Card>
 
-      {/* Payment Link */}
+      {/* Payment Link with QR Code (per Section 5.3) */}
       {pkg.paymentLink && (
         <Card className="animate-fade-up-light-slow">
           <CardHeader>
-            <CardTitle>{t('packageDetail.paymentLink')}</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <QrCode className="h-5 w-5" />
+              {t('packageDetail.paymentLink')}
+            </CardTitle>
             <CardDescription>{t('packageDetail.paymentLinkDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-2">
-              <Input value={pkg.paymentLink} readOnly className="font-mono text-sm" />
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onClick={() => copyPaymentLink(pkg.paymentLink!)}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onClick={() => window.open(pkg.paymentLink!, '_blank')}
-              >
-                <ExternalLink className="h-4 w-4" />
-              </Button>
+            <div className="grid gap-6 md:grid-cols-[1fr,auto]">
+              <div className="space-y-4">
+                {/* Full URL */}
+                <div className="flex items-center gap-2">
+                  <Input value={pkg.paymentLink} readOnly className="font-mono text-sm" />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => copyPaymentLink(pkg.paymentLink!)}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => window.open(pkg.paymentLink!, '_blank')}
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                  </Button>
+                </div>
+                {pkg.paymentLinkExpiresAt && (
+                  <p className="text-sm text-muted-foreground">
+                    <Clock className="mr-1 inline h-4 w-4" />
+                    {t('packageDetail.expires')}: {new Date(pkg.paymentLinkExpiresAt).toLocaleString()}
+                  </p>
+                )}
+                {/* Package Summary */}
+                <div className="rounded-lg bg-muted/50 p-3 text-sm">
+                  <p className="font-medium">{pkg.packageName}</p>
+                  <p className="text-muted-foreground">
+                    {pkg.credits} credits • {formatCurrency(pkg.price, pkg.currency)}
+                  </p>
+                </div>
+              </div>
+              {/* QR Code (per Section 5.3) */}
+              <div className="flex flex-col items-center">
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(pkg.paymentLink)}`}
+                  alt="Payment Link QR Code"
+                  className="rounded-lg border bg-white p-2"
+                  width={150}
+                  height={150}
+                />
+                <p className="mt-2 text-center text-xs text-muted-foreground">
+                  {t('packageDetail.scanQrCode') || 'Scan to pay'}
+                </p>
+              </div>
             </div>
-            {pkg.paymentLinkExpiresAt && (
-              <p className="mt-2 text-sm text-muted-foreground">
-                <Clock className="mr-1 inline h-4 w-4" />
-                {t('packageDetail.expires')}: {new Date(pkg.paymentLinkExpiresAt).toLocaleString()}
-              </p>
-            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Payment Information (when paid, per Section 5.4) */}
+      {pkg.status === CustomPackageStatus.PAID && (
+        <Card className="animate-fade-up-medium-slow border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-300">
+              <CreditCard className="h-5 w-5" />
+              {t('packageDetail.paymentInfo') || 'Payment Information'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <p className="text-sm text-muted-foreground">{t('packageDetail.paymentStatus') || 'Payment Status'}</p>
+                <Badge className="bg-green-500">{t('status.paid')}</Badge>
+              </div>
+              {pkg.paidAt && (
+                <div>
+                  <p className="text-sm text-muted-foreground">{t('packageDetail.paymentDate') || 'Payment Date'}</p>
+                  <p className="font-medium">{new Date(pkg.paidAt).toLocaleString()}</p>
+                </div>
+              )}
+              {pkg.stripePaymentId && (
+                <div className="md:col-span-2">
+                  <p className="text-sm text-muted-foreground">{t('packageDetail.transactionId') || 'Transaction ID'}</p>
+                  <code className="rounded bg-muted px-2 py-1 text-sm">{pkg.stripePaymentId}</code>
+                </div>
+              )}
+              {pkg.accountCreated !== undefined && (
+                <div className="md:col-span-2">
+                  <p className="text-sm text-muted-foreground">{t('packageDetail.clientAccount') || 'Client Account'}</p>
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    <span className="font-medium">
+                      {pkg.accountCreated
+                        ? t('packageDetail.accountCreated') || 'Account created successfully'
+                        : t('packageDetail.accountPending') || 'Account creation pending'}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
       )}

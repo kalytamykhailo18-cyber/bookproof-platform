@@ -328,6 +328,10 @@ export class ClosersService {
         clientName: dto.clientName,
         clientEmail: dto.clientEmail,
         clientCompany: dto.clientCompany,
+        clientPhone: dto.clientPhone,
+        // Keyword research inclusions (per Section 5.2)
+        includeKeywordResearch: dto.includeKeywordResearch || false,
+        keywordResearchCredits: dto.keywordResearchCredits || 0,
         status: CustomPackageStatus.DRAFT,
         // Approval workflow
         approvalRequired,
@@ -405,6 +409,9 @@ export class ClosersService {
         ...(dto.clientName && { clientName: dto.clientName }),
         ...(dto.clientEmail && { clientEmail: dto.clientEmail }),
         ...(dto.clientCompany !== undefined && { clientCompany: dto.clientCompany }),
+        ...(dto.clientPhone !== undefined && { clientPhone: dto.clientPhone }),
+        ...(dto.includeKeywordResearch !== undefined && { includeKeywordResearch: dto.includeKeywordResearch }),
+        ...(dto.keywordResearchCredits !== undefined && { keywordResearchCredits: dto.keywordResearchCredits }),
       },
     });
 
@@ -474,6 +481,9 @@ export class ClosersService {
 
     const pkg = await this.prisma.customPackage.findUnique({
       where: { id: packageId },
+      include: {
+        invoice: true, // Include invoice for payment-related fields
+      },
     });
 
     if (!pkg) {
@@ -534,7 +544,7 @@ export class ClosersService {
     // Generate unique payment link token
     const token = randomBytes(32).toString('hex');
     const paymentLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/checkout/custom/${token}`;
-    const expirationDays = dto.expirationDays || 7;
+    const expirationDays = dto.expirationDays || 30; // Default 30 days per Section 5.3
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + expirationDays);
 
@@ -1090,6 +1100,10 @@ export class ClosersService {
       clientName: pkg.clientName,
       clientEmail: pkg.clientEmail,
       clientCompany: pkg.clientCompany || undefined,
+      clientPhone: pkg.clientPhone || undefined,
+      // Keyword research inclusions (per Section 5.2)
+      includeKeywordResearch: pkg.includeKeywordResearch || false,
+      keywordResearchCredits: pkg.keywordResearchCredits || 0,
       status: pkg.status,
       // Approval fields
       approvalRequired: pkg.approvalRequired,
@@ -1103,6 +1117,10 @@ export class ClosersService {
       sentAt: pkg.sentAt || undefined,
       viewedAt: pkg.viewedAt || undefined,
       viewCount: pkg.viewCount,
+      // Payment-related fields from invoice (per Section 5.4)
+      paidAt: pkg.invoice?.paidAt || undefined,
+      stripePaymentId: pkg.invoice?.stripePaymentId || undefined,
+      accountCreated: pkg.invoice?.accountCreated || undefined,
       createdAt: pkg.createdAt,
       updatedAt: pkg.updatedAt,
     };

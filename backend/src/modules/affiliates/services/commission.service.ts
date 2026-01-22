@@ -320,7 +320,8 @@ export class CommissionService {
   }
 
   /**
-   * Get commissions for affiliate
+   * Get commissions for affiliate - Section 6.4
+   * Includes author partial identifier for privacy
    */
   async getCommissionsForAffiliate(
     affiliateProfileId: string,
@@ -332,9 +333,45 @@ export class CommissionService {
         where.status = status;
       }
 
-      return await this.prisma.affiliateCommission.findMany({
+      const commissions = await this.prisma.affiliateCommission.findMany({
         where,
+        include: {
+          referredAuthor: {
+            include: {
+              user: { select: { email: true } },
+            },
+          },
+        },
         orderBy: { createdAt: 'desc' },
+      });
+
+      // Map to response DTOs with masked author email
+      return commissions.map((commission) => {
+        const email = commission.referredAuthor?.user?.email || 'unknown';
+        const [localPart, domain] = email.split('@');
+        const maskedEmail =
+          localPart && localPart.length > 3
+            ? `${localPart.substring(0, 3)}***@${domain || 'email.com'}`
+            : `***@${domain || 'email.com'}`;
+
+        return {
+          id: commission.id,
+          affiliateProfileId: commission.affiliateProfileId,
+          creditPurchaseId: commission.creditPurchaseId,
+          referredAuthorId: commission.referredAuthorId,
+          authorIdentifier: maskedEmail,
+          purchaseAmount: parseFloat(commission.purchaseAmount.toString()),
+          commissionAmount: parseFloat(commission.commissionAmount.toString()),
+          commissionRate: parseFloat(commission.commissionRate.toString()),
+          status: commission.status,
+          pendingUntil: commission.pendingUntil,
+          approvedAt: commission.approvedAt,
+          paidAt: commission.paidAt,
+          cancelledAt: commission.cancelledAt,
+          cancellationReason: commission.cancellationReason,
+          createdAt: commission.createdAt,
+          updatedAt: commission.updatedAt,
+        };
       });
     } catch (error) {
       this.logger.error(`Error getting commissions: ${error.message}`, error.stack);

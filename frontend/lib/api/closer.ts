@@ -45,6 +45,9 @@ export interface CreateCustomPackageDto {
   clientName: string;
   clientEmail: string;
   clientCompany?: string;
+  clientPhone?: string; // Client phone number (per Section 5.2)
+  includeKeywordResearch?: boolean; // Include keyword research credits
+  keywordResearchCredits?: number; // Number of keyword research credits
 }
 
 export interface UpdateCustomPackageDto {
@@ -59,6 +62,9 @@ export interface UpdateCustomPackageDto {
   clientName?: string;
   clientEmail?: string;
   clientCompany?: string;
+  clientPhone?: string; // Client phone number (per Section 5.2)
+  includeKeywordResearch?: boolean; // Include keyword research credits
+  keywordResearchCredits?: number; // Number of keyword research credits
 }
 
 export interface SendPackageDto {
@@ -87,6 +93,9 @@ export interface CustomPackageResponse {
   clientName: string;
   clientEmail: string;
   clientCompany?: string;
+  clientPhone?: string; // Client phone number (per Section 5.2)
+  includeKeywordResearch: boolean; // Include keyword research credits
+  keywordResearchCredits: number; // Number of keyword research credits
   status: CustomPackageStatus;
   // Approval workflow fields
   approvalRequired: boolean;
@@ -100,6 +109,10 @@ export interface CustomPackageResponse {
   sentAt?: string;
   viewedAt?: string;
   viewCount: number;
+  // Payment-related fields (from invoice, per Section 5.4)
+  paidAt?: string;
+  stripePaymentId?: string;
+  accountCreated?: boolean;
   createdAt: string;
   updatedAt: string;
 }

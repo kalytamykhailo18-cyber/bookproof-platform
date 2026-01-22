@@ -6,6 +6,7 @@ import { Language, TargetMarket } from '@prisma/client';
 
 export interface PdfGenerationInput {
   bookTitle: string;
+  bookSubtitle?: string; // Optional subtitle (max 200 chars)
   genre: string;
   category: string;
   language: Language;
@@ -68,7 +69,7 @@ export class KeywordPdfService {
    * Generate HTML content for PDF
    */
   private generateHtml(input: PdfGenerationInput): string {
-    const { bookTitle, genre, category, language, targetMarket, keywords } = input;
+    const { bookTitle, bookSubtitle, genre, category, language, targetMarket, keywords } = input;
 
     return `
 <!DOCTYPE html>
@@ -309,6 +310,12 @@ export class KeywordPdfService {
       <span class="meta-label">Book Title:</span>
       <span class="meta-value">${this.escapeHtml(bookTitle)}</span>
     </div>
+    ${bookSubtitle ? `
+    <div class="meta-row">
+      <span class="meta-label">Subtitle:</span>
+      <span class="meta-value">${this.escapeHtml(bookSubtitle)}</span>
+    </div>
+    ` : ''}
     <div class="meta-row">
       <span class="meta-label">Genre:</span>
       <span class="meta-value">${this.escapeHtml(genre)}</span>
@@ -423,6 +430,112 @@ export class KeywordPdfService {
         </div>
       `).join('')}
     ` : ''}
+  </div>
+
+  <!-- Examples Section (Section 6 per requirements) -->
+  <div class="section">
+    <h2 class="section-title">6. Optimized Examples</h2>
+    <p class="section-description">
+      Sample implementations showing how to apply your keywords effectively.
+    </p>
+
+    <div class="guideline">
+      <div class="guideline-title">Sample Optimized Title</div>
+      <div class="guideline-instruction">
+        Combine your book's core topic with 1-2 primary keywords naturally.
+      </div>
+      <div class="guideline-examples">
+        <strong>Example:</strong>
+        <ul>
+          <li>${keywords.kdpSuggestions.title && keywords.kdpSuggestions.title.length > 0
+            ? this.escapeHtml(keywords.kdpSuggestions.title[0])
+            : `${this.escapeHtml(bookTitle)}: A Complete Guide`}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="guideline">
+      <div class="guideline-title">Sample Optimized Subtitle</div>
+      <div class="guideline-instruction">
+        Use 2-3 secondary keywords to expand on your topic and attract your target audience.
+      </div>
+      <div class="guideline-examples">
+        <strong>Example:</strong>
+        <ul>
+          <li>${keywords.kdpSuggestions.subtitle && keywords.kdpSuggestions.subtitle.length > 0
+            ? this.escapeHtml(keywords.kdpSuggestions.subtitle[0])
+            : `Master ${keywords.primaryKeywords[0] || 'Your Topic'} with Practical Strategies for ${keywords.primaryKeywords[1] || 'Success'}`}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="guideline">
+      <div class="guideline-title">Sample Description Paragraph</div>
+      <div class="guideline-instruction">
+        Naturally incorporate keywords while maintaining readability and engagement.
+      </div>
+      <div class="guideline-examples">
+        <strong>Example opening paragraph:</strong>
+        <p style="margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 4px; font-style: italic;">
+          "Are you looking for ${keywords.primaryKeywords[0] || 'guidance'}? This comprehensive guide covers everything you need to know about ${keywords.primaryKeywords[1] || 'your topic'}. Whether you're a beginner or experienced, you'll discover ${keywords.secondaryKeywords[0] || 'strategies'} that will help you achieve ${keywords.secondaryKeywords[1] || 'your goals'}."
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Best Practices Section (Section 7 per requirements) -->
+  <div class="section">
+    <h2 class="section-title">7. Best Practices</h2>
+    <p class="section-description">
+      Do's and Don'ts for Amazon KDP keyword optimization.
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #22c55e;">
+        <h3 style="color: #15803d; font-size: 16px; margin-bottom: 10px;">✓ DO</h3>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="padding: 5px 0; font-size: 13px;">• Use all 7 backend keyword boxes</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Include long-tail keywords for better targeting</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Research competitor keywords</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Update keywords based on performance</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Use relevant genre-specific terms</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Include alternate spellings if relevant</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Use keywords naturally in description</li>
+        </ul>
+      </div>
+      <div style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+        <h3 style="color: #b91c1c; font-size: 16px; margin-bottom: 10px;">✗ DON'T</h3>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="padding: 5px 0; font-size: 13px;">• Repeat words from your title</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Use your author name as keyword</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Include competitor book titles</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Use misleading or unrelated keywords</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Stuff keywords unnaturally</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Use trademarked terms</li>
+          <li style="padding: 5px 0; font-size: 13px;">• Exceed 50 characters per keyword box</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="margin-top: 20px;">
+      <strong>Amazon Policy Compliance:</strong>
+      <p style="margin-top: 8px; font-size: 13px;">
+        Amazon prohibits the use of misleading keywords, competitor names, unrelated terms, and adult content keywords (unless appropriate).
+        Violation of keyword policies can result in book removal or account suspension. Always ensure your keywords accurately represent your book's content.
+      </p>
+    </div>
+
+    <div class="guideline" style="margin-top: 20px;">
+      <div class="guideline-title">Common Mistakes to Avoid</div>
+      <ul style="list-style: none; padding: 0; margin: 10px 0;">
+        <li style="padding: 6px 0; font-size: 13px;">❌ Using only broad, high-competition keywords</li>
+        <li style="padding: 6px 0; font-size: 13px;">❌ Ignoring long-tail keywords that have better conversion rates</li>
+        <li style="padding: 6px 0; font-size: 13px;">❌ Not updating keywords after launch based on search data</li>
+        <li style="padding: 6px 0; font-size: 13px;">❌ Copying keywords from competitors without research</li>
+        <li style="padding: 6px 0; font-size: 13px;">❌ Using keywords that don't match reader search intent</li>
+        <li style="padding: 6px 0; font-size: 13px;">❌ Forgetting to include keywords in book description</li>
+      </ul>
+    </div>
   </div>
 
   <div class="footer">

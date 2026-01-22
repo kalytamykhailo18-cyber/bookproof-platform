@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -40,11 +40,24 @@ const DRAFT_STORAGE_KEY = 'keyword-research-draft';
 
 const formSchema = z.object({
   bookId: z.string().optional(), // Optional for standalone purchases (no existing book)
-  bookTitle: z.string().min(2, 'Book title is required'),
+  bookTitle: z
+    .string()
+    .min(2, 'Book title is required')
+    .max(200, 'Book title must be 200 characters or less'),
+  bookSubtitle: z
+    .string()
+    .max(200, 'Subtitle must be 200 characters or less')
+    .optional(),
   genre: z.string().min(2, 'Genre is required'),
   category: z.string().min(2, 'Category is required'),
-  description: z.string().min(10, 'Description must be at least 10 characters'),
-  targetAudience: z.string().min(5, 'Target audience is required'),
+  description: z
+    .string()
+    .min(100, 'Short description must be at least 100 characters')
+    .max(500, 'Short description must be 500 characters or less'),
+  targetAudience: z
+    .string()
+    .min(50, 'Target audience description must be at least 50 characters')
+    .max(200, 'Target audience description must be 200 characters or less'),
   competingBooks: z.string().optional(),
   specificKeywords: z.string().optional(),
   bookLanguage: z.nativeEnum(Language),
@@ -59,13 +72,18 @@ export default function NewKeywordResearchPage() {
   const t = useTranslations('keyword-research.new');
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const locale = (params.locale as string) || 'en';
   const createMutation = useCreateKeywordResearch();
   const validateCouponMutation = useValidateCoupon();
   const { data: pricing } = usePublicKeywordResearchPricing();
 
+  // Check if coming from credit purchase (Section 9.1)
+  const fromCreditPurchase = searchParams.get('fromCreditPurchase') === 'true';
+
   // Get dynamic price from settings, fallback to $49.99
-  const basePrice = pricing?.price ?? 49.99;
+  // If from credit purchase, it's already paid so price is 0
+  const basePrice = fromCreditPurchase ? 0 : (pricing?.price ?? 49.99);
 
   const [couponValidation, setCouponValidation] = useState<{
     valid: boolean;
@@ -102,6 +120,7 @@ export default function NewKeywordResearchPage() {
       bookLanguage: Language.EN,
       targetMarket: TargetMarket.US,
       bookTitle: '',
+      bookSubtitle: '',
       genre: '',
       category: '',
       description: '',
@@ -129,7 +148,7 @@ export default function NewKeywordResearchPage() {
 
   const selectedBookId = form.watch('bookId');
 
-  // Auto-save draft when form values change (debounced)
+  // Auto-save draft when form values change (debounced every 60 seconds per Section 9.2 requirements)
   const formValues = form.watch();
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -150,7 +169,7 @@ export default function NewKeywordResearchPage() {
           // Ignore storage errors
         }
       }
-    }, 1000); // Debounce 1 second
+    }, 60000); // Debounce 60 seconds per Section 9.2 requirements
 
     return () => clearTimeout(timer);
   }, [formValues]);
@@ -164,11 +183,13 @@ export default function NewKeywordResearchPage() {
       bookLanguage: Language.EN,
       targetMarket: TargetMarket.US,
       bookTitle: '',
+      bookSubtitle: '',
       genre: '',
       category: '',
       description: '',
       targetAudience: '',
       competingBooks: '',
+      specificKeywords: '',
       additionalNotes: '',
       couponCode: '',
     });
@@ -211,7 +232,11 @@ export default function NewKeywordResearchPage() {
 
     const data = form.getValues();
     try {
-      const result = await createMutation.mutateAsync(data);
+      // If from credit purchase, use pending credit (Section 9.1)
+      const submitData = fromCreditPurchase
+        ? { ...data, usePendingCredit: true }
+        : data;
+      const result = await createMutation.mutateAsync(submitData);
       // Clear draft on successful submission
       localStorage.removeItem(DRAFT_STORAGE_KEY);
       router.push(`/${locale}/author/keyword-research/${result.id}`);
@@ -231,8 +256,22 @@ export default function NewKeywordResearchPage() {
         <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
       </div>
 
+      {/* Pre-paid from Credit Purchase Indicator (Section 9.1) */}
+      {fromCreditPurchase && (
+        <Alert className="mb-6 border-green-500 bg-green-50 dark:bg-green-950/20">
+          <CheckCircle className="h-4 w-4 text-green-600" />
+          <AlertDescription className="text-green-700 dark:text-green-400">
+            <span className="font-medium">Keyword Research Already Paid!</span>
+            <span className="ml-2">
+              Complete the form below to generate your professional keyword report. No additional
+              payment required.
+            </span>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Draft Status Indicator */}
-      {hasDraft && (
+      {hasDraft && !fromCreditPurchase && (
         <Alert className="mb-6">
           <Save className="h-4 w-4" />
           <AlertDescription className="flex items-center justify-between">
@@ -305,9 +344,43 @@ export default function NewKeywordResearchPage() {
                   <FormItem>
                     <FormLabel>{t('fields.bookTitle.label')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t('fields.bookTitle.placeholder')} {...field} />
+                      <Input
+                        placeholder={t('fields.bookTitle.placeholder')}
+                        maxLength={200}
+                        {...field}
+                      />
                     </FormControl>
-                    <FormDescription>{t('fields.bookTitle.description')}</FormDescription>
+                    <FormDescription>
+                      {t('fields.bookTitle.description')} ({field.value?.length || 0}/200)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="bookSubtitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('fields.bookSubtitle.label') || 'Book Subtitle'} ({t('optional') || 'Optional'})
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={
+                          t('fields.bookSubtitle.placeholder') ||
+                          'e.g., A Step-by-Step Guide for Authors'
+                        }
+                        maxLength={200}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {t('fields.bookSubtitle.description') ||
+                        'Optional subtitle for your book (max 200 characters)'}{' '}
+                      ({field.value?.length || 0}/200)
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -415,10 +488,13 @@ export default function NewKeywordResearchPage() {
                       <Textarea
                         placeholder={t('fields.description.placeholder')}
                         rows={4}
+                        maxLength={500}
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>{t('fields.description.description')}</FormDescription>
+                    <FormDescription>
+                      {t('fields.description.description')} ({field.value?.length || 0}/500, min 100)
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -431,9 +507,16 @@ export default function NewKeywordResearchPage() {
                   <FormItem>
                     <FormLabel>{t('fields.targetAudience.label')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t('fields.targetAudience.placeholder')} {...field} />
+                      <Textarea
+                        placeholder={t('fields.targetAudience.placeholder')}
+                        rows={2}
+                        maxLength={200}
+                        {...field}
+                      />
                     </FormControl>
-                    <FormDescription>{t('fields.targetAudience.description')}</FormDescription>
+                    <FormDescription>
+                      {t('fields.targetAudience.description')} ({field.value?.length || 0}/200, min 50)
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -509,75 +592,96 @@ export default function NewKeywordResearchPage() {
           {/* Review & Payment */}
           <Card>
             <CardHeader>
-              <CardTitle>{t('review.title')}</CardTitle>
-              <CardDescription>Review your order and complete payment</CardDescription>
+              <CardTitle>
+                {fromCreditPurchase ? 'Review & Submit' : t('review.title')}
+              </CardTitle>
+              <CardDescription>
+                {fromCreditPurchase
+                  ? 'Review your information and submit to generate your report'
+                  : 'Review your order and complete payment'}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Coupon Code */}
-              <FormField
-                control={form.control}
-                name="couponCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('fields.couponCode.label')}</FormLabel>
-                    <div className="flex gap-2">
-                      <FormControl>
-                        <Input placeholder={t('fields.couponCode.placeholder')} {...field} />
-                      </FormControl>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={handleValidateCoupon}
-                        disabled={!field.value || validateCouponMutation.isPending}
-                      >
-                        {validateCouponMutation.isPending ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          t('fields.couponCode.apply')
-                        )}
-                      </Button>
-                    </div>
-                    {couponValidation && (
-                      <div className="mt-2 flex items-center gap-2">
-                        {couponValidation.valid ? (
-                          <>
-                            <CheckCircle className="h-4 w-4 text-green-500" />
-                            <span className="text-sm text-green-600">
-                              {t('fields.couponCode.applied')}
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            <AlertCircle className="h-4 w-4 text-red-500" />
-                            <span className="text-sm text-red-600">
-                              {t('fields.couponCode.invalid')}
-                            </span>
-                          </>
-                        )}
+              {/* Coupon Code - Only show if NOT from credit purchase */}
+              {!fromCreditPurchase && (
+                <FormField
+                  control={form.control}
+                  name="couponCode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('fields.couponCode.label')}</FormLabel>
+                      <div className="flex gap-2">
+                        <FormControl>
+                          <Input placeholder={t('fields.couponCode.placeholder')} {...field} />
+                        </FormControl>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={handleValidateCoupon}
+                          disabled={!field.value || validateCouponMutation.isPending}
+                        >
+                          {validateCouponMutation.isPending ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            t('fields.couponCode.apply')
+                          )}
+                        </Button>
                       </div>
-                    )}
-                    <FormDescription>{t('fields.couponCode.description')}</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      {couponValidation && (
+                        <div className="mt-2 flex items-center gap-2">
+                          {couponValidation.valid ? (
+                            <>
+                              <CheckCircle className="h-4 w-4 text-green-500" />
+                              <span className="text-sm text-green-600">
+                                {t('fields.couponCode.applied')}
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <AlertCircle className="h-4 w-4 text-red-500" />
+                              <span className="text-sm text-red-600">
+                                {t('fields.couponCode.invalid')}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      )}
+                      <FormDescription>{t('fields.couponCode.description')}</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
 
               {/* Pricing Summary */}
               <div className="space-y-2 border-t pt-4">
-                <div className="flex justify-between text-sm">
-                  <span>{t('review.subtotal')}</span>
-                  <span>${basePrice.toFixed(2)}</span>
-                </div>
-                {discount > 0 && (
-                  <div className="flex justify-between text-sm text-green-600">
-                    <span>{t('review.discount')}</span>
-                    <span>-${discount.toFixed(2)}</span>
+                {fromCreditPurchase ? (
+                  // Pre-paid from credit purchase
+                  <div className="flex items-center justify-between rounded-md bg-green-50 p-3 dark:bg-green-950/20">
+                    <span className="font-medium text-green-700 dark:text-green-400">
+                      Already Paid
+                    </span>
+                    <span className="font-bold text-green-700 dark:text-green-400">$0.00</span>
                   </div>
+                ) : (
+                  // Standard pricing
+                  <>
+                    <div className="flex justify-between text-sm">
+                      <span>{t('review.subtotal')}</span>
+                      <span>${basePrice.toFixed(2)}</span>
+                    </div>
+                    {discount > 0 && (
+                      <div className="flex justify-between text-sm text-green-600">
+                        <span>{t('review.discount')}</span>
+                        <span>-${discount.toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between border-t pt-2 text-lg font-bold">
+                      <span>{t('review.total')}</span>
+                      <span>${finalPrice.toFixed(2)}</span>
+                    </div>
+                  </>
                 )}
-                <div className="flex justify-between border-t pt-2 text-lg font-bold">
-                  <span>{t('review.total')}</span>
-                  <span>${finalPrice.toFixed(2)}</span>
-                </div>
               </div>
 
               {/* Submit Button */}
@@ -593,6 +697,8 @@ export default function NewKeywordResearchPage() {
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {t('submitting')}
                   </>
+                ) : fromCreditPurchase ? (
+                  'Generate Keyword Report'
                 ) : (
                   t('submit')
                 )}

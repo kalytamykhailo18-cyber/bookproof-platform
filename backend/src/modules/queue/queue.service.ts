@@ -50,10 +50,24 @@ export class QueueService {
       throw new NotFoundException('Reader profile not found');
     }
 
-    // Get all active campaigns
+    // Get all active campaigns with count of pending assignments (WAITING/SCHEDULED)
+    // This ensures estimated queue position matches what reader will actually get
     const campaigns = await this.prisma.book.findMany({
       where: {
         status: CampaignStatus.ACTIVE,
+      },
+      include: {
+        _count: {
+          select: {
+            readerAssignments: {
+              where: {
+                status: {
+                  in: [AssignmentStatus.WAITING, AssignmentStatus.SCHEDULED],
+                },
+              },
+            },
+          },
+        },
       },
       orderBy: {
         campaignStartDate: 'desc',
@@ -67,13 +81,14 @@ export class QueueService {
       const hasApplied = readerProfile.assignments.some((a) => a.bookId === campaign.id);
 
       // Estimate queue position and week (internal calculation only)
-      const currentAssignments = campaign.totalAssignedReaders;
+      // Use count of WAITING/SCHEDULED to match actual queuePosition calculation in applyToCampaign
+      const pendingAssignmentsCount = campaign._count.readerAssignments;
       const reviewsPerWeek = campaign.reviewsPerWeek || 1;
 
-      const estimatedQueuePosition = hasApplied ? undefined : currentAssignments + 1;
+      const estimatedQueuePosition = hasApplied ? undefined : pendingAssignmentsCount + 1;
       const estimatedWeek = hasApplied
         ? undefined
-        : Math.ceil((currentAssignments + 1) / reviewsPerWeek);
+        : Math.ceil((pendingAssignmentsCount + 1) / reviewsPerWeek);
 
       return {
         id: campaign.id,
@@ -1000,13 +1015,15 @@ export class QueueService {
   private async mapAssignmentToResponse(assignment: any): Promise<AssignmentResponseDto> {
     const book = assignment.book;
 
-    // Calculate hours remaining until deadline
+    // Calculate hours remaining until deadline (with decimal for minutes display)
+    // Frontend uses this to show HH:MM countdown timer
     let hoursRemaining: number | undefined;
     if (assignment.deadlineAt) {
       const now = new Date();
       const deadline = new Date(assignment.deadlineAt);
       const diffMs = deadline.getTime() - now.getTime();
-      hoursRemaining = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60)));
+      // Return decimal value (e.g., 47.5 = 47h 30m) for accurate minute display
+      hoursRemaining = Math.max(0, diffMs / (1000 * 60 * 60));
     }
 
     // SECURITY: Return secure streaming endpoint URLs for all content types

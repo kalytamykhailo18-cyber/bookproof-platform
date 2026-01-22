@@ -5,6 +5,7 @@ import { Language, TargetMarket } from '@prisma/client';
 
 export interface KeywordGenerationInput {
   bookTitle: string;
+  bookSubtitle?: string; // Optional subtitle (max 200 chars)
   genre: string;
   category: string;
   description: string;
@@ -104,6 +105,7 @@ export class KeywordAiService {
 
 **Book Information:**
 - Title: ${input.bookTitle}
+${input.bookSubtitle ? `- Subtitle: ${input.bookSubtitle}` : ''}
 - Genre: ${input.genre}
 - Category: ${input.category}
 - Description: ${input.description}
