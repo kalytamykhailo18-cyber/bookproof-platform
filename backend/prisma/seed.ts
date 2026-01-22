@@ -31,7 +31,7 @@ function randomFutureDate(daysAhead: number): Date {
 async function main() {
   console.log('🌱 Starting comprehensive database seeding...\n');
 
-  const defaultPassword = await hashPassword('Test123!');
+  const defaultPassword = await hashPassword('TestPass123@');
 
   // ============================================
   // 1. SYSTEM SETTINGS
@@ -1116,7 +1116,7 @@ async function main() {
 
   console.log('\n🔐 Default Credentials:');
   console.log('   Email: superadmin@bookproof.com');
-  console.log('   Password: Test123!');
+  console.log('   Password: TestPass123@');
   console.log('\n   (Same password for all seeded users)');
 }
 
