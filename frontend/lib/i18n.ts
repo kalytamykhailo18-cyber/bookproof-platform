@@ -40,6 +40,8 @@ const messageLoaders: Record<string, (locale: Locale) => Promise<Record<string, 
     import(`../messages/${locale}/admin-landing-pages.json`).then((m) => m.default),
   'admin-team': (locale) =>
     import(`../messages/${locale}/admin-team.json`).then((m) => m.default),
+  'admin-affiliates': (locale) =>
+    import(`../messages/${locale}/admin-affiliates.json`).then((m) => m.default),
   cookies: (locale) => import(`../messages/${locale}/cookies.json`).then((m) => m.default),
 };
 
@@ -92,6 +94,7 @@ export default getRequestConfig(async ({ locale }) => {
     keywordResearch,
     adminLandingPages,
     adminTeam,
+    adminAffiliates,
     cookies,
   ] = await Promise.all([
     import(`../messages/${locale}/common.json`).then((m) => m.default),
@@ -116,6 +119,7 @@ export default getRequestConfig(async ({ locale }) => {
     import(`../messages/${locale}/keyword-research.json`).then((m) => m.default),
     import(`../messages/${locale}/admin-landing-pages.json`).then((m) => m.default),
     import(`../messages/${locale}/admin-team.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-affiliates.json`).then((m) => m.default),
     import(`../messages/${locale}/cookies.json`).then((m) => m.default),
   ]);
 
@@ -146,6 +150,7 @@ export default getRequestConfig(async ({ locale }) => {
       ...payouts,
       ...reports,
       ...keywordResearch,
+      adminAffiliates,
       cookies,
     },
   };
