@@ -36,6 +36,26 @@ export function useAuth() {
       tokenManager.setToken(response.accessToken);
       setUser(response.user);
       queryClient.setQueryData(['user'], response.user);
+
+      // If email is not verified, redirect to verification required page
+      if (!response.user.emailVerified) {
+        router.push(`/${locale}/verify-email-required`);
+      } else {
+        // Email already verified (dev mode), redirect to role-based dashboard
+        switch (response.user.role) {
+          case 'AUTHOR':
+            router.push(`/${locale}/author`);
+            break;
+          case 'READER':
+            router.push(`/${locale}/reader`);
+            break;
+          case 'AFFILIATE':
+            router.push(`/${locale}/affiliate/dashboard`);
+            break;
+          default:
+            router.push(`/${locale}`);
+        }
+      }
     },
     onError: (error: any) => {
       stopLoading();
