@@ -197,6 +197,8 @@ export default getRequestConfig(async ({ locale }) => {
       affiliates,
       // reviews.json has internal nesting: { submit: {...}, validation: {...}, issues: {...} }
       reviews,
+      // payouts.json has internal nesting: { paymentMethods: {...}, status: {...}, history: {...}, validation: {...} }
+      payouts,
       // campaigns.json has internal nesting: { public: {...} }
       campaigns,
       // notifications.json has internal nesting: { settings: {...} }
