@@ -197,11 +197,11 @@ export class DashboardService {
       orderBy: { updatedAt: 'desc' },
     });
 
-    // Get recent admin actions
+    // Get recent admin actions (Section 4.1: Last 20 platform activities)
     const recentAdminActions = await this.prisma.auditLog.findMany({
       where: { userRole: 'ADMIN' as any },
       orderBy: { createdAt: 'desc' },
-      take: 10,
+      take: 20,
     });
 
     // Calculate revenue statistics

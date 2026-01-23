@@ -176,17 +176,15 @@ export default getRequestConfig(async ({ locale }) => {
       ...transactions,
       ...campaignAnalytics,
       ...readerStats,
-      // Nested admin namespaces (for useTranslations('admin.xxx'))
-      admin: {
-        dashboard: adminDashboard,
-        controls: adminControls,
-        exceptions: adminExceptions,
-        coupons: adminCoupons,
-        payouts: adminPayouts,
-        landingPages: adminLandingPages,
-        team: adminTeam,
-        validation: adminValidation,
-      },
+      // Admin namespaces with dot notation (for useTranslations('admin.xxx'))
+      'admin.dashboard': adminDashboard,
+      'admin.controls': adminControls,
+      'admin.exceptions': adminExceptions,
+      'admin.coupons': adminCoupons,
+      'admin.payouts': adminPayouts,
+      'admin.landingPages': adminLandingPages,
+      'admin.team': adminTeam,
+      'admin.validation': adminValidation,
       // Flat admin namespaces (for useTranslations('adminXxx'))
       adminReaders,
       adminAuthors,
