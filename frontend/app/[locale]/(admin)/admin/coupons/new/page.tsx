@@ -76,7 +76,7 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>;
 
 export default function NewCouponPage() {
-  const t = useTranslations('admin.coupons');
+  const t = useTranslations('adminCoupons');
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;

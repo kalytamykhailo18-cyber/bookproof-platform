@@ -21,7 +21,7 @@ import {
 import { formatDate } from '@/lib/utils';
 
 export default function CouponUsagePage() {
-  const t = useTranslations('admin.coupons');
+  const t = useTranslations('adminCoupons');
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
