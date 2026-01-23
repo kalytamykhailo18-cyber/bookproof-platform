@@ -253,6 +253,35 @@ export default function AdminDashboardPage() {
         </Card>
       </div>
 
+      {/* Pending Payouts Card - Section 4.1 Overview Statistics */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Card className="animate-fade-up cursor-pointer hover:border-primary/50 transition-colors" onClick={() => navigateTo('payouts')}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pending Payouts</CardTitle>
+            <DollarSign className="h-4 w-4 text-orange-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">
+              {dashboard?.quickActions?.pendingPayoutRequestsCount || 0}
+            </div>
+            <p className="text-xs text-muted-foreground">Reader and affiliate payout requests waiting for processing</p>
+          </CardContent>
+        </Card>
+
+        <Card className="animate-fade-up-slow cursor-pointer hover:border-primary/50 transition-colors" onClick={() => navigateTo('validation')}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Validation Queue</CardTitle>
+            <ClipboardList className="h-4 w-4 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">
+              {dashboard?.summary.totalReviewsPendingValidation || 0}
+            </div>
+            <p className="text-xs text-muted-foreground">Reviews awaiting admin validation</p>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Summary Cards - Review & Credit Metrics */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="animate-zoom-in-fast">
@@ -423,7 +452,8 @@ export default function AdminDashboardPage() {
                   (campaign: CampaignSectionItemDto, index: number) => (
                     <div
                       key={campaign.id}
-                      className={`rounded-lg border bg-background p-3 animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}
+                      className={`rounded-lg border bg-background p-3 cursor-pointer hover:border-green-400 transition-colors animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}
+                      onClick={() => navigateTo(`campaigns/${campaign.id}`)}
                     >
                       <div className="mb-2 flex items-start justify-between">
                         <div>
@@ -482,7 +512,8 @@ export default function AdminDashboardPage() {
                   (campaign: CampaignSectionItemDto, index: number) => (
                     <div
                       key={campaign.id}
-                      className={`rounded-lg border bg-background p-3 animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}
+                      className={`rounded-lg border bg-background p-3 cursor-pointer hover:border-yellow-400 transition-colors animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}
+                      onClick={() => navigateTo(`campaigns/${campaign.id}`)}
                     >
                       <div className="mb-2 flex items-start justify-between">
                         <div>
@@ -543,7 +574,8 @@ export default function AdminDashboardPage() {
                 dashboard.issuesCampaigns.map((campaign: CampaignSectionItemDto, index: number) => (
                   <div
                     key={campaign.id}
-                    className={`rounded-lg border bg-background p-3 animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}
+                    className={`rounded-lg border bg-background p-3 cursor-pointer hover:border-red-400 transition-colors animate-fade-up-${['fast', 'light-slow', 'medium-slow'][index % 3]}`}
+                    onClick={() => navigateTo('validation')}
                   >
                     <div className="mb-2 flex items-start justify-between">
                       <div>
@@ -603,7 +635,11 @@ export default function AdminDashboardPage() {
               {dashboard?.campaignsRequiringAttention &&
               dashboard.campaignsRequiringAttention.length > 0 ? (
                 dashboard.campaignsRequiringAttention.map((campaign) => (
-                  <TableRow key={campaign.id}>
+                  <TableRow
+                    key={campaign.id}
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => navigateTo(`campaigns/${campaign.id}`)}
+                  >
                     <TableCell className="font-medium">{campaign.bookTitle}</TableCell>
                     <TableCell>{campaign.authorName}</TableCell>
                     <TableCell>{campaign.issue}</TableCell>

@@ -73,5 +73,13 @@
     "amazonRemovalRate": "Taxa de Remoção Amazon",
     "reviewsRemoved": "Avaliações removidas pela Amazon"
   },
+  "payouts": {
+    "pending": "Pagamentos Pendentes",
+    "description": "Solicitações de pagamento de leitores e afiliados aguardando processamento"
+  },
+  "validation": {
+    "queue": "Fila de Validação",
+    "description": "Avaliações aguardando validação do admin"
+  },
   "loading": "Carregando painel..."
 }
