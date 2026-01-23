@@ -33,6 +33,7 @@ const LOCKOUT_CONFIG = {
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
+  private readonly skipEmailVerification: boolean;
 
   constructor(
     private prisma: PrismaService,
@@ -44,7 +45,14 @@ export class AuthService {
     private cacheService?: CacheService,
     @Optional() // TrackingService is optional - no forwardRef needed!
     private trackingService?: TrackingService,
-  ) {}
+  ) {
+    // DEV MODE: Skip email verification for testing
+    // Set SKIP_EMAIL_VERIFICATION=true in .env to auto-verify users
+    this.skipEmailVerification = this.configService.get<string>('SKIP_EMAIL_VERIFICATION') === 'true';
+    if (this.skipEmailVerification) {
+      this.logger.warn('⚠️  DEV MODE: Email verification is DISABLED. Users will be auto-verified.');
+    }
+  }
 
   /**
    * Get cache key for login attempts tracking
@@ -245,6 +253,7 @@ export class AuthService {
     const verificationToken = PasswordUtil.generateToken(32);
 
     // Create user and profile based on role
+    // DEV MODE: Auto-verify users if SKIP_EMAIL_VERIFICATION=true
     const user = await this.prisma.user.create({
       data: {
         email,
@@ -257,7 +266,8 @@ export class AuthService {
         phone,
         country,
         marketingConsent: marketingConsent || false,
-        emailVerified: false,
+        emailVerified: this.skipEmailVerification, // Auto-verify in dev mode
+        emailVerifiedAt: this.skipEmailVerification ? new Date() : null,
       },
     });
 
@@ -306,10 +316,15 @@ export class AuthService {
     this.logger.log(`User registered: ${email} with role ${role}`);
 
     // Send verification email (per requirements.md: Welcome email sent AFTER verification)
-    try {
-      await this.emailService.sendVerificationEmail(user.email, verificationToken);
-    } catch (error) {
-      this.logger.error(`Failed to send verification email to ${user.email}`, error);
+    // DEV MODE: Log verification URL instead of sending email
+    if (this.skipEmailVerification) {
+      this.logger.log(`✅ DEV MODE: User ${user.email} auto-verified. No email sent.`);
+    } else {
+      try {
+        await this.emailService.sendVerificationEmail(user.email, verificationToken);
+      } catch (error) {
+        this.logger.error(`Failed to send verification email to ${user.email}`, error);
+      }
     }
 
     // Generate JWT token (new users have tokenVersion 0)
@@ -786,6 +801,7 @@ export class AuthService {
     const verificationToken = PasswordUtil.generateToken(32);
 
     // Create user with AUTHOR role
+    // DEV MODE: Auto-verify users if SKIP_EMAIL_VERIFICATION=true
     const user = await this.prisma.user.create({
       data: {
         email,
@@ -796,7 +812,8 @@ export class AuthService {
         preferredCurrency: preferredCurrency || 'USD',
         phone,
         country,
-        emailVerified: false,
+        emailVerified: this.skipEmailVerification,
+        emailVerifiedAt: this.skipEmailVerification ? new Date() : null,
       },
     });
 
@@ -922,13 +939,15 @@ export class AuthService {
     }
 
     // Create user with ADMIN role
+    // DEV MODE: Auto-verify users if SKIP_EMAIL_VERIFICATION=true
     const user = await this.prisma.user.create({
       data: {
         email,
         passwordHash,
         role: UserRole.ADMIN,
         name,
-        emailVerified: false,
+        emailVerified: this.skipEmailVerification,
+        emailVerifiedAt: this.skipEmailVerification ? new Date() : null,
       },
     });
 
@@ -1018,6 +1037,7 @@ export class AuthService {
     const verificationToken = PasswordUtil.generateToken(32);
 
     // Create user with CLOSER role
+    // DEV MODE: Auto-verify users if SKIP_EMAIL_VERIFICATION=true
     const user = await this.prisma.user.create({
       data: {
         email,
@@ -1025,7 +1045,8 @@ export class AuthService {
         role: UserRole.CLOSER,
         name,
         isActive,
-        emailVerified: false,
+        emailVerified: this.skipEmailVerification,
+        emailVerifiedAt: this.skipEmailVerification ? new Date() : null,
       },
     });
 
