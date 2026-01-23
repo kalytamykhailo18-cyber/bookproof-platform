@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -49,6 +50,7 @@ export default function AffiliateRegisterPage() {
   const locale = (params.locale as string) || 'en';
   const { data: existingProfile, isLoading: checkingProfile } = useAffiliateProfile();
   const registerMutation = useRegisterAffiliate();
+  const [isDashboardLoading, setIsDashboardLoading] = useState(false);
 
   const form = useForm<RegisterAffiliateFormData>({
     resolver: zodResolver(registerAffiliateSchema),
@@ -110,7 +112,15 @@ export default function AffiliateRegisterPage() {
                 <AlertDescription>{t('existingApplication.pending')}</AlertDescription>
               </Alert>
             )}
-            <Button type="button" onClick={() => router.push(`/${locale}/affiliate/dashboard`)}>
+            <Button
+              type="button"
+              onClick={() => {
+                setIsDashboardLoading(true);
+                router.push(`/${locale}/affiliate/dashboard`);
+              }}
+              disabled={isDashboardLoading}
+            >
+              {isDashboardLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('existingApplication.goToDashboard')}
             </Button>
           </CardContent>

@@ -1,5 +1,6 @@
 // Admin Reports DTOs
 // Financial, Operational, and Affiliate Reports for Admin Dashboard
+import { IsString, IsNotEmpty, IsOptional, IsIn } from 'class-validator';
 
 export class FinancialReportDto {
   // Revenue Breakdown
@@ -102,12 +103,24 @@ export class OperationalReportDto {
     }>;
   };
 
-  // Amazon Removal Tracking
+  // Amazon Removal Tracking (Section 12.5: Replacement Statistics)
   amazonRemovalMetrics: {
     totalRemovals: number;
-    removalRate: number; // Percentage
+    removalRate: number; // Percentage of validated reviews removed
     replacementsProvided: number;
     withinGuaranteePeriod: number;
+    // Section 12.5 required fields
+    replacementRate: number; // Percentage: (replacements provided / eligible for replacement) * 100
+    averageDaysToRemoval: number; // Average days from validation to removal detection
+    // Per-campaign breakdown
+    perCampaignBreakdown: Array<{
+      campaignId: string;
+      campaignTitle: string;
+      totalRemovals: number;
+      replacementsProvided: number;
+      eligibleForReplacement: number;
+      averageDaysToRemoval: number;
+    }>;
   };
 
   // Period
@@ -176,12 +189,25 @@ export class AffiliateReportDto {
 
 // Export Options DTOs
 export class ExportQueryDto {
+  @IsString()
+  @IsNotEmpty()
   startDate: string;
+
+  @IsString()
+  @IsNotEmpty()
   endDate: string;
+
+  @IsOptional()
+  @IsIn(['csv', 'pdf'])
   format?: 'csv' | 'pdf';
 }
 
 export class DateRangeQueryDto {
+  @IsString()
+  @IsNotEmpty()
   startDate: string;
+
+  @IsString()
+  @IsNotEmpty()
   endDate: string;
 }

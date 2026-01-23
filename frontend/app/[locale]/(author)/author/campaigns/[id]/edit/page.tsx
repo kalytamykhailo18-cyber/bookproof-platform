@@ -97,6 +97,9 @@ export default function EditCampaignPage() {
   const { campaign, isLoading: isLoadingCampaign } = useCampaign(campaignId);
   const { updateCampaign, isUpdating } = useCampaigns();
   const [currentStep, setCurrentStep] = useState<Step>('basic');
+  const [isBackLoading, setIsBackLoading] = useState(false);
+  const [isDashboardLoading, setIsDashboardLoading] = useState(false);
+  const [isCampaignLoading, setIsCampaignLoading] = useState(false);
 
   const {
     register,
@@ -198,7 +201,16 @@ export default function EditCampaignPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p>{t('notFound')}</p>
-            <Button type="button" onClick={() => router.push(`/${locale}/author`)} className="mt-4">
+            <Button
+              type="button"
+              onClick={() => {
+                setIsDashboardLoading(true);
+                router.push(`/${locale}/author`);
+              }}
+              className="mt-4"
+              disabled={isDashboardLoading}
+            >
+              {isDashboardLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -214,7 +226,16 @@ export default function EditCampaignPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p>{t('cannotEdit')}</p>
-            <Button type="button" onClick={() => router.push(`/${locale}/author/campaigns/${campaignId}`)} className="mt-4">
+            <Button
+              type="button"
+              onClick={() => {
+                setIsCampaignLoading(true);
+                router.push(`/${locale}/author/campaigns/${campaignId}`);
+              }}
+              className="mt-4"
+              disabled={isCampaignLoading}
+            >
+              {isCampaignLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('backToCampaign')}
             </Button>
           </CardContent>
@@ -230,10 +251,14 @@ export default function EditCampaignPage() {
         <Button
           type="button"
           variant="ghost"
-          onClick={() => router.push(`/${locale}/author/campaigns/${campaignId}`)}
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/author/campaigns/${campaignId}`);
+          }}
           className="mb-4"
+          disabled={isBackLoading}
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
           {t('back')}
         </Button>
         <h1 className="text-3xl font-bold">{t('title')}</h1>

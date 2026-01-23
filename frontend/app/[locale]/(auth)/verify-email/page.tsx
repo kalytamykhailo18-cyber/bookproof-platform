@@ -17,6 +17,7 @@ export default function VerifyEmailPage() {
   const { verifyEmail } = useAuth();
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isNavLoading, setIsNavLoading] = useState(false);
 
   useEffect(() => {
     const token = searchParams.get('token');
@@ -92,14 +93,14 @@ export default function VerifyEmailPage() {
 
       <CardFooter className="flex flex-col space-y-2">
         {status === 'success' && (
-          <Button type="button" className="w-full" onClick={() => router.push(`/${locale}/login`)}>
-            {t('loginButton')}
+          <Button type="button" className="w-full" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); router.push(`/${locale}/login`); }}>
+            {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('loginButton')}
           </Button>
         )}
 
         {status === 'error' && (
-          <Button type="button" onClick={() => router.push(`/${locale}/register`)} variant="outline" className="w-full">
-            {t('resendButton')}
+          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); router.push(`/${locale}/register`); }} variant="outline" className="w-full">
+            {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('resendButton')}
           </Button>
         )}
       </CardFooter>

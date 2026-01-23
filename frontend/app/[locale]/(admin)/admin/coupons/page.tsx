@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Plus, Edit, Trash2, Eye, TrendingUp, Filter, Tag, AlertCircle } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, TrendingUp, Filter, Tag, AlertCircle, Loader2 } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useCoupons, useDeleteCoupon } from '@/hooks/useCoupons';
 import { Button } from '@/components/ui/button';
@@ -52,6 +52,8 @@ export default function CouponsPage() {
   const [filterAppliesTo, setFilterAppliesTo] = useState<string>('all');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [couponToDelete, setCouponToDelete] = useState<string | null>(null);
+  const [isCreateLoading, setIsCreateLoading] = useState(false);
+  const [loadingCouponId, setLoadingCouponId] = useState<string | null>(null);
 
   // Build filters
   const filters: { isActive?: boolean; appliesTo?: CouponAppliesTo } = {};
@@ -144,8 +146,16 @@ export default function CouponsPage() {
           <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <Button type="button" className="animate-fade-left" onClick={() => router.push(`/${locale}/admin/coupons/new`)}>
-          <Plus className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          className="animate-fade-left"
+          onClick={() => {
+            setIsCreateLoading(true);
+            router.push(`/${locale}/admin/coupons/new`);
+          }}
+          disabled={isCreateLoading}
+        >
+          {isCreateLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
           {t('createNew')}
         </Button>
       </div>
@@ -256,16 +266,34 @@ export default function CouponsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => router.push(`/${locale}/admin/coupons/${coupon.id}`)}>
-                            <Eye className="mr-2 h-4 w-4" />
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setLoadingCouponId(coupon.id + '-view');
+                              router.push(`/${locale}/admin/coupons/${coupon.id}`);
+                            }}
+                            disabled={loadingCouponId === coupon.id + '-view'}
+                          >
+                            {loadingCouponId === coupon.id + '-view' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Eye className="mr-2 h-4 w-4" />}
                             {t('actions.view')}
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push(`/${locale}/admin/coupons/${coupon.id}/edit`)}>
-                            <Edit className="mr-2 h-4 w-4" />
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setLoadingCouponId(coupon.id + '-edit');
+                              router.push(`/${locale}/admin/coupons/${coupon.id}/edit`);
+                            }}
+                            disabled={loadingCouponId === coupon.id + '-edit'}
+                          >
+                            {loadingCouponId === coupon.id + '-edit' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Edit className="mr-2 h-4 w-4" />}
                             {t('actions.edit')}
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push(`/${locale}/admin/coupons/${coupon.id}/usage`)}>
-                            <TrendingUp className="mr-2 h-4 w-4" />
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setLoadingCouponId(coupon.id + '-usage');
+                              router.push(`/${locale}/admin/coupons/${coupon.id}/usage`);
+                            }}
+                            disabled={loadingCouponId === coupon.id + '-usage'}
+                          >
+                            {loadingCouponId === coupon.id + '-usage' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <TrendingUp className="mr-2 h-4 w-4" />}
                             {t('actions.viewUsage')}
                           </DropdownMenuItem>
                           <DropdownMenuItem

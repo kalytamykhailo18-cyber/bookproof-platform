@@ -83,6 +83,27 @@
       }
     }
   },
+  "testimonials": {
+    "title": "Lo Que Dicen Nuestros Usuarios",
+    "subtitle": "Únete a miles de autores que han crecido su presencia en Amazon con BookProof",
+    "items": {
+      "t1": {
+        "quote": "BookProof ayudó a mi novela debut a obtener la visibilidad que necesitaba. Las reseñas llegaron naturalmente y ayudaron a impulsar significativamente mis rankings.",
+        "author": "Sarah M.",
+        "title": "Autora Bestseller"
+      },
+      "t2": {
+        "quote": "Por fin un servicio que realmente cumple sus promesas. Lectores reales, reseñas reales. La credibilidad de mi libro se disparó después de usar BookProof.",
+        "author": "James T.",
+        "title": "Autor Autopublicado"
+      },
+      "t3": {
+        "quote": "La distribución gradual de las reseñas hizo que todo pareciera orgánico. Amazon nunca marcó nada, y mis ventas aumentaron constantemente.",
+        "author": "Maria L.",
+        "title": "Autora de Romance"
+      }
+    }
+  },
   "pricing": {
     "title": "Precios Simples y Transparentes",
     "subtitle": "Elige un paquete que se ajuste a tus objetivos de marketing del libro",

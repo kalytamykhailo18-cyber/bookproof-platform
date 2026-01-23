@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { VerifyEmailDto } from './dto/verify-email.dto';
-import { RequestPasswordResetDto, ResetPasswordDto } from './dto/reset-password.dto';
+import { RequestPasswordResetDto, ResetPasswordDto, ChangePasswordDto } from './dto/reset-password.dto';
 import { AuthResponseDto, MessageResponseDto, UserDataDto } from './dto/auth-response.dto';
 import { CreateAuthorByCloserDto, CreateAuthorByCloserResponseDto } from './dto/create-author-by-closer.dto';
 import { CreateAdminDto, CreateAdminResponseDto } from './dto/create-admin.dto';
@@ -73,8 +73,8 @@ export class AuthController {
   @ApiOperation({ summary: 'Request password reset link' })
   @ApiResponse({ status: 200, description: 'Reset link sent if email exists', type: MessageResponseDto })
   @ApiResponse({ status: 429, description: 'Too many password reset requests' })
-  async requestPasswordReset(@Body() dto: RequestPasswordResetDto): Promise<MessageResponseDto> {
-    return this.authService.requestPasswordReset(dto);
+  async requestPasswordReset(@Body() dto: RequestPasswordResetDto, @Req() request: Request): Promise<MessageResponseDto> {
+    return this.authService.requestPasswordReset(dto, request);
   }
 
   @Public()
@@ -196,5 +196,25 @@ export class AuthController {
     @CurrentUser() user: CurrentUserData,
   ): Promise<UnlockAccountResponseDto> {
     return this.authService.unlockAccount(dto.email, user.id, dto.reason);
+  }
+
+  /**
+   * Change password for authenticated user
+   * Per requirements.md Section 15.1: Session Security
+   * - Verifies current password
+   * - Invalidates all sessions on password change
+   */
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Change password for authenticated user' })
+  @ApiResponse({ status: 200, description: 'Password changed successfully', type: MessageResponseDto })
+  @ApiResponse({ status: 400, description: 'Current password is incorrect or new password is invalid' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async changePassword(
+    @Body() dto: ChangePasswordDto,
+    @CurrentUser() user: CurrentUserData,
+  ): Promise<MessageResponseDto> {
+    return this.authService.changePassword(user.id, dto.currentPassword, dto.newPassword);
   }
 }

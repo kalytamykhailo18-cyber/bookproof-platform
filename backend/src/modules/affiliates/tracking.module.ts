@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TrackingService } from './services/tracking.service';
 import { PrismaModule } from '@common/prisma/prisma.module';
+import { NotificationsModule } from '@modules/notifications/notifications.module';
 
 /**
  * Tracking Module
@@ -11,7 +12,7 @@ import { PrismaModule } from '@common/prisma/prisma.module';
  * Separated from main AffiliatesModule to prevent circular dependencies.
  */
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, NotificationsModule],
   providers: [TrackingService],
   exports: [TrackingService],
 })

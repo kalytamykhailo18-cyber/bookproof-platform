@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useCreateCoupon } from '@/hooks/useCoupons';
 import { CreateCouponDto, CouponType, CouponAppliesTo } from '@/lib/api/coupons';
 import { Button } from '@/components/ui/button';
@@ -80,6 +81,7 @@ export default function NewCouponPage() {
   const params = useParams();
   const locale = params.locale as string;
   const createMutation = useCreateCoupon();
+  const [isBackLoading, setIsBackLoading] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -113,8 +115,17 @@ export default function NewCouponPage() {
     <div className="container mx-auto max-w-4xl space-y-6 py-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button type="button" variant="ghost" size="icon" onClick={() => router.push(`/${locale}/admin/coupons`)}>
-          <ArrowLeft className="h-4 w-4" />
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/admin/coupons`);
+          }}
+          disabled={isBackLoading}
+        >
+          {isBackLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowLeft className="h-4 w-4" />}
         </Button>
         <div>
           <h1 className="text-3xl font-bold">{t('new.title')}</h1>
@@ -460,11 +471,21 @@ export default function NewCouponPage() {
 
           {/* Actions */}
           <div className="flex justify-end gap-4">
-            <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/admin/coupons`)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsBackLoading(true);
+                router.push(`/${locale}/admin/coupons`);
+              }}
+              disabled={isBackLoading}
+            >
+              {isBackLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('new.actions.cancel')}
             </Button>
             <Button type="button" onClick={handleSubmit} disabled={createMutation.isPending}>
-              {createMutation.isPending ? t('new.actions.creating') : t('new.actions.create')}
+              {createMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {t('new.actions.create')}
             </Button>
           </div>
         </div>

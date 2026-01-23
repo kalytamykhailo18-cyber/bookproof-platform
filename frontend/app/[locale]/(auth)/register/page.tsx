@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter, useParams } from 'next/navigation';
 import { toast } from 'sonner';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Loader2 } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -128,6 +128,7 @@ export default function RegisterPage() {
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
 
   const [amazonLinks, setAmazonLinks] = useState<string[]>(['']);
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
 
   const {
     register,
@@ -625,16 +626,19 @@ export default function RegisterPage() {
           disabled={isRegistering}
           onClick={handleRegister}
         >
-          {isRegistering ? t('submitting') : t('submitButton')}
+          {isRegistering ? <Loader2 className="h-4 w-4 animate-spin" /> : t('submitButton')}
         </Button>
 
         <p className="animate-fade-up-slow text-center text-sm text-muted-foreground">
           {t('hasAccount')}{' '}
           <span
             className="cursor-pointer font-medium text-primary hover:underline"
-            onClick={() => router.push(`/${locale}/login`)}
+            onClick={() => {
+              setIsLoginLoading(true);
+              router.push(`/${locale}/login`);
+            }}
           >
-            {t('signIn')}
+            {isLoginLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('signIn')}
           </span>
         </p>
       </CardFooter>

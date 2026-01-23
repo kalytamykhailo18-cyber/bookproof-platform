@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { DollarSign, Wallet, ArrowLeft } from 'lucide-react';
+import { DollarSign, Wallet, ArrowLeft, Loader2 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 
 import { useReaderStats } from '@/hooks/useReaders';
@@ -58,6 +58,8 @@ export default function RequestPayoutPage() {
   const { mutate: requestPayout, isPending } = useRequestPayout();
 
   const [selectedMethod, setSelectedMethod] = useState<string>('');
+  const [isBackLoading, setIsBackLoading] = useState(false);
+  const [isCancelLoading, setIsCancelLoading] = useState(false);
 
   const {
     register,
@@ -219,10 +221,14 @@ export default function RequestPayoutPage() {
         type="button"
         variant="ghost"
         size="sm"
-        onClick={() => router.push(`/${locale}/reader/wallet`)}
+        onClick={() => {
+          setIsBackLoading(true);
+          router.push(`/${locale}/reader/wallet`);
+        }}
         className="mb-6 animate-fade-right-fast"
+        disabled={isBackLoading}
       >
-        <ArrowLeft className="mr-2 h-4 w-4" />
+        {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
         Back to Wallet
       </Button>
 
@@ -361,10 +367,14 @@ export default function RequestPayoutPage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.back()}
-                disabled={isPending}
+                onClick={() => {
+                  setIsCancelLoading(true);
+                  router.back();
+                }}
+                disabled={isPending || isCancelLoading}
                 className="flex-1"
               >
+                {isCancelLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('cancel')}
               </Button>
               <Button
@@ -373,7 +383,7 @@ export default function RequestPayoutPage() {
                 disabled={isPending || availableBalance < MIN_PAYOUT_AMOUNT || amount > availableBalance}
                 className="flex-1"
               >
-                {isPending ? t('submitting') : t('submit')}
+                {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : t('submit')}
               </Button>
             </div>
           </div>

@@ -9,6 +9,7 @@ import {
   UserData,
   RequestPasswordResetRequest,
   ResetPasswordRequest,
+  ChangePasswordRequest,
 } from '@/lib/api/auth';
 import { tokenManager } from '@/lib/api/client';
 import { useAuthStore } from '@/store/authStore';
@@ -126,6 +127,27 @@ export function useAuth() {
     },
   });
 
+  // Change password mutation (Section 15.1)
+  const changePasswordMutation = useMutation({
+    mutationFn: (data: ChangePasswordRequest) => {
+      startLoading('Changing your password...');
+      return authApi.changePassword(data);
+    },
+    onSuccess: () => {
+      stopLoading();
+      // Clear user session since all tokens are invalidated
+      tokenManager.clearToken();
+      clearUser();
+      queryClient.clear();
+      router.push(`/${locale}/login`);
+      toast.success('Password changed successfully. Please log in with your new password.');
+    },
+    onError: (error: any) => {
+      stopLoading();
+      console.error('Password change error:', error);
+    },
+  });
+
   // Get current user profile query
   const {
     data: profileData,
@@ -186,6 +208,10 @@ export function useAuth() {
     resetPasswordAsync: resetPasswordMutation.mutateAsync,
     isResettingPassword: resetPasswordMutation.isPending,
     resetPasswordError: resetPasswordMutation.error,
+    changePassword: changePasswordMutation.mutate,
+    changePasswordAsync: changePasswordMutation.mutateAsync,
+    isChangingPassword: changePasswordMutation.isPending,
+    changePasswordError: changePasswordMutation.error,
     logout,
   };
 }

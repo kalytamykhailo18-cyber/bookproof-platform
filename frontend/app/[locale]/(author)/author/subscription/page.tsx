@@ -32,6 +32,7 @@ import {
   AlertCircle,
   RefreshCw,
   XCircle,
+  Loader2,
 } from 'lucide-react';
 
 export default function SubscriptionPage() {
@@ -278,7 +279,7 @@ export default function SubscriptionPage() {
                     onClick={handleCancelSubscription}
                     disabled={!cancelReason || cancelSubscription.isPending}
                   >
-                    {cancelSubscription.isPending ? 'Cancelling...' : 'Confirm Cancellation'}
+                    {cancelSubscription.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Confirm Cancellation'}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -361,7 +362,7 @@ export default function SubscriptionPage() {
                     disabled={createSubscriptionCheckout.isPending}
                   >
                     <CreditCard className="mr-2 h-4 w-4" />
-                    {createSubscriptionCheckout.isPending ? 'Processing...' : 'Subscribe Now'}
+                    {createSubscriptionCheckout.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Subscribe Now'}
                   </Button>
                 </CardFooter>
               </Card>

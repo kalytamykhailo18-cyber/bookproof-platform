@@ -18,6 +18,7 @@ export default function NotificationsPage() {
   const locale = (params.locale as string) || 'en';
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [typeFilter, setTypeFilter] = useState<NotificationType | 'ALL'>('ALL');
+  const [isSettingsLoading, setIsSettingsLoading] = useState(false);
 
   // Get notifications
   const { data: notificationData, isLoading } = useNotifications({
@@ -52,8 +53,17 @@ export default function NotificationsPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button type="button" variant="outline" className="animate-fade-left" onClick={() => router.push(`/${locale}/reader/notifications/settings`)}>
-            <Settings className="mr-2 h-4 w-4" />
+          <Button
+            type="button"
+            variant="outline"
+            className="animate-fade-left"
+            onClick={() => {
+              setIsSettingsLoading(true);
+              router.push(`/${locale}/reader/notifications/settings`);
+            }}
+            disabled={isSettingsLoading}
+          >
+            {isSettingsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Settings className="mr-2 h-4 w-4" />}
             Settings
           </Button>
           {notificationData && notificationData.unreadCount > 0 && (

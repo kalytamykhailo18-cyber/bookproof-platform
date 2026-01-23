@@ -901,7 +901,7 @@ export default function TransactionsPage() {
                           onClick={() => handleCancelRefundRequest(request.id)}
                           disabled={cancelRefund.isPending}
                         >
-                          Cancel
+                          {cancelRefund.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Cancel'}
                         </Button>
                       )}
                       {request.adminNotes && (

@@ -1,9 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { XCircle } from 'lucide-react';
+import { XCircle, Loader2 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 
 export default function CreditPurchaseCancelPage() {
@@ -11,6 +12,8 @@ export default function CreditPurchaseCancelPage() {
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'en';
+  const [isTryAgainLoading, setIsTryAgainLoading] = useState(false);
+  const [isDashboardLoading, setIsDashboardLoading] = useState(false);
 
   return (
     <div className="container mx-auto max-w-2xl px-4 py-12">
@@ -25,10 +28,27 @@ export default function CreditPurchaseCancelPage() {
           <p className="animate-fade-up-slow text-muted-foreground">{t('message')}</p>
 
           <div className="flex animate-fade-up-very-slow flex-col justify-center gap-4 sm:flex-row">
-            <Button type="button" onClick={() => router.push(`/${locale}/author/credits`)}>
+            <Button
+              type="button"
+              onClick={() => {
+                setIsTryAgainLoading(true);
+                router.push(`/${locale}/author/credits`);
+              }}
+              disabled={isTryAgainLoading}
+            >
+              {isTryAgainLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('tryAgain')}
             </Button>
-            <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/author`)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsDashboardLoading(true);
+                router.push(`/${locale}/author`);
+              }}
+              disabled={isDashboardLoading}
+            >
+              {isDashboardLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('backToDashboard')}
             </Button>
           </div>

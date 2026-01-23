@@ -37,6 +37,7 @@ import {
   UserPlus,
   FileText,
   CheckCircle2,
+  Loader2,
 } from 'lucide-react';
 
 export default function CampaignControlsPage() {
@@ -103,6 +104,7 @@ export default function CampaignControlsPage() {
   const [removeReaderNotify, setRemoveReaderNotify] = useState(true);
   const [removeReaderRefund, setRemoveReaderRefund] = useState(true);
   const [removeReaderNotes, setRemoveReaderNotes] = useState('');
+  const [isBackLoading, setIsBackLoading] = useState(false);
 
   const handlePause = () => {
     pauseCampaign.mutate(
@@ -367,8 +369,17 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button type="button" variant="ghost" className="mb-4" onClick={() => router.push(`/${locale}/admin/campaigns/${bookId}`)}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          variant="ghost"
+          className="mb-4"
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/admin/campaigns/${bookId}`);
+          }}
+          disabled={isBackLoading}
+        >
+          {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
           {t('backToCampaign')}
         </Button>
         <div className="flex items-center justify-between">
@@ -531,7 +542,7 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                       disabled={!pauseReason || pauseCampaign.isPending}
                       className="w-full"
                     >
-                      {pauseCampaign.isPending ? t('actions.pausing') : t('actions.confirmPause')}
+                      {pauseCampaign.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : t('actions.confirmPause')}
                     </Button>
                   </div>
                 </DialogContent>
@@ -574,7 +585,7 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                       className="w-full"
                     >
                       {resumeCampaign.isPending
-                        ? t('actions.resuming')
+                        ? <Loader2 className="h-4 w-4 animate-spin" />
                         : t('actions.confirmResume')}
                     </Button>
                   </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useReaderProfile, useReaderStats } from '@/hooks/useReaders';
 import { useMyAssignments } from '@/hooks/useQueue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,6 +19,7 @@ import {
   Wallet,
   Eye,
   Banknote,
+  Loader2,
 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 import { AssignmentStatus, Assignment } from '@/lib/api/queue';
@@ -63,6 +65,7 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
   const params = useParams();
   const locale = (params.locale as string) || 'en';
   const t = useTranslations('reader.dashboard');
+  const [isNavLoading, setIsNavLoading] = useState(false);
 
   const getStatusVariant = (
     status: AssignmentStatus,
@@ -110,10 +113,15 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
 
   const isUrgent = assignment.hoursRemaining && assignment.hoursRemaining < 24;
 
+  const handleCardClick = () => {
+    setIsNavLoading(true);
+    router.push(`/${locale}/reader/assignments/${assignment.id}`);
+  };
+
   return (
     <Card
-      className={`cursor-pointer transition-all hover:scale-[1.02] hover:shadow-md ${className || ''}`}
-      onClick={() => router.push(`/${locale}/reader/assignments/${assignment.id}`)}
+      className={`cursor-pointer transition-all hover:scale-[1.02] hover:shadow-md ${isNavLoading ? 'pointer-events-none opacity-70' : ''} ${className || ''}`}
+      onClick={handleCardClick}
     >
       <CardHeader>
         <div className="flex items-start justify-between">
@@ -184,6 +192,11 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
           <BookOpen className="h-4 w-4" />
           <span>{assignment.book.genre}</span>
         </div>
+        {isNavLoading && (
+          <div className="mt-3 flex items-center justify-center">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          </div>
+        )}
       </CardContent>
     </Card>
   );
@@ -197,6 +210,10 @@ export default function ReaderDashboard() {
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'en';
+
+  const [isCampaignsLoading, setIsCampaignsLoading] = useState(false);
+  const [isPayoutLoading, setIsPayoutLoading] = useState(false);
+  const [isStatsLoading, setIsStatsLoading] = useState(false);
 
   // Redirect to profile creation if no profile exists
   if (!isLoadingProfile && !hasProfile) {
@@ -246,28 +263,43 @@ export default function ReaderDashboard() {
           <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button type="button" className="animate-fade-left" onClick={() => router.push(`/${locale}/reader/campaigns`)}>
-            <BookOpen className="mr-2 h-4 w-4" />
+          <Button
+            type="button"
+            className="animate-fade-left"
+            onClick={() => {
+              setIsCampaignsLoading(true);
+              router.push(`/${locale}/reader/campaigns`);
+            }}
+            disabled={isCampaignsLoading}
+          >
+            {isCampaignsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <BookOpen className="mr-2 h-4 w-4" />}
             {t('browseBooks')}
           </Button>
           <Button
             type="button"
             variant="outline"
             className="animate-fade-left-slow"
-            onClick={() => router.push(`/${locale}/reader/wallet/payout`)}
-            disabled={(stats?.walletBalance || 0) < 50}
+            onClick={() => {
+              setIsPayoutLoading(true);
+              router.push(`/${locale}/reader/wallet/payout`);
+            }}
+            disabled={isPayoutLoading || (stats?.walletBalance || 0) < 50}
             title={(stats?.walletBalance || 0) < 50 ? t('payoutMinimumRequired') : undefined}
           >
-            <Wallet className="mr-2 h-4 w-4" />
+            {isPayoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wallet className="mr-2 h-4 w-4" />}
             {t('requestPayout')}
           </Button>
           <Button
             type="button"
             variant="ghost"
             className="animate-fade-left-light-slow"
-            onClick={() => router.push(`/${locale}/reader/stats`)}
+            onClick={() => {
+              setIsStatsLoading(true);
+              router.push(`/${locale}/reader/stats`);
+            }}
+            disabled={isStatsLoading}
           >
-            <Eye className="mr-2 h-4 w-4" />
+            {isStatsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Eye className="mr-2 h-4 w-4" />}
             {t('viewMyReviews')}
           </Button>
         </div>
@@ -382,9 +414,17 @@ export default function ReaderDashboard() {
             <BookOpen className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-muted-foreground" />
             <h3 className="mb-2 text-lg font-semibold">{t('empty.title')}</h3>
             <p className="mb-4 text-muted-foreground">{t('empty.description')}</p>
-            <Button type="button" onClick={() => router.push(`/${locale}/reader/campaigns`)}>
+            <Button
+              type="button"
+              onClick={() => {
+                setIsCampaignsLoading(true);
+                router.push(`/${locale}/reader/campaigns`);
+              }}
+              disabled={isCampaignsLoading}
+            >
+              {isCampaignsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               {t('browseBooks')}
-              <ArrowRight className="ml-2 h-4 w-4" />
+              {!isCampaignsLoading && <ArrowRight className="ml-2 h-4 w-4" />}
             </Button>
           </CardContent>
         </Card>

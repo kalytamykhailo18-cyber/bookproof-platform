@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -94,13 +94,16 @@ export default function LandingPageContentEditor() {
 
   const [faqs, setFaqs] = useState<FaqItem[]>(content.faqs || []);
 
-  // Update state when data loads
-  useState(() => {
-    if (content.hero) setHeroContent(content.hero);
-    if (content.features) setFeatures(content.features);
-    if (content.testimonials) setTestimonials(content.testimonials);
-    if (content.faqs) setFaqs(content.faqs);
-  });
+  // Update state when data loads or language changes
+  useEffect(() => {
+    if (landingPage?.content) {
+      const parsedContent: LandingPageContent = JSON.parse(landingPage.content);
+      if (parsedContent.hero) setHeroContent(parsedContent.hero);
+      if (parsedContent.features) setFeatures(parsedContent.features);
+      if (parsedContent.testimonials) setTestimonials(parsedContent.testimonials);
+      if (parsedContent.faqs) setFaqs(parsedContent.faqs);
+    }
+  }, [landingPage?.content]);
 
   const handleSave = async () => {
     const updatedContent: LandingPageContent = {

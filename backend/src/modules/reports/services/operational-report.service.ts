@@ -315,10 +315,17 @@ export class OperationalReportService {
       },
       select: {
         id: true,
+        bookId: true,
         replacementEligible: true,
         replacementProvided: true,
         validatedAt: true,
         removalDetectedAt: true,
+        book: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
       },
     });
 
@@ -345,6 +352,18 @@ export class OperationalReportService {
       (r) => r.replacementProvided,
     ).length;
 
+    // Eligible for replacement (within 14-day guarantee period)
+    const eligibleForReplacement = removedReviews.filter(
+      (r) => r.replacementEligible,
+    ).length;
+
+    // Replacement rate: (replacements provided / eligible for replacement) * 100
+    // Per Section 12.5: Replacement rate is based on eligible removals, not total removals
+    const replacementRate =
+      eligibleForReplacement > 0
+        ? (replacementsProvided / eligibleForReplacement) * 100
+        : 0;
+
     // Within guarantee period (14 days from validation)
     const withinGuaranteePeriod = removedReviews.filter((r) => {
       if (!r.validatedAt || !r.removalDetectedAt) return false;
@@ -354,11 +373,81 @@ export class OperationalReportService {
       return daysDiff <= 14;
     }).length;
 
+    // Average days to removal (Section 12.5)
+    const daysToRemovalList: number[] = [];
+    removedReviews.forEach((r) => {
+      if (r.validatedAt && r.removalDetectedAt) {
+        const daysDiff =
+          (r.removalDetectedAt.getTime() - r.validatedAt.getTime()) /
+          (1000 * 60 * 60 * 24);
+        daysToRemovalList.push(daysDiff);
+      }
+    });
+
+    const averageDaysToRemoval =
+      daysToRemovalList.length > 0
+        ? daysToRemovalList.reduce((sum, d) => sum + d, 0) / daysToRemovalList.length
+        : 0;
+
+    // Per-campaign breakdown (Section 12.5)
+    const campaignMap = new Map<string, {
+      campaignId: string;
+      campaignTitle: string;
+      totalRemovals: number;
+      replacementsProvided: number;
+      eligibleForReplacement: number;
+      daysToRemoval: number[];
+    }>();
+
+    removedReviews.forEach((r) => {
+      const campaignId = r.bookId;
+      const campaignTitle = r.book?.title || 'Unknown';
+
+      if (!campaignMap.has(campaignId)) {
+        campaignMap.set(campaignId, {
+          campaignId,
+          campaignTitle,
+          totalRemovals: 0,
+          replacementsProvided: 0,
+          eligibleForReplacement: 0,
+          daysToRemoval: [],
+        });
+      }
+
+      const stats = campaignMap.get(campaignId)!;
+      stats.totalRemovals++;
+      if (r.replacementProvided) stats.replacementsProvided++;
+      if (r.replacementEligible) stats.eligibleForReplacement++;
+
+      if (r.validatedAt && r.removalDetectedAt) {
+        const daysDiff =
+          (r.removalDetectedAt.getTime() - r.validatedAt.getTime()) /
+          (1000 * 60 * 60 * 24);
+        stats.daysToRemoval.push(daysDiff);
+      }
+    });
+
+    const perCampaignBreakdown = Array.from(campaignMap.values()).map((stats) => ({
+      campaignId: stats.campaignId,
+      campaignTitle: stats.campaignTitle,
+      totalRemovals: stats.totalRemovals,
+      replacementsProvided: stats.replacementsProvided,
+      eligibleForReplacement: stats.eligibleForReplacement,
+      averageDaysToRemoval: stats.daysToRemoval.length > 0
+        ? parseFloat(
+            (stats.daysToRemoval.reduce((sum, d) => sum + d, 0) / stats.daysToRemoval.length).toFixed(2),
+          )
+        : 0,
+    }));
+
     return {
       totalRemovals,
       removalRate: parseFloat(removalRate.toFixed(2)),
       replacementsProvided,
       withinGuaranteePeriod,
+      replacementRate: parseFloat(replacementRate.toFixed(2)),
+      averageDaysToRemoval: parseFloat(averageDaysToRemoval.toFixed(2)),
+      perCampaignBreakdown,
     };
   }
 }

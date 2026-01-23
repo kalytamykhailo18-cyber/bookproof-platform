@@ -51,6 +51,9 @@ export interface LandingPageLead {
   source?: string;
   medium?: string;
   campaign?: string;
+  content?: string;      // utm_content
+  term?: string;         // utm_term
+  affiliateRef?: string; // ref (affiliate code)
   country?: string;
   marketingConsent: boolean;
   welcomeEmailSent: boolean;

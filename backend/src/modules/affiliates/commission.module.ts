@@ -3,6 +3,7 @@ import { CommissionService } from './services/commission.service';
 import { CommissionCronService } from './services/commission-cron.service';
 import { PrismaModule } from '@common/prisma/prisma.module';
 import { EmailModule } from '@modules/email/email.module';
+import { NotificationsModule } from '@modules/notifications/notifications.module';
 
 /**
  * Commission Module
@@ -13,7 +14,7 @@ import { EmailModule } from '@modules/email/email.module';
  * Separated from main AffiliatesModule to prevent circular dependencies.
  */
 @Module({
-  imports: [PrismaModule, EmailModule],
+  imports: [PrismaModule, EmailModule, NotificationsModule],
   providers: [CommissionService, CommissionCronService],
   exports: [CommissionService],
 })

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useCampaigns } from '@/hooks/useCampaigns';
 import { Button } from '@/components/ui/button';
@@ -46,6 +46,9 @@ export default function CampaignsListPage() {
   const params = useParams();
   const locale = (params.locale as string) || 'en';
   const { campaigns, isLoadingCampaigns, pauseCampaign, resumeCampaign, isPausing, isResuming } = useCampaigns();
+
+  const [isNewCampaignLoading, setIsNewCampaignLoading] = useState(false);
+  const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(null);
 
   const getStatusColor = (status: CampaignStatus) => {
     switch (status) {
@@ -119,9 +122,13 @@ export default function CampaignsListPage() {
         </div>
         <Button
           type="button"
-          onClick={() => router.push(`/${locale}/author/campaigns/new`)}
+          onClick={() => {
+            setIsNewCampaignLoading(true);
+            router.push(`/${locale}/author/campaigns/new`);
+          }}
+          disabled={isNewCampaignLoading}
         >
-          <Plus className="mr-2 h-4 w-4" />
+          {isNewCampaignLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
           {t('list.newCampaign') || 'New Campaign'}
         </Button>
       </div>
@@ -154,8 +161,11 @@ export default function CampaignsListPage() {
                   return (
                     <TableRow
                       key={campaign.id}
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}`)}
+                      className={`cursor-pointer hover:bg-muted/50 ${loadingCampaignId === campaign.id ? 'pointer-events-none opacity-70' : ''}`}
+                      onClick={() => {
+                        setLoadingCampaignId(campaign.id);
+                        router.push(`/${locale}/author/campaigns/${campaign.id}`);
+                      }}
                     >
                       {/* Book Title with Cover */}
                       <TableCell>
@@ -226,7 +236,7 @@ export default function CampaignsListPage() {
                               disabled={isPausing}
                               title={t('list.actions.pause') || 'Pause Campaign'}
                             >
-                              <Pause className="h-4 w-4" />
+                              {isPausing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Pause className="h-4 w-4" />}
                             </Button>
                           )}
                           {campaign.status === CampaignStatus.PAUSED && (
@@ -238,7 +248,7 @@ export default function CampaignsListPage() {
                               disabled={isResuming}
                               title={t('list.actions.resume') || 'Resume Campaign'}
                             >
-                              <Play className="h-4 w-4" />
+                              {isResuming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
                             </Button>
                           )}
                           <Button
@@ -247,11 +257,13 @@ export default function CampaignsListPage() {
                             size="sm"
                             onClick={(e) => {
                               e.stopPropagation();
+                              setLoadingCampaignId(campaign.id);
                               router.push(`/${locale}/author/campaigns/${campaign.id}`);
                             }}
                             title={t('list.actions.view') || 'View Details'}
+                            disabled={loadingCampaignId === campaign.id}
                           >
-                            <Eye className="h-4 w-4" />
+                            {loadingCampaignId === campaign.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eye className="h-4 w-4" />}
                           </Button>
                           <ChevronRight className="h-4 w-4 text-muted-foreground" />
                         </div>
@@ -270,9 +282,13 @@ export default function CampaignsListPage() {
               </p>
               <Button
                 type="button"
-                onClick={() => router.push(`/${locale}/author/campaigns/new`)}
+                onClick={() => {
+                  setIsNewCampaignLoading(true);
+                  router.push(`/${locale}/author/campaigns/new`);
+                }}
+                disabled={isNewCampaignLoading}
               >
-                <Plus className="mr-2 h-4 w-4" />
+                {isNewCampaignLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
                 {t('list.newCampaign') || 'New Campaign'}
               </Button>
             </div>

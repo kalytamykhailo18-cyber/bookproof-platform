@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useOperationalReport, useReportExportUrls } from '@/hooks/useAdminReports';
+import { useOperationalReport, useExportOperationalCsv, useExportOperationalPdf } from '@/hooks/useAdminReports';
 import {
   Download,
   FileText,
+  FileDown,
   Users,
   CheckCircle,
   XCircle,
@@ -29,10 +30,21 @@ export default function AdminOperationalReportsPage() {
     dateRange.endDate,
   );
 
-  const { getOperationalCsvUrl } = useReportExportUrls();
+  const exportCsvMutation = useExportOperationalCsv();
+  const exportPdfMutation = useExportOperationalPdf();
 
   const handleExportCsv = () => {
-    window.open(getOperationalCsvUrl(dateRange.startDate, dateRange.endDate), '_blank');
+    exportCsvMutation.mutate({
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+    });
+  };
+
+  const handleExportPdf = () => {
+    exportPdfMutation.mutate({
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+    });
   };
 
   const handleDateRangeChange = (start: string, end: string) => {
@@ -50,9 +62,23 @@ export default function AdminOperationalReportsPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button type="button" variant="outline" onClick={handleExportCsv}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleExportCsv}
+            disabled={exportCsvMutation.isPending}
+          >
             <Download className="mr-2 h-4 w-4" />
-            Export CSV
+            {exportCsvMutation.isPending ? 'Exporting...' : 'Export CSV'}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleExportPdf}
+            disabled={exportPdfMutation.isPending}
+          >
+            <FileDown className="mr-2 h-4 w-4" />
+            {exportPdfMutation.isPending ? 'Exporting...' : 'Export PDF'}
           </Button>
         </div>
       </div>
@@ -296,43 +322,101 @@ export default function AdminOperationalReportsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5" />
-                Amazon Removal Metrics
+                Amazon Removal Metrics (14-Day Replacement Guarantee)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Removals</p>
-                  <p className="text-2xl font-bold text-red-600">
-                    {report.amazonRemovalMetrics.totalRemovals}
-                  </p>
+              <div className="space-y-6">
+                {/* Summary Statistics */}
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total Removals</p>
+                    <p className="text-2xl font-bold text-red-600">
+                      {report.amazonRemovalMetrics.totalRemovals}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Removal Rate</p>
+                    <p className="text-2xl font-bold">
+                      {report.amazonRemovalMetrics.removalRate}%
+                    </p>
+                    <Progress
+                      value={report.amazonRemovalMetrics.removalRate}
+                      className="mt-2"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      Replacements Provided
+                    </p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {report.amazonRemovalMetrics.replacementsProvided}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      Replacement Rate
+                    </p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {report.amazonRemovalMetrics.replacementRate}%
+                    </p>
+                    <Progress
+                      value={report.amazonRemovalMetrics.replacementRate}
+                      className="mt-2"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      Avg Days to Removal
+                    </p>
+                    <p className="text-2xl font-bold">
+                      {report.amazonRemovalMetrics.averageDaysToRemoval.toFixed(1)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      Within Guarantee Period
+                    </p>
+                    <p className="text-2xl font-bold">
+                      {report.amazonRemovalMetrics.withinGuaranteePeriod}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Removal Rate</p>
-                  <p className="text-2xl font-bold">
-                    {report.amazonRemovalMetrics.removalRate}%
-                  </p>
-                  <Progress
-                    value={report.amazonRemovalMetrics.removalRate}
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    Replacements Provided
-                  </p>
-                  <p className="text-2xl font-bold text-green-600">
-                    {report.amazonRemovalMetrics.replacementsProvided}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    Within Guarantee Period
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {report.amazonRemovalMetrics.withinGuaranteePeriod}
-                  </p>
-                </div>
+
+                {/* Per-Campaign Breakdown */}
+                {report.amazonRemovalMetrics.perCampaignBreakdown &&
+                  report.amazonRemovalMetrics.perCampaignBreakdown.length > 0 && (
+                    <div className="mt-6">
+                      <h3 className="font-semibold mb-3">Per-Campaign Breakdown</h3>
+                      <div className="space-y-2">
+                        {report.amazonRemovalMetrics.perCampaignBreakdown.map(
+                          (campaign) => (
+                            <div
+                              key={campaign.campaignId}
+                              className="flex justify-between items-center p-3 border rounded-md"
+                            >
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium truncate max-w-xs">
+                                  {campaign.campaignTitle}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-6 text-sm">
+                                <span className="text-muted-foreground">
+                                  Removals: <strong className="text-red-600">{campaign.totalRemovals}</strong>
+                                </span>
+                                <span className="text-muted-foreground">
+                                  Replaced: <strong className="text-green-600">{campaign.replacementsProvided}</strong>
+                                </span>
+                                <span className="text-muted-foreground">
+                                  Avg Days: <strong>{campaign.averageDaysToRemoval.toFixed(1)}</strong>
+                                </span>
+                              </div>
+                            </div>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                  )}
               </div>
             </CardContent>
           </Card>

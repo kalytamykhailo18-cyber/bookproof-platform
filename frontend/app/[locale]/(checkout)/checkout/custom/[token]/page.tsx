@@ -26,6 +26,8 @@ export default function CustomPackageCheckoutPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isHomeLoading, setIsHomeLoading] = useState(false);
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
 
   useEffect(() => {
     const fetchPackage = async () => {
@@ -52,8 +54,8 @@ export default function CustomPackageCheckoutPage() {
       setIsProcessing(true);
       const baseUrl = window.location.origin;
       const result = await customPackageApi.createCheckout(token, {
-        successUrl: `${baseUrl}/checkout/custom/${token}/success`,
-        cancelUrl: `${baseUrl}/checkout/custom/${token}`,
+        successUrl: `${baseUrl}/${locale}/checkout/custom/${token}/success`,
+        cancelUrl: `${baseUrl}/${locale}/checkout/custom/${token}`,
       });
 
       // Redirect to Stripe checkout
@@ -101,7 +103,11 @@ export default function CustomPackageCheckoutPage() {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button type="button" variant="outline" onClick={() => router.push(`/${locale}`)}>
+          <Button type="button" variant="outline" onClick={() => {
+            setIsHomeLoading(true);
+            router.push(`/${locale}`);
+          }} disabled={isHomeLoading}>
+            {isHomeLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Go to Homepage
           </Button>
         </CardFooter>
@@ -150,7 +156,13 @@ export default function CustomPackageCheckoutPage() {
           <p className="text-sm text-muted-foreground">Credits: {packageData.credits}</p>
         </CardContent>
         <CardFooter>
-          <Button type="button" onClick={() => router.push(`/${locale}/login`)}>Go to Login</Button>
+          <Button type="button" onClick={() => {
+            setIsLoginLoading(true);
+            router.push(`/${locale}/login`);
+          }} disabled={isLoginLoading}>
+            {isLoginLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Go to Login
+          </Button>
         </CardFooter>
       </Card>
     );

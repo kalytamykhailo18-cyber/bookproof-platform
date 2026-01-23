@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/useAuth';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -19,7 +20,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CheckCircle2, ArrowLeft } from 'lucide-react';
+import { CheckCircle2, ArrowLeft, Loader2 } from 'lucide-react';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -33,7 +34,9 @@ export default function ForgotPasswordPage() {
   const params = useParams();
   const locale = (params.locale as string) || 'en';
   const { requestPasswordResetAsync, isRequestingReset } = useAuth();
+  const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
   const [emailSent, setEmailSent] = useState(false);
+  const [isBackLoading, setIsBackLoading] = useState(false);
 
   const {
     register,
@@ -50,13 +53,23 @@ export default function ForgotPasswordPage() {
 
     const data = getValues();
     try {
-      await requestPasswordResetAsync(data);
+      // Get reCAPTCHA token if enabled (Section 15.2)
+      let captchaToken: string | undefined;
+      if (isRecaptchaEnabled) {
+        captchaToken = await executeRecaptcha('password_reset');
+      }
+
+      await requestPasswordResetAsync({ ...data, captchaToken });
       setEmailSent(true);
       toast.success(t('success'));
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } }; message?: string };
       const errorMessage = err?.response?.data?.message || err?.message || t('error');
-      toast.error(errorMessage);
+      if (errorMessage.includes('CAPTCHA')) {
+        toast.error('Security verification failed. Please try again.');
+      } else {
+        toast.error(errorMessage);
+      }
     }
   };
 
@@ -79,10 +92,13 @@ export default function ForgotPasswordPage() {
             type="button"
             variant="outline"
             className="w-full"
-            onClick={() => router.push(`/${locale}/login`)}
+            disabled={isBackLoading}
+            onClick={() => {
+              setIsBackLoading(true);
+              router.push(`/${locale}/login`);
+            }}
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('backToLogin')}
+            {isBackLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><ArrowLeft className="mr-2 h-4 w-4" />{t('backToLogin')}</>}
           </Button>
         </CardFooter>
       </Card>
@@ -121,17 +137,20 @@ export default function ForgotPasswordPage() {
           disabled={isRequestingReset}
           onClick={handleSubmit}
         >
-          {isRequestingReset ? t('submitting') : t('submitButton')}
+          {isRequestingReset ? <Loader2 className="h-4 w-4 animate-spin" /> : t('submitButton')}
         </Button>
 
         <Button
           variant="ghost"
           className="w-full animate-fade-up-slow"
           type="button"
-          onClick={() => router.push(`/${locale}/login`)}
+          disabled={isBackLoading}
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/login`);
+          }}
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {t('backToLogin')}
+          {isBackLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><ArrowLeft className="mr-2 h-4 w-4" />{t('backToLogin')}</>}
         </Button>
       </CardFooter>
     </Card>

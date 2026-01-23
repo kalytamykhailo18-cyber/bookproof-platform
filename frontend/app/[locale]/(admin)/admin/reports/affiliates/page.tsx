@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useAffiliateReport, useReportExportUrls } from '@/hooks/useAdminReports';
+import { useAffiliateReport, useExportAffiliateCsv, useExportAffiliatePdf } from '@/hooks/useAdminReports';
 import {
   Download,
   FileText,
+  FileDown,
   Users,
   DollarSign,
   TrendingUp,
@@ -29,10 +30,21 @@ export default function AdminAffiliateReportsPage() {
     dateRange.endDate,
   );
 
-  const { getAffiliateCsvUrl } = useReportExportUrls();
+  const exportCsvMutation = useExportAffiliateCsv();
+  const exportPdfMutation = useExportAffiliatePdf();
 
   const handleExportCsv = () => {
-    window.open(getAffiliateCsvUrl(dateRange.startDate, dateRange.endDate), '_blank');
+    exportCsvMutation.mutate({
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+    });
+  };
+
+  const handleExportPdf = () => {
+    exportPdfMutation.mutate({
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+    });
   };
 
   const handleDateRangeChange = (start: string, end: string) => {
@@ -50,9 +62,23 @@ export default function AdminAffiliateReportsPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button type="button" variant="outline" onClick={handleExportCsv}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleExportCsv}
+            disabled={exportCsvMutation.isPending}
+          >
             <Download className="mr-2 h-4 w-4" />
-            Export CSV
+            {exportCsvMutation.isPending ? 'Exporting...' : 'Export CSV'}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleExportPdf}
+            disabled={exportPdfMutation.isPending}
+          >
+            <FileDown className="mr-2 h-4 w-4" />
+            {exportPdfMutation.isPending ? 'Exporting...' : 'Export PDF'}
           </Button>
         </div>
       </div>

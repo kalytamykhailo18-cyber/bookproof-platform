@@ -1,6 +1,7 @@
 import { Injectable, Logger, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { EmailService } from '@modules/email/email.service';
+import { NotificationsService } from '@modules/notifications/notifications.service';
 import { PayoutRequestStatus, CommissionStatus, EmailType, UserRole } from '@prisma/client';
 import { RequestPayoutDto, ProcessPayoutDto, PayoutAction } from '../dto';
 import { Decimal } from '@prisma/client/runtime/library';
@@ -13,6 +14,7 @@ export class AffiliatePayoutService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   /**
@@ -80,11 +82,11 @@ export class AffiliatePayoutService {
 
       this.logger.log(`Payout requested by affiliate ${affiliateProfileId}, amount: $${dto.amount}`);
 
-      // Send notification to admins about new payout request
+      // Send notification to admins about new payout request (Section 13.2)
       try {
         const affiliateUser = await this.prisma.user.findFirst({
           where: { affiliateProfile: { id: affiliateProfileId } },
-          select: { name: true, email: true },
+          select: { id: true, name: true, email: true },
         });
 
         const admins = await this.prisma.user.findMany({
@@ -92,6 +94,16 @@ export class AffiliatePayoutService {
           select: { id: true, email: true, name: true, preferredLanguage: true },
         });
 
+        // Send in-app notifications to admins (Section 13.2)
+        const adminIds = admins.map((admin) => admin.id);
+        await this.notificationsService.notifyAdminPayoutRequest(
+          adminIds,
+          affiliateUser?.name || 'Affiliate',
+          dto.amount,
+          'affiliate',
+        );
+
+        // Send email notifications
         for (const admin of admins) {
           await this.emailService.sendTemplatedEmail(
             admin.email,
@@ -266,7 +278,7 @@ export class AffiliatePayoutService {
 
     this.logger.log(`Payout ${payout.id} completed by admin ${adminUserId}, transaction: ${transactionId}`);
 
-    // Send notification to affiliate about completed payout
+    // Send notification to affiliate about completed payout (Section 13.2)
     try {
       const affiliateUser = await this.prisma.user.findFirst({
         where: { affiliateProfile: { id: payout.affiliateProfileId } },
@@ -274,6 +286,14 @@ export class AffiliatePayoutService {
       });
 
       if (affiliateUser) {
+        // Send in-app notification (Section 13.2)
+        await this.notificationsService.notifyAffiliatePayoutProcessed(
+          affiliateUser.id,
+          payout.amount.toNumber(),
+          payout.paymentMethod,
+        );
+
+        // Send email notification
         await this.emailService.sendTemplatedEmail(
           affiliateUser.email,
           EmailType.AFFILIATE_PAYOUT_PROCESSED,
@@ -288,10 +308,10 @@ export class AffiliatePayoutService {
           affiliateUser.id,
           affiliateUser.preferredLanguage,
         );
-        this.logger.log(`Payout completion email sent to ${affiliateUser.email}`);
+        this.logger.log(`Payout completion notifications sent to ${affiliateUser.email}`);
       }
     } catch (emailError) {
-      this.logger.error(`Failed to send payout completion email: ${emailError.message}`);
+      this.logger.error(`Failed to send payout completion notifications: ${emailError.message}`);
     }
 
     return updated;

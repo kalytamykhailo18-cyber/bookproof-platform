@@ -8,6 +8,7 @@ import {
 import { PrismaService } from '@common/prisma/prisma.service';
 import { AuditService } from '@modules/audit/audit.service';
 import { EmailService } from '@modules/email/email.service';
+import { NotificationsService } from '@modules/notifications/notifications.service';
 import { TrackingService } from './services/tracking.service';
 import { CommissionService } from './services/commission.service';
 import { AffiliatePayoutService } from './services/payout.service';
@@ -33,6 +34,7 @@ export class AffiliatesService {
     private readonly prisma: PrismaService,
     private readonly auditService: AuditService,
     private readonly emailService: EmailService,
+    private readonly notificationsService: NotificationsService,
     private readonly trackingService: TrackingService,
     private readonly commissionService: CommissionService,
     private readonly payoutService: AffiliatePayoutService,
@@ -116,12 +118,23 @@ export class AffiliatesService {
 
       // Send notification to all admins about new affiliate application
       // Per requirements Section 8.1: "Admin receives notification of new application"
+      // Per requirements Section 13.2: "Admin notification - New affiliate application"
       try {
         const admins = await this.prisma.user.findMany({
           where: { role: UserRole.ADMIN },
           select: { id: true, email: true, name: true, preferredLanguage: true },
         });
 
+        // Send in-app notifications to admins (Section 13.2)
+        const adminIds = admins.map((admin) => admin.id);
+        await this.notificationsService.notifyAdminNewAffiliateApplication(
+          adminIds,
+          user.name || 'Unknown',
+          user.email,
+          profile.id,
+        );
+
+        // Send email notifications
         for (const admin of admins) {
           await this.emailService.sendTemplatedEmail(
             admin.email,
@@ -291,12 +304,20 @@ export class AffiliatesService {
         this.logger.error(`Failed to log audit for affiliate approval: ${auditError.message}`);
       }
 
-      // Send approval/rejection email to affiliate
+      // Send approval/rejection notification to affiliate
       // Per requirements Section 1.5:
       // - If Approved: Affiliate receives email with dashboard access, unique referral link is generated
       // - If Rejected: Affiliate receives email with rejection reason, can reapply after 30 days
+      // Per requirements Section 13.2: "Affiliate notification - Application approved"
       try {
         if (dto.approve) {
+          // Send in-app notification (Section 13.2)
+          await this.notificationsService.notifyAffiliateApplicationApproved(
+            profile.user.id,
+            updated.referralCode,
+          );
+
+          // Send email notification
           const referralLink = await this.getReferralLink(id);
           await this.emailService.sendTemplatedEmail(
             profile.user.email,
@@ -310,8 +331,15 @@ export class AffiliatesService {
             profile.user.id,
             profile.user.preferredLanguage,
           );
-          this.logger.log(`Sent affiliate approval email to ${profile.user.email}`);
+          this.logger.log(`Sent affiliate approval notifications to ${profile.user.email}`);
         } else {
+          // Send in-app notification (Section 13.2)
+          await this.notificationsService.notifyAffiliateApplicationRejected(
+            profile.user.id,
+            dto.rejectionReason || 'Application did not meet requirements',
+          );
+
+          // Send email notification
           await this.emailService.sendTemplatedEmail(
             profile.user.email,
             EmailType.AFFILIATE_APPLICATION_REJECTED,
@@ -323,10 +351,10 @@ export class AffiliatesService {
             profile.user.id,
             profile.user.preferredLanguage,
           );
-          this.logger.log(`Sent affiliate rejection email to ${profile.user.email}`);
+          this.logger.log(`Sent affiliate rejection notifications to ${profile.user.email}`);
         }
       } catch (emailError) {
-        this.logger.error(`Failed to send affiliate approval/rejection email: ${emailError.message}`);
+        this.logger.error(`Failed to send affiliate approval/rejection notifications: ${emailError.message}`);
       }
 
       return this.toResponseDto(updated, profile.user);

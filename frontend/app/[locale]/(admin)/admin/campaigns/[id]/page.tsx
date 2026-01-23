@@ -44,6 +44,7 @@ import {
   Star,
   ExternalLink,
   RefreshCw,
+  Loader2,
 } from 'lucide-react';
 
 export default function AdminCampaignDetailPage() {
@@ -67,6 +68,8 @@ export default function AdminCampaignDetailPage() {
   const [pauseDialogOpen, setPauseDialogOpen] = useState(false);
   const [resumeDialogOpen, setResumeDialogOpen] = useState(false);
   const [distributionDialogOpen, setDistributionDialogOpen] = useState(false);
+  const [isBackLoading, setIsBackLoading] = useState(false);
+  const [isControlsLoading, setIsControlsLoading] = useState(false);
 
   const [pauseReason, setPauseReason] = useState('');
   const [pauseNotes, setPauseNotes] = useState('');
@@ -180,8 +183,17 @@ export default function AdminCampaignDetailPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button type="button" variant="ghost" className="mb-4" onClick={() => router.push(`/${locale}/admin/campaigns`)}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          variant="ghost"
+          className="mb-4"
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/admin/campaigns`);
+          }}
+          disabled={isBackLoading}
+        >
+          {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
           {t('backToCampaigns')}
         </Button>
         <div className="flex items-center justify-between">
@@ -231,7 +243,7 @@ export default function AdminCampaignDetailPage() {
                       disabled={!pauseReason || pauseCampaign.isPending}
                       className="w-full"
                     >
-                      {pauseCampaign.isPending ? t('actions.pausing') : t('actions.confirmPause')}
+                      {pauseCampaign.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : t('actions.confirmPause')}
                     </Button>
                   </div>
                 </DialogContent>
@@ -275,15 +287,23 @@ export default function AdminCampaignDetailPage() {
                       className="w-full"
                     >
                       {resumeCampaign.isPending
-                        ? t('actions.resuming')
+                        ? <Loader2 className="h-4 w-4 animate-spin" />
                         : t('actions.confirmResume')}
                     </Button>
                   </div>
                 </DialogContent>
               </Dialog>
             ) : null}
-            <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/admin/campaigns/${campaignId}/controls`)}>
-              <Settings className="mr-2 h-4 w-4" />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsControlsLoading(true);
+                router.push(`/${locale}/admin/campaigns/${campaignId}/controls`);
+              }}
+              disabled={isControlsLoading}
+            >
+              {isControlsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Settings className="mr-2 h-4 w-4" />}
               {t('actions.controls')}
             </Button>
           </div>

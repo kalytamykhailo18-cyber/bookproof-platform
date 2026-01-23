@@ -15,6 +15,7 @@ import {
   XCircle,
   Send,
   ArrowLeft,
+  Loader2,
 } from 'lucide-react';
 import { AssignmentStatus, BookFormat } from '@/lib/api/queue';
 import { formatDistanceToNow } from 'date-fns';
@@ -571,7 +572,7 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button type="button" variant="destructive" className="w-full" disabled={isWithdrawing}>
-                      {isWithdrawing ? t('actions.withdrawing') : t('actions.withdraw')}
+                      {isWithdrawing ? <Loader2 className="h-4 w-4 animate-spin" /> : t('actions.withdraw')}
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>

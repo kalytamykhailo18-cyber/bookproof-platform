@@ -19,7 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { FileText, Shield, CheckCircle } from 'lucide-react';
+import { FileText, Shield, CheckCircle, Loader2 } from 'lucide-react';
 
 export default function AcceptTermsPage() {
   const t = useTranslations('auth.acceptTerms');
@@ -171,7 +171,7 @@ export default function AcceptTermsPage() {
           disabled={!termsAccepted || acceptTermsMutation.isPending}
         >
           {acceptTermsMutation.isPending
-            ? t('accepting') || 'Accepting...'
+            ? <Loader2 className="h-4 w-4 animate-spin" />
             : t('acceptButton') || 'Accept and Continue'}
         </Button>
 

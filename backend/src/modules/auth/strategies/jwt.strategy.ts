@@ -15,11 +15,14 @@ export interface JwtPayload {
 /**
  * Custom JWT extractor that tries multiple sources:
  * 1. Authorization header (Bearer token) - primary method
- * 2. Query parameter 'token' - for HTML5 audio/video streaming
+ * 2. Query parameter 'token' - for file streaming endpoints
  *
- * The query parameter is needed because HTML5 <audio> elements
- * cannot send Authorization headers. This is a common pattern
- * for secure media streaming.
+ * The query parameter is needed because:
+ * - HTML5 <audio> elements cannot send Authorization headers
+ * - Browser-based file downloads open in new tabs without headers
+ *
+ * Per Section 11.2: Secure file access requires JWT validation
+ * for ebook, audiobook, and synopsis streaming.
  */
 function extractJwtFromHeaderOrQuery(req: Request): string | null {
   // First try the Authorization header (preferred)
@@ -28,11 +31,19 @@ function extractJwtFromHeaderOrQuery(req: Request): string | null {
     return authHeader.substring(7);
   }
 
-  // Then try query parameter (for audio/video streaming)
-  // Only allow for specific streaming endpoints for security
+  // Then try query parameter (for file streaming endpoints only)
+  // Only allow for specific streaming endpoints for security (Section 11.3)
   const queryToken = req.query?.token as string;
-  if (queryToken && req.path?.includes('stream-audio')) {
-    return queryToken;
+  if (queryToken) {
+    const path = req.path || '';
+    // Allow token from query params for all secure streaming endpoints
+    if (
+      path.includes('stream-audio') ||
+      path.includes('stream-ebook') ||
+      path.includes('stream-synopsis')
+    ) {
+      return queryToken;
+    }
   }
 
   return null;

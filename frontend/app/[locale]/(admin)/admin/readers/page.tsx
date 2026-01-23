@@ -39,6 +39,7 @@ import {
   CheckCircle,
   XCircle,
   TrendingUp,
+  Loader2,
 } from 'lucide-react';
 
 export default function AdminReadersPage() {
@@ -54,6 +55,8 @@ export default function AdminReadersPage() {
   const [verifiedFilter, setVerifiedFilter] = useState<string>('all');
   const [countryFilter, setCountryFilter] = useState<string>('all');
   const [languageFilter, setLanguageFilter] = useState<string>('all');
+  const [loadingReaderId, setLoadingReaderId] = useState<string | null>(null);
+  const [loadingActionsId, setLoadingActionsId] = useState<string | null>(null);
 
   const { data: readers, isLoading: isLoadingReaders } = useAllReaders({
     search: searchQuery || undefined,
@@ -451,17 +454,33 @@ export default function AdminReadersPage() {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          onClick={() => router.push(`/${locale}/admin/readers/${reader.id}`)}
+                          onClick={() => {
+                            setLoadingReaderId(reader.id);
+                            router.push(`/${locale}/admin/readers/${reader.id}`);
+                          }}
+                          disabled={loadingReaderId === reader.id}
                         >
-                          <Eye className="h-4 w-4" />
+                          {loadingReaderId === reader.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
                         </Button>
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
-                          onClick={() => router.push(`/${locale}/admin/readers/${reader.id}?tab=actions`)}
+                          onClick={() => {
+                            setLoadingActionsId(reader.id);
+                            router.push(`/${locale}/admin/readers/${reader.id}?tab=actions`);
+                          }}
+                          disabled={loadingActionsId === reader.id}
                         >
-                          <Settings className="h-4 w-4" />
+                          {loadingActionsId === reader.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Settings className="h-4 w-4" />
+                          )}
                         </Button>
                       </div>
                     </TableCell>

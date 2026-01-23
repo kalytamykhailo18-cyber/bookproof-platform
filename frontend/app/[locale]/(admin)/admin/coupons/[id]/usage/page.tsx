@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, DollarSign, Users, Hash, BarChart3 } from 'lucide-react';
+import { ArrowLeft, DollarSign, Users, Hash, BarChart3, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCoupon, useCouponUsageStats } from '@/hooks/useCoupons';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,8 @@ export default function CouponUsagePage() {
 
   const { data: coupon, isLoading: couponLoading } = useCoupon(id);
   const { data: stats, isLoading: statsLoading } = useCouponUsageStats(id);
+
+  const [isBackLoading, setIsBackLoading] = useState(false);
 
   const isLoading = couponLoading || statsLoading;
 
@@ -57,8 +60,17 @@ export default function CouponUsagePage() {
     <div className="container mx-auto max-w-6xl space-y-6 py-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button type="button" variant="ghost" size="icon" onClick={() => router.push(`/${locale}/admin/coupons/${id}`)}>
-          <ArrowLeft className="h-4 w-4" />
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/admin/coupons/${id}`);
+          }}
+          disabled={isBackLoading}
+        >
+          {isBackLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowLeft className="h-4 w-4" />}
         </Button>
         <div>
           <h1 className="text-3xl font-bold">

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,12 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { CheckCircle, Mail, ArrowRight } from 'lucide-react';
+import { CheckCircle, Mail, ArrowRight, Loader2 } from 'lucide-react';
 
 export default function CustomPackageSuccessPage() {
   const params = useParams();
   const router = useRouter();
   const locale = (params.locale as string) || 'en';
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
 
   return (
     <Card className="border-green-200 bg-gradient-to-br from-green-50 to-white">
@@ -81,9 +83,13 @@ export default function CustomPackageSuccessPage() {
       </CardContent>
 
       <CardFooter className="flex flex-col gap-3">
-        <Button className="w-full" size="lg" onClick={() => router.push(`/${locale}/login`)}>
+        <Button className="w-full" size="lg" onClick={() => {
+          setIsLoginLoading(true);
+          router.push(`/${locale}/login`);
+        }} disabled={isLoginLoading}>
+          {isLoginLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
           Go to Login
-          <ArrowRight className="ml-2 h-4 w-4" />
+          {!isLoginLoading && <ArrowRight className="ml-2 h-4 w-4" />}
         </Button>
         <p className="text-center text-xs text-muted-foreground">
           Didn&apos;t receive the email? Check your spam folder or contact support.

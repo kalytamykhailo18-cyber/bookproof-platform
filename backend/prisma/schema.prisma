@@ -1842,11 +1842,14 @@ model LandingPageLead {
   language Language
   userType String? // "author" or "reader"
 
-  // Source tracking
-  source   String? // Where they came from (utm_source)
-  medium   String? // utm_medium
-  campaign String? // utm_campaign
-  referrer String? @db.Text
+  // Source tracking (UTM parameters per requirements 10.3)
+  source       String? // Where they came from (utm_source)
+  medium       String? // utm_medium
+  campaign     String? // utm_campaign
+  content      String? // utm_content
+  term         String? // utm_term
+  affiliateRef String? // ref (affiliate referral code)
+  referrer     String? @db.Text
 
   // IP and location
   ipAddress String?

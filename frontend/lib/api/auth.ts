@@ -67,6 +67,7 @@ export interface MessageResponse {
 
 export interface RequestPasswordResetRequest {
   email: string;
+  captchaToken?: string; // reCAPTCHA v3 token for bot protection (Section 15.2)
 }
 
 export interface ResetPasswordRequest {
@@ -181,6 +182,15 @@ export interface UnlockAccountResponse {
   wasLocked: boolean;
 }
 
+/**
+ * Change Password Request (Section 15.1)
+ * For authenticated users to change their password
+ */
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
 // Auth API functions
 export const authApi = {
   register: async (data: RegisterRequest): Promise<AuthResponse> => {
@@ -249,6 +259,15 @@ export const authApi = {
       '/auth/admin/unlock-account',
       data,
     );
+    return response.data;
+  },
+
+  /**
+   * Change password for authenticated user
+   * Per requirements.md Section 15.1
+   */
+  changePassword: async (data: ChangePasswordRequest): Promise<MessageResponse> => {
+    const response = await apiClient.post<MessageResponse>('/auth/change-password', data);
     return response.data;
   },
 };

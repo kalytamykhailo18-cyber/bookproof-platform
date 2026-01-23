@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   useCloserDashboardStats,
@@ -27,6 +28,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Plus,
+  Loader2,
 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 
@@ -38,6 +40,9 @@ export default function CloserDashboardPage() {
   const { data: stats, isLoading: statsLoading } = useCloserDashboardStats();
   const { data: packageStats, isLoading: packageStatsLoading } = useCloserPackageStats();
   const { data: salesHistory, isLoading: salesLoading } = useCloserSalesHistory(5);
+
+  const [isCreateLoading, setIsCreateLoading] = useState(false);
+  const [isViewAllLoading, setIsViewAllLoading] = useState(false);
 
   if (statsLoading || packageStatsLoading) {
     return (
@@ -79,8 +84,15 @@ export default function CloserDashboardPage() {
           <h1 className="text-3xl font-bold">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground">{t('dashboard.description')}</p>
         </div>
-        <Button type="button" onClick={() => router.push(`/${locale}/closer/packages/new`)}>
-          <Plus className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          onClick={() => {
+            setIsCreateLoading(true);
+            router.push(`/${locale}/closer/packages/new`);
+          }}
+          disabled={isCreateLoading}
+        >
+          {isCreateLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
           {t('dashboard.createPackage')}
         </Button>
       </div>
@@ -245,7 +257,17 @@ export default function CloserDashboardPage() {
             <CardTitle>{t('dashboard.recentSales')}</CardTitle>
             <CardDescription>{t('dashboard.latestCompletedSales')}</CardDescription>
           </div>
-          <Button type="button" variant="outline" size="sm" onClick={() => router.push(`/${locale}/closer/sales`)}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setIsViewAllLoading(true);
+              router.push(`/${locale}/closer/sales`);
+            }}
+            disabled={isViewAllLoading}
+          >
+            {isViewAllLoading && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
             {t('dashboard.viewAll')}
           </Button>
         </CardHeader>

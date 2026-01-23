@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Loader2 } from 'lucide-react';
 
 interface ApprovePayoutDialogProps {
   payout: PayoutResponse;
@@ -72,7 +73,7 @@ export default function ApprovePayoutDialog({
             {t('approve.cancelButton')}
           </Button>
           <Button type="button" onClick={handleApprove} disabled={isPending}>
-            {isPending ? t('approve.confirming') : t('approve.confirmButton')}
+            {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : t('approve.confirmButton')}
           </Button>
         </DialogFooter>
       </DialogContent>

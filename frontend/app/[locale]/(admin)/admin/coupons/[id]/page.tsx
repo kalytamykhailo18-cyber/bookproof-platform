@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Edit, TrendingUp, Trash2 } from 'lucide-react';
+import { ArrowLeft, Edit, TrendingUp, Trash2, Loader2 } from 'lucide-react';
 import { useCoupon, useDeleteCoupon } from '@/hooks/useCoupons';
 import { CouponType, CouponAppliesTo } from '@/lib/api/coupons';
 import { Button } from '@/components/ui/button';
@@ -31,6 +32,10 @@ export default function CouponDetailPage() {
 
   const { data: coupon, isLoading } = useCoupon(id);
   const deleteMutation = useDeleteCoupon();
+
+  const [isBackLoading, setIsBackLoading] = useState(false);
+  const [isUsageLoading, setIsUsageLoading] = useState(false);
+  const [isEditLoading, setIsEditLoading] = useState(false);
 
   const handleDelete = async () => {
     await deleteMutation.mutateAsync(id);
@@ -114,8 +119,17 @@ export default function CouponDetailPage() {
       {/* Header */}
       <div className="flex animate-fade-up items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button type="button" variant="ghost" size="icon" onClick={() => router.push(`/${locale}/admin/coupons`)}>
-            <ArrowLeft className="h-4 w-4" />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              setIsBackLoading(true);
+              router.push(`/${locale}/admin/coupons`);
+            }}
+            disabled={isBackLoading}
+          >
+            {isBackLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowLeft className="h-4 w-4" />}
           </Button>
           <div>
             <h1 className="font-mono text-3xl font-bold">{coupon.code}</h1>
@@ -123,12 +137,28 @@ export default function CouponDetailPage() {
           </div>
         </div>
         <div className="flex animate-fade-left gap-2">
-          <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/admin/coupons/${id}/usage`)}>
-            <TrendingUp className="mr-2 h-4 w-4" />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setIsUsageLoading(true);
+              router.push(`/${locale}/admin/coupons/${id}/usage`);
+            }}
+            disabled={isUsageLoading}
+          >
+            {isUsageLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <TrendingUp className="mr-2 h-4 w-4" />}
             {t('actions.viewUsage')}
           </Button>
-          <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/admin/coupons/${id}/edit`)}>
-            <Edit className="mr-2 h-4 w-4" />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setIsEditLoading(true);
+              router.push(`/${locale}/admin/coupons/${id}/edit`);
+            }}
+            disabled={isEditLoading}
+          >
+            {isEditLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Edit className="mr-2 h-4 w-4" />}
             {t('actions.edit')}
           </Button>
           <AlertDialog>

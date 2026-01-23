@@ -47,10 +47,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 
 // Lead form validation schema
 const leadFormSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
   userType: z.enum(['author', 'reader', 'both']).optional(),
   marketingConsent: z.boolean().optional(),
@@ -63,10 +64,16 @@ function Header({ locale }: { locale: string }) {
   const t = useTranslations();
   const router = useRouter();
   const [isLoginLoading, setIsLoginLoading] = useState(false);
+  const [isSignupLoading, setIsSignupLoading] = useState(false);
 
   const handleLoginClick = () => {
     setIsLoginLoading(true);
     router.push(`/${locale}/login`);
+  };
+
+  const handleSignupClick = () => {
+    setIsSignupLoading(true);
+    router.push(`/${locale}/register`);
   };
 
   return (
@@ -82,8 +89,8 @@ function Header({ locale }: { locale: string }) {
           <Button type="button" variant="ghost" className="animate-fade-left-fast" onClick={handleLoginClick} disabled={isLoginLoading}>
             {isLoginLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('nav.login')}
           </Button>
-          <Button type="button" className="animate-fade-left" onClick={() => router.push(`/${locale}/register`)}>
-            {t('nav.signup')}
+          <Button type="button" className="animate-fade-left" onClick={handleSignupClick} disabled={isSignupLoading}>
+            {isSignupLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('nav.signup')}
           </Button>
         </div>
       </div>
@@ -95,6 +102,18 @@ function Header({ locale }: { locale: string }) {
 function HeroSection({ locale }: { locale: string }) {
   const t = useTranslations('hero');
   const router = useRouter();
+  const [isPrimaryLoading, setIsPrimaryLoading] = useState(false);
+  const [isSecondaryLoading, setIsSecondaryLoading] = useState(false);
+
+  const handlePrimaryClick = () => {
+    setIsPrimaryLoading(true);
+    router.push(`/${locale}/register`);
+  };
+
+  const handleSecondaryClick = () => {
+    setIsSecondaryLoading(true);
+    router.push(`/${locale}/login`);
+  };
 
   return (
     <section className="py-20 md:py-32">
@@ -108,11 +127,11 @@ function HeroSection({ locale }: { locale: string }) {
               {t('subtitle')}
             </p>
             <div className="flex animate-fade-up-slow flex-col gap-4 sm:flex-row">
-              <Button type="button" size="lg" className="text-lg" onClick={() => router.push(`/${locale}/register`)}>
-                {t('cta.primary')}
+              <Button type="button" size="lg" className="text-lg" onClick={handlePrimaryClick} disabled={isPrimaryLoading}>
+                {isPrimaryLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : t('cta.primary')}
               </Button>
-              <Button type="button" size="lg" variant="outline" className="text-lg" onClick={() => router.push(`/${locale}/login`)}>
-                {t('cta.secondary')}
+              <Button type="button" size="lg" variant="outline" className="text-lg" onClick={handleSecondaryClick} disabled={isSecondaryLoading}>
+                {isSecondaryLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : t('cta.secondary')}
               </Button>
             </div>
             <div className="grid animate-fade-up-very-slow grid-cols-3 gap-6 pt-8">
@@ -317,10 +336,83 @@ function ReaderBenefitsSection() {
   );
 }
 
+// Testimonials Section - Per Requirements 10.1
+function TestimonialsSection() {
+  const t = useTranslations('testimonials');
+
+  const testimonials = [
+    {
+      quoteKey: 'items.t1.quote',
+      authorKey: 'items.t1.author',
+      titleKey: 'items.t1.title',
+      rating: 5,
+      animation: 'animate-fade-up-fast',
+    },
+    {
+      quoteKey: 'items.t2.quote',
+      authorKey: 'items.t2.author',
+      titleKey: 'items.t2.title',
+      rating: 5,
+      animation: 'animate-fade-up',
+    },
+    {
+      quoteKey: 'items.t3.quote',
+      authorKey: 'items.t3.author',
+      titleKey: 'items.t3.title',
+      rating: 5,
+      animation: 'animate-fade-up-light-slow',
+    },
+  ];
+
+  const renderStars = (rating: number) => {
+    return (
+      <div className="flex gap-1">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            className={`h-4 w-4 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <section id="testimonials" className="bg-muted/50 py-20">
+      <div className="container">
+        <div className="mb-16 animate-fade-down text-center">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">{t('title')}</h2>
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">{t('subtitle')}</p>
+        </div>
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3">
+          {testimonials.map((testimonial, index) => (
+            <Card key={index} className={`${testimonial.animation} transition-shadow hover:shadow-lg`}>
+              <CardContent className="pt-6">
+                <div className="mb-4">{renderStars(testimonial.rating)}</div>
+                <p className="mb-4 italic text-muted-foreground">"{t(testimonial.quoteKey)}"</p>
+                <div className="border-t pt-4">
+                  <p className="font-semibold">{t(testimonial.authorKey)}</p>
+                  <p className="text-sm text-muted-foreground">{t(testimonial.titleKey)}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // Pricing Section
 function PricingSection({ locale }: { locale: string }) {
   const t = useTranslations('pricing');
   const router = useRouter();
+  const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
+
+  const handleGetStarted = (index: number) => {
+    setLoadingIndex(index);
+    router.push(`/${locale}/register`);
+  };
 
   const packages = [
     {
@@ -413,8 +505,8 @@ function PricingSection({ locale }: { locale: string }) {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full" variant={pkg.popular ? 'default' : 'outline'} onClick={() => router.push(`/${locale}/register`)}>
-                  {t('cta')}
+                <Button className="w-full" variant={pkg.popular ? 'default' : 'outline'} onClick={() => handleGetStarted(index)} disabled={loadingIndex === index}>
+                  {loadingIndex === index ? <Loader2 className="h-4 w-4 animate-spin" /> : t('cta')}
                 </Button>
               </CardContent>
             </Card>
@@ -434,6 +526,8 @@ function LeadCaptureForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [utmParams, setUtmParams] = useState<Record<string, string>>({});
+  // reCAPTCHA hook for bot protection (Section 15.2)
+  const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
 
   const {
     register,
@@ -453,11 +547,12 @@ function LeadCaptureForm() {
   const userType = watch('userType');
   const marketingConsent = watch('marketingConsent');
 
-  // Extract UTM parameters on mount
+  // Extract UTM parameters on mount - Per Requirements 10.3
+  // Capture: utm_source, utm_medium, utm_campaign, utm_content, utm_term, ref (affiliate code)
   useEffect(() => {
     const params: Record<string, string> = {};
     searchParams.forEach((value, key) => {
-      if (key.startsWith('utm_')) {
+      if (key.startsWith('utm_') || key === 'ref') {
         params[key] = value;
       }
     });
@@ -474,6 +569,9 @@ function LeadCaptureForm() {
         source: params.utm_source,
         medium: params.utm_medium,
         campaign: params.utm_campaign,
+        content: params.utm_content,
+        term: params.utm_term,
+        affiliateRef: params.ref,
         referrer: document.referrer || undefined,
       }),
     }).catch(() => {
@@ -488,6 +586,18 @@ function LeadCaptureForm() {
     const data = getValues();
     setIsSubmitting(true);
     try {
+      // Get reCAPTCHA token if enabled (Section 15.2)
+      let captchaToken: string | undefined;
+      if (isRecaptchaEnabled) {
+        try {
+          captchaToken = await executeRecaptcha('lead_capture');
+        } catch (captchaError) {
+          toast.error('Security verification failed. Please try again.');
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/v1/landing-pages/leads`,
         {
@@ -501,7 +611,11 @@ function LeadCaptureForm() {
             source: utmParams.utm_source,
             medium: utmParams.utm_medium,
             campaign: utmParams.utm_campaign,
+            content: utmParams.utm_content,
+            term: utmParams.utm_term,
+            affiliateRef: utmParams.ref,
             referrer: document.referrer || undefined,
+            captchaToken, // Section 15.2: CAPTCHA token for bot protection
           }),
         },
       );
@@ -517,7 +631,17 @@ function LeadCaptureForm() {
         setIsSubmitted(true);
         reset();
       } else {
-        toast.error(t('error'));
+        // Handle error response - check for CAPTCHA failure
+        try {
+          const errorResult = await response.json();
+          if (errorResult.message?.includes('CAPTCHA')) {
+            toast.error('Security verification failed. Please try again.');
+          } else {
+            toast.error(t('error'));
+          }
+        } catch {
+          toast.error(t('error'));
+        }
       }
     } catch (error) {
       toast.error(t('error'));
@@ -543,16 +667,19 @@ function LeadCaptureForm() {
             ) : (
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="name">{t('fields.name.label')}</Label>
+                  <Label htmlFor="name">{t('fields.name.label')} *</Label>
                   <Input
                     id="name"
                     type="text"
                     placeholder={t('fields.name.placeholder')}
                     {...register('name')}
                   />
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-destructive">{errors.name.message}</p>
+                  )}
                 </div>
                 <div>
-                  <Label htmlFor="email">{t('fields.email.label')}</Label>
+                  <Label htmlFor="email">{t('fields.email.label')} *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -597,7 +724,7 @@ function LeadCaptureForm() {
                   onClick={handleFormSubmit}
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? t('submitting') : t('cta')}
+                  {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : t('cta')}
                 </Button>
               </div>
             )}
@@ -707,6 +834,9 @@ function ContactSection() {
 function Footer({ locale }: { locale: string }) {
   const t = useTranslations('footer');
   const router = useRouter();
+  const [isPrivacyLoading, setIsPrivacyLoading] = useState(false);
+  const [isTermsLoading, setIsTermsLoading] = useState(false);
+  const [isCookiesLoading, setIsCookiesLoading] = useState(false);
 
   return (
     <footer className="border-t bg-background py-12">
@@ -767,25 +897,40 @@ function Footer({ locale }: { locale: string }) {
             <ul className="space-y-2">
               <li>
                 <span
-                  className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => router.push(`/${locale}/privacy`)}
+                  className={`cursor-pointer text-muted-foreground hover:text-foreground flex items-center gap-2 ${isPrivacyLoading ? 'opacity-70' : ''}`}
+                  onClick={() => {
+                    if (isPrivacyLoading) return;
+                    setIsPrivacyLoading(true);
+                    router.push(`/${locale}/privacy`);
+                  }}
                 >
+                  {isPrivacyLoading && <Loader2 className="h-3 w-3 animate-spin" />}
                   {t('links.legal.privacy')}
                 </span>
               </li>
               <li>
                 <span
-                  className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => router.push(`/${locale}/terms`)}
+                  className={`cursor-pointer text-muted-foreground hover:text-foreground flex items-center gap-2 ${isTermsLoading ? 'opacity-70' : ''}`}
+                  onClick={() => {
+                    if (isTermsLoading) return;
+                    setIsTermsLoading(true);
+                    router.push(`/${locale}/terms`);
+                  }}
                 >
+                  {isTermsLoading && <Loader2 className="h-3 w-3 animate-spin" />}
                   {t('links.legal.terms')}
                 </span>
               </li>
               <li>
                 <span
-                  className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => router.push(`/${locale}/cookies`)}
+                  className={`cursor-pointer text-muted-foreground hover:text-foreground flex items-center gap-2 ${isCookiesLoading ? 'opacity-70' : ''}`}
+                  onClick={() => {
+                    if (isCookiesLoading) return;
+                    setIsCookiesLoading(true);
+                    router.push(`/${locale}/cookies`);
+                  }}
                 >
+                  {isCookiesLoading && <Loader2 className="h-3 w-3 animate-spin" />}
                   {t('links.legal.cookies')}
                 </span>
               </li>
@@ -819,6 +964,7 @@ export default function LandingPage() {
         <FeaturesSection />
         <ReaderBenefitsSection />
         <PricingSection locale={locale} />
+        <TestimonialsSection />
         <FAQSection />
         <LeadCaptureForm />
         <ContactSection />

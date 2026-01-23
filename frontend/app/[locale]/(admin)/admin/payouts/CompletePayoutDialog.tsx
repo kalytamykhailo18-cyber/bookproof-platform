@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Loader2 } from 'lucide-react';
 
 interface CompletePayoutDialogProps {
   payout: PayoutResponse;
@@ -109,7 +110,7 @@ export default function CompletePayoutDialog({
             {t('complete.cancelButton')}
           </Button>
           <Button type="button" onClick={handleComplete} disabled={isPending || transactionId.trim().length < 5}>
-            {isPending ? t('complete.confirming') : t('complete.confirmButton')}
+            {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : t('complete.confirmButton')}
           </Button>
         </DialogFooter>
       </DialogContent>

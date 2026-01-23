@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useFinancialReport, useReportExportUrls } from '@/hooks/useAdminReports';
-import { Download, FileText, DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
+import { useFinancialReport, useExportFinancialCsv, useExportFinancialPdf } from '@/hooks/useAdminReports';
+import { Download, FileText, DollarSign, TrendingUp, TrendingDown, FileDown } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency } from '@/lib/utils';
 import { startOfMonth, endOfMonth, format } from 'date-fns';
@@ -21,10 +21,21 @@ export default function AdminFinancialReportsPage() {
     dateRange.endDate,
   );
 
-  const { getFinancialCsvUrl } = useReportExportUrls();
+  const exportCsvMutation = useExportFinancialCsv();
+  const exportPdfMutation = useExportFinancialPdf();
 
   const handleExportCsv = () => {
-    window.open(getFinancialCsvUrl(dateRange.startDate, dateRange.endDate), '_blank');
+    exportCsvMutation.mutate({
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+    });
+  };
+
+  const handleExportPdf = () => {
+    exportPdfMutation.mutate({
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+    });
   };
 
   const handleDateRangeChange = (start: string, end: string) => {
@@ -42,9 +53,23 @@ export default function AdminFinancialReportsPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button type="button" variant="outline" onClick={handleExportCsv}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleExportCsv}
+            disabled={exportCsvMutation.isPending}
+          >
             <Download className="mr-2 h-4 w-4" />
-            Export CSV
+            {exportCsvMutation.isPending ? 'Exporting...' : 'Export CSV'}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleExportPdf}
+            disabled={exportPdfMutation.isPending}
+          >
+            <FileDown className="mr-2 h-4 w-4" />
+            {exportPdfMutation.isPending ? 'Exporting...' : 'Export PDF'}
           </Button>
         </div>
       </div>

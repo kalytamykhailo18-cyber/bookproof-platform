@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsString, IsOptional, IsEnum, IsBoolean } from 'class-validator';
 import { Language } from '@prisma/client';
 
@@ -6,6 +6,14 @@ export class CaptureLeadDto {
   @ApiProperty({ example: 'john@example.com' })
   @IsEmail()
   email: string;
+
+  @ApiPropertyOptional({
+    description: 'reCAPTCHA v3 token for bot protection (Section 15.2)',
+    example: '03AGdBq24...',
+  })
+  @IsOptional()
+  @IsString()
+  captchaToken?: string;
 
   @ApiProperty({ example: 'John Doe', required: false })
   @IsString()
@@ -35,6 +43,21 @@ export class CaptureLeadDto {
   @IsString()
   @IsOptional()
   campaign?: string;
+
+  @ApiProperty({ example: 'banner_ad', required: false, description: 'utm_content parameter' })
+  @IsString()
+  @IsOptional()
+  content?: string;
+
+  @ApiProperty({ example: 'book_marketing', required: false, description: 'utm_term parameter' })
+  @IsString()
+  @IsOptional()
+  term?: string;
+
+  @ApiProperty({ example: 'AFF123', required: false, description: 'Affiliate referral code (ref parameter)' })
+  @IsString()
+  @IsOptional()
+  affiliateRef?: string;
 
   @ApiProperty({ example: 'https://google.com', required: false })
   @IsString()

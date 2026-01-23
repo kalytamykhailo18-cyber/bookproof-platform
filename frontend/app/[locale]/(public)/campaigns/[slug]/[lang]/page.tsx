@@ -38,6 +38,9 @@ export default function PublicCampaignPage() {
   const [campaign, setCampaign] = useState<PublicCampaign | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isGetBookLoading, setIsGetBookLoading] = useState(false);
+  const [isHomeLoading, setIsHomeLoading] = useState(false);
+  const [loadingLang, setLoadingLang] = useState<string | null>(null);
 
   useEffect(() => {
     const loadCampaign = async () => {
@@ -65,6 +68,7 @@ export default function PublicCampaignPage() {
   }, [slug, lang]);
 
   const handleGetFreeBook = () => {
+    setIsGetBookLoading(true);
     if (isAuthenticated) {
       // Redirect to reader application page
       router.push(`/${lang}/reader/campaigns`);
@@ -76,6 +80,7 @@ export default function PublicCampaignPage() {
   };
 
   const handleLanguageSwitch = (newLang: string) => {
+    setLoadingLang(newLang);
     router.push(`/${newLang}/campaigns/${slug}/${newLang.toLowerCase()}`);
   };
 
@@ -99,7 +104,11 @@ export default function PublicCampaignPage() {
               <p className="text-muted-foreground mb-4">
                 {error || t('notFound.message')}
               </p>
-              <Button type="button" onClick={() => router.push(`/${lang}`)}>
+              <Button type="button" onClick={() => {
+                setIsHomeLoading(true);
+                router.push(`/${lang}`);
+              }} disabled={isHomeLoading}>
+                {isHomeLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t('notFound.goHome')}
               </Button>
             </div>
@@ -185,7 +194,12 @@ export default function PublicCampaignPage() {
       <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <button onClick={() => router.push(`/${lang}`)} className="text-xl font-bold">
+            <button onClick={() => {
+              if (isHomeLoading) return;
+              setIsHomeLoading(true);
+              router.push(`/${lang}`);
+            }} className="text-xl font-bold flex items-center gap-2" disabled={isHomeLoading}>
+              {isHomeLoading && <Loader2 className="h-4 w-4 animate-spin" />}
               BookProof
             </button>
 
@@ -198,7 +212,9 @@ export default function PublicCampaignPage() {
                     variant={l === campaign.viewingLanguage ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => handleLanguageSwitch(l)}
+                    disabled={loadingLang === l}
                   >
+                    {loadingLang === l && <Loader2 className="mr-1 h-3 w-3 animate-spin" />}
                     {l}
                   </Button>
                 ))}
@@ -241,8 +257,9 @@ export default function PublicCampaignPage() {
                 size="lg"
                 className="w-full max-w-[300px]"
                 onClick={handleGetFreeBook}
-                disabled={!campaign.acceptingRegistrations}
+                disabled={!campaign.acceptingRegistrations || isGetBookLoading}
               >
+                {isGetBookLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {campaign.acceptingRegistrations
                   ? (isAuthenticated ? t('cta.apply') : t('cta.getFreeBook'))
                   : 'Campaign Full'}
@@ -415,8 +432,9 @@ export default function PublicCampaignPage() {
             type="button"
             size="lg"
             onClick={handleGetFreeBook}
-            disabled={!campaign.acceptingRegistrations}
+            disabled={!campaign.acceptingRegistrations || isGetBookLoading}
           >
+            {isGetBookLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {campaign.acceptingRegistrations
               ? (isAuthenticated ? t('cta.apply') : t('cta.getFreeBook'))
               : 'Campaign Full'}

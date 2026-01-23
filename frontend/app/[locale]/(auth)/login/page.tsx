@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Loader2 } from 'lucide-react';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -38,6 +39,8 @@ export default function LoginPage() {
   const { loginAsync, isLoggingIn } = useAuth();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
   const [rememberMe, setRememberMe] = useState(false);
+  const [isForgotLoading, setIsForgotLoading] = useState(false);
+  const [isSignupLoading, setIsSignupLoading] = useState(false);
 
   // Section 16.1: Get return URL from query params
   const returnUrl = searchParams.get('returnUrl');
@@ -129,25 +132,31 @@ export default function LoginPage() {
           </div>
           <span
             className="cursor-pointer text-sm text-primary hover:underline"
-            onClick={() => router.push(`/${locale}/forgot-password`)}
+            onClick={() => {
+              setIsForgotLoading(true);
+              router.push(`/${locale}/forgot-password`);
+            }}
           >
-            {t('forgotPassword')}
+            {isForgotLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('forgotPassword')}
           </span>
         </div>
       </CardContent>
 
       <CardFooter className="flex flex-col space-y-4">
         <Button type="button" className="w-full" disabled={isLoggingIn} onClick={handleLogin}>
-          {isLoggingIn ? t('submitting') : t('submitButton')}
+          {isLoggingIn ? <Loader2 className="h-4 w-4 animate-spin" /> : t('submitButton')}
         </Button>
 
         <p className="text-center text-sm text-muted-foreground">
           {t('noAccount')}{' '}
           <span
             className="cursor-pointer font-medium text-primary hover:underline"
-            onClick={() => router.push(`/${locale}/register`)}
+            onClick={() => {
+              setIsSignupLoading(true);
+              router.push(`/${locale}/register`);
+            }}
           >
-            {t('signUp')}
+            {isSignupLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('signUp')}
           </span>
         </p>
       </CardFooter>
