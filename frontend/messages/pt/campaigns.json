@@ -1,0 +1,53 @@
+{
+  "public": {
+    "title": "Obtenha Sua Cópia Gratuita",
+    "subtitle": "Participe do nosso programa de leitura e receba uma cópia gratuita deste livro",
+    "loading": "Carregando campanha...",
+    "notFound": "Campanha não encontrada",
+    "notFoundDescription": "Esta campanha pode ter terminado ou não existe.",
+    "backToHome": "Voltar ao Início",
+    "bookDetails": {
+      "title": "Detalhes do Livro",
+      "author": "Autor",
+      "format": "Formato",
+      "genre": "Gênero",
+      "language": "Idioma",
+      "synopsis": "Sinopse"
+    },
+    "formats": {
+      "ebook": "Ebook",
+      "audiobook": "Audiolivro",
+      "both": "Ebook e Audiolivro"
+    },
+    "benefits": {
+      "title": "O Que Você Recebe",
+      "freeBook": "Cópia gratuita do livro",
+      "earn": "Ganhe dinheiro pela sua avaliação honesta",
+      "flexible": "Leia no seu próprio ritmo",
+      "keep": "Fique com o livro para sempre"
+    },
+    "cta": {
+      "getBook": "Obter Livro Gratuito",
+      "gettingBook": "Processando...",
+      "loginRequired": "Faça login para continuar",
+      "alreadyApplied": "Já Aplicado",
+      "unavailable": "Indisponível no Momento"
+    },
+    "status": {
+      "active": "Disponível",
+      "paused": "Pausado",
+      "completed": "Concluído",
+      "unavailable": "Indisponível"
+    },
+    "slots": {
+      "available": "{count} vagas restantes",
+      "limited": "Vagas limitadas disponíveis"
+    },
+    "language": {
+      "switch": "Ver em",
+      "en": "Inglês",
+      "pt": "Português",
+      "es": "Espanhol"
+    }
+  }
+}

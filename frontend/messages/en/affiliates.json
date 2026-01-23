@@ -414,5 +414,41 @@
         "submitting": "Processing..."
       }
     }
+  },
+  "referredAuthors": {
+    "title": "Referred Authors",
+    "description": "View all authors you have referred and their purchase activity",
+    "stats": {
+      "totalReferrals": "Total Referred Authors",
+      "totalPurchases": "Total Purchases",
+      "totalCommission": "Total Commission Earned"
+    },
+    "table": {
+      "title": "Referred Authors List",
+      "description": "Click on an author to see their purchase history",
+      "empty": "No referred authors yet",
+      "emptyDescription": "Share your referral link to start earning commissions!",
+      "author": "Author",
+      "signUpDate": "Sign-up Date",
+      "totalPurchases": "Total Purchases",
+      "commissionEarned": "Commission Earned",
+      "lastPurchase": "Last Purchase",
+      "actions": "Actions",
+      "viewDetails": "View Details"
+    },
+    "detail": {
+      "title": "Author Purchase History",
+      "description": "Purchase history and commission breakdown",
+      "author": "Author",
+      "signUpDate": "Sign-up Date",
+      "totalPurchases": "Purchases",
+      "totalCommission": "Total Commission",
+      "purchaseHistory": "Purchase History (Amounts Only)",
+      "noPurchases": "No purchases yet",
+      "date": "Date",
+      "purchaseAmount": "Purchase Amount",
+      "commission": "Your Commission",
+      "notFound": "Author not found"
+    }
   }
 }

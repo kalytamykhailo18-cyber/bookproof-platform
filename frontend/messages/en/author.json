@@ -217,5 +217,46 @@
         "deleting": "Deleting..."
       }
     }
+  },
+  "transactions": {
+    "title": "Transaction History",
+    "subtitle": "View all your financial transactions and credit usage",
+    "stats": {
+      "totalPurchases": "Total Purchases",
+      "oneTime": "One-time payments",
+      "subscriptionPayments": "Subscription Payments",
+      "recurring": "Recurring charges",
+      "creditsUsed": "Credits Used",
+      "totalAllocated": "Total allocated"
+    },
+    "spendingOverview": {
+      "title": "Spending Overview",
+      "description": "Your spending by category"
+    },
+    "history": {
+      "title": "Transaction History",
+      "description": "All your financial transactions"
+    },
+    "export": {
+      "csv": "Export CSV"
+    },
+    "filter": {
+      "all": "All",
+      "purchases": "Purchases",
+      "subscriptions": "Subscriptions",
+      "usage": "Usage"
+    },
+    "recentPurchases": {
+      "title": "Recent Credit Purchases",
+      "description": "Your latest credit package purchases via Stripe"
+    },
+    "refundRequests": {
+      "title": "My Refund Requests",
+      "description": "Track the status of your refund requests"
+    },
+    "refundDialog": {
+      "title": "Request Refund",
+      "description": "Submit a refund request for this purchase."
+    }
   }
 }
