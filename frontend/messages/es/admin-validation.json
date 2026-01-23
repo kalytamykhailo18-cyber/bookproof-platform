@@ -1,0 +1,67 @@
+{
+  "title": "Validacion de Resenas",
+  "subtitle": "Revise y valide envios pendientes de lectores",
+  "stats": {
+    "pending": "Pendientes",
+    "validated": "Validadas",
+    "rejected": "Rechazadas",
+    "flagged": "Marcadas"
+  },
+  "bulk": {
+    "selected": "{count} resenas seleccionadas",
+    "approve": "Aprobar Seleccionadas",
+    "clear": "Limpiar Seleccion"
+  },
+  "list": {
+    "title": "{count} Resenas Pendientes",
+    "description": "Envios de resenas esperando validacion"
+  },
+  "empty": {
+    "title": "Todo al Dia!",
+    "description": "No hay resenas pendientes de validacion"
+  },
+  "review": {
+    "byAuthor": "por {author}",
+    "reader": "Lector",
+    "reliability": "Confiabilidad",
+    "completion": "Finalizacion",
+    "amazonProfile": "Perfil Amazon",
+    "viewProfile": "Ver Perfil",
+    "verified": "Verificado",
+    "unverified": "No Verificado",
+    "rating": "Calificacion",
+    "viewOnAmazon": "Ver Resena en Amazon",
+    "submitted": "Enviado"
+  },
+  "actions": {
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "flag": "Marcar",
+    "requestResubmission": "Solicitar Reenvio"
+  },
+  "dialog": {
+    "approve": {
+      "title": "Aprobar Resena",
+      "description": "Esta seguro que desea aprobar esta resena? El lector sera acreditado."
+    },
+    "reject": {
+      "title": "Rechazar Resena",
+      "description": "Por favor, proporcione una razon para rechazar esta resena."
+    },
+    "flag": {
+      "title": "Marcar Resena",
+      "description": "Marcar esta resena para investigacion adicional."
+    },
+    "resubmit": {
+      "title": "Solicitar Reenvio",
+      "description": "Solicitar al lector que reenvie su resena."
+    },
+    "issueType": "Tipo de Problema",
+    "severity": "Gravedad",
+    "notes": "Notas",
+    "notesPlaceholder": "Agregue notas o instrucciones adicionales...",
+    "cancel": "Cancelar",
+    "processing": "Procesando...",
+    "confirm": "Confirmar"
+  }
+}

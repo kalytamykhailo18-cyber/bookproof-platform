@@ -1,0 +1,67 @@
+{
+  "title": "Validacao de Avaliacoes",
+  "subtitle": "Revise e valide envios pendentes de leitores",
+  "stats": {
+    "pending": "Pendentes",
+    "validated": "Validadas",
+    "rejected": "Rejeitadas",
+    "flagged": "Sinalizadas"
+  },
+  "bulk": {
+    "selected": "{count} avaliacoes selecionadas",
+    "approve": "Aprovar Selecionadas",
+    "clear": "Limpar Selecao"
+  },
+  "list": {
+    "title": "{count} Avaliacoes Pendentes",
+    "description": "Envios de avaliacoes aguardando validacao"
+  },
+  "empty": {
+    "title": "Tudo em Dia!",
+    "description": "Nao ha avaliacoes pendentes de validacao"
+  },
+  "review": {
+    "byAuthor": "por {author}",
+    "reader": "Leitor",
+    "reliability": "Confiabilidade",
+    "completion": "Conclusao",
+    "amazonProfile": "Perfil Amazon",
+    "viewProfile": "Ver Perfil",
+    "verified": "Verificado",
+    "unverified": "Nao Verificado",
+    "rating": "Avaliacao",
+    "viewOnAmazon": "Ver Avaliacao na Amazon",
+    "submitted": "Enviado"
+  },
+  "actions": {
+    "approve": "Aprovar",
+    "reject": "Rejeitar",
+    "flag": "Sinalizar",
+    "requestResubmission": "Solicitar Reenvio"
+  },
+  "dialog": {
+    "approve": {
+      "title": "Aprovar Avaliacao",
+      "description": "Tem certeza que deseja aprovar esta avaliacao? O leitor sera creditado."
+    },
+    "reject": {
+      "title": "Rejeitar Avaliacao",
+      "description": "Por favor, forneca um motivo para rejeitar esta avaliacao."
+    },
+    "flag": {
+      "title": "Sinalizar Avaliacao",
+      "description": "Sinalizar esta avaliacao para investigacao adicional."
+    },
+    "resubmit": {
+      "title": "Solicitar Reenvio",
+      "description": "Solicitar ao leitor que reenvie sua avaliacao."
+    },
+    "issueType": "Tipo de Problema",
+    "severity": "Gravidade",
+    "notes": "Notas",
+    "notesPlaceholder": "Adicione notas ou instrucoes adicionais...",
+    "cancel": "Cancelar",
+    "processing": "Processando...",
+    "confirm": "Confirmar"
+  }
+}
