@@ -5,6 +5,7 @@
   "transactionHistory": "Transaction History",
   "availableBalance": "Available Balance",
   "totalEarned": "Total Earned",
+  "totalWithdrawn": "Total Withdrawn",
   "pendingEarnings": "Pending Earnings",
   "minimumPayout": "Minimum payout amount is $50",
   "amount": "Amount",
