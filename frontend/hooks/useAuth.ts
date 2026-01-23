@@ -64,13 +64,13 @@ export function useAuth() {
           router.push(`/${locale}/reader`);
           break;
         case 'ADMIN':
-          router.push(`/${locale}/admin`);
+          router.push(`/${locale}/admin/dashboard`);
           break;
         case 'CLOSER':
           router.push(`/${locale}/closer`);
           break;
         case 'AFFILIATE':
-          router.push(`/${locale}/affiliate`);
+          router.push(`/${locale}/affiliate/dashboard`);
           break;
         default:
           router.push(`/${locale}`);
