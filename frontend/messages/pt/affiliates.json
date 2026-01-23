@@ -403,5 +403,41 @@
         "submitting": "Processando..."
       }
     }
+  },
+  "referredAuthors": {
+    "title": "Autores Indicados",
+    "description": "Veja todos os autores que você indicou e suas atividades de compra",
+    "stats": {
+      "totalReferrals": "Total de Autores Indicados",
+      "totalPurchases": "Total de Compras",
+      "totalCommission": "Comissão Total Ganha"
+    },
+    "table": {
+      "title": "Lista de Autores Indicados",
+      "description": "Clique em um autor para ver seu histórico de compras",
+      "empty": "Nenhum autor indicado ainda",
+      "emptyDescription": "Compartilhe seu link de indicação para começar a ganhar comissões!",
+      "author": "Autor",
+      "signUpDate": "Data de Cadastro",
+      "totalPurchases": "Total de Compras",
+      "commissionEarned": "Comissão Ganha",
+      "lastPurchase": "Última Compra",
+      "actions": "Ações",
+      "viewDetails": "Ver Detalhes"
+    },
+    "detail": {
+      "title": "Histórico de Compras do Autor",
+      "description": "Histórico de compras e detalhamento de comissões",
+      "author": "Autor",
+      "signUpDate": "Data de Cadastro",
+      "totalPurchases": "Compras",
+      "totalCommission": "Comissão Total",
+      "purchaseHistory": "Histórico de Compras (Apenas Valores)",
+      "noPurchases": "Nenhuma compra ainda",
+      "date": "Data",
+      "purchaseAmount": "Valor da Compra",
+      "commission": "Sua Comissão",
+      "notFound": "Autor não encontrado"
+    }
   }
 }

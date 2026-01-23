@@ -217,5 +217,46 @@
         "deleting": "Eliminando..."
       }
     }
+  },
+  "transactions": {
+    "title": "Historial de Transacciones",
+    "subtitle": "Ve todas tus transacciones financieras y uso de créditos",
+    "stats": {
+      "totalPurchases": "Compras Totales",
+      "oneTime": "Pagos únicos",
+      "subscriptionPayments": "Pagos de Suscripción",
+      "recurring": "Cargos recurrentes",
+      "creditsUsed": "Créditos Usados",
+      "totalAllocated": "Total asignado"
+    },
+    "spendingOverview": {
+      "title": "Resumen de Gastos",
+      "description": "Tus gastos por categoría"
+    },
+    "history": {
+      "title": "Historial de Transacciones",
+      "description": "Todas tus transacciones financieras"
+    },
+    "export": {
+      "csv": "Exportar CSV"
+    },
+    "filter": {
+      "all": "Todos",
+      "purchases": "Compras",
+      "subscriptions": "Suscripciones",
+      "usage": "Uso"
+    },
+    "recentPurchases": {
+      "title": "Compras de Créditos Recientes",
+      "description": "Tus últimas compras de paquetes de créditos via Stripe"
+    },
+    "refundRequests": {
+      "title": "Mis Solicitudes de Reembolso",
+      "description": "Rastrea el estado de tus solicitudes de reembolso"
+    },
+    "refundDialog": {
+      "title": "Solicitar Reembolso",
+      "description": "Envía una solicitud de reembolso para esta compra."
+    }
   }
 }

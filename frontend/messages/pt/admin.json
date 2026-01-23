@@ -1,0 +1,29 @@
+{
+  "packageApprovals": {
+    "title": "Aprovações de Pacotes",
+    "description": "Revise e aprove pacotes personalizados com preços abaixo do limite de 80%",
+    "pricingInfo": "Informações de Limite de Preço",
+    "standardRate": "Taxa Padrão",
+    "minimumThreshold": "Limite Mínimo (80%)",
+    "requiresApproval": "Requer Aprovação",
+    "pendingPackages": "Pacotes Pendentes",
+    "packagesAwaitingApproval": "pacotes aguardando aprovação",
+    "package": "Pacote",
+    "client": "Cliente",
+    "credits": "Créditos",
+    "price": "Preço",
+    "ratePerCredit": "Taxa/Crédito",
+    "discount": "Desconto",
+    "created": "Criado",
+    "approve": "Aprovar",
+    "reject": "Rejeitar",
+    "noPending": "Nenhum pacote pendente de aprovação",
+    "allCaughtUp": "Todos os pacotes personalizados com preços especiais foram revisados",
+    "rejectPackage": "Rejeitar Pacote",
+    "rejectDescription": "Por favor, forneça um motivo para rejeitar este pacote. O closer será notificado.",
+    "rejectionReason": "Motivo da Rejeição",
+    "rejectionReasonPlaceholder": "Ex: Desconto muito alto para este segmento de clientes...",
+    "rejecting": "Rejeitando...",
+    "confirmReject": "Rejeitar Pacote"
+  }
+}

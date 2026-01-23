@@ -62,6 +62,10 @@ const messageLoaders: Record<string, (locale: Locale) => Promise<Record<string, 
     import(`../messages/${locale}/admin-affiliates.json`).then((m) => m.default),
   closer: (locale) => import(`../messages/${locale}/closer.json`).then((m) => m.default),
   cookies: (locale) => import(`../messages/${locale}/cookies.json`).then((m) => m.default),
+  campaigns: (locale) => import(`../messages/${locale}/campaigns.json`).then((m) => m.default),
+  notifications: (locale) =>
+    import(`../messages/${locale}/notifications.json`).then((m) => m.default),
+  admin: (locale) => import(`../messages/${locale}/admin.json`).then((m) => m.default),
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,6 +129,9 @@ export default getRequestConfig(async ({ locale }) => {
     adminAffiliates,
     closer,
     cookies,
+    campaigns,
+    notifications,
+    admin,
   ] = await Promise.all([
     import(`../messages/${locale}/common.json`).then((m) => m.default),
     import(`../messages/${locale}/auth.json`).then((m) => m.default),
@@ -160,36 +167,49 @@ export default getRequestConfig(async ({ locale }) => {
     import(`../messages/${locale}/admin-affiliates.json`).then((m) => m.default),
     import(`../messages/${locale}/closer.json`).then((m) => m.default),
     import(`../messages/${locale}/cookies.json`).then((m) => m.default),
+    import(`../messages/${locale}/campaigns.json`).then((m) => m.default),
+    import(`../messages/${locale}/notifications.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin.json`).then((m) => m.default),
   ]);
 
   return {
     locale,
     messages: {
+      // Spread common translations at root level
       ...common,
-      auth,
       ...landing,
-      ...reader,
-      ...reviews,
-      ...author,
       ...credits,
       ...subscription,
       ...transactions,
       ...campaignAnalytics,
       ...readerStats,
-      // Admin namespace (for useTranslations('admin.xxx'))
-      admin: {
-        dashboard: adminDashboard,
-        controls: adminControls,
-        exceptions: adminExceptions,
-        coupons: adminCoupons,
-        payouts: adminPayouts,
-        landingPages: adminLandingPages,
-        team: adminTeam,
-        validation: adminValidation,
-      },
-      // Flat admin namespace (for useTranslations('adminDashboard'))
-      adminDashboard,
+      ...payouts,
+      ...reports,
+
+      // Nested namespaces - keep structure for useTranslations('namespace.key')
+      // auth.json has internal nesting: { login: {...}, register: {...} }
+      auth,
+      // reader.json has internal nesting: { dashboard: {...}, campaigns: {...} }
+      reader,
+      // author.json has internal nesting: { dashboard: {...}, credits: {...}, campaigns: {...} }
+      author,
+      // affiliates.json has internal nesting: { register: {...}, dashboard: {...}, ... }
+      affiliates,
+      // reviews.json has internal nesting: { submit: {...}, validation: {...}, issues: {...} }
+      reviews,
+      // campaigns.json has internal nesting: { public: {...} }
+      campaigns,
+      // notifications.json has internal nesting: { settings: {...} }
+      notifications,
+      // keyword-research.json has internal nesting: { new: {...}, edit: {...}, details: {...}, admin: {...} }
+      'keyword-research': keywordResearch,
+
       // Flat admin namespaces (for useTranslations('adminXxx'))
+      adminDashboard,
+      adminControls,
+      adminExceptions,
+      adminCoupons,
+      adminPayouts,
       adminReaders,
       adminAuthors,
       adminCampaigns,
@@ -199,20 +219,18 @@ export default getRequestConfig(async ({ locale }) => {
       adminAffiliateDetails,
       adminAffiliatePayouts,
       adminAuthorTransactions,
-      adminControls,
-      adminExceptions,
-      adminCoupons,
-      adminPayouts,
       adminTeam,
       adminValidation,
-      // Hyphenated namespaces (for useTranslations('admin-xxx'))
+      adminLandingPages,
+
+      // Hyphenated keys for components using hyphenated namespace
       'admin-landing-pages': adminLandingPages,
       'admin-payouts': adminPayouts,
+
+      // admin.json has internal nesting: { packageApprovals: {...} }
+      admin,
+
       // Other namespaces
-      ...affiliates,
-      ...payouts,
-      ...reports,
-      ...keywordResearch,
       closer,
       cookies,
     },
