@@ -31,6 +31,24 @@ const messageLoaders: Record<string, (locale: Locale) => Promise<Record<string, 
     import(`../messages/${locale}/admin-coupons.json`).then((m) => m.default),
   'admin-payouts': (locale) =>
     import(`../messages/${locale}/admin-payouts.json`).then((m) => m.default),
+  'admin-readers': (locale) =>
+    import(`../messages/${locale}/admin-readers.json`).then((m) => m.default),
+  'admin-authors': (locale) =>
+    import(`../messages/${locale}/admin-authors.json`).then((m) => m.default),
+  'admin-campaigns': (locale) =>
+    import(`../messages/${locale}/admin-campaigns.json`).then((m) => m.default),
+  'admin-settings': (locale) =>
+    import(`../messages/${locale}/admin-settings.json`).then((m) => m.default),
+  'admin-refunds': (locale) =>
+    import(`../messages/${locale}/admin-refunds.json`).then((m) => m.default),
+  'admin-affiliate-details': (locale) =>
+    import(`../messages/${locale}/admin-affiliate-details.json`).then((m) => m.default),
+  'admin-affiliate-payouts': (locale) =>
+    import(`../messages/${locale}/admin-affiliate-payouts.json`).then((m) => m.default),
+  'admin-author-transactions': (locale) =>
+    import(`../messages/${locale}/admin-author-transactions.json`).then((m) => m.default),
+  'admin-validation': (locale) =>
+    import(`../messages/${locale}/admin-validation.json`).then((m) => m.default),
   affiliates: (locale) => import(`../messages/${locale}/affiliates.json`).then((m) => m.default),
   payouts: (locale) => import(`../messages/${locale}/payouts.json`).then((m) => m.default),
   reports: (locale) => import(`../messages/${locale}/reports.json`).then((m) => m.default),
@@ -42,6 +60,7 @@ const messageLoaders: Record<string, (locale: Locale) => Promise<Record<string, 
     import(`../messages/${locale}/admin-team.json`).then((m) => m.default),
   'admin-affiliates': (locale) =>
     import(`../messages/${locale}/admin-affiliates.json`).then((m) => m.default),
+  closer: (locale) => import(`../messages/${locale}/closer.json`).then((m) => m.default),
   cookies: (locale) => import(`../messages/${locale}/cookies.json`).then((m) => m.default),
 };
 
@@ -88,6 +107,15 @@ export default getRequestConfig(async ({ locale }) => {
     adminExceptions,
     adminCoupons,
     adminPayouts,
+    adminReaders,
+    adminAuthors,
+    adminCampaigns,
+    adminSettings,
+    adminRefunds,
+    adminAffiliateDetails,
+    adminAffiliatePayouts,
+    adminAuthorTransactions,
+    adminValidation,
     affiliates,
     payouts,
     reports,
@@ -95,6 +123,7 @@ export default getRequestConfig(async ({ locale }) => {
     adminLandingPages,
     adminTeam,
     adminAffiliates,
+    closer,
     cookies,
   ] = await Promise.all([
     import(`../messages/${locale}/common.json`).then((m) => m.default),
@@ -113,6 +142,15 @@ export default getRequestConfig(async ({ locale }) => {
     import(`../messages/${locale}/admin-exceptions.json`).then((m) => m.default),
     import(`../messages/${locale}/admin-coupons.json`).then((m) => m.default),
     import(`../messages/${locale}/admin-payouts.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-readers.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-authors.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-campaigns.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-settings.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-refunds.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-affiliate-details.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-affiliate-payouts.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-author-transactions.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-validation.json`).then((m) => m.default),
     import(`../messages/${locale}/affiliates.json`).then((m) => m.default),
     import(`../messages/${locale}/payouts.json`).then((m) => m.default),
     import(`../messages/${locale}/reports.json`).then((m) => m.default),
@@ -120,6 +158,7 @@ export default getRequestConfig(async ({ locale }) => {
     import(`../messages/${locale}/admin-landing-pages.json`).then((m) => m.default),
     import(`../messages/${locale}/admin-team.json`).then((m) => m.default),
     import(`../messages/${locale}/admin-affiliates.json`).then((m) => m.default),
+    import(`../messages/${locale}/closer.json`).then((m) => m.default),
     import(`../messages/${locale}/cookies.json`).then((m) => m.default),
   ]);
 
@@ -137,6 +176,7 @@ export default getRequestConfig(async ({ locale }) => {
       ...transactions,
       ...campaignAnalytics,
       ...readerStats,
+      // Nested admin namespaces (for useTranslations('admin.xxx'))
       admin: {
         dashboard: adminDashboard,
         controls: adminControls,
@@ -145,12 +185,32 @@ export default getRequestConfig(async ({ locale }) => {
         payouts: adminPayouts,
         landingPages: adminLandingPages,
         team: adminTeam,
+        validation: adminValidation,
       },
+      // Flat admin namespaces (for useTranslations('adminXxx'))
+      adminReaders,
+      adminAuthors,
+      adminCampaigns,
+      adminSettings,
+      adminRefunds,
+      adminAffiliates,
+      adminAffiliateDetails,
+      adminAffiliatePayouts,
+      adminAuthorTransactions,
+      adminControls,
+      adminExceptions,
+      adminCoupons,
+      adminPayouts,
+      adminTeam,
+      // Hyphenated namespaces (for useTranslations('admin-xxx'))
+      'admin-landing-pages': adminLandingPages,
+      'admin-payouts': adminPayouts,
+      // Other namespaces
       ...affiliates,
       ...payouts,
       ...reports,
       ...keywordResearch,
-      adminAffiliates,
+      closer,
       cookies,
     },
   };
