@@ -371,26 +371,26 @@ export class CommissionService {
 
       const commissions = await this.prisma.affiliateCommission.findMany({
         where,
-        include: {
-          referredAuthor: {
-            include: {
-              user: { select: { email: true } },
-            },
-          },
-        },
         orderBy: { createdAt: 'desc' },
       });
 
       // Map to response DTOs with masked author email
-      return commissions.map((commission) => {
-        const email = commission.referredAuthor?.user?.email || 'unknown';
+      const result = [];
+      for (const commission of commissions) {
+        // Get the referred author's email
+        const authorProfile = await this.prisma.authorProfile.findUnique({
+          where: { id: commission.referredAuthorId },
+          include: { user: { select: { email: true } } },
+        });
+
+        const email = authorProfile?.user?.email || 'unknown';
         const [localPart, domain] = email.split('@');
         const maskedEmail =
           localPart && localPart.length > 3
             ? `${localPart.substring(0, 3)}***@${domain || 'email.com'}`
             : `***@${domain || 'email.com'}`;
 
-        return {
+        result.push({
           id: commission.id,
           affiliateProfileId: commission.affiliateProfileId,
           creditPurchaseId: commission.creditPurchaseId,
@@ -407,8 +407,9 @@ export class CommissionService {
           cancellationReason: commission.cancellationReason,
           createdAt: commission.createdAt,
           updatedAt: commission.updatedAt,
-        };
-      });
+        });
+      }
+      return result;
     } catch (error) {
       this.logger.error(`Error getting commissions: ${error.message}`, error.stack);
       throw error;

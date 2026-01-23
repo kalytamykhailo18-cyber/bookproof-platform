@@ -48,6 +48,8 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
+import Autoplay from 'embla-carousel-autoplay';
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, CarouselDots } from '@/components/ui/carousel';
 
 // Lead form validation schema
 const leadFormSchema = z.object({
@@ -341,27 +343,15 @@ function TestimonialsSection() {
   const t = useTranslations('testimonials');
 
   const testimonials = [
-    {
-      quoteKey: 'items.t1.quote',
-      authorKey: 'items.t1.author',
-      titleKey: 'items.t1.title',
-      rating: 5,
-      animation: 'animate-fade-up-fast',
-    },
-    {
-      quoteKey: 'items.t2.quote',
-      authorKey: 'items.t2.author',
-      titleKey: 'items.t2.title',
-      rating: 5,
-      animation: 'animate-fade-up',
-    },
-    {
-      quoteKey: 'items.t3.quote',
-      authorKey: 'items.t3.author',
-      titleKey: 'items.t3.title',
-      rating: 5,
-      animation: 'animate-fade-up-light-slow',
-    },
+    { quoteKey: 'items.t1.quote', authorKey: 'items.t1.author', titleKey: 'items.t1.title', rating: 5, photo: 'https://randomuser.me/api/portraits/women/44.jpg' },
+    { quoteKey: 'items.t2.quote', authorKey: 'items.t2.author', titleKey: 'items.t2.title', rating: 5, photo: 'https://randomuser.me/api/portraits/men/32.jpg' },
+    { quoteKey: 'items.t3.quote', authorKey: 'items.t3.author', titleKey: 'items.t3.title', rating: 5, photo: 'https://randomuser.me/api/portraits/women/68.jpg' },
+    { quoteKey: 'items.t4.quote', authorKey: 'items.t4.author', titleKey: 'items.t4.title', rating: 5, photo: 'https://randomuser.me/api/portraits/men/75.jpg' },
+    { quoteKey: 'items.t5.quote', authorKey: 'items.t5.author', titleKey: 'items.t5.title', rating: 5, photo: 'https://randomuser.me/api/portraits/women/26.jpg' },
+    { quoteKey: 'items.t6.quote', authorKey: 'items.t6.author', titleKey: 'items.t6.title', rating: 5, photo: 'https://randomuser.me/api/portraits/men/46.jpg' },
+    { quoteKey: 'items.t7.quote', authorKey: 'items.t7.author', titleKey: 'items.t7.title', rating: 5, photo: 'https://randomuser.me/api/portraits/women/52.jpg' },
+    { quoteKey: 'items.t8.quote', authorKey: 'items.t8.author', titleKey: 'items.t8.title', rating: 5, photo: 'https://randomuser.me/api/portraits/men/22.jpg' },
+    { quoteKey: 'items.t9.quote', authorKey: 'items.t9.author', titleKey: 'items.t9.title', rating: 5, photo: 'https://randomuser.me/api/portraits/women/33.jpg' },
   ];
 
   const renderStars = (rating: number) => {
@@ -380,23 +370,52 @@ function TestimonialsSection() {
   return (
     <section id="testimonials" className="bg-muted/50 py-20">
       <div className="container">
-        <div className="mb-16 animate-fade-down text-center">
+        <div className="mb-12 animate-fade-down text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">{t('title')}</h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3">
-          {testimonials.map((testimonial, index) => (
-            <Card key={index} className={`${testimonial.animation} transition-shadow hover:shadow-lg`}>
-              <CardContent className="pt-6">
-                <div className="mb-4">{renderStars(testimonial.rating)}</div>
-                <p className="mb-4 italic text-muted-foreground">"{t(testimonial.quoteKey)}"</p>
-                <div className="border-t pt-4">
-                  <p className="font-semibold">{t(testimonial.authorKey)}</p>
-                  <p className="text-sm text-muted-foreground">{t(testimonial.titleKey)}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="mx-auto max-w-6xl px-12">
+          <Carousel
+            opts={{
+              align: 'start',
+              loop: true,
+            }}
+            plugins={[
+              Autoplay({
+                delay: 3000,
+                stopOnInteraction: false,
+                stopOnMouseEnter: true,
+              }),
+            ]}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4">
+              {testimonials.map((testimonial, index) => (
+                <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                  <Card className="h-full transition-shadow hover:shadow-lg">
+                    <CardContent className="flex h-full flex-col pt-6">
+                      <div className="mb-4">{renderStars(testimonial.rating)}</div>
+                      <p className="mb-4 flex-grow italic text-muted-foreground">"{t(testimonial.quoteKey)}"</p>
+                      <div className="flex items-center gap-3 border-t pt-4">
+                        <img
+                          src={testimonial.photo}
+                          alt={t(testimonial.authorKey)}
+                          className="h-12 w-12 rounded-full object-cover"
+                        />
+                        <div>
+                          <p className="font-semibold">{t(testimonial.authorKey)}</p>
+                          <p className="text-sm text-muted-foreground">{t(testimonial.titleKey)}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+            <CarouselDots />
+          </Carousel>
         </div>
       </div>
     </section>
@@ -693,13 +712,13 @@ function LeadCaptureForm() {
                 <div>
                   <Label htmlFor="userType">{t('fields.userType.label')}</Label>
                   <Select
-                    value={userType}
+                    value={userType ?? ''}
                     onValueChange={(value) =>
                       setValue('userType', value as 'author' | 'reader' | 'both')
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue placeholder={t('fields.userType.label')} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="author">{t('fields.userType.options.author')}</SelectItem>

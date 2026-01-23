@@ -433,17 +433,17 @@ export class AffiliatesService {
           affiliateProfileId,
           clickedAt: { gte: thirtyDaysAgo },
         },
-        _count: { id: true },
+        _count: { _all: true },
       });
 
       // Get conversions (sign-ups) grouped by day
       const conversions = await this.prisma.affiliateReferral.groupBy({
-        by: ['convertedAt'],
+        by: ['registeredAt'],
         where: {
           affiliateProfileId,
-          convertedAt: { gte: thirtyDaysAgo },
+          registeredAt: { gte: thirtyDaysAgo },
         },
-        _count: { id: true },
+        _count: { _all: true },
       });
 
       // Create date range for last 30 days
@@ -458,12 +458,12 @@ export class AffiliatesService {
         // Find clicks for this date
         const clickCount = clicks
           .filter((c) => c.clickedAt?.toISOString().split('T')[0] === dateStr)
-          .reduce((sum, c) => sum + c._count.id, 0);
+          .reduce((sum, c) => sum + (c._count?._all || 0), 0);
 
         // Find conversions for this date
         const conversionCount = conversions
-          .filter((c) => c.convertedAt?.toISOString().split('T')[0] === dateStr)
-          .reduce((sum, c) => sum + c._count.id, 0);
+          .filter((c) => c.registeredAt?.toISOString().split('T')[0] === dateStr)
+          .reduce((sum, c) => sum + (c._count?._all || 0), 0);
 
         clicksData.push({ date: dateStr, value: clickCount });
         conversionsData.push({ date: dateStr, value: conversionCount });
@@ -486,19 +486,18 @@ export class AffiliatesService {
     try {
       const referrals = await this.prisma.affiliateReferral.findMany({
         where: { affiliateProfileId },
-        include: {
-          referredAuthor: {
-            include: {
-              user: { select: { email: true } },
-            },
-          },
-        },
-        orderBy: { convertedAt: 'desc' },
+        orderBy: { registeredAt: 'desc' },
       });
 
       const result: ReferredAuthorDto[] = [];
 
       for (const referral of referrals) {
+        // Get the referred author's email
+        const authorProfile = await this.prisma.authorProfile.findUnique({
+          where: { id: referral.referredAuthorId },
+          include: { user: { select: { email: true } } },
+        });
+
         // Get commissions for this referral
         const commissions = await this.prisma.affiliateCommission.findMany({
           where: {
@@ -517,7 +516,7 @@ export class AffiliatesService {
           commissions.length > 0 ? commissions[0].createdAt : undefined;
 
         // Mask email for privacy (show first 3 chars + *** + domain)
-        const email = referral.referredAuthor?.user?.email || 'unknown';
+        const email = authorProfile?.user?.email || 'unknown';
         const [localPart, domain] = email.split('@');
         const maskedEmail =
           localPart.length > 3
@@ -527,7 +526,7 @@ export class AffiliatesService {
         result.push({
           id: referral.id,
           authorIdentifier: maskedEmail,
-          signUpDate: referral.convertedAt || referral.createdAt,
+          signUpDate: referral.registeredAt || referral.createdAt,
           totalPurchases,
           totalCommissionEarned,
           lastPurchaseDate,
@@ -554,18 +553,17 @@ export class AffiliatesService {
           id: referralId,
           affiliateProfileId,
         },
-        include: {
-          referredAuthor: {
-            include: {
-              user: { select: { email: true } },
-            },
-          },
-        },
       });
 
       if (!referral) {
         throw new NotFoundException('Referral not found');
       }
+
+      // Get the referred author's email
+      const authorProfile = await this.prisma.authorProfile.findUnique({
+        where: { id: referral.referredAuthorId },
+        include: { user: { select: { email: true } } },
+      });
 
       // Get commissions for this referral
       const commissions = await this.prisma.affiliateCommission.findMany({
@@ -585,7 +583,7 @@ export class AffiliatesService {
         commissions.length > 0 ? commissions[0].createdAt : undefined;
 
       // Mask email for privacy
-      const email = referral.referredAuthor?.user?.email || 'unknown';
+      const email = authorProfile?.user?.email || 'unknown';
       const [localPart, domain] = email.split('@');
       const maskedEmail =
         localPart.length > 3
@@ -602,7 +600,7 @@ export class AffiliatesService {
       return {
         id: referral.id,
         authorIdentifier: maskedEmail,
-        signUpDate: referral.convertedAt || referral.createdAt,
+        signUpDate: referral.registeredAt || referral.createdAt,
         totalPurchases,
         totalCommissionEarned,
         lastPurchaseDate,
