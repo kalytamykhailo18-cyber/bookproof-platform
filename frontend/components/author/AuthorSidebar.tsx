@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useParams, usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -39,6 +39,11 @@ export function AuthorSidebar() {
   const locale = (params?.locale as string) || 'en';
   const [collapsed, setCollapsed] = useState(false);
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
+
+  // Reset loading state when navigation completes
+  useEffect(() => {
+    setLoadingPath(null);
+  }, [pathname]);
 
   const navSections: NavSection[] = [
     {

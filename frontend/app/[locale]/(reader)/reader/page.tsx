@@ -155,7 +155,7 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
         {assignment.status === AssignmentStatus.WAITING && assignment.queuePosition && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4" />
-            <span>{t('queuePosition', { position: assignment.queuePosition })}</span>
+            <span>{t('queuePosition', { position: `#${assignment.queuePosition}` })}</span>
           </div>
         )}
 
@@ -284,7 +284,7 @@ export default function ReaderDashboard() {
               router.push(`/${locale}/reader/wallet/payout`);
             }}
             disabled={isPayoutLoading || (stats?.walletBalance || 0) < 50}
-            title={(stats?.walletBalance || 0) < 50 ? t('payoutMinimumRequired') : undefined}
+            title={(stats?.walletBalance || 0) < 50 ? t('payoutMinimumRequired', { amount: '$50' }) : undefined}
           >
             {isPayoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wallet className="mr-2 h-4 w-4" />}
             {t('requestPayout')}
@@ -309,28 +309,28 @@ export default function ReaderDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           title={t('stats.walletBalance')}
-          value={`$${stats?.walletBalance.toFixed(2) || '0.00'}`}
+          value={`$${(stats?.walletBalance ?? 0).toFixed(2)}`}
           icon={DollarSign}
-          description={t('stats.totalEarned', { amount: stats?.totalEarned.toFixed(2) || '0.00' })}
+          description={t('stats.totalEarned', { amount: `$${(stats?.totalEarned ?? 0).toFixed(2)}` })}
           className="animate-fade-up-fast"
         />
         <StatsCard
           title={t('stats.activeAssignments')}
-          value={stats?.activeAssignments || 0}
+          value={stats?.activeAssignments ?? 0}
           icon={BookOpen}
           description={t('stats.currentlyWorking')}
           className="animate-fade-up-light-slow"
         />
         <StatsCard
           title={t('stats.completedReviews')}
-          value={stats?.completedAssignments || 0}
+          value={stats?.completedAssignments ?? 0}
           icon={CheckCircle}
-          description={t('stats.completionRate', { rate: stats?.completionRate.toFixed(0) || '0' })}
+          description={t('stats.completionRate', { rate: (stats?.completionRate ?? 0).toFixed(0) })}
           className="animate-fade-up-medium-slow"
         />
         <StatsCard
           title={t('stats.pendingPayouts')}
-          value={`$${stats?.pendingPayouts?.toFixed(2) || '0.00'}`}
+          value={`$${(stats?.pendingPayouts ?? 0).toFixed(2)}`}
           icon={Banknote}
           description={t('stats.awaitingProcessing')}
           className="animate-fade-up-heavy-slow"

@@ -6,19 +6,24 @@
     "byAuthor": "por {author}",
     "credit": "crédito",
     "credits": "créditos",
-    "queuePosition": "Posición en cola: #{position}",
+    "queuePosition": "Posición en cola: {position}",
     "scheduledFor": "Programado para: {date}",
     "deadline": "Fecha límite",
     "remaining": "restantes",
+    "payoutMinimumRequired": "Mínimo {amount} requerido para retiro",
+    "requestPayout": "Solicitar Retiro",
+    "viewMyReviews": "Ver Mis Reseñas",
     "stats": {
       "walletBalance": "Saldo de Cartera",
-      "totalEarned": "Total ganado: ${amount}",
+      "totalEarned": "Total ganado: {amount}",
       "activeAssignments": "Asignaciones Activas",
       "currentlyWorking": "Trabajando actualmente",
       "completedReviews": "Reseñas Completadas",
       "completionRate": "{rate}% tasa de finalización",
       "reliabilityScore": "Puntuación de Confiabilidad",
-      "performanceRating": "Tu calificación de rendimiento"
+      "performanceRating": "Tu calificación de rendimiento",
+      "pendingPayouts": "Retiros Pendientes",
+      "awaitingProcessing": "Esperando procesamiento"
     },
     "sections": {
       "activeAssignments": "Asignaciones Activas",
@@ -57,8 +62,8 @@
       "format": "Formato",
       "allFormats": "Todos los Formatos"
     },
-    "resultsCount": "Mostrando {{count}} libro",
-    "resultsCount_plural": "Mostrando {{count}} libros",
+    "resultsCount": "Mostrando {count} libro",
+    "resultsCount_plural": "Mostrando {count} libros",
     "campaign": {
       "byAuthor": "por {author}",
       "target": "Objetivo",
@@ -89,7 +94,7 @@
     "deadline": {
       "urgent": "URGENTE: ¡Fecha Límite Aproximándose!",
       "reminder": "Recordatorio de Fecha Límite",
-      "due": "Vence {{time}}",
+      "due": "Vence {time}",
       "hoursRemaining": "horas restantes"
     },
     "sections": {
@@ -97,13 +102,13 @@
       "ebookDownload": "Descarga de eBook",
       "ebookDownloadDesc": "Descarga el eBook a tu dispositivo",
       "downloadButton": "Descargar eBook (PDF/EPUB)",
-      "downloaded": "Descargado {{time}}",
+      "downloaded": "Descargado {time}",
       "audiobookPlayer": "Reproductor de Audiolibro"
     },
     "materialsNotAvailable": {
       "title": "Materiales Aún No Disponibles",
-      "waiting": "Estás en la cola en la posición #{{position}}. Los materiales se liberarán cuando llegue tu turno.",
-      "scheduled": "Los materiales se liberarán el {{date}}",
+      "waiting": "Estás en la cola en la posición {position}. Los materiales se liberarán cuando llegue tu turno.",
+      "scheduled": "Los materiales se liberarán el {date}",
       "expired": "Esta asignación ha expirado y ya no está disponible."
     },
     "details": {
@@ -160,7 +165,7 @@
     "amazonProfiles": {
       "verified": "Verificado",
       "pending": "Verificación Pendiente",
-      "addLabel": "Agregar URL de Perfil de Amazon ({{count}}/3)",
+      "addLabel": "Agregar URL de Perfil de Amazon ({count}/3)",
       "placeholder": "https://amazon.com/gp/profile/...",
       "example": "Ejemplo: https://amazon.com/gp/profile/XXXXXXXXXXXXX",
       "maxReached": "Has alcanzado el máximo de 3 perfiles de Amazon. Elimina uno para agregar un nuevo perfil."
