@@ -43,7 +43,7 @@ import { CampaignSectionItemDto } from '@/lib/api/dashboards';
 import { useAuthStore } from '@/store/authStore';
 
 export default function AdminDashboardPage() {
-  const t = useTranslations('admin.dashboard');
+  const t = useTranslations('adminDashboard');
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'en';

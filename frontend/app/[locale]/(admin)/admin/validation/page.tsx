@@ -38,7 +38,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { useTranslations } from 'next-intl';
 
 export default function AdminValidationPage() {
-  const t = useTranslations('admin.validation');
+  const t = useTranslations('adminValidation');
   const {
     pendingReviews,
     isLoadingPending,
