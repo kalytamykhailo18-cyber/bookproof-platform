@@ -1,23 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ShieldX, Home, ArrowLeft, Loader2 } from 'lucide-react';
 
 /**
- * 403 Forbidden Page
+ * 403 Forbidden Page (Locale-aware)
  * Section 16.1: Clear message with link to dashboard
- *
- * Note: This is the root-level 403, shown when no locale context exists.
- * Routes use 'en' as default locale since we're outside [locale] context.
  */
-export default function Forbidden() {
+export default function ForbiddenPage() {
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const [isHomeLoading, setIsHomeLoading] = useState(false);
-
-  // Default locale for root-level 403 (outside [locale] context)
-  const locale = 'en';
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted px-4">
@@ -37,7 +33,7 @@ export default function Forbidden() {
           Access Forbidden
         </h2>
 
-        {/* Description - Section 16.1 requirement */}
+        {/* Description */}
         <p className="mb-8 text-muted-foreground">
           You don't have permission to access this resource. This area is restricted to authorized users only.
         </p>

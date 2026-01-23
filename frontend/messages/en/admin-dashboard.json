@@ -1,54 +1,77 @@
 {
   "title": "Admin Dashboard",
-  "description": "Platform overview and key metrics",
-  "summary": {
+  "subtitle": "Platform overview and key metrics",
+  "stats": {
     "totalCampaigns": "Total Campaigns",
-    "activeCampaigns": "active",
+    "active": "{count} active",
     "totalAuthors": "Total Authors",
     "platformWide": "Platform-wide",
     "totalReaders": "Total Readers",
     "activeReaders": "active",
     "pendingReviews": "Pending Reviews",
-    "awaitingCompletion": "Awaiting completion"
+    "awaitingValidation": "Awaiting validation"
   },
   "revenue": {
     "thisMonth": "Revenue This Month",
-    "changeFromLastMonth": "from last month",
-    "totalRevenue": "Total Revenue (All Time)",
+    "fromLastMonth": "from last month",
+    "totalAllTime": "Total Revenue (All Time)",
     "lifetimeEarnings": "Lifetime earnings",
-    "activeSubscriptions": "Active Subscriptions",
-    "mrr": "MRR",
-    "breakdown": "Revenue Breakdown",
-    "breakdownDescription": "Revenue by source",
+    "activeSubscriptions": "Active Subscriptions"
+  },
+  "revenueBreakdown": {
+    "title": "Revenue Breakdown",
+    "description": "Revenue by source",
     "creditPurchases": "Credit Purchases",
     "oneTimePayments": "One-time payments",
     "subscriptions": "Subscriptions",
     "recurringRevenue": "Recurring revenue"
   },
   "campaigns": {
-    "requireAttention": "Campaigns Requiring Attention",
-    "issuesNeedReview": "Issues that need admin review",
-    "bookTitle": "Book Title",
-    "author": "Author",
-    "issue": "Issue",
-    "severity": "Severity",
-    "status": "Status",
-    "noIssues": "No campaigns requiring attention"
+    "reviews": "reviews",
+    "behind": "behind",
+    "weekOf": "Week {current} of {total}",
+    "healthy": {
+      "title": "Healthy Campaigns",
+      "description": "{count} campaigns on track",
+      "onTrack": "On Track",
+      "empty": "No healthy campaigns"
+    },
+    "delayed": {
+      "title": "Delayed Campaigns",
+      "description": "{count} campaigns behind schedule",
+      "empty": "No delayed campaigns"
+    },
+    "issues": {
+      "title": "Campaigns with Issues",
+      "description": "{count} campaigns with critical issues",
+      "empty": "No campaigns with issues"
+    }
+  },
+  "attention": {
+    "title": "Campaigns Requiring Attention",
+    "description": "Issues that need admin review",
+    "columns": {
+      "bookTitle": "Book Title",
+      "author": "Author",
+      "issue": "Issue",
+      "severity": "Severity"
+    },
+    "empty": "No campaigns requiring attention"
   },
   "activity": {
     "title": "Recent Activity",
-    "description": "Latest platform events",
-    "noActivity": "No recent activity"
+    "description": "Latest admin actions",
+    "empty": "No recent activity"
   },
   "health": {
-    "title": "Platform Health",
-    "avgReviewCompletion": "Avg Review Completion",
-    "avgTimeToComplete": "Average time to complete",
-    "days": "days",
-    "readerSatisfaction": "Reader Satisfaction",
-    "basedOnFeedback": "Based on feedback",
-    "campaignSuccessRate": "Campaign Success Rate",
-    "completedOnTime": "Completed on time"
+    "completionRate": "Completion Rate",
+    "averageCompletion": "Average review completion",
+    "readerReliability": "Reader Reliability",
+    "averageReliability": "Average reliability score",
+    "validationTime": "Validation Time",
+    "avgTimeToValidate": "Avg time to validate reviews",
+    "amazonRemovalRate": "Amazon Removal Rate",
+    "reviewsRemoved": "Reviews removed by Amazon"
   },
   "loading": "Loading dashboard..."
 }
