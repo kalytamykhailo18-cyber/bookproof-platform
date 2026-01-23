@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/lib/api/auth';
 import { Loader2 } from 'lucide-react';
 import { DashboardHeader } from '@/components/shared/DashboardHeader';
+import { ReaderSidebar } from '@/components/reader/ReaderSidebar';
 
 export default function ReaderLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -54,9 +55,20 @@ export default function ReaderLayout({ children }: { children: React.ReactNode }
   }
 
   return (
-    <>
-      <DashboardHeader />
-      {children}
-    </>
+    <div className="min-h-screen bg-background">
+      {/* Sidebar */}
+      <ReaderSidebar />
+
+      {/* Main Content */}
+      <div className="pl-64 transition-all duration-300">
+        {/* Header */}
+        <DashboardHeader />
+
+        {/* Page Content */}
+        <main className="min-h-[calc(100vh-3.5rem)]">
+          {children}
+        </main>
+      </div>
+    </div>
   );
 }
