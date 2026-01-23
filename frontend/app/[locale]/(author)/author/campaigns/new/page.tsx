@@ -602,14 +602,14 @@ export default function NewCampaignPage() {
                         <p className="text-sm text-muted-foreground">
                           {t('files.clickToUpload') || 'Click to upload cover image'}
                         </p>
-                        <p className="text-xs text-muted-foreground">JPG, PNG (max 5MB)</p>
+                        <p className="text-xs text-muted-foreground">JPG, PNG, WebP (max 5MB)</p>
                       </>
                     )}
                   </div>
                   <input
                     ref={coverInputRef}
                     type="file"
-                    accept="image/jpeg,image/png"
+                    accept="image/jpeg,image/png,image/webp"
                     className="hidden"
                     onChange={handleCoverChange}
                   />

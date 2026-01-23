@@ -224,7 +224,15 @@ export class AmazonMonitoringService {
                 user: true,
               },
             },
-            book: true,
+            book: {
+              include: {
+                authorProfile: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
           },
         });
 
@@ -251,10 +259,35 @@ export class AmazonMonitoringService {
           // Log email error but don't fail the replacement process
           console.error('Failed to send replacement notification email:', emailError);
         }
+
+        // Section 12.4 (optional): Notify author that a replacement has been assigned
+        // Note: Author notification is optional per requirements. Using ADMIN_NEW_ISSUE
+        // to notify author about the replacement status update.
+        try {
+          const authorUser = updatedAssignment.book.authorProfile?.user;
+          if (authorUser) {
+            const appUrl = process.env.APP_URL || 'http://localhost:3000';
+            await this.emailService.sendTemplatedEmail(
+              authorUser.email,
+              EmailType.ADMIN_NEW_ISSUE, // Generic issue notification for replacement
+              {
+                adminName: authorUser.name || 'Author',
+                issueType: 'Review Replacement Scheduled',
+                issueDescription: `A review for your campaign "${updatedAssignment.book.title}" was removed by Amazon within the 14-day guarantee period. A replacement reviewer has been assigned and will receive the materials shortly. No action is required from you.`,
+                dashboardUrl: `${appUrl}/${authorUser.preferredLanguage?.toLowerCase() || 'en'}/author/campaigns/${updatedAssignment.book.id}`,
+              },
+              authorUser.id,
+              authorUser.preferredLanguage,
+            );
+          }
+        } catch (authorNotifError) {
+          // Log error but don't fail - author notification is optional per requirements
+          console.error('Failed to send author replacement notification:', authorNotifError);
+        }
       } else {
-        // No readers in queue - admin will need to manually recruit more readers
-        // or wait for new readers to join the campaign queue
-        // The replacementEligible flag on the review tracks that this needs replacement
+        // No readers in queue - Section 12.4: The replacementEligible flag tracks that
+        // this needs replacement. When a new reader joins the campaign queue,
+        // they will be automatically assigned as the replacement (see queue.service.ts)
       }
     }
 

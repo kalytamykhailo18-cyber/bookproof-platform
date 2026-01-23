@@ -43,7 +43,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Plus, MoreHorizontal, Send, Trash2, Eye, Copy, ExternalLink } from 'lucide-react';
+import { Plus, MoreHorizontal, Send, Trash2, Eye, Copy, ExternalLink, Loader2 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { CustomPackageStatus } from '@/lib/api/closer';
 import { toast } from 'sonner';
@@ -68,6 +68,10 @@ export default function PackagesPage() {
   const [selectedPackageId, setSelectedPackageId] = useState<string>('');
   const [expirationDays, setExpirationDays] = useState(30); // Default 30 days per Section 5.3
   const [customMessage, setCustomMessage] = useState('');
+
+  // Navigation loading states
+  const [isCreateLoading, setIsCreateLoading] = useState(false);
+  const [loadingPackageId, setLoadingPackageId] = useState<string | null>(null);
 
   const handleSend = () => {
     sendPackage.mutate(
@@ -158,8 +162,15 @@ export default function PackagesPage() {
           <h1 className="text-3xl font-bold">{t('packages.title')}</h1>
           <p className="text-muted-foreground">{t('packages.description')}</p>
         </div>
-        <Button type="button" onClick={() => router.push(`/${locale}/closer/packages/new`)}>
-          <Plus className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          onClick={() => {
+            setIsCreateLoading(true);
+            router.push(`/${locale}/closer/packages/new`);
+          }}
+          disabled={isCreateLoading}
+        >
+          {isCreateLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
           {t('packages.createPackage')}
         </Button>
       </div>
@@ -315,8 +326,14 @@ export default function PackagesPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => router.push(`/${locale}/closer/packages/${pkg.id}`)}>
-                            <Eye className="mr-2 h-4 w-4" />
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setLoadingPackageId(pkg.id);
+                              router.push(`/${locale}/closer/packages/${pkg.id}`);
+                            }}
+                            disabled={loadingPackageId === pkg.id}
+                          >
+                            {loadingPackageId === pkg.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Eye className="mr-2 h-4 w-4" />}
                             {t('packages.viewDetails')}
                           </DropdownMenuItem>
                           {pkg.paymentLink && (
@@ -366,8 +383,17 @@ export default function PackagesPage() {
           ) : (
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <p className="text-muted-foreground">{t('packages.noPackagesFound')}</p>
-              <Button type="button" variant="outline" className="mt-4" onClick={() => router.push(`/${locale}/closer/packages/new`)}>
-                <Plus className="mr-2 h-4 w-4" />
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-4"
+                onClick={() => {
+                  setIsCreateLoading(true);
+                  router.push(`/${locale}/closer/packages/new`);
+                }}
+                disabled={isCreateLoading}
+              >
+                {isCreateLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
                 {t('packages.createFirstPackage')}
               </Button>
             </div>

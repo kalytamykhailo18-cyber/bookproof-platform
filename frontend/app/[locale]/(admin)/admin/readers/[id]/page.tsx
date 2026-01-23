@@ -70,6 +70,7 @@ import {
   Mail,
   MailCheck,
   Send,
+  Loader2,
 } from 'lucide-react';
 
 export default function AdminReaderDetailPage() {
@@ -131,6 +132,7 @@ export default function AdminReaderDetailPage() {
   const [banNotes, setBanNotes] = useState('');
   const [emailSubject, setEmailSubject] = useState('');
   const [emailMessage, setEmailMessage] = useState('');
+  const [isBackLoading, setIsBackLoading] = useState(false);
 
   const handleSuspend = () => {
     if (!actionReason.trim()) return;
@@ -411,8 +413,17 @@ export default function AdminReaderDetailPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/${locale}/admin/readers`)}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/admin/readers`);
+          }}
+          disabled={isBackLoading}
+        >
+          {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
           {t('detail.backToReaders')}
         </Button>
       </div>

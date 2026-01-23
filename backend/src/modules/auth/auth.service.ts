@@ -433,8 +433,12 @@ export class AuthService {
     return { message: 'Email verified successfully' };
   }
 
-  async requestPasswordReset(dto: RequestPasswordResetDto): Promise<{ message: string }> {
-    const { email } = dto;
+  async requestPasswordReset(dto: RequestPasswordResetDto, request?: Request): Promise<{ message: string }> {
+    const { email, captchaToken } = dto;
+
+    // Verify CAPTCHA for bot protection (Section 15.2)
+    const clientIp = request?.ip || request?.headers?.['x-forwarded-for']?.toString().split(',')[0];
+    await this.captchaService.verify(captchaToken, 'password_reset', clientIp);
 
     const user = await this.prisma.user.findUnique({
       where: { email },
@@ -1074,5 +1078,64 @@ export class AuthService {
       commissionRate,
       isActive,
     };
+  }
+
+  /**
+   * Change password for authenticated user (Section 15.1)
+   * - Verifies current password
+   * - Validates new password strength
+   * - Updates password hash
+   * - Invalidates all sessions (tokenVersion increment)
+   * - Sends confirmation email
+   */
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<{ message: string }> {
+    // Find user
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    // Verify current password
+    const isCurrentPasswordValid = await PasswordUtil.compare(currentPassword, user.passwordHash);
+    if (!isCurrentPasswordValid) {
+      throw new BadRequestException('Current password is incorrect');
+    }
+
+    // Check that new password is different from current password
+    const isSamePassword = await PasswordUtil.compare(newPassword, user.passwordHash);
+    if (isSamePassword) {
+      throw new BadRequestException('New password must be different from current password');
+    }
+
+    // Hash new password
+    const newPasswordHash = await PasswordUtil.hash(newPassword);
+
+    // Update password and increment tokenVersion to invalidate all sessions
+    // Per Section 15.1: "Invalidate all sessions on password change"
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        passwordHash: newPasswordHash,
+        tokenVersion: { increment: 1 },
+      },
+    });
+
+    this.logger.log(`Password changed for user: ${user.email}`);
+
+    // Send confirmation email
+    try {
+      await this.emailService.sendPasswordChangedConfirmation(user.email, user.name);
+    } catch (error) {
+      this.logger.error(`Failed to send password changed confirmation to ${user.email}`, error);
+    }
+
+    return { message: 'Password changed successfully. Please log in again with your new password.' };
   }
 }

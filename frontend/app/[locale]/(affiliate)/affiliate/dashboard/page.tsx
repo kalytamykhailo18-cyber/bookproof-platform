@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   useAffiliateProfile,
@@ -30,6 +31,7 @@ import {
   Link as LinkIcon,
   Wallet,
   Percent,
+  Loader2,
 } from 'lucide-react';
 import {
   LineChart,
@@ -55,6 +57,13 @@ export default function AffiliateDashboardPage() {
   const { data: chartData, isLoading: chartLoading } = useAffiliateChartData();
   const { data: commissions, isLoading: commissionsLoading } = useCommissions();
   const { data: payouts, isLoading: payoutsLoading } = usePayouts();
+
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
+  const [isReferralLinksLoading, setIsReferralLinksLoading] = useState(false);
+  const [isReferredAuthorsLoading, setIsReferredAuthorsLoading] = useState(false);
+  const [isPayoutsNavLoading, setIsPayoutsNavLoading] = useState(false);
+  const [isCommissionsLoading, setIsCommissionsLoading] = useState(false);
+  const [isPayoutsViewLoading, setIsPayoutsViewLoading] = useState(false);
 
   const isLoading = profileLoading || statsLoading;
 
@@ -131,8 +140,13 @@ export default function AffiliateDashboardPage() {
               type="button"
               variant="link"
               className="ml-2 h-auto p-0"
-              onClick={() => router.push(`/${locale}/affiliate/register`)}
+              onClick={() => {
+                setIsRegisterLoading(true);
+                router.push(`/${locale}/affiliate/register`);
+              }}
+              disabled={isRegisterLoading}
             >
+              {isRegisterLoading && <Loader2 className="mr-1 h-3 w-3 animate-spin" />}
               {t('register')}
             </Button>
           </AlertDescription>
@@ -167,16 +181,39 @@ export default function AffiliateDashboardPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button type="button" onClick={() => router.push(`/${locale}/affiliate/referral-links`)}>
-            <LinkIcon className="mr-2 h-4 w-4" />
+          <Button
+            type="button"
+            onClick={() => {
+              setIsReferralLinksLoading(true);
+              router.push(`/${locale}/affiliate/referral-links`);
+            }}
+            disabled={isReferralLinksLoading}
+          >
+            {isReferralLinksLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LinkIcon className="mr-2 h-4 w-4" />}
             {t('getReferralLink')}
           </Button>
-          <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/affiliate/referred-authors`)}>
-            <Users className="mr-2 h-4 w-4" />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setIsReferredAuthorsLoading(true);
+              router.push(`/${locale}/affiliate/referred-authors`);
+            }}
+            disabled={isReferredAuthorsLoading}
+          >
+            {isReferredAuthorsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Users className="mr-2 h-4 w-4" />}
             {t('referredAuthors') || 'Referred Authors'}
           </Button>
-          <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/affiliate/payouts`)}>
-            <Wallet className="mr-2 h-4 w-4" />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setIsPayoutsNavLoading(true);
+              router.push(`/${locale}/affiliate/payouts`);
+            }}
+            disabled={isPayoutsNavLoading}
+          >
+            {isPayoutsNavLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wallet className="mr-2 h-4 w-4" />}
             {t('requestPayout')}
           </Button>
         </div>
@@ -363,8 +400,13 @@ export default function AffiliateDashboardPage() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => router.push(`/${locale}/affiliate/commissions`)}
+              onClick={() => {
+                setIsCommissionsLoading(true);
+                router.push(`/${locale}/affiliate/commissions`);
+              }}
+              disabled={isCommissionsLoading}
             >
+              {isCommissionsLoading && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
               {t('viewAll')}
             </Button>
           </div>
@@ -419,8 +461,13 @@ export default function AffiliateDashboardPage() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => router.push(`/${locale}/affiliate/payouts`)}
+              onClick={() => {
+                setIsPayoutsViewLoading(true);
+                router.push(`/${locale}/affiliate/payouts`);
+              }}
+              disabled={isPayoutsViewLoading}
             >
+              {isPayoutsViewLoading && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
               {t('viewAll')}
             </Button>
           </div>

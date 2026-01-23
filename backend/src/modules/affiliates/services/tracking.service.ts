@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
+import { NotificationsService } from '@modules/notifications/notifications.service';
 import { TrackClickDto } from '../dto';
 import { randomBytes } from 'crypto';
 
@@ -9,7 +10,10 @@ export class TrackingService {
   private readonly COOKIE_NAME = 'bp_aff_ref';
   private readonly COOKIE_EXPIRY_DAYS = 90; // 90-day cookie duration per business requirements
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   /**
    * Track an affiliate click
@@ -201,6 +205,16 @@ export class TrackingService {
 
       // Update affiliate stats
       await this.updateAffiliateStats(affiliateProfileId);
+
+      // Send in-app notification to affiliate about new referral sign-up (Section 13.2)
+      try {
+        await this.notificationsService.notifyAffiliateNewReferral(
+          affiliate.userId,
+          'a new author', // Anonymous per privacy requirements
+        );
+      } catch (notifError) {
+        this.logger.error(`Failed to send new referral notification: ${notifError.message}`);
+      }
 
       this.logger.log(`Conversion tracked for affiliate ${affiliateProfileId}, author: ${referredAuthorId}`);
     } catch (error) {

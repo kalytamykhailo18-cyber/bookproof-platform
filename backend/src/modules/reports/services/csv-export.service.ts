@@ -126,13 +126,24 @@ export class CsvExportService {
     });
     csv += '\n';
 
-    // Amazon Removal Metrics
-    csv += '--- AMAZON REMOVAL METRICS ---\n';
+    // Amazon Removal Metrics (Section 12.5: Replacement Statistics)
+    csv += '--- AMAZON REMOVAL METRICS (14-Day Replacement Guarantee) ---\n';
     csv += 'Metric,Value\n';
     csv += `Total Removals,${report.amazonRemovalMetrics.totalRemovals}\n`;
     csv += `Removal Rate,${report.amazonRemovalMetrics.removalRate}%\n`;
     csv += `Replacements Provided,${report.amazonRemovalMetrics.replacementsProvided}\n`;
     csv += `Within Guarantee Period,${report.amazonRemovalMetrics.withinGuaranteePeriod}\n`;
+    csv += `Replacement Rate,${report.amazonRemovalMetrics.replacementRate}%\n`;
+    csv += `Average Days to Removal,${report.amazonRemovalMetrics.averageDaysToRemoval}\n\n`;
+
+    // Per-Campaign Breakdown (Section 12.5)
+    if (report.amazonRemovalMetrics.perCampaignBreakdown && report.amazonRemovalMetrics.perCampaignBreakdown.length > 0) {
+      csv += '--- PER-CAMPAIGN REMOVAL BREAKDOWN ---\n';
+      csv += 'Campaign Title,Total Removals,Replacements Provided,Eligible for Replacement,Average Days to Removal\n';
+      report.amazonRemovalMetrics.perCampaignBreakdown.forEach((campaign) => {
+        csv += `"${campaign.campaignTitle}",${campaign.totalRemovals},${campaign.replacementsProvided},${campaign.eligibleForReplacement},${campaign.averageDaysToRemoval}\n`;
+      });
+    }
 
     return csv;
   }

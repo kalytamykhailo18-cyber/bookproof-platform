@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Loader2 } from 'lucide-react';
 
 interface RejectPayoutDialogProps {
   payout: PayoutResponse;
@@ -97,7 +98,7 @@ export default function RejectPayoutDialog({
             onClick={handleReject}
             disabled={isPending || reason.trim().length < 10}
           >
-            {isPending ? t('reject.confirming') : t('reject.confirmButton')}
+            {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : t('reject.confirmButton')}
           </Button>
         </DialogFooter>
       </DialogContent>

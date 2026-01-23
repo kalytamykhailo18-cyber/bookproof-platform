@@ -56,6 +56,7 @@ export default function AdminKeywordResearchPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showRegenerateDialog, setShowRegenerateDialog] = useState(false);
+  const [loadingResearchId, setLoadingResearchId] = useState<string | null>(null);
 
   const { data: researches, isLoading } = useKeywordResearchForAdmin();
   const regenerateMutation = useRegenerateKeywordResearch();
@@ -252,8 +253,18 @@ export default function AdminKeywordResearchPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => router.push(`/${locale}/author/keyword-research/${research.id}`)}>
-                            <Eye className="mr-2 h-4 w-4" />
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setLoadingResearchId(research.id);
+                              router.push(`/${locale}/author/keyword-research/${research.id}`);
+                            }}
+                            disabled={loadingResearchId === research.id}
+                          >
+                            {loadingResearchId === research.id ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                              <Eye className="mr-2 h-4 w-4" />
+                            )}
                             {t('actions.view')}
                           </DropdownMenuItem>
                           {research.status === KeywordResearchStatus.COMPLETED &&

@@ -13,6 +13,7 @@ import {
   Clock,
   AlertCircle,
   MessageSquare,
+  Loader2,
 } from 'lucide-react';
 import { useReports, useDownloadReport, useRegenerateReport } from '@/hooks/useReports';
 import { useCampaigns } from '@/hooks/useCampaigns';
@@ -122,7 +123,7 @@ export default function ReportsPage() {
                     onClick={() => handleDownload(report.bookId)}
                     disabled={isDownloading || !report.pdfUrl}
                   >
-                    <Download className="mr-2 h-4 w-4" />
+                    {isDownloading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
                     {isDownloading ? t('downloading') : t('downloadPdf')}
                   </Button>
                   <Button

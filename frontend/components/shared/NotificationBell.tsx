@@ -14,12 +14,14 @@ import { useUnreadCount, useNotifications, useMarkAsRead, useMarkAllAsRead } fro
 import { NotificationList } from './NotificationList';
 import { useRealtimeUpdates, RealtimeEventType } from '@/hooks/useRealtimeUpdates';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/hooks/useAuth';
 
 /**
  * Notification Bell Component
  *
  * Displays a bell icon with unread count badge in the header.
  * Shows a dropdown with recent notifications when clicked.
+ * Requirement 13.1: Bell icon in header with unread count badge
  */
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,6 +29,7 @@ export function NotificationBell() {
   const router = useRouter();
   const params = useParams();
   const locale = (params?.locale as string) || 'en';
+  const { user } = useAuth();
 
   // Get unread count
   const { data: unreadCount = 0 } = useUnreadCount();
@@ -68,10 +71,29 @@ export function NotificationBell() {
     markAllAsRead();
   };
 
-  // Handle view all click
+  // Handle view all click - navigate based on user role (Requirement 13.1)
   const handleViewAll = () => {
     setIsOpen(false);
-    router.push(`/${locale}/reader/notifications`); // Navigate to full notifications page
+    // Navigate to role-specific notifications page
+    let basePath = 'reader'; // Default
+    if (user?.role) {
+      switch (user.role) {
+        case 'AUTHOR':
+          basePath = 'author';
+          break;
+        case 'ADMIN':
+          basePath = 'admin';
+          break;
+        case 'AFFILIATE':
+          basePath = 'affiliate';
+          break;
+        case 'READER':
+        default:
+          basePath = 'reader';
+          break;
+      }
+    }
+    router.push(`/${locale}/${basePath}/notifications`);
   };
 
   return (

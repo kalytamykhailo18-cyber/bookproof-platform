@@ -22,6 +22,21 @@ export class TrackPageViewDto {
   @IsOptional()
   campaign?: string;
 
+  @ApiProperty({ example: 'banner_ad', required: false, description: 'utm_content parameter' })
+  @IsString()
+  @IsOptional()
+  content?: string;
+
+  @ApiProperty({ example: 'book_marketing', required: false, description: 'utm_term parameter' })
+  @IsString()
+  @IsOptional()
+  term?: string;
+
+  @ApiProperty({ example: 'AFF123', required: false, description: 'Affiliate referral code (ref parameter)' })
+  @IsString()
+  @IsOptional()
+  affiliateRef?: string;
+
   @ApiProperty({ example: 'https://google.com', required: false })
   @IsString()
   @IsOptional()

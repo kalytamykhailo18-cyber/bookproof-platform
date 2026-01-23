@@ -1,6 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { EmailService } from '@modules/email/email.service';
+import { CaptchaService } from '@common/services/captcha.service';
 import { CaptureLeadDto, CaptureLeadResponseDto } from './dto/capture-lead.dto';
 import { TrackPageViewDto, TrackPageViewResponseDto } from './dto/track-page-view.dto';
 import { AnalyticsStatsDto, GlobalAnalyticsDto } from './dto/analytics.dto';
@@ -19,13 +20,18 @@ export class LandingPagesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
+    private readonly captchaService: CaptchaService,
   ) {}
 
   /**
    * Capture a lead from the landing page form
+   * Per Section 15.2: Contact forms must have CAPTCHA protection
    */
   async captureLead(dto: CaptureLeadDto): Promise<CaptureLeadResponseDto> {
     try {
+      // Verify CAPTCHA for bot protection (Section 15.2)
+      await this.captchaService.verify(dto.captchaToken, 'lead_capture', dto.ipAddress);
+
       // Check if lead already exists
       const existingLead = await this.prisma.landingPageLead.findFirst({
         where: {
@@ -43,7 +49,7 @@ export class LandingPagesService {
         };
       }
 
-      // Create new lead
+      // Create new lead with all UTM parameters (per requirements 10.3)
       const lead = await this.prisma.landingPageLead.create({
         data: {
           email: dto.email,
@@ -53,6 +59,9 @@ export class LandingPagesService {
           source: dto.source,
           medium: dto.medium,
           campaign: dto.campaign,
+          content: dto.content,      // utm_content
+          term: dto.term,            // utm_term
+          affiliateRef: dto.affiliateRef, // ref (affiliate code)
           referrer: dto.referrer,
           ipAddress: dto.ipAddress,
           country: dto.country,
@@ -474,6 +483,9 @@ export class LandingPagesService {
           source: lead.source || undefined,
           medium: lead.medium || undefined,
           campaign: lead.campaign || undefined,
+          content: lead.content || undefined,
+          term: lead.term || undefined,
+          affiliateRef: lead.affiliateRef || undefined,
           country: lead.country || undefined,
           marketingConsent: lead.marketingConsent,
           welcomeEmailSent: lead.welcomeEmailSent,
@@ -509,7 +521,7 @@ export class LandingPagesService {
         return JSON.stringify(leads, null, 2);
       }
 
-      // CSV format
+      // CSV format with all UTM parameters
       const headers = [
         'ID',
         'Email',
@@ -519,6 +531,9 @@ export class LandingPagesService {
         'Source',
         'Medium',
         'Campaign',
+        'Content',
+        'Term',
+        'Affiliate Ref',
         'Country',
         'Marketing Consent',
         'Welcome Email Sent',
@@ -535,6 +550,9 @@ export class LandingPagesService {
         lead.source || '',
         lead.medium || '',
         lead.campaign || '',
+        lead.content || '',
+        lead.term || '',
+        lead.affiliateRef || '',
         lead.country || '',
         lead.marketingConsent ? 'Yes' : 'No',
         lead.welcomeEmailSent ? 'Yes' : 'No',

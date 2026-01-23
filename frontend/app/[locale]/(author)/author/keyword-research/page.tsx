@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   useKeywordResearchForAuthor,
@@ -30,6 +31,8 @@ export default function KeywordResearchListPage() {
   const { data: researches, isLoading } = useKeywordResearchForAuthor();
   const { data: pricing } = usePublicKeywordResearchPricing();
   const downloadMutation = useDownloadKeywordResearchPdf();
+  const [isCreateLoading, setIsCreateLoading] = useState(false);
+  const [loadingResearchId, setLoadingResearchId] = useState<string | null>(null);
 
   // Get dynamic price from settings, fallback to $49.99
   const currentPrice = pricing?.price ?? 49.99;
@@ -62,8 +65,15 @@ export default function KeywordResearchListPage() {
           <h1 className="text-3xl font-bold">{t('list.title')}</h1>
           <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <Button type="button" onClick={() => router.push(`/${locale}/author/keyword-research/new`)}>
-          <Plus className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          onClick={() => {
+            setIsCreateLoading(true);
+            router.push(`/${locale}/author/keyword-research/new`);
+          }}
+          disabled={isCreateLoading}
+        >
+          {isCreateLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
           {t('createNew')}
         </Button>
       </div>
@@ -100,8 +110,15 @@ export default function KeywordResearchListPage() {
               <FileText className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="mb-2 text-lg font-semibold">{t('list.empty')}</h3>
               <p className="mb-6 text-muted-foreground">{t('list.emptyDescription')}</p>
-              <Button type="button" onClick={() => router.push(`/${locale}/author/keyword-research/new`)}>
-                <Plus className="mr-2 h-4 w-4" />
+              <Button
+                type="button"
+                onClick={() => {
+                  setIsCreateLoading(true);
+                  router.push(`/${locale}/author/keyword-research/new`);
+                }}
+                disabled={isCreateLoading}
+              >
+                {isCreateLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
                 {t('createNew')}
               </Button>
             </div>
@@ -154,9 +171,17 @@ export default function KeywordResearchListPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => router.push(`/${locale}/author/keyword-research/${research.id}`)}
+                          onClick={() => {
+                            setLoadingResearchId(research.id);
+                            router.push(`/${locale}/author/keyword-research/${research.id}`);
+                          }}
+                          disabled={loadingResearchId === research.id}
                         >
-                          <Eye className="mr-1 h-4 w-4" />
+                          {loadingResearchId === research.id ? (
+                            <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                          ) : (
+                            <Eye className="mr-1 h-4 w-4" />
+                          )}
                           {t('list.actions.view')}
                         </Button>
                         {research.status === KeywordResearchStatus.COMPLETED && research.pdfUrl && (

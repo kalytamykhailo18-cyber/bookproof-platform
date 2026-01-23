@@ -1,12 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 /**
  * Terms of Service Page
  */
 export default function TermsOfServicePage() {
   const router = useRouter();
+  const [isBackLoading, setIsBackLoading] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -154,9 +157,14 @@ export default function TermsOfServicePage() {
 
           <div className="mt-8 pt-8 border-t border-gray-200">
             <button
-              onClick={() => router.back()}
-              className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              onClick={() => {
+                setIsBackLoading(true);
+                router.back();
+              }}
+              disabled={isBackLoading}
+              className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-70 flex items-center gap-2"
             >
+              {isBackLoading && <Loader2 className="h-4 w-4 animate-spin" />}
               Go Back
             </button>
           </div>

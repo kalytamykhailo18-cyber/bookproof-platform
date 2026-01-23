@@ -708,6 +708,7 @@ export default function AdminLandingPagesPage() {
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'en';
+  const [isContentEditorLoading, setIsContentEditorLoading] = useState(false);
 
   return (
     <TranslationContext.Provider value={t as TFunction}>
@@ -771,8 +772,19 @@ export default function AdminLandingPagesPage() {
                         Changes are saved per language and can be previewed before publishing.
                       </p>
                       <div className="flex gap-2">
-                        <Button type="button" onClick={() => router.push(`/${locale}/admin/landing-pages/content`)}>
-                          <FileEdit className="mr-2 h-4 w-4" />
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            setIsContentEditorLoading(true);
+                            router.push(`/${locale}/admin/landing-pages/content`);
+                          }}
+                          disabled={isContentEditorLoading}
+                        >
+                          {isContentEditorLoading ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <FileEdit className="mr-2 h-4 w-4" />
+                          )}
                           Open Content Editor
                         </Button>
                         <Button

@@ -193,20 +193,8 @@ export class CampaignFilesController {
       throw new BadRequestException('No file uploaded');
     }
 
-    // Validate file type
-    const allowedMimeTypes = ['application/pdf', 'application/epub+zip'];
-    if (!allowedMimeTypes.includes(file.mimetype)) {
-      throw new BadRequestException(
-        'Invalid file type. Only PDF and EPUB are allowed.',
-      );
-    }
-
-    // Validate file size
-    if (file.size > this.maxEbookSize) {
-      throw new BadRequestException(
-        `File too large. Maximum size is ${this.maxEbookSize / 1024 / 1024}MB`,
-      );
-    }
+    // Validate ebook file (PDF, EPUB, MOBI - 50MB max per Section 11.1)
+    FileValidationUtil.validateEbook(file);
 
     // Generate file key and upload
     const fileKey = this.filesService.generateFileKey('ebook', file.originalname);
@@ -268,17 +256,8 @@ export class CampaignFilesController {
       throw new BadRequestException('No file uploaded');
     }
 
-    // Validate file type
-    if (file.mimetype !== 'audio/mpeg' && file.mimetype !== 'audio/mp3') {
-      throw new BadRequestException('Invalid file type. Only MP3 is allowed.');
-    }
-
-    // Validate file size
-    if (file.size > this.maxAudiobookSize) {
-      throw new BadRequestException(
-        `File too large. Maximum size is ${this.maxAudiobookSize / 1024 / 1024}MB`,
-      );
-    }
+    // Validate audiobook file (MP3 - 500MB max per Section 11.1)
+    FileValidationUtil.validateAudiobook(file);
 
     // Generate file key and upload
     const fileKey = this.filesService.generateFileKey(
@@ -337,20 +316,8 @@ export class CampaignFilesController {
       throw new BadRequestException('No file uploaded');
     }
 
-    // Validate file type
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!allowedMimeTypes.includes(file.mimetype)) {
-      throw new BadRequestException(
-        'Invalid file type. Only JPEG, PNG, and WebP are allowed.',
-      );
-    }
-
-    // Validate file size
-    if (file.size > this.maxCoverSize) {
-      throw new BadRequestException(
-        `File too large. Maximum size is ${this.maxCoverSize / 1024 / 1024}MB`,
-      );
-    }
+    // Validate cover image (JPG, PNG, WebP - 5MB max per Section 11.1)
+    FileValidationUtil.validateCoverImage(file);
 
     // Generate file key and upload
     const fileKey = this.filesService.generateFileKey('cover', file.originalname);

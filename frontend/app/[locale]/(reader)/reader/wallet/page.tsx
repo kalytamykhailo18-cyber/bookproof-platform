@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { format } from 'date-fns';
 import {
@@ -15,6 +16,7 @@ import {
   ArrowDownRight,
   RefreshCw,
   Gift,
+  Loader2,
 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 
@@ -71,6 +73,8 @@ export default function WalletPage() {
   const { data: payouts, isLoading: payoutsLoading } = useMyPayouts();
   const { data: transactions, isLoading: transactionsLoading } = useWalletTransactions();
 
+  const [isPayoutLoading, setIsPayoutLoading] = useState(false);
+
   const availableBalance = stats?.walletBalance || 0;
   const totalEarned = stats?.totalEarned || 0;
   const pendingEarnings = stats?.pendingEarnings || 0;
@@ -101,8 +105,16 @@ export default function WalletPage() {
           <h1 className="mb-2 text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">Manage your earnings and request payouts</p>
         </div>
-        <Button type="button" disabled={availableBalance < 50} className="animate-fade-left-fast" onClick={() => router.push(`/${locale}/reader/wallet/payout`)}>
-          <Plus className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          disabled={availableBalance < 50 || isPayoutLoading}
+          className="animate-fade-left-fast"
+          onClick={() => {
+            setIsPayoutLoading(true);
+            router.push(`/${locale}/reader/wallet/payout`);
+          }}
+        >
+          {isPayoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
           {t('requestPayout')}
         </Button>
       </div>
@@ -235,8 +247,15 @@ export default function WalletPage() {
             <div className="animate-fade-up-fast py-12 text-center">
               <DollarSign className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <p className="mb-4 text-muted-foreground">{t('history.noPayouts')}</p>
-              <Button type="button" disabled={availableBalance < 50} onClick={() => router.push(`/${locale}/reader/wallet/payout`)}>
-                <Plus className="mr-2 h-4 w-4" />
+              <Button
+                type="button"
+                disabled={availableBalance < 50 || isPayoutLoading}
+                onClick={() => {
+                  setIsPayoutLoading(true);
+                  router.push(`/${locale}/reader/wallet/payout`);
+                }}
+              >
+                {isPayoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
                 {t('requestPayout')}
               </Button>
             </div>

@@ -74,6 +74,9 @@ export default function CampaignDetailPage() {
   const [showActivateDialog, setShowActivateDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [creditsToAllocate, setCreditsToAllocate] = useState(0);
+  const [isBackLoading, setIsBackLoading] = useState(false);
+  const [isAnalyticsLoading, setIsAnalyticsLoading] = useState(false);
+  const [isEditLoading, setIsEditLoading] = useState(false);
 
   const ebookInputRef = useRef<HTMLInputElement>(null);
   const audiobookInputRef = useRef<HTMLInputElement>(null);
@@ -208,7 +211,16 @@ export default function CampaignDetailPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <p>{t('notFound')}</p>
-            <Button type="button" onClick={() => router.push(`/${locale}/author`)} className="mt-4">
+            <Button
+              type="button"
+              onClick={() => {
+                setIsBackLoading(true);
+                router.push(`/${locale}/author`);
+              }}
+              className="mt-4"
+              disabled={isBackLoading}
+            >
+              {isBackLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -227,8 +239,17 @@ export default function CampaignDetailPage() {
     <div className="container mx-auto max-w-6xl px-4 py-8">
       {/* Header */}
       <div className="mb-8 animate-fade-up">
-        <Button type="button" variant="ghost" onClick={() => router.push(`/${locale}/author`)} className="mb-4">
-          <ArrowLeft className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/author`);
+          }}
+          className="mb-4"
+          disabled={isBackLoading}
+        >
+          {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
           {t('backToDashboard')}
         </Button>
         <div className="flex items-start justify-between">
@@ -254,9 +275,13 @@ export default function CampaignDetailPage() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
+                  onClick={() => {
+                    setIsAnalyticsLoading(true);
+                    router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`);
+                  }}
+                  disabled={isAnalyticsLoading}
                 >
-                  <BarChart3 className="mr-2 h-4 w-4" />
+                  {isAnalyticsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <BarChart3 className="mr-2 h-4 w-4" />}
                   {t('progress.viewAnalytics')}
                 </Button>
               </CardHeader>
@@ -369,7 +394,7 @@ export default function CampaignDetailPage() {
                       <input
                         ref={ebookInputRef}
                         type="file"
-                        accept=".pdf,.epub"
+                        accept=".pdf,.epub,.mobi"
                         className="hidden"
                         onChange={handleEbookUpload}
                       />
@@ -512,7 +537,7 @@ export default function CampaignDetailPage() {
                     <input
                       ref={synopsisInputRef}
                       type="file"
-                      accept=".pdf"
+                      accept=".pdf,.doc,.docx,.txt"
                       className="hidden"
                       onChange={handleSynopsisUpload}
                     />
@@ -699,9 +724,13 @@ export default function CampaignDetailPage() {
                   type="button"
                   variant="outline"
                   className="w-full"
-                  onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/edit`)}
+                  onClick={() => {
+                    setIsEditLoading(true);
+                    router.push(`/${locale}/author/campaigns/${campaign.id}/edit`);
+                  }}
+                  disabled={isEditLoading}
                 >
-                  <Edit className="mr-2 h-4 w-4" />
+                  {isEditLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Edit className="mr-2 h-4 w-4" />}
                   {t('actions.edit') || 'Edit'}
                 </Button>
 
@@ -749,9 +778,13 @@ export default function CampaignDetailPage() {
                   type="button"
                   variant="outline"
                   className="w-full"
-                  onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
+                  onClick={() => {
+                    setIsAnalyticsLoading(true);
+                    router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`);
+                  }}
+                  disabled={isAnalyticsLoading}
                 >
-                  <BarChart3 className="mr-2 h-4 w-4" />
+                  {isAnalyticsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <BarChart3 className="mr-2 h-4 w-4" />}
                   {t('actions.viewAnalytics') || 'View Analytics'}
                 </Button>
 
@@ -792,9 +825,13 @@ export default function CampaignDetailPage() {
                   type="button"
                   variant="outline"
                   className="w-full"
-                  onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
+                  onClick={() => {
+                    setIsAnalyticsLoading(true);
+                    router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`);
+                  }}
+                  disabled={isAnalyticsLoading}
                 >
-                  <BarChart3 className="mr-2 h-4 w-4" />
+                  {isAnalyticsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <BarChart3 className="mr-2 h-4 w-4" />}
                   {t('actions.viewAnalytics') || 'View Analytics'}
                 </Button>
               </CardContent>
@@ -812,9 +849,13 @@ export default function CampaignDetailPage() {
                   type="button"
                   variant="outline"
                   className="w-full"
-                  onClick={() => router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`)}
+                  onClick={() => {
+                    setIsAnalyticsLoading(true);
+                    router.push(`/${locale}/author/campaigns/${campaign.id}/analytics`);
+                  }}
+                  disabled={isAnalyticsLoading}
                 >
-                  <BarChart3 className="mr-2 h-4 w-4" />
+                  {isAnalyticsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <BarChart3 className="mr-2 h-4 w-4" />}
                   {t('actions.viewFinalReport') || 'View Final Report'}
                 </Button>
 

@@ -196,7 +196,7 @@ function CampaignCard({
             </Button>
           ) : (
             <Button type="button" onClick={handleApply} disabled={isApplying} className="w-full">
-              {isApplying ? t('campaign.applying') : t('campaign.applyToReview')}
+              {isApplying ? <Loader2 className="h-4 w-4 animate-spin" /> : t('campaign.applyToReview')}
             </Button>
           )}
         </div>

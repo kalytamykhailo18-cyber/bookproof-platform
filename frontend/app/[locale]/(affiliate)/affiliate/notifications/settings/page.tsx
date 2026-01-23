@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import {
@@ -53,6 +53,7 @@ export default function NotificationSettingsPage() {
   const locale = (params.locale as string) || 'en';
   const { data: settings, isLoading } = useNotificationSettings();
   const { mutate: updateSettings, isPending } = useUpdateNotificationSettings();
+  const [isBackLoading, setIsBackLoading] = useState(false);
 
   const { register, handleSubmit, setValue, watch } = useForm<SettingsFormData>({
     defaultValues: {
@@ -109,9 +110,13 @@ export default function NotificationSettingsPage() {
           variant="ghost"
           size="sm"
           className="mb-4"
-          onClick={() => router.push(`/${locale}/affiliate/notifications`)}
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/affiliate/notifications`);
+          }}
+          disabled={isBackLoading}
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
           Back to Notifications
         </Button>
         <h1 className="text-3xl font-bold">Notification Settings</h1>

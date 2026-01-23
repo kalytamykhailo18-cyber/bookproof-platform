@@ -37,6 +37,7 @@ import {
   UserCheck,
   UserX,
   AlertCircle,
+  Loader2,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
@@ -48,6 +49,7 @@ export default function AdminAffiliatesPage() {
   const [approvalFilter, setApprovalFilter] = useState<string>('all');
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [loadingAffiliateId, setLoadingAffiliateId] = useState<string | null>(null);
 
   const { data: affiliates, isLoading } = useAffiliatesForAdmin();
 
@@ -308,8 +310,21 @@ export default function AdminAffiliatesPage() {
                     </TableCell>
                     <TableCell>{formatDate(affiliate.createdAt)}</TableCell>
                     <TableCell className="text-right">
-                      <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/${locale}/admin/affiliates/${affiliate.id}`)}>
-                        <Eye className="h-4 w-4" />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setLoadingAffiliateId(affiliate.id);
+                          router.push(`/${locale}/admin/affiliates/${affiliate.id}`);
+                        }}
+                        disabled={loadingAffiliateId === affiliate.id}
+                      >
+                        {loadingAffiliateId === affiliate.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </Button>
                     </TableCell>
                   </TableRow>

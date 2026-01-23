@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useCredits } from '@/hooks/useCredits';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle2, Search, Sparkles } from 'lucide-react';
+import { CheckCircle2, Search, Sparkles, Loader2 } from 'lucide-react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 
 export default function CreditPurchaseSuccessPage() {
@@ -19,6 +19,9 @@ export default function CreditPurchaseSuccessPage() {
 
   // Check if keyword research was included in purchase (Section 9.1)
   const includeKeywordResearch = searchParams.get('includeKeywordResearch') === 'true';
+  const [isKeywordLoading, setIsKeywordLoading] = useState(false);
+  const [isCampaignLoading, setIsCampaignLoading] = useState(false);
+  const [isDashboardLoading, setIsDashboardLoading] = useState(false);
 
   useEffect(() => {
     // Refetch credit balance after successful purchase
@@ -50,11 +53,13 @@ export default function CreditPurchaseSuccessPage() {
                 <Button
                   type="button"
                   className="mt-3"
-                  onClick={() =>
-                    router.push(`/${locale}/author/keyword-research/new?fromCreditPurchase=true`)
-                  }
+                  onClick={() => {
+                    setIsKeywordLoading(true);
+                    router.push(`/${locale}/author/keyword-research/new?fromCreditPurchase=true`);
+                  }}
+                  disabled={isKeywordLoading}
                 >
-                  <Search className="mr-2 h-4 w-4" />
+                  {isKeywordLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
                   Fill Keyword Research Form
                 </Button>
               </AlertDescription>
@@ -66,10 +71,27 @@ export default function CreditPurchaseSuccessPage() {
           </div>
 
           <div className="flex animate-fade-up flex-col justify-center gap-4 sm:flex-row">
-            <Button type="button" onClick={() => router.push(`/${locale}/author/campaigns/new`)}>
+            <Button
+              type="button"
+              onClick={() => {
+                setIsCampaignLoading(true);
+                router.push(`/${locale}/author/campaigns/new`);
+              }}
+              disabled={isCampaignLoading}
+            >
+              {isCampaignLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('createCampaign')}
             </Button>
-            <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/author`)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsDashboardLoading(true);
+                router.push(`/${locale}/author`);
+              }}
+              disabled={isDashboardLoading}
+            >
+              {isDashboardLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('backToDashboard')}
             </Button>
           </div>

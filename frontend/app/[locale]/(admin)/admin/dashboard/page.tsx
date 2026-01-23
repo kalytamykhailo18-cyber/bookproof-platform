@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useDashboards } from '@/hooks/useDashboards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,6 +35,7 @@ import {
   Coins,
   ClipboardList,
   Timer,
+  Loader2,
 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -55,7 +57,10 @@ export default function AdminDashboardPage() {
   // Check if current admin has access to financial data
   const canViewFinancials = isSuperAdmin();
 
+  const [loadingPath, setLoadingPath] = useState<string | null>(null);
+
   const navigateTo = (path: string) => {
+    setLoadingPath(path);
     router.push(`/${locale}/admin/${path}`);
   };
 
@@ -93,8 +98,9 @@ export default function AdminDashboardPage() {
           variant="outline"
           className="flex flex-col h-auto py-3 gap-1 relative"
           onClick={() => navigateTo('validation')}
+          disabled={loadingPath === 'validation'}
         >
-          <Flag className="h-5 w-5 text-red-500" />
+          {loadingPath === 'validation' ? <Loader2 className="h-5 w-5 animate-spin" /> : <Flag className="h-5 w-5 text-red-500" />}
           <span className="text-xs">Flagged Reviews</span>
           {dashboard?.quickActions?.flaggedReviewsCount ? (
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -108,8 +114,9 @@ export default function AdminDashboardPage() {
           variant="outline"
           className="flex flex-col h-auto py-3 gap-1 relative"
           onClick={() => navigateTo('disputes')}
+          disabled={loadingPath === 'disputes'}
         >
-          <MessageSquare className="h-5 w-5 text-orange-500" />
+          {loadingPath === 'disputes' ? <Loader2 className="h-5 w-5 animate-spin" /> : <MessageSquare className="h-5 w-5 text-orange-500" />}
           <span className="text-xs">Disputes</span>
           {dashboard?.quickActions?.pendingDisputesCount ? (
             <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -123,8 +130,9 @@ export default function AdminDashboardPage() {
           variant="outline"
           className="flex flex-col h-auto py-3 gap-1 relative"
           onClick={() => navigateTo('affiliates')}
+          disabled={loadingPath === 'affiliates'}
         >
-          <UserPlus className="h-5 w-5 text-blue-500" />
+          {loadingPath === 'affiliates' ? <Loader2 className="h-5 w-5 animate-spin" /> : <UserPlus className="h-5 w-5 text-blue-500" />}
           <span className="text-xs">Affiliate Apps</span>
           {dashboard?.quickActions?.pendingAffiliateApplicationsCount ? (
             <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -138,8 +146,9 @@ export default function AdminDashboardPage() {
           variant="outline"
           className="flex flex-col h-auto py-3 gap-1 relative"
           onClick={() => navigateTo('payouts')}
+          disabled={loadingPath === 'payouts'}
         >
-          <CreditCard className="h-5 w-5 text-green-500" />
+          {loadingPath === 'payouts' ? <Loader2 className="h-5 w-5 animate-spin" /> : <CreditCard className="h-5 w-5 text-green-500" />}
           <span className="text-xs">Payout Requests</span>
           {dashboard?.quickActions?.pendingPayoutRequestsCount ? (
             <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -153,8 +162,9 @@ export default function AdminDashboardPage() {
           variant="outline"
           className="flex flex-col h-auto py-3 gap-1"
           onClick={() => navigateTo('reports/financial')}
+          disabled={loadingPath === 'reports/financial'}
         >
-          <FileText className="h-5 w-5 text-purple-500" />
+          {loadingPath === 'reports/financial' ? <Loader2 className="h-5 w-5 animate-spin" /> : <FileText className="h-5 w-5 text-purple-500" />}
           <span className="text-xs">Financial Reports</span>
         </Button>
 
@@ -163,8 +173,9 @@ export default function AdminDashboardPage() {
           variant="outline"
           className="flex flex-col h-auto py-3 gap-1"
           onClick={() => navigateTo('notifications')}
+          disabled={loadingPath === 'notifications'}
         >
-          <AlertCircle className="h-5 w-5 text-yellow-500" />
+          {loadingPath === 'notifications' ? <Loader2 className="h-5 w-5 animate-spin" /> : <AlertCircle className="h-5 w-5 text-yellow-500" />}
           <span className="text-xs">Announcements</span>
         </Button>
       </div>

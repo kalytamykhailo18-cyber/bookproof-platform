@@ -32,6 +32,7 @@ import {
   User,
   Mail,
   AlertCircle,
+  Loader2,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import type { CreditTransactionType } from '@/lib/api/admin-controls';
@@ -79,6 +80,7 @@ export default function AuthorTransactionsPage() {
 
   const [page, setPage] = useState(0);
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [isBackLoading, setIsBackLoading] = useState(false);
   const limit = 20;
 
   const { data, isLoading, isError } = useAuthorTransactionHistory(authorId, limit, page * limit);
@@ -123,8 +125,17 @@ export default function AuthorTransactionsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="flex animate-fade-right items-center gap-4">
-        <Button type="button" variant="ghost" size="icon" onClick={() => router.push(`/${locale}/admin/authors`)}>
-          <ArrowLeft className="h-5 w-5" />
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/admin/authors`);
+          }}
+          disabled={isBackLoading}
+        >
+          {isBackLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <ArrowLeft className="h-5 w-5" />}
         </Button>
         <div>
           <h1 className="text-3xl font-bold">{t('title')}</h1>

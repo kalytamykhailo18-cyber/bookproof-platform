@@ -175,6 +175,15 @@ export class LandingPageLeadResponseDto {
   @ApiProperty({ required: false })
   campaign?: string;
 
+  @ApiProperty({ required: false, description: 'utm_content parameter' })
+  content?: string;
+
+  @ApiProperty({ required: false, description: 'utm_term parameter' })
+  term?: string;
+
+  @ApiProperty({ required: false, description: 'Affiliate referral code' })
+  affiliateRef?: string;
+
   @ApiProperty({ required: false })
   country?: string;
 

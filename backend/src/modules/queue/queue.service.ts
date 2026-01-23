@@ -241,50 +241,124 @@ export class QueueService {
 
     const queuePosition = currentAssignmentsCount + 1;
 
-    // Create assignment in WAITING status
+    // Section 12.4: Check if this campaign has pending replacement needs
+    // If queue was empty (queuePosition === 1) and there are eligible replacements,
+    // immediately schedule this reader as a replacement
+    let isPendingReplacement = false;
+    let originalReview: { id: string; readerAssignmentId: string } | null = null;
+
+    if (queuePosition === 1) {
+      const pendingReplacement = await this.prisma.review.findFirst({
+        where: {
+          bookId: dto.bookId,
+          replacementEligible: true,
+          replacementProvided: false,
+        },
+        orderBy: {
+          removalDetectedAt: 'asc', // FIFO: First removed, first replaced
+        },
+        select: {
+          id: true,
+          readerAssignmentId: true,
+        },
+      });
+
+      if (pendingReplacement) {
+        isPendingReplacement = true;
+        originalReview = pendingReplacement;
+        this.logger.log(
+          `New reader joins campaign ${dto.bookId} - assigning as replacement for review ${pendingReplacement.id}`,
+        );
+      }
+    }
+
+    // Create assignment - either as SCHEDULED replacement or WAITING in queue
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const assignment = await this.prisma.readerAssignment.create({
       data: {
         bookId: dto.bookId,
         readerProfileId: readerProfile.id,
-        status: AssignmentStatus.WAITING,
+        status: isPendingReplacement ? AssignmentStatus.SCHEDULED : AssignmentStatus.WAITING,
         formatAssigned,
         creditsValue,
         amazonProfileId,
         queuePosition,
-        isBufferAssignment: false, // Buffer assignments are created by scheduler
+        isBufferAssignment: false,
+        // If this is a replacement, schedule for today
+        scheduledDate: isPendingReplacement ? today : undefined,
+        isReassignment: isPendingReplacement,
+        // Link to the original assignment (not review) that was removed
+        originalAssignmentId: isPendingReplacement && originalReview ? originalReview.readerAssignmentId : undefined,
+        reassignmentReason: isPendingReplacement ? 'Review removed by Amazon - replacement from queue' : undefined,
       },
       include: {
         book: true,
       },
     });
 
+    // If this is a replacement, update the original review to mark replacement provided
+    // Note: replacementReviewId will be set later when the new review is submitted and validated
+    if (isPendingReplacement && originalReview) {
+      await this.prisma.review.update({
+        where: { id: originalReview.id },
+        data: {
+          replacementProvided: true,
+          // replacementReviewId will be set when the new reader's review is created
+        },
+      });
+
+      this.logger.log(
+        `Replacement scheduled for review ${originalReview.id} - reader assigned to campaign ${dto.bookId}`,
+      );
+    }
+
     // Get reader user details for email
     const readerUser = await this.prisma.user.findUnique({
       where: { id: userId },
     });
 
-    // Send "Application Received" email to reader
-    // Per requirements Section 3.3: After applying, reader should receive confirmation
+    // Send appropriate email based on whether this is a replacement or regular application
     if (readerUser) {
       const reviewsPerWeek = campaign.reviewsPerWeek || 10;
       const estimatedWeek = Math.ceil(queuePosition / reviewsPerWeek);
 
       try {
-        await this.emailService.sendTemplatedEmail(
-          readerUser.email,
-          EmailType.READER_APPLICATION_RECEIVED,
-          {
-            readerName: readerUser.name || 'Reader',
-            bookTitle: assignment.book.title,
-            queuePosition: queuePosition,
-            estimatedWeek: estimatedWeek,
-            formatAssigned: formatAssigned,
-            dashboardUrl: '/reader/dashboard',
-          },
-          readerUser.id,
-          readerUser.preferredLanguage,
-        );
-        this.logger.log(`Sent application received email to reader ${readerUser.email}`);
+        if (isPendingReplacement) {
+          // Section 12.4: Send replacement assignment email
+          await this.emailService.sendTemplatedEmail(
+            readerUser.email,
+            EmailType.READER_REPLACEMENT_ASSIGNED,
+            {
+              userName: readerUser.name || 'Reader',
+              bookTitle: assignment.book.title,
+              bookAuthor: campaign.authorName,
+              assignmentUrl: `/${readerUser.preferredLanguage?.toLowerCase() || 'en'}/reader/assignments/${assignment.id}`,
+              dashboardUrl: `/${readerUser.preferredLanguage?.toLowerCase() || 'en'}/reader/dashboard`,
+            },
+            readerUser.id,
+            readerUser.preferredLanguage,
+          );
+          this.logger.log(`Sent replacement assignment email to reader ${readerUser.email}`);
+        } else {
+          // Regular application - send standard confirmation
+          await this.emailService.sendTemplatedEmail(
+            readerUser.email,
+            EmailType.READER_APPLICATION_RECEIVED,
+            {
+              readerName: readerUser.name || 'Reader',
+              bookTitle: assignment.book.title,
+              queuePosition: queuePosition,
+              estimatedWeek: estimatedWeek,
+              formatAssigned: formatAssigned,
+              dashboardUrl: '/reader/dashboard',
+            },
+            readerUser.id,
+            readerUser.preferredLanguage,
+          );
+          this.logger.log(`Sent application received email to reader ${readerUser.email}`);
+        }
       } catch (emailError) {
         // Don't fail the application if email fails
         this.logger.error(`Failed to send application email: ${emailError.message}`);
@@ -292,11 +366,24 @@ export class QueueService {
 
       // Create in-app notification (Requirements Section 13.2)
       try {
-        await this.notificationsService.notifyReaderApplicationAccepted(
-          userId,
-          assignment.book.title,
-          queuePosition,
-        );
+        if (isPendingReplacement) {
+          // Replacement assignment notification
+          await this.notificationsService.createNotification({
+            userId,
+            type: 'ASSIGNMENT' as any,
+            title: 'Replacement Review Opportunity',
+            message: `You've been assigned as a replacement reviewer for "${assignment.book.title}". Materials will be released shortly!`,
+            actionUrl: `/reader/assignments/${assignment.id}`,
+            metadata: { bookTitle: assignment.book.title, isReplacement: true },
+          });
+        } else {
+          // Regular application notification
+          await this.notificationsService.notifyReaderApplicationAccepted(
+            userId,
+            assignment.book.title,
+            queuePosition,
+          );
+        }
       } catch (notifError) {
         // Don't fail the application if notification fails
         this.logger.error(`Failed to send notification: ${notifError.message}`);

@@ -89,6 +89,7 @@ export default function AdminAffiliatePayoutsPage() {
   const [selectedPayout, setSelectedPayout] = useState<PayoutResponseDto | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [actionType, setActionType] = useState<'approve' | 'reject' | 'complete'>('approve');
+  const [isBackLoading, setIsBackLoading] = useState(false);
 
   const { data: payouts, isLoading } = usePayoutsForAdmin(statusFilter);
   const processMutation = useProcessPayout();
@@ -179,8 +180,17 @@ export default function AdminAffiliatePayoutsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/${locale}/admin/affiliates`)}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/admin/affiliates`);
+          }}
+          disabled={isBackLoading}
+        >
+          {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
           {t('backToAffiliates')}
         </Button>
       </div>

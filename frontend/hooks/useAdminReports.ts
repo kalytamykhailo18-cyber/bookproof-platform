@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   adminReportsApi,
   FinancialReportDto,
@@ -43,15 +43,59 @@ export const useAffiliateReport = (startDate: string, endDate: string) => {
 };
 
 /**
- * Helper to get CSV export URL
+ * Export types for admin reports
  */
-export const useReportExportUrls = () => {
-  return {
-    getFinancialCsvUrl: (startDate: string, endDate: string) =>
-      adminReportsApi.getFinancialReportCsvUrl(startDate, endDate),
-    getOperationalCsvUrl: (startDate: string, endDate: string) =>
-      adminReportsApi.getOperationalReportCsvUrl(startDate, endDate),
-    getAffiliateCsvUrl: (startDate: string, endDate: string) =>
-      adminReportsApi.getAffiliateReportCsvUrl(startDate, endDate),
-  };
+type ReportType = 'financial' | 'operational' | 'affiliate';
+type ExportFormat = 'csv' | 'pdf';
+
+interface ExportParams {
+  startDate: string;
+  endDate: string;
+}
+
+/**
+ * Hook for exporting admin reports (Section 14.4)
+ * Uses authenticated API calls with blob downloads
+ */
+export const useExportReport = (reportType: ReportType, format: ExportFormat) => {
+  return useMutation({
+    mutationFn: async (params: ExportParams) => {
+      const { startDate, endDate } = params;
+      let blob: Blob;
+
+      // Get the appropriate download function
+      if (reportType === 'financial') {
+        blob = format === 'csv'
+          ? await adminReportsApi.downloadFinancialReportCsv(startDate, endDate)
+          : await adminReportsApi.downloadFinancialReportPdf(startDate, endDate);
+      } else if (reportType === 'operational') {
+        blob = format === 'csv'
+          ? await adminReportsApi.downloadOperationalReportCsv(startDate, endDate)
+          : await adminReportsApi.downloadOperationalReportPdf(startDate, endDate);
+      } else {
+        blob = format === 'csv'
+          ? await adminReportsApi.downloadAffiliateReportCsv(startDate, endDate)
+          : await adminReportsApi.downloadAffiliateReportPdf(startDate, endDate);
+      }
+
+      // Generate filename
+      const extension = format === 'csv' ? 'csv' : 'pdf';
+      const filename = `${reportType}-report-${startDate}-to-${endDate}.${extension}`;
+
+      // Trigger download
+      adminReportsApi.triggerFileDownload(blob, filename);
+
+      return blob;
+    },
+  });
 };
+
+/**
+ * Convenience hooks for specific report exports
+ */
+export const useExportFinancialCsv = () => useExportReport('financial', 'csv');
+export const useExportFinancialPdf = () => useExportReport('financial', 'pdf');
+export const useExportOperationalCsv = () => useExportReport('operational', 'csv');
+export const useExportOperationalPdf = () => useExportReport('operational', 'pdf');
+export const useExportAffiliateCsv = () => useExportReport('affiliate', 'csv');
+export const useExportAffiliatePdf = () => useExportReport('affiliate', 'pdf');

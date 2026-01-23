@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ArrowLeft, Save, Send, Copy, ExternalLink, Clock, Eye, CheckCircle, QrCode, CreditCard, User } from 'lucide-react';
+import { ArrowLeft, Save, Send, Copy, ExternalLink, Clock, Eye, CheckCircle, QrCode, CreditCard, User, Loader2 } from 'lucide-react';
 import { CustomPackageStatus } from '@/lib/api/closer';
 import { toast } from 'sonner';
 
@@ -45,6 +45,7 @@ export default function PackageDetailPage() {
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
   const [expirationDays, setExpirationDays] = useState(30); // Default 30 days per Section 5.3
   const [customMessage, setCustomMessage] = useState('');
+  const [isBackLoading, setIsBackLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     packageName: '',
@@ -177,7 +178,17 @@ export default function PackageDetailPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 flex-col items-center justify-center">
           <p className="text-muted-foreground">{t('packages.noPackagesFound')}</p>
-          <Button type="button" variant="outline" className="mt-4" onClick={() => router.push(`/${locale}/closer/packages`)}>
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-4"
+            onClick={() => {
+              setIsBackLoading(true);
+              router.push(`/${locale}/closer/packages`);
+            }}
+            disabled={isBackLoading}
+          >
+            {isBackLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t('packages.allPackages')}
           </Button>
         </div>
@@ -192,8 +203,17 @@ export default function PackageDetailPage() {
       {/* Header */}
       <div className="flex animate-fade-up items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button type="button" variant="ghost" size="icon" onClick={() => router.push(`/${locale}/closer/packages`)}>
-            <ArrowLeft className="h-5 w-5" />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              setIsBackLoading(true);
+              router.push(`/${locale}/closer/packages`);
+            }}
+            disabled={isBackLoading}
+          >
+            {isBackLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <ArrowLeft className="h-5 w-5" />}
           </Button>
           <div>
             <div className="flex items-center gap-3">

@@ -95,6 +95,18 @@ export interface OperationalReportDto {
     removalRate: number;
     replacementsProvided: number;
     withinGuaranteePeriod: number;
+    // Section 12.5 required fields
+    replacementRate: number; // Percentage: (replacements provided / eligible for replacement) * 100
+    averageDaysToRemoval: number; // Average days from validation to removal detection
+    // Per-campaign breakdown
+    perCampaignBreakdown: Array<{
+      campaignId: string;
+      campaignTitle: string;
+      totalRemovals: number;
+      replacementsProvided: number;
+      eligibleForReplacement: number;
+      averageDaysToRemoval: number;
+    }>;
   };
   period: {
     startDate: string;
@@ -169,10 +181,14 @@ export const adminReportsApi = {
   },
 
   /**
-   * Export Financial Report as CSV
+   * Export Financial Report as CSV - Downloads via authenticated API call
    */
-  getFinancialReportCsvUrl(startDate: string, endDate: string): string {
-    return `/api/v1/admin/reports/financial/export/csv?startDate=${startDate}&endDate=${endDate}`;
+  async downloadFinancialReportCsv(startDate: string, endDate: string): Promise<Blob> {
+    const response = await apiClient.get(
+      `/admin/reports/financial/export/csv?startDate=${startDate}&endDate=${endDate}`,
+      { responseType: 'blob' },
+    );
+    return response.data;
   },
 
   /**
@@ -189,10 +205,14 @@ export const adminReportsApi = {
   },
 
   /**
-   * Export Operational Report as CSV
+   * Export Operational Report as CSV - Downloads via authenticated API call
    */
-  getOperationalReportCsvUrl(startDate: string, endDate: string): string {
-    return `/api/v1/admin/reports/operational/export/csv?startDate=${startDate}&endDate=${endDate}`;
+  async downloadOperationalReportCsv(startDate: string, endDate: string): Promise<Blob> {
+    const response = await apiClient.get(
+      `/admin/reports/operational/export/csv?startDate=${startDate}&endDate=${endDate}`,
+      { responseType: 'blob' },
+    );
+    return response.data;
   },
 
   /**
@@ -209,9 +229,68 @@ export const adminReportsApi = {
   },
 
   /**
-   * Export Affiliate Report as CSV
+   * Export Affiliate Report as CSV - Downloads via authenticated API call
    */
-  getAffiliateReportCsvUrl(startDate: string, endDate: string): string {
-    return `/api/v1/admin/reports/affiliates/export/csv?startDate=${startDate}&endDate=${endDate}`;
+  async downloadAffiliateReportCsv(startDate: string, endDate: string): Promise<Blob> {
+    const response = await apiClient.get(
+      `/admin/reports/affiliates/export/csv?startDate=${startDate}&endDate=${endDate}`,
+      { responseType: 'blob' },
+    );
+    return response.data;
+  },
+
+  // ============================================
+  // PDF EXPORT (Section 14.4)
+  // ============================================
+
+  /**
+   * Export Financial Report as PDF - Downloads via authenticated API call
+   */
+  async downloadFinancialReportPdf(startDate: string, endDate: string): Promise<Blob> {
+    const response = await apiClient.get(
+      `/admin/reports/financial/export/pdf?startDate=${startDate}&endDate=${endDate}`,
+      { responseType: 'blob' },
+    );
+    return response.data;
+  },
+
+  /**
+   * Export Operational Report as PDF - Downloads via authenticated API call
+   */
+  async downloadOperationalReportPdf(startDate: string, endDate: string): Promise<Blob> {
+    const response = await apiClient.get(
+      `/admin/reports/operational/export/pdf?startDate=${startDate}&endDate=${endDate}`,
+      { responseType: 'blob' },
+    );
+    return response.data;
+  },
+
+  /**
+   * Export Affiliate Report as PDF - Downloads via authenticated API call
+   */
+  async downloadAffiliateReportPdf(startDate: string, endDate: string): Promise<Blob> {
+    const response = await apiClient.get(
+      `/admin/reports/affiliates/export/pdf?startDate=${startDate}&endDate=${endDate}`,
+      { responseType: 'blob' },
+    );
+    return response.data;
+  },
+
+  // ============================================
+  // UTILITY FUNCTIONS
+  // ============================================
+
+  /**
+   * Trigger download of a blob file
+   */
+  triggerFileDownload(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   },
 };

@@ -52,6 +52,7 @@ import {
   Ban,
   ShieldCheck,
   FileText,
+  Loader2,
 } from 'lucide-react';
 import type { AuthorListItemDto } from '@/lib/api/admin-controls';
 
@@ -67,6 +68,7 @@ export default function AdminAuthorsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedAuthor, setSelectedAuthor] = useState<AuthorListItemDto | null>(null);
+  const [loadingAuthorId, setLoadingAuthorId] = useState<string | null>(null);
   const [addCreditsDialogOpen, setAddCreditsDialogOpen] = useState(false);
   const [removeCreditsDialogOpen, setRemoveCreditsDialogOpen] = useState(false);
   const [creditsAmount, setCreditsAmount] = useState('');
@@ -442,8 +444,21 @@ export default function AdminAuthorsPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/${locale}/admin/authors/${author.id}/transactions`)}>
-                          <History className="h-4 w-4" />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setLoadingAuthorId(author.id);
+                            router.push(`/${locale}/admin/authors/${author.id}/transactions`);
+                          }}
+                          disabled={loadingAuthorId === author.id}
+                        >
+                          {loadingAuthorId === author.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <History className="h-4 w-4" />
+                          )}
                         </Button>
                         <Button
                           type="button"

@@ -98,6 +98,7 @@ export default function AdminAffiliateDetailsPage() {
   const [approveDialogOpen, setApproveDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [commissionRateDialogOpen, setCommissionRateDialogOpen] = useState(false);
+  const [isBackLoading, setIsBackLoading] = useState(false);
 
   const { data: affiliate, isLoading } = useAffiliateByIdForAdmin(id);
   const { data: commissions, isLoading: commissionsLoading } = useCommissionsForAdmin(id);
@@ -216,8 +217,17 @@ export default function AdminAffiliateDetailsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" onClick={() => router.push(`/${locale}/admin/affiliates`)}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/admin/affiliates`);
+          }}
+          disabled={isBackLoading}
+        >
+          {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
           {t('backToAffiliates')}
         </Button>
       </div>

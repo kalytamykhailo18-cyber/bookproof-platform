@@ -19,7 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Loader2 } from 'lucide-react';
 
 /**
  * Password validation matching backend requirements:
@@ -60,6 +60,7 @@ export default function ResetPasswordPage() {
   const locale = (params.locale as string) || 'en';
   const { resetPasswordAsync, isResettingPassword } = useAuth();
   const [resetSuccess, setResetSuccess] = useState(false);
+  const [isNavLoading, setIsNavLoading] = useState(false);
   const token = searchParams.get('token');
 
   const {
@@ -114,8 +115,8 @@ export default function ResetPasswordPage() {
           <p className="text-muted-foreground">{t('errorInvalidToken')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
-          <Button type="button" onClick={() => router.push(`/${locale}/forgot-password`)} className="w-full">
-            Request New Link
+          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); router.push(`/${locale}/forgot-password`); }} className="w-full">
+            {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Request New Link'}
           </Button>
         </CardFooter>
       </Card>
@@ -137,8 +138,8 @@ export default function ResetPasswordPage() {
           <p className="animate-fade-up text-center text-muted-foreground">{t('successMessage')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
-          <Button type="button" onClick={() => router.push(`/${locale}/login`)} className="w-full">
-            {t('loginButton')}
+          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); router.push(`/${locale}/login`); }} className="w-full">
+            {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('loginButton')}
           </Button>
         </CardFooter>
       </Card>
@@ -192,7 +193,7 @@ export default function ResetPasswordPage() {
           disabled={isResettingPassword}
           onClick={handleResetPassword}
         >
-          {isResettingPassword ? t('submitting') : t('submitButton')}
+          {isResettingPassword ? <Loader2 className="h-4 w-4 animate-spin" /> : t('submitButton')}
         </Button>
       </CardFooter>
     </Card>

@@ -1,12 +1,18 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 /**
  * Cookie Policy Page
  */
 export default function CookiePolicyPage() {
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
+  const [isPrivacyLoading, setIsPrivacyLoading] = useState(false);
+  const [isTermsLoading, setIsTermsLoading] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -154,15 +160,25 @@ export default function CookiePolicyPage() {
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Related Documents</h2>
               <div className="flex flex-col gap-3">
                 <span
-                  onClick={() => router.push('/privacy')}
-                  className="text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer"
+                  onClick={() => {
+                    if (isPrivacyLoading) return;
+                    setIsPrivacyLoading(true);
+                    router.push(`/${locale}/privacy`);
+                  }}
+                  className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isPrivacyLoading ? 'opacity-70' : ''}`}
                 >
+                  {isPrivacyLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                   Privacy Policy
                 </span>
                 <span
-                  onClick={() => router.push('/terms')}
-                  className="text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer"
+                  onClick={() => {
+                    if (isTermsLoading) return;
+                    setIsTermsLoading(true);
+                    router.push(`/${locale}/terms`);
+                  }}
+                  className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isTermsLoading ? 'opacity-70' : ''}`}
                 >
+                  {isTermsLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                   Terms of Service
                 </span>
               </div>

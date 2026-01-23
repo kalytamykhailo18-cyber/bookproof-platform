@@ -1,6 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 /**
  * Privacy Policy Page
@@ -18,6 +20,10 @@ import { useRouter } from 'next/navigation';
  */
 export default function PrivacyPolicyPage() {
   const router = useRouter();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
+  const [isTermsLoading, setIsTermsLoading] = useState(false);
+  const [isCookiesLoading, setIsCookiesLoading] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted py-12">
@@ -331,15 +337,25 @@ export default function PrivacyPolicyPage() {
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Related Documents</h2>
               <div className="flex flex-col gap-3">
                 <span
-                  onClick={() => router.push('/terms')}
-                  className="text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer"
+                  onClick={() => {
+                    if (isTermsLoading) return;
+                    setIsTermsLoading(true);
+                    router.push(`/${locale}/terms`);
+                  }}
+                  className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isTermsLoading ? 'opacity-70' : ''}`}
                 >
+                  {isTermsLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                   Terms of Service
                 </span>
                 <span
-                  onClick={() => router.push('/cookies')}
-                  className="text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer"
+                  onClick={() => {
+                    if (isCookiesLoading) return;
+                    setIsCookiesLoading(true);
+                    router.push(`/${locale}/cookies`);
+                  }}
+                  className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isCookiesLoading ? 'opacity-70' : ''}`}
                 >
+                  {isCookiesLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                   Cookie Policy
                 </span>
               </div>

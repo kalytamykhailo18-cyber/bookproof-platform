@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { FileQuestion, Home, Search } from 'lucide-react';
+import { FileQuestion, Home, Search, Loader2 } from 'lucide-react';
 
 /**
  * Global 404 Not Found Page
@@ -10,6 +11,13 @@ import { FileQuestion, Home, Search } from 'lucide-react';
  */
 export default function NotFound() {
   const router = useRouter();
+  const [isHomeLoading, setIsHomeLoading] = useState(false);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [isCampaignsLoading, setIsCampaignsLoading] = useState(false);
+  const [isAssignmentsLoading, setIsAssignmentsLoading] = useState(false);
+  const [isAdminLoading, setIsAdminLoading] = useState(false);
+  const [isHelpLoading, setIsHelpLoading] = useState(false);
+  const [isContactLoading, setIsContactLoading] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted px-4">
@@ -36,13 +44,32 @@ export default function NotFound() {
 
         {/* Navigation Options */}
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-          <Button type="button" size="lg" className="gap-2" onClick={() => router.push('/')}>
-            <Home className="h-4 w-4" />
+          <Button
+            type="button"
+            size="lg"
+            className="gap-2"
+            onClick={() => {
+              setIsHomeLoading(true);
+              router.push('/');
+            }}
+            disabled={isHomeLoading}
+          >
+            {isHomeLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Home className="h-4 w-4" />}
             Go Home
           </Button>
 
-          <Button type="button" variant="outline" size="lg" className="gap-2" onClick={() => router.push('/search')}>
-            <Search className="h-4 w-4" />
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            className="gap-2"
+            onClick={() => {
+              setIsSearchLoading(true);
+              router.push('/search');
+            }}
+            disabled={isSearchLoading}
+          >
+            {isSearchLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
             Search
           </Button>
         </div>
@@ -54,27 +81,47 @@ export default function NotFound() {
           </p>
           <div className="flex flex-col gap-2 text-sm">
             <button
-              onClick={() => router.push('/author/campaigns')}
-              className="text-primary hover:underline"
+              onClick={() => {
+                setIsCampaignsLoading(true);
+                router.push('/author/campaigns');
+              }}
+              className="inline-flex items-center justify-center gap-2 text-primary hover:underline"
+              disabled={isCampaignsLoading}
             >
+              {isCampaignsLoading && <Loader2 className="h-3 w-3 animate-spin" />}
               My Campaigns
             </button>
             <button
-              onClick={() => router.push('/reader/assignments')}
-              className="text-primary hover:underline"
+              onClick={() => {
+                setIsAssignmentsLoading(true);
+                router.push('/reader/assignments');
+              }}
+              className="inline-flex items-center justify-center gap-2 text-primary hover:underline"
+              disabled={isAssignmentsLoading}
             >
+              {isAssignmentsLoading && <Loader2 className="h-3 w-3 animate-spin" />}
               My Assignments
             </button>
             <button
-              onClick={() => router.push('/admin/dashboard')}
-              className="text-primary hover:underline"
+              onClick={() => {
+                setIsAdminLoading(true);
+                router.push('/admin/dashboard');
+              }}
+              className="inline-flex items-center justify-center gap-2 text-primary hover:underline"
+              disabled={isAdminLoading}
             >
+              {isAdminLoading && <Loader2 className="h-3 w-3 animate-spin" />}
               Admin Dashboard
             </button>
             <button
-              onClick={() => router.push('/help')}
-              className="text-primary hover:underline"
+              onClick={() => {
+                setIsHelpLoading(true);
+                router.push('/help');
+              }}
+              className="inline-flex items-center justify-center gap-2 text-primary hover:underline"
+              disabled={isHelpLoading}
             >
+              {isHelpLoading && <Loader2 className="h-3 w-3 animate-spin" />}
               Help Center
             </button>
           </div>
@@ -85,9 +132,14 @@ export default function NotFound() {
           <p>
             Still having trouble?{' '}
             <button
-              onClick={() => router.push('/contact')}
-              className="text-primary hover:underline"
+              onClick={() => {
+                setIsContactLoading(true);
+                router.push('/contact');
+              }}
+              className="inline-flex items-center gap-1 text-primary hover:underline"
+              disabled={isContactLoading}
             >
+              {isContactLoading && <Loader2 className="h-3 w-3 animate-spin" />}
               Contact Support
             </button>
           </p>

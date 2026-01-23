@@ -457,6 +457,199 @@ export class NotificationsService {
     });
   }
 
+  // ==========================================
+  // SECTION 13.2: ADDITIONAL NOTIFICATION METHODS
+  // ==========================================
+
+  /**
+   * Notify author when campaign is completed
+   * Per Section 13.2: Author notification - Campaign completed
+   */
+  async notifyAuthorCampaignCompleted(
+    userId: string,
+    bookTitle: string,
+    totalReviews: number,
+  ): Promise<void> {
+    await this.createNotification({
+      userId,
+      type: NotificationType.CAMPAIGN,
+      title: 'Campaign Completed',
+      message: `Congratulations! Your campaign "${bookTitle}" has been completed with ${totalReviews} reviews delivered.`,
+      actionUrl: '/author/campaigns',
+      metadata: { bookTitle, totalReviews },
+    });
+  }
+
+  /**
+   * Notify author when report is ready
+   * Per Section 13.2: Author notification - Report ready
+   */
+  async notifyAuthorReportReady(
+    userId: string,
+    reportType: string,
+    reportUrl: string,
+  ): Promise<void> {
+    await this.createNotification({
+      userId,
+      type: NotificationType.GENERAL,
+      title: 'Report Ready',
+      message: `Your ${reportType} report is ready for download.`,
+      actionUrl: reportUrl,
+      metadata: { reportType },
+    });
+  }
+
+  /**
+   * Notify author when credits are expiring soon
+   * Per Section 13.2: Author notification - Credits expiring soon
+   */
+  async notifyAuthorCreditsExpiringSoon(
+    userId: string,
+    creditsExpiring: number,
+    expirationDate: Date,
+  ): Promise<void> {
+    await this.createNotification({
+      userId,
+      type: NotificationType.PAYMENT,
+      title: 'Credits Expiring Soon',
+      message: `You have ${creditsExpiring} credits expiring on ${expirationDate.toLocaleDateString()}. Use them before they expire!`,
+      actionUrl: '/author/credits',
+      metadata: { creditsExpiring, expirationDate: expirationDate.toISOString() },
+    });
+  }
+
+  /**
+   * Notify reader when payout is processed
+   * Per Section 13.2: Reader notification - Payout processed
+   */
+  async notifyReaderPayoutProcessed(
+    userId: string,
+    amount: number,
+    paymentMethod: string,
+  ): Promise<void> {
+    await this.createNotification({
+      userId,
+      type: NotificationType.PAYMENT,
+      title: 'Payout Processed',
+      message: `Your payout of $${amount.toFixed(2)} has been processed via ${paymentMethod}. Funds should arrive within 3-5 business days.`,
+      actionUrl: '/reader/wallet',
+      metadata: { amount, paymentMethod },
+    });
+  }
+
+  /**
+   * Notify admin of campaign issue
+   * Per Section 13.2: Admin notification - Campaign issue detected
+   */
+  async notifyAdminCampaignIssue(
+    adminUserIds: string[],
+    bookTitle: string,
+    issueType: string,
+    campaignId: string,
+  ): Promise<void> {
+    await this.createBulkNotifications(
+      adminUserIds,
+      NotificationType.ADMIN,
+      'Campaign Issue Detected',
+      `A ${issueType} issue has been detected for campaign "${bookTitle}".`,
+      `/admin/campaigns/${campaignId}`,
+      { bookTitle, issueType, campaignId },
+    );
+  }
+
+  /**
+   * Notify admin of new affiliate application
+   * Per Section 13.2: Admin notification - New affiliate application
+   */
+  async notifyAdminNewAffiliateApplication(
+    adminUserIds: string[],
+    affiliateName: string,
+    affiliateEmail: string,
+    affiliateId: string,
+  ): Promise<void> {
+    await this.createBulkNotifications(
+      adminUserIds,
+      NotificationType.ADMIN,
+      'New Affiliate Application',
+      `${affiliateName} (${affiliateEmail}) has submitted an affiliate application.`,
+      `/admin/affiliates/${affiliateId}`,
+      { affiliateName, affiliateEmail, affiliateId },
+    );
+  }
+
+  /**
+   * Notify affiliate when application is approved
+   * Per Section 13.2: Affiliate notification - Application approved
+   */
+  async notifyAffiliateApplicationApproved(
+    userId: string,
+    referralCode: string,
+  ): Promise<void> {
+    await this.createNotification({
+      userId,
+      type: NotificationType.GENERAL,
+      title: 'Application Approved',
+      message: `Your affiliate application has been approved! Your referral code is: ${referralCode}. Start sharing your link to earn commissions.`,
+      actionUrl: '/affiliate/dashboard',
+      metadata: { referralCode },
+    });
+  }
+
+  /**
+   * Notify affiliate when application is rejected
+   * Per Section 13.2: Affiliate notification - Application rejected
+   */
+  async notifyAffiliateApplicationRejected(
+    userId: string,
+    reason: string,
+  ): Promise<void> {
+    await this.createNotification({
+      userId,
+      type: NotificationType.GENERAL,
+      title: 'Application Not Approved',
+      message: `Your affiliate application was not approved. Reason: ${reason}. You may reapply after 30 days.`,
+      actionUrl: '/affiliate/dashboard',
+      metadata: { reason },
+    });
+  }
+
+  /**
+   * Notify affiliate when commission is approved
+   * Per Section 13.2: Affiliate notification - Commission approved
+   */
+  async notifyAffiliateCommissionApproved(
+    userId: string,
+    amount: number,
+  ): Promise<void> {
+    await this.createNotification({
+      userId,
+      type: NotificationType.PAYMENT,
+      title: 'Commission Approved',
+      message: `$${amount.toFixed(2)} in commission has been approved and added to your available balance for withdrawal.`,
+      actionUrl: '/affiliate/earnings',
+      metadata: { amount },
+    });
+  }
+
+  /**
+   * Notify affiliate when payout is processed
+   * Per Section 13.2: Affiliate notification - Payout processed
+   */
+  async notifyAffiliatePayoutProcessed(
+    userId: string,
+    amount: number,
+    paymentMethod: string,
+  ): Promise<void> {
+    await this.createNotification({
+      userId,
+      type: NotificationType.PAYMENT,
+      title: 'Payout Processed',
+      message: `Your payout of $${amount.toFixed(2)} has been processed via ${paymentMethod}. Funds should arrive within 3-5 business days.`,
+      actionUrl: '/affiliate/earnings',
+      metadata: { amount, paymentMethod },
+    });
+  }
+
   private mapToResponse(notification: any): NotificationResponseDto {
     return {
       id: notification.id,

@@ -17,6 +17,7 @@ import { FinancialReportService } from './services/financial-report.service';
 import { OperationalReportService } from './services/operational-report.service';
 import { AffiliateReportService } from './services/affiliate-report.service';
 import { CsvExportService } from './services/csv-export.service';
+import { AdminReportPdfService } from './services/admin-report-pdf.service';
 import {
   FinancialReportDto,
   OperationalReportDto,
@@ -33,6 +34,7 @@ export class AdminReportsController {
     private readonly operationalReportService: OperationalReportService,
     private readonly affiliateReportService: AffiliateReportService,
     private readonly csvExportService: CsvExportService,
+    private readonly adminReportPdfService: AdminReportPdfService,
   ) {}
 
   /**
@@ -87,6 +89,37 @@ export class AdminReportsController {
   }
 
   /**
+   * Export Financial Report as PDF (Section 14.4)
+   * GET /admin/reports/financial/export/pdf?startDate=2024-01-01&endDate=2024-12-31
+   *
+   * Per Milestone 5.5: Financial Oversight is SUPER_ADMIN only
+   */
+  @Get('financial/export/pdf')
+  @UseGuards(AdminRolesGuard)
+  @AdminRoles(AdminRole.SUPER_ADMIN)
+  async exportFinancialReportPdf(
+    @Query() query: DateRangeQueryDto,
+    @Res() res: Response,
+  ): Promise<void> {
+    const startDate = new Date(query.startDate);
+    const endDate = new Date(query.endDate);
+
+    const report = await this.financialReportService.generateFinancialReport(
+      startDate,
+      endDate,
+    );
+
+    const pdfBuffer = await this.adminReportPdfService.generateFinancialReportPdf(report);
+
+    const filename = `financial-report-${query.startDate}-to-${query.endDate}.pdf`;
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', pdfBuffer.length);
+    res.status(HttpStatus.OK).send(pdfBuffer);
+  }
+
+  /**
    * Get Operational Report
    * GET /admin/reports/operational?startDate=2024-01-01&endDate=2024-12-31
    */
@@ -130,6 +163,33 @@ export class AdminReportsController {
   }
 
   /**
+   * Export Operational Report as PDF (Section 14.4)
+   * GET /admin/reports/operational/export/pdf?startDate=2024-01-01&endDate=2024-12-31
+   */
+  @Get('operational/export/pdf')
+  async exportOperationalReportPdf(
+    @Query() query: DateRangeQueryDto,
+    @Res() res: Response,
+  ): Promise<void> {
+    const startDate = new Date(query.startDate);
+    const endDate = new Date(query.endDate);
+
+    const report = await this.operationalReportService.generateOperationalReport(
+      startDate,
+      endDate,
+    );
+
+    const pdfBuffer = await this.adminReportPdfService.generateOperationalReportPdf(report);
+
+    const filename = `operational-report-${query.startDate}-to-${query.endDate}.pdf`;
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', pdfBuffer.length);
+    res.status(HttpStatus.OK).send(pdfBuffer);
+  }
+
+  /**
    * Get Affiliate Report
    * GET /admin/reports/affiliates?startDate=2024-01-01&endDate=2024-12-31
    */
@@ -170,5 +230,32 @@ export class AdminReportsController {
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.status(HttpStatus.OK).send(csv);
+  }
+
+  /**
+   * Export Affiliate Report as PDF (Section 14.4)
+   * GET /admin/reports/affiliates/export/pdf?startDate=2024-01-01&endDate=2024-12-31
+   */
+  @Get('affiliates/export/pdf')
+  async exportAffiliateReportPdf(
+    @Query() query: DateRangeQueryDto,
+    @Res() res: Response,
+  ): Promise<void> {
+    const startDate = new Date(query.startDate);
+    const endDate = new Date(query.endDate);
+
+    const report = await this.affiliateReportService.generateAffiliateReport(
+      startDate,
+      endDate,
+    );
+
+    const pdfBuffer = await this.adminReportPdfService.generateAffiliateReportPdf(report);
+
+    const filename = `affiliate-report-${query.startDate}-to-${query.endDate}.pdf`;
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', pdfBuffer.length);
+    res.status(HttpStatus.OK).send(pdfBuffer);
   }
 }

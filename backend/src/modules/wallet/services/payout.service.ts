@@ -8,6 +8,7 @@ import { PrismaService } from '@common/prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { EncryptionUtil } from '@common/utils/encryption.util';
 import { EmailService } from '@modules/email/email.service';
+import { NotificationsService } from '@modules/notifications/notifications.service';
 import { PayoutRequestStatus, Prisma, EmailType, UserRole } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import {
@@ -27,6 +28,7 @@ export class WalletPayoutService {
     private prisma: PrismaService,
     private configService: ConfigService,
     private emailService: EmailService,
+    private notificationsService: NotificationsService,
   ) {
     this.encryptionKey =
       this.configService.get<string>('ENCRYPTION_KEY') || '';
@@ -145,7 +147,7 @@ export class WalletPayoutService {
 
     this.logger.log(`Payout request created: ${payoutRequest.id}`);
 
-    // Send notification to all admins about new payout request
+    // Send notification to all admins about new payout request (Section 13.2)
     try {
       const admins = await this.prisma.user.findMany({
         where: { role: UserRole.ADMIN, isActive: true },
@@ -158,6 +160,16 @@ export class WalletPayoutService {
         include: { user: { select: { name: true, email: true } } },
       });
 
+      // Send in-app notifications to admins (Section 13.2)
+      const adminIds = admins.map((admin) => admin.id);
+      await this.notificationsService.notifyAdminPayoutRequest(
+        adminIds,
+        readerProfile?.user?.name || 'Reader',
+        dto.amount,
+        'reader',
+      );
+
+      // Send email notifications
       for (const admin of admins) {
         await this.emailService.sendTemplatedEmail(
           admin.email,
@@ -358,8 +370,16 @@ export class WalletPayoutService {
 
     this.logger.log(`Payout completed: ${payoutId}, transaction: ${transactionId}`);
 
-    // Step 9: Send confirmation email to reader
+    // Step 9: Send confirmation notifications to reader (Section 13.2)
     try {
+      // Send in-app notification (Section 13.2)
+      await this.notificationsService.notifyReaderPayoutProcessed(
+        payout.readerProfile.user.id,
+        payout.amount.toNumber(),
+        payout.paymentMethod,
+      );
+
+      // Send email notification
       await this.emailService.sendPayoutCompletedEmail({
         to: payout.readerProfile.user.email,
         readerName: payout.readerProfile.user.name || 'Reader',
@@ -370,10 +390,10 @@ export class WalletPayoutService {
         userId: payout.readerProfile.user.id,
         language: payout.readerProfile.user.preferredLanguage || undefined,
       });
-      this.logger.log(`Payout confirmation email sent to ${payout.readerProfile.user.email}`);
+      this.logger.log(`Payout completion notifications sent to ${payout.readerProfile.user.email}`);
     } catch (emailError) {
       // Log error but don't fail the payout completion
-      this.logger.error(`Failed to send payout confirmation email: ${emailError.message}`);
+      this.logger.error(`Failed to send payout completion notifications: ${emailError.message}`);
     }
 
     return this.mapToResponse(updatedPayout, true);

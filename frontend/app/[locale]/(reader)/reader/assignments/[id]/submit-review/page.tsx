@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { AlertCircle, CheckCircle, ArrowLeft, Star, Send } from 'lucide-react';
+import { AlertCircle, CheckCircle, ArrowLeft, Star, Send, Loader2 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -365,8 +365,7 @@ export default function SubmitReviewPage({ params }: { params: { id: string } })
                 disabled={isSubmitting || !isFormValid()}
                 className="flex-1"
               >
-                <Send className="mr-2 h-4 w-4" />
-                {isSubmitting ? t('form.submitting') : t('form.submit')}
+                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="mr-2 h-4 w-4" />{t('form.submit')}</>}
               </Button>
               <Button type="button" variant="outline" onClick={() => router.back()}>
                 {t('form.cancel')}

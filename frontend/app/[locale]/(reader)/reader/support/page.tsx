@@ -36,7 +36,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Plus, Scale, MessageSquare, HelpCircle } from 'lucide-react';
+import { Plus, Scale, MessageSquare, HelpCircle, Loader2 } from 'lucide-react';
 import { DisputeStatus, DisputeType, DisputePriority, AppealStatus } from '@/lib/api/disputes';
 
 export default function ReaderSupportPage() {
@@ -215,7 +215,7 @@ export default function ReaderSupportPage() {
                 onClick={handleCreateDispute}
                 disabled={disputeDescription.length < 10 || createDispute.isPending}
               >
-                {createDispute.isPending ? 'Submitting...' : 'Submit Request'}
+                {createDispute.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Submit Request'}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -329,7 +329,7 @@ export default function ReaderSupportPage() {
                                 onClick={handleFileAppeal}
                                 disabled={appealReason.length < 20 || fileAppeal.isPending}
                               >
-                                {fileAppeal.isPending ? 'Submitting...' : 'Submit Appeal'}
+                                {fileAppeal.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Submit Appeal'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>

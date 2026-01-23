@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { EmailService } from '@modules/email/email.service';
+import { NotificationsService } from '@modules/notifications/notifications.service';
 import { CommissionStatus, EmailType } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
@@ -12,6 +13,7 @@ export class CommissionService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   /**
@@ -97,7 +99,7 @@ export class CommissionService {
         `Commission created for affiliate ${referral.affiliateProfileId}, amount: ${commissionAmount}`,
       );
 
-      // Send new referral email to affiliate
+      // Send new referral notification to affiliate (Section 13.2)
       try {
         const affiliateUser = await this.prisma.user.findUnique({
           where: { id: referral.affiliateProfile.userId },
@@ -110,6 +112,14 @@ export class CommissionService {
         });
 
         if (affiliateUser) {
+          // Send in-app notification (Section 13.2)
+          await this.notificationsService.notifyAffiliateReferralPurchase(
+            affiliateUser.id,
+            purchaseAmount.toNumber(),
+            commissionAmount.toNumber(),
+          );
+
+          // Send email notification
           await this.emailService.sendTemplatedEmail(
             affiliateUser.email,
             EmailType.AFFILIATE_NEW_REFERRAL,
@@ -123,10 +133,10 @@ export class CommissionService {
             affiliateUser.id,
             affiliateUser.preferredLanguage,
           );
-          this.logger.log(`New referral email sent to affiliate ${affiliateUser.email}`);
+          this.logger.log(`New referral purchase notifications sent to affiliate ${affiliateUser.email}`);
         }
       } catch (emailError) {
-        this.logger.error(`Failed to send new referral email: ${emailError.message}`);
+        this.logger.error(`Failed to send new referral notifications: ${emailError.message}`);
       }
     } catch (error) {
       this.logger.error(`Error creating commission: ${error.message}`, error.stack);
@@ -175,9 +185,35 @@ export class CommissionService {
         },
       });
 
-      // Update affiliate earnings for each affected affiliate
+      // Update affiliate earnings for each affected affiliate and send notifications (Section 13.2)
       const affiliateIds = [...new Set(pendingCommissions.map((c) => c.affiliateProfileId))];
-      await Promise.all(affiliateIds.map((id) => this.updateAffiliateEarnings(id)));
+
+      // Group commissions by affiliate for notifications
+      const commissionsByAffiliate = new Map<string, number>();
+      for (const commission of pendingCommissions) {
+        const current = commissionsByAffiliate.get(commission.affiliateProfileId) || 0;
+        commissionsByAffiliate.set(commission.affiliateProfileId, current + commission.commissionAmount.toNumber());
+      }
+
+      await Promise.all(affiliateIds.map(async (id) => {
+        // Update earnings
+        await this.updateAffiliateEarnings(id);
+
+        // Send notification for approved commissions (Section 13.2)
+        const approvedAmount = commissionsByAffiliate.get(id) || 0;
+        if (approvedAmount > 0) {
+          const affiliate = await this.prisma.affiliateProfile.findUnique({
+            where: { id },
+            select: { userId: true },
+          });
+          if (affiliate) {
+            await this.notificationsService.notifyAffiliateCommissionApproved(
+              affiliate.userId,
+              approvedAmount,
+            );
+          }
+        }
+      }));
 
       this.logger.log(`Approved ${updated.count} pending commissions totaling $${totalAmount.toFixed(2)}`);
       return { approvedCount: updated.count, totalAmount };

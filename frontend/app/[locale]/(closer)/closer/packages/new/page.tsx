@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ArrowLeft, Save, Search } from 'lucide-react';
+import { ArrowLeft, Save, Search, Loader2 } from 'lucide-react';
 
 export default function CreatePackagePage() {
   const t = useTranslations('closer');
@@ -26,6 +26,7 @@ export default function CreatePackagePage() {
   const locale = params.locale as string;
   const createPackage = useCreatePackage();
 
+  const [isBackLoading, setIsBackLoading] = useState(false);
   const [formData, setFormData] = useState({
     packageName: '',
     description: '',
@@ -81,8 +82,17 @@ export default function CreatePackagePage() {
     <div className="container mx-auto max-w-3xl space-y-6 px-4 py-8">
       {/* Header */}
       <div className="flex animate-fade-up items-center gap-4">
-        <Button type="button" variant="ghost" size="icon" onClick={() => router.push(`/${locale}/closer/packages`)}>
-          <ArrowLeft className="h-5 w-5" />
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            setIsBackLoading(true);
+            router.push(`/${locale}/closer/packages`);
+          }}
+          disabled={isBackLoading}
+        >
+          {isBackLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <ArrowLeft className="h-5 w-5" />}
         </Button>
         <div>
           <h1 className="text-3xl font-bold">{t('createPackage.title')}</h1>
@@ -336,12 +346,21 @@ export default function CreatePackagePage() {
 
           {/* Actions */}
           <div className="flex animate-fade-up justify-end gap-4">
-            <Button type="button" variant="outline" onClick={() => router.push(`/${locale}/closer/packages`)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsBackLoading(true);
+                router.push(`/${locale}/closer/packages`);
+              }}
+              disabled={isBackLoading}
+            >
+              {isBackLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('createPackage.cancel')}
             </Button>
             <Button type="button" onClick={handleFormSubmit} disabled={createPackage.isPending}>
-              <Save className="mr-2 h-4 w-4" />
-              {createPackage.isPending ? t('createPackage.creating') : t('createPackage.create')}
+              {createPackage.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+              {t('createPackage.create')}
             </Button>
           </div>
         </div>

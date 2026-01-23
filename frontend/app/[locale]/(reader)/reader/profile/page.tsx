@@ -28,6 +28,7 @@ import {
   Wallet,
   TrendingUp,
   XCircle,
+  Loader2,
 } from 'lucide-react';
 import { ContentPreference } from '@/lib/api/readers';
 import { useTranslations } from 'next-intl';
@@ -239,7 +240,7 @@ export default function ReaderProfilePage() {
                 <div className="animate-fade-up-medium-slow flex gap-2 pt-4">
                   <Button type="button" onClick={handleSave} disabled={isSaving}>
                     {isSaving ? (
-                      t('actions.saving')
+                      <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
                       <>
                         <Save className="mr-2 h-4 w-4" />
@@ -314,7 +315,7 @@ export default function ReaderProfilePage() {
                       onClick={() => handleRemoveAmazonProfile(amazonProfile.id)}
                       disabled={isRemovingAmazonProfile}
                     >
-                      <Trash2 className="h-4 w-4 text-red-500" />
+                      {isRemovingAmazonProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4 text-red-500" />}
                     </Button>
                   </div>
                 ))}
@@ -342,7 +343,7 @@ export default function ReaderProfilePage() {
                         onClick={handleAddAmazonProfile}
                         disabled={isAddingAmazonProfile || !newAmazonProfile.trim()}
                       >
-                        <Plus className="h-4 w-4" />
+                        {isAddingAmazonProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
                       </Button>
                     </div>
                     <p className="text-xs text-muted-foreground">{t('amazonProfiles.example')}</p>

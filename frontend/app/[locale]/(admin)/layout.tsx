@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/lib/api/auth';
 import { Loader2 } from 'lucide-react';
+import { DashboardHeader } from '@/components/shared/DashboardHeader';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -48,5 +49,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <DashboardHeader />
+      {children}
+    </>
+  );
 }

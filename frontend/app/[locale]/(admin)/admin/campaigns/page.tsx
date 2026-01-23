@@ -37,6 +37,7 @@ import {
   Play,
   Eye,
   Settings,
+  Loader2,
 } from 'lucide-react';
 
 export default function AdminCampaignsPage() {
@@ -50,6 +51,8 @@ export default function AdminCampaignsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [healthFilter, setHealthFilter] = useState<string>('all');
+  const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(null);
+  const [loadingControlsId, setLoadingControlsId] = useState<string | null>(null);
 
   const filteredCampaigns = useMemo(() => {
     if (!campaigns) return [];
@@ -328,18 +331,32 @@ export default function AdminCampaignsPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => router.push(`/${locale}/admin/campaigns/${campaign.campaign.id}`)}
+                          onClick={() => {
+                            setLoadingCampaignId(campaign.campaign.id);
+                            router.push(`/${locale}/admin/campaigns/${campaign.campaign.id}`);
+                          }}
+                          disabled={loadingCampaignId === campaign.campaign.id}
                         >
-                          <Eye className="h-4 w-4" />
+                          {loadingCampaignId === campaign.campaign.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() =>
-                            router.push(`/${locale}/admin/campaigns/${campaign.campaign.id}/controls`)
-                          }
+                          onClick={() => {
+                            setLoadingControlsId(campaign.campaign.id);
+                            router.push(`/${locale}/admin/campaigns/${campaign.campaign.id}/controls`);
+                          }}
+                          disabled={loadingControlsId === campaign.campaign.id}
                         >
-                          <Settings className="h-4 w-4" />
+                          {loadingControlsId === campaign.campaign.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Settings className="h-4 w-4" />
+                          )}
                         </Button>
                       </div>
                     </TableCell>
