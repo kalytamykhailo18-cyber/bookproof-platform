@@ -67,6 +67,17 @@ export class AuthController {
   }
 
   @Public()
+  @Post('resend-verification')
+  @Throttle({ default: { limit: 3, ttl: 60000 } }) // 3 resend attempts per minute per IP
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Resend email verification link' })
+  @ApiResponse({ status: 200, description: 'Verification email resent if applicable', type: MessageResponseDto })
+  @ApiResponse({ status: 429, description: 'Too many resend attempts' })
+  async resendVerification(@Body() dto: { email: string }): Promise<MessageResponseDto> {
+    return this.authService.resendVerificationEmail(dto.email);
+  }
+
+  @Public()
   @Post('request-password-reset')
   @Throttle({ default: { limit: 3, ttl: 60000 } }) // 3 password reset requests per minute per IP
   @HttpCode(HttpStatus.OK)

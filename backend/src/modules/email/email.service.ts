@@ -81,12 +81,14 @@ export class EmailService {
     private readonly templateService: EmailTemplateService,
     private readonly prisma: PrismaService,
   ) {
-    const apiKey = this.configService.get<string>('email.apiKey');
-    this.fromEmail = this.configService.get<string>('email.fromEmail') || 'noreply@bookproof.com';
+    const apiKey = this.configService.get<string>('email.resend.apiKey');
+    this.fromEmail = this.configService.get<string>('email.resend.fromEmail') || 'noreply@bookproof.com';
     this.appUrl = this.configService.get<string>('app.url') || 'http://localhost:3000';
 
     if (!apiKey) {
       this.logger.warn('Resend API key not configured. Emails will not be sent.');
+    } else {
+      this.logger.log('Resend API configured successfully');
     }
 
     this.resend = new Resend(apiKey);

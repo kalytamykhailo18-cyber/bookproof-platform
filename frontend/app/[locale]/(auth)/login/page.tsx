@@ -21,7 +21,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Mail } from 'lucide-react';
+import { authApi } from '@/lib/api/auth';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -41,6 +42,8 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isForgotLoading, setIsForgotLoading] = useState(false);
   const [isSignupLoading, setIsSignupLoading] = useState(false);
+  const [showVerificationNeeded, setShowVerificationNeeded] = useState(false);
+  const [isResendingVerification, setIsResendingVerification] = useState(false);
 
   // Section 16.1: Get return URL from query params
   const returnUrl = searchParams.get('returnUrl');
@@ -79,9 +82,31 @@ export default function LoginPage() {
       const errorMessage = err?.response?.data?.message || err?.message || t('error');
       if (errorMessage.includes('CAPTCHA')) {
         toast.error('Security verification failed. Please try again.');
+      } else if (errorMessage.toLowerCase().includes('verify your email')) {
+        // Show verification needed UI instead of just a toast
+        setShowVerificationNeeded(true);
       } else {
         toast.error(errorMessage);
       }
+    }
+  };
+
+  const handleResendVerification = async () => {
+    const email = getValues('email');
+    if (!email) {
+      toast.error('Please enter your email address first');
+      return;
+    }
+
+    setIsResendingVerification(true);
+    try {
+      await authApi.resendVerificationEmail(email);
+      toast.success(t('verificationSent') || 'Verification email sent! Please check your inbox.');
+      setShowVerificationNeeded(false);
+    } catch {
+      toast.error(t('verificationError') || 'Failed to send verification email. Please try again.');
+    } finally {
+      setIsResendingVerification(false);
     }
   };
 
@@ -140,6 +165,37 @@ export default function LoginPage() {
             {isForgotLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('forgotPassword')}
           </span>
         </div>
+
+        {showVerificationNeeded && (
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950">
+            <div className="flex items-start gap-3">
+              <Mail className="mt-0.5 h-5 w-5 text-amber-600 dark:text-amber-400" />
+              <div className="flex-1 space-y-2">
+                <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                  {t('emailNotVerified') || 'Email not verified'}
+                </p>
+                <p className="text-sm text-amber-700 dark:text-amber-300">
+                  {t('emailNotVerifiedDesc') || 'Please verify your email address before logging in. Check your inbox for the verification link.'}
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleResendVerification}
+                  disabled={isResendingVerification}
+                  className="mt-2"
+                >
+                  {isResendingVerification ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Mail className="mr-2 h-4 w-4" />
+                  )}
+                  {t('resendVerification') || 'Resend verification email'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="flex flex-col space-y-4">

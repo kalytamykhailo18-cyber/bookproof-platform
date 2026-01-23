@@ -29,10 +29,10 @@ export default function VerifyEmailRequiredPage() {
 
     setIsResending(true);
     try {
-      await authApi.requestPasswordReset({ email: user.email });
-      toast.success(t('resendSuccess'));
+      await authApi.resendVerificationEmail(user.email);
+      toast.success(t('resendSuccess') || 'Verification email sent! Please check your inbox.');
     } catch {
-      toast.error(t('resendError'));
+      toast.error(t('resendError') || 'Failed to resend verification email. Please try again.');
     } finally {
       setIsResending(false);
     }

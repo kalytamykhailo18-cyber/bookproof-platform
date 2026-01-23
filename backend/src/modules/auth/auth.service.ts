@@ -448,6 +448,64 @@ export class AuthService {
     return { message: 'Email verified successfully' };
   }
 
+  /**
+   * Resend verification email to user
+   * Rate limited to prevent abuse
+   */
+  async resendVerificationEmail(email: string): Promise<{ message: string }> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    // Always return success to prevent email enumeration
+    if (!user) {
+      this.logger.warn(`Resend verification requested for non-existent email: ${email}`);
+      return { message: 'If the email exists and is not verified, a new verification link has been sent' };
+    }
+
+    // If already verified, no need to resend
+    if (user.emailVerified) {
+      return { message: 'If the email exists and is not verified, a new verification link has been sent' };
+    }
+
+    // Invalidate any existing verification tokens for this user
+    await this.prisma.passwordReset.updateMany({
+      where: {
+        userId: user.id,
+        used: false,
+      },
+      data: {
+        used: true,
+        usedAt: new Date(),
+      },
+    });
+
+    // Generate new verification token
+    const verificationToken = PasswordUtil.generateToken(32);
+
+    // Store new verification token
+    await this.prisma.passwordReset.create({
+      data: {
+        userId: user.id,
+        token: verificationToken,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+        used: false,
+      },
+    });
+
+    this.logger.log(`Resending verification email to: ${email}`);
+
+    // Send verification email
+    try {
+      await this.emailService.sendVerificationEmail(user.email, verificationToken);
+      this.logger.log(`Verification email resent to ${user.email}`);
+    } catch (error) {
+      this.logger.error(`Failed to resend verification email to ${user.email}`, error);
+    }
+
+    return { message: 'If the email exists and is not verified, a new verification link has been sent' };
+  }
+
   async requestPasswordReset(dto: RequestPasswordResetDto, request?: Request): Promise<{ message: string }> {
     const { email, captchaToken } = dto;
 

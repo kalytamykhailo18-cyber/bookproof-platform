@@ -5,4 +5,5 @@ export default registerAs('app', () => ({
   name: process.env.APP_NAME || 'BookProof',
   port: parseInt(process.env.PORT || '4000', 10),
   apiUrl: process.env.API_URL || 'http://localhost:4000',
+  url: process.env.FRONTEND_URL || 'http://localhost:3000',
 }));
