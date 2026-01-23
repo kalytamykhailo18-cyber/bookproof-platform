@@ -73,5 +73,13 @@
     "amazonRemovalRate": "Amazon Removal Rate",
     "reviewsRemoved": "Reviews removed by Amazon"
   },
+  "payouts": {
+    "pending": "Pending Payouts",
+    "description": "Reader and affiliate payout requests waiting for processing"
+  },
+  "validation": {
+    "queue": "Validation Queue",
+    "description": "Reviews awaiting admin validation"
+  },
   "loading": "Loading dashboard..."
 }

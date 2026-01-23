@@ -73,5 +73,13 @@
     "amazonRemovalRate": "Tasa de Eliminación Amazon",
     "reviewsRemoved": "Reseñas eliminadas por Amazon"
   },
+  "payouts": {
+    "pending": "Pagos Pendientes",
+    "description": "Solicitudes de pago de lectores y afiliados esperando procesamiento"
+  },
+  "validation": {
+    "queue": "Cola de Validación",
+    "description": "Reseñas esperando validación del admin"
+  },
   "loading": "Cargando panel..."
 }
