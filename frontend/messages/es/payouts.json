@@ -5,6 +5,7 @@
   "transactionHistory": "Historial de Transacciones",
   "availableBalance": "Saldo Disponible",
   "totalEarned": "Total Ganado",
+  "totalWithdrawn": "Total Retirado",
   "pendingEarnings": "Ganancias Pendientes",
   "minimumPayout": "El monto mínimo de pago es $50",
   "amount": "Monto",
