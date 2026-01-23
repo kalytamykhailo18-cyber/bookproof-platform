@@ -364,16 +364,16 @@ export const adminControlsApi = {
    * Get all campaigns for admin
    */
   async getAllCampaigns(): Promise<CampaignAnalyticsDto[]> {
-    const response = await apiClient.get<CampaignAnalyticsDto[]>('/admin/campaigns');
-    return response.data;
+    const response = await apiClient.get<{ campaigns: CampaignAnalyticsDto[]; total: number }>('/admin/campaigns');
+    return response.data.campaigns;
   },
 
   /**
    * Get all authors with credit information
    */
   async getAllAuthors(): Promise<AuthorListItemDto[]> {
-    const response = await apiClient.get<AuthorListItemDto[]>('/admin/campaigns/authors');
-    return response.data;
+    const response = await apiClient.get<{ authors: AuthorListItemDto[]; total: number }>('/admin/campaigns/authors');
+    return response.data.authors;
   },
 
   /**
