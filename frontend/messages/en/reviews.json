@@ -11,7 +11,7 @@
       "item2": "The author will NEVER see your review link or Amazon profile",
       "item3": "Your feedback will be anonymized in the final report to the author",
       "item4": "Compensation will be credited to your wallet after admin approval",
-      "format": "Format: {format} = ${value}.00"
+      "format": "Format: {format} = {value}"
     },
     "form": {
       "title": "Review Details",

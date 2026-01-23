@@ -11,7 +11,7 @@
       "item2": "O autor NUNCA verá seu link de avaliação ou perfil da Amazon",
       "item3": "Seu feedback será anônimo no relatório final para o autor",
       "item4": "A compensação será creditada em sua carteira após aprovação do admin",
-      "format": "Formato: {format} = ${value}.00"
+      "format": "Formato: {format} = {value}"
     },
     "form": {
       "title": "Detalhes da Avaliação",

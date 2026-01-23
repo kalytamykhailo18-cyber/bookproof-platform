@@ -6,19 +6,24 @@
     "byAuthor": "by {author}",
     "credit": "credit",
     "credits": "credits",
-    "queuePosition": "Queue position: #{position}",
+    "queuePosition": "Queue position: {position}",
     "scheduledFor": "Scheduled for: {date}",
     "deadline": "Deadline",
     "remaining": "remaining",
+    "payoutMinimumRequired": "Minimum {amount} required for payout",
+    "requestPayout": "Request Payout",
+    "viewMyReviews": "View My Reviews",
     "stats": {
       "walletBalance": "Wallet Balance",
-      "totalEarned": "Total earned: ${amount}",
+      "totalEarned": "Total earned: {amount}",
       "activeAssignments": "Active Assignments",
       "currentlyWorking": "Currently working on",
       "completedReviews": "Completed Reviews",
       "completionRate": "{rate}% completion rate",
       "reliabilityScore": "Reliability Score",
-      "performanceRating": "Your performance rating"
+      "performanceRating": "Your performance rating",
+      "pendingPayouts": "Pending Payouts",
+      "awaitingProcessing": "Awaiting processing"
     },
     "sections": {
       "activeAssignments": "Active Assignments",
@@ -57,8 +62,8 @@
       "format": "Format",
       "allFormats": "All Formats"
     },
-    "resultsCount": "Showing {{count}} book",
-    "resultsCount_plural": "Showing {{count}} books",
+    "resultsCount": "Showing {count} book",
+    "resultsCount_plural": "Showing {count} books",
     "campaign": {
       "byAuthor": "by {author}",
       "target": "Target",
@@ -89,7 +94,7 @@
     "deadline": {
       "urgent": "URGENT: Deadline Approaching!",
       "reminder": "Deadline Reminder",
-      "due": "Due {{time}}",
+      "due": "Due {time}",
       "hoursRemaining": "hours remaining"
     },
     "sections": {
@@ -97,13 +102,13 @@
       "ebookDownload": "Ebook Download",
       "ebookDownloadDesc": "Download the ebook to your device",
       "downloadButton": "Download Ebook (PDF/EPUB)",
-      "downloaded": "Downloaded {{time}}",
+      "downloaded": "Downloaded {time}",
       "audiobookPlayer": "Audiobook Player"
     },
     "materialsNotAvailable": {
       "title": "Materials Not Yet Available",
-      "waiting": "You're in the queue at position #{{position}}. Materials will be released when your turn comes.",
-      "scheduled": "Materials will be released on {{date}}",
+      "waiting": "You're in the queue at position {position}. Materials will be released when your turn comes.",
+      "scheduled": "Materials will be released on {date}",
       "expired": "This assignment has expired and is no longer available."
     },
     "details": {
@@ -160,7 +165,7 @@
     "amazonProfiles": {
       "verified": "Verified",
       "pending": "Pending Verification",
-      "addLabel": "Add Amazon Profile URL ({{count}}/3)",
+      "addLabel": "Add Amazon Profile URL ({count}/3)",
       "placeholder": "https://amazon.com/gp/profile/...",
       "example": "Example: https://amazon.com/gp/profile/XXXXXXXXXXXXX",
       "maxReached": "You've reached the maximum of 3 Amazon profiles. Remove one to add a new profile."

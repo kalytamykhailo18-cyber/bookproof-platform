@@ -399,7 +399,7 @@ export default function AssignmentDetailPage({ params }: { params: { id: string 
                 <p className="text-muted-foreground">
                   {assignment.status === AssignmentStatus.WAITING && (
                     <>
-                      {t('materialsNotAvailable.waiting', { position: assignment.queuePosition })}
+                      {t('materialsNotAvailable.waiting', { position: `#${assignment.queuePosition}` })}
                     </>
                   )}
                   {assignment.status === AssignmentStatus.SCHEDULED && assignment.scheduledDate && (
