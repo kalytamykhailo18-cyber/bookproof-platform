@@ -122,11 +122,18 @@ export function AdminSidebar() {
   ];
 
   const handleNavigation = (href: string) => {
+    // Don't navigate if already on this page
+    // pathname doesn't include locale, href does, so strip locale from href
+    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    if (pathname === hrefWithoutLocale) return;
     setLoadingPath(href);
     router.push(href);
   };
 
-  const isActive = (href: string) => pathname === href;
+  const isActive = (href: string) => {
+    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    return pathname === hrefWithoutLocale;
+  };
 
   return (
     <aside

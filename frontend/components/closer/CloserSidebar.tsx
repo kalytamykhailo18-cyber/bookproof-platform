@@ -57,11 +57,18 @@ export function CloserSidebar() {
   ];
 
   const handleNavigation = (href: string) => {
+    // Don't navigate if already on this page
+    // pathname doesn't include locale, href does, so strip locale from href
+    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    if (pathname === hrefWithoutLocale) return;
     setLoadingPath(href);
     router.push(href);
   };
 
-  const isActive = (href: string) => pathname === href || pathname?.startsWith(href + '/');
+  const isActive = (href: string) => {
+    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    return pathname === hrefWithoutLocale || pathname?.startsWith(hrefWithoutLocale + '/');
+  };
 
   return (
     <aside
