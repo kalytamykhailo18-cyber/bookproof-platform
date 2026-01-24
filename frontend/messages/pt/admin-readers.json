@@ -44,7 +44,11 @@
     "amazonVerification": "Verificação Amazon",
     "allVerification": "Todos",
     "verified": "Verificado",
-    "unverified": "Não Verificado"
+    "unverified": "Não Verificado",
+    "country": "País",
+    "allCountries": "Todos os Países",
+    "language": "Idioma",
+    "allLanguages": "Todos os Idiomas"
   },
   "table": {
     "title": "Leitores",
@@ -57,6 +61,8 @@
     "reliability": "Confiabilidade",
     "wallet": "Carteira",
     "actions": "Ações",
+    "country": "País",
+    "language": "Idioma",
     "completedExpired": "concluídas / expiradas",
     "earned": "Ganho",
     "book": "Livro",
@@ -67,7 +73,7 @@
     "validatedAt": "Validado",
     "date": "Data",
     "type": "Tipo",
-    "description": "Descrição",
+    "descriptionColumn": "Descrição",
     "amount": "Valor",
     "requestedAt": "Solicitado",
     "processedAt": "Processado",

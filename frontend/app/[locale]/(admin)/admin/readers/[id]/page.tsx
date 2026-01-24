@@ -833,7 +833,7 @@ export default function AdminReaderDetailPage() {
                     <TableRow>
                       <TableHead>{t('table.date')}</TableHead>
                       <TableHead>{t('table.type')}</TableHead>
-                      <TableHead>{t('table.description')}</TableHead>
+                      <TableHead>{t('table.descriptionColumn')}</TableHead>
                       <TableHead className="text-right">{t('table.amount')}</TableHead>
                     </TableRow>
                   </TableHeader>
