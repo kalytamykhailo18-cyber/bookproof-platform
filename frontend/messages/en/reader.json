@@ -83,6 +83,39 @@
     "emptyState": {
       "title": "No books found",
       "description": "Try adjusting your filters or check back later"
+    },
+    "modal": {
+      "synopsis": "Synopsis",
+      "applyToReviewThisBook": "Apply to Review This Book"
+    },
+    "apply": {
+      "back": "Back",
+      "next": "Next",
+      "submit": "Submit Application",
+      "submitting": "Submitting...",
+      "selectedFormat": "Selected Format",
+      "step1": {
+        "title": "Select Format",
+        "description": "Choose the format you want to review"
+      },
+      "step2": {
+        "title": "Confirm Application",
+        "description": "Review and confirm your application"
+      },
+      "confirm1": "I understand I will receive access to review materials",
+      "confirm2": "I commit to completing the review before the deadline",
+      "confirm3": "I agree to provide an honest and detailed review",
+      "success": {
+        "title": "Application Submitted!",
+        "description": "Your application has been received",
+        "status": "Status",
+        "waitingForAccess": "Waiting for access",
+        "queuePosition": "Queue Position",
+        "estimatedWeek": "Estimated Week",
+        "weekNumber": "Week {number}",
+        "notification": "You will be notified when materials are available",
+        "done": "Done"
+      }
     }
   },
   "assignment": {
@@ -142,6 +175,7 @@
   "profile": {
     "title": "Reader Profile",
     "subtitle": "Manage your reading preferences and earnings",
+    "backToDashboard": "Back to Dashboard",
     "editProfile": "Edit Profile",
     "sections": {
       "profileSettings": "Profile Settings",

@@ -83,6 +83,39 @@
     "emptyState": {
       "title": "No se encontraron libros",
       "description": "Intenta ajustar tus filtros o vuelve más tarde"
+    },
+    "modal": {
+      "synopsis": "Sinopsis",
+      "applyToReviewThisBook": "Postularse para Reseñar Este Libro"
+    },
+    "apply": {
+      "back": "Atrás",
+      "next": "Siguiente",
+      "submit": "Enviar Postulación",
+      "submitting": "Enviando...",
+      "selectedFormat": "Formato Seleccionado",
+      "step1": {
+        "title": "Seleccionar Formato",
+        "description": "Elige el formato que deseas reseñar"
+      },
+      "step2": {
+        "title": "Confirmar Postulación",
+        "description": "Revisa y confirma tu postulación"
+      },
+      "confirm1": "Entiendo que recibiré acceso a los materiales de reseña",
+      "confirm2": "Me comprometo a completar la reseña antes de la fecha límite",
+      "confirm3": "Acepto proporcionar una reseña honesta y detallada",
+      "success": {
+        "title": "¡Postulación Enviada!",
+        "description": "Tu postulación ha sido recibida",
+        "status": "Estado",
+        "waitingForAccess": "Esperando acceso",
+        "queuePosition": "Posición en Cola",
+        "estimatedWeek": "Semana Estimada",
+        "weekNumber": "Semana {number}",
+        "notification": "Serás notificado cuando los materiales estén disponibles",
+        "done": "Listo"
+      }
     }
   },
   "assignment": {
@@ -142,6 +175,7 @@
   "profile": {
     "title": "Perfil del Lector",
     "subtitle": "Gestiona tus preferencias de lectura y ganancias",
+    "backToDashboard": "Volver al Panel",
     "editProfile": "Editar Perfil",
     "sections": {
       "profileSettings": "Configuración del Perfil",

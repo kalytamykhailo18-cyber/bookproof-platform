@@ -199,6 +199,8 @@ export default getRequestConfig(async ({ locale }) => {
       reviews,
       // payouts.json has internal nesting: { paymentMethods: {...}, status: {...}, history: {...}, validation: {...} }
       payouts,
+      // reader-stats.json - add as nested namespace for useTranslations('readerStats')
+      readerStats,
       // campaigns.json has internal nesting: { public: {...} }
       campaigns,
       // notifications.json has internal nesting: { settings: {...} }
