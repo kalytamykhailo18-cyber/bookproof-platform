@@ -4,6 +4,10 @@ import { notFound } from 'next/navigation';
 export const locales = ['en', 'pt', 'es'] as const;
 export type Locale = (typeof locales)[number];
 
+// Cache for loaded messages - load once per locale, reuse forever
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const messagesCache: Record<string, Record<string, any>> = {};
+
 // Message file loaders by namespace
 const messageLoaders: Record<string, (locale: Locale) => Promise<Record<string, unknown>>> = {
   common: (locale) => import(`../messages/${locale}/common.json`).then((m) => m.default),
@@ -92,10 +96,20 @@ export async function getMessages(locale: Locale, namespaces: string[]): Promise
   }
 }
 
-export default getRequestConfig(async ({ locale }) => {
-  if (!locales.includes(locale as Locale)) notFound();
+export default getRequestConfig(async ({ requestLocale }) => {
+  const locale = await requestLocale;
 
-  // Load all message files for the locale
+  if (!locale || !locales.includes(locale as Locale)) notFound();
+
+  // Return cached messages if available
+  if (messagesCache[locale]) {
+    return {
+      locale,
+      messages: messagesCache[locale],
+    };
+  }
+
+  // Load all message files for the locale (only on first request)
   const [
     common,
     auth,
@@ -178,11 +192,10 @@ export default getRequestConfig(async ({ locale }) => {
     import(`../messages/${locale}/settings.json`).then((m) => m.default),
   ]);
 
-  return {
-    locale,
-    messages: {
-      // Spread common translations at root level
-      ...common,
+  // Build and cache the messages object
+  const messages = {
+    // Spread common translations at root level
+    ...common,
       ...landing,
       ...credits,
       ...subscription,
@@ -247,6 +260,13 @@ export default getRequestConfig(async ({ locale }) => {
       closer,
       cookies,
       settings,
-    },
+  };
+
+  // Cache for future requests
+  messagesCache[locale] = messages;
+
+  return {
+    locale,
+    messages,
   };
 });
