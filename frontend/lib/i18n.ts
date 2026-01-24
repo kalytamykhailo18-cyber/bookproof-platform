@@ -66,6 +66,7 @@ const messageLoaders: Record<string, (locale: Locale) => Promise<Record<string, 
   notifications: (locale) =>
     import(`../messages/${locale}/notifications.json`).then((m) => m.default),
   admin: (locale) => import(`../messages/${locale}/admin.json`).then((m) => m.default),
+  adminLogs: (locale) => import(`../messages/${locale}/admin-logs.json`).then((m) => m.default),
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -132,6 +133,7 @@ export default getRequestConfig(async ({ locale }) => {
     campaigns,
     notifications,
     admin,
+    adminLogs,
   ] = await Promise.all([
     import(`../messages/${locale}/common.json`).then((m) => m.default),
     import(`../messages/${locale}/auth.json`).then((m) => m.default),
@@ -170,6 +172,7 @@ export default getRequestConfig(async ({ locale }) => {
     import(`../messages/${locale}/campaigns.json`).then((m) => m.default),
     import(`../messages/${locale}/notifications.json`).then((m) => m.default),
     import(`../messages/${locale}/admin.json`).then((m) => m.default),
+    import(`../messages/${locale}/admin-logs.json`).then((m) => m.default),
   ]);
 
   return {
@@ -233,6 +236,9 @@ export default getRequestConfig(async ({ locale }) => {
 
       // admin.json has internal nesting: { packageApprovals: {...} }
       admin,
+
+      // admin-logs.json for admin log pages
+      adminLogs,
 
       // Other namespaces
       closer,
