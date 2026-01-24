@@ -21,7 +21,7 @@ export function useAdminExceptions() {
     useQuery({
       queryKey: ['assignment-exceptions', bookId, readerProfileId, limit],
       queryFn: () => adminExceptionsApi.getExceptions(bookId, readerProfileId, limit),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
   // Extend deadline mutation

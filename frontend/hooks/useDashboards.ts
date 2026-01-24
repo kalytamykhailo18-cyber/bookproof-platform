@@ -75,8 +75,8 @@ export function useDashboards() {
       queryKey: ['campaign-tracking', bookId],
       queryFn: () => dashboardsApi.getCampaignTracking(bookId),
       enabled: !!bookId,
-      staleTime: 30000,
-      refetchInterval: 60000, // Refresh every minute
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000,
     });
 
   /**
@@ -96,8 +96,8 @@ export function useDashboards() {
     useQuery({
       queryKey: ['author-activity-feed'],
       queryFn: () => dashboardsApi.getAuthorActivityFeed(),
-      staleTime: 30000,
-      refetchInterval: 60000, // Refresh every minute
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000,
     });
 
   // ============================================
@@ -112,8 +112,8 @@ export function useDashboards() {
     useQuery({
       queryKey: ['reader-performance-stats'],
       queryFn: () => dashboardsApi.getReaderStats(),
-      staleTime: 30000,
-      refetchInterval: 60000, // Refresh every minute
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000,
     });
 
   return {

@@ -68,7 +68,7 @@ export function useClosersList() {
   return useQuery({
     queryKey: ['admin', 'team', 'closers'],
     queryFn: fetchClosers,
-    staleTime: 30000, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 }
 
@@ -80,7 +80,7 @@ export function useAdminsList() {
   return useQuery({
     queryKey: ['admin', 'team', 'admins'],
     queryFn: fetchAdmins,
-    staleTime: 30000, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 }
 

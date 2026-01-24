@@ -27,7 +27,7 @@ export function useUserDetails(userId: string) {
     queryKey: ['admin', 'users', userId],
     queryFn: () => adminUsersApi.getUser(userId),
     enabled: !!userId,
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -39,7 +39,7 @@ export function useUserAuditLog(userId: string, page = 1, limit = 50) {
     queryKey: ['admin', 'users', userId, 'audit-log', page, limit],
     queryFn: () => adminUsersApi.getUserAuditLog(userId, page, limit),
     enabled: !!userId,
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

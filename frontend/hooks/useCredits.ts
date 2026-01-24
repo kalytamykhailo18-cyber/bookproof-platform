@@ -28,7 +28,7 @@ export function useCredits() {
   } = useQuery({
     queryKey: ['credit-balance'],
     queryFn: creditsApi.getCreditBalance,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 
   // Get purchase history

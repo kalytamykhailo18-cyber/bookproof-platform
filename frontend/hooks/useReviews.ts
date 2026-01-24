@@ -22,7 +22,7 @@ export function useReviewSubmission(assignmentId: string) {
   } = useQuery({
     queryKey: ['review-assignment', assignmentId],
     queryFn: () => reviewsApi.getReviewByAssignment(assignmentId),
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 
   // Submit review mutation
@@ -106,7 +106,7 @@ export function useAdminValidation() {
   } = useQuery({
     queryKey: ['pending-reviews-stats'],
     queryFn: reviewsApi.getPendingReviewsStats,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 
   // Validate review mutation
@@ -185,7 +185,7 @@ export function useIssueManagement() {
   } = useQuery({
     queryKey: ['open-issues'],
     queryFn: reviewsApi.getOpenIssues,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 
   // Create issue mutation
@@ -316,7 +316,7 @@ export function useReview(reviewId: string | null) {
     queryKey: ['review', reviewId],
     queryFn: () => reviewsApi.getReviewById(reviewId!),
     enabled: !!reviewId,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 
   return {

@@ -21,7 +21,7 @@ export function useAdminReaders() {
     useQuery({
       queryKey: ['admin-readers', filters],
       queryFn: () => adminReadersApi.getAllReaders(filters),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
   // Get reader stats
@@ -29,7 +29,7 @@ export function useAdminReaders() {
     useQuery({
       queryKey: ['admin-reader-stats'],
       queryFn: () => adminReadersApi.getReaderStats(),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
   // Get reader details
@@ -37,7 +37,7 @@ export function useAdminReaders() {
     useQuery({
       queryKey: ['admin-reader', readerProfileId],
       queryFn: () => adminReadersApi.getReaderDetails(readerProfileId),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
       enabled: !!readerProfileId,
     });
 
@@ -46,7 +46,7 @@ export function useAdminReaders() {
     useQuery({
       queryKey: ['admin-reader-reviews', readerProfileId, limit, offset],
       queryFn: () => adminReadersApi.getReaderReviewHistory(readerProfileId, limit, offset),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
       enabled: !!readerProfileId,
     });
 
