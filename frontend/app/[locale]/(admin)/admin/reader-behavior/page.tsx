@@ -271,12 +271,12 @@ export default function ReaderBehaviorPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex flex-wrap gap-1">
-                            {reader.flagTypes.slice(0, 2).map((type) => (
+                            {reader.flagTypes?.slice(0, 2).map((type) => (
                               <Badge key={type} variant="outline" className="text-xs">
                                 {getFlagTypeLabel(type)}
                               </Badge>
                             ))}
-                            {reader.flagTypes.length > 2 && (
+                            {reader.flagTypes && reader.flagTypes.length > 2 && (
                               <Badge variant="outline" className="text-xs">
                                 +{reader.flagTypes.length - 2}
                               </Badge>

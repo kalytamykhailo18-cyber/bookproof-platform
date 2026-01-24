@@ -315,9 +315,9 @@ Reviews Per Week: ${reportData.timeline.reviewsPerWeek}
 On Schedule: ${reportData.timeline.onSchedule ? 'Yes' : 'No'}
 Days Remaining: ${reportData.timeline.daysRemaining}
 
-READERS (${reportData.readers.length})
+READERS (${reportData.readers?.length || 0})
 ${'='.repeat(40)}
-${reportData.readers.map((r) => `
+${(reportData.readers || []).map((r) => `
 Name: ${r.name}
 Email: ${r.email}
 Status: ${r.status}
@@ -1045,9 +1045,9 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                       </div>
 
                       <div className="rounded-lg bg-muted p-4">
-                        <h4 className="font-semibold">Readers ({reportData.readers.length})</h4>
+                        <h4 className="font-semibold">Readers ({reportData.readers?.length || 0})</h4>
                         <div className="mt-2 max-h-40 overflow-y-auto">
-                          {reportData.readers.map((reader) => (
+                          {(reportData.readers || []).map((reader) => (
                             <div
                               key={reader.id}
                               className="border-b py-2 text-sm last:border-b-0"

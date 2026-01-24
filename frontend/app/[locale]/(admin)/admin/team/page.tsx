@@ -341,7 +341,7 @@ export default function AdminTeamPage() {
                         </TableCell>
                         <TableCell>
                           <span className="text-sm text-muted-foreground">
-                            {admin.permissions.length} {t('admins.table.permissions').toLowerCase()}
+                            {admin.permissions?.length || 0} {t('admins.table.permissions').toLowerCase()}
                           </span>
                         </TableCell>
                         <TableCell>
