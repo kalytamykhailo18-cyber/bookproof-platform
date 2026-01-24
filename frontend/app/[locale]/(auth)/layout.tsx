@@ -5,9 +5,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { LanguageSelector } from '@/components/shared/LanguageSelector';
 
-// Disable static generation for auth pages
-export const dynamic = 'force-dynamic';
-
 function AuthHeader({ locale }: { locale: string }) {
   const t = useTranslations();
   const router = useRouter();

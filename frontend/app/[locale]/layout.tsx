@@ -4,9 +4,6 @@ import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/lib/i18n';
 import { CookieConsent } from '@/components/shared/CookieConsent';
 
-// Force dynamic rendering for all locale routes (authenticated pages)
-export const dynamic = 'force-dynamic';
-
 interface LocaleLayoutProps {
   children: React.ReactNode;
   params: { locale: string };

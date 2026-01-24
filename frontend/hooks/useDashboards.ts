@@ -15,8 +15,8 @@ export function useDashboards() {
     useQuery({
       queryKey: ['admin-dashboard'],
       queryFn: () => dashboardsApi.getAdminDashboard(),
-      staleTime: 30000,
-      refetchInterval: 60000, // Refresh every minute
+      staleTime: 3 * 60 * 1000, // 3 minutes - use cached data
+      gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
     });
 
   /**
@@ -26,7 +26,8 @@ export function useDashboards() {
     useQuery({
       queryKey: ['admin-revenue-analytics'],
       queryFn: () => dashboardsApi.getAdminRevenueAnalytics(),
-      staleTime: 60000,
+      staleTime: 5 * 60 * 1000, // 5 minutes - use cached data
+      gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
     });
 
   /**

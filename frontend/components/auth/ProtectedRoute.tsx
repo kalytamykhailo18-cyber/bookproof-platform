@@ -54,7 +54,9 @@ export function ProtectedRoute({
     }
   }, [user, requireTermsAccepted, router, locale]);
 
-  if (isLoadingProfile) {
+  // Only show loading spinner if we don't have user data yet
+  // This prevents the loading spinner on every navigation when user is already loaded
+  if (isLoadingProfile && !user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-4">

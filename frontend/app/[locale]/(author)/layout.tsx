@@ -5,9 +5,6 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { DashboardHeader } from '@/components/shared/DashboardHeader';
 import { AuthorSidebar } from '@/components/author/AuthorSidebar';
 
-// Force dynamic rendering for authenticated routes
-export const dynamic = 'force-dynamic';
-
 export default function AuthorLayout({ children }: { children: ReactNode }) {
   return (
     <ProtectedRoute

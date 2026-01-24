@@ -36,8 +36,8 @@ export default function CloserLayout({ children }: { children: React.ReactNode }
     }
   }, [user, isLoading, router, locale]);
 
-  // Show loading state while checking authentication
-  if (isLoading) {
+  // Only show loading state if we don't have user data yet
+  if (isLoading && !user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
