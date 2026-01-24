@@ -134,8 +134,11 @@ export class ExceptionHandlingController {
   async getExceptions(
     @Query('bookId') bookId?: string,
     @Query('readerProfileId') readerProfileId?: string,
-    @Query('limit') limit?: number,
+    @Query('limit') limitStr?: string,
   ): Promise<AssignmentExceptionDto[]> {
-    return this.exceptionHandlingService.getAssignmentExceptions(bookId, readerProfileId, limit);
+    // Parse limit safely to avoid NaN being passed to Prisma
+    const limit = limitStr ? parseInt(limitStr, 10) : undefined;
+    const safeLimit = Number.isNaN(limit) ? undefined : limit;
+    return this.exceptionHandlingService.getAssignmentExceptions(bookId, readerProfileId, safeLimit);
   }
 }
