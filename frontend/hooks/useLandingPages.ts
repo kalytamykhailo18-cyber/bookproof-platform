@@ -82,7 +82,7 @@ export function useLeads(params: GetLeadsParams = {}) {
   return useQuery<LeadsListResponse>({
     queryKey: ['landing-pages', 'leads', params],
     queryFn: () => getLeads(params),
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

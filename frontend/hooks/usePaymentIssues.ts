@@ -25,7 +25,7 @@ export function usePaymentIssues(query?: GetPaymentIssuesQuery) {
   return useQuery<PaymentIssueResponse[]>({
     queryKey: [PAYMENT_ISSUES_KEY, query],
     queryFn: () => paymentIssuesApi.getPaymentIssues(query),
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -36,7 +36,7 @@ export function useOpenPaymentIssues() {
   return useQuery<PaymentIssueResponse[]>({
     queryKey: [PAYMENT_ISSUES_OPEN_KEY],
     queryFn: () => paymentIssuesApi.getOpenPaymentIssues(),
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -59,7 +59,7 @@ export function usePaymentIssue(issueId: string) {
     queryKey: [PAYMENT_ISSUES_KEY, issueId],
     queryFn: () => paymentIssuesApi.getPaymentIssueById(issueId),
     enabled: !!issueId,
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

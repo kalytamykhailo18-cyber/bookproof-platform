@@ -67,7 +67,7 @@ export function useCampaigns() {
   } = useQuery({
     queryKey: ['campaigns'],
     queryFn: campaignsApi.getCampaigns,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 
   // Create campaign mutation
@@ -351,7 +351,7 @@ export function useCampaign(id: string) {
     queryKey: ['campaign', id],
     queryFn: () => campaignsApi.getCampaign(id),
     enabled: !!id,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 
   return {

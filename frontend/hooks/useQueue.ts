@@ -48,7 +48,7 @@ export function useMyAssignments() {
   } = useQuery({
     queryKey: ['my-assignments'],
     queryFn: queueApi.getMyAssignments,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 
   // Apply to campaign mutation
@@ -169,7 +169,7 @@ export function useAssignment(assignmentId: string) {
     queryKey: ['assignment', assignmentId],
     queryFn: () => queueApi.getAssignment(assignmentId),
     enabled: !!assignmentId,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 
   return {

@@ -27,7 +27,7 @@ export function useSuspiciousReaders() {
   return useQuery<SuspiciousReader[]>({
     queryKey: [SUSPICIOUS_READERS_KEY],
     queryFn: () => readerBehaviorApi.getSuspiciousReaders(),
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -38,7 +38,7 @@ export function useBehaviorFlags(query?: GetBehaviorFlagsQuery) {
   return useQuery<BehaviorFlagResponse[]>({
     queryKey: [BEHAVIOR_FLAGS_KEY, query],
     queryFn: () => readerBehaviorApi.getBehaviorFlags(query),
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -61,7 +61,7 @@ export function useReaderBehaviorReport(readerProfileId: string) {
     queryKey: [READER_BEHAVIOR_KEY, readerProfileId],
     queryFn: () => readerBehaviorApi.getReaderBehaviorReport(readerProfileId),
     enabled: !!readerProfileId,
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -73,7 +73,7 @@ export function useAnalyzeReaderBehavior(readerProfileId: string) {
     queryKey: [READER_BEHAVIOR_KEY, 'analyze', readerProfileId],
     queryFn: () => readerBehaviorApi.analyzeReaderBehavior(readerProfileId),
     enabled: !!readerProfileId,
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

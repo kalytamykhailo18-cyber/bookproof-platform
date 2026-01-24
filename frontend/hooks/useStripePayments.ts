@@ -24,7 +24,7 @@ export function useStripePayments() {
     useQuery({
       queryKey: ['payment-transactions'],
       queryFn: () => stripeApi.payments.getTransactions(),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
   // Get single transaction
@@ -33,7 +33,7 @@ export function useStripePayments() {
       queryKey: ['payment-transaction', transactionId],
       queryFn: () => stripeApi.payments.getTransaction(transactionId),
       enabled: !!transactionId,
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
   // Get invoice
@@ -68,7 +68,7 @@ export function useStripePayments() {
     useQuery({
       queryKey: ['my-subscription'],
       queryFn: () => stripeApi.subscriptions.getMySubscription(),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
       retry: 1, // Don't retry too many times if no subscription exists
     });
 
@@ -78,7 +78,7 @@ export function useStripePayments() {
       queryKey: ['subscription-details', subscriptionId],
       queryFn: () => stripeApi.subscriptions.getSubscriptionDetails(subscriptionId),
       enabled: !!subscriptionId,
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
   // Get subscription management
@@ -87,7 +87,7 @@ export function useStripePayments() {
       queryKey: ['subscription-management', subscriptionId],
       queryFn: () => stripeApi.subscriptions.getSubscriptionManagement(subscriptionId),
       enabled: !!subscriptionId,
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
   // Create subscription plan (Admin only)

@@ -20,7 +20,8 @@ export function useNotifications(params?: GetNotificationsParams) {
   return useQuery({
     queryKey: ['notifications', params],
     queryFn: () => getNotifications(params),
-    staleTime: 30000, // 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000,
   });
 }
 
@@ -31,8 +32,8 @@ export function useUnreadCount() {
   return useQuery({
     queryKey: ['notifications', 'unreadCount'],
     queryFn: getUnreadCount,
-    staleTime: 10000, // 10 seconds
-    refetchInterval: 30000, // Refetch every 30 seconds
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000,
   });
 }
 

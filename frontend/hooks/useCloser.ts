@@ -50,7 +50,7 @@ export function useCloserDashboardStats() {
   return useQuery<CloserDashboardStats>({
     queryKey: [CLOSER_DASHBOARD_KEY],
     queryFn: () => closerApi.getDashboardStats(),
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -61,7 +61,7 @@ export function useCloserSalesHistory(limit?: number, offset?: number) {
   return useQuery<SalesHistoryItem[]>({
     queryKey: [CLOSER_SALES_KEY, limit, offset],
     queryFn: () => closerApi.getSalesHistory(limit, offset),
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -76,7 +76,7 @@ export function useCloserPackages(query?: GetPackagesQuery) {
   return useQuery<CustomPackageResponse[]>({
     queryKey: [CLOSER_PACKAGES_KEY, query],
     queryFn: () => closerApi.getPackages(query),
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -99,7 +99,7 @@ export function useCloserPackage(packageId: string) {
     queryKey: [CLOSER_PACKAGES_KEY, packageId],
     queryFn: () => closerApi.getPackageById(packageId),
     enabled: !!packageId,
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -195,7 +195,7 @@ export function useCloserInvoices(query?: GetInvoicesQuery) {
   return useQuery<InvoiceResponse[]>({
     queryKey: [CLOSER_INVOICES_KEY, query],
     queryFn: () => closerApi.getInvoices(query),
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -218,7 +218,7 @@ export function useCloserInvoice(invoiceId: string) {
     queryKey: [CLOSER_INVOICES_KEY, invoiceId],
     queryFn: () => closerApi.getInvoiceById(invoiceId),
     enabled: !!invoiceId,
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
@@ -285,7 +285,7 @@ export function usePackagesPendingApproval() {
   return useQuery<CustomPackageResponse[]>({
     queryKey: [ADMIN_PACKAGES_PENDING_KEY],
     queryFn: () => closerApi.getPackagesPendingApproval(),
-    staleTime: 30000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 

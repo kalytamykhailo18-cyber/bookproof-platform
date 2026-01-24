@@ -40,7 +40,7 @@ export function useAdminControls() {
     useQuery({
       queryKey: ['campaign-health', bookId],
       queryFn: () => adminControlsApi.getCampaignHealth(bookId),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
       enabled: !!bookId,
     });
 
@@ -49,7 +49,7 @@ export function useAdminControls() {
     useQuery({
       queryKey: ['campaign-analytics', bookId],
       queryFn: () => adminControlsApi.getCampaignAnalytics(bookId),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
       enabled: !!bookId,
     });
 
@@ -58,7 +58,7 @@ export function useAdminControls() {
     useQuery({
       queryKey: ['admin-campaigns'],
       queryFn: () => adminControlsApi.getAllCampaigns(),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
   // Get all authors
@@ -66,7 +66,7 @@ export function useAdminControls() {
     useQuery({
       queryKey: ['admin-authors'],
       queryFn: () => adminControlsApi.getAllAuthors(),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
   // Get author details
@@ -74,7 +74,7 @@ export function useAdminControls() {
     useQuery({
       queryKey: ['admin-author', authorProfileId],
       queryFn: () => adminControlsApi.getAuthorDetails(authorProfileId),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
       enabled: !!authorProfileId,
     });
 
@@ -87,7 +87,7 @@ export function useAdminControls() {
     useQuery({
       queryKey: ['admin-author-transactions', authorProfileId, limit, offset],
       queryFn: () => adminControlsApi.getAuthorTransactionHistory(authorProfileId, limit, offset),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
       enabled: !!authorProfileId,
     });
 
@@ -100,7 +100,7 @@ export function useAdminControls() {
     useQuery({
       queryKey: ['admin-credit-transactions', limit, offset, type],
       queryFn: () => adminControlsApi.getAllCreditTransactions(limit, offset, type),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
   // Pause campaign mutation
@@ -327,7 +327,7 @@ export function useAdminControls() {
     useQuery({
       queryKey: ['assignment-exceptions', bookId, readerProfileId, limit],
       queryFn: () => adminControlsApi.getAssignmentExceptions(bookId, readerProfileId, limit),
-      staleTime: 30000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
   // Suspend author mutation
