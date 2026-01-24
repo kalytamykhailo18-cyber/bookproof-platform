@@ -91,7 +91,7 @@ export default function CreditPurchasePage() {
           <div className="flex justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin" />
           </div>
-        ) : packageTiers && packageTiers.length > 0 ? (
+        ) : Array.isArray(packageTiers) && packageTiers.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {packageTiers.map((pkg: PackageTier, index) => {
               const isSelected = selectedPackage === pkg.id;
@@ -249,7 +249,7 @@ export default function CreditPurchasePage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {packageTiers && (
+              {Array.isArray(packageTiers) && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">
                     {packageTiers.find((p) => p.id === selectedPackage)?.name || 'Credit Package'}
@@ -281,7 +281,7 @@ export default function CreditPurchasePage() {
                   <span>
                     $
                     {(
-                      (packageTiers?.find((p) => p.id === selectedPackage)?.basePrice || 0) +
+                      ((Array.isArray(packageTiers) ? packageTiers.find((p) => p.id === selectedPackage)?.basePrice : 0) || 0) +
                       (includeKeywordResearch ? keywordResearchPrice : 0)
                     ).toFixed(2)}
                   </span>

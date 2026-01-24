@@ -98,7 +98,7 @@ export default function CampaignsListPage() {
 
   // Sort campaigns by created date (newest first)
   const sortedCampaigns = useMemo(() => {
-    if (!campaigns) return [];
+    if (!campaigns || !Array.isArray(campaigns)) return [];
     return [...campaigns].sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
