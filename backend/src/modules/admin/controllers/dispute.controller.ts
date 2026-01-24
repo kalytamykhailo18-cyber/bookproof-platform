@@ -116,8 +116,8 @@ export class DisputeController {
   }
 
   @Get('user/:userId')
-  @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Get disputes by user' })
+  @Roles(UserRole.ADMIN, UserRole.AUTHOR, UserRole.READER)
+  @ApiOperation({ summary: 'Get disputes by user (users can only view their own)' })
   @ApiParam({ name: 'userId', description: 'User ID' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -126,7 +126,12 @@ export class DisputeController {
   })
   async getDisputesByUser(
     @Param('userId') userId: string,
+    @Req() req: Request,
   ): Promise<DisputeResponseDto[]> {
+    // Non-admin users can only view their own disputes
+    if (req.user!.role !== UserRole.ADMIN && req.user!.id !== userId) {
+      return [];
+    }
     return this.disputeService.getDisputesByUser(userId);
   }
 
