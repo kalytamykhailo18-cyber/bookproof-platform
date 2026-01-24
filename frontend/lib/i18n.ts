@@ -197,10 +197,11 @@ export default getRequestConfig(async ({ requestLocale }) => {
     // Spread common translations at root level
     ...common,
       ...landing,
-      ...subscription,
-      ...transactions,
-      ...campaignAnalytics,
-      ...readerStats,
+      // Named namespaces - keep for useTranslations('namespace')
+      subscription,
+      transactions,
+      campaignAnalytics,
+      readerStats,
 
       // Nested namespaces - keep structure for useTranslations('namespace.key')
       // auth.json has internal nesting: { login: {...}, register: {...} }
@@ -215,8 +216,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
       reviews,
       // payouts.json has internal nesting: { paymentMethods: {...}, status: {...}, history: {...}, validation: {...} }
       payouts,
-      // reader-stats.json - add as nested namespace for useTranslations('readerStats')
-      readerStats,
       // campaigns.json has internal nesting: { public: {...} }
       campaigns,
       // notifications.json has internal nesting: { settings: {...} }

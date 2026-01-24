@@ -32,7 +32,7 @@ export default function ReportsPage() {
 
   // Match reports with campaigns
   const reportsWithCampaigns = useMemo(() => {
-    if (!reports || !campaigns) return [];
+    if (!reports || !Array.isArray(reports) || !campaigns || !Array.isArray(campaigns)) return [];
 
     return reports.map((report) => {
       const campaign = campaigns.find((c) => c.id === report.bookId);

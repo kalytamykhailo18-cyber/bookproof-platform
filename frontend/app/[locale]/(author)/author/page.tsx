@@ -49,7 +49,7 @@ export default function AuthorDashboardPage() {
 
   // Calculate campaign statistics per requirements.md Section 2.1
   const campaignStats = useMemo(() => {
-    if (!campaigns) return { active: 0, completed: 0 };
+    if (!campaigns || !Array.isArray(campaigns)) return { active: 0, completed: 0 };
     return {
       active: campaigns.filter((c) => c.status === CampaignStatus.ACTIVE).length,
       completed: campaigns.filter((c) => c.status === CampaignStatus.COMPLETED).length,
@@ -332,7 +332,7 @@ export default function AuthorDashboardPage() {
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin" />
           </div>
-        ) : campaigns && campaigns.length > 0 ? (
+        ) : Array.isArray(campaigns) && campaigns.length > 0 ? (
           <div className="grid grid-cols-1 gap-4">
             {campaigns.map((campaign, index) => {
               const animationClass = index % 2 === 0 ? 'animate-fade-left' : 'animate-fade-right';
