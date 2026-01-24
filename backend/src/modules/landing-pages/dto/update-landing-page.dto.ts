@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsBoolean, IsEnum, ValidateNested } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsEnum, ValidateNested, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Language } from '@prisma/client';
 
@@ -144,9 +144,15 @@ export class GetLandingPageLeadsDto {
   source?: string;
 
   @ApiProperty({ required: false, default: 1 })
+  @IsNumber()
+  @IsOptional()
+  @Type(() => Number)
   page?: number;
 
   @ApiProperty({ required: false, default: 20 })
+  @IsNumber()
+  @IsOptional()
+  @Type(() => Number)
   limit?: number;
 }
 
