@@ -4,7 +4,19 @@
     "subtitle": "Gestiona tus campañas de reseñas de libros y créditos",
     "buttons": {
       "buyCredits": "Comprar Créditos",
-      "newCampaign": "Nueva Campaña"
+      "newCampaign": "Nueva Campaña",
+      "noCreditsTooltip": "Compra créditos para crear campañas"
+    },
+    "campaignStats": {
+      "active": "Campañas Activas",
+      "activeDescription": "Campañas en ejecución",
+      "completed": "Campañas Completadas",
+      "completedDescription": "Campañas finalizadas con éxito"
+    },
+    "activity": {
+      "title": "Actividad Reciente",
+      "description": "Tus últimas actualizaciones y notificaciones",
+      "noActivity": "Sin actividad reciente"
     },
     "creditBalance": {
       "available": "Créditos Disponibles",
@@ -17,6 +29,7 @@
     },
     "campaigns": {
       "title": "Tus Campañas",
+      "viewAll": "Ver Todas las Campañas",
       "noCampaigns": "Aún no hay campañas",
       "createFirst": "Crea tu primera campaña para empezar a recibir reseñas",
       "targetReviews": "Reseñas Objetivo",
@@ -43,7 +56,21 @@
       "validityDays": "{days} días para activar",
       "select": "Seleccionar Paquete",
       "selected": "Seleccionado",
-      "noPackages": "No hay paquetes disponibles en este momento"
+      "noPackages": "No hay paquetes disponibles en este momento",
+      "mostPopular": "Más Popular"
+    },
+    "keywordResearch": {
+      "title": "Agregar Investigación de Palabras Clave",
+      "description": "Análisis profesional de palabras clave para optimizar la visibilidad de tu libro en Amazon",
+      "addLabel": "Incluir Servicio de Investigación de Palabras Clave",
+      "benefits": "Obtén palabras clave específicas, sugerencias de categoría y optimización SEO para la lista de tu libro",
+      "oneTime": "Tarifa única"
+    },
+    "orderSummary": {
+      "title": "Resumen del Pedido",
+      "coupon": "Cupón",
+      "appliedAtCheckout": "Aplicado en el checkout",
+      "total": "Total"
     },
     "coupon": {
       "title": "¿Tienes un Código de Cupón?",
@@ -77,6 +104,29 @@
     }
   },
   "campaigns": {
+    "list": {
+      "title": "Mis Campañas",
+      "subtitle": "Gestiona todas tus campañas de reseñas de libros",
+      "newCampaign": "Nueva Campaña",
+      "allCampaigns": "Todas las Campañas",
+      "tableDescription": "Haz clic en una campaña para ver detalles",
+      "noCampaigns": "Aún no hay campañas",
+      "createFirst": "Crea tu primera campaña para comenzar",
+      "columns": {
+        "book": "Libro",
+        "status": "Estado",
+        "credits": "Créditos",
+        "reviews": "Reseñas",
+        "progress": "Progreso",
+        "created": "Creado",
+        "actions": "Acciones"
+      },
+      "actions": {
+        "pause": "Pausar Campaña",
+        "resume": "Reanudar Campaña",
+        "view": "Ver Detalles"
+      }
+    },
     "new": {
       "title": "Crear Nueva Campaña",
       "subtitle": "Configura tu campaña de reseñas de libros en 3 sencillos pasos",
@@ -188,8 +238,13 @@
       "actions": {
         "title": "Acciones",
         "activate": "Activar Campaña",
-        "edit": "Editar Campaña",
-        "delete": "Eliminar Campaña"
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "pause": "Pausar Campaña",
+        "resume": "Reanudar Campaña",
+        "viewAnalytics": "Ver Analytics",
+        "downloadReport": "Descargar Informe",
+        "viewFinalReport": "Ver Informe Final"
       },
       "credits": {
         "title": "Créditos",

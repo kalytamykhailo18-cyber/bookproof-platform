@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useCredits } from '@/hooks/useCredits';
 import { useCampaigns } from '@/hooks/useCampaigns';
@@ -8,6 +8,7 @@ import { useDashboards } from '@/hooks/useDashboards';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Loader2,
   Plus,
@@ -22,7 +23,7 @@ import {
   RefreshCw,
   Coins,
 } from 'lucide-react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, usePathname } from 'next/navigation';
 import { CampaignStatus } from '@/lib/api/campaigns';
 import { AuthorActivityType } from '@/lib/api/dashboards';
 
@@ -30,16 +31,21 @@ export default function AuthorDashboardPage() {
   const t = useTranslations('author.dashboard');
   const router = useRouter();
   const params = useParams();
+  const pathname = usePathname();
   const locale = (params.locale as string) || 'en';
   const { creditBalance, isLoadingBalance } = useCredits();
   const { campaigns, isLoadingCampaigns } = useCampaigns();
   const { useAuthorActivityFeed } = useDashboards();
   const { data: activityFeed, isLoading: isLoadingActivity } = useAuthorActivityFeed();
 
-  const [isCreditsLoading, setIsCreditsLoading] = useState(false);
-  const [isNewCampaignLoading, setIsNewCampaignLoading] = useState(false);
-  const [isViewAllLoading, setIsViewAllLoading] = useState(false);
+  const [loadingPath, setLoadingPath] = useState<string | null>(null);
   const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(null);
+
+  // Reset loading state when navigation completes
+  useEffect(() => {
+    setLoadingPath(null);
+    setLoadingCampaignId(null);
+  }, [pathname]);
 
   // Calculate campaign statistics per requirements.md Section 2.1
   const campaignStats = useMemo(() => {
@@ -83,6 +89,31 @@ export default function AuthorDashboardPage() {
     }
   };
 
+  const navigateTo = (path: string) => {
+    setLoadingPath(path);
+    router.push(`/${locale}/author/${path}`);
+  };
+
+  // Page loading skeleton
+  if (isLoadingBalance && isLoadingCampaigns) {
+    return (
+      <div className="container mx-auto space-y-6 px-4 py-8">
+        <Skeleton className="h-12 w-64 animate-pulse" />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-32 animate-pulse" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {[1, 2].map((i) => (
+            <Skeleton key={i} className="h-32 animate-pulse" />
+          ))}
+        </div>
+        <Skeleton className="h-64 animate-pulse" />
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
@@ -96,30 +127,24 @@ export default function AuthorDashboardPage() {
             type="button"
             variant="outline"
             className="animate-fade-left"
-            onClick={() => {
-              setIsCreditsLoading(true);
-              router.push(`/${locale}/author/credits`);
-            }}
-            disabled={isCreditsLoading}
+            onClick={() => navigateTo('credits')}
+            disabled={loadingPath === 'credits'}
           >
-            {isCreditsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CreditCard className="mr-2 h-4 w-4" />}
+            {loadingPath === 'credits' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CreditCard className="mr-2 h-4 w-4" />}
             {t('buttons.buyCredits')}
           </Button>
           <Button
             type="button"
             className="animate-fade-left-fast"
-            disabled={isNewCampaignLoading || !creditBalance?.availableCredits || creditBalance.availableCredits <= 0}
+            disabled={loadingPath === 'campaigns/new' || !creditBalance?.availableCredits || creditBalance.availableCredits <= 0}
             title={
               !creditBalance?.availableCredits || creditBalance.availableCredits <= 0
                 ? t('buttons.noCreditsTooltip') || 'Purchase credits to create campaigns'
                 : undefined
             }
-            onClick={() => {
-              setIsNewCampaignLoading(true);
-              router.push(`/${locale}/author/campaigns/new`);
-            }}
+            onClick={() => navigateTo('campaigns/new')}
           >
-            {isNewCampaignLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+            {loadingPath === 'campaigns/new' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
             {t('buttons.newCampaign')}
           </Button>
         </div>
@@ -294,15 +319,12 @@ export default function AuthorDashboardPage() {
             type="button"
             variant="ghost"
             className="text-primary"
-            onClick={() => {
-              setIsViewAllLoading(true);
-              router.push(`/${locale}/author/campaigns`);
-            }}
-            disabled={isViewAllLoading}
+            onClick={() => navigateTo('campaigns')}
+            disabled={loadingPath === 'campaigns'}
           >
-            {isViewAllLoading && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
+            {loadingPath === 'campaigns' ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : null}
             {t('campaigns.viewAll') || 'View All Campaigns'}
-            {!isViewAllLoading && <ChevronRight className="ml-1 h-4 w-4" />}
+            {loadingPath !== 'campaigns' && <ChevronRight className="ml-1 h-4 w-4" />}
           </Button>
         </div>
 
@@ -378,13 +400,10 @@ export default function AuthorDashboardPage() {
               <p className="mb-4 text-sm text-muted-foreground">{t('campaigns.createFirst')}</p>
               <Button
                 type="button"
-                onClick={() => {
-                  setIsNewCampaignLoading(true);
-                  router.push(`/${locale}/author/campaigns/new`);
-                }}
-                disabled={isNewCampaignLoading}
+                onClick={() => navigateTo('campaigns/new')}
+                disabled={loadingPath === 'campaigns/new'}
               >
-                {isNewCampaignLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+                {loadingPath === 'campaigns/new' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
                 {t('buttons.newCampaign')}
               </Button>
             </CardContent>

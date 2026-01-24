@@ -1,12 +1,13 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useCampaigns } from '@/hooks/useCampaigns';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -24,31 +25,29 @@ import {
   Play,
   ChevronRight,
 } from 'lucide-react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { CampaignStatus, Campaign } from '@/lib/api/campaigns';
 
 /**
  * Campaign List Page (Section 2.4)
- *
- * Displays all campaigns for the authenticated author with:
- * - Book title with cover thumbnail
- * - Status (Active, Paused, Completed)
- * - Credits allocated
- * - Reviews delivered / Total
- * - Progress percentage bar
- * - Created date
- * - Actions (View, Pause/Resume if active)
  */
 export default function CampaignsListPage() {
   const t = useTranslations('author.campaigns');
   const router = useRouter();
   const params = useParams();
+  const pathname = usePathname();
   const locale = (params.locale as string) || 'en';
   const { campaigns, isLoadingCampaigns, pauseCampaign, resumeCampaign, isPausing, isResuming } = useCampaigns();
 
-  const [isNewCampaignLoading, setIsNewCampaignLoading] = useState(false);
+  const [loadingPath, setLoadingPath] = useState<string | null>(null);
   const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(null);
+
+  // Reset loading state when navigation completes
+  useEffect(() => {
+    setLoadingPath(null);
+    setLoadingCampaignId(null);
+  }, [pathname]);
 
   const getStatusColor = (status: CampaignStatus) => {
     switch (status) {
@@ -92,6 +91,11 @@ export default function CampaignsListPage() {
     resumeCampaign(campaignId);
   };
 
+  const navigateTo = (path: string) => {
+    setLoadingPath(path);
+    router.push(`/${locale}/author/${path}`);
+  };
+
   // Sort campaigns by created date (newest first)
   const sortedCampaigns = useMemo(() => {
     if (!campaigns) return [];
@@ -100,12 +104,30 @@ export default function CampaignsListPage() {
     );
   }, [campaigns]);
 
+  // Page loading skeleton
   if (isLoadingCampaigns) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex h-64 items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="container mx-auto space-y-6 px-4 py-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <Skeleton className="h-10 w-48 animate-pulse" />
+            <Skeleton className="mt-2 h-5 w-72 animate-pulse" />
+          </div>
+          <Skeleton className="h-10 w-36 animate-pulse" />
         </div>
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-32 animate-pulse" />
+            <Skeleton className="h-4 w-48 animate-pulse" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Skeleton key={i} className="h-16 w-full animate-pulse" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -113,7 +135,7 @@ export default function CampaignsListPage() {
   return (
     <div className="container mx-auto space-y-6 px-4 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex animate-fade-up items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('list.title') || 'My Campaigns'}</h1>
           <p className="text-muted-foreground">
@@ -122,19 +144,16 @@ export default function CampaignsListPage() {
         </div>
         <Button
           type="button"
-          onClick={() => {
-            setIsNewCampaignLoading(true);
-            router.push(`/${locale}/author/campaigns/new`);
-          }}
-          disabled={isNewCampaignLoading}
+          onClick={() => navigateTo('campaigns/new')}
+          disabled={loadingPath === 'campaigns/new'}
         >
-          {isNewCampaignLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+          {loadingPath === 'campaigns/new' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
           {t('list.newCampaign') || 'New Campaign'}
         </Button>
       </div>
 
       {/* Campaigns Table */}
-      <Card>
+      <Card className="animate-fade-up-fast">
         <CardHeader>
           <CardTitle>{t('list.allCampaigns') || 'All Campaigns'}</CardTitle>
           <CardDescription>
@@ -282,13 +301,10 @@ export default function CampaignsListPage() {
               </p>
               <Button
                 type="button"
-                onClick={() => {
-                  setIsNewCampaignLoading(true);
-                  router.push(`/${locale}/author/campaigns/new`);
-                }}
-                disabled={isNewCampaignLoading}
+                onClick={() => navigateTo('campaigns/new')}
+                disabled={loadingPath === 'campaigns/new'}
               >
-                {isNewCampaignLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+                {loadingPath === 'campaigns/new' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
                 {t('list.newCampaign') || 'New Campaign'}
               </Button>
             </div>
