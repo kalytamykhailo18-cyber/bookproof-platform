@@ -83,6 +83,39 @@
     "emptyState": {
       "title": "Nenhum livro encontrado",
       "description": "Tente ajustar seus filtros ou volte mais tarde"
+    },
+    "modal": {
+      "synopsis": "Sinopse",
+      "applyToReviewThisBook": "Candidatar-se para Avaliar Este Livro"
+    },
+    "apply": {
+      "back": "Voltar",
+      "next": "Próximo",
+      "submit": "Enviar Candidatura",
+      "submitting": "Enviando...",
+      "selectedFormat": "Formato Selecionado",
+      "step1": {
+        "title": "Selecionar Formato",
+        "description": "Escolha o formato que deseja avaliar"
+      },
+      "step2": {
+        "title": "Confirmar Candidatura",
+        "description": "Revise e confirme sua candidatura"
+      },
+      "confirm1": "Entendo que receberei acesso aos materiais de avaliação",
+      "confirm2": "Comprometo-me a concluir a avaliação antes do prazo",
+      "confirm3": "Concordo em fornecer uma avaliação honesta e detalhada",
+      "success": {
+        "title": "Candidatura Enviada!",
+        "description": "Sua candidatura foi recebida",
+        "status": "Status",
+        "waitingForAccess": "Aguardando acesso",
+        "queuePosition": "Posição na Fila",
+        "estimatedWeek": "Semana Estimada",
+        "weekNumber": "Semana {number}",
+        "notification": "Você será notificado quando os materiais estiverem disponíveis",
+        "done": "Concluído"
+      }
     }
   },
   "assignment": {
@@ -142,6 +175,7 @@
   "profile": {
     "title": "Perfil do Leitor",
     "subtitle": "Gerencie suas preferências de leitura e ganhos",
+    "backToDashboard": "Voltar ao Painel",
     "editProfile": "Editar Perfil",
     "sections": {
       "profileSettings": "Configurações do Perfil",
