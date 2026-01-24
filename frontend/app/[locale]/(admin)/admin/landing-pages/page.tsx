@@ -219,7 +219,7 @@ function AnalyticsTabContent() {
               </div>
 
               {/* Top Sources */}
-              {stats.topSources.length > 0 && (
+              {stats.topSources && stats.topSources.length > 0 && (
                 <div>
                   <p className="mb-2 text-sm font-medium">{t('leads.table.source')}</p>
                   <div className="space-y-1">

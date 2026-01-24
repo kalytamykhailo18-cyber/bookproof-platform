@@ -149,7 +149,7 @@ export default function NotificationsPage() {
       </Card>
 
       {/* Pagination Info */}
-      {notificationData && notificationData.total > 0 && (
+      {notificationData && notificationData.notifications && notificationData.total > 0 && (
         <div className="mt-4 text-center text-sm text-muted-foreground animate-fade-up-slow">
           Showing {notificationData.notifications.length} of {notificationData.total} notifications
         </div>

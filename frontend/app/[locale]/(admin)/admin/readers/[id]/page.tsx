@@ -530,7 +530,7 @@ export default function AdminReaderDetailPage() {
                   <div className="animate-fade-up-extra-slow">
                     <Label className="text-muted-foreground">{t('fields.preferredGenres')}</Label>
                     <div className="mt-1 flex flex-wrap gap-1">
-                      {reader.preferredGenres.length > 0 ? (
+                      {reader.preferredGenres?.length > 0 ? (
                         reader.preferredGenres.map((genre) => (
                           <Badge key={genre} variant="outline" className="text-xs">
                             {genre}
@@ -591,7 +591,7 @@ export default function AdminReaderDetailPage() {
                   <CardDescription>{t('overview.recentAssignmentsDesc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {reader.recentAssignments.length === 0 ? (
+                  {!reader.recentAssignments || reader.recentAssignments.length === 0 ? (
                     <p className="py-8 text-center text-muted-foreground">
                       {t('overview.noAssignments')}
                     </p>
@@ -686,7 +686,7 @@ export default function AdminReaderDetailPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="max-h-64 space-y-3 overflow-y-auto">
-                  {reader.adminNotes.length === 0 ? (
+                  {!reader.adminNotes || reader.adminNotes.length === 0 ? (
                     <p className="py-4 text-center text-sm text-muted-foreground">
                       {t('notes.empty')}
                     </p>
@@ -823,7 +823,7 @@ export default function AdminReaderDetailPage() {
               <CardDescription>{t('wallet.transactionsDesc')}</CardDescription>
             </CardHeader>
             <CardContent>
-              {reader.walletTransactions.length === 0 ? (
+              {!reader.walletTransactions || reader.walletTransactions.length === 0 ? (
                 <p className="py-8 text-center text-muted-foreground">
                   {t('wallet.noTransactions')}
                 </p>
@@ -869,7 +869,7 @@ export default function AdminReaderDetailPage() {
               <CardTitle>{t('wallet.payoutHistory')}</CardTitle>
             </CardHeader>
             <CardContent>
-              {reader.payoutHistory.length === 0 ? (
+              {!reader.payoutHistory || reader.payoutHistory.length === 0 ? (
                 <p className="py-8 text-center text-muted-foreground">{t('wallet.noPayouts')}</p>
               ) : (
                 <Table>
@@ -929,7 +929,7 @@ export default function AdminReaderDetailPage() {
               <CardDescription>{t('amazon.description')}</CardDescription>
             </CardHeader>
             <CardContent>
-              {reader.amazonProfiles.length === 0 ? (
+              {!reader.amazonProfiles || reader.amazonProfiles.length === 0 ? (
                 <p className="py-8 text-center text-muted-foreground">{t('amazon.empty')}</p>
               ) : (
                 <div className="space-y-4">
