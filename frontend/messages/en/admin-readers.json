@@ -44,7 +44,11 @@
     "amazonVerification": "Amazon Verification",
     "allVerification": "All",
     "verified": "Verified",
-    "unverified": "Unverified"
+    "unverified": "Unverified",
+    "country": "Country",
+    "allCountries": "All Countries",
+    "language": "Language",
+    "allLanguages": "All Languages"
   },
   "table": {
     "title": "Readers",
@@ -57,6 +61,8 @@
     "reliability": "Reliability",
     "wallet": "Wallet",
     "actions": "Actions",
+    "country": "Country",
+    "language": "Language",
     "completedExpired": "completed / expired",
     "earned": "Earned",
     "book": "Book",
@@ -67,7 +73,7 @@
     "validatedAt": "Validated",
     "date": "Date",
     "type": "Type",
-    "description": "Description",
+    "descriptionColumn": "Description",
     "amount": "Amount",
     "requestedAt": "Requested",
     "processedAt": "Processed",
