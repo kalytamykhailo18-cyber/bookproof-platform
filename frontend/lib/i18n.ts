@@ -63,6 +63,7 @@ const messageLoaders: Record<string, (locale: Locale) => Promise<Record<string, 
   closer: (locale) => import(`../messages/${locale}/closer.json`).then((m) => m.default),
   cookies: (locale) => import(`../messages/${locale}/cookies.json`).then((m) => m.default),
   campaigns: (locale) => import(`../messages/${locale}/campaigns.json`).then((m) => m.default),
+  settings: (locale) => import(`../messages/${locale}/settings.json`).then((m) => m.default),
   notifications: (locale) =>
     import(`../messages/${locale}/notifications.json`).then((m) => m.default),
   admin: (locale) => import(`../messages/${locale}/admin.json`).then((m) => m.default),
@@ -134,6 +135,7 @@ export default getRequestConfig(async ({ locale }) => {
     notifications,
     admin,
     adminLogs,
+    settings,
   ] = await Promise.all([
     import(`../messages/${locale}/common.json`).then((m) => m.default),
     import(`../messages/${locale}/auth.json`).then((m) => m.default),
@@ -173,6 +175,7 @@ export default getRequestConfig(async ({ locale }) => {
     import(`../messages/${locale}/notifications.json`).then((m) => m.default),
     import(`../messages/${locale}/admin.json`).then((m) => m.default),
     import(`../messages/${locale}/admin-logs.json`).then((m) => m.default),
+    import(`../messages/${locale}/settings.json`).then((m) => m.default),
   ]);
 
   return {
@@ -243,6 +246,7 @@ export default getRequestConfig(async ({ locale }) => {
       // Other namespaces
       closer,
       cookies,
+      settings,
     },
   };
 });
