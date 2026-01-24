@@ -507,8 +507,11 @@ export class ExceptionHandlingService {
   async getAssignmentExceptions(
     bookId?: string,
     readerProfileId?: string,
-    limit: number = 50,
+    limit?: number,
   ): Promise<AssignmentExceptionDto[]> {
+    // Ensure limit is a valid positive integer, default to 50
+    const safeLimit = (limit && Number.isInteger(limit) && limit > 0) ? limit : 50;
+
     // Build where clause
     const whereClause: any = {
       OR: [
@@ -534,7 +537,7 @@ export class ExceptionHandlingService {
         readerProfile: { include: { user: true } },
       },
       orderBy: { updatedAt: 'desc' },
-      take: limit,
+      take: safeLimit,
     });
 
     return assignments.map((assignment) => {

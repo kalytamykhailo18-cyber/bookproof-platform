@@ -1,4 +1,8 @@
 {
+  "common": {
+    "actions": "Acciones",
+    "cancel": "Cancelar"
+  },
   "packageApprovals": {
     "title": "Aprobaciones de Paquetes",
     "description": "Revisa y aprueba paquetes personalizados con precios por debajo del umbral del 80%",

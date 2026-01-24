@@ -1,4 +1,8 @@
 {
+  "common": {
+    "actions": "Actions",
+    "cancel": "Cancel"
+  },
   "packageApprovals": {
     "title": "Package Approvals",
     "description": "Review and approve custom packages with pricing below the 80% threshold",
