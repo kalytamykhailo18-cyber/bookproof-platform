@@ -4,7 +4,19 @@
     "subtitle": "Gerencie suas campanhas de avaliação de livros e créditos",
     "buttons": {
       "buyCredits": "Comprar Créditos",
-      "newCampaign": "Nova Campanha"
+      "newCampaign": "Nova Campanha",
+      "noCreditsTooltip": "Compre créditos para criar campanhas"
+    },
+    "campaignStats": {
+      "active": "Campanhas Ativas",
+      "activeDescription": "Campanhas em execução",
+      "completed": "Campanhas Concluídas",
+      "completedDescription": "Campanhas finalizadas com sucesso"
+    },
+    "activity": {
+      "title": "Atividade Recente",
+      "description": "Suas últimas atualizações e notificações",
+      "noActivity": "Nenhuma atividade recente"
     },
     "creditBalance": {
       "available": "Créditos Disponíveis",
@@ -17,6 +29,7 @@
     },
     "campaigns": {
       "title": "Suas Campanhas",
+      "viewAll": "Ver Todas as Campanhas",
       "noCampaigns": "Nenhuma campanha ainda",
       "createFirst": "Crie sua primeira campanha para começar a receber avaliações",
       "targetReviews": "Avaliações Alvo",
@@ -43,7 +56,21 @@
       "validityDays": "{days} dias para ativar",
       "select": "Selecionar Pacote",
       "selected": "Selecionado",
-      "noPackages": "Nenhum pacote disponível no momento"
+      "noPackages": "Nenhum pacote disponível no momento",
+      "mostPopular": "Mais Popular"
+    },
+    "keywordResearch": {
+      "title": "Adicionar Pesquisa de Palavras-chave",
+      "description": "Análise profissional de palavras-chave para otimizar a visibilidade do seu livro na Amazon",
+      "addLabel": "Incluir Serviço de Pesquisa de Palavras-chave",
+      "benefits": "Obtenha palavras-chave direcionadas, sugestões de categoria e otimização SEO para a listagem do seu livro",
+      "oneTime": "Taxa única"
+    },
+    "orderSummary": {
+      "title": "Resumo do Pedido",
+      "coupon": "Cupom",
+      "appliedAtCheckout": "Aplicado no checkout",
+      "total": "Total"
     },
     "coupon": {
       "title": "Tem um Código de Cupom?",
@@ -77,6 +104,29 @@
     }
   },
   "campaigns": {
+    "list": {
+      "title": "Minhas Campanhas",
+      "subtitle": "Gerencie todas as suas campanhas de avaliação de livros",
+      "newCampaign": "Nova Campanha",
+      "allCampaigns": "Todas as Campanhas",
+      "tableDescription": "Clique em uma campanha para ver detalhes",
+      "noCampaigns": "Nenhuma campanha ainda",
+      "createFirst": "Crie sua primeira campanha para começar",
+      "columns": {
+        "book": "Livro",
+        "status": "Status",
+        "credits": "Créditos",
+        "reviews": "Avaliações",
+        "progress": "Progresso",
+        "created": "Criado",
+        "actions": "Ações"
+      },
+      "actions": {
+        "pause": "Pausar Campanha",
+        "resume": "Retomar Campanha",
+        "view": "Ver Detalhes"
+      }
+    },
     "new": {
       "title": "Criar Nova Campanha",
       "subtitle": "Configure sua campanha de avaliação de livros em 3 etapas fáceis",
@@ -188,8 +238,13 @@
       "actions": {
         "title": "Ações",
         "activate": "Ativar Campanha",
-        "edit": "Editar Campanha",
-        "delete": "Excluir Campanha"
+        "edit": "Editar",
+        "delete": "Excluir",
+        "pause": "Pausar Campanha",
+        "resume": "Retomar Campanha",
+        "viewAnalytics": "Ver Analytics",
+        "downloadReport": "Baixar Relatório",
+        "viewFinalReport": "Ver Relatório Final"
       },
       "credits": {
         "title": "Créditos",

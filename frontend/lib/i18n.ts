@@ -197,13 +197,10 @@ export default getRequestConfig(async ({ requestLocale }) => {
     // Spread common translations at root level
     ...common,
       ...landing,
-      ...credits,
       ...subscription,
       ...transactions,
       ...campaignAnalytics,
       ...readerStats,
-      ...payouts,
-      ...reports,
 
       // Nested namespaces - keep structure for useTranslations('namespace.key')
       // auth.json has internal nesting: { login: {...}, register: {...} }
@@ -260,6 +257,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
       closer,
       cookies,
       settings,
+      credits,
+      reports,
   };
 
   // Cache for future requests

@@ -39,3 +39,4 @@ logs/
 .env
 .claude
 .husky
+CLAUDE.md

@@ -4,7 +4,19 @@
     "subtitle": "Manage your book review campaigns and credits",
     "buttons": {
       "buyCredits": "Buy Credits",
-      "newCampaign": "New Campaign"
+      "newCampaign": "New Campaign",
+      "noCreditsTooltip": "Purchase credits to create campaigns"
+    },
+    "campaignStats": {
+      "active": "Active Campaigns",
+      "activeDescription": "Currently running campaigns",
+      "completed": "Completed Campaigns",
+      "completedDescription": "Successfully finished campaigns"
+    },
+    "activity": {
+      "title": "Recent Activity",
+      "description": "Your latest updates and notifications",
+      "noActivity": "No recent activity"
     },
     "creditBalance": {
       "available": "Available Credits",
@@ -17,6 +29,7 @@
     },
     "campaigns": {
       "title": "Your Campaigns",
+      "viewAll": "View All Campaigns",
       "noCampaigns": "No campaigns yet",
       "createFirst": "Create your first campaign to start getting reviews",
       "targetReviews": "Target Reviews",
@@ -43,7 +56,21 @@
       "validityDays": "{days} days to activate",
       "select": "Select Package",
       "selected": "Selected",
-      "noPackages": "No packages available at the moment"
+      "noPackages": "No packages available at the moment",
+      "mostPopular": "Most Popular"
+    },
+    "keywordResearch": {
+      "title": "Add Keyword Research",
+      "description": "Professional keyword analysis to optimize your book visibility on Amazon",
+      "addLabel": "Include Keyword Research Service",
+      "benefits": "Get targeted keywords, category suggestions, and SEO optimization for your book listing",
+      "oneTime": "One-time fee"
+    },
+    "orderSummary": {
+      "title": "Order Summary",
+      "coupon": "Coupon",
+      "appliedAtCheckout": "Applied at checkout",
+      "total": "Total"
     },
     "coupon": {
       "title": "Have a Coupon Code?",
@@ -77,6 +104,29 @@
     }
   },
   "campaigns": {
+    "list": {
+      "title": "My Campaigns",
+      "subtitle": "Manage all your book review campaigns",
+      "newCampaign": "New Campaign",
+      "allCampaigns": "All Campaigns",
+      "tableDescription": "Click on a campaign to view details",
+      "noCampaigns": "No campaigns yet",
+      "createFirst": "Create your first campaign to get started",
+      "columns": {
+        "book": "Book",
+        "status": "Status",
+        "credits": "Credits",
+        "reviews": "Reviews",
+        "progress": "Progress",
+        "created": "Created",
+        "actions": "Actions"
+      },
+      "actions": {
+        "pause": "Pause Campaign",
+        "resume": "Resume Campaign",
+        "view": "View Details"
+      }
+    },
     "new": {
       "title": "Create New Campaign",
       "subtitle": "Set up your book review campaign in 3 easy steps",
@@ -188,8 +238,13 @@
       "actions": {
         "title": "Actions",
         "activate": "Activate Campaign",
-        "edit": "Edit Campaign",
-        "delete": "Delete Campaign"
+        "edit": "Edit",
+        "delete": "Delete",
+        "pause": "Pause Campaign",
+        "resume": "Resume Campaign",
+        "viewAnalytics": "View Analytics",
+        "downloadReport": "Download Report",
+        "viewFinalReport": "View Final Report"
       },
       "credits": {
         "title": "Credits",
