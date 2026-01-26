@@ -53,6 +53,7 @@
     "register": "Inscrever-se Agora",
     "applicationPending": "Sua inscrição de afiliado está pendente de aprovação.",
     "applicationRejected": "Sua inscrição de afiliado foi rejeitada",
+    "referredAuthors": "Autores Indicados",
     "stats": {
       "totalEarnings": "Ganhos Totais",
       "approvedEarnings": "Disponível",
@@ -61,7 +62,19 @@
       "totalClicks": "Cliques Totais",
       "conversionRate": "Taxa de Conversão",
       "totalReferrals": "Indicações Totais",
-      "activeReferrals": "Ativos"
+      "activeReferrals": "Ativos",
+      "commissionRate": "Taxa de Comissão",
+      "commissionRateDescription": "Sua porcentagem de ganhos em cada compra de indicação",
+      "availableForPayout": "Disponível para Saque",
+      "availableDescription": "Comissões liberadas e prontas para saque",
+      "totalPaid": "Total Pago",
+      "totalPaidDescription": "Valor total pago a você"
+    },
+    "charts": {
+      "clicksTitle": "Cliques ao Longo do Tempo",
+      "conversionsTitle": "Conversões ao Longo do Tempo",
+      "clicks": "Cliques",
+      "conversions": "Conversões"
     },
     "recentCommissions": {
       "title": "Comissões Recentes",
@@ -141,6 +154,11 @@
         "title": "Ganhe Comissões Vitalícias",
         "description": "Você ganha 20% em cada compra que eles fazem - para sempre!"
       }
+    },
+    "qrCode": {
+      "title": "Código QR",
+      "description": "Escaneie este código QR para acessar seu link de indicação",
+      "download": "Baixar Código QR"
     }
   },
   "commissions": {
@@ -166,6 +184,7 @@
       "title": "Todas as Comissões",
       "description": "Histórico completo dos seus ganhos de comissão",
       "empty": "Ainda não há comissões",
+      "author": "Autor",
       "purchaseAmount": "Valor da Compra",
       "commissionAmount": "Comissão",
       "rate": "Taxa",

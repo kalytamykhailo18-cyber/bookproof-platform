@@ -53,6 +53,7 @@
     "register": "Apply Now",
     "applicationPending": "Your affiliate application is pending approval.",
     "applicationRejected": "Your affiliate application was rejected",
+    "referredAuthors": "Referred Authors",
     "stats": {
       "totalEarnings": "Total Earnings",
       "approvedEarnings": "Available",
@@ -61,7 +62,19 @@
       "totalClicks": "Total Clicks",
       "conversionRate": "Conversion Rate",
       "totalReferrals": "Total Referrals",
-      "activeReferrals": "Active"
+      "activeReferrals": "Active",
+      "commissionRate": "Commission Rate",
+      "commissionRateDescription": "Your earnings percentage on each referral purchase",
+      "availableForPayout": "Available for Payout",
+      "availableDescription": "Commissions cleared and ready to withdraw",
+      "totalPaid": "Total Paid",
+      "totalPaidDescription": "Total amount paid out to you"
+    },
+    "charts": {
+      "clicksTitle": "Clicks Over Time",
+      "conversionsTitle": "Conversions Over Time",
+      "clicks": "Clicks",
+      "conversions": "Conversions"
     },
     "recentCommissions": {
       "title": "Recent Commissions",
@@ -141,6 +154,11 @@
         "title": "Earn Lifetime Commissions",
         "description": "You earn 20% on every purchase they make - for life!"
       }
+    },
+    "qrCode": {
+      "title": "QR Code",
+      "description": "Scan this QR code to access your referral link",
+      "download": "Download QR Code"
     }
   },
   "commissions": {
@@ -166,6 +184,7 @@
       "title": "All Commissions",
       "description": "Complete history of your commission earnings",
       "empty": "No commissions yet",
+      "author": "Author",
       "purchaseAmount": "Purchase Amount",
       "commissionAmount": "Commission",
       "rate": "Rate",
