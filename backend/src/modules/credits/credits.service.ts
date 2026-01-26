@@ -39,11 +39,32 @@ export class CreditsService {
   ) {
     const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
-      throw new Error('STRIPE_SECRET_KEY is not configured');
+      this.logger.warn('STRIPE_SECRET_KEY is not configured - payment features will be disabled');
+      this.stripe = null as any;
+      return;
+    }
+    // Validate Stripe key format
+    if (!stripeSecretKey.startsWith('sk_test_') && !stripeSecretKey.startsWith('sk_live_')) {
+      this.logger.warn('STRIPE_SECRET_KEY appears invalid - payment features will be disabled');
+      this.stripe = null as any;
+      return;
+    }
+    if (stripeSecretKey.length < 30) {
+      this.logger.warn('STRIPE_SECRET_KEY appears too short - payment features will be disabled');
+      this.stripe = null as any;
+      return;
     }
     this.stripe = new Stripe(stripeSecretKey, {
       apiVersion: '2023-10-16',
     });
+  }
+
+  private ensureStripeConfigured(): void {
+    if (!this.stripe) {
+      throw new BadRequestException(
+        'Payment system is not configured. Please contact the administrator.',
+      );
+    }
   }
 
   /**
@@ -163,6 +184,9 @@ export class CreditsService {
     authorProfileId: string,
     dto: PurchaseCreditDto,
   ): Promise<CheckoutSessionResponseDto> {
+    // Ensure Stripe is properly configured
+    this.ensureStripeConfigured();
+
     // Get package tier
     const packageTier = await this.prisma.packageTier.findUnique({
       where: { id: dto.packageTierId },

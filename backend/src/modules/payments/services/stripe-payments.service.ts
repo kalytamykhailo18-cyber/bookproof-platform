@@ -23,7 +23,7 @@ import { FilesService } from '@modules/files/files.service';
 
 @Injectable()
 export class StripePaymentsService {
-  private stripe: Stripe;
+  private stripe: Stripe | null;
 
   constructor(
     private prisma: PrismaService,
@@ -34,12 +34,26 @@ export class StripePaymentsService {
     private filesService: FilesService,
   ) {
     const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
-    if (!stripeSecretKey) {
-      throw new Error('STRIPE_SECRET_KEY is not configured');
+    if (!stripeSecretKey || !this.isValidStripeKey(stripeSecretKey)) {
+      console.warn('STRIPE_SECRET_KEY is not configured or invalid - payment features will be disabled');
+      this.stripe = null;
+      return;
     }
     this.stripe = new Stripe(stripeSecretKey, {
       apiVersion: '2023-10-16',
     });
+  }
+
+  private isValidStripeKey(key: string): boolean {
+    return (key.startsWith('sk_test_') || key.startsWith('sk_live_')) && key.length >= 30;
+  }
+
+  private ensureStripeConfigured(): void {
+    if (!this.stripe) {
+      throw new BadRequestException(
+        'Payment system is not configured. Please contact the administrator.',
+      );
+    }
   }
 
   /**
@@ -49,6 +63,8 @@ export class StripePaymentsService {
     authorProfileId: string,
     dto: CreateCheckoutSessionDto,
   ): Promise<CheckoutSessionResponseDto> {
+    this.ensureStripeConfigured();
+
     // Get package tier details
     const packageTier = await this.prisma.packageTier.findUnique({
       where: { id: dto.packageTierId },
@@ -110,7 +126,7 @@ export class StripePaymentsService {
     // Create or get Stripe customer
     let stripeCustomerId = authorProfile.stripeCustomerId;
     if (!stripeCustomerId) {
-      const customer = await this.stripe.customers.create({
+      const customer = await this.stripe!.customers.create({
         email: authorProfile.user.email,
         name: authorProfile.user.name,
         metadata: {
@@ -128,7 +144,7 @@ export class StripePaymentsService {
     }
 
     // Create Stripe checkout session
-    const session = await this.stripe.checkout.sessions.create({
+    const session = await this.stripe!.checkout.sessions.create({
       customer: stripeCustomerId,
       payment_method_types: ['card'],
       line_items: [
@@ -172,7 +188,7 @@ export class StripePaymentsService {
    * Handle successful payment webhook
    */
   async handlePaymentSuccess(sessionId: string): Promise<void> {
-    const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+    const session = await this.stripe!.checkout.sessions.retrieve(sessionId);
 
     const authorProfileId = session.metadata!.authorProfileId;
     const packageTierId = session.metadata!.packageTierId;
@@ -308,7 +324,7 @@ export class StripePaymentsService {
    * Handle failed payment webhook
    */
   async handlePaymentFailure(sessionId: string): Promise<PaymentFailureDto> {
-    const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+    const session = await this.stripe!.checkout.sessions.retrieve(sessionId);
 
     // Create failed payment record
     const authorProfileId = session.metadata!.authorProfileId;
@@ -636,7 +652,7 @@ export class StripePaymentsService {
     }
 
     // Create Stripe checkout session
-    const session = await this.stripe.checkout.sessions.create({
+    const session = await this.stripe!.checkout.sessions.create({
       payment_method_types: ['card'],
       customer_email: pkg.clientEmail,
       line_items: [
@@ -684,7 +700,7 @@ export class StripePaymentsService {
   async handleCustomPackagePaymentSuccess(
     sessionId: string,
   ): Promise<CustomPackagePaymentSuccessDto> {
-    const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+    const session = await this.stripe!.checkout.sessions.retrieve(sessionId);
 
     if (session.metadata?.type !== 'custom_package') {
       throw new BadRequestException('Invalid session type');
