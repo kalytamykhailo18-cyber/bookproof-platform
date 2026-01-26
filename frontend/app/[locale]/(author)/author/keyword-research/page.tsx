@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   useKeywordResearchForAuthor,
@@ -18,8 +18,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2, Plus, Download, Eye, FileText } from 'lucide-react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, usePathname } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import { KeywordResearchStatus } from '@/lib/api/keywords';
 
@@ -27,12 +28,19 @@ export default function KeywordResearchListPage() {
   const t = useTranslations('keyword-research');
   const router = useRouter();
   const params = useParams();
+  const pathname = usePathname();
   const locale = (params.locale as string) || 'en';
   const { data: researches, isLoading } = useKeywordResearchForAuthor();
   const { data: pricing } = usePublicKeywordResearchPricing();
   const downloadMutation = useDownloadKeywordResearchPdf();
-  const [isCreateLoading, setIsCreateLoading] = useState(false);
+  const [loadingPath, setLoadingPath] = useState<string | null>(null);
   const [loadingResearchId, setLoadingResearchId] = useState<string | null>(null);
+
+  // Reset loading states when navigation completes
+  useEffect(() => {
+    setLoadingPath(null);
+    setLoadingResearchId(null);
+  }, [pathname]);
 
   // Get dynamic price from settings, fallback to $49.99
   const currentPrice = pricing?.price ?? 49.99;
@@ -57,6 +65,45 @@ export default function KeywordResearchListPage() {
     downloadMutation.mutate(id);
   };
 
+  const navigateTo = (path: string) => {
+    setLoadingPath(path);
+    router.push(`/${locale}/author/keyword-research/${path}`);
+  };
+
+  // Page loading skeleton
+  if (isLoading) {
+    return (
+      <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
+        <div className="flex items-start justify-between">
+          <div>
+            <Skeleton className="h-10 w-64 animate-pulse" />
+            <Skeleton className="mt-2 h-5 w-96 animate-pulse" />
+          </div>
+          <Skeleton className="h-10 w-40 animate-pulse" />
+        </div>
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-48 animate-pulse" />
+            <Skeleton className="mt-2 h-4 w-72 animate-pulse" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-8 w-32 animate-pulse" />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-32 animate-pulse" />
+          </CardHeader>
+          <CardContent>
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="mb-4 h-16 w-full animate-pulse" />
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
       {/* Header */}
@@ -67,13 +114,10 @@ export default function KeywordResearchListPage() {
         </div>
         <Button
           type="button"
-          onClick={() => {
-            setIsCreateLoading(true);
-            router.push(`/${locale}/author/keyword-research/new`);
-          }}
-          disabled={isCreateLoading}
+          onClick={() => navigateTo('new')}
+          disabled={loadingPath === 'new'}
         >
-          {isCreateLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+          {loadingPath === 'new' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
           {t('createNew')}
         </Button>
       </div>
@@ -101,24 +145,17 @@ export default function KeywordResearchListPage() {
           <CardTitle>{t('myOrders')}</CardTitle>
         </CardHeader>
         <CardContent>
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
-          ) : !researches || researches.length === 0 ? (
+          {!Array.isArray(researches) || researches.length === 0 ? (
             <div className="py-12 text-center">
               <FileText className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="mb-2 text-lg font-semibold">{t('list.empty')}</h3>
               <p className="mb-6 text-muted-foreground">{t('list.emptyDescription')}</p>
               <Button
                 type="button"
-                onClick={() => {
-                  setIsCreateLoading(true);
-                  router.push(`/${locale}/author/keyword-research/new`);
-                }}
-                disabled={isCreateLoading}
+                onClick={() => navigateTo('new')}
+                disabled={loadingPath === 'new'}
               >
-                {isCreateLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+                {loadingPath === 'new' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
                 {t('createNew')}
               </Button>
             </div>
@@ -175,7 +212,7 @@ export default function KeywordResearchListPage() {
                             setLoadingResearchId(research.id);
                             router.push(`/${locale}/author/keyword-research/${research.id}`);
                           }}
-                          disabled={loadingResearchId === research.id}
+                          disabled={loadingResearchId === research.id || loadingPath !== null}
                         >
                           {loadingResearchId === research.id ? (
                             <Loader2 className="mr-1 h-4 w-4 animate-spin" />

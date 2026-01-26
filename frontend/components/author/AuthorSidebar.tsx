@@ -95,7 +95,23 @@ export function AuthorSidebar() {
 
   const isActive = (href: string) => {
     const hrefWithoutLocale = href.replace(`/${locale}`, '');
-    return pathname === hrefWithoutLocale || pathname?.startsWith(hrefWithoutLocale + '/');
+
+    // Exact match
+    if (pathname === hrefWithoutLocale) return true;
+
+    // For child routes, check if there's a more specific nav item that matches
+    // If so, this parent shouldn't be active
+    if (pathname?.startsWith(hrefWithoutLocale + '/')) {
+      // Get all nav hrefs
+      const allHrefs = navSections.flatMap(s => s.items.map(i => i.href.replace(`/${locale}`, '')));
+      // Check if any other nav item is a more specific match
+      const hasMoreSpecificMatch = allHrefs.some(
+        h => h !== hrefWithoutLocale && pathname?.startsWith(h) && h.startsWith(hrefWithoutLocale)
+      );
+      return !hasMoreSpecificMatch;
+    }
+
+    return false;
   };
 
   return (

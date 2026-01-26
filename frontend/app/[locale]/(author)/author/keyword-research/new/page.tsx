@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams, usePathname } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -11,6 +11,7 @@ import { useValidateCoupon } from '@/hooks/useCoupons';
 import { usePublicKeywordResearchPricing } from '@/hooks/useSettings';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Form,
   FormControl,
@@ -198,7 +199,7 @@ export default function NewKeywordResearchPage() {
 
   // Auto-fill book details when book is selected
   useEffect(() => {
-    if (selectedBookId && campaigns) {
+    if (selectedBookId && Array.isArray(campaigns)) {
       const campaign = campaigns.find((c) => c.id === selectedBookId);
       if (campaign) {
         form.setValue('bookTitle', campaign.title);
@@ -318,7 +319,7 @@ export default function NewKeywordResearchPage() {
                             <Loader2 className="mr-2 inline h-4 w-4 animate-spin" />
                             Loading campaigns...
                           </div>
-                        ) : campaigns && campaigns.length > 0 ? (
+                        ) : Array.isArray(campaigns) && campaigns.length > 0 ? (
                           campaigns.map((campaign) => (
                             <SelectItem key={campaign.id} value={campaign.id}>
                               {campaign.title}

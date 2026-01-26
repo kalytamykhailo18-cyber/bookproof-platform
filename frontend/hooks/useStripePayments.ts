@@ -63,13 +63,23 @@ export function useStripePayments() {
   // SUBSCRIPTIONS
   // ============================================
 
-  // Get my subscription
+  // Get my subscription - returns null if no subscription (404)
   const useMySubscription = () =>
     useQuery({
       queryKey: ['my-subscription'],
-      queryFn: () => stripeApi.subscriptions.getMySubscription(),
+      queryFn: async () => {
+        try {
+          return await stripeApi.subscriptions.getMySubscription();
+        } catch (error: any) {
+          // Return null for 404 (no subscription) instead of throwing
+          if (error.response?.status === 404) {
+            return null;
+          }
+          throw error;
+        }
+      },
       staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 1, // Don't retry too many times if no subscription exists
+      retry: false, // Don't retry - 404 means no subscription
     });
 
   // Get subscription details
