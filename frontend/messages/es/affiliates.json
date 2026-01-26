@@ -53,6 +53,7 @@
     "register": "Aplicar Ahora",
     "applicationPending": "Tu solicitud de afiliado está pendiente de aprobación.",
     "applicationRejected": "Tu solicitud de afiliado fue rechazada",
+    "referredAuthors": "Autores Referidos",
     "stats": {
       "totalEarnings": "Ganancias Totales",
       "approvedEarnings": "Disponible",
@@ -61,7 +62,19 @@
       "totalClicks": "Clics Totales",
       "conversionRate": "Tasa de Conversión",
       "totalReferrals": "Referencias Totales",
-      "activeReferrals": "Activos"
+      "activeReferrals": "Activos",
+      "commissionRate": "Tasa de Comisión",
+      "commissionRateDescription": "Tu porcentaje de ganancias en cada compra de referido",
+      "availableForPayout": "Disponible para Retiro",
+      "availableDescription": "Comisiones liberadas y listas para retirar",
+      "totalPaid": "Total Pagado",
+      "totalPaidDescription": "Monto total pagado a ti"
+    },
+    "charts": {
+      "clicksTitle": "Clics a lo Largo del Tiempo",
+      "conversionsTitle": "Conversiones a lo Largo del Tiempo",
+      "clicks": "Clics",
+      "conversions": "Conversiones"
     },
     "recentCommissions": {
       "title": "Comisiones Recientes",
@@ -141,6 +154,11 @@
         "title": "Gana Comisiones de Por Vida",
         "description": "¡Ganas el 20% en cada compra que realicen - de por vida!"
       }
+    },
+    "qrCode": {
+      "title": "Código QR",
+      "description": "Escanea este código QR para acceder a tu enlace de referido",
+      "download": "Descargar Código QR"
     }
   },
   "commissions": {
@@ -166,6 +184,7 @@
       "title": "Todas las Comisiones",
       "description": "Historial completo de tus ganancias por comisiones",
       "empty": "Aún no hay comisiones",
+      "author": "Autor",
       "purchaseAmount": "Monto de Compra",
       "commissionAmount": "Comisión",
       "rate": "Tasa",

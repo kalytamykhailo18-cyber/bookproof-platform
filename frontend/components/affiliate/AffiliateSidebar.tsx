@@ -90,7 +90,18 @@ export function AffiliateSidebar() {
 
   const isActive = (href: string) => {
     const hrefWithoutLocale = href.replace(`/${locale}`, '');
-    return pathname === hrefWithoutLocale || pathname?.startsWith(hrefWithoutLocale + '/');
+    // Exact match
+    if (pathname === hrefWithoutLocale) return true;
+    // Check if pathname starts with this href
+    if (pathname?.startsWith(hrefWithoutLocale + '/')) {
+      // But only highlight if there's no more specific nav item that matches
+      const allHrefs = navSections.flatMap((s) => s.items.map((i) => i.href.replace(`/${locale}`, '')));
+      const hasMoreSpecificMatch = allHrefs.some(
+        (h) => h !== hrefWithoutLocale && pathname?.startsWith(h) && h.startsWith(hrefWithoutLocale)
+      );
+      return !hasMoreSpecificMatch;
+    }
+    return false;
   };
 
   return (

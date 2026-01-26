@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsBoolean, IsNumber, Min, Max } from 'class-validator';
+import { IsEnum, IsOptional, IsBoolean, IsNumber, IsArray, IsString, Min, Max } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NotificationType } from '@prisma/client';
 
@@ -78,6 +78,8 @@ export class GetNotificationsDto {
 
 export class MarkAsReadDto {
   @ApiProperty({ description: 'Notification IDs to mark as read', type: [String] })
+  @IsArray()
+  @IsString({ each: true })
   notificationIds: string[];
 }
 
