@@ -48,11 +48,17 @@ export const affiliateKeys = {
   marketingMaterialsStats: () => [...affiliateKeys.all, 'marketing-materials-stats'] as const,
 };
 
-// Affiliate hooks
+// Cache durations for affiliate data
+const STALE_TIME = 1000 * 60 * 2; // 2 minutes - data considered fresh
+const GC_TIME = 1000 * 60 * 10; // 10 minutes - keep in cache
+
+// Affiliate hooks with caching
 export function useAffiliateProfile() {
   return useQuery({
     queryKey: affiliateKeys.profile(),
     queryFn: () => affiliatesApi.getMe(),
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
   });
 }
 
@@ -60,6 +66,8 @@ export function useAffiliateStats() {
   return useQuery({
     queryKey: affiliateKeys.stats(),
     queryFn: () => affiliatesApi.getStats(),
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
   });
 }
 
@@ -67,6 +75,8 @@ export function useReferralLink() {
   return useQuery({
     queryKey: affiliateKeys.referralLink(),
     queryFn: () => affiliatesApi.getReferralLink(),
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
   });
 }
 
@@ -75,6 +85,8 @@ export function useAffiliateChartData() {
   return useQuery<AffiliateChartData>({
     queryKey: affiliateKeys.chartData(),
     queryFn: () => affiliatesApi.getChartData(),
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
   });
 }
 
@@ -83,6 +95,8 @@ export function useReferredAuthors() {
   return useQuery<ReferredAuthorDto[]>({
     queryKey: affiliateKeys.referredAuthors(),
     queryFn: () => affiliatesApi.getReferredAuthors(),
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
   });
 }
 
@@ -91,6 +105,8 @@ export function useReferredAuthorDetail(referralId: string) {
     queryKey: affiliateKeys.referredAuthorDetail(referralId),
     queryFn: () => affiliatesApi.getReferredAuthorDetail(referralId),
     enabled: !!referralId,
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
   });
 }
 
@@ -98,6 +114,8 @@ export function useCommissions(status?: CommissionStatus) {
   return useQuery({
     queryKey: affiliateKeys.commissionsByStatus(status),
     queryFn: () => affiliatesApi.getCommissions(status),
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
   });
 }
 
@@ -105,6 +123,8 @@ export function usePayouts() {
   return useQuery({
     queryKey: affiliateKeys.payouts(),
     queryFn: () => affiliatesApi.getPayouts(),
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
   });
 }
 
@@ -249,6 +269,8 @@ export function useMarketingMaterials(query?: GetMarketingMaterialsQueryDto) {
   return useQuery({
     queryKey: affiliateKeys.marketingMaterials(query),
     queryFn: () => affiliatesApi.getMarketingMaterials(query),
+    staleTime: STALE_TIME,
+    gcTime: GC_TIME,
   });
 }
 

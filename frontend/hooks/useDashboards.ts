@@ -2,8 +2,12 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { dashboardsApi } from '@/lib/api/dashboards';
+import { useAuth } from './useAuth';
 
 export function useDashboards() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
+
   // ============================================
   // ADMIN DASHBOARD
   // ============================================
@@ -15,8 +19,10 @@ export function useDashboards() {
     useQuery({
       queryKey: ['admin-dashboard'],
       queryFn: () => dashboardsApi.getAdminDashboard(),
+      enabled: isAdmin, // Only fetch when user is admin
       staleTime: 3 * 60 * 1000, // 3 minutes - use cached data
       gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+      retry: false, // Don't retry on 403
     });
 
   /**
@@ -26,8 +32,10 @@ export function useDashboards() {
     useQuery({
       queryKey: ['admin-revenue-analytics'],
       queryFn: () => dashboardsApi.getAdminRevenueAnalytics(),
+      enabled: isAdmin, // Only fetch when user is admin
       staleTime: 5 * 60 * 1000, // 5 minutes - use cached data
       gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+      retry: false, // Don't retry on 403
     });
 
   /**
@@ -37,8 +45,9 @@ export function useDashboards() {
     useQuery({
       queryKey: ['admin-author-transactions', authorProfileId],
       queryFn: () => dashboardsApi.getAuthorTransactionsForAdmin(authorProfileId),
-      enabled: !!authorProfileId,
+      enabled: isAdmin && !!authorProfileId,
       staleTime: 30000,
+      retry: false,
     });
 
   /**
@@ -48,8 +57,9 @@ export function useDashboards() {
     useQuery({
       queryKey: ['admin-reader-stats', readerProfileId],
       queryFn: () => dashboardsApi.getReaderStatsForAdmin(readerProfileId),
-      enabled: !!readerProfileId,
+      enabled: isAdmin && !!readerProfileId,
       staleTime: 30000,
+      retry: false,
     });
 
   /**
@@ -59,8 +69,9 @@ export function useDashboards() {
     useQuery({
       queryKey: ['admin-campaign-tracking', bookId],
       queryFn: () => dashboardsApi.getCampaignTrackingForAdmin(bookId),
-      enabled: !!bookId,
+      enabled: isAdmin && !!bookId,
       staleTime: 30000,
+      retry: false,
     });
 
   // ============================================

@@ -65,7 +65,9 @@ export default function AffiliateDashboardPage() {
   const [isCommissionsLoading, setIsCommissionsLoading] = useState(false);
   const [isPayoutsViewLoading, setIsPayoutsViewLoading] = useState(false);
 
-  const isLoading = profileLoading || statsLoading;
+  // Only wait for profile - it's the critical data to determine UI state
+  // Stats, charts, commissions, payouts load progressively with skeletons
+  const isLoading = profileLoading;
 
   // Prepare chart data for recharts
   const preparedChartData =
@@ -221,107 +223,128 @@ export default function AffiliateDashboardPage() {
 
       {/* Stats Cards - Row 1 */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="animate-fade-up-fast">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.totalEarnings')}</CardTitle>
-            <DollarSign className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              ${stats?.totalEarnings.toFixed(2) || '0.00'}
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {t('stats.approvedEarnings')}: ${stats?.approvedEarnings.toFixed(2) || '0.00'}
-            </p>
-          </CardContent>
-        </Card>
+        {statsLoading ? (
+          <>
+            <Skeleton className="h-28 animate-pulse" />
+            <Skeleton className="h-28 animate-pulse" />
+            <Skeleton className="h-28 animate-pulse" />
+            <Skeleton className="h-28 animate-pulse" />
+          </>
+        ) : (
+          <>
+            <Card className="animate-fade-up-fast">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t('stats.totalEarnings')}</CardTitle>
+                <DollarSign className="h-4 w-4 text-green-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-green-600">
+                  ${stats?.totalEarnings.toFixed(2) || '0.00'}
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t('stats.approvedEarnings')}: ${stats?.approvedEarnings.toFixed(2) || '0.00'}
+                </p>
+              </CardContent>
+            </Card>
 
-        <Card className="animate-fade-up-light-slow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.pendingEarnings')}</CardTitle>
-            <TrendingUp className="h-4 w-4 text-yellow-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">
-              ${stats?.pendingEarnings.toFixed(2) || '0.00'}
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">{t('stats.pendingDescription')}</p>
-          </CardContent>
-        </Card>
+            <Card className="animate-fade-up-light-slow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t('stats.pendingEarnings')}</CardTitle>
+                <TrendingUp className="h-4 w-4 text-yellow-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-yellow-600">
+                  ${stats?.pendingEarnings.toFixed(2) || '0.00'}
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">{t('stats.pendingDescription')}</p>
+              </CardContent>
+            </Card>
 
-        <Card className="animate-fade-up-slow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.totalClicks')}</CardTitle>
-            <MousePointerClick className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{stats?.totalClicks || 0}</div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {t('stats.conversionRate')}: {stats?.conversionRate.toFixed(2) || 0}%
-            </p>
-          </CardContent>
-        </Card>
+            <Card className="animate-fade-up-slow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t('stats.totalClicks')}</CardTitle>
+                <MousePointerClick className="h-4 w-4 text-blue-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-blue-600">{stats?.totalClicks || 0}</div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t('stats.conversionRate')}: {stats?.conversionRate.toFixed(2) || 0}%
+                </p>
+              </CardContent>
+            </Card>
 
-        <Card className="animate-fade-up-very-slow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.totalReferrals')}</CardTitle>
-            <Users className="h-4 w-4 text-purple-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-purple-600">{stats?.totalReferrals || 0}</div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {t('stats.activeReferrals')}: {stats?.activeReferrals || 0}
-            </p>
-          </CardContent>
-        </Card>
+            <Card className="animate-fade-up-very-slow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t('stats.totalReferrals')}</CardTitle>
+                <Users className="h-4 w-4 text-purple-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-purple-600">{stats?.totalReferrals || 0}</div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t('stats.activeReferrals')}: {stats?.activeReferrals || 0}
+                </p>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
 
       {/* Stats Cards - Row 2: Commission Rate (Section 6.1 requirement) */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Card className="animate-fade-up">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.commissionRate') || 'Your Commission Rate'}</CardTitle>
-            <Percent className="h-4 w-4 text-indigo-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-indigo-600">
-              {profile?.commissionRate || 20}%
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {t('stats.commissionRateDescription') || 'You earn this percentage on every sale'}
-            </p>
-          </CardContent>
-        </Card>
+        {statsLoading ? (
+          <>
+            <Skeleton className="h-28 animate-pulse" />
+            <Skeleton className="h-28 animate-pulse" />
+            <Skeleton className="h-28 animate-pulse" />
+          </>
+        ) : (
+          <>
+            <Card className="animate-fade-up">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t('stats.commissionRate') || 'Your Commission Rate'}</CardTitle>
+                <Percent className="h-4 w-4 text-indigo-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-indigo-600">
+                  {profile?.commissionRate || 20}%
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t('stats.commissionRateDescription') || 'You earn this percentage on every sale'}
+                </p>
+              </CardContent>
+            </Card>
 
-        <Card className="animate-fade-up-fast">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.availableForPayout') || 'Available for Payout'}</CardTitle>
-            <Wallet className="h-4 w-4 text-emerald-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-emerald-600">
-              ${stats?.approvedEarnings.toFixed(2) || '0.00'}
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {t('stats.availableDescription') || 'Ready to withdraw'}
-            </p>
-          </CardContent>
-        </Card>
+            <Card className="animate-fade-up-fast">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t('stats.availableForPayout') || 'Available for Payout'}</CardTitle>
+                <Wallet className="h-4 w-4 text-emerald-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-emerald-600">
+                  ${stats?.approvedEarnings.toFixed(2) || '0.00'}
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t('stats.availableDescription') || 'Ready to withdraw'}
+                </p>
+              </CardContent>
+            </Card>
 
-        <Card className="animate-fade-up-light-slow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.totalPaid') || 'Total Paid Out'}</CardTitle>
-            <DollarSign className="h-4 w-4 text-gray-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-600">
-              ${stats?.paidEarnings.toFixed(2) || '0.00'}
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {t('stats.totalPaidDescription') || 'Already withdrawn'}
-            </p>
-          </CardContent>
-        </Card>
+            <Card className="animate-fade-up-light-slow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t('stats.totalPaid') || 'Total Paid Out'}</CardTitle>
+                <DollarSign className="h-4 w-4 text-gray-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-gray-600">
+                  ${stats?.paidEarnings.toFixed(2) || '0.00'}
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t('stats.totalPaidDescription') || 'Already withdrawn'}
+                </p>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
 
       {/* Charts Section - Section 6.1 requirement */}

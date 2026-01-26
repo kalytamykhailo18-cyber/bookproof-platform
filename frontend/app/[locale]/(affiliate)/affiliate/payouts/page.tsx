@@ -107,22 +107,6 @@ export default function AffiliatePayoutsPage() {
       p.status === PayoutRequestStatus.PROCESSING,
   );
 
-  if (statsLoading || payoutsLoading) {
-    return (
-      <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
-        <div className="flex items-start justify-between">
-          <div className="space-y-2">
-            <Skeleton className="h-9 w-32 animate-pulse" />
-            <Skeleton className="h-5 w-80 animate-pulse" />
-          </div>
-          <Skeleton className="h-10 w-40 animate-pulse" />
-        </div>
-        <Skeleton className="h-32 animate-pulse" />
-        <Skeleton className="h-64 animate-pulse" />
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
       {/* Header */}
@@ -135,9 +119,13 @@ export default function AffiliatePayoutsPage() {
           <DialogTrigger asChild>
             <Button
               type="button"
-              disabled={hasPendingPayout || (stats?.approvedEarnings || 0) < 50}
+              disabled={statsLoading || payoutsLoading || hasPendingPayout || (stats?.approvedEarnings || 0) < 50}
             >
-              <Wallet className="mr-2 h-4 w-4" />
+              {(statsLoading || payoutsLoading) ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Wallet className="mr-2 h-4 w-4" />
+              )}
               {t('requestPayout')}
             </Button>
           </DialogTrigger>
@@ -263,33 +251,37 @@ export default function AffiliatePayoutsPage() {
       </div>
 
       {/* Balance Card */}
-      <Card className="animate-fade-up-fast">
-        <CardHeader>
-          <CardTitle>{t('balance.title')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <div>
-              <p className="text-sm text-muted-foreground">{t('balance.approved')}</p>
-              <p className="text-2xl font-bold text-green-600">
-                ${stats?.approvedEarnings.toFixed(2) || '0.00'}
-              </p>
+      {statsLoading ? (
+        <Skeleton className="h-32 animate-pulse" />
+      ) : (
+        <Card className="animate-fade-up-fast">
+          <CardHeader>
+            <CardTitle>{t('balance.title')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div>
+                <p className="text-sm text-muted-foreground">{t('balance.approved')}</p>
+                <p className="text-2xl font-bold text-green-600">
+                  ${stats?.approvedEarnings.toFixed(2) || '0.00'}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">{t('balance.pending')}</p>
+                <p className="text-2xl font-bold text-yellow-600">
+                  ${stats?.pendingEarnings.toFixed(2) || '0.00'}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">{t('balance.paid')}</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  ${stats?.paidEarnings.toFixed(2) || '0.00'}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">{t('balance.pending')}</p>
-              <p className="text-2xl font-bold text-yellow-600">
-                ${stats?.pendingEarnings.toFixed(2) || '0.00'}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">{t('balance.paid')}</p>
-              <p className="text-2xl font-bold text-blue-600">
-                ${stats?.paidEarnings.toFixed(2) || '0.00'}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {hasPendingPayout && (
         <Alert className="animate-fade-up">
@@ -299,52 +291,56 @@ export default function AffiliatePayoutsPage() {
       )}
 
       {/* Payouts History */}
-      <Card className="animate-zoom-in-slow">
-        <CardHeader>
-          <CardTitle>{t('history.title')}</CardTitle>
-          <CardDescription>{t('history.description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {!payouts || payouts.length === 0 ? (
-            <div className="py-12 text-center text-muted-foreground">
-              <Wallet className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-              <p>{t('history.empty')}</p>
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('history.table.amount')}</TableHead>
-                  <TableHead>{t('history.table.method')}</TableHead>
-                  <TableHead>{t('history.table.status')}</TableHead>
-                  <TableHead>{t('history.table.requestedAt')}</TableHead>
-                  <TableHead>{t('history.table.processedAt')}</TableHead>
-                  <TableHead>{t('history.table.transactionId')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {payouts.map((payout, index) => (
-                  <TableRow
-                    key={payout.id}
-                    className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
-                  >
-                    <TableCell className="font-semibold">${payout.amount.toFixed(2)}</TableCell>
-                    <TableCell>{payout.paymentMethod}</TableCell>
-                    <TableCell>{getPayoutStatusBadge(payout.status)}</TableCell>
-                    <TableCell>{formatDate(payout.requestedAt)}</TableCell>
-                    <TableCell>
-                      {payout.processedAt ? formatDate(payout.processedAt) : '-'}
-                    </TableCell>
-                    <TableCell className="font-mono text-sm">
-                      {payout.transactionId || '-'}
-                    </TableCell>
+      {payoutsLoading ? (
+        <Skeleton className="h-64 animate-pulse" />
+      ) : (
+        <Card className="animate-zoom-in-slow">
+          <CardHeader>
+            <CardTitle>{t('history.title')}</CardTitle>
+            <CardDescription>{t('history.description')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!payouts || payouts.length === 0 ? (
+              <div className="py-12 text-center text-muted-foreground">
+                <Wallet className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+                <p>{t('history.empty')}</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('history.table.amount')}</TableHead>
+                    <TableHead>{t('history.table.method')}</TableHead>
+                    <TableHead>{t('history.table.status')}</TableHead>
+                    <TableHead>{t('history.table.requestedAt')}</TableHead>
+                    <TableHead>{t('history.table.processedAt')}</TableHead>
+                    <TableHead>{t('history.table.transactionId')}</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+                </TableHeader>
+                <TableBody>
+                  {payouts.map((payout, index) => (
+                    <TableRow
+                      key={payout.id}
+                      className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
+                    >
+                      <TableCell className="font-semibold">${payout.amount.toFixed(2)}</TableCell>
+                      <TableCell>{payout.paymentMethod}</TableCell>
+                      <TableCell>{getPayoutStatusBadge(payout.status)}</TableCell>
+                      <TableCell>{formatDate(payout.requestedAt)}</TableCell>
+                      <TableCell>
+                        {payout.processedAt ? formatDate(payout.processedAt) : '-'}
+                      </TableCell>
+                      <TableCell className="font-mono text-sm">
+                        {payout.transactionId || '-'}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

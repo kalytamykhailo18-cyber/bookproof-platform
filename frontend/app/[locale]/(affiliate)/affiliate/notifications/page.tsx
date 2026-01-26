@@ -5,14 +5,15 @@ import { useTranslations } from 'next-intl';
 import { useNotifications, useMarkAsRead, useMarkAllAsRead } from '@/hooks/useNotifications';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { NotificationList } from '@/components/shared/NotificationList';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Settings, CheckCheck, Loader2 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import { NotificationType } from '@/lib/api/notifications';
 
 export default function NotificationsPage() {
-  const t = useTranslations('notifications');
+  useTranslations('notifications'); // Namespace loaded for nested components
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'en';
@@ -41,6 +42,25 @@ export default function NotificationsPage() {
   const handleMarkAllAsRead = () => {
     markAllAsRead();
   };
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8 flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-9 w-48 animate-pulse" />
+            <Skeleton className="h-5 w-80 animate-pulse" />
+          </div>
+          <div className="flex gap-3">
+            <Skeleton className="h-10 w-28 animate-pulse" />
+            <Skeleton className="h-10 w-40 animate-pulse" />
+          </div>
+        </div>
+        <Skeleton className="mb-6 h-16 animate-pulse" />
+        <Skeleton className="h-96 animate-pulse" />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">

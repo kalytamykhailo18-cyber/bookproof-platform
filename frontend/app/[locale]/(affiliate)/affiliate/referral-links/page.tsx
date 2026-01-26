@@ -52,20 +52,6 @@ export default function AffiliateReferralLinksPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto max-w-4xl space-y-6 px-4 py-8">
-        <div className="space-y-2">
-          <Skeleton className="h-9 w-48 animate-pulse" />
-          <Skeleton className="h-5 w-96 animate-pulse" />
-        </div>
-        <Skeleton className="h-48 animate-pulse" />
-        <Skeleton className="h-32 animate-pulse" />
-        <Skeleton className="h-64 animate-pulse" />
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto max-w-4xl space-y-6 px-4 py-8">
       {/* Header */}
@@ -75,76 +61,80 @@ export default function AffiliateReferralLinksPage() {
       </div>
 
       {/* Referral Link Card */}
-      <Card className="animate-fade-up-fast">
-        <CardHeader>
-          <CardTitle>{t('yourLink.title')}</CardTitle>
-          <CardDescription>{t('yourLink.description')}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-2">
-            <Input value={referralLinkData?.referralLink || ''} readOnly className="font-mono" />
-            <Button type="button" onClick={handleCopy} variant="outline">
-              {copied ? (
-                <>
-                  <CheckCircle className="mr-2 h-4 w-4" />
-                  {t('copied')}
-                </>
-              ) : (
-                <>
-                  <Copy className="mr-2 h-4 w-4" />
-                  {t('copy')}
-                </>
-              )}
-            </Button>
-          </div>
-
-          {/* Social Share Buttons */}
-          <div className="space-y-2">
-            <p className="text-sm font-medium">{t('shareTo.title')}</p>
+      {isLoading ? (
+        <Skeleton className="h-48 animate-pulse" />
+      ) : (
+        <Card className="animate-fade-up-fast">
+          <CardHeader>
+            <CardTitle>{t('yourLink.title')}</CardTitle>
+            <CardDescription>{t('yourLink.description')}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => handleShare('twitter')}
-              >
-                <Share2 className="mr-2 h-4 w-4" />
-                Twitter
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => handleShare('facebook')}
-              >
-                <Share2 className="mr-2 h-4 w-4" />
-                Facebook
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => handleShare('linkedin')}
-              >
-                <Share2 className="mr-2 h-4 w-4" />
-                LinkedIn
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => handleShare('email')}
-              >
-                <Share2 className="mr-2 h-4 w-4" />
-                {t('shareTo.email')}
+              <Input value={referralLinkData?.referralLink || ''} readOnly className="font-mono" />
+              <Button type="button" onClick={handleCopy} variant="outline">
+                {copied ? (
+                  <>
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                    {t('copied')}
+                  </>
+                ) : (
+                  <>
+                    <Copy className="mr-2 h-4 w-4" />
+                    {t('copy')}
+                  </>
+                )}
               </Button>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+
+            {/* Social Share Buttons */}
+            <div className="space-y-2">
+              <p className="text-sm font-medium">{t('shareTo.title')}</p>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleShare('twitter')}
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Twitter
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleShare('facebook')}
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Facebook
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleShare('linkedin')}
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  LinkedIn
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleShare('email')}
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  {t('shareTo.email')}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* QR Code Section - Section 6.2 requirement */}
-      {referralLinkData?.referralLink && (
+      {!isLoading && referralLinkData?.referralLink && (
         <Card className="animate-fade-up">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
