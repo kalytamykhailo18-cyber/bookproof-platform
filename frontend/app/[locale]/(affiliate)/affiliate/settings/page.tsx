@@ -28,6 +28,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -70,6 +71,22 @@ export default function SettingsPage() {
 
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const [deleteReason, setDeleteReason] = useState('');
+
+  // Show skeleton loading when initial data is loading
+  if (isLoadingConsents && isLoadingLanguage) {
+    return (
+      <div className="container mx-auto p-6 max-w-4xl space-y-6">
+        <div className="space-y-2">
+          <Skeleton className="h-9 w-48 animate-pulse" />
+          <Skeleton className="h-5 w-80 animate-pulse" />
+        </div>
+        <Skeleton className="h-32 animate-pulse" />
+        <Skeleton className="h-48 animate-pulse" />
+        <Skeleton className="h-64 animate-pulse" />
+        <Skeleton className="h-48 animate-pulse" />
+      </div>
+    );
+  }
 
   const handleExportData = () => {
     exportData();

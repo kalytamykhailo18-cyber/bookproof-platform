@@ -67,25 +67,6 @@ export default function AffiliateCommissionsPage() {
 
   const totals = calculateTotals();
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
-        <div className="space-y-2">
-          <Skeleton className="h-9 w-48 animate-pulse" />
-          <Skeleton className="h-5 w-80 animate-pulse" />
-        </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <Skeleton className="h-24 animate-pulse" />
-          <Skeleton className="h-24 animate-pulse" />
-          <Skeleton className="h-24 animate-pulse" />
-          <Skeleton className="h-24 animate-pulse" />
-        </div>
-        <Skeleton className="h-24 animate-pulse" />
-        <Skeleton className="h-96 animate-pulse" />
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
       {/* Header */}
@@ -96,41 +77,52 @@ export default function AffiliateCommissionsPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <Card className="animate-fade-up-fast">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">{t('summary.total')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">${totals.total.toFixed(2)}</div>
-          </CardContent>
-        </Card>
+        {isLoading ? (
+          <>
+            <Skeleton className="h-24 animate-pulse" />
+            <Skeleton className="h-24 animate-pulse" />
+            <Skeleton className="h-24 animate-pulse" />
+            <Skeleton className="h-24 animate-pulse" />
+          </>
+        ) : (
+          <>
+            <Card className="animate-fade-up-fast">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">{t('summary.total')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-green-600">${totals.total.toFixed(2)}</div>
+              </CardContent>
+            </Card>
 
-        <Card className="animate-fade-up-light-slow">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">{t('summary.pending')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">${totals.pending.toFixed(2)}</div>
-          </CardContent>
-        </Card>
+            <Card className="animate-fade-up-light-slow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">{t('summary.pending')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-yellow-600">${totals.pending.toFixed(2)}</div>
+              </CardContent>
+            </Card>
 
-        <Card className="animate-fade-up-slow">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">{t('summary.approved')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">${totals.approved.toFixed(2)}</div>
-          </CardContent>
-        </Card>
+            <Card className="animate-fade-up-slow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">{t('summary.approved')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-green-600">${totals.approved.toFixed(2)}</div>
+              </CardContent>
+            </Card>
 
-        <Card className="animate-fade-up-very-slow">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">{t('summary.paid')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-600">${totals.paid.toFixed(2)}</div>
-          </CardContent>
-        </Card>
+            <Card className="animate-fade-up-very-slow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">{t('summary.paid')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-blue-600">${totals.paid.toFixed(2)}</div>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
 
       {/* Filters */}
@@ -166,56 +158,60 @@ export default function AffiliateCommissionsPage() {
       </Card>
 
       {/* Commissions Table */}
-      <Card className="animate-zoom-in-slow">
-        <CardHeader>
-          <CardTitle>{t('table.title')}</CardTitle>
-          <CardDescription>{t('table.description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {!commissions || commissions.length === 0 ? (
-            <div className="py-12 text-center text-muted-foreground">
-              <DollarSign className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-              <p>{t('table.empty')}</p>
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('table.author') || 'Author'}</TableHead>
-                  <TableHead>{t('table.purchaseAmount')}</TableHead>
-                  <TableHead>{t('table.commissionAmount')}</TableHead>
-                  <TableHead>{t('table.rate')}</TableHead>
-                  <TableHead>{t('table.status')}</TableHead>
-                  <TableHead>{t('table.createdAt')}</TableHead>
-                  <TableHead>{t('table.approvedAt')}</TableHead>
-                  <TableHead>{t('table.paidAt')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {commissions.map((commission, index) => (
-                  <TableRow
-                    key={commission.id}
-                    className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
-                  >
-                    <TableCell className="font-mono text-sm">{commission.authorIdentifier}</TableCell>
-                    <TableCell>${commission.purchaseAmount.toFixed(2)}</TableCell>
-                    <TableCell className="font-semibold">
-                      ${commission.commissionAmount.toFixed(2)}
-                    </TableCell>
-                    <TableCell>{commission.commissionRate}%</TableCell>
-                    <TableCell>{getCommissionStatusBadge(commission.status)}</TableCell>
-                    <TableCell>{formatDate(commission.createdAt)}</TableCell>
-                    <TableCell>
-                      {commission.approvedAt ? formatDate(commission.approvedAt) : '-'}
-                    </TableCell>
-                    <TableCell>{commission.paidAt ? formatDate(commission.paidAt) : '-'}</TableCell>
+      {isLoading ? (
+        <Skeleton className="h-96 animate-pulse" />
+      ) : (
+        <Card className="animate-zoom-in-slow">
+          <CardHeader>
+            <CardTitle>{t('table.title')}</CardTitle>
+            <CardDescription>{t('table.description')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!commissions || commissions.length === 0 ? (
+              <div className="py-12 text-center text-muted-foreground">
+                <DollarSign className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+                <p>{t('table.empty')}</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('table.author') || 'Author'}</TableHead>
+                    <TableHead>{t('table.purchaseAmount')}</TableHead>
+                    <TableHead>{t('table.commissionAmount')}</TableHead>
+                    <TableHead>{t('table.rate')}</TableHead>
+                    <TableHead>{t('table.status')}</TableHead>
+                    <TableHead>{t('table.createdAt')}</TableHead>
+                    <TableHead>{t('table.approvedAt')}</TableHead>
+                    <TableHead>{t('table.paidAt')}</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+                </TableHeader>
+                <TableBody>
+                  {commissions.map((commission, index) => (
+                    <TableRow
+                      key={commission.id}
+                      className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
+                    >
+                      <TableCell className="font-mono text-sm">{commission.authorIdentifier}</TableCell>
+                      <TableCell>${commission.purchaseAmount.toFixed(2)}</TableCell>
+                      <TableCell className="font-semibold">
+                        ${commission.commissionAmount.toFixed(2)}
+                      </TableCell>
+                      <TableCell>{commission.commissionRate}%</TableCell>
+                      <TableCell>{getCommissionStatusBadge(commission.status)}</TableCell>
+                      <TableCell>{formatDate(commission.createdAt)}</TableCell>
+                      <TableCell>
+                        {commission.approvedAt ? formatDate(commission.approvedAt) : '-'}
+                      </TableCell>
+                      <TableCell>{commission.paidAt ? formatDate(commission.paidAt) : '-'}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Info Card */}
       <Card className="animate-fade-up-very-slow">
