@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Language, TargetMarket, KeywordResearchStatus } from '@/lib/api/keywords';
 
@@ -123,8 +124,34 @@ export default function EditKeywordResearchPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto max-w-4xl px-4 py-8">
-        <div className="flex min-h-[400px] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        {/* Header Skeleton */}
+        <div className="mb-8">
+          <Skeleton className="mb-4 h-8 w-32 animate-pulse" />
+          <Skeleton className="h-10 w-64 animate-pulse" />
+          <Skeleton className="mt-2 h-5 w-96 animate-pulse" />
+        </div>
+        {/* Form Card Skeletons */}
+        {[1, 2].map((i) => (
+          <Card key={i} className="mb-6">
+            <CardHeader>
+              <Skeleton className="h-6 w-40 animate-pulse" />
+              <Skeleton className="mt-1 h-4 w-64 animate-pulse" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {[1, 2, 3].map((j) => (
+                <div key={j}>
+                  <Skeleton className="h-4 w-24 animate-pulse" />
+                  <Skeleton className="mt-2 h-10 w-full animate-pulse" />
+                  <Skeleton className="mt-1 h-3 w-48 animate-pulse" />
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        ))}
+        {/* Submit Button Skeleton */}
+        <div className="flex justify-end gap-4">
+          <Skeleton className="h-10 w-24 animate-pulse" />
+          <Skeleton className="h-10 w-32 animate-pulse" />
         </div>
       </div>
     );

@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Loader2,
   Download,
@@ -108,8 +109,63 @@ export default function KeywordResearchDetailsPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto max-w-7xl px-4 py-8">
-        <div className="flex min-h-[400px] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        {/* Header Skeleton */}
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <Skeleton className="h-10 w-64 animate-pulse" />
+            <Skeleton className="mt-2 h-5 w-48 animate-pulse" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-10 w-32 animate-pulse" />
+            <Skeleton className="h-10 w-40 animate-pulse" />
+          </div>
+        </div>
+        {/* Status Banner Skeleton */}
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-14 w-14 rounded-full animate-pulse" />
+              <div className="flex-1">
+                <Skeleton className="h-6 w-32 animate-pulse" />
+                <Skeleton className="mt-2 h-4 w-48 animate-pulse" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        {/* Content Skeleton */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-1">
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-6 w-32 animate-pulse" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i}>
+                    <Skeleton className="h-4 w-24 animate-pulse" />
+                    <Skeleton className="mt-1 h-5 w-full animate-pulse" />
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+          <div className="space-y-6 lg:col-span-2">
+            {[1, 2].map((i) => (
+              <Card key={i}>
+                <CardHeader>
+                  <Skeleton className="h-6 w-40 animate-pulse" />
+                  <Skeleton className="mt-1 h-4 w-64 animate-pulse" />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {[1, 2, 3, 4, 5, 6].map((j) => (
+                      <Skeleton key={j} className="h-8 w-24 animate-pulse" />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     );
