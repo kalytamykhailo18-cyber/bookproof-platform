@@ -17,27 +17,43 @@ import { SubscriptionStatus, CreditTransactionType } from '@prisma/client';
 
 @Injectable()
 export class StripeSubscriptionsService {
-  private stripe: Stripe;
+  private stripe: Stripe | null;
 
   constructor(
     private prisma: PrismaService,
     private configService: ConfigService,
   ) {
     const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
-    if (!stripeSecretKey) {
-      throw new Error('STRIPE_SECRET_KEY is not configured');
+    if (!stripeSecretKey || !this.isValidStripeKey(stripeSecretKey)) {
+      console.warn('STRIPE_SECRET_KEY is not configured or invalid - subscription features will be disabled');
+      this.stripe = null;
+      return;
     }
     this.stripe = new Stripe(stripeSecretKey, {
       apiVersion: '2023-10-16',
     });
   }
 
+  private isValidStripeKey(key: string): boolean {
+    return (key.startsWith('sk_test_') || key.startsWith('sk_live_')) && key.length >= 30;
+  }
+
+  private ensureStripeConfigured(): void {
+    if (!this.stripe) {
+      throw new BadRequestException(
+        'Payment system is not configured. Please contact the administrator.',
+      );
+    }
+  }
+
   /**
    * Create subscription plan (Admin only)
    */
   async createSubscriptionPlan(dto: CreateSubscriptionPlanDto): Promise<any> {
+    this.ensureStripeConfigured();
+
     // Create Stripe product
-    const product = await this.stripe.products.create({
+    const product = await this.stripe!.products.create({
       name: dto.planName,
       description: dto.description,
       metadata: {
@@ -46,7 +62,7 @@ export class StripeSubscriptionsService {
     });
 
     // Create Stripe price
-    const price = await this.stripe.prices.create({
+    const price = await this.stripe!.prices.create({
       product: product.id,
       currency: dto.currency.toLowerCase(),
       unit_amount: Math.round(dto.pricePerMonth * 100), // Convert to cents
@@ -72,6 +88,8 @@ export class StripeSubscriptionsService {
     authorProfileId: string,
     dto: CreateSubscriptionCheckoutDto,
   ): Promise<SubscriptionCheckoutResponseDto> {
+    this.ensureStripeConfigured();
+
     // Get author profile
     const authorProfile = await this.prisma.authorProfile.findUnique({
       where: { id: authorProfileId },
@@ -97,7 +115,7 @@ export class StripeSubscriptionsService {
     // Create or get Stripe customer
     let stripeCustomerId = authorProfile.stripeCustomerId;
     if (!stripeCustomerId) {
-      const customer = await this.stripe.customers.create({
+      const customer = await this.stripe!.customers.create({
         email: authorProfile.user.email,
         name: authorProfile.user.name,
         metadata: {
@@ -114,11 +132,11 @@ export class StripeSubscriptionsService {
     }
 
     // Get price details from Stripe
-    const price = await this.stripe.prices.retrieve(dto.stripePriceId);
-    const product = await this.stripe.products.retrieve(price.product as string);
+    const price = await this.stripe!.prices.retrieve(dto.stripePriceId);
+    const product = await this.stripe!.products.retrieve(price.product as string);
 
     // Create Stripe checkout session for subscription
-    const session = await this.stripe.checkout.sessions.create({
+    const session = await this.stripe!.checkout.sessions.create({
       customer: stripeCustomerId,
       payment_method_types: ['card'],
       line_items: [
@@ -152,11 +170,11 @@ export class StripeSubscriptionsService {
    * Handle subscription created webhook
    */
   async handleSubscriptionCreated(stripeSubscriptionId: string): Promise<void> {
-    const subscription = await this.stripe.subscriptions.retrieve(stripeSubscriptionId);
+    const subscription = await this.stripe!.subscriptions.retrieve(stripeSubscriptionId);
 
     const authorProfileId = subscription.metadata.authorProfileId;
-    const price = await this.stripe.prices.retrieve(subscription.items.data[0].price.id);
-    const product = await this.stripe.products.retrieve(price.product as string);
+    const price = await this.stripe!.prices.retrieve(subscription.items.data[0].price.id);
+    const product = await this.stripe!.products.retrieve(price.product as string);
 
     // Create subscription record
     await this.prisma.subscription.create({
@@ -182,7 +200,7 @@ export class StripeSubscriptionsService {
    * Handle subscription renewed webhook
    */
   async handleSubscriptionRenewed(stripeSubscriptionId: string): Promise<SubscriptionRenewalDto> {
-    const stripeSubscription = await this.stripe.subscriptions.retrieve(stripeSubscriptionId);
+    const stripeSubscription = await this.stripe!.subscriptions.retrieve(stripeSubscriptionId);
 
     // Update subscription record
     const subscription = await this.prisma.subscription.findUnique({
@@ -280,9 +298,9 @@ export class StripeSubscriptionsService {
 
     // Cancel in Stripe
     if (dto.cancelImmediately) {
-      await this.stripe.subscriptions.cancel(subscription.stripeSubscriptionId);
+      await this.stripe!.subscriptions.cancel(subscription.stripeSubscriptionId);
     } else {
-      await this.stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+      await this.stripe!.subscriptions.update(subscription.stripeSubscriptionId, {
         cancel_at_period_end: true,
       });
     }
