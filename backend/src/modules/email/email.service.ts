@@ -82,7 +82,7 @@ export class EmailService {
     private readonly prisma: PrismaService,
   ) {
     const apiKey = this.configService.get<string>('email.resend.apiKey');
-    this.fromEmail = this.configService.get<string>('email.resend.fromEmail') || 'noreply@bookproof.com';
+    this.fromEmail = this.configService.get<string>('email.resend.fromEmail') || 'noreply@bookproof.app';
     this.appUrl = this.configService.get<string>('app.url') || 'http://localhost:3000';
 
     if (!apiKey) {

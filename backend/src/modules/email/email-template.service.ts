@@ -492,9 +492,9 @@ export class EmailTemplateService {
     const allVariables = {
       ...variables,
       currentYear: variables.currentYear || new Date().getFullYear(),
-      logoUrl: variables.logoUrl || 'https://bookproof.com/logo.png',
-      supportUrl: variables.supportUrl || 'https://bookproof.com/support',
-      unsubscribeUrl: variables.unsubscribeUrl || 'https://bookproof.com/unsubscribe',
+      logoUrl: variables.logoUrl || 'https://bookproof.app/logo.png',
+      supportUrl: variables.supportUrl || 'https://bookproof.app/support',
+      unsubscribeUrl: variables.unsubscribeUrl || 'https://bookproof.app/unsubscribe',
     };
 
     // Replace all variables

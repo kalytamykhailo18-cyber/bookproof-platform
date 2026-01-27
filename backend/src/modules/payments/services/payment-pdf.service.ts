@@ -47,8 +47,8 @@ export class PaymentPdfService {
     this.companyAddress =
       this.configService.get('COMPANY_ADDRESS') ||
       '123 Publishing Ave, Suite 456\nNew York, NY 10001, USA';
-    this.companyEmail = this.configService.get('COMPANY_EMAIL') || 'billing@bookproof.com';
-    this.supportEmail = this.configService.get('SUPPORT_EMAIL') || 'support@bookproof.com';
+    this.companyEmail = this.configService.get('COMPANY_EMAIL') || 'billing@bookproof.app';
+    this.supportEmail = this.configService.get('SUPPORT_EMAIL') || 'support@bookproof.app';
   }
 
   /**

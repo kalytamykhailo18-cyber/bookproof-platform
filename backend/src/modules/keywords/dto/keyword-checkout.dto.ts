@@ -7,7 +7,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateKeywordResearchCheckoutDto {
   @ApiProperty({
     description: 'URL to redirect after successful payment',
-    example: 'https://bookproof.com/author/keyword-research/123?success=true',
+    example: 'https://bookproof.app/author/keyword-research/123?success=true',
   })
   @IsString()
   @IsUrl({ require_tld: false })
@@ -16,7 +16,7 @@ export class CreateKeywordResearchCheckoutDto {
 
   @ApiProperty({
     description: 'URL to redirect if payment is cancelled',
-    example: 'https://bookproof.com/author/keyword-research/123?cancelled=true',
+    example: 'https://bookproof.app/author/keyword-research/123?cancelled=true',
   })
   @IsString()
   @IsUrl({ require_tld: false })

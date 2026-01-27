@@ -11,7 +11,7 @@ export class EmailService {
 
   constructor(private configService: ConfigService) {
     const apiKey = this.configService.get<string>('email.apiKey');
-    this.fromEmail = this.configService.get<string>('email.fromEmail') || 'noreply@bookproof.com';
+    this.fromEmail = this.configService.get<string>('email.fromEmail') || 'noreply@bookproof.app';
     this.appUrl = this.configService.get<string>('app.url') || 'http://localhost:3000';
 
     if (!apiKey) {

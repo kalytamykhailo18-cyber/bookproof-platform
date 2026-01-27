@@ -30,7 +30,7 @@ export class InvoicePdfService {
   constructor(private configService: ConfigService) {
     this.companyName = this.configService.get('COMPANY_NAME') || 'BookProof';
     this.companyAddress = this.configService.get('COMPANY_ADDRESS') || '';
-    this.companyEmail = this.configService.get('COMPANY_EMAIL') || 'support@bookproof.com';
+    this.companyEmail = this.configService.get('COMPANY_EMAIL') || 'support@bookproof.app';
   }
 
   /**

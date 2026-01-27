@@ -18,7 +18,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'files.bookproof.com',
+        hostname: 'files.bookproof.app',
       },
       {
         protocol: 'https',

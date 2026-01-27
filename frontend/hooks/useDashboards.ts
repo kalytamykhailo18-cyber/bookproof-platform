@@ -7,6 +7,7 @@ import { useAuth } from './useAuth';
 export function useDashboards() {
   const { user } = useAuth();
   const isAdmin = user?.role === 'ADMIN';
+  const userId = user?.id;
 
   // ============================================
   // ADMIN DASHBOARD
@@ -17,12 +18,13 @@ export function useDashboards() {
    */
   const useAdminDashboard = () =>
     useQuery({
-      queryKey: ['admin-dashboard'],
+      // Include userId in key to prevent cross-user cache issues
+      queryKey: ['admin-dashboard', userId],
       queryFn: () => dashboardsApi.getAdminDashboard(),
-      enabled: isAdmin, // Only fetch when user is admin
-      staleTime: 3 * 60 * 1000, // 3 minutes - use cached data
-      gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
-      retry: false, // Don't retry on 403
+      enabled: isAdmin && !!userId, // Only fetch when user is admin AND we have userId
+      staleTime: 3 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      retry: false,
     });
 
   /**
@@ -30,12 +32,12 @@ export function useDashboards() {
    */
   const useAdminRevenueAnalytics = () =>
     useQuery({
-      queryKey: ['admin-revenue-analytics'],
+      queryKey: ['admin-revenue-analytics', userId],
       queryFn: () => dashboardsApi.getAdminRevenueAnalytics(),
-      enabled: isAdmin, // Only fetch when user is admin
-      staleTime: 5 * 60 * 1000, // 5 minutes - use cached data
-      gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
-      retry: false, // Don't retry on 403
+      enabled: isAdmin && !!userId,
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      retry: false,
     });
 
   /**
@@ -43,9 +45,9 @@ export function useDashboards() {
    */
   const useAuthorTransactionsForAdmin = (authorProfileId: string) =>
     useQuery({
-      queryKey: ['admin-author-transactions', authorProfileId],
+      queryKey: ['admin-author-transactions', userId, authorProfileId],
       queryFn: () => dashboardsApi.getAuthorTransactionsForAdmin(authorProfileId),
-      enabled: isAdmin && !!authorProfileId,
+      enabled: isAdmin && !!userId && !!authorProfileId,
       staleTime: 30000,
       retry: false,
     });
@@ -55,9 +57,9 @@ export function useDashboards() {
    */
   const useReaderStatsForAdmin = (readerProfileId: string) =>
     useQuery({
-      queryKey: ['admin-reader-stats', readerProfileId],
+      queryKey: ['admin-reader-stats', userId, readerProfileId],
       queryFn: () => dashboardsApi.getReaderStatsForAdmin(readerProfileId),
-      enabled: isAdmin && !!readerProfileId,
+      enabled: isAdmin && !!userId && !!readerProfileId,
       staleTime: 30000,
       retry: false,
     });
@@ -67,9 +69,9 @@ export function useDashboards() {
    */
   const useCampaignTrackingForAdmin = (bookId: string) =>
     useQuery({
-      queryKey: ['admin-campaign-tracking', bookId],
+      queryKey: ['admin-campaign-tracking', userId, bookId],
       queryFn: () => dashboardsApi.getCampaignTrackingForAdmin(bookId),
-      enabled: isAdmin && !!bookId,
+      enabled: isAdmin && !!userId && !!bookId,
       staleTime: 30000,
       retry: false,
     });

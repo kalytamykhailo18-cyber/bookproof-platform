@@ -236,10 +236,10 @@ async function main() {
   console.log('\n👑 Creating admin users...');
 
   const admins = [
-    { email: 'superadmin@bookproof.com', name: 'Super Admin', role: AdminRole.SUPER_ADMIN },
-    { email: 'admin@bookproof.com', name: 'Admin User', role: AdminRole.ADMIN },
-    { email: 'moderator@bookproof.com', name: 'Mod User', role: AdminRole.MODERATOR },
-    { email: 'support@bookproof.com', name: 'Support User', role: AdminRole.SUPPORT },
+    { email: 'superadmin@bookproof.app', name: 'Super Admin', role: AdminRole.SUPER_ADMIN },
+    { email: 'admin@bookproof.app', name: 'Admin User', role: AdminRole.ADMIN },
+    { email: 'moderator@bookproof.app', name: 'Mod User', role: AdminRole.MODERATOR },
+    { email: 'support@bookproof.app', name: 'Support User', role: AdminRole.SUPPORT },
   ];
 
   const createdAdmins: Record<string, any> = {};
@@ -323,9 +323,9 @@ async function main() {
   console.log('\n💼 Creating closer users...');
 
   const closers = [
-    { email: 'closer1@bookproof.com', name: 'David Sales', commissionRate: 10.00 },
-    { email: 'closer2@bookproof.com', name: 'Lisa Closer', commissionRate: 15.00 },
-    { email: 'closer3@bookproof.com', name: 'Tom Enterprise', commissionRate: 12.00 },
+    { email: 'closer1@bookproof.app', name: 'David Sales', commissionRate: 10.00 },
+    { email: 'closer2@bookproof.app', name: 'Lisa Closer', commissionRate: 15.00 },
+    { email: 'closer3@bookproof.app', name: 'Tom Enterprise', commissionRate: 12.00 },
   ];
 
   const createdClosers: Record<string, any> = {};
@@ -1115,7 +1115,7 @@ async function main() {
   console.log(`   - Landing Page Leads: ${leads.length}`);
 
   console.log('\n🔐 Default Credentials:');
-  console.log('   Email: superadmin@bookproof.com');
+  console.log('   Email: superadmin@bookproof.app');
   console.log('   Password: TestPass123@');
   console.log('\n   (Same password for all seeded users)');
 }
