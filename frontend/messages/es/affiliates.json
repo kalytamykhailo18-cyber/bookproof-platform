@@ -31,7 +31,7 @@
       },
       "customSlug": {
         "label": "Slug de Referencia Personalizado (Opcional)",
-        "description": "Crea una URL personalizada (ej., 'mi-blog' → bookproof.com?ref=mi-blog)"
+        "description": "Crea una URL personalizada (ej., 'mi-blog' → bookproof.app?ref=mi-blog)"
       },
       "submit": "Enviar Solicitud",
       "submitting": "Enviando..."

@@ -615,7 +615,7 @@ export class AffiliatesService {
   /**
    * Generate referral link
    */
-  async getReferralLink(affiliateProfileId: string, baseUrl: string = 'https://bookproof.com'): Promise<string> {
+  async getReferralLink(affiliateProfileId: string, baseUrl: string = 'https://bookproof.app'): Promise<string> {
     try {
       const profile = await this.prisma.affiliateProfile.findUnique({
         where: { id: affiliateProfileId },

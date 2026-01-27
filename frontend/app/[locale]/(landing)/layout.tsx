@@ -42,7 +42,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = params.locale as Locale;
   const content = seoContent[locale] || seoContent.en;
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bookproof.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bookproof.app';
 
   // Generate alternate language URLs for hreflang
   const languages: Record<string, string> = {};

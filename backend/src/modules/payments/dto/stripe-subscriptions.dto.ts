@@ -63,7 +63,7 @@ export class CreateSubscriptionCheckoutDto {
 
   @ApiProperty({
     description: 'Success redirect URL',
-    example: 'https://bookproof.com/author/subscription/success',
+    example: 'https://bookproof.app/author/subscription/success',
   })
   @IsUrl()
   @IsNotEmpty()
@@ -71,7 +71,7 @@ export class CreateSubscriptionCheckoutDto {
 
   @ApiProperty({
     description: 'Cancel redirect URL',
-    example: 'https://bookproof.com/author/subscription/cancel',
+    example: 'https://bookproof.app/author/subscription/cancel',
   })
   @IsUrl()
   @IsNotEmpty()

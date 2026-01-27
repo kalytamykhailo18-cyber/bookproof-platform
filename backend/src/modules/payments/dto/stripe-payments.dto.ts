@@ -23,7 +23,7 @@ export class CreateCheckoutSessionDto {
 
   @ApiProperty({
     description: 'Success redirect URL',
-    example: 'https://bookproof.com/author/payment/success',
+    example: 'https://bookproof.app/author/payment/success',
   })
   @IsUrl()
   @IsNotEmpty()
@@ -31,7 +31,7 @@ export class CreateCheckoutSessionDto {
 
   @ApiProperty({
     description: 'Cancel redirect URL',
-    example: 'https://bookproof.com/author/payment/cancel',
+    example: 'https://bookproof.app/author/payment/cancel',
   })
   @IsUrl()
   @IsNotEmpty()
@@ -260,7 +260,7 @@ export class CustomPackagePublicDto {
 export class CreateCustomPackageCheckoutDto {
   @ApiProperty({
     description: 'Success redirect URL',
-    example: 'https://bookproof.com/checkout/custom/success',
+    example: 'https://bookproof.app/checkout/custom/success',
   })
   @IsUrl()
   @IsNotEmpty()
@@ -268,7 +268,7 @@ export class CreateCustomPackageCheckoutDto {
 
   @ApiProperty({
     description: 'Cancel redirect URL',
-    example: 'https://bookproof.com/checkout/custom/cancel',
+    example: 'https://bookproof.app/checkout/custom/cancel',
   })
   @IsUrl()
   @IsNotEmpty()

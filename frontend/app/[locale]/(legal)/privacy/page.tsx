@@ -261,7 +261,7 @@ export default function PrivacyPolicyPage() {
               </p>
 
               <p className="text-gray-700 font-semibold">
-                To exercise any of these rights, please visit your account settings or contact us at privacy@bookproof.com. We will respond within 30 days.
+                To exercise any of these rights, please visit your account settings or contact us at privacy@bookproof.app. We will respond within 30 days.
               </p>
             </section>
 
@@ -310,9 +310,9 @@ export default function PrivacyPolicyPage() {
               </p>
 
               <div className="bg-gray-50 p-6 rounded-lg">
-                <p className="text-gray-700 mb-2"><strong>Email:</strong> privacy@bookproof.com</p>
-                <p className="text-gray-700 mb-2"><strong>Support:</strong> support@bookproof.com</p>
-                <p className="text-gray-700 mb-4"><strong>Data Protection Officer:</strong> dpo@bookproof.com</p>
+                <p className="text-gray-700 mb-2"><strong>Email:</strong> privacy@bookproof.app</p>
+                <p className="text-gray-700 mb-2"><strong>Support:</strong> support@bookproof.app</p>
+                <p className="text-gray-700 mb-4"><strong>Data Protection Officer:</strong> dpo@bookproof.app</p>
 
                 <p className="text-gray-700 mb-2"><strong>Mailing Address:</strong></p>
                 <p className="text-gray-700">

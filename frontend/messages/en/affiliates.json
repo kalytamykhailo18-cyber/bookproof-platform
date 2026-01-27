@@ -31,7 +31,7 @@
       },
       "customSlug": {
         "label": "Custom Referral Slug (Optional)",
-        "description": "Create a custom vanity URL (e.g., 'my-blog' → bookproof.com?ref=my-blog)"
+        "description": "Create a custom vanity URL (e.g., 'my-blog' → bookproof.app?ref=my-blog)"
       },
       "submit": "Submit Application",
       "submitting": "Submitting..."

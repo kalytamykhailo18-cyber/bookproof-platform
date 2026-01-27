@@ -824,9 +824,9 @@ function ContactSection() {
                   type="button"
                   variant="link"
                   className="h-auto p-0 text-primary hover:underline"
-                  onClick={() => window.open('mailto:support@bookproof.com', '_self')}
+                  onClick={() => window.open('mailto:support@bookproof.app', '_self')}
                 >
-                  support@bookproof.com
+                  support@bookproof.app
                 </Button>
               </div>
             </CardContent>
