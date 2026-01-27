@@ -584,9 +584,12 @@ async function main() {
   for (const book of books) {
     const author = createdAuthors[book.authorEmail];
     const startDate = book.status === CampaignStatus.DRAFT ? null : randomPastDate(30);
+    const slug = book.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
-    const created = await prisma.book.create({
-      data: {
+    const created = await prisma.book.upsert({
+      where: { slug },
+      update: {
+        // Update existing book with new values
         authorProfileId: author.authorProfile.id,
         title: book.title,
         authorName: book.authorName,
@@ -605,7 +608,30 @@ async function main() {
         status: book.status,
         campaignStartDate: startDate,
         expectedEndDate: startDate ? new Date(startDate.getTime() + 42 * 24 * 60 * 60 * 1000) : null,
-        slug: book.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+        landingPageEnabled: book.status !== CampaignStatus.DRAFT,
+        landingPageLanguages: [author.preferredLanguage],
+        coverImageUrl: `https://picsum.photos/seed/${book.asin}/300/450`,
+      },
+      create: {
+        authorProfileId: author.authorProfile.id,
+        title: book.title,
+        authorName: book.authorName,
+        asin: book.asin,
+        amazonLink: `https://amazon.com/dp/${book.asin}`,
+        synopsis: `This is a captivating ${book.genre.toLowerCase()} book that will keep you engaged from start to finish. ${book.title} tells the story of unforgettable characters and their journey through extraordinary circumstances.`,
+        language: author.preferredLanguage,
+        genre: book.genre,
+        category: book.category,
+        availableFormats: book.format,
+        creditsAllocated: book.creditsAllocated,
+        creditsUsed: book.creditsUsed,
+        creditsRemaining: book.creditsAllocated - book.creditsUsed,
+        targetReviews: book.targetReviews,
+        reviewsPerWeek: Math.ceil(book.targetReviews / 6),
+        status: book.status,
+        campaignStartDate: startDate,
+        expectedEndDate: startDate ? new Date(startDate.getTime() + 42 * 24 * 60 * 60 * 1000) : null,
+        slug,
         landingPageEnabled: book.status !== CampaignStatus.DRAFT,
         landingPageLanguages: [author.preferredLanguage],
         totalPublicViews: Math.floor(Math.random() * 500),
@@ -705,8 +731,22 @@ async function main() {
         ? ReviewStatus.VALIDATED
         : ReviewStatus.VALIDATED;
 
-    await prisma.review.create({
-      data: {
+    await prisma.review.upsert({
+      where: { readerAssignmentId: assignment.id },
+      update: {
+        // Update existing review
+        bookId: assignment.bookId,
+        readerProfileId: assignment.readerProfileId,
+        amazonProfileId: amazonProfiles.length > 0 ? amazonProfiles[0].id : null,
+        internalRating: rating,
+        internalFeedback: `I really enjoyed reading "${assignment.book.title}". The story was engaging and well-written. I would recommend it to fans of ${assignment.book.genre}.`,
+        status,
+        validatedAt: status === ReviewStatus.VALIDATED ? randomPastDate(3) : null,
+        compensationPaid: status === ReviewStatus.VALIDATED,
+        compensationAmount: assignment.formatAssigned === BookFormat.AUDIOBOOK ? 4.00 : 2.00,
+        compensationPaidAt: status === ReviewStatus.VALIDATED ? randomPastDate(2) : null,
+      },
+      create: {
         readerAssignmentId: assignment.id,
         bookId: assignment.bookId,
         readerProfileId: assignment.readerProfileId,
