@@ -16,7 +16,13 @@ export class QueueService implements OnModuleInit {
   private queueEvents: Map<string, QueueEvents> = new Map();
 
   constructor(private configService: ConfigService) {
+    const redisEnabled = this.configService.get<boolean>('redis.enabled');
     const redisUrl = this.configService.get<string>('redis.url');
+
+    if (!redisEnabled) {
+      this.logger.warn('Redis disabled via REDIS_ENABLED=false. Background jobs will not work.');
+      return;
+    }
 
     if (!redisUrl) {
       this.logger.warn('Redis URL not configured. Background jobs will not work.');
@@ -34,7 +40,12 @@ export class QueueService implements OnModuleInit {
     }
   }
 
-  createQueue(queueName: string): Queue {
+  createQueue(queueName: string): Queue | null {
+    if (!this.connection) {
+      this.logger.warn(`Cannot create queue ${queueName} - Redis not connected`);
+      return null;
+    }
+
     if (this.queues.has(queueName)) {
       return this.queues.get(queueName)!;
     }
@@ -52,7 +63,12 @@ export class QueueService implements OnModuleInit {
   createWorker<T extends JobData>(
     queueName: string,
     processor: (job: { data: T }) => Promise<void>,
-  ): Worker {
+  ): Worker | null {
+    if (!this.connection) {
+      this.logger.warn(`Cannot create worker for ${queueName} - Redis not connected`);
+      return null;
+    }
+
     if (this.workers.has(queueName)) {
       return this.workers.get(queueName)!;
     }
@@ -87,6 +103,10 @@ export class QueueService implements OnModuleInit {
 
   async addJob(queueName: string, jobName: string, data: JobData, options?: unknown) {
     const queue = this.queues.get(queueName) || this.createQueue(queueName);
+    if (!queue) {
+      this.logger.warn(`Cannot add job to ${queueName} - queue not available`);
+      return null;
+    }
     const job = await queue.add(jobName, data, options as Parameters<Queue['add']>[2]);
     this.logger.log(`Job ${job.id} added to queue ${queueName}`);
     return job;
@@ -94,6 +114,10 @@ export class QueueService implements OnModuleInit {
 
   async addBulkJobs(queueName: string, jobs: { name: string; data: JobData }[]) {
     const queue = this.queues.get(queueName) || this.createQueue(queueName);
+    if (!queue) {
+      this.logger.warn(`Cannot add bulk jobs to ${queueName} - queue not available`);
+      return;
+    }
     await queue.addBulk(jobs);
     this.logger.log(`${jobs.length} jobs added to queue ${queueName}`);
   }

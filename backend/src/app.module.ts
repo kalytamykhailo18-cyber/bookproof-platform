@@ -151,8 +151,8 @@ import { UsersModule } from '@modules/users/users.module';
     PrismaModule,
     CacheModule,
     FilesModule,
-    QueueModule,
-    BullQueueModule,
+    QueueModule.forRoot(),
+    BullQueueModule.forRoot(),
     EmailModule,
     AuditModule,
 

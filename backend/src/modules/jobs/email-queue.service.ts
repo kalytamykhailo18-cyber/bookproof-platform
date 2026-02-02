@@ -1,5 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bullmq';
+import { Injectable, Logger, Optional, Inject } from '@nestjs/common';
 import { Queue, JobsOptions } from 'bullmq';
 import { EmailType, Language } from '@prisma/client';
 import { EmailVariables } from '@modules/email/email-template.service';
@@ -14,14 +13,22 @@ import { SendEmailJobData } from './processors/email-sender.processor';
  * - Automatic retries on failure
  * - Rate limiting and throttling
  * - Better error handling
+ *
+ * When Redis is disabled (REDIS_ENABLED=false), falls back to sync email sending
  */
 @Injectable()
 export class EmailQueueService {
   private readonly logger = new Logger(EmailQueueService.name);
+  private readonly redisEnabled: boolean;
 
   constructor(
-    @InjectQueue('email-queue') private emailQueue: Queue<SendEmailJobData>,
-  ) {}
+    @Optional() @Inject('BullQueue_email-queue') private emailQueue?: Queue<SendEmailJobData>,
+  ) {
+    this.redisEnabled = process.env.REDIS_ENABLED === 'true';
+    if (!this.redisEnabled) {
+      this.logger.warn('Redis disabled - email queue operations will be no-ops');
+    }
+  }
 
   /**
    * Add email to queue for async sending
@@ -34,6 +41,11 @@ export class EmailQueueService {
     language: Language = Language.EN,
     options?: JobsOptions,
   ): Promise<string> {
+    if (!this.emailQueue) {
+      this.logger.warn(`Email queue disabled - skipping ${type} to ${to}`);
+      return `no-queue-${Date.now()}`;
+    }
+
     try {
       const job = await this.emailQueue.add(
         'send-email',
@@ -111,6 +123,10 @@ export class EmailQueueService {
    * Get queue statistics
    */
   async getQueueStats() {
+    if (!this.emailQueue) {
+      return { waiting: 0, active: 0, completed: 0, failed: 0, delayed: 0, total: 0, disabled: true };
+    }
+
     const [waiting, active, completed, failed, delayed] = await Promise.all([
       this.emailQueue.getWaitingCount(),
       this.emailQueue.getActiveCount(),
@@ -133,6 +149,8 @@ export class EmailQueueService {
    * Get job status by ID
    */
   async getJobStatus(jobId: string) {
+    if (!this.emailQueue) return null;
+
     const job = await this.emailQueue.getJob(jobId);
 
     if (!job) {
@@ -157,6 +175,8 @@ export class EmailQueueService {
    * Retry failed job
    */
   async retryFailedJob(jobId: string): Promise<void> {
+    if (!this.emailQueue) return;
+
     const job = await this.emailQueue.getJob(jobId);
 
     if (!job) {
@@ -171,6 +191,7 @@ export class EmailQueueService {
    * Clear completed jobs (admin maintenance)
    */
   async clearCompletedJobs(): Promise<void> {
+    if (!this.emailQueue) return;
     await this.emailQueue.clean(86400000, 1000, 'completed'); // 24 hours, keep 1000
     this.logger.log('Cleared old completed jobs');
   }
@@ -179,6 +200,7 @@ export class EmailQueueService {
    * Clear failed jobs (admin maintenance)
    */
   async clearFailedJobs(): Promise<void> {
+    if (!this.emailQueue) return;
     await this.emailQueue.clean(604800000, 5000, 'failed'); // 7 days, keep 5000
     this.logger.log('Cleared old failed jobs');
   }
@@ -187,6 +209,7 @@ export class EmailQueueService {
    * Pause queue (admin action)
    */
   async pauseQueue(): Promise<void> {
+    if (!this.emailQueue) return;
     await this.emailQueue.pause();
     this.logger.warn('Email queue PAUSED');
   }
@@ -195,6 +218,7 @@ export class EmailQueueService {
    * Resume queue (admin action)
    */
   async resumeQueue(): Promise<void> {
+    if (!this.emailQueue) return;
     await this.emailQueue.resume();
     this.logger.log('Email queue RESUMED');
   }
@@ -203,6 +227,7 @@ export class EmailQueueService {
    * Drain queue (remove all waiting jobs)
    */
   async drainQueue(): Promise<void> {
+    if (!this.emailQueue) return;
     await this.emailQueue.drain();
     this.logger.warn('Email queue DRAINED (all waiting jobs removed)');
   }

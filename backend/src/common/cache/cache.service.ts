@@ -25,8 +25,14 @@ export class CacheService implements OnModuleInit {
   constructor(private configService: ConfigService) {}
 
   async onModuleInit() {
+    const redisEnabled = this.configService.get<boolean>('redis.enabled');
     const redisUrl = this.configService.get<string>('redis.url');
     const redisToken = this.configService.get<string>('redis.token');
+
+    if (!redisEnabled) {
+      this.logger.warn('Redis disabled via REDIS_ENABLED=false. Caching disabled.');
+      return;
+    }
 
     if (!redisUrl) {
       this.logger.warn('Redis URL not configured. Caching disabled.');
