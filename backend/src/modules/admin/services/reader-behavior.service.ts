@@ -386,28 +386,48 @@ export class ReaderBehaviorService {
       },
     });
 
+    if (flaggedReaders.length === 0) return [];
+
+    // Batch fetch all reader profiles in one query
+    const readerProfileIds = flaggedReaders.map((fg) => fg.readerProfileId);
+    const readerProfiles = await this.prisma.readerProfile.findMany({
+      where: { id: { in: readerProfileIds } },
+      include: {
+        user: true,
+      },
+    });
+
+    // Batch fetch all flags in one query
+    const allFlags = await this.prisma.readerBehaviorFlag.findMany({
+      where: {
+        readerProfileId: { in: readerProfileIds },
+        status: 'ACTIVE' as any,
+      },
+      select: {
+        readerProfileId: true,
+        flagType: true,
+      },
+    });
+
+    // Build lookup maps for O(1) access
+    const readerProfileMap = new Map(
+      readerProfiles.map((rp) => [rp.id, rp]),
+    );
+    const flagsMap = new Map<string, BehaviorFlagType[]>();
+    allFlags.forEach((flag) => {
+      if (!flagsMap.has(flag.readerProfileId)) {
+        flagsMap.set(flag.readerProfileId, []);
+      }
+      flagsMap.get(flag.readerProfileId)!.push(flag.flagType as BehaviorFlagType);
+    });
+
+    // Build results from batched data
     const results: SuspiciousReaderDto[] = [];
-
     for (const flagGroup of flaggedReaders) {
-      const readerProfile = await this.prisma.readerProfile.findUnique({
-        where: { id: flagGroup.readerProfileId },
-        include: {
-          user: true,
-        },
-      });
-
+      const readerProfile = readerProfileMap.get(flagGroup.readerProfileId);
       if (!readerProfile) continue;
 
-      // Get flag types for this reader
-      const flags = await this.prisma.readerBehaviorFlag.findMany({
-        where: {
-          readerProfileId: flagGroup.readerProfileId,
-          status: 'ACTIVE' as any,
-        },
-        select: {
-          flagType: true,
-        },
-      });
+      const flags = flagsMap.get(flagGroup.readerProfileId) || [];
 
       results.push({
         readerProfileId: readerProfile.id,
@@ -418,7 +438,7 @@ export class ReaderBehaviorService {
           : 100,
         activeFlagCount: flagGroup._count.id,
         highestSeverity: (flagGroup._max.severity as IssueSeverity) || IssueSeverity.LOW,
-        flagTypes: flags.map((f) => f.flagType as BehaviorFlagType),
+        flagTypes: flags,
         lastFlagDate: flagGroup._max.createdAt || new Date(),
         isFlagged: readerProfile.isFlagged,
         isActive: readerProfile.isActive,

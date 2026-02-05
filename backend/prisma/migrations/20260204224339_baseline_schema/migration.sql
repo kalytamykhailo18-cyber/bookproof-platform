@@ -8,6 +8,12 @@ CREATE TYPE "Language" AS ENUM ('EN', 'PT', 'ES');
 CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'COMPLETED', 'FAILED', 'REFUNDED', 'CANCELLED');
 
 -- CreateEnum
+CREATE TYPE "RefundReason" AS ENUM ('DIDNT_NEED_CREDITS', 'WRONG_PACKAGE', 'ACCIDENTAL_PURCHASE', 'SERVICE_NOT_AS_EXPECTED', 'OTHER');
+
+-- CreateEnum
+CREATE TYPE "RefundRequestStatus" AS ENUM ('PENDING', 'APPROVED', 'PARTIALLY_APPROVED', 'REJECTED', 'PROCESSING', 'COMPLETED');
+
+-- CreateEnum
 CREATE TYPE "SubscriptionStatus" AS ENUM ('ACTIVE', 'PAST_DUE', 'CANCELED', 'INCOMPLETE', 'INCOMPLETE_EXPIRED', 'TRIALING', 'UNPAID');
 
 -- CreateEnum
@@ -26,7 +32,7 @@ CREATE TYPE "ContentPreference" AS ENUM ('EBOOK', 'AUDIOBOOK', 'BOTH');
 CREATE TYPE "AssignmentStatus" AS ENUM ('WAITING', 'SCHEDULED', 'APPROVED', 'IN_PROGRESS', 'SUBMITTED', 'VALIDATED', 'COMPLETED', 'EXPIRED', 'REASSIGNED', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "ReminderType" AS ENUM ('MATERIALS_READY', 'DEADLINE_24H', 'DEADLINE_48H', 'DEADLINE_72H', 'EXPIRATION_NOTICE');
+CREATE TYPE "ReminderType" AS ENUM ('MATERIALS_READY', 'DEADLINE_24H', 'DEADLINE_48H', 'DEADLINE_60H', 'DEADLINE_69H', 'DEADLINE_72H', 'EXPIRATION_NOTICE');
 
 -- CreateEnum
 CREATE TYPE "ReviewStatus" AS ENUM ('PENDING_SUBMISSION', 'SUBMITTED', 'PENDING_VALIDATION', 'VALIDATED', 'REJECTED', 'FLAGGED', 'REMOVED_BY_AMAZON');
@@ -50,7 +56,10 @@ CREATE TYPE "PayoutRequestStatus" AS ENUM ('REQUESTED', 'PENDING_REVIEW', 'APPRO
 CREATE TYPE "AdminRole" AS ENUM ('SUPER_ADMIN', 'ADMIN', 'MODERATOR', 'SUPPORT');
 
 -- CreateEnum
-CREATE TYPE "CustomPackageStatus" AS ENUM ('DRAFT', 'SENT', 'VIEWED', 'PAID', 'EXPIRED', 'CANCELLED');
+CREATE TYPE "CustomPackageStatus" AS ENUM ('DRAFT', 'PENDING_APPROVAL', 'SENT', 'VIEWED', 'PAID', 'EXPIRED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "PackageApprovalStatus" AS ENUM ('NOT_REQUIRED', 'PENDING', 'APPROVED', 'REJECTED');
 
 -- CreateEnum
 CREATE TYPE "CommissionStatus" AS ENUM ('PENDING', 'APPROVED', 'PAID', 'CANCELLED');
@@ -74,7 +83,7 @@ CREATE TYPE "TargetMarket" AS ENUM ('US', 'BR');
 CREATE TYPE "LogSeverity" AS ENUM ('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL');
 
 -- CreateEnum
-CREATE TYPE "EmailType" AS ENUM ('WELCOME', 'EMAIL_VERIFICATION', 'PASSWORD_RESET', 'PASSWORD_CHANGED', 'READER_APPLICATION_RECEIVED', 'READER_MATERIALS_READY', 'READER_DEADLINE_24H', 'READER_DEADLINE_48H', 'READER_DEADLINE_72H', 'READER_ASSIGNMENT_EXPIRED', 'READER_REVIEW_VALIDATED', 'READER_REVIEW_REJECTED', 'READER_PAYOUT_COMPLETED', 'READER_ASSIGNMENT_REASSIGNED', 'READER_ASSIGNMENT_CANCELLED', 'READER_DEADLINE_EXTENDED', 'READER_RESUBMISSION_REQUESTED', 'AUTHOR_CAMPAIGN_STARTED', 'AUTHOR_CAMPAIGN_COMPLETED', 'AUTHOR_REPORT_READY', 'AUTHOR_PAYMENT_RECEIVED', 'AUTHOR_PAYMENT_FAILED', 'AUTHOR_CREDITS_EXPIRING_SOON', 'AUTHOR_CREDITS_EXPIRED', 'AUTHOR_CREDITS_ADDED', 'AUTHOR_CREDITS_REMOVED', 'ADMIN_NEW_ISSUE', 'ADMIN_URGENT_ISSUE', 'ADMIN_PAYOUT_REQUESTED', 'ADMIN_NEW_AFFILIATE_APPLICATION', 'PAYMENT_RECEIVED', 'PAYMENT_FAILED', 'REFUND_PROCESSED', 'SUBSCRIPTION_RENEWED', 'SUBSCRIPTION_CANCELLED', 'KEYWORD_RESEARCH_READY', 'AFFILIATE_APPLICATION_RECEIVED', 'AFFILIATE_APPLICATION_APPROVED', 'AFFILIATE_APPLICATION_REJECTED', 'AFFILIATE_PAYOUT_PROCESSED', 'AFFILIATE_NEW_REFERRAL', 'CLOSER_PAYMENT_RECEIVED', 'CLOSER_ACCOUNT_CREATED', 'CLOSER_PACKAGE_SENT_TO_CLIENT', 'AUTHOR_ACCOUNT_CREATED_BY_CLOSER', 'LANDING_PAGE_WELCOME');
+CREATE TYPE "EmailType" AS ENUM ('WELCOME', 'EMAIL_VERIFICATION', 'PASSWORD_RESET', 'PASSWORD_CHANGED', 'READER_APPLICATION_RECEIVED', 'READER_MATERIALS_READY', 'READER_DEADLINE_24H', 'READER_DEADLINE_48H', 'READER_DEADLINE_72H', 'READER_ASSIGNMENT_EXPIRED', 'READER_REVIEW_SUBMITTED', 'READER_REVIEW_VALIDATED', 'READER_REVIEW_REJECTED', 'READER_PAYOUT_COMPLETED', 'READER_ASSIGNMENT_REASSIGNED', 'READER_ASSIGNMENT_CANCELLED', 'READER_DEADLINE_EXTENDED', 'READER_RESUBMISSION_REQUESTED', 'READER_REPLACEMENT_ASSIGNED', 'AUTHOR_CAMPAIGN_STARTED', 'AUTHOR_CAMPAIGN_COMPLETED', 'AUTHOR_REPORT_READY', 'AUTHOR_PAYMENT_RECEIVED', 'AUTHOR_PAYMENT_FAILED', 'AUTHOR_CREDITS_EXPIRING_SOON', 'AUTHOR_CREDITS_EXPIRED', 'AUTHOR_CREDITS_ADDED', 'AUTHOR_CREDITS_REMOVED', 'ADMIN_NEW_ISSUE', 'ADMIN_URGENT_ISSUE', 'ADMIN_PAYOUT_REQUESTED', 'ADMIN_NEW_AFFILIATE_APPLICATION', 'ADMIN_CRITICAL_ERROR', 'ADMIN_NOTIFICATION', 'PAYMENT_RECEIVED', 'PAYMENT_FAILED', 'REFUND_PROCESSED', 'SUBSCRIPTION_RENEWED', 'SUBSCRIPTION_CANCELLED', 'KEYWORD_RESEARCH_READY', 'AFFILIATE_APPLICATION_RECEIVED', 'AFFILIATE_APPLICATION_APPROVED', 'AFFILIATE_APPLICATION_REJECTED', 'AFFILIATE_PAYOUT_PROCESSED', 'AFFILIATE_NEW_REFERRAL', 'CLOSER_PAYMENT_RECEIVED', 'CLOSER_ACCOUNT_CREATED', 'CLOSER_PACKAGE_SENT_TO_CLIENT', 'AUTHOR_ACCOUNT_CREATED_BY_CLOSER', 'LANDING_PAGE_WELCOME');
 
 -- CreateEnum
 CREATE TYPE "EmailStatus" AS ENUM ('PENDING', 'SENT', 'DELIVERED', 'OPENED', 'CLICKED', 'BOUNCED', 'FAILED', 'SPAM_COMPLAINT');
@@ -93,6 +102,9 @@ CREATE TYPE "DisputeStatus" AS ENUM ('OPEN', 'IN_PROGRESS', 'RESOLVED', 'ESCALAT
 
 -- CreateEnum
 CREATE TYPE "DisputePriority" AS ENUM ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL');
+
+-- CreateEnum
+CREATE TYPE "AppealStatus" AS ENUM ('NONE', 'PENDING', 'APPROVED', 'REJECTED');
 
 -- CreateEnum
 CREATE TYPE "PaymentIssueType" AS ENUM ('PAYMENT_FAILED', 'PAYMENT_DISPUTE', 'REFUND_REQUEST', 'PAYOUT_ISSUE', 'DUPLICATE_PAYMENT', 'CREDIT_MISMATCH', 'OTHER');
@@ -129,6 +141,12 @@ CREATE TABLE "User" (
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "emailVerifiedAt" TIMESTAMP(3),
     "tokenVersion" INTEGER NOT NULL DEFAULT 0,
+    "isBanned" BOOLEAN NOT NULL DEFAULT false,
+    "bannedAt" TIMESTAMP(3),
+    "bannedBy" TEXT,
+    "banReason" TEXT,
+    "deletionScheduledAt" TIMESTAMP(3),
+    "deletionReason" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "notificationEmailEnabled" BOOLEAN NOT NULL DEFAULT true,
@@ -158,6 +176,7 @@ CREATE TABLE "AuthorProfile" (
     "totalCreditsPurchased" INTEGER NOT NULL DEFAULT 0,
     "totalCreditsUsed" INTEGER NOT NULL DEFAULT 0,
     "availableCredits" INTEGER NOT NULL DEFAULT 0,
+    "pendingKeywordResearchCredits" INTEGER NOT NULL DEFAULT 0,
     "stripeCustomerId" TEXT,
     "referredByAffiliateId" TEXT,
     "referredByCloserId" TEXT,
@@ -165,6 +184,11 @@ CREATE TABLE "AuthorProfile" (
     "accountCreatedByCloser" BOOLEAN NOT NULL DEFAULT false,
     "termsAccepted" BOOLEAN NOT NULL DEFAULT false,
     "termsAcceptedAt" TIMESTAMP(3),
+    "isSuspended" BOOLEAN NOT NULL DEFAULT false,
+    "suspendedAt" TIMESTAMP(3),
+    "suspendedBy" TEXT,
+    "suspendReason" TEXT,
+    "adminNotes" TEXT,
     "lastLoginAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -198,8 +222,11 @@ CREATE TABLE "CreditPurchase" (
     "packageTierId" TEXT,
     "credits" INTEGER NOT NULL,
     "amountPaid" DECIMAL(10,2) NOT NULL,
+    "baseAmount" DECIMAL(10,2),
+    "discountAmount" DECIMAL(10,2),
     "currency" TEXT NOT NULL DEFAULT 'USD',
     "validityDays" INTEGER NOT NULL,
+    "activationWindowDays" INTEGER NOT NULL DEFAULT 30,
     "purchaseDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "activationWindowExpiresAt" TIMESTAMP(3) NOT NULL,
     "activated" BOOLEAN NOT NULL DEFAULT false,
@@ -217,6 +244,26 @@ CREATE TABLE "CreditPurchase" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "CreditPurchase_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "RefundRequest" (
+    "id" TEXT NOT NULL,
+    "creditPurchaseId" TEXT NOT NULL,
+    "authorProfileId" TEXT NOT NULL,
+    "reason" "RefundReason" NOT NULL,
+    "explanation" TEXT,
+    "status" "RefundRequestStatus" NOT NULL DEFAULT 'PENDING',
+    "adminNotes" TEXT,
+    "reviewedBy" TEXT,
+    "reviewedAt" TIMESTAMP(3),
+    "refundAmount" DECIMAL(10,2),
+    "stripeRefundId" TEXT,
+    "processedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "RefundRequest_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -272,6 +319,7 @@ CREATE TABLE "Book" (
     "synopsisFileName" TEXT,
     "language" "Language" NOT NULL,
     "genre" TEXT NOT NULL,
+    "secondaryGenre" TEXT,
     "category" TEXT NOT NULL,
     "publishedDate" TIMESTAMP(3),
     "pageCount" INTEGER,
@@ -288,6 +336,24 @@ CREATE TABLE "Book" (
     "audioBookDuration" INTEGER,
     "coverImageUrl" TEXT,
     "readingInstructions" TEXT,
+    "slug" TEXT,
+    "landingPageEnabled" BOOLEAN NOT NULL DEFAULT false,
+    "landingPageLanguages" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "titleEN" TEXT,
+    "titlePT" TEXT,
+    "titleES" TEXT,
+    "synopsisEN" TEXT,
+    "synopsisPT" TEXT,
+    "synopsisES" TEXT,
+    "totalPublicViews" INTEGER NOT NULL DEFAULT 0,
+    "totalENViews" INTEGER NOT NULL DEFAULT 0,
+    "totalPTViews" INTEGER NOT NULL DEFAULT 0,
+    "totalESViews" INTEGER NOT NULL DEFAULT 0,
+    "lastViewedAt" TIMESTAMP(3),
+    "totalUniqueVisitors" INTEGER NOT NULL DEFAULT 0,
+    "uniqueENVisitors" INTEGER NOT NULL DEFAULT 0,
+    "uniquePTVisitors" INTEGER NOT NULL DEFAULT 0,
+    "uniqueESVisitors" INTEGER NOT NULL DEFAULT 0,
     "creditsAllocated" INTEGER NOT NULL DEFAULT 0,
     "creditsUsed" INTEGER NOT NULL DEFAULT 0,
     "creditsRemaining" INTEGER NOT NULL DEFAULT 0,
@@ -316,6 +382,19 @@ CREATE TABLE "Book" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Book_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "CampaignView" (
+    "id" TEXT NOT NULL,
+    "bookId" TEXT NOT NULL,
+    "visitorHash" TEXT NOT NULL,
+    "language" "Language" NOT NULL,
+    "viewedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "viewCount" INTEGER NOT NULL DEFAULT 1,
+    "lastViewedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "CampaignView_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -376,6 +455,11 @@ CREATE TABLE "ReaderProfile" (
     "flagReason" TEXT,
     "flaggedAt" TIMESTAMP(3),
     "flaggedBy" TEXT,
+    "isSuspended" BOOLEAN NOT NULL DEFAULT false,
+    "suspendedAt" TIMESTAMP(3),
+    "suspendedBy" TEXT,
+    "suspendReason" TEXT,
+    "adminNotes" TEXT,
     "preferredGenres" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "lastLoginAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -392,10 +476,22 @@ CREATE TABLE "AmazonProfile" (
     "profileName" TEXT,
     "isVerified" BOOLEAN NOT NULL DEFAULT false,
     "verifiedAt" TIMESTAMP(3),
+    "verifiedBy" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "AmazonProfile_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ReaderAdminNote" (
+    "id" TEXT NOT NULL,
+    "readerProfileId" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "createdBy" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "ReaderAdminNote_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -429,8 +525,13 @@ CREATE TABLE "ReaderAssignment" (
     "reassignmentReason" TEXT,
     "reassignedBy" TEXT,
     "reassignedAt" TIMESTAMP(3),
+    "cancelledAt" TIMESTAMP(3),
     "cancelledBy" TEXT,
     "cancellationReason" TEXT,
+    "isManualGrant" BOOLEAN NOT NULL DEFAULT false,
+    "manualGrantBy" TEXT,
+    "manualGrantReason" TEXT,
+    "completedAt" TIMESTAMP(3),
     "withdrawnByReader" BOOLEAN NOT NULL DEFAULT false,
     "withdrawnAt" TIMESTAMP(3),
     "withdrawalReason" TEXT,
@@ -618,8 +719,8 @@ CREATE TABLE "CloserProfile" (
     "totalSales" DECIMAL(10,2) NOT NULL DEFAULT 0,
     "totalClients" INTEGER NOT NULL DEFAULT 0,
     "totalPackagesSold" INTEGER NOT NULL DEFAULT 0,
-    "commissionEnabled" BOOLEAN NOT NULL DEFAULT false,
-    "commissionRate" DECIMAL(5,2),
+    "commissionEnabled" BOOLEAN NOT NULL DEFAULT true,
+    "commissionRate" DECIMAL(5,2) NOT NULL DEFAULT 0,
     "commissionEarned" DECIMAL(10,2) NOT NULL DEFAULT 0,
     "commissionPaid" DECIMAL(10,2) NOT NULL DEFAULT 0,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
@@ -646,7 +747,15 @@ CREATE TABLE "CustomPackage" (
     "clientName" TEXT NOT NULL,
     "clientEmail" TEXT NOT NULL,
     "clientCompany" TEXT,
+    "clientPhone" TEXT,
+    "includeKeywordResearch" BOOLEAN NOT NULL DEFAULT false,
+    "keywordResearchCredits" INTEGER NOT NULL DEFAULT 0,
     "status" "CustomPackageStatus" NOT NULL DEFAULT 'DRAFT',
+    "approvalRequired" BOOLEAN NOT NULL DEFAULT false,
+    "approvalStatus" "PackageApprovalStatus" NOT NULL DEFAULT 'NOT_REQUIRED',
+    "approvedBy" TEXT,
+    "approvedAt" TIMESTAMP(3),
+    "rejectionReason" TEXT,
     "paymentLink" TEXT,
     "paymentLinkExpiresAt" TIMESTAMP(3),
     "sentAt" TIMESTAMP(3),
@@ -855,11 +964,13 @@ CREATE TABLE "KeywordResearch" (
     "authorProfileId" TEXT NOT NULL,
     "bookId" TEXT,
     "bookTitle" TEXT NOT NULL,
+    "bookSubtitle" TEXT,
     "genre" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "targetAudience" TEXT NOT NULL,
     "competingBooks" TEXT,
+    "specificKeywords" TEXT,
     "bookLanguage" "Language" NOT NULL,
     "targetMarket" "TargetMarket" NOT NULL DEFAULT 'US',
     "additionalNotes" TEXT,
@@ -921,6 +1032,9 @@ CREATE TABLE "LandingPageLead" (
     "source" TEXT,
     "medium" TEXT,
     "campaign" TEXT,
+    "content" TEXT,
+    "term" TEXT,
+    "affiliateRef" TEXT,
     "referrer" TEXT,
     "ipAddress" TEXT,
     "country" TEXT,
@@ -1048,7 +1162,17 @@ CREATE TABLE "Dispute" (
     "escalatedBy" TEXT,
     "escalatedAt" TIMESTAMP(3),
     "escalationReason" TEXT,
+    "firstResponseAt" TIMESTAMP(3),
+    "firstResponseBy" TEXT,
+    "slaDeadline" TIMESTAMP(3),
+    "slaBreached" BOOLEAN NOT NULL DEFAULT false,
     "adminNotes" TEXT,
+    "appealedAt" TIMESTAMP(3),
+    "appealReason" TEXT,
+    "appealStatus" "AppealStatus" DEFAULT 'NONE',
+    "appealResolvedBy" TEXT,
+    "appealResolvedAt" TIMESTAMP(3),
+    "appealResolution" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -1169,6 +1293,21 @@ CREATE INDEX "CreditPurchase_paymentStatus_idx" ON "CreditPurchase"("paymentStat
 CREATE INDEX "CreditPurchase_purchaseDate_idx" ON "CreditPurchase"("purchaseDate");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "RefundRequest_stripeRefundId_key" ON "RefundRequest"("stripeRefundId");
+
+-- CreateIndex
+CREATE INDEX "RefundRequest_creditPurchaseId_idx" ON "RefundRequest"("creditPurchaseId");
+
+-- CreateIndex
+CREATE INDEX "RefundRequest_authorProfileId_idx" ON "RefundRequest"("authorProfileId");
+
+-- CreateIndex
+CREATE INDEX "RefundRequest_status_idx" ON "RefundRequest"("status");
+
+-- CreateIndex
+CREATE INDEX "RefundRequest_createdAt_idx" ON "RefundRequest"("createdAt");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Subscription_stripeSubscriptionId_key" ON "Subscription"("stripeSubscriptionId");
 
 -- CreateIndex
@@ -1193,6 +1332,9 @@ CREATE INDEX "CreditTransaction_type_idx" ON "CreditTransaction"("type");
 CREATE INDEX "CreditTransaction_createdAt_idx" ON "CreditTransaction"("createdAt");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Book_slug_key" ON "Book"("slug");
+
+-- CreateIndex
 CREATE INDEX "Book_authorProfileId_idx" ON "Book"("authorProfileId");
 
 -- CreateIndex
@@ -1212,6 +1354,30 @@ CREATE INDEX "Book_genre_idx" ON "Book"("genre");
 
 -- CreateIndex
 CREATE INDEX "Book_category_idx" ON "Book"("category");
+
+-- CreateIndex
+CREATE INDEX "Book_slug_idx" ON "Book"("slug");
+
+-- CreateIndex
+CREATE INDEX "Book_landingPageEnabled_idx" ON "Book"("landingPageEnabled");
+
+-- CreateIndex
+CREATE INDEX "Book_createdAt_idx" ON "Book"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "Book_status_createdAt_idx" ON "Book"("status", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "CampaignView_bookId_idx" ON "CampaignView"("bookId");
+
+-- CreateIndex
+CREATE INDEX "CampaignView_visitorHash_idx" ON "CampaignView"("visitorHash");
+
+-- CreateIndex
+CREATE INDEX "CampaignView_viewedAt_idx" ON "CampaignView"("viewedAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CampaignView_bookId_visitorHash_language_key" ON "CampaignView"("bookId", "visitorHash", "language");
 
 -- CreateIndex
 CREATE INDEX "CampaignMetric_bookId_idx" ON "CampaignMetric"("bookId");
@@ -1250,6 +1416,15 @@ CREATE INDEX "ReaderProfile_reliabilityScore_idx" ON "ReaderProfile"("reliabilit
 CREATE INDEX "AmazonProfile_readerProfileId_idx" ON "AmazonProfile"("readerProfileId");
 
 -- CreateIndex
+CREATE INDEX "ReaderAdminNote_readerProfileId_idx" ON "ReaderAdminNote"("readerProfileId");
+
+-- CreateIndex
+CREATE INDEX "ReaderAdminNote_createdBy_idx" ON "ReaderAdminNote"("createdBy");
+
+-- CreateIndex
+CREATE INDEX "ReaderAdminNote_createdAt_idx" ON "ReaderAdminNote"("createdAt");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "ReaderAssignment_audioAccessToken_key" ON "ReaderAssignment"("audioAccessToken");
 
 -- CreateIndex
@@ -1278,6 +1453,12 @@ CREATE INDEX "ReaderAssignment_amazonProfileId_idx" ON "ReaderAssignment"("amazo
 
 -- CreateIndex
 CREATE INDEX "ReaderAssignment_bookId_status_idx" ON "ReaderAssignment"("bookId", "status");
+
+-- CreateIndex
+CREATE INDEX "ReaderAssignment_readerProfileId_status_idx" ON "ReaderAssignment"("readerProfileId", "status");
+
+-- CreateIndex
+CREATE INDEX "ReaderAssignment_createdAt_idx" ON "ReaderAssignment"("createdAt");
 
 -- CreateIndex
 CREATE INDEX "Reminder_readerAssignmentId_idx" ON "Reminder"("readerAssignmentId");
@@ -1314,6 +1495,12 @@ CREATE INDEX "Review_submittedAt_idx" ON "Review"("submittedAt");
 
 -- CreateIndex
 CREATE INDEX "Review_amazonProfileId_idx" ON "Review"("amazonProfileId");
+
+-- CreateIndex
+CREATE INDEX "Review_bookId_status_idx" ON "Review"("bookId", "status");
+
+-- CreateIndex
+CREATE INDEX "Review_createdAt_idx" ON "Review"("createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "AmazonReviewMonitor_reviewId_key" ON "AmazonReviewMonitor"("reviewId");
@@ -1655,6 +1842,12 @@ CREATE INDEX "Dispute_relatedEntityType_relatedEntityId_idx" ON "Dispute"("relat
 CREATE INDEX "Dispute_createdAt_idx" ON "Dispute"("createdAt");
 
 -- CreateIndex
+CREATE INDEX "Dispute_slaBreached_idx" ON "Dispute"("slaBreached");
+
+-- CreateIndex
+CREATE INDEX "Dispute_appealStatus_idx" ON "Dispute"("appealStatus");
+
+-- CreateIndex
 CREATE INDEX "PaymentIssue_userId_idx" ON "PaymentIssue"("userId");
 
 -- CreateIndex
@@ -1709,6 +1902,12 @@ ALTER TABLE "CreditPurchase" ADD CONSTRAINT "CreditPurchase_packageTierId_fkey" 
 ALTER TABLE "CreditPurchase" ADD CONSTRAINT "CreditPurchase_couponId_fkey" FOREIGN KEY ("couponId") REFERENCES "Coupon"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "RefundRequest" ADD CONSTRAINT "RefundRequest_creditPurchaseId_fkey" FOREIGN KEY ("creditPurchaseId") REFERENCES "CreditPurchase"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "RefundRequest" ADD CONSTRAINT "RefundRequest_authorProfileId_fkey" FOREIGN KEY ("authorProfileId") REFERENCES "AuthorProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_authorProfileId_fkey" FOREIGN KEY ("authorProfileId") REFERENCES "AuthorProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -1721,6 +1920,9 @@ ALTER TABLE "CreditTransaction" ADD CONSTRAINT "CreditTransaction_bookId_fkey" F
 ALTER TABLE "Book" ADD CONSTRAINT "Book_authorProfileId_fkey" FOREIGN KEY ("authorProfileId") REFERENCES "AuthorProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "CampaignView" ADD CONSTRAINT "CampaignView_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "CampaignMetric" ADD CONSTRAINT "CampaignMetric_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -1731,6 +1933,12 @@ ALTER TABLE "ReaderProfile" ADD CONSTRAINT "ReaderProfile_userId_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "AmazonProfile" ADD CONSTRAINT "AmazonProfile_readerProfileId_fkey" FOREIGN KEY ("readerProfileId") REFERENCES "ReaderProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ReaderAdminNote" ADD CONSTRAINT "ReaderAdminNote_readerProfileId_fkey" FOREIGN KEY ("readerProfileId") REFERENCES "ReaderProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ReaderAdminNote" ADD CONSTRAINT "ReaderAdminNote_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ReaderAssignment" ADD CONSTRAINT "ReaderAssignment_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1830,3 +2038,4 @@ ALTER TABLE "EmailLog" ADD CONSTRAINT "EmailLog_userId_fkey" FOREIGN KEY ("userI
 
 -- AddForeignKey
 ALTER TABLE "Notification" ADD CONSTRAINT "Notification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+

@@ -13,6 +13,7 @@ class ApiClient {
         'Content-Type': 'application/json',
       },
       withCredentials: true,
+      timeout: 30000, // 30 second timeout for all requests
     });
 
     this.setupInterceptors();

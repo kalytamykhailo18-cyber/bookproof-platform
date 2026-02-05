@@ -32,11 +32,16 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  console.time('[LOGIN] Total Page Load Time');
+  console.log('[LOGIN] 1. Component function started', new Date().toISOString());
+
   const t = useTranslations('auth.login');
   const router = useRouter();
   const searchParams = useSearchParams();
   const params = useParams();
   const locale = (params.locale as string) || 'en';
+
+  console.log('[LOGIN] 2. Hooks initializing', new Date().toISOString());
   const { loginAsync, isLoggingIn } = useAuth();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
   const [rememberMe, setRememberMe] = useState(false);
@@ -57,8 +62,15 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
+  console.log('[LOGIN] 3. All hooks initialized', new Date().toISOString());
+  console.timeEnd('[LOGIN] Total Page Load Time');
+
   const handleLogin = async () => {
+    console.log('[LOGIN] 4. Login button clicked', new Date().toISOString());
+    console.time('[LOGIN] Login Process Duration');
+
     const isValid = await trigger();
+    console.log('[LOGIN] 5. Form validation complete, valid:', isValid, new Date().toISOString());
     if (!isValid) return;
 
     const data = getValues();
@@ -66,10 +78,15 @@ export default function LoginPage() {
       // Get reCAPTCHA token if enabled
       let captchaToken: string | undefined;
       if (isRecaptchaEnabled) {
+        console.log('[LOGIN] 6. Getting reCAPTCHA token...', new Date().toISOString());
         captchaToken = await executeRecaptcha('login');
+        console.log('[LOGIN] 7. reCAPTCHA token received', new Date().toISOString());
       }
 
+      console.log('[LOGIN] 8. Calling login API...', new Date().toISOString());
       await loginAsync({ ...data, captchaToken, rememberMe });
+      console.log('[LOGIN] 9. Login API successful', new Date().toISOString());
+      console.timeEnd('[LOGIN] Login Process Duration');
       toast.success(t('success'));
 
       // Section 16.1: Redirect to intended destination after successful login

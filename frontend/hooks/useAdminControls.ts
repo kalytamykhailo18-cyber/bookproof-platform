@@ -62,12 +62,19 @@ export function useAdminControls() {
     });
 
   // Get all authors
-  const useAllAuthors = () =>
-    useQuery({
-      queryKey: ['admin-authors'],
-      queryFn: () => adminControlsApi.getAllAuthors(),
+  const useAllAuthors = (limit: number = 100, offset: number = 0) => {
+    console.log('[HOOK] useAllAuthors called', { limit, offset, time: new Date().toISOString() });
+    return useQuery({
+      queryKey: ['admin-authors', limit, offset],
+      queryFn: async () => {
+        console.log('[HOOK] useAllAuthors queryFn START', new Date().toISOString());
+        const result = await adminControlsApi.getAllAuthors(limit, offset);
+        console.log('[HOOK] useAllAuthors queryFn END', { count: result.authors.length, time: new Date().toISOString() });
+        return result;
+      },
       staleTime: 5 * 60 * 1000, // 5 minutes
     });
+  };
 
   // Get author details
   const useAuthorDetails = (authorProfileId: string) =>

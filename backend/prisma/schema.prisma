@@ -539,6 +539,8 @@ model Book {
   @@index([category])
   @@index([slug])
   @@index([landingPageEnabled])
+  @@index([createdAt])
+  @@index([status, createdAt])
 }
 
 // Track unique campaign landing page views - Milestone 2.2
@@ -845,6 +847,8 @@ model ReaderAssignment {
   @@index([materialsReleasedAt])
   @@index([amazonProfileId])
   @@index([bookId, status])
+  @@index([readerProfileId, status])
+  @@index([createdAt])
 }
 
 model Reminder {
@@ -955,6 +959,8 @@ model Review {
   @@index([validatedAt])
   @@index([submittedAt])
   @@index([amazonProfileId])
+  @@index([bookId, status])
+  @@index([createdAt])
 }
 
 // Monitor reviews for Amazon removal (14-day guarantee period)

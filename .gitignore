@@ -41,3 +41,4 @@ logs/
 .husky
 CLAUDE.md
 bookproof
+*.log

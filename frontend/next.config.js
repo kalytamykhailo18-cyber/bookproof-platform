@@ -30,6 +30,24 @@ const nextConfig = {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      // Fix Watchpack errors - exclude system files from watching
+      config.watchOptions = {
+        ...config.watchOptions,
+        ignored: [
+          '**/node_modules/**',
+          '**/.git/**',
+          '**/.next/**',
+          '**/pagefile.sys',
+          '**/hiberfil.sys',
+          '**/swapfile.sys',
+          'D:/**', // Exclude D drive root
+        ],
+      };
+    }
+    return config;
+  },
 };
 
 module.exports = withNextIntl(nextConfig);

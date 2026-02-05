@@ -649,10 +649,9 @@ export class CampaignControlsService {
               createdAt: true,
             },
           },
-          books: {
+          _count: {
             select: {
-              id: true,
-              status: true,
+              books: true,
             },
           },
         },
@@ -665,6 +664,24 @@ export class CampaignControlsService {
       this.prisma.authorProfile.count(),
     ]);
 
+    // Get active campaign counts for all authors in a single query
+    const authorIds = authors.map(a => a.id);
+    const activeCampaignCounts = await this.prisma.book.groupBy({
+      by: ['authorProfileId'],
+      where: {
+        authorProfileId: { in: authorIds },
+        status: { in: [CampaignStatus.ACTIVE, CampaignStatus.PAUSED] },
+      },
+      _count: {
+        id: true,
+      },
+    });
+
+    // Create a map for quick lookup
+    const activeCampaignMap = new Map(
+      activeCampaignCounts.map(c => [c.authorProfileId, c._count.id])
+    );
+
     const authorItems = authors.map((author) => ({
       id: author.id,
       userId: author.userId,
@@ -673,11 +690,8 @@ export class CampaignControlsService {
       totalCreditsPurchased: author.totalCreditsPurchased,
       totalCreditsUsed: author.totalCreditsUsed,
       availableCredits: author.availableCredits,
-      activeCampaigns: author.books.filter(
-        (b: { id: string; status: CampaignStatus }) =>
-          b.status === CampaignStatus.ACTIVE || b.status === CampaignStatus.PAUSED,
-      ).length,
-      totalCampaigns: author.books.length,
+      activeCampaigns: activeCampaignMap.get(author.id) || 0,
+      totalCampaigns: author._count.books,
       createdAt: author.createdAt,
       isVerified: author.user.emailVerified,
     }));

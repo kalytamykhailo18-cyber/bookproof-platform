@@ -621,6 +621,7 @@ export class CampaignsService {
 
   /**
    * Get pending review counts for multiple campaigns (batch)
+   * Optimized to use single aggregation query
    */
   private async getPendingReviewCounts(bookIds: string[]): Promise<Map<string, number>> {
     const result = new Map<string, number>();
@@ -629,14 +630,12 @@ export class CampaignsService {
       return result;
     }
 
-    // Group count by bookId
+    // Single query with join and groupBy on bookId directly
     const counts = await this.prisma.review.groupBy({
-      by: ['readerAssignmentId'],
+      by: ['bookId'],
       where: {
-        readerAssignment: {
-          bookId: {
-            in: bookIds,
-          },
+        bookId: {
+          in: bookIds,
         },
         status: {
           in: [ReviewStatus.SUBMITTED, ReviewStatus.PENDING_VALIDATION],
@@ -647,29 +646,9 @@ export class CampaignsService {
       },
     });
 
-    // Map assignment IDs to book IDs and aggregate
-    const assignmentIds = counts.map(c => c.readerAssignmentId);
-    if (assignmentIds.length > 0) {
-      const assignments = await this.prisma.readerAssignment.findMany({
-        where: {
-          id: {
-            in: assignmentIds,
-          },
-        },
-        select: {
-          id: true,
-          bookId: true,
-        },
-      });
-
-      const assignmentToBook = new Map(assignments.map(a => [a.id, a.bookId]));
-
-      for (const count of counts) {
-        const bookId = assignmentToBook.get(count.readerAssignmentId);
-        if (bookId) {
-          result.set(bookId, (result.get(bookId) || 0) + count._count.id);
-        }
-      }
+    // Build result map
+    for (const count of counts) {
+      result.set(count.bookId, count._count.id);
     }
 
     return result;

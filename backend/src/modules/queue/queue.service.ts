@@ -50,29 +50,35 @@ export class QueueService {
       throw new NotFoundException('Reader profile not found');
     }
 
-    // Get all active campaigns with count of pending assignments (WAITING/SCHEDULED)
-    // This ensures estimated queue position matches what reader will actually get
+    // Get all active campaigns without nested counts (performance optimization)
     const campaigns = await this.prisma.book.findMany({
       where: {
         status: CampaignStatus.ACTIVE,
-      },
-      include: {
-        _count: {
-          select: {
-            readerAssignments: {
-              where: {
-                status: {
-                  in: [AssignmentStatus.WAITING, AssignmentStatus.SCHEDULED],
-                },
-              },
-            },
-          },
-        },
       },
       orderBy: {
         campaignStartDate: 'desc',
       },
     });
+
+    // Batch fetch pending assignment counts for all campaigns in single query
+    const campaignIds = campaigns.map(c => c.id);
+    const assignmentCounts = await this.prisma.readerAssignment.groupBy({
+      by: ['bookId'],
+      where: {
+        bookId: { in: campaignIds },
+        status: {
+          in: [AssignmentStatus.WAITING, AssignmentStatus.SCHEDULED],
+        },
+      },
+      _count: {
+        id: true,
+      },
+    });
+
+    // Build lookup map for O(1) access
+    const countMap = new Map(
+      assignmentCounts.map(ac => [ac.bookId, ac._count.id])
+    );
 
     // Map campaigns to response DTOs
     // NOTE: Per requirement "Readers cannot see total campaign scope or author information"
@@ -82,7 +88,7 @@ export class QueueService {
 
       // Estimate queue position and week (internal calculation only)
       // Use count of WAITING/SCHEDULED to match actual queuePosition calculation in applyToCampaign
-      const pendingAssignmentsCount = campaign._count.readerAssignments;
+      const pendingAssignmentsCount = countMap.get(campaign.id) || 0;
       const reviewsPerWeek = campaign.reviewsPerWeek || 1;
 
       const estimatedQueuePosition = hasApplied ? undefined : pendingAssignmentsCount + 1;

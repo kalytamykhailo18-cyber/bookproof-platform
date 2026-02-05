@@ -57,13 +57,27 @@ import {
 import type { AuthorListItemDto } from '@/lib/api/admin-controls';
 
 export default function AdminAuthorsPage() {
+  console.time('[AUTHORS] Total Page Load Time');
+  console.log('[AUTHORS] 1. Component function started', new Date().toISOString());
+
   const t = useTranslations('adminAuthors');
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'en';
+
+  console.log('[AUTHORS] 2. Hooks initialized', new Date().toISOString());
+
   const { useAllAuthors, addCredits, removeCredits, suspendAuthor, unsuspendAuthor, updateAuthorNotes } = useAdminControls();
 
-  const { data: authors, isLoading } = useAllAuthors();
+  const [page, setPage] = useState(1);
+  const pageSize = 50;
+
+  console.log('[AUTHORS] 3. About to call useAllAuthors API', new Date().toISOString());
+  const { data, isLoading } = useAllAuthors(pageSize, (page - 1) * pageSize);
+  console.log('[AUTHORS] 4. useAllAuthors hook called, isLoading:', isLoading, 'hasData:', !!data, new Date().toISOString());
+  const authors = data?.authors || [];
+  const totalAuthors = data?.total || 0;
+  const totalPages = Math.ceil(totalAuthors / pageSize);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -82,9 +96,10 @@ export default function AdminAuthorsPage() {
   const [adminNotes, setAdminNotes] = useState('');
 
   const filteredAuthors = useMemo(() => {
+    console.log('[AUTHORS] 5. Filtering authors, count:', authors?.length, new Date().toISOString());
     if (!authors) return [];
 
-    return authors.filter((author) => {
+    const filtered = authors.filter((author) => {
       const matchesSearch =
         author.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         author.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -98,6 +113,8 @@ export default function AdminAuthorsPage() {
 
       return matchesSearch && matchesStatus;
     });
+    console.log('[AUTHORS] 6. Filtering complete, filtered count:', filtered.length, new Date().toISOString());
+    return filtered;
   }, [authors, searchTerm, statusFilter]);
 
   const stats = useMemo(() => {
@@ -253,6 +270,7 @@ export default function AdminAuthorsPage() {
   };
 
   if (isLoading) {
+    console.log('[AUTHORS] 7. Rendering loading skeleton', new Date().toISOString());
     return (
       <div className="container mx-auto space-y-6 p-6">
         <Skeleton className="h-10 w-64 animate-pulse" />
@@ -266,6 +284,9 @@ export default function AdminAuthorsPage() {
       </div>
     );
   }
+
+  console.log('[AUTHORS] 8. Starting main render with data', new Date().toISOString());
+  console.timeEnd('[AUTHORS] Total Page Load Time');
 
   return (
     <div className="container mx-auto space-y-6 p-6">
@@ -512,6 +533,38 @@ export default function AdminAuthorsPage() {
                 ))}
               </TableBody>
             </Table>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-4 flex items-center justify-between border-t pt-4">
+              <div className="text-sm text-muted-foreground">
+                Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, totalAuthors)} of {totalAuthors} authors
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                >
+                  Previous
+                </Button>
+                <div className="flex items-center gap-2 px-2">
+                  <span className="text-sm">
+                    Page {page} of {totalPages}
+                  </span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
           )}
         </CardContent>
       </Card>

@@ -46,6 +46,7 @@ export function NotificationBell() {
 
   // Subscribe to real-time notification events
   useRealtimeUpdates({
+    enabled: !!user, // Only connect if user is authenticated
     showNotifications: false, // We'll handle display manually
     onEvent: {
       [RealtimeEventType.NOTIFICATION]: () => {
