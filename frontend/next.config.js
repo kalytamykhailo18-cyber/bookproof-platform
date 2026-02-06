@@ -4,7 +4,7 @@ const withNextIntl = createNextIntlPlugin('./lib/i18n.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false, // Disable to avoid double requests in dev
   swcMinify: true,
   eslint: {
     // Disable ESLint during production builds

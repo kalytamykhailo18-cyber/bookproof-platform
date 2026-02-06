@@ -14,7 +14,8 @@ export const useFinancialReport = (startDate: string, endDate: string) => {
     queryKey: ['financial-report', startDate, endDate],
     queryFn: () => adminReportsApi.getFinancialReport(startDate, endDate),
     enabled: !!startDate && !!endDate,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
@@ -26,7 +27,8 @@ export const useOperationalReport = (startDate: string, endDate: string) => {
     queryKey: ['operational-report', startDate, endDate],
     queryFn: () => adminReportsApi.getOperationalReport(startDate, endDate),
     enabled: !!startDate && !!endDate,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
@@ -38,7 +40,8 @@ export const useAffiliateReport = (startDate: string, endDate: string) => {
     queryKey: ['affiliate-report', startDate, endDate],
     queryFn: () => adminReportsApi.getAffiliateReport(startDate, endDate),
     enabled: !!startDate && !!endDate,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 

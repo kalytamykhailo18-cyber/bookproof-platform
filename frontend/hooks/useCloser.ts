@@ -40,6 +40,7 @@ export function useCloserProfile() {
     queryKey: [CLOSER_PROFILE_KEY],
     queryFn: () => closerApi.getProfile(),
     staleTime: 60000,
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -51,6 +52,7 @@ export function useCloserDashboardStats() {
     queryKey: [CLOSER_DASHBOARD_KEY],
     queryFn: () => closerApi.getDashboardStats(),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -62,6 +64,7 @@ export function useCloserSalesHistory(limit?: number, offset?: number) {
     queryKey: [CLOSER_SALES_KEY, limit, offset],
     queryFn: () => closerApi.getSalesHistory(limit, offset),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -77,6 +80,7 @@ export function useCloserPackages(query?: GetPackagesQuery) {
     queryKey: [CLOSER_PACKAGES_KEY, query],
     queryFn: () => closerApi.getPackages(query),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -88,6 +92,7 @@ export function useCloserPackageStats() {
     queryKey: [CLOSER_PACKAGES_STATS_KEY],
     queryFn: () => closerApi.getPackageStats(),
     staleTime: 60000,
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -100,6 +105,7 @@ export function useCloserPackage(packageId: string) {
     queryFn: () => closerApi.getPackageById(packageId),
     enabled: !!packageId,
     staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -196,6 +202,7 @@ export function useCloserInvoices(query?: GetInvoicesQuery) {
     queryKey: [CLOSER_INVOICES_KEY, query],
     queryFn: () => closerApi.getInvoices(query),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -207,6 +214,7 @@ export function useCloserInvoiceStats() {
     queryKey: [CLOSER_INVOICES_STATS_KEY],
     queryFn: () => closerApi.getInvoiceStats(),
     staleTime: 60000,
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -219,6 +227,7 @@ export function useCloserInvoice(invoiceId: string) {
     queryFn: () => closerApi.getInvoiceById(invoiceId),
     enabled: !!invoiceId,
     staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -286,6 +295,7 @@ export function usePackagesPendingApproval() {
     queryKey: [ADMIN_PACKAGES_PENDING_KEY],
     queryFn: () => closerApi.getPackagesPendingApproval(),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 

@@ -26,6 +26,8 @@ export function useRefundEligibility(creditPurchaseId: string | undefined) {
   return useQuery({
     queryKey: REFUND_KEYS.eligibility(creditPurchaseId || ''),
     queryFn: () => refundsApi.checkEligibility(creditPurchaseId!),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
     enabled: !!creditPurchaseId,
   });
 }
@@ -37,6 +39,8 @@ export function useMyRefundRequests() {
   return useQuery({
     queryKey: REFUND_KEYS.myRequests(),
     queryFn: () => refundsApi.getMyRequests(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -47,6 +51,8 @@ export function useRefundRequest(requestId: string | undefined) {
   return useQuery({
     queryKey: REFUND_KEYS.request(requestId || ''),
     queryFn: () => refundsApi.getRequest(requestId!),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
     enabled: !!requestId,
   });
 }
@@ -94,6 +100,8 @@ export function useAdminRefundRequests(filters?: {
   return useQuery({
     queryKey: REFUND_KEYS.adminRequests(filters?.status),
     queryFn: () => refundsApi.getAllRequests(filters),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -104,6 +112,8 @@ export function useAdminRefundRequest(requestId: string | undefined) {
   return useQuery({
     queryKey: REFUND_KEYS.request(requestId || ''),
     queryFn: () => refundsApi.getRequestAdmin(requestId!),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
     enabled: !!requestId,
   });
 }

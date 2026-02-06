@@ -30,10 +30,6 @@ export function useAllSettings() {
     queryFn: () => settingsApi.getAllSettings(),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     staleTime: 60000,
   });
 }
@@ -46,10 +42,6 @@ export function useSettingsByCategory(category: string) {
     queryKey: ['settings', 'category', category],
     queryFn: () => settingsApi.getSettingsByCategory(category),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     enabled: !!category,
     staleTime: 60000,
@@ -65,10 +57,6 @@ export function usePricingSettings() {
     queryFn: () => settingsApi.getPricingSettings(),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     staleTime: 60000,
   });
 }
@@ -81,10 +69,6 @@ export function useKeywordResearchPricing() {
     queryKey: ['settings', 'pricing', 'keyword-research'],
     queryFn: () => settingsApi.getKeywordResearchPricing(),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     staleTime: 60000,
   });
@@ -137,10 +121,6 @@ export function useReviewPaymentRates() {
     queryFn: () => settingsApi.getReviewPaymentRates(),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     staleTime: 60000,
   });
 }
@@ -177,12 +157,7 @@ export function usePublicKeywordResearchPricing() {
     queryFn: () => settingsApi.getPublicKeywordResearchPricing(),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     staleTime: 300000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -194,10 +169,6 @@ export function usePublicKeywordResearchFeatureStatus() {
     queryKey: ['public', 'features', 'keyword-research'],
     queryFn: () => settingsApi.getPublicKeywordResearchFeatureStatus(),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     staleTime: 60000, // 1 minute
   });
@@ -215,10 +186,6 @@ export function useKeywordResearchFeatureStatus() {
     queryKey: ['settings', 'features', 'keyword-research'],
     queryFn: () => settingsApi.getKeywordResearchFeatureStatus(),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     staleTime: 30000,
   });
@@ -261,10 +228,6 @@ export function useSystemConfiguration() {
     queryKey: ['settings', 'system-config'],
     queryFn: () => settingsApi.getSystemConfiguration(),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     staleTime: 60000,
   });

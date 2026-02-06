@@ -30,7 +30,6 @@ export function useDisputes(query?: GetDisputesQuery) {
     queryKey: [DISPUTES_KEY, query],
     queryFn: () => disputesApi.getDisputes(query),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -42,7 +41,6 @@ export function useOpenDisputes() {
     queryKey: [DISPUTES_OPEN_KEY],
     queryFn: () => disputesApi.getOpenDisputes(),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -53,8 +51,7 @@ export function useDisputeStats() {
   return useQuery<DisputeStats>({
     queryKey: [DISPUTES_STATS_KEY],
     queryFn: () => disputesApi.getDisputeStats(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 60000,
   });
 }
 
@@ -67,7 +64,6 @@ export function useDispute(disputeId: string) {
     queryFn: () => disputesApi.getDisputeById(disputeId),
     enabled: !!disputeId,
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -80,7 +76,6 @@ export function useUserDisputes(userId: string) {
     queryFn: () => disputesApi.getDisputesByUser(userId),
     enabled: !!userId,
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 

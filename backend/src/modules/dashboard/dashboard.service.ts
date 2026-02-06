@@ -239,32 +239,21 @@ export class DashboardService {
       where: { status: 'ACTIVE' as any },
     });
 
-    // Calculate platform health
-    const allReaderProfiles = await this.prisma.readerProfile.findMany({
-      select: {
-        completionRate: true,
-        reliabilityScore: true,
-        removalRate: true,
-      },
-    });
+    // Calculate platform health using database aggregation (fast)
+    const [avgStats, readerCount] = await Promise.all([
+      this.prisma.readerProfile.aggregate({
+        _avg: {
+          completionRate: true,
+          reliabilityScore: true,
+          removalRate: true,
+        },
+      }),
+      this.prisma.readerProfile.count(),
+    ]);
 
-    const avgCompletionRate =
-      allReaderProfiles.reduce(
-        (sum, profile) => sum + parseFloat(profile.completionRate?.toString() || '0'),
-        0,
-      ) / (allReaderProfiles.length || 1);
-
-    const avgReliabilityScore =
-      allReaderProfiles.reduce(
-        (sum, profile) => sum + parseFloat(profile.reliabilityScore?.toString() || '0'),
-        0,
-      ) / (allReaderProfiles.length || 1);
-
-    const avgRemovalRate =
-      allReaderProfiles.reduce(
-        (sum, profile) => sum + parseFloat(profile.removalRate?.toString() || '0'),
-        0,
-      ) / (allReaderProfiles.length || 1);
+    const avgCompletionRate = parseFloat(avgStats._avg.completionRate?.toString() || '0');
+    const avgReliabilityScore = parseFloat(avgStats._avg.reliabilityScore?.toString() || '0');
+    const avgRemovalRate = parseFloat(avgStats._avg.removalRate?.toString() || '0');
 
     return {
       summary: {

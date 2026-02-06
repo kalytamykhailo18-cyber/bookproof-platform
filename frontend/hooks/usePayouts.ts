@@ -24,6 +24,8 @@ export function useMyPayouts() {
   return useQuery<PayoutResponse[]>({
     queryKey: ['payouts', 'my-payouts'],
     queryFn: getMyPayouts,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -31,6 +33,8 @@ export function useWalletTransactions() {
   return useQuery<WalletTransaction[]>({
     queryKey: ['wallet', 'transactions'],
     queryFn: getWalletTransactions,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -38,6 +42,8 @@ export function useWalletSummary() {
   return useQuery<WalletSummary>({
     queryKey: ['wallet', 'summary'],
     queryFn: getWalletSummary,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -62,6 +68,8 @@ export function usePendingPayouts() {
   return useQuery<PayoutResponse[]>({
     queryKey: ['payouts', 'pending'],
     queryFn: getPendingPayouts,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -69,6 +77,8 @@ export function useAllPayouts() {
   return useQuery<PayoutResponse[]>({
     queryKey: ['payouts', 'all'],
     queryFn: getAllPayouts,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 

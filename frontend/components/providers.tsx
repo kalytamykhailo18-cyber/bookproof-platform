@@ -8,21 +8,24 @@ import { LoadingProvider } from './providers/LoadingProvider';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
-    () =>
-      new QueryClient({
+    () => {
+      const client = new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 30000, // Data fresh for 30 seconds
-            gcTime: 5 * 60 * 1000, // Cache for 5 minutes
+            staleTime: 5 * 60 * 1000, // Data fresh for 5 minutes
+            gcTime: 10 * 60 * 1000, // Cache for 10 minutes
             retry: 1,
             refetchOnWindowFocus: false,
-            refetchOnMount: false, // Don't refetch on every mount
+            refetchOnMount: false, // Don't refetch - data stays fresh for 5min
           },
           mutations: {
             retry: 0,
           },
         },
-      }),
+      });
+
+      return client;
+    }
   );
 
   return (

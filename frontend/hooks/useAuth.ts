@@ -22,7 +22,7 @@ export function useAuth() {
   const router = useRouter();
   const params = useParams();
   const locale = (params?.locale as string) || 'en';
-  const { setUser, clearUser, user, isAuthenticated } = useAuthStore();
+  const { setUser, clearUser, user, isAuthenticated, _hasHydrated } = useAuthStore();
   const { startLoading, stopLoading } = useLoading();
 
   // Register mutation
@@ -176,7 +176,7 @@ export function useAuth() {
   } = useQuery({
     queryKey: ['user'],
     queryFn: authApi.getProfile,
-    enabled: isAuthenticated && !!tokenManager.getToken(),
+    enabled: _hasHydrated && !!tokenManager.getToken(),
     retry: false,
     staleTime: 5 * 60 * 1000, // 5 minutes - don't refetch if data is fresh
     gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
@@ -185,9 +185,17 @@ export function useAuth() {
   // Handle profile data changes
   useEffect(() => {
     if (profileData) {
+      console.log('✅ Setting user from API:', profileData.email);
       setUser(profileData);
     }
   }, [profileData, setUser]);
+
+  // On mount, check if we have persisted user data
+  useEffect(() => {
+    if (_hasHydrated && user) {
+      console.log('✅ User restored from localStorage:', user.email);
+    }
+  }, [_hasHydrated, user]);
 
   // Handle profile errors
   useEffect(() => {

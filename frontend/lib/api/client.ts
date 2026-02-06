@@ -74,6 +74,9 @@ class ApiClient {
           if (status === 401) {
             toast.error('Session expired. Please login again.');
             this.clearToken();
+            // Also clear Zustand auth store
+            const { useAuthStore } = await import('@/store/authStore');
+            useAuthStore.getState().clearUser();
             // Don't redirect - let user stay on current page
             // They can click login button themselves
           } else if (status === 403) {

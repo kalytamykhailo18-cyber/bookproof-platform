@@ -3,24 +3,24 @@
 import { useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/store/authStore';
 import { UserRole } from '@/lib/api/auth';
 import { Loader2 } from 'lucide-react';
 import { DashboardHeader } from '@/components/shared/DashboardHeader';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
-
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
   const { user, isLoadingProfile: isLoading } = useAuth();
+  const { _hasHydrated } = useAuthStore();
 
   useEffect(() => {
-    if (!isLoading) {
+    // CRITICAL: Only redirect AFTER hydration completes
+    if (_hasHydrated && !isLoading) {
       if (!user) {
-        // Not authenticated - redirect to login
         router.push(`/${locale}/login`);
       } else if (user.role !== UserRole.ADMIN) {
-        // Authenticated but not an admin - redirect to appropriate dashboard
         if (user.role === UserRole.AFFILIATE) {
           router.push(`/${locale}/affiliate/dashboard`);
         } else if (user.role === UserRole.AUTHOR) {
@@ -30,9 +30,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }
       }
     }
-  }, [user, isLoading, router, locale]);
+  }, [_hasHydrated, user, isLoading, router, locale]);
 
-  // Only show loading state if we don't have user data yet
+  // CRITICAL FIX: Wait for hydration BEFORE checking user
+  if (!_hasHydrated) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // After hydration, check if loading profile
   if (isLoading && !user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -41,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  // Show loading state while redirecting
+  // After hydration, check user validity
   if (!user || user.role !== UserRole.ADMIN) {
     return (
       <div className="flex min-h-screen items-center justify-center">

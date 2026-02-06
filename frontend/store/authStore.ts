@@ -1,12 +1,14 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import type { UserData } from '@/lib/api/auth';
 
 interface AuthState {
   user: UserData | null;
   isAuthenticated: boolean;
+  _hasHydrated: boolean;
   setUser: (user: UserData | null) => void;
   clearUser: () => void;
+  setHasHydrated: (hasHydrated: boolean) => void;
   // Admin role helpers for role-based access control (Section 5.1, 5.5)
   isSuperAdmin: () => boolean;
   isAdmin: () => boolean;
@@ -18,6 +20,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       isAuthenticated: false,
+      _hasHydrated: false,
       setUser: (user) =>
         set({
           user,
@@ -27,6 +30,10 @@ export const useAuthStore = create<AuthState>()(
         set({
           user: null,
           isAuthenticated: false,
+        }),
+      setHasHydrated: (hasHydrated) =>
+        set({
+          _hasHydrated: hasHydrated,
         }),
       // Check if user is a SUPER_ADMIN (full access to financial data)
       isSuperAdmin: () => {
@@ -49,6 +56,16 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'bookproof-auth',
+      storage: createJSONStorage(() => localStorage),
+      // Only persist user and isAuthenticated, NOT _hasHydrated
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
+      onRehydrateStorage: () => (state) => {
+        console.log('🔄 Hydrating auth state:', state);
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

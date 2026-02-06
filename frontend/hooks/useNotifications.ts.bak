@@ -21,7 +21,6 @@ export function useNotifications(params?: GetNotificationsParams) {
     queryKey: ['notifications', params],
     queryFn: () => getNotifications(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 10 * 60 * 1000,
   });
 }
@@ -34,7 +33,6 @@ export function useUnreadCount() {
     queryKey: ['notifications', 'unreadCount'],
     queryFn: getUnreadCount,
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 10 * 60 * 1000,
   });
 }

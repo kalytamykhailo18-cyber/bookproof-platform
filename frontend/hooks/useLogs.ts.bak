@@ -19,10 +19,6 @@ export const useActivityLogs = (params?: GetActivityLogsParams) => {
     queryFn: () => getActivityLogs(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
@@ -34,10 +30,6 @@ export const useErrorLogs = (params?: GetErrorLogsParams) => {
     queryKey: ['errorLogs', params],
     queryFn: () => getErrorLogs(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
@@ -51,10 +43,6 @@ export const useEmailLogs = (params?: GetEmailLogsParams) => {
     queryFn: () => getEmailLogs(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
@@ -67,10 +55,6 @@ export const useActivityLogStats = () => {
     queryFn: getActivityLogStats,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
@@ -82,10 +66,6 @@ export const useEmailLogStats = () => {
     queryKey: ['emailLogStats'],
     queryFn: getEmailLogStats,
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };

@@ -34,6 +34,8 @@ export function useCoupons(filters?: {
   return useQuery({
     queryKey: couponKeys.list(filters),
     queryFn: () => couponsApi.getAll(filters),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -45,6 +47,8 @@ export function useCoupon(id: string) {
     queryKey: couponKeys.detail(id),
     queryFn: () => couponsApi.getById(id),
     enabled: !!id,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -56,6 +60,8 @@ export function useCouponUsageStats(id: string) {
     queryKey: couponKeys.usage(id),
     queryFn: () => couponsApi.getUsageStats(id),
     enabled: !!id,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 

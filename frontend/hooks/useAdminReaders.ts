@@ -20,7 +20,7 @@ export function useAdminReaders() {
   const useAllReaders = (filters?: AdminReaderFilters) =>
     useQuery({
       queryKey: ['admin-readers', filters],
-      queryFn: () => adminReadersApi.getAllReaders(filters),
+      queryFn: ({ signal }) => adminReadersApi.getAllReaders(filters),
       staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
