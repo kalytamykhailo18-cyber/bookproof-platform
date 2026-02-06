@@ -57,24 +57,19 @@ import {
 import type { AuthorListItemDto } from '@/lib/api/admin-controls';
 
 export default function AdminAuthorsPage() {
-  console.time('[AUTHORS] Total Page Load Time');
-  console.log('[AUTHORS] 1. Component function started', new Date().toISOString());
 
   const t = useTranslations('adminAuthors');
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || 'en';
 
-  console.log('[AUTHORS] 2. Hooks initialized', new Date().toISOString());
 
   const { useAllAuthors, addCredits, removeCredits, suspendAuthor, unsuspendAuthor, updateAuthorNotes } = useAdminControls();
 
   const [page, setPage] = useState(1);
   const pageSize = 50;
 
-  console.log('[AUTHORS] 3. About to call useAllAuthors API', new Date().toISOString());
   const { data, isLoading } = useAllAuthors(pageSize, (page - 1) * pageSize);
-  console.log('[AUTHORS] 4. useAllAuthors hook called, isLoading:', isLoading, 'hasData:', !!data, new Date().toISOString());
   const authors = data?.authors || [];
   const totalAuthors = data?.total || 0;
   const totalPages = Math.ceil(totalAuthors / pageSize);
@@ -96,7 +91,6 @@ export default function AdminAuthorsPage() {
   const [adminNotes, setAdminNotes] = useState('');
 
   const filteredAuthors = useMemo(() => {
-    console.log('[AUTHORS] 5. Filtering authors, count:', authors?.length, new Date().toISOString());
     if (!authors) return [];
 
     const filtered = authors.filter((author) => {
@@ -113,7 +107,6 @@ export default function AdminAuthorsPage() {
 
       return matchesSearch && matchesStatus;
     });
-    console.log('[AUTHORS] 6. Filtering complete, filtered count:', filtered.length, new Date().toISOString());
     return filtered;
   }, [authors, searchTerm, statusFilter]);
 
@@ -270,7 +263,6 @@ export default function AdminAuthorsPage() {
   };
 
   if (isLoading) {
-    console.log('[AUTHORS] 7. Rendering loading skeleton', new Date().toISOString());
     return (
       <div className="container mx-auto space-y-6 p-6">
         <Skeleton className="h-10 w-64 animate-pulse" />
@@ -285,8 +277,6 @@ export default function AdminAuthorsPage() {
     );
   }
 
-  console.log('[AUTHORS] 8. Starting main render with data', new Date().toISOString());
-  console.timeEnd('[AUTHORS] Total Page Load Time');
 
   return (
     <div className="container mx-auto space-y-6 p-6">

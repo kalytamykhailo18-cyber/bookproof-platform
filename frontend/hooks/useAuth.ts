@@ -185,17 +185,9 @@ export function useAuth() {
   // Handle profile data changes
   useEffect(() => {
     if (profileData) {
-      console.log('✅ Setting user from API:', profileData.email);
       setUser(profileData);
     }
   }, [profileData, setUser]);
-
-  // On mount, check if we have persisted user data
-  useEffect(() => {
-    if (_hasHydrated && user) {
-      console.log('✅ User restored from localStorage:', user.email);
-    }
-  }, [_hasHydrated, user]);
 
   // Handle profile errors
   useEffect(() => {

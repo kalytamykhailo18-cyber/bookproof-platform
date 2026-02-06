@@ -373,18 +373,9 @@ export const adminControlsApi = {
    */
   async getAllAuthors(limit: number = 100, offset: number = 0): Promise<{ authors: AuthorListItemDto[]; total: number }> {
     const startTime = performance.now();
-    console.log('[API] getAllAuthors - Request START', { limit, offset, time: new Date().toISOString() });
 
     const response = await apiClient.get<{ authors: AuthorListItemDto[]; total: number }>('/admin/campaigns/authors', {
       params: { limit, offset },
-    });
-
-    const endTime = performance.now();
-    console.log('[API] getAllAuthors - Request END', {
-      duration: `${(endTime - startTime).toFixed(2)}ms`,
-      authorsCount: response.data.authors.length,
-      total: response.data.total,
-      time: new Date().toISOString()
     });
 
     return response.data;

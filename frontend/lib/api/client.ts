@@ -20,9 +20,6 @@ class ApiClient {
   }
 
   private setupInterceptors() {
-    // Dev mode logging
-    const isDev = process.env.NODE_ENV === 'development';
-
     // Request interceptor - add JWT token
     this.client.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
@@ -30,12 +27,6 @@ class ApiClient {
         if (token && config.headers) {
           config.headers.Authorization = `Bearer ${token}`;
         }
-
-        // Log requests in dev mode
-        if (isDev) {
-          console.log(`🔵 ${config.method?.toUpperCase()} ${config.url}`);
-        }
-
         return config;
       },
       (error) => {
@@ -46,24 +37,11 @@ class ApiClient {
     // Response interceptor - handle errors globally
     this.client.interceptors.response.use(
       (response) => {
-        // Log successful responses in dev mode
-        if (isDev) {
-          console.log(`🟢 ${response.config.url} - ${response.status}`);
-        }
         return response;
       },
       async (error) => {
         const status = error.response?.status;
         const message = error.response?.data?.message || error.message;
-
-        // Log errors in dev mode
-        if (isDev) {
-          console.error(`🔴 ${error.config?.url} - ${status || 'Network Error'}`, {
-            status,
-            message,
-            data: error.response?.data,
-          });
-        }
 
         // Only show toast in browser environment
         if (typeof window !== 'undefined') {
