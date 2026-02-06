@@ -167,6 +167,8 @@ export function useAffiliatesForAdmin() {
   return useQuery({
     queryKey: affiliateKeys.listsAdmin(),
     queryFn: () => affiliatesApi.getAllForAdmin(),
+    staleTime: 5 * 60 * 1000, // 5 minutes - matches authors page
+    gcTime: 10 * 60 * 1000, // 10 minutes - keep in cache
   });
 }
 
@@ -175,6 +177,8 @@ export function useAffiliateByIdForAdmin(id: string) {
     queryKey: affiliateKeys.detailAdmin(id),
     queryFn: () => affiliatesApi.getByIdForAdmin(id),
     enabled: !!id,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -183,6 +187,8 @@ export function useCommissionsForAdmin(id: string, status?: CommissionStatus) {
     queryKey: affiliateKeys.commissionsAdmin(id, status),
     queryFn: () => affiliatesApi.getCommissionsForAdmin(id, status),
     enabled: !!id,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -190,6 +196,8 @@ export function usePayoutsForAdmin(status?: PayoutRequestStatus) {
   return useQuery({
     queryKey: affiliateKeys.payoutsAdmin(status),
     queryFn: () => affiliatesApi.getAllPayoutsForAdmin(status),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -295,6 +303,8 @@ export function useMarketingMaterialsForAdmin(query?: GetMarketingMaterialsQuery
   return useQuery({
     queryKey: affiliateKeys.marketingMaterialsAdmin(query),
     queryFn: () => affiliatesApi.getMarketingMaterialsForAdmin(query),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -302,6 +312,8 @@ export function useMarketingMaterialsStats() {
   return useQuery({
     queryKey: affiliateKeys.marketingMaterialsStats(),
     queryFn: () => affiliatesApi.getMarketingMaterialsStats(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 

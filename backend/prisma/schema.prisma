@@ -695,7 +695,12 @@ model ReaderProfile {
   @@index([userId])
   @@index([isActive])
   @@index([isFlagged])
+  @@index([isSuspended])
   @@index([reliabilityScore])
+  @@index([contentPreference])
+  @@index([isActive, isSuspended]) // Compound index for status='active' filter
+  @@index([isActive, contentPreference]) // Compound index for active + content filter
+  @@index([isFlagged, contentPreference]) // Compound index for flagged + content filter
 }
 
 model AmazonProfile {

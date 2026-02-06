@@ -58,14 +58,21 @@ export default function AdminReadersPage() {
   const [loadingReaderId, setLoadingReaderId] = useState<string | null>(null);
   const [loadingActionsId, setLoadingActionsId] = useState<string | null>(null);
 
-  const { data: readers, isLoading: isLoadingReaders } = useAllReaders({
-    search: searchQuery || undefined,
-    status:
-      statusFilter !== 'all' ? (statusFilter as 'active' | 'suspended' | 'flagged') : undefined,
-    contentPreference: contentFilter !== 'all' ? (contentFilter as ContentPreference) : undefined,
-    hasVerifiedAmazon:
-      verifiedFilter === 'verified' ? true : verifiedFilter === 'unverified' ? false : undefined,
-  });
+  // Memoize filter object to prevent unnecessary re-renders and re-fetches
+  const filters = useMemo(
+    () => ({
+      search: searchQuery || undefined,
+      status:
+        statusFilter !== 'all' ? (statusFilter as 'active' | 'suspended' | 'flagged') : undefined,
+      contentPreference:
+        contentFilter !== 'all' ? (contentFilter as ContentPreference) : undefined,
+      hasVerifiedAmazon:
+        verifiedFilter === 'verified' ? true : verifiedFilter === 'unverified' ? false : undefined,
+    }),
+    [searchQuery, statusFilter, contentFilter, verifiedFilter],
+  );
+
+  const { data: readers, isLoading: isLoadingReaders } = useAllReaders(filters);
 
   const { data: stats, isLoading: isLoadingStats } = useReaderStats();
 
