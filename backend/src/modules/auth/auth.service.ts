@@ -49,8 +49,18 @@ export class AuthService {
     // DEV MODE: Skip email verification for testing
     // Set SKIP_EMAIL_VERIFICATION=true in .env to auto-verify users
     this.skipEmailVerification = this.configService.get<string>('SKIP_EMAIL_VERIFICATION') === 'true';
-    if (this.skipEmailVerification) {
-      this.logger.warn('⚠️  DEV MODE: Email verification is DISABLED. Users will be auto-verified.');
+
+    const isDevelopment = this.configService.get<boolean>('jwt.isDevelopment');
+    const jwtExpiry = this.configService.get<string>('jwt.expiresIn');
+
+    if (isDevelopment) {
+      this.logger.warn('🔧 DEV MODE ENABLED:');
+      this.logger.warn(`  • JWT expiry: ${jwtExpiry} (long-lived sessions)`);
+      if (this.skipEmailVerification) {
+        this.logger.warn('  • Email verification: DISABLED (auto-verify)');
+      }
+      this.logger.warn('  • No re-login needed after backend restart');
+      this.logger.warn('  ⚠️  DO NOT USE IN PRODUCTION!');
     }
   }
 
@@ -640,7 +650,14 @@ export class AuthService {
   ): string {
     const payload = { sub: userId, email, role, tokenVersion };
 
-    // Use 7 days for "remember me", otherwise use default (24h from config)
+    const isDevelopment = this.configService.get<boolean>('jwt.isDevelopment');
+
+    // Development mode: Always use long-lived tokens (30 days)
+    if (isDevelopment) {
+      return this.jwtService.sign(payload, { expiresIn: '30d' });
+    }
+
+    // Production mode: Use 7 days for "remember me", otherwise default (24h)
     if (rememberMe) {
       return this.jwtService.sign(payload, { expiresIn: '7d' });
     }

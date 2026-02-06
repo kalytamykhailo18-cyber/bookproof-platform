@@ -42,3 +42,5 @@ logs/
 CLAUDE.md
 bookproof
 *.log
+*.txt
+*.md
