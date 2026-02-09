@@ -153,7 +153,7 @@ export function LoginPage() {
             className="cursor-pointer text-sm text-primary hover:underline"
             onClick={() => {
               setIsForgotLoading(true);
-              navigate(`/${i18n.language}/forgot-password`);
+              navigate(`/forgot-password`);
             }}
           >
             {isForgotLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('login.forgotPassword')}
@@ -203,7 +203,7 @@ export function LoginPage() {
             className="cursor-pointer font-medium text-primary hover:underline"
             onClick={() => {
               setIsSignupLoading(true);
-              navigate(`/${i18n.language}/register`);
+              navigate(`/register`);
             }}
           >
             {isSignupLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('login.signUp')}

@@ -95,7 +95,7 @@ export function CookieConsent() {
   };
 
   const goToCookiePolicy = () => {
-    navigate(`/${locale}/cookies`);
+    navigate(`/cookies`);
   };
 
   if (!showBanner) {

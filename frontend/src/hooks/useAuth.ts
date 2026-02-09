@@ -37,21 +37,21 @@ export function useAuth() {
 
       // If email is not verified, redirect to verification required page
       if (!response.user.emailVerified) {
-        navigate(`/${locale}/verify-email-required`);
+        navigate('/verify-email-required');
       } else {
         // Email already verified (dev mode), redirect to role-based dashboard
         switch (response.user.role) {
           case 'AUTHOR':
-            navigate(`/${locale}/author`);
+            navigate('/author');
             break;
           case 'READER':
-            navigate(`/${locale}/reader`);
+            navigate('/reader');
             break;
           case 'AFFILIATE':
-            navigate(`/${locale}/affiliate/dashboard`);
+            navigate('/affiliate/dashboard');
             break;
           default:
-            navigate(`/${locale}`);
+            navigate('/');
         }
       }
     },
@@ -76,22 +76,22 @@ export function useAuth() {
       // Redirect based on role
       switch (response.user.role) {
         case 'AUTHOR':
-          navigate(`/${locale}/author`);
+          navigate('/author');
           break;
         case 'READER':
-          navigate(`/${locale}/reader`);
+          navigate('/reader');
           break;
         case 'ADMIN':
-          navigate(`/${locale}/admin/dashboard`);
+          navigate('/admin/dashboard');
           break;
         case 'CLOSER':
-          navigate(`/${locale}/closer`);
+          navigate('/closer');
           break;
         case 'AFFILIATE':
-          navigate(`/${locale}/affiliate/dashboard`);
+          navigate('/affiliate/dashboard');
           break;
         default:
-          navigate(`/${locale}`);
+          navigate('/');
       }
     },
     onError: (error: any) => {
@@ -157,7 +157,7 @@ export function useAuth() {
       tokenManager.clearToken();
       clearUser();
       queryClient.clear();
-      navigate(`/${locale}/login`);
+      navigate('/login');
       toast.success('Password changed successfully. Please log in with your new password.');
     },
     onError: (error: any) => {
@@ -200,7 +200,7 @@ export function useAuth() {
     tokenManager.clearToken();
     clearUser();
     queryClient.clear();
-    navigate(`/${locale}/login`);
+    navigate('/login');
     toast.success('Logged out successfully');
   };
 

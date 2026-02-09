@@ -426,7 +426,7 @@ export function AdminAuthorsPage() {
                           size="sm"
                           onClick={() => {
                             setLoadingAuthorId(author.id);
-                            navigate(`/${i18n.language}/admin/authors/${author.id}/transactions`);
+                            navigate(`/admin/authors/${author.id}/transactions`);
                           }}
                           disabled={loadingAuthorId === author.id}
                         >

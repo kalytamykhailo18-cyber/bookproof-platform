@@ -80,7 +80,7 @@ export function CloserDashboardPage() {
           type="button"
           onClick={() => {
             setIsCreateLoading(true);
-            navigate(`/${i18n.language}/closer/packages/new`);
+            navigate(`/closer/packages/new`);
           }}
           disabled={isCreateLoading}
         >
@@ -255,7 +255,7 @@ export function CloserDashboardPage() {
             size="sm"
             onClick={() => {
               setIsViewAllLoading(true);
-              navigate(`/${i18n.language}/closer/sales`);
+              navigate(`/closer/sales`);
             }}
             disabled={isViewAllLoading}
           >

@@ -159,7 +159,7 @@ export function CookiePolicyPage() {
                   onClick={() => {
                     if (isPrivacyLoading) return;
                     setIsPrivacyLoading(true);
-                    navigate(`/${i18n.language}/privacy`);
+                    navigate(`/privacy`);
                   }}
                   className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isPrivacyLoading ? 'opacity-70' : ''}`}
                 >
@@ -170,7 +170,7 @@ export function CookiePolicyPage() {
                   onClick={() => {
                     if (isTermsLoading) return;
                     setIsTermsLoading(true);
-                    navigate(`/${i18n.language}/terms`);
+                    navigate(`/terms`);
                   }}
                   className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isTermsLoading ? 'opacity-70' : ''}`}
                 >

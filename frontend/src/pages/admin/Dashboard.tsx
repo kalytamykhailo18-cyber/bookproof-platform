@@ -33,7 +33,7 @@ import {
   ClipboardList,
   Timer,
   Loader2 } from 'lucide-react';
-import { useNavigate,  useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { CampaignSectionItemDto } from '@/lib/api/dashboards';
 import { useAuthStore } from '@/stores/authStore';
@@ -55,7 +55,7 @@ export function AdminDashboardPage() {
 
   const navigateTo = (path: string) => {
     setLoadingPath(path);
-    navigate(`/${i18n.language}/admin/${path}`);
+    navigate(`/admin/${path}`);
   };
 
   if (dashboardLoading) {

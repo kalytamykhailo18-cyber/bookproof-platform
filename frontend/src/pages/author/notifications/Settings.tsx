@@ -101,7 +101,7 @@ export function NotificationSettingsPage() {
           className="mb-4"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/author/notifications`);
+            navigate(`/author/notifications`);
           }}
           disabled={isBackLoading}
         >

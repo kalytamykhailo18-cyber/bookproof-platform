@@ -64,7 +64,7 @@ export function AssignmentDetailPage({ params }: { params: { id: string } }) {
             <XCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="mb-2 text-lg font-semibold">{t('notFound.title')}</h3>
             <p className="mb-4 text-muted-foreground">{t('notFound.description')}</p>
-            <Button type="button" onClick={() => navigate(`/${i18n.language}/reader`)}>
+            <Button type="button" onClick={() => navigate(`/reader`)}>
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -170,7 +170,7 @@ export function AssignmentDetailPage({ params }: { params: { id: string } }) {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" onClick={() => navigate(`/${i18n.language}/reader`)}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => navigate(`/reader`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToDashboard')}
         </Button>
@@ -539,7 +539,7 @@ export function AssignmentDetailPage({ params }: { params: { id: string } }) {
                 <Button
                   type="button"
                   className="w-full"
-                  onClick={() => navigate(`/${i18n.language}/reader/assignments/${assignment.id}/submit-review`)}
+                  onClick={() => navigate(`/reader/assignments/${assignment.id}/submit-review`)}
                 >
                   <Send className="mr-2 h-4 w-4" />
                   Submit Review

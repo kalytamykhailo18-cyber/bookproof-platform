@@ -170,7 +170,7 @@ export function EditCampaignPage() {
       { id: campaignId, data: cleanData },
       {
         onSuccess: () => {
-          navigate(`/${i18n.language}/author/campaigns/${campaignId}`);
+          navigate(`/author/campaigns/${campaignId}`);
         } },
     );
   };
@@ -193,7 +193,7 @@ export function EditCampaignPage() {
               type="button"
               onClick={() => {
                 setIsDashboardLoading(true);
-                navigate(`/${i18n.language}/author`);
+                navigate(`/author`);
               }}
               className="mt-4"
               disabled={isDashboardLoading}
@@ -218,7 +218,7 @@ export function EditCampaignPage() {
               type="button"
               onClick={() => {
                 setIsCampaignLoading(true);
-                navigate(`/${i18n.language}/author/campaigns/${campaignId}`);
+                navigate(`/author/campaigns/${campaignId}`);
               }}
               className="mt-4"
               disabled={isCampaignLoading}
@@ -241,7 +241,7 @@ export function EditCampaignPage() {
           variant="ghost"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/author/campaigns/${campaignId}`);
+            navigate(`/author/campaigns/${campaignId}`);
           }}
           className="mb-4"
           disabled={isBackLoading}

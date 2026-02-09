@@ -35,7 +35,7 @@ export function CouponDetailPage() {
 
   const handleDelete = async () => {
     await deleteMutation.mutateAsync(id);
-    navigate(`/${i18n.language}/admin/coupons`);
+    navigate(`/admin/coupons`);
   };
 
   const getCouponTypeBadge = (type: CouponType) => {
@@ -119,7 +119,7 @@ export function CouponDetailPage() {
             size="icon"
             onClick={() => {
               setIsBackLoading(true);
-              navigate(`/${i18n.language}/admin/coupons`);
+              navigate(`/admin/coupons`);
             }}
             disabled={isBackLoading}
           >
@@ -136,7 +136,7 @@ export function CouponDetailPage() {
             variant="outline"
             onClick={() => {
               setIsUsageLoading(true);
-              navigate(`/${i18n.language}/admin/coupons/${id}/usage`);
+              navigate(`/admin/coupons/${id}/usage`);
             }}
             disabled={isUsageLoading}
           >
@@ -148,7 +148,7 @@ export function CouponDetailPage() {
             variant="outline"
             onClick={() => {
               setIsEditLoading(true);
-              navigate(`/${i18n.language}/admin/coupons/${id}/edit`);
+              navigate(`/admin/coupons/${id}/edit`);
             }}
             disabled={isEditLoading}
           >

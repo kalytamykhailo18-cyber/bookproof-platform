@@ -296,7 +296,7 @@ export function CreditPurchasePage() {
                 type="button"
                 variant="link"
                 className="h-auto p-0 text-primary underline"
-                onClick={() => navigate(`/${i18n.language}/author/keyword-research/new`)}
+                onClick={() => navigate(`/author/keyword-research/new`)}
               >
                 order keyword research separately
               </Button>

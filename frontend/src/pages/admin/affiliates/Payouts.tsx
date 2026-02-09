@@ -170,7 +170,7 @@ export function AdminAffiliatePayoutsPage() {
           size="sm"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/admin/affiliates`);
+            navigate(`/admin/affiliates`);
           }}
           disabled={isBackLoading}
         >

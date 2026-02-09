@@ -1,29 +1,23 @@
 import { useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 /**
  * Clean React hook for language switching
- * Handles both i18next AND URL routing together
+ * Language is stored in localStorage and managed by i18next
+ * No URL routing needed - language is independent of routes
  */
 export function useLanguage() {
   const { i18n } = useTranslation();
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const currentLanguage = i18n.language || 'en';
 
   const changeLanguage = useCallback(
     (newLang: string) => {
-      // Change i18next language
+      // Change i18next language - automatically saved to localStorage
+      // by LanguageDetector with caches: ['localStorage'] config
       i18n.changeLanguage(newLang);
-
-      // Update URL to match
-      const pathParts = location.pathname.split('/');
-      pathParts[1] = newLang; // Replace locale in /:locale/...
-      navigate(pathParts.join('/'), { replace: true });
     },
-    [i18n, location.pathname, navigate]
+    [i18n]
   );
 
   return {

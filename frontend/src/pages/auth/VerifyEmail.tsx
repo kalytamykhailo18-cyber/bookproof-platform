@@ -89,13 +89,13 @@ export function VerifyEmailPage() {
 
       <CardFooter className="flex flex-col space-y-2">
         {status === 'success' && (
-          <Button type="button" className="w-full" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${i18n.language}/login`); }}>
+          <Button type="button" className="w-full" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/login`); }}>
             {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('loginButton')}
           </Button>
         )}
 
         {status === 'error' && (
-          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${i18n.language}/register`); }} variant="outline" className="w-full">
+          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/register`); }} variant="outline" className="w-full">
             {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('resendButton')}
           </Button>
         )}

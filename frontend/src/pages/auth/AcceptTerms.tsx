@@ -37,7 +37,7 @@ export function AcceptTermsPage() {
       // Invalidate user query to refresh profile data
       queryClient.invalidateQueries({ queryKey: ['user'] });
       // Redirect to author dashboard
-      navigate(`/${i18n.language}/author`);
+      navigate(`/author`);
     },
     onError: (error: unknown) => {
       stopLoading();
@@ -56,7 +56,7 @@ export function AcceptTermsPage() {
 
   // If user already accepted terms, redirect to dashboard
   if (user?.termsAccepted) {
-    navigate(`/${i18n.language}/author`);
+    navigate(`/author`);
     return null;
   }
 

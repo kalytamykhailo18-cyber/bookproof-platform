@@ -226,7 +226,7 @@ export function NewKeywordResearchPage() {
       const result = await createMutation.mutateAsync(submitData);
       // Clear draft on successful submission
       localStorage.removeItem(DRAFT_STORAGE_KEY);
-      navigate(`/${i18n.language}/author/keyword-research/${result.id}`);
+      navigate(`/author/keyword-research/${result.id}`);
     } catch (error) {
       console.error('Failed to create keyword research:', error);
     }

@@ -52,18 +52,18 @@ export function DashboardHeader({ showLogo = false }: DashboardHeaderProps) {
   const getDashboardPath = () => {
     switch (user?.role) {
       case 'ADMIN':
-        return `/${i18n.language}/admin/dashboard`;
+        return `/admin/dashboard`;
       case 'AFFILIATE':
-        return `/${i18n.language}/affiliate/dashboard`;
+        return `/affiliate/dashboard`;
       default:
-        return `/${i18n.language}/${getBasePath()}`;
+        return `/${getBasePath()}`;
     }
   };
 
   const basePath = getBasePath();
 
   const handleNavigate = (path: string) => {
-    navigate(`/${i18n.language}/${basePath}/${path}`);
+    navigate(`/${basePath}/${path}`);
   };
 
   const getInitials = (name?: string | null) => {

@@ -620,7 +620,7 @@ export function RegisterPage() {
             className="cursor-pointer font-medium text-primary hover:underline"
             onClick={() => {
               setIsLoginLoading(true);
-              navigate(`/${i18n.language}/login`);
+              navigate(`/login`);
             }}
           >
             {isLoginLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('signIn')}

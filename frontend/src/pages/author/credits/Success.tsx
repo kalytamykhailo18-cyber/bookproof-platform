@@ -51,7 +51,7 @@ export function CreditPurchaseSuccessPage() {
                   className="mt-3"
                   onClick={() => {
                     setIsKeywordLoading(true);
-                    navigate(`/${i18n.language}/author/keyword-research/new?fromCreditPurchase=true`);
+                    navigate(`/author/keyword-research/new?fromCreditPurchase=true`);
                   }}
                   disabled={isKeywordLoading}
                 >
@@ -71,7 +71,7 @@ export function CreditPurchaseSuccessPage() {
               type="button"
               onClick={() => {
                 setIsCampaignLoading(true);
-                navigate(`/${i18n.language}/author/campaigns/new`);
+                navigate(`/author/campaigns/new`);
               }}
               disabled={isCampaignLoading}
             >
@@ -83,7 +83,7 @@ export function CreditPurchaseSuccessPage() {
               variant="outline"
               onClick={() => {
                 setIsDashboardLoading(true);
-                navigate(`/${i18n.language}/author`);
+                navigate(`/author`);
               }}
               disabled={isDashboardLoading}
             >

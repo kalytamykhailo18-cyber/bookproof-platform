@@ -47,37 +47,37 @@ export function AuthorSidebar() {
     {
       title: 'Overview',
       items: [
-        { title: 'Dashboard', href: `/${locale}/author`, icon: LayoutDashboard },
+        { title: 'Dashboard', href: '/author', icon: LayoutDashboard },
       ],
     },
     {
       title: 'Campaigns',
       items: [
-        { title: 'My Campaigns', href: `/${locale}/author/campaigns`, icon: BookOpen },
+        { title: 'My Campaigns', href: '/author/campaigns', icon: BookOpen },
       ],
     },
     {
       title: 'Credits',
       items: [
-        { title: 'Credit Balance', href: `/${locale}/author/credits`, icon: CreditCard },
-        { title: 'Purchase Credits', href: `/${locale}/author/credits/purchase`, icon: ShoppingCart },
-        { title: 'Transactions', href: `/${locale}/author/transactions`, icon: Receipt },
+        { title: 'Credit Balance', href: '/author/credits', icon: CreditCard },
+        { title: 'Purchase Credits', href: '/author/credits/purchase', icon: ShoppingCart },
+        { title: 'Transactions', href: '/author/transactions', icon: Receipt },
       ],
     },
     {
       title: 'Services',
       items: [
-        { title: 'Keyword Research', href: `/${locale}/author/keyword-research`, icon: Search },
-        { title: 'Reports', href: `/${locale}/author/reports`, icon: FileText },
+        { title: 'Keyword Research', href: '/author/keyword-research', icon: Search },
+        { title: 'Reports', href: '/author/reports', icon: FileText },
       ],
     },
     {
       title: 'Account',
       items: [
-        { title: 'Notifications', href: `/${locale}/author/notifications`, icon: Bell },
-        { title: 'Subscription', href: `/${locale}/author/subscription`, icon: CreditCard },
-        { title: 'Settings', href: `/${locale}/author/settings`, icon: Settings },
-        { title: 'Support', href: `/${locale}/author/support`, icon: HelpCircle },
+        { title: 'Notifications', href: '/author/notifications', icon: Bell },
+        { title: 'Subscription', href: '/author/subscription', icon: CreditCard },
+        { title: 'Settings', href: '/author/settings', icon: Settings },
+        { title: 'Support', href: '/author/support', icon: HelpCircle },
       ],
     },
   ];
@@ -85,14 +85,14 @@ export function AuthorSidebar() {
   const handleNavigation = (href: string) => {
     // Don't navigate if already on this page
     // pathname doesn't include locale, href does, so strip locale from href
-    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    const hrefWithoutLocale = href;
     if (pathname === hrefWithoutLocale) return;
     setLoadingPath(href);
     navigate(href);
   };
 
   const isActive = (href: string) => {
-    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    const hrefWithoutLocale = href;
 
     // Exact match
     if (pathname === hrefWithoutLocale) return true;
@@ -123,7 +123,7 @@ export function AuthorSidebar() {
       <div className="flex h-16 items-center justify-between border-b px-4">
         <button
           type="button"
-          onClick={() => handleNavigation(`/${locale}/author`)}
+          onClick={() => handleNavigation('/author')}
           className="flex items-center gap-2"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">

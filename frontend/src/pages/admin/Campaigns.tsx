@@ -44,7 +44,7 @@ import {
 
 export function AdminCampaignDetailPage() {
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation('adminCampaigns.detail');
+  const { t, i18n } = useTranslation('adminCampaigns');
   const params = useParams();
   const campaignId = params.id as string;
 
@@ -157,10 +157,10 @@ export function AdminCampaignDetailPage() {
         <Card className="animate-fade-up">
           <CardContent className="py-16 text-center">
             <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-500" />
-            <h3 className="text-lg font-semibold">{t('notFound.title')}</h3>
-            <p className="text-muted-foreground">{t('notFound.description')}</p>
-            <Button className="mt-4" onClick={() => navigate(`/${i18n.language}/admin/campaigns`)}>
-              {t('backToCampaigns')}
+            <h3 className="text-lg font-semibold">{t('detail.notFound.title')}</h3>
+            <p className="text-muted-foreground">{t('detail.notFound.description')}</p>
+            <Button className="mt-4" onClick={() => navigate(`/admin/campaigns`)}>
+              {t('detail.backToCampaigns')}
             </Button>
           </CardContent>
         </Card>
@@ -178,12 +178,12 @@ export function AdminCampaignDetailPage() {
           className="mb-4"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/admin/campaigns`);
+            navigate(`/admin/campaigns`);
           }}
           disabled={isBackLoading}
         >
           {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
-          {t('backToCampaigns')}
+          {t('detail.backToCampaigns')}
         </Button>
         <div className="flex items-center justify-between">
           <div>
@@ -288,7 +288,7 @@ export function AdminCampaignDetailPage() {
               variant="outline"
               onClick={() => {
                 setIsControlsLoading(true);
-                navigate(`/${i18n.language}/admin/campaigns/${campaignId}/controls`);
+                navigate(`/admin/campaigns/${campaignId}/controls`);
               }}
               disabled={isControlsLoading}
             >

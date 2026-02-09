@@ -32,6 +32,10 @@ import adminAffiliatesEN from '../locales/en/admin-affiliates.json';
 import adminAffiliatesES from '../locales/es/admin-affiliates.json';
 import adminAffiliatesPT from '../locales/pt/admin-affiliates.json';
 
+import adminAffiliateDetailsEN from '../locales/en/admin-affiliate-details.json';
+import adminAffiliateDetailsES from '../locales/es/admin-affiliate-details.json';
+import adminAffiliateDetailsPT from '../locales/pt/admin-affiliate-details.json';
+
 import adminCampaignsEN from '../locales/en/admin-campaigns.json';
 import adminCampaignsES from '../locales/es/admin-campaigns.json';
 import adminCampaignsPT from '../locales/pt/admin-campaigns.json';
@@ -86,6 +90,7 @@ const resources = {
     adminAuthors: adminAuthorsEN,
     adminReaders: adminReadersEN,
     adminAffiliates: adminAffiliatesEN,
+    adminAffiliateDetails: adminAffiliateDetailsEN,
     adminCampaigns: adminCampaignsEN,
     adminValidation: adminValidationEN,
     adminPayouts: adminPayoutsEN,
@@ -104,6 +109,7 @@ const resources = {
     adminAuthors: adminAuthorsES,
     adminReaders: adminReadersES,
     adminAffiliates: adminAffiliatesES,
+    adminAffiliateDetails: adminAffiliateDetailsES,
     adminCampaigns: adminCampaignsES,
     adminValidation: adminValidationES,
     adminPayouts: adminPayoutsES,
@@ -122,6 +128,7 @@ const resources = {
     adminAuthors: adminAuthorsPT,
     adminReaders: adminReadersPT,
     adminAffiliates: adminAffiliatesPT,
+    adminAffiliateDetails: adminAffiliateDetailsPT,
     adminCampaigns: adminCampaignsPT,
     adminValidation: adminValidationPT,
     adminPayouts: adminPayoutsPT,
@@ -163,7 +170,6 @@ i18n
     },
   })
   .then(() => {
-    console.log('i18n initialized with language:', i18n.language);
     console.log('Available namespaces:', Object.keys(resources.en));
   })
   .catch((err) => {

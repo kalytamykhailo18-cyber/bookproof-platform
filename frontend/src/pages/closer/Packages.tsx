@@ -169,7 +169,7 @@ export function PackageDetailPage() {
             className="mt-4"
             onClick={() => {
               setIsBackLoading(true);
-              navigate(`/${i18n.language}/closer/packages`);
+              navigate(`/closer/packages`);
             }}
             disabled={isBackLoading}
           >
@@ -194,7 +194,7 @@ export function PackageDetailPage() {
             size="icon"
             onClick={() => {
               setIsBackLoading(true);
-              navigate(`/${i18n.language}/closer/packages`);
+              navigate(`/closer/packages`);
             }}
             disabled={isBackLoading}
           >

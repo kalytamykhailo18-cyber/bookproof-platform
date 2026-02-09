@@ -141,6 +141,7 @@
     "notFound": {
       "title": "Campaña No Encontrada",
       "description": "La campaña que buscas no existe o ha sido eliminada."
-    }
+    },
+    "backToCampaigns": "Volver a Campañas"
   }
 }

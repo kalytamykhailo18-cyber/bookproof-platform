@@ -109,7 +109,7 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
 
   const handleCardClick = () => {
     setIsNavLoading(true);
-    navigate(`/${i18n.language}/reader/assignments/${assignment.id}`);
+    navigate(`/reader/assignments/${assignment.id}`);
   };
 
   return (
@@ -209,7 +209,7 @@ export function ReaderDashboard() {
 
   // Redirect to profile creation if no profile exists
   if (!isLoadingProfile && !hasProfile) {
-    navigate(`/${i18n.language}/reader/profile`);
+    navigate(`/reader/profile`);
     return null;
   }
 
@@ -260,7 +260,7 @@ export function ReaderDashboard() {
             className="animate-fade-left"
             onClick={() => {
               setIsCampaignsLoading(true);
-              navigate(`/${i18n.language}/reader/campaigns`);
+              navigate(`/reader/campaigns`);
             }}
             disabled={isCampaignsLoading}
           >
@@ -273,7 +273,7 @@ export function ReaderDashboard() {
             className="animate-fade-left-slow"
             onClick={() => {
               setIsPayoutLoading(true);
-              navigate(`/${i18n.language}/reader/wallet/payout`);
+              navigate(`/reader/wallet/payout`);
             }}
             disabled={isPayoutLoading || (stats?.walletBalance || 0) < 50}
             title={(stats?.walletBalance || 0) < 50 ? t('payoutMinimumRequired', { amount: '$50' }) : undefined}
@@ -287,7 +287,7 @@ export function ReaderDashboard() {
             className="animate-fade-left-light-slow"
             onClick={() => {
               setIsStatsLoading(true);
-              navigate(`/${i18n.language}/reader/stats`);
+              navigate(`/reader/stats`);
             }}
             disabled={isStatsLoading}
           >
@@ -410,7 +410,7 @@ export function ReaderDashboard() {
               type="button"
               onClick={() => {
                 setIsCampaignsLoading(true);
-                navigate(`/${i18n.language}/reader/campaigns`);
+                navigate(`/reader/campaigns`);
               }}
               disabled={isCampaignsLoading}
             >

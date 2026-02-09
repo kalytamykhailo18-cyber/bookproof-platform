@@ -105,7 +105,7 @@ export function ResetPasswordPage() {
           <p className="text-muted-foreground">{t('errorInvalidToken')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
-          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${i18n.language}/forgot-password`); }} className="w-full">
+          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/forgot-password`); }} className="w-full">
             {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Request New Link'}
           </Button>
         </CardFooter>
@@ -128,7 +128,7 @@ export function ResetPasswordPage() {
           <p className="animate-fade-up text-center text-muted-foreground">{t('successMessage')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
-          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${i18n.language}/login`); }} className="w-full">
+          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/login`); }} className="w-full">
             {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('loginButton')}
           </Button>
         </CardFooter>

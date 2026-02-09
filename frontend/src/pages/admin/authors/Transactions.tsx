@@ -104,7 +104,7 @@ export function AuthorTransactionsPage() {
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-semibold">{t('error.title')}</h3>
             <p className="text-muted-foreground">{t('error.description')}</p>
-            <Button type="button" className="mt-4" onClick={() => navigate(`/${i18n.language}/admin/authors`)}>
+            <Button type="button" className="mt-4" onClick={() => navigate(`/admin/authors`)}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               {t('backToAuthors')}
             </Button>
@@ -124,7 +124,7 @@ export function AuthorTransactionsPage() {
           size="icon"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/admin/authors`);
+            navigate(`/admin/authors`);
           }}
           disabled={isBackLoading}
         >

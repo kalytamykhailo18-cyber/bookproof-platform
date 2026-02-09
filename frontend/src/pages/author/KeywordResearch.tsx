@@ -44,10 +44,10 @@ export function KeywordResearchDetailsPage() {
       // Refetch to get updated status
       refetch();
       // Clean up URL
-      navigate(`/${i18n.language}/author/keyword-research/${id}`);
+      navigate(`/author/keyword-research/${id}`);
     } else if (cancelled === 'true') {
       toast.error('Payment was cancelled. Please try again.');
-      navigate(`/${i18n.language}/author/keyword-research/${id}`);
+      navigate(`/author/keyword-research/${id}`);
     }
   }, [searchParams, id, router, refetch]);
 
@@ -56,7 +56,7 @@ export function KeywordResearchDetailsPage() {
   };
 
   const handleEdit = () => {
-    navigate(`/${i18n.language}/author/keyword-research/${id}/edit`);
+    navigate(`/author/keyword-research/${id}/edit`);
   };
 
   const handlePayNow = () => {
@@ -64,8 +64,8 @@ export function KeywordResearchDetailsPage() {
     checkoutMutation.mutate({
       id,
       data: {
-        successUrl: `${baseUrl}/${i18n.language}/author/keyword-research/${id}?success=true`,
-        cancelUrl: `${baseUrl}/${i18n.language}/author/keyword-research/${id}?cancelled=true` } });
+        successUrl: `${baseUrl}/author/keyword-research/${id}?success=true`,
+        cancelUrl: `${baseUrl}/author/keyword-research/${id}?cancelled=true` } });
   };
 
   const getStatusColor = (status: KeywordResearchStatus) => {

@@ -45,34 +45,34 @@ export function AffiliateSidebar() {
     {
       title: 'Overview',
       items: [
-        { title: 'Dashboard', href: `/${locale}/affiliate/dashboard`, icon: LayoutDashboard },
+        { title: 'Dashboard', href: '/affiliate/dashboard', icon: LayoutDashboard },
       ],
     },
     {
       title: 'Referrals',
       items: [
-        { title: 'Referral Links', href: `/${locale}/affiliate/referral-links`, icon: Link2 },
-        { title: 'Referred Authors', href: `/${locale}/affiliate/referred-authors`, icon: Users },
+        { title: 'Referral Links', href: '/affiliate/referral-links', icon: Link2 },
+        { title: 'Referred Authors', href: '/affiliate/referred-authors', icon: Users },
       ],
     },
     {
       title: 'Earnings',
       items: [
-        { title: 'Commissions', href: `/${locale}/affiliate/commissions`, icon: DollarSign },
-        { title: 'Payouts', href: `/${locale}/affiliate/payouts`, icon: Wallet },
+        { title: 'Commissions', href: '/affiliate/commissions', icon: DollarSign },
+        { title: 'Payouts', href: '/affiliate/payouts', icon: Wallet },
       ],
     },
     {
       title: 'Resources',
       items: [
-        { title: 'Marketing Materials', href: `/${locale}/affiliate/marketing-materials`, icon: Image },
+        { title: 'Marketing Materials', href: '/affiliate/marketing-materials', icon: Image },
       ],
     },
     {
       title: 'Account',
       items: [
-        { title: 'Notifications', href: `/${locale}/affiliate/notifications`, icon: Bell },
-        { title: 'Settings', href: `/${locale}/affiliate/settings`, icon: Settings },
+        { title: 'Notifications', href: '/affiliate/notifications', icon: Bell },
+        { title: 'Settings', href: '/affiliate/settings', icon: Settings },
       ],
     },
   ];
@@ -80,14 +80,14 @@ export function AffiliateSidebar() {
   const handleNavigation = (href: string) => {
     // Don't navigate if already on this page
     // pathname doesn't include locale, href does, so strip locale from href
-    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    const hrefWithoutLocale = href;
     if (pathname === hrefWithoutLocale) return;
     setLoadingPath(href);
     navigate(href);
   };
 
   const isActive = (href: string) => {
-    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    const hrefWithoutLocale = href;
     // Exact match
     if (pathname === hrefWithoutLocale) return true;
     // Check if pathname starts with this href
@@ -113,7 +113,7 @@ export function AffiliateSidebar() {
       <div className="flex h-16 items-center justify-between border-b px-4">
         <button
           type="button"
-          onClick={() => handleNavigation(`/${locale}/affiliate/dashboard`)}
+          onClick={() => handleNavigation('/affiliate/dashboard')}
           className="flex items-center gap-2"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">

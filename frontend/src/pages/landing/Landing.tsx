@@ -72,10 +72,10 @@ function HeroSection() {
               {t('subtitle')}
             </p>
             <div className="flex animate-fade-up-slow flex-col gap-4 sm:flex-row">
-              <Button type="button" size="lg" className="text-lg" onClick={() => navigate(`/${i18n.language}/register`)}>
+              <Button type="button" size="lg" className="text-lg" onClick={() => navigate(`/register`)}>
                 {t('cta.primary')}
               </Button>
-              <Button type="button" size="lg" variant="outline" className="text-lg" onClick={() => navigate(`/${i18n.language}/login`)}>
+              <Button type="button" size="lg" variant="outline" className="text-lg" onClick={() => navigate(`/login`)}>
                 {t('cta.secondary')}
               </Button>
             </div>
@@ -443,7 +443,7 @@ function PricingSection() {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full" variant={pkg.popular ? 'default' : 'outline'} onClick={() => navigate(`/${i18n.language}/register`)}>
+                <Button className="w-full" variant={pkg.popular ? 'default' : 'outline'} onClick={() => navigate(`/register`)}>
                   {t('cta')}
                 </Button>
               </CardContent>

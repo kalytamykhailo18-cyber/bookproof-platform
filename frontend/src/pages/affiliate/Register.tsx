@@ -61,7 +61,7 @@ export function AffiliateRegisterPage() {
 
     const data = form.getValues();
     await registerMutation.mutateAsync(data);
-    navigate(`/${i18n.language}/affiliate/dashboard`);
+    navigate(`/affiliate/dashboard`);
   };
 
   // If user already has profile, show status
@@ -108,7 +108,7 @@ export function AffiliateRegisterPage() {
               type="button"
               onClick={() => {
                 setIsDashboardLoading(true);
-                navigate(`/${i18n.language}/affiliate/dashboard`);
+                navigate(`/affiliate/dashboard`);
               }}
               disabled={isDashboardLoading}
             >

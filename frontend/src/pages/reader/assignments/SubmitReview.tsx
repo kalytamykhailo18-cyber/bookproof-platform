@@ -128,7 +128,7 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
           <CardContent className="py-16 text-center">
             <AlertCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="mb-2 text-lg font-semibold">{t('notFound.title')}</h3>
-            <Button type="button" className="mt-4" onClick={() => navigate(`/${i18n.language}/reader`)}>
+            <Button type="button" className="mt-4" onClick={() => navigate(`/reader`)}>
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -141,7 +141,7 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
   if (review || isSubmitSuccess) {
     return (
       <div className="container mx-auto space-y-6 p-6">
-        <Button type="button" variant="ghost" className="animate-fade-right" onClick={() => navigate(`/${i18n.language}/reader/assignments/${assignmentId}`)}>
+        <Button type="button" variant="ghost" className="animate-fade-right" onClick={() => navigate(`/reader/assignments/${assignmentId}`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToAssignment')}
         </Button>
@@ -156,10 +156,10 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
               {t('success.description')}
             </p>
             <div className="flex justify-center gap-2">
-              <Button type="button" onClick={() => navigate(`/${i18n.language}/reader`)}>
+              <Button type="button" onClick={() => navigate(`/reader`)}>
                 {t('backToDashboard')}
               </Button>
-              <Button type="button" variant="outline" onClick={() => navigate(`/${i18n.language}/reader/profile`)}>
+              <Button type="button" variant="outline" onClick={() => navigate(`/reader/profile`)}>
                 {t('viewWallet')}
               </Button>
             </div>
@@ -173,7 +173,7 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button type="button" variant="ghost" className="mb-4" onClick={() => navigate(`/${i18n.language}/reader/assignments/${assignmentId}`)}>
+        <Button type="button" variant="ghost" className="mb-4" onClick={() => navigate(`/reader/assignments/${assignmentId}`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToAssignment')}
         </Button>

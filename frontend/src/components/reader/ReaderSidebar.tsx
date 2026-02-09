@@ -45,29 +45,29 @@ export function ReaderSidebar() {
     {
       title: 'Overview',
       items: [
-        { title: 'Dashboard', href: `/${locale}/reader`, icon: LayoutDashboard },
+        { title: 'Dashboard', href: '/reader', icon: LayoutDashboard },
       ],
     },
     {
       title: 'Reviews',
       items: [
-        { title: 'Browse Campaigns', href: `/${locale}/reader/campaigns`, icon: BookOpen },
+        { title: 'Browse Campaigns', href: '/reader/campaigns', icon: BookOpen },
       ],
     },
     {
       title: 'Earnings',
       items: [
-        { title: 'Wallet', href: `/${locale}/reader/wallet`, icon: Wallet },
-        { title: 'Statistics', href: `/${locale}/reader/stats`, icon: BarChart3 },
+        { title: 'Wallet', href: '/reader/wallet', icon: Wallet },
+        { title: 'Statistics', href: '/reader/stats', icon: BarChart3 },
       ],
     },
     {
       title: 'Account',
       items: [
-        { title: 'Profile', href: `/${locale}/reader/profile`, icon: User },
-        { title: 'Notifications', href: `/${locale}/reader/notifications`, icon: Bell },
-        { title: 'Settings', href: `/${locale}/reader/settings`, icon: Settings },
-        { title: 'Support', href: `/${locale}/reader/support`, icon: HelpCircle },
+        { title: 'Profile', href: '/reader/profile', icon: User },
+        { title: 'Notifications', href: '/reader/notifications', icon: Bell },
+        { title: 'Settings', href: '/reader/settings', icon: Settings },
+        { title: 'Support', href: '/reader/support', icon: HelpCircle },
       ],
     },
   ];
@@ -75,14 +75,14 @@ export function ReaderSidebar() {
   const handleNavigation = (href: string) => {
     // Don't navigate if already on this page
     // pathname doesn't include locale, href does, so strip locale from href
-    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    const hrefWithoutLocale = href;
     if (pathname === hrefWithoutLocale) return;
     setLoadingPath(href);
     navigate(href);
   };
 
   const isActive = (href: string) => {
-    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    const hrefWithoutLocale = href;
     // Exact match
     if (pathname === hrefWithoutLocale) return true;
     // Check if pathname starts with this href
@@ -108,7 +108,7 @@ export function ReaderSidebar() {
       <div className="flex h-16 items-center justify-between border-b px-4">
         <button
           type="button"
-          onClick={() => handleNavigation(`/${locale}/reader`)}
+          onClick={() => handleNavigation('/reader')}
           className="flex items-center gap-2"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">

@@ -203,7 +203,7 @@ export function CampaignDetailPage() {
               type="button"
               onClick={() => {
                 setIsBackLoading(true);
-                navigate(`/${i18n.language}/author`);
+                navigate(`/author`);
               }}
               className="mt-4"
               disabled={isBackLoading}
@@ -232,7 +232,7 @@ export function CampaignDetailPage() {
           variant="ghost"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/author`);
+            navigate(`/author`);
           }}
           className="mb-4"
           disabled={isBackLoading}
@@ -265,7 +265,7 @@ export function CampaignDetailPage() {
                   size="sm"
                   onClick={() => {
                     setIsAnalyticsLoading(true);
-                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}/analytics`);
+                    navigate(`/author/campaigns/${campaign.id}/analytics`);
                   }}
                   disabled={isAnalyticsLoading}
                 >
@@ -712,7 +712,7 @@ export function CampaignDetailPage() {
                   className="w-full"
                   onClick={() => {
                     setIsEditLoading(true);
-                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}/edit`);
+                    navigate(`/author/campaigns/${campaign.id}/edit`);
                   }}
                   disabled={isEditLoading}
                 >
@@ -765,7 +765,7 @@ export function CampaignDetailPage() {
                   className="w-full"
                   onClick={() => {
                     setIsAnalyticsLoading(true);
-                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}/analytics`);
+                    navigate(`/author/campaigns/${campaign.id}/analytics`);
                   }}
                   disabled={isAnalyticsLoading}
                 >
@@ -811,7 +811,7 @@ export function CampaignDetailPage() {
                   className="w-full"
                   onClick={() => {
                     setIsAnalyticsLoading(true);
-                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}/analytics`);
+                    navigate(`/author/campaigns/${campaign.id}/analytics`);
                   }}
                   disabled={isAnalyticsLoading}
                 >
@@ -835,7 +835,7 @@ export function CampaignDetailPage() {
                   className="w-full"
                   onClick={() => {
                     setIsAnalyticsLoading(true);
-                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}/analytics`);
+                    navigate(`/author/campaigns/${campaign.id}/analytics`);
                   }}
                   disabled={isAnalyticsLoading}
                 >

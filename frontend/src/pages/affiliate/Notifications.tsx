@@ -74,7 +74,7 @@ export function NotificationsPage() {
             className="animate-fade-left"
             onClick={() => {
               setIsSettingsLoading(true);
-              navigate(`/${i18n.language}/affiliate/notifications/settings`);
+              navigate(`/affiliate/notifications/settings`);
             }}
             disabled={isSettingsLoading}
           >

@@ -83,7 +83,7 @@ export function useMyAssignments() {
       queryClient.invalidateQueries({ queryKey: ['available-campaigns'] });
       queryClient.invalidateQueries({ queryKey: ['reader-stats'] });
       toast.success('Successfully withdrawn from assignment');
-      navigate(`/${locale}/reader`);
+      navigate('/reader');
     },
     onError: (error: any) => {
       stopLoading();

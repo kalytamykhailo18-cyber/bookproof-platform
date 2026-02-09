@@ -84,7 +84,7 @@ export function RequestPayoutPage() {
         notes: data.notes },
       {
         onSuccess: () => {
-          navigate(`/${i18n.language}/reader/wallet`);
+          navigate(`/reader/wallet`);
         } },
     );
   };
@@ -211,7 +211,7 @@ export function RequestPayoutPage() {
         size="sm"
         onClick={() => {
           setIsBackLoading(true);
-          navigate(`/${i18n.language}/reader/wallet`);
+          navigate(`/reader/wallet`);
         }}
         className="mb-6 animate-fade-right-fast"
         disabled={isBackLoading}

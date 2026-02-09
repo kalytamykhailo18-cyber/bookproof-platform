@@ -78,7 +78,7 @@ export function useCampaigns() {
       stopLoading();
       queryClient.invalidateQueries({ queryKey: ['campaigns'] });
       toast.success('Campaign created successfully!');
-      navigate(`/${locale}/author/campaigns/${newCampaign.id}`);
+      navigate(`/author/campaigns/${newCampaign.id}`);
     },
     onError: (error: any) => {
       stopLoading();
@@ -120,7 +120,7 @@ export function useCampaigns() {
       stopLoading();
       queryClient.invalidateQueries({ queryKey: ['campaigns'] });
       toast.success('Campaign deleted successfully!');
-      navigate(`/${locale}/author/campaigns`);
+      navigate('/author/campaigns');
     },
     onError: (error: any) => {
       stopLoading();

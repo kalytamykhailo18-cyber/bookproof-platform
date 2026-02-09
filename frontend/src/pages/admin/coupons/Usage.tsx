@@ -61,7 +61,7 @@ export function CouponUsagePage() {
           size="icon"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/admin/coupons/${id}`);
+            navigate(`/admin/coupons/${id}`);
           }}
           disabled={isBackLoading}
         >
