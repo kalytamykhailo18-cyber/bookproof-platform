@@ -1,0 +1,67 @@
+{
+  "title": "Review Validation",
+  "subtitle": "Review and validate pending submissions from readers",
+  "stats": {
+    "pending": "Pending",
+    "validated": "Validated",
+    "rejected": "Rejected",
+    "flagged": "Flagged"
+  },
+  "bulk": {
+    "selected": "{count} reviews selected",
+    "approve": "Approve Selected",
+    "clear": "Clear Selection"
+  },
+  "list": {
+    "title": "{count} Pending Reviews",
+    "description": "Review submissions awaiting validation"
+  },
+  "empty": {
+    "title": "All Caught Up!",
+    "description": "There are no reviews pending validation"
+  },
+  "review": {
+    "byAuthor": "by {author}",
+    "reader": "Reader",
+    "reliability": "Reliability",
+    "completion": "Completion",
+    "amazonProfile": "Amazon Profile",
+    "viewProfile": "View Profile",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "rating": "Rating",
+    "viewOnAmazon": "View Review on Amazon",
+    "submitted": "Submitted"
+  },
+  "actions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "flag": "Flag",
+    "requestResubmission": "Request Resubmission"
+  },
+  "dialog": {
+    "approve": {
+      "title": "Approve Review",
+      "description": "Are you sure you want to approve this review? The reader will be credited."
+    },
+    "reject": {
+      "title": "Reject Review",
+      "description": "Please provide a reason for rejecting this review."
+    },
+    "flag": {
+      "title": "Flag Review",
+      "description": "Flag this review for further investigation."
+    },
+    "resubmit": {
+      "title": "Request Resubmission",
+      "description": "Request the reader to resubmit their review."
+    },
+    "issueType": "Issue Type",
+    "severity": "Severity",
+    "notes": "Notes",
+    "notesPlaceholder": "Add any additional notes or instructions...",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+    "confirm": "Confirm"
+  }
+}

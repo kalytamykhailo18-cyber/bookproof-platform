@@ -1,0 +1,232 @@
+{
+  "title": "Pesquisa de Palavras-Chave",
+  "subtitle": "Pesquisa profissional de palavras-chave alimentada por IA para seus livros",
+  "createNew": "Solicitar Pesquisa de Palavras-Chave",
+  "myOrders": "Minhas Solicitações de Pesquisa",
+  "adminMonitor": "Monitorar Todas as Solicitações",
+  "price": "Preço por livro",
+  "priceValue": "$49.99",
+
+  "status": {
+    "pending": "Pagamento Pendente",
+    "processing": "Processando",
+    "completed": "Concluído",
+    "failed": "Falhou"
+  },
+
+  "list": {
+    "title": "Solicitações de Pesquisa de Palavras-Chave",
+    "empty": "Ainda não há solicitações de pesquisa",
+    "emptyDescription": "Solicite sua primeira pesquisa de palavras-chave para obter palavras-chave otimizadas para Amazon KDP com IA.",
+    "table": {
+      "bookTitle": "Título do Livro",
+      "status": "Status",
+      "price": "Preço",
+      "paid": "Pago",
+      "createdAt": "Criado",
+      "completedAt": "Concluído",
+      "actions": "Ações"
+    },
+    "actions": {
+      "view": "Ver Resultados",
+      "download": "Baixar PDF",
+      "regenerate": "Regenerar"
+    }
+  },
+
+  "new": {
+    "title": "Solicitar Pesquisa de Palavras-Chave",
+    "subtitle": "Obtenha recomendações de palavras-chave alimentadas por IA para seu livro",
+    "draft": {
+      "restored": "Rascunho restaurado da sua sessão anterior",
+      "lastSaved": "Último salvamento",
+      "clear": "Limpar Rascunho",
+      "cleared": "Rascunho limpo"
+    },
+    "steps": {
+      "bookInfo": "Informações do Livro",
+      "details": "Detalhes do Livro",
+      "review": "Revisar e Pagar"
+    },
+    "fields": {
+      "bookId": {
+        "label": "Selecionar Livro",
+        "placeholder": "Escolha um livro de suas campanhas",
+        "description": "Selecione o livro para o qual deseja pesquisa de palavras-chave"
+      },
+      "bookTitle": {
+        "label": "Título do Livro",
+        "placeholder": "O Guia Completo para Autopublicação",
+        "description": "O título completo do seu livro"
+      },
+      "genre": {
+        "label": "Gênero",
+        "placeholder": "Não Ficção",
+        "description": "Gênero ou categoria principal"
+      },
+      "category": {
+        "label": "Categoria da Amazon",
+        "placeholder": "Negócios e Dinheiro > Marketing",
+        "description": "Caminho específico da categoria da Amazon"
+      },
+      "description": {
+        "label": "Descrição do Livro",
+        "placeholder": "Um guia completo para autores que querem autopublicar...",
+        "description": "Breve descrição do conteúdo e valor do seu livro"
+      },
+      "targetAudience": {
+        "label": "Público-Alvo",
+        "placeholder": "Autores aspirantes, autopublicadores, escritores independentes",
+        "description": "Para quem é este livro?"
+      },
+      "competingBooks": {
+        "label": "Livros Concorrentes (Opcional)",
+        "placeholder": "Marketing de Livros Simplificado, APE: Autor Editor Empreendedor",
+        "description": "Livros similares ou ASINs para analisar"
+      },
+      "bookLanguage": {
+        "label": "Idioma do Livro",
+        "description": "Idioma principal do seu livro"
+      },
+      "targetMarket": {
+        "label": "Mercado Amazon Alvo",
+        "description": "Selecione o marketplace da Amazon para otimização de palavras-chave. Cada pedido é para UM mercado.",
+        "us": "Amazon Estados Unidos (amazon.com)",
+        "br": "Amazon Brasil (amazon.com.br)"
+      },
+      "additionalNotes": {
+        "label": "Notas Adicionais (Opcional)",
+        "placeholder": "Foco em palavras-chave para otimização Amazon KDP...",
+        "description": "Qualquer requisito específico ou área de foco"
+      },
+      "couponCode": {
+        "label": "Código de Cupom (Opcional)",
+        "placeholder": "KEYWORDS20",
+        "description": "Insira um código de cupom se você tiver um",
+        "apply": "Aplicar",
+        "applied": "Cupom aplicado",
+        "invalid": "Cupom inválido ou expirado"
+      }
+    },
+    "review": {
+      "title": "Revisar Seu Pedido",
+      "bookInfo": "Informações do Livro",
+      "pricing": "Preços",
+      "subtotal": "Subtotal",
+      "discount": "Desconto",
+      "total": "Total",
+      "termsAgree": "Concordo com os termos e condições",
+      "termsLink": "Ver termos"
+    },
+    "submit": "Fazer Pedido",
+    "submitting": "Criando pedido...",
+    "success": "Pedido de pesquisa de palavras-chave criado com sucesso!",
+    "error": "Falha ao criar pedido"
+  },
+
+  "edit": {
+    "title": "Editar Pesquisa de Palavras-Chave",
+    "subtitle": "Atualize os detalhes do livro antes de concluir o pagamento",
+    "submit": "Salvar Alterações",
+    "submitting": "Salvando...",
+    "success": "Alterações salvas com sucesso",
+    "error": "Falha ao salvar alterações",
+    "cannotEdit": "Este pedido não pode mais ser editado porque já está sendo processado ou concluído."
+  },
+
+  "details": {
+    "title": "Resultados da Pesquisa de Palavras-Chave",
+    "bookInfo": "Informações do Livro",
+    "orderInfo": "Informações do Pedido",
+    "orderId": "ID do Pedido",
+    "createdAt": "Criado",
+    "completedAt": "Concluído",
+    "status": "Status",
+    "targetMarket": "Mercado Alvo",
+    "targetMarketUS": "Amazon Estados Unidos (amazon.com)",
+    "targetMarketBR": "Amazon Brasil (amazon.com.br)",
+    "processing": "Sua pesquisa de palavras-chave está sendo processada. Isso geralmente leva 5-10 minutos.",
+    "failed": "A geração da pesquisa de palavras-chave falhou. Entre em contato com o suporte.",
+    "downloadPdf": "Baixar Relatório PDF",
+    "downloadCount": "Baixado {count} vezes",
+    "edit": "Editar Detalhes",
+    "pendingNote": "Este pedido está aguardando pagamento. Você pode editar os detalhes do livro antes de concluir o pagamento.",
+
+    "keywords": {
+      "title": "Palavras-Chave",
+      "primary": {
+        "title": "Palavras-Chave Primárias",
+        "description": "Termos de busca amplos e de alto volume"
+      },
+      "secondary": {
+        "title": "Palavras-Chave Secundárias",
+        "description": "Termos específicos de subtópicos"
+      },
+      "longTail": {
+        "title": "Palavras-Chave de Cauda Longa",
+        "description": "Frases específicas de 3-5 palavras com menor concorrência"
+      }
+    },
+
+    "usage": {
+      "title": "Guias de Uso",
+      "howToUse": "Como Usar Estas Palavras-Chave"
+    },
+
+    "kdp": {
+      "title": "Palavras-Chave Backend da Amazon KDP",
+      "description": "Use estes conjuntos de palavras-chave no seu backend KDP (7 caixas, máx. 50 caracteres cada)",
+      "box": "Caixa {number}"
+    },
+
+    "actions": {
+      "regenerate": "Regenerar Palavras-Chave",
+      "regenerateConfirm": "Tem certeza de que deseja regenerar esta pesquisa de palavras-chave? Isso criará novas palavras-chave geradas por IA.",
+      "regenerateSuccess": "Regeneração iniciada",
+      "regenerateError": "Falha ao regenerar"
+    }
+  },
+
+  "admin": {
+    "title": "Solicitações de Pesquisa de Palavras-Chave - Admin",
+    "filters": {
+      "all": "Todas as Solicitações",
+      "pending": "Pendente",
+      "processing": "Processando",
+      "completed": "Concluído",
+      "failed": "Falhou"
+    },
+    "table": {
+      "author": "Autor",
+      "bookTitle": "Título do Livro",
+      "status": "Status",
+      "price": "Preço",
+      "paid": "Pago",
+      "createdAt": "Criado",
+      "completedAt": "Concluído",
+      "actions": "Ações"
+    },
+    "actions": {
+      "view": "Ver",
+      "regenerate": "Regenerar",
+      "downloadPdf": "Baixar PDF"
+    },
+    "stats": {
+      "totalOrders": "Total de Pedidos",
+      "processing": "Processando",
+      "completed": "Concluído",
+      "failed": "Falhou",
+      "totalRevenue": "Receita Total"
+    }
+  },
+
+  "errors": {
+    "bookNotFound": "Livro não encontrado",
+    "alreadyExists": "Pesquisa de palavras-chave já existe para este livro",
+    "notAuthorized": "Não autorizado para acessar esta pesquisa",
+    "pdfNotReady": "PDF ainda não gerado",
+    "createFailed": "Falha ao criar pedido de pesquisa de palavras-chave",
+    "loadFailed": "Falha ao carregar pesquisa de palavras-chave",
+    "downloadFailed": "Falha ao baixar PDF"
+  }
+}

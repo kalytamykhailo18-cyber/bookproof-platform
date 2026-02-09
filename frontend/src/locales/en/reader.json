@@ -1,0 +1,237 @@
+{
+  "dashboard": {
+    "title": "Reader Dashboard",
+    "subtitle": "Welcome back! Track your assignments and earnings.",
+    "browseBooks": "Browse Books",
+    "byAuthor": "by {author}",
+    "credit": "credit",
+    "credits": "credits",
+    "queuePosition": "Queue position: {position}",
+    "scheduledFor": "Scheduled for: {date}",
+    "deadline": "Deadline",
+    "remaining": "remaining",
+    "payoutMinimumRequired": "Minimum {amount} required for payout",
+    "requestPayout": "Request Payout",
+    "viewMyReviews": "View My Reviews",
+    "stats": {
+      "walletBalance": "Wallet Balance",
+      "totalEarned": "Total earned: {amount}",
+      "activeAssignments": "Active Assignments",
+      "currentlyWorking": "Currently working on",
+      "completedReviews": "Completed Reviews",
+      "completionRate": "{rate}% completion rate",
+      "reliabilityScore": "Reliability Score",
+      "performanceRating": "Your performance rating",
+      "pendingPayouts": "Pending Payouts",
+      "awaitingProcessing": "Awaiting processing"
+    },
+    "sections": {
+      "activeAssignments": "Active Assignments",
+      "activeDescription": "Books you can access now - complete before deadline!",
+      "upcomingAssignments": "Upcoming Assignments",
+      "upcomingDescription": "Books scheduled for you - materials will be released on scheduled date",
+      "completedSubmitted": "Completed & Submitted",
+      "completedDescription": "Your review history"
+    },
+    "empty": {
+      "title": "No assignments yet",
+      "description": "Browse available books and apply to start earning"
+    },
+    "status": {
+      "waiting": "Waiting in Queue",
+      "scheduled": "Scheduled",
+      "approved": "Materials Available",
+      "inProgress": "In Progress",
+      "submitted": "Submitted",
+      "completed": "Completed",
+      "expired": "Expired"
+    }
+  },
+  "campaigns": {
+    "title": "Browse Books",
+    "subtitle": "Find books to review and start earning",
+    "backToDashboard": "Back to Dashboard",
+    "filters": {
+      "title": "Filters",
+      "search": "Search",
+      "searchPlaceholder": "Title, author...",
+      "genre": "Genre",
+      "allGenres": "All Genres",
+      "language": "Language",
+      "allLanguages": "All Languages",
+      "format": "Format",
+      "allFormats": "All Formats"
+    },
+    "resultsCount": "Showing {count} book",
+    "resultsCount_plural": "Showing {count} books",
+    "campaign": {
+      "byAuthor": "by {author}",
+      "target": "Target",
+      "delivered": "Delivered",
+      "rate": "Rate",
+      "perWeek": "/week",
+      "queuePosition": "Queue Position",
+      "estimatedWait": "Estimated wait",
+      "week": "week",
+      "weeks": "weeks",
+      "selectFormat": "Select Format",
+      "alreadyApplied": "Already Applied",
+      "formatNotAvailable": "Format Not Available",
+      "applyToReview": "Apply to Review",
+      "applying": "Applying..."
+    },
+    "emptyState": {
+      "title": "No books found",
+      "description": "Try adjusting your filters or check back later"
+    },
+    "modal": {
+      "synopsis": "Synopsis",
+      "applyToReviewThisBook": "Apply to Review This Book"
+    },
+    "apply": {
+      "back": "Back",
+      "next": "Next",
+      "submit": "Submit Application",
+      "submitting": "Submitting...",
+      "selectedFormat": "Selected Format",
+      "step1": {
+        "title": "Select Format",
+        "description": "Choose the format you want to review"
+      },
+      "step2": {
+        "title": "Confirm Application",
+        "description": "Review and confirm your application"
+      },
+      "confirm1": "I understand I will receive access to review materials",
+      "confirm2": "I commit to completing the review before the deadline",
+      "confirm3": "I agree to provide an honest and detailed review",
+      "success": {
+        "title": "Application Submitted!",
+        "description": "Your application has been received",
+        "status": "Status",
+        "waitingForAccess": "Waiting for access",
+        "queuePosition": "Queue Position",
+        "estimatedWeek": "Estimated Week",
+        "weekNumber": "Week {number}",
+        "notification": "You will be notified when materials are available",
+        "done": "Done"
+      }
+    }
+  },
+  "assignment": {
+    "backToDashboard": "Back to Dashboard",
+    "notFound": {
+      "title": "Assignment not found",
+      "description": "The assignment you're looking for doesn't exist or has been removed."
+    },
+    "deadline": {
+      "urgent": "URGENT: Deadline Approaching!",
+      "reminder": "Deadline Reminder",
+      "due": "Due {time}",
+      "hoursRemaining": "hours remaining"
+    },
+    "sections": {
+      "synopsis": "Synopsis",
+      "ebookDownload": "Ebook Download",
+      "ebookDownloadDesc": "Download the ebook to your device",
+      "downloadButton": "Download Ebook (PDF/EPUB)",
+      "downloaded": "Downloaded {time}",
+      "audiobookPlayer": "Audiobook Player"
+    },
+    "materialsNotAvailable": {
+      "title": "Materials Not Yet Available",
+      "waiting": "You're in the queue at position {position}. Materials will be released when your turn comes.",
+      "scheduled": "Materials will be released on {date}",
+      "expired": "This assignment has expired and is no longer available."
+    },
+    "details": {
+      "title": "Assignment Details",
+      "genre": "Genre",
+      "format": "Format",
+      "credits": "Credits",
+      "queuePosition": "Queue Position",
+      "week": "Week",
+      "released": "Released"
+    },
+    "timeline": {
+      "title": "Timeline",
+      "applied": "Applied",
+      "materialsReleased": "Materials Released",
+      "deadline": "Deadline",
+      "at": "at"
+    },
+    "actions": {
+      "title": "Actions",
+      "withdraw": "Withdraw from Assignment",
+      "withdrawing": "Withdrawing...",
+      "withdrawDialog": {
+        "title": "Withdraw from Assignment?",
+        "description": "Are you sure you want to withdraw from this assignment? This action cannot be undone. You can reapply later if you change your mind.",
+        "cancel": "Cancel",
+        "confirm": "Yes, Withdraw"
+      }
+    }
+  },
+  "profile": {
+    "title": "Reader Profile",
+    "subtitle": "Manage your reading preferences and earnings",
+    "backToDashboard": "Back to Dashboard",
+    "editProfile": "Edit Profile",
+    "sections": {
+      "profileSettings": "Profile Settings",
+      "createDesc": "Create your reader profile to start applying to books",
+      "editDesc": "Update your reading preferences",
+      "currentDesc": "Your current preferences",
+      "amazonProfiles": "Amazon Profiles",
+      "amazonProfilesDesc": "Add up to 3 Amazon profile URLs for review validation (required for earnings)"
+    },
+    "contentPreference": {
+      "label": "Content Preference",
+      "ebook": "Ebook Only (1 credit per review)",
+      "audiobook": "Audiobook Only (2 credits per review)",
+      "both": "Both Formats (flexible)",
+      "help": "This determines which book formats you can apply for"
+    },
+    "genres": {
+      "label": "Preferred Genres",
+      "help": "Select genres you enjoy reading (helps with book recommendations)"
+    },
+    "amazonProfiles": {
+      "verified": "Verified",
+      "pending": "Pending Verification",
+      "addLabel": "Add Amazon Profile URL ({count}/3)",
+      "placeholder": "https://amazon.com/gp/profile/...",
+      "example": "Example: https://amazon.com/gp/profile/XXXXXXXXXXXXX",
+      "maxReached": "You've reached the maximum of 3 Amazon profiles. Remove one to add a new profile."
+    },
+    "actions": {
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "create": "Create Profile",
+      "cancel": "Cancel"
+    },
+    "stats": {
+      "title": "Earnings & Performance",
+      "walletBalance": "Wallet Balance",
+      "totalEarned": "Total Earned",
+      "totalWithdrawn": "Total Withdrawn",
+      "completed": "Completed",
+      "expired": "Expired",
+      "rejected": "Rejected",
+      "reliabilityScore": "Reliability Score",
+      "completionRate": "Completion Rate",
+      "accountFlagged": "Account Flagged"
+    },
+    "createPrompt": {
+      "title": "Create Your Profile",
+      "description": "Complete your profile to start browsing books and earning money for reviews!"
+    }
+  },
+  "audiobook": {
+    "nowPlaying": "Now Playing",
+    "streamingOnly": "Streaming Only",
+    "streamingWarning": "This audiobook is available for streaming only. The signed URL expires in 7 days.",
+    "skipBack": "Skip back 15 seconds",
+    "skipForward": "Skip forward 15 seconds"
+  }
+}

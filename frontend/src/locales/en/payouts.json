@@ -1,0 +1,84 @@
+{
+  "title": "Wallet & Payouts",
+  "requestPayout": "Request Payout",
+  "payoutHistory": "Payout History",
+  "transactionHistory": "Transaction History",
+  "availableBalance": "Available Balance",
+  "totalEarned": "Total Earned",
+  "totalWithdrawn": "Total Withdrawn",
+  "pendingEarnings": "Pending Earnings",
+  "minimumPayout": "Minimum payout amount is $50",
+  "amount": "Amount",
+  "paymentMethod": "Payment Method",
+  "paymentDetails": "Payment Details",
+  "notes": "Notes (Optional)",
+  "submit": "Submit Request",
+  "submitting": "Submitting...",
+  "cancel": "Cancel",
+
+  "paymentMethods": {
+    "PayPal": "PayPal",
+    "BankTransfer": "Bank Transfer",
+    "Wise": "Wise",
+    "Crypto": "Cryptocurrency"
+  },
+
+  "paypal": {
+    "email": "PayPal Email",
+    "emailPlaceholder": "your@email.com"
+  },
+
+  "bank": {
+    "accountNumber": "Account Number",
+    "routingNumber": "Routing Number",
+    "bankName": "Bank Name",
+    "accountHolderName": "Account Holder Name"
+  },
+
+  "wise": {
+    "email": "Wise Email",
+    "emailPlaceholder": "your@email.com"
+  },
+
+  "crypto": {
+    "walletAddress": "Wallet Address",
+    "network": "Network",
+    "networkPlaceholder": "ETH, BTC, USDT, etc."
+  },
+
+  "status": {
+    "REQUESTED": "Requested",
+    "PENDING_REVIEW": "Pending Review",
+    "APPROVED": "Approved",
+    "PROCESSING": "Processing",
+    "COMPLETED": "Completed",
+    "REJECTED": "Rejected",
+    "CANCELLED": "Cancelled"
+  },
+
+  "history": {
+    "noPayouts": "No payout requests yet",
+    "requestedAt": "Requested",
+    "processedAt": "Processed",
+    "paidAt": "Paid",
+    "viewDetails": "View Details",
+    "transactionId": "Transaction ID",
+    "rejectionReason": "Rejection Reason",
+    "adminNotes": "Admin Notes"
+  },
+
+  "validation": {
+    "amountRequired": "Amount is required",
+    "amountMin": "Minimum amount is $50",
+    "amountMax": "Amount exceeds available balance",
+    "methodRequired": "Payment method is required",
+    "detailsRequired": "Payment details are required",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email format",
+    "accountNumberRequired": "Account number is required",
+    "routingNumberRequired": "Routing number is required",
+    "bankNameRequired": "Bank name is required",
+    "walletAddressRequired": "Wallet address is required",
+    "networkRequired": "Network is required"
+  }
+}

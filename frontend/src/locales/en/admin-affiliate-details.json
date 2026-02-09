@@ -1,0 +1,76 @@
+{
+  "backToAffiliates": "Back to Affiliates",
+  "notFound": "Affiliate not found",
+  "actions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "disable": "Disable",
+    "enable": "Enable",
+    "updateCommission": "Update Commission"
+  },
+  "status": {
+    "approved": "Approved on",
+    "rejected": "Rejected"
+  },
+  "stats": {
+    "totalEarnings": "Total Earnings",
+    "approved": "Approved",
+    "clicks": "Clicks",
+    "conversionRate": "Conversion Rate",
+    "referrals": "Referrals",
+    "active": "Active",
+    "commissionRate": "Commission Rate"
+  },
+  "application": {
+    "title": "Application Details",
+    "referralCode": "Referral Code",
+    "customSlug": "Custom Slug",
+    "websiteUrl": "Website URL",
+    "socialMedia": "Social Media",
+    "promotionPlan": "Promotion Plan",
+    "estimatedReach": "Estimated Reach",
+    "createdAt": "Applied On"
+  },
+  "commissions": {
+    "title": "Commission History",
+    "description": "View all commissions earned by this affiliate",
+    "empty": "No commissions found",
+    "table": {
+      "purchase": "Purchase Amount",
+      "commission": "Commission",
+      "status": "Status",
+      "created": "Created",
+      "approved": "Approved"
+    }
+  },
+  "commissionStatus": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "paid": "Paid",
+    "cancelled": "Cancelled"
+  },
+  "approveDialog": {
+    "title": "Approve Affiliate",
+    "description": "Set the commission rate for this affiliate",
+    "commissionRateLabel": "Commission Rate (%)",
+    "commissionRateDescription": "The percentage of each sale this affiliate will earn",
+    "submitting": "Approving...",
+    "confirm": "Approve Affiliate"
+  },
+  "rejectDialog": {
+    "title": "Reject Affiliate",
+    "description": "Provide a reason for rejecting this application",
+    "reasonLabel": "Rejection Reason",
+    "reasonPlaceholder": "Enter the reason for rejection...",
+    "submitting": "Rejecting...",
+    "confirm": "Reject Application"
+  },
+  "commissionRateDialog": {
+    "title": "Update Commission Rate",
+    "description": "Set a new commission rate for this affiliate",
+    "label": "Commission Rate (%)",
+    "currentRate": "Current rate",
+    "submitting": "Updating...",
+    "confirm": "Update Rate"
+  }
+}

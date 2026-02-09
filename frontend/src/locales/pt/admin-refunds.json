@@ -1,0 +1,67 @@
+{
+  "title": "Gestão de Reembolsos",
+  "description": "Revisar e processar solicitações de reembolso de autores",
+
+  "stats": {
+    "pending": "Pendente",
+    "pendingDesc": "Aguardando revisão",
+    "approved": "Aprovado",
+    "approvedDesc": "Reembolsado com sucesso",
+    "rejected": "Rejeitado",
+    "rejectedDesc": "Não elegível",
+    "totalRefunded": "Total Reembolsado",
+    "totalRefundedDesc": "Todo o período"
+  },
+
+  "table": {
+    "title": "Solicitações de Reembolso",
+    "totalRequests": "solicitações totais",
+    "date": "Data",
+    "author": "Autor",
+    "amount": "Valor",
+    "credits": "Créditos",
+    "reason": "Motivo",
+    "eligibility": "Elegibilidade",
+    "status": "Status",
+    "actions": "Ações"
+  },
+
+  "filters": {
+    "all": "Todos os Status",
+    "pending": "Pendente",
+    "approved": "Aprovado",
+    "partiallyApproved": "Parcialmente Aprovado",
+    "rejected": "Rejeitado",
+    "processing": "Processando",
+    "completed": "Concluído"
+  },
+
+  "dialog": {
+    "title": "Processar Solicitação de Reembolso",
+    "description": "Revisar e tomar uma decisão sobre esta solicitação de reembolso.",
+    "decision": "Decisão",
+    "partialAmount": "Valor do Reembolso",
+    "notes": "Notas do Administrador"
+  },
+
+  "decisions": {
+    "approve": "Aprovar Reembolso Total",
+    "approvePartial": "Aprovar Reembolso Parcial",
+    "reject": "Rejeitar Solicitação"
+  },
+
+  "reasons": {
+    "DIDNT_NEED_CREDITS": "Não precisava dos créditos",
+    "WRONG_PACKAGE": "Pacote errado",
+    "ACCIDENTAL_PURCHASE": "Compra acidental",
+    "SERVICE_NOT_AS_EXPECTED": "Serviço não como esperado",
+    "OTHER": "Outro"
+  },
+
+  "empty": {
+    "title": "Sem solicitações de reembolso",
+    "description": "Não há solicitações de reembolso para revisar."
+  },
+
+  "loading": "Carregando solicitações de reembolso..."
+}

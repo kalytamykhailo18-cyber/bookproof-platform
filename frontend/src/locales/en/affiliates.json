@@ -1,0 +1,473 @@
+{
+  "register": {
+    "title": "Become an Affiliate",
+    "description": "Join our affiliate program and earn 20% lifetime commission on every referral",
+    "benefits": {
+      "title": "Why Join Our Affiliate Program?",
+      "commission": "Earn 20% lifetime commission on all purchases made by your referrals",
+      "lifetime": "Lifetime commissions - earn from every purchase your referrals make, forever",
+      "tracking": "Advanced tracking with 90-day cookie window and detailed analytics",
+      "payout": "Minimum $50 payout threshold with multiple payment options"
+    },
+    "form": {
+      "title": "Application Form",
+      "description": "Please fill out this form to apply. Our team will review your application within 2-3 business days.",
+      "websiteUrl": {
+        "label": "Website URL",
+        "description": "Your primary website or blog where you'll promote our service"
+      },
+      "socialMediaUrls": {
+        "label": "Social Media URLs (Optional)",
+        "description": "Comma-separated list of your social media profiles (Twitter, Instagram, etc.)"
+      },
+      "promotionPlan": {
+        "label": "Promotion Plan",
+        "description": "Describe how you plan to promote our service (minimum 50 characters)",
+        "placeholder": "Example: I plan to write detailed review articles, create tutorial videos, and share on my newsletter with 10,000 subscribers..."
+      },
+      "estimatedReach": {
+        "label": "Estimated Reach (Optional)",
+        "description": "Your estimated monthly audience size (visitors, subscribers, followers)"
+      },
+      "customSlug": {
+        "label": "Custom Referral Slug (Optional)",
+        "description": "Create a custom vanity URL (e.g., 'my-blog' → bookproof.app?ref=my-blog)"
+      },
+      "submit": "Submit Application",
+      "submitting": "Submitting..."
+    },
+    "existingApplication": {
+      "title": "Affiliate Application Status",
+      "pending": "Your affiliate application is currently under review. We'll notify you once it's been processed.",
+      "approved": "Your affiliate application has been approved! You can now start promoting and earning commissions.",
+      "rejected": "Your affiliate application was rejected",
+      "goToDashboard": "Go to Dashboard"
+    }
+  },
+  "dashboard": {
+    "title": "Affiliate Dashboard",
+    "subtitle": "Your referral code",
+    "getReferralLink": "Get Referral Link",
+    "requestPayout": "Request Payout",
+    "noProfile": "You don't have an affiliate profile yet.",
+    "register": "Apply Now",
+    "applicationPending": "Your affiliate application is pending approval.",
+    "applicationRejected": "Your affiliate application was rejected",
+    "referredAuthors": "Referred Authors",
+    "stats": {
+      "totalEarnings": "Total Earnings",
+      "approvedEarnings": "Available",
+      "pendingEarnings": "Pending",
+      "pendingDescription": "14-day hold period",
+      "totalClicks": "Total Clicks",
+      "conversionRate": "Conversion Rate",
+      "totalReferrals": "Total Referrals",
+      "activeReferrals": "Active",
+      "commissionRate": "Commission Rate",
+      "commissionRateDescription": "Your earnings percentage on each referral purchase",
+      "availableForPayout": "Available for Payout",
+      "availableDescription": "Commissions cleared and ready to withdraw",
+      "totalPaid": "Total Paid",
+      "totalPaidDescription": "Total amount paid out to you"
+    },
+    "charts": {
+      "clicksTitle": "Clicks Over Time",
+      "conversionsTitle": "Conversions Over Time",
+      "clicks": "Clicks",
+      "conversions": "Conversions"
+    },
+    "recentCommissions": {
+      "title": "Recent Commissions",
+      "empty": "No commissions yet. Start promoting to earn commissions!",
+      "table": {
+        "amount": "Purchase",
+        "commission": "Commission",
+        "status": "Status",
+        "date": "Date"
+      }
+    },
+    "recentPayouts": {
+      "title": "Recent Payouts",
+      "empty": "No payout requests yet.",
+      "table": {
+        "amount": "Amount",
+        "method": "Method",
+        "status": "Status",
+        "requestedAt": "Requested",
+        "processedAt": "Processed"
+      }
+    },
+    "viewAll": "View All",
+    "commissionStatus": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "paid": "Paid",
+      "cancelled": "Cancelled"
+    },
+    "payoutStatus": {
+      "requested": "Requested",
+      "pending_review": "Pending Review",
+      "approved": "Approved",
+      "processing": "Processing",
+      "completed": "Completed",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    }
+  },
+  "referralLinks": {
+    "title": "Referral Links",
+    "description": "Share your unique referral link and start earning commissions",
+    "yourLink": {
+      "title": "Your Referral Link",
+      "description": "Share this link on your website, blog, social media, or anywhere your audience can see it"
+    },
+    "copy": "Copy Link",
+    "copied": "Link copied to clipboard!",
+    "shareTo": {
+      "title": "Share to Social Media",
+      "email": "Email"
+    },
+    "shareText": "Check out BookProof - the best platform for book marketing and reader engagement!",
+    "emailSubject": "Discover BookProof",
+    "performance": {
+      "title": "Link Performance",
+      "description": "Track how your referral link is performing",
+      "clicks": "Total Clicks",
+      "conversions": "Conversions",
+      "conversionRate": "Conversion Rate"
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "step1": {
+        "title": "Share Your Link",
+        "description": "Copy your unique referral link and share it with your audience"
+      },
+      "step2": {
+        "title": "Users Click Your Link",
+        "description": "When someone clicks your link, a 90-day tracking cookie is set"
+      },
+      "step3": {
+        "title": "User Registers & Purchases",
+        "description": "If they register within 90 days and make a purchase, you earn a commission"
+      },
+      "step4": {
+        "title": "Earn Lifetime Commissions",
+        "description": "You earn 20% on every purchase they make - for life!"
+      }
+    },
+    "qrCode": {
+      "title": "QR Code",
+      "description": "Scan this QR code to access your referral link",
+      "download": "Download QR Code"
+    }
+  },
+  "commissions": {
+    "title": "Commissions",
+    "description": "View and track all your commission earnings",
+    "summary": {
+      "total": "Total Earned",
+      "pending": "Pending",
+      "approved": "Approved",
+      "paid": "Paid"
+    },
+    "filters": {
+      "title": "Filters",
+      "allStatuses": "All Statuses"
+    },
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "paid": "Paid",
+      "cancelled": "Cancelled"
+    },
+    "table": {
+      "title": "All Commissions",
+      "description": "Complete history of your commission earnings",
+      "empty": "No commissions yet",
+      "author": "Author",
+      "purchaseAmount": "Purchase Amount",
+      "commissionAmount": "Commission",
+      "rate": "Rate",
+      "status": "Status",
+      "createdAt": "Created",
+      "approvedAt": "Approved",
+      "paidAt": "Paid"
+    },
+    "info": {
+      "title": "Commission Status Information",
+      "pending": "Pending: Commissions are held for 14 days to allow for potential refunds",
+      "approved": "Approved: Commissions ready to be included in your next payout request",
+      "paid": "Paid: Commissions that have been paid out to you"
+    }
+  },
+  "payouts": {
+    "title": "Payouts",
+    "description": "Request payouts and view your payout history",
+    "requestPayout": "Request Payout",
+    "balance": {
+      "title": "Your Balance",
+      "approved": "Available to Withdraw",
+      "pending": "Pending (14-day hold)",
+      "paid": "Total Paid Out"
+    },
+    "pendingPayoutNotice": "You have a pending payout request. Please wait for it to be processed before requesting another payout.",
+    "request": {
+      "title": "Request Payout",
+      "description": "Minimum payout amount is $50",
+      "availableBalance": "Available Balance",
+      "form": {
+        "amount": {
+          "label": "Amount",
+          "description": "Minimum $50"
+        },
+        "paymentMethod": {
+          "label": "Payment Method",
+          "description": "Select your preferred payment method",
+          "bankTransfer": "Bank Transfer",
+          "crypto": "Cryptocurrency"
+        },
+        "paymentDetails": {
+          "label": "Payment Details",
+          "description": "Enter your payment account details (email, wallet address, etc.)",
+          "placeholder": "payment@example.com or wallet address"
+        },
+        "notes": {
+          "label": "Notes (Optional)",
+          "description": "Any additional information for the admin",
+          "placeholder": "e.g., Preferred currency, special instructions..."
+        },
+        "submit": "Submit Request",
+        "submitting": "Submitting..."
+      }
+    },
+    "history": {
+      "title": "Payout History",
+      "description": "View all your payout requests and their status",
+      "empty": "No payout requests yet",
+      "table": {
+        "amount": "Amount",
+        "method": "Payment Method",
+        "status": "Status",
+        "requestedAt": "Requested",
+        "processedAt": "Processed",
+        "transactionId": "Transaction ID"
+      }
+    },
+    "status": {
+      "requested": "Requested",
+      "pending_review": "Pending Review",
+      "approved": "Approved",
+      "processing": "Processing",
+      "completed": "Completed",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    }
+  },
+  "admin": {
+    "list": {
+      "title": "Affiliate Management",
+      "description": "Manage affiliate applications and monitor performance",
+      "stats": {
+        "total": "Total Affiliates",
+        "approved": "Approved",
+        "pending": "Pending",
+        "totalEarnings": "Total Earnings"
+      },
+      "filters": {
+        "title": "Filters",
+        "allApproval": "All Applications",
+        "approved": "Approved Only",
+        "pending": "Pending Only",
+        "allStatus": "All Status",
+        "active": "Active Only",
+        "inactive": "Inactive Only",
+        "search": "Search by name, email, or code..."
+      },
+      "table": {
+        "empty": "No affiliates found",
+        "user": "User",
+        "referralCode": "Referral Code",
+        "commissionRate": "Rate",
+        "earnings": "Earnings",
+        "approved": "Approved",
+        "clicks": "Clicks",
+        "conversions": "Conversions",
+        "status": "Status",
+        "createdAt": "Created",
+        "actions": "Actions",
+        "view": "View Details"
+      },
+      "status": {
+        "approved": "Approved",
+        "pending": "Pending",
+        "active": "Active",
+        "inactive": "Inactive"
+      }
+    },
+    "details": {
+      "title": "Affiliate Details",
+      "notFound": "Affiliate not found",
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject",
+        "enable": "Enable",
+        "disable": "Disable",
+        "updateCommission": "Update Rate"
+      },
+      "status": {
+        "approved": "Approved on",
+        "rejected": "Rejected"
+      },
+      "stats": {
+        "totalEarnings": "Total Earnings",
+        "approved": "Approved",
+        "clicks": "Total Clicks",
+        "conversionRate": "Conversion Rate",
+        "referrals": "Total Referrals",
+        "active": "Active",
+        "commissionRate": "Commission Rate"
+      },
+      "application": {
+        "title": "Application Details",
+        "referralCode": "Referral Code",
+        "customSlug": "Custom Slug",
+        "websiteUrl": "Website",
+        "socialMedia": "Social Media",
+        "promotionPlan": "Promotion Plan",
+        "estimatedReach": "Estimated Reach",
+        "createdAt": "Applied On"
+      },
+      "commissions": {
+        "title": "Commissions",
+        "description": "All commissions earned by this affiliate",
+        "empty": "No commissions yet",
+        "table": {
+          "purchase": "Purchase",
+          "commission": "Commission",
+          "status": "Status",
+          "created": "Created",
+          "approved": "Approved"
+        }
+      },
+      "commissionStatus": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "paid": "Paid",
+        "cancelled": "Cancelled"
+      },
+      "approveDialog": {
+        "title": "Approve Affiliate",
+        "description": "Set commission rate and approve this affiliate application",
+        "commissionRateLabel": "Commission Rate (%)",
+        "commissionRateDescription": "Default is 20%. You can set a custom rate between 0-50%",
+        "confirm": "Approve Affiliate",
+        "submitting": "Approving..."
+      },
+      "rejectDialog": {
+        "title": "Reject Affiliate",
+        "description": "Please provide a reason for rejecting this application",
+        "reasonLabel": "Rejection Reason",
+        "reasonPlaceholder": "e.g., Website does not meet our guidelines...",
+        "confirm": "Reject Application",
+        "submitting": "Rejecting..."
+      },
+      "commissionRateDialog": {
+        "title": "Update Commission Rate",
+        "description": "Set a custom commission rate for this affiliate",
+        "label": "New Commission Rate (%)",
+        "currentRate": "Current rate",
+        "confirm": "Update Rate",
+        "submitting": "Updating..."
+      }
+    },
+    "payouts": {
+      "title": "Payout Management",
+      "description": "Process affiliate payout requests",
+      "stats": {
+        "total": "Total Amount",
+        "requested": "Requested",
+        "approved": "Approved",
+        "completed": "Completed",
+        "rejected": "Rejected"
+      },
+      "filters": {
+        "title": "Filters",
+        "allStatuses": "All Statuses"
+      },
+      "status": {
+        "requested": "Requested",
+        "approved": "Approved",
+        "processing": "Processing",
+        "completed": "Completed",
+        "rejected": "Rejected"
+      },
+      "table": {
+        "empty": "No payout requests",
+        "affiliate": "Affiliate",
+        "amount": "Amount",
+        "method": "Method",
+        "status": "Status",
+        "requestedAt": "Requested",
+        "processedAt": "Processed",
+        "transactionId": "Transaction ID",
+        "actions": "Actions"
+      },
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject",
+        "complete": "Complete"
+      },
+      "dialog": {
+        "approveTitle": "Approve Payout",
+        "rejectTitle": "Reject Payout",
+        "completeTitle": "Complete Payout",
+        "amount": "Amount",
+        "rejectionReasonLabel": "Rejection Reason",
+        "rejectionReasonPlaceholder": "Why is this payout being rejected?",
+        "transactionIdLabel": "Transaction ID",
+        "transactionIdPlaceholder": "Enter the payment transaction ID",
+        "transactionIdDescription": "PayPal transaction ID, bank transfer reference, etc.",
+        "notesLabel": "Notes (Optional)",
+        "notesPlaceholder": "Any additional notes...",
+        "confirm": "Confirm",
+        "submitting": "Processing..."
+      }
+    }
+  },
+  "referredAuthors": {
+    "title": "Referred Authors",
+    "description": "View all authors you have referred and their purchase activity",
+    "stats": {
+      "totalReferrals": "Total Referred Authors",
+      "totalPurchases": "Total Purchases",
+      "totalCommission": "Total Commission Earned"
+    },
+    "table": {
+      "title": "Referred Authors List",
+      "description": "Click on an author to see their purchase history",
+      "empty": "No referred authors yet",
+      "emptyDescription": "Share your referral link to start earning commissions!",
+      "author": "Author",
+      "signUpDate": "Sign-up Date",
+      "totalPurchases": "Total Purchases",
+      "commissionEarned": "Commission Earned",
+      "lastPurchase": "Last Purchase",
+      "actions": "Actions",
+      "viewDetails": "View Details"
+    },
+    "detail": {
+      "title": "Author Purchase History",
+      "description": "Purchase history and commission breakdown",
+      "author": "Author",
+      "signUpDate": "Sign-up Date",
+      "totalPurchases": "Purchases",
+      "totalCommission": "Total Commission",
+      "purchaseHistory": "Purchase History (Amounts Only)",
+      "noPurchases": "No purchases yet",
+      "date": "Date",
+      "purchaseAmount": "Purchase Amount",
+      "commission": "Your Commission",
+      "notFound": "Author not found"
+    }
+  }
+}

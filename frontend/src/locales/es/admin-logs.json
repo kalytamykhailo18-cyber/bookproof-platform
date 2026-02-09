@@ -1,0 +1,93 @@
+{
+  "activity": {
+    "title": "Registros de Actividad",
+    "description": "Seguimiento de actividad del sistema y acciones de usuarios",
+    "logsTable": "Registros de Actividad",
+    "showing": "Mostrando {from} a {to} de {total} entradas"
+  },
+  "stats": {
+    "totalLogs": "Total de Registros",
+    "allTime": "Todo el tiempo",
+    "recentLogs": "Registros Recientes",
+    "last24h": "Últimas 24 horas",
+    "warningLogs": "Advertencias",
+    "warnings": "Advertencias",
+    "errorLogs": "Errores",
+    "errors": "Errores",
+    "criticalLogs": "Críticos",
+    "critical": "Problemas críticos"
+  },
+  "filters": {
+    "title": "Filtros",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar registros...",
+    "action": "Acción",
+    "actionPlaceholder": "Filtrar por acción...",
+    "entity": "Entidad",
+    "entityPlaceholder": "Filtrar por entidad...",
+    "severity": "Severidad",
+    "allSeverities": "Todas las Severidades",
+    "userRole": "Rol de Usuario",
+    "allRoles": "Todos los Roles",
+    "apply": "Aplicar Filtros",
+    "clear": "Limpiar",
+    "status": "Estado",
+    "allStatuses": "Todos los Estados",
+    "emailSearchPlaceholder": "Buscar por tipo o asunto...",
+    "recipient": "Destinatario",
+    "recipientPlaceholder": "Filtrar por email del destinatario...",
+    "errorSearchPlaceholder": "Buscar registros de errores...",
+    "allErrorSeverities": "Todas las Severidades de Error"
+  },
+  "table": {
+    "timestamp": "Fecha/Hora",
+    "severity": "Severidad",
+    "action": "Acción",
+    "entity": "Entidad",
+    "user": "Usuario",
+    "description": "Descripción",
+    "ipAddress": "Dirección IP",
+    "viewDetails": "Ver Detalles"
+  },
+  "empty": {
+    "title": "No se encontraron registros",
+    "description": "Ningún registro de actividad coincide con tus filtros",
+    "noEmails": "Ningún registro de email coincide con tus filtros",
+    "noErrors": "No se encontraron registros de errores"
+  },
+  "pagination": {
+    "page": "Página {current} de {total}",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
+  "emails": {
+    "title": "Registros de Email",
+    "description": "Seguimiento de emails enviados y su estado de entrega",
+    "logsTable": "Registros de Email"
+  },
+  "emailStats": {
+    "totalEmails": "Total de Emails",
+    "allTime": "Todo el tiempo",
+    "sentEmails": "Emails Enviados",
+    "sent": "Enviados exitosamente",
+    "deliveredEmails": "Emails Entregados",
+    "delivered": "Entrega confirmada",
+    "failedEmails": "Emails Fallidos",
+    "failed": "Entrega fallida",
+    "pendingEmails": "Emails Pendientes",
+    "pending": "Esperando entrega"
+  },
+  "emailTable": {
+    "timestamp": "Fecha/Hora",
+    "recipient": "Destinatario",
+    "subject": "Asunto",
+    "type": "Tipo",
+    "status": "Estado",
+    "delivered": "Entregado"
+  },
+  "errors": {
+    "title": "Registros de Errores",
+    "description": "Monitorear errores de aplicación y problemas críticos",
+    "logsTable": "Registros de Errores"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "title": "Gestão de Autores",
+  "subtitle": "Gerenciar todos os autores e seus créditos",
+  "stats": {
+    "totalAuthors": "Total de Autores",
+    "registered": "Autores registrados",
+    "verified": "Verificados",
+    "verifiedAccounts": "Contas verificadas",
+    "totalCredits": "Créditos Totais",
+    "creditsPurchased": "Créditos comprados",
+    "availableCredits": "Créditos Disponíveis",
+    "creditsAvailable": "Créditos disponíveis",
+    "activeCampaigns": "Campanhas Ativas",
+    "runningCampaigns": "Campanhas em execução"
+  },
+  "status": {
+    "verified": "Verificado",
+    "unverified": "Não Verificado"
+  },
+  "filters": {
+    "title": "Filtros",
+    "searchPlaceholder": "Buscar por nome ou email...",
+    "status": "Status",
+    "allStatuses": "Todos os Status",
+    "verified": "Verificado",
+    "unverified": "Não Verificado",
+    "withActiveCampaigns": "Com Campanhas Ativas",
+    "noActiveCampaigns": "Sem Campanhas Ativas"
+  },
+  "table": {
+    "title": "Autores",
+    "description": "Todos os autores registrados na plataforma",
+    "author": "Autor",
+    "verified": "Status",
+    "totalCredits": "Créditos Totais",
+    "available": "Disponíveis",
+    "used": "Usados",
+    "campaigns": "Campanhas",
+    "actions": "Ações"
+  },
+  "empty": {
+    "title": "Nenhum autor encontrado",
+    "description": "Tente ajustar seus filtros ou busca"
+  },
+  "dialogs": {
+    "reason": "Motivo",
+    "reasonPlaceholder": "Digite o motivo...",
+    "notes": "Notas (opcional)",
+    "notesPlaceholder": "Notas adicionais...",
+    "cancel": "Cancelar",
+    "processing": "Processando...",
+    "addCredits": {
+      "title": "Adicionar Créditos",
+      "description": "Adicionar créditos manualmente à conta do autor",
+      "amount": "Créditos a Adicionar",
+      "amountPlaceholder": "Digite a quantidade",
+      "confirm": "Adicionar Créditos"
+    },
+    "removeCredits": {
+      "title": "Remover Créditos",
+      "description": "Remover créditos manualmente da conta do autor",
+      "amount": "Créditos a Remover",
+      "amountPlaceholder": "Digite a quantidade",
+      "available": "Disponíveis",
+      "max": "Máximo",
+      "confirm": "Remover Créditos"
+    }
+  }
+}

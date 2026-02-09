@@ -1,0 +1,177 @@
+{
+  "title": "Gestión de Cupones",
+  "subtitle": "Crear y gestionar cupones de descuento para la plataforma",
+  "createNew": "Crear Cupón",
+  "loading": "Cargando cupones...",
+  "noCoupons": "No se encontraron cupones. Crea tu primer cupón para comenzar.",
+
+  "empty": {
+    "title": "No se encontraron cupones",
+    "description": "Crea tu primer cupón para comenzar"
+  },
+
+  "detail": {
+    "subtitle": "Detalles del Cupón"
+  },
+
+  "filters": {
+    "title": "Filtros",
+    "allStatus": "Todos los Estados",
+    "active": "Solo Activos",
+    "inactive": "Solo Inactivos",
+    "allTypes": "Todos los Tipos"
+  },
+
+  "types": {
+    "percentage": "Descuento Porcentual",
+    "fixedAmount": "Descuento de Cantidad Fija",
+    "freeAddon": "Complemento Gratuito"
+  },
+
+  "appliesTo": {
+    "credits": "Créditos",
+    "keywordResearch": "Investigación de Palabras Clave",
+    "all": "Todos los Productos"
+  },
+
+  "status": {
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+
+  "table": {
+    "title": "Cupones",
+    "description": "Ver y gestionar todos los cupones de descuento",
+    "code": "Código",
+    "type": "Tipo",
+    "discount": "Descuento",
+    "appliesTo": "Se Aplica A",
+    "usage": "Uso",
+    "validPeriod": "Período Válido",
+    "status": "Estado",
+    "actions": "Acciones",
+    "to": "a"
+  },
+
+  "actions": {
+    "view": "Ver Detalles",
+    "edit": "Editar",
+    "viewUsage": "Ver Estadísticas de Uso",
+    "delete": "Eliminar"
+  },
+
+  "deleteDialog": {
+    "title": "Eliminar Cupón",
+    "description": "¿Estás seguro de que deseas eliminar este cupón? Esto lo desactivará pero conservará el historial de uso.",
+    "cancel": "Cancelar",
+    "confirm": "Eliminar Cupón"
+  },
+
+  "new": {
+    "title": "Crear Nuevo Cupón",
+    "description": "Crear un nuevo cupón de descuento para la plataforma",
+
+    "basic": {
+      "title": "Información Básica",
+      "description": "Configurar el código y tipo del cupón"
+    },
+
+    "discount": {
+      "title": "Configuración de Descuento",
+      "description": "Configurar el monto del descuento y los requisitos"
+    },
+
+    "limits": {
+      "title": "Límites de Uso",
+      "description": "Establecer cuántas veces se puede usar el cupón"
+    },
+
+    "validity": {
+      "title": "Período de Validez",
+      "description": "Establecer cuándo es válido el cupón"
+    },
+
+    "fields": {
+      "code": {
+        "label": "Código del Cupón",
+        "placeholder": "VERANO2024",
+        "description": "Código único que los usuarios ingresarán. Se convertirá en mayúsculas."
+      },
+      "type": {
+        "label": "Tipo de Descuento"
+      },
+      "appliesTo": {
+        "label": "Se Aplica A"
+      },
+      "purpose": {
+        "label": "Propósito",
+        "placeholder": "Promoción de verano para nuevos autores",
+        "description": "Descripción interna de para qué es este cupón"
+      },
+      "discountPercent": {
+        "label": "Porcentaje de Descuento (%)",
+        "description": "Porcentaje de descuento del precio total (0-100)"
+      },
+      "discountAmount": {
+        "label": "Monto de Descuento ($)",
+        "description": "Monto fijo en dólares de descuento del precio total"
+      },
+      "minimumPurchase": {
+        "label": "Compra Mínima ($)",
+        "description": "Monto mínimo de compra requerido (opcional)"
+      },
+      "minimumCredits": {
+        "label": "Créditos Mínimos",
+        "description": "Créditos mínimos en el paquete requeridos (opcional)"
+      },
+      "maxUses": {
+        "label": "Usos Totales Máximos",
+        "placeholder": "Ilimitado",
+        "description": "Número máximo de veces que se puede usar este cupón (dejar vacío para ilimitado)"
+      },
+      "maxUsesPerUser": {
+        "label": "Usos Máximos Por Usuario",
+        "description": "Número máximo de veces que un usuario puede usar este cupón"
+      },
+      "validFrom": {
+        "label": "Válido Desde"
+      },
+      "validUntil": {
+        "label": "Válido Hasta",
+        "description": "Dejar vacío para sin expiración"
+      },
+      "isActive": {
+        "label": "Activar Cupón",
+        "description": "Hacer que este cupón esté disponible para usar inmediatamente"
+      }
+    },
+
+    "actions": {
+      "cancel": "Cancelar",
+      "create": "Crear Cupón",
+      "creating": "Creando..."
+    }
+  },
+
+  "usage": {
+    "title": "Estadísticas de Uso del Cupón",
+    "overview": {
+      "title": "Resumen",
+      "totalUses": "Usos Totales",
+      "uniqueUsers": "Usuarios Únicos",
+      "totalDiscount": "Descuento Total Otorgado",
+      "avgDiscount": "Descuento Promedio"
+    },
+    "chart": {
+      "title": "Uso a lo Largo del Tiempo"
+    },
+    "recent": {
+      "title": "Usos Recientes",
+      "user": "Usuario",
+      "email": "Correo",
+      "discount": "Descuento",
+      "date": "Fecha",
+      "order": "Pedido"
+    }
+  }
+}

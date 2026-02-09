@@ -1,0 +1,31 @@
+{
+  "banner": {
+    "title": "Preferencias de Cookies",
+    "description": "Utilizamos cookies para mejorar su experiencia de navegacion, ofrecer contenido personalizado y analizar nuestro trafico. Al hacer clic en \"Aceptar Todo\", acepta el uso de cookies.",
+    "learnMore": "Mas Informacion",
+    "customize": "Personalizar",
+    "essentialOnly": "Solo Esenciales",
+    "acceptAll": "Aceptar Todo"
+  },
+  "settings": {
+    "title": "Configuracion de Cookies",
+    "essential": {
+      "title": "Cookies Esenciales",
+      "description": "Necesarias para el funcionamiento del sitio. No se pueden desactivar."
+    },
+    "functional": {
+      "title": "Cookies Funcionales",
+      "description": "Recuerdan sus preferencias como el idioma y la configuracion de moneda."
+    },
+    "analytics": {
+      "title": "Cookies de Analisis",
+      "description": "Nos ayudan a entender como los visitantes interactuan con nuestro sitio."
+    },
+    "marketing": {
+      "title": "Cookies de Marketing",
+      "description": "Utilizadas para el seguimiento de afiliados y publicidad personalizada."
+    },
+    "rejectAll": "Rechazar Todo",
+    "savePreferences": "Guardar Preferencias"
+  }
+}
