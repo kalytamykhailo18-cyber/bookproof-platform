@@ -45,6 +45,7 @@ import {
 export function AdminCampaignDetailPage() {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation('adminCampaigns.detail');
+  const params = useParams();
   const campaignId = params.id as string;
 
   const {

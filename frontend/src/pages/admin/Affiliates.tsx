@@ -81,6 +81,7 @@ type CommissionRateFormData = z.infer<typeof commissionRateSchema>;
 export function AdminAffiliateDetailsPage() {
   const { t, i18n } = useTranslation('adminAffiliateDetails');
   const navigate = useNavigate();
+  const params = useParams();
   const id = params.id as string;
 
   const [approveDialogOpen, setApproveDialogOpen] = useState(false);

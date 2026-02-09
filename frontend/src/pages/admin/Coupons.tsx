@@ -23,6 +23,7 @@ import { formatDate } from '@/lib/utils';
 export function CouponDetailPage() {
   const { t, i18n } = useTranslation('adminCoupons');
   const navigate = useNavigate();
+  const params = useParams();
   const id = params.id as string;
 
   const { data: coupon, isLoading } = useCoupon(id);

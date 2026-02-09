@@ -54,6 +54,16 @@ export function AdminSidebar() {
     setLoadingPath(null);
   }, [pathname]);
 
+  // Safety timeout: Clear loading state after 3 seconds if stuck
+  useEffect(() => {
+    if (loadingPath) {
+      const timer = setTimeout(() => {
+        setLoadingPath(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [loadingPath]);
+
   const navSections: NavSection[] = [
     {
       title: 'Overview',
@@ -123,7 +133,15 @@ export function AdminSidebar() {
     // Don't navigate if already on this page
     // pathname doesn't include locale, href does, so strip locale from href
     const hrefWithoutLocale = href.replace(`/${i18n.language}`, '');
-    if (pathname === hrefWithoutLocale) return;
+    // Normalize paths by removing trailing slashes for comparison
+    const normalizedPathname = pathname.replace(/\/$/, '');
+    const normalizedHref = hrefWithoutLocale.replace(/\/$/, '');
+
+    if (normalizedPathname === normalizedHref) {
+      // Already on this page, don't set loading state or navigate
+      return;
+    }
+
     setLoadingPath(href);
     navigate(href);
   };
@@ -181,10 +199,11 @@ export function AdminSidebar() {
                       variant={active ? 'secondary' : 'ghost'}
                       className={cn(
                         'w-full justify-start',
-                        collapsed && 'justify-center px-2'
+                        collapsed && 'justify-center px-2',
+                        active && 'cursor-default'
                       )}
                       onClick={() => handleNavigation(item.href)}
-                      disabled={loading}
+                      disabled={loading || active}
                     >
                       {loading ? (
                         <Loader2 className={cn('h-4 w-4 animate-spin', !collapsed && 'mr-2')} />

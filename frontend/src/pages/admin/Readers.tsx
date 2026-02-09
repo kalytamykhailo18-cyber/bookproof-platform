@@ -69,6 +69,7 @@ import {
 export function AdminReaderDetailPage() {
   const { t, i18n } = useTranslation('adminReaders');
   const navigate = useNavigate();
+  const params = useParams();
   const [searchParams] = useSearchParams();
   const readerId = params.id as string;
   const initialTab = searchParams.get('tab') || 'overview';
