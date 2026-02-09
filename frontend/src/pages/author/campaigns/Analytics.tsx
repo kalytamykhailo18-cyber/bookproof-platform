@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useDashboards } from '@/hooks/useDashboards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -28,10 +28,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 export function CampaignAnalyticsPage() {
-  const params = useParams();
   const navigate = useNavigate();
   const bookId = params.id as string;
-  const { t } = useTranslation('campaignAnalytics');
+  const { t, i18n } = useTranslation('campaignAnalytics');
 
   const { useCampaignTracking } = useDashboards();
   const { data: tracking, isLoading } = useCampaignTracking(bookId);
@@ -54,7 +53,7 @@ export function CampaignAnalyticsPage() {
         <div className="flex h-64 animate-fade-up flex-col items-center justify-center text-center">
           <AlertCircle className="mb-4 h-12 w-12 text-muted-foreground" />
           <p className="text-muted-foreground">{t('notFound') || 'Campaign not found'}</p>
-          <Button type="button" variant="outline" className="mt-4" onClick={() => router.back()}>
+          <Button type="button" variant="outline" className="mt-4" onClick={() => navigate(-1)}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t('back') || 'Go Back'}
           </Button>
@@ -108,7 +107,7 @@ export function CampaignAnalyticsPage() {
     <div className="container mx-auto space-y-6 px-4 py-8">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button type="button" variant="ghost" onClick={() => router.back()} className="mb-4">
+        <Button type="button" variant="ghost" onClick={() => navigate(-1)} className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('back') || 'Back to Campaign'}
         </Button>

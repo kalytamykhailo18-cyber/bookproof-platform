@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -79,11 +79,9 @@ const commissionRateSchema = z.object({
 type CommissionRateFormData = z.infer<typeof commissionRateSchema>;
 
 export function AdminAffiliateDetailsPage() {
-  const { t } = useTranslation('adminAffiliateDetails');
-  const params = useParams();
+  const { t, i18n } = useTranslation('adminAffiliateDetails');
   const navigate = useNavigate();
   const id = params.id as string;
-  const locale = (params.locale as string) || 'en';
 
   const [approveDialogOpen, setApproveDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
@@ -206,7 +204,7 @@ export function AdminAffiliateDetailsPage() {
           size="sm"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/admin/affiliates`);
+            navigate(`/${i18n.language}/admin/affiliates`);
           }}
           disabled={isBackLoading}
         >

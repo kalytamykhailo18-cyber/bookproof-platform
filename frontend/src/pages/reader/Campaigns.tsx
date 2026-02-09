@@ -24,7 +24,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { BookFormat } from '@/lib/api/campaigns';
 import { AvailableCampaign } from '@/lib/api/queue';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useNavigate,  useParams } from 'react-router-dom';
 
 // Truncate synopsis to 200 characters
@@ -61,7 +61,7 @@ function CampaignCard({
   className?: string;
   onOpenDetail: (campaign: AvailableCampaign) => void;
 }) {
-  const { t } = useTranslation('reader.campaigns');
+  const { t, i18n } = useTranslation('reader.campaigns');
   const { applyToCampaign, isApplying } = useMyAssignments();
   const { profile } = useReaderProfile();
   const [selectedFormat, setSelectedFormat] = useState<BookFormat>(BookFormat.EBOOK);
@@ -211,7 +211,7 @@ function BookDetailModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const { t } = useTranslation('reader.campaigns');
+  const { t, i18n } = useTranslation('reader.campaigns');
   const { applyToCampaign, isApplying, lastAppliedAssignment } = useMyAssignments();
   const { profile } = useReaderProfile();
 
@@ -585,10 +585,8 @@ function BookDetailModal({
 }
 
 export function CampaignsPage() {
-  const { t } = useTranslation('reader.campaigns');
+  const { t, i18n } = useTranslation('reader.campaigns');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { campaigns, isLoadingCampaigns } = useAvailableCampaigns();
   const { profile, isLoadingProfile } = useReaderProfile();
 
@@ -613,7 +611,7 @@ export function CampaignsPage() {
 
   // Redirect to profile creation if no profile
   if (!isLoadingProfile && !profile) {
-    navigate(`/${locale}/reader/profile`);
+    navigate(`/${i18n.language}/reader/profile`);
     return null;
   }
 
@@ -663,7 +661,7 @@ export function CampaignsPage() {
               variant="ghost"
               size="sm"
               className="animate-fade-right"
-              onClick={() => navigate(`/${locale}/reader`)}
+              onClick={() => navigate(`/${i18n.language}/reader`)}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               {t('backToDashboard')}

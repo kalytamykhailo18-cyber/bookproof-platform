@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useNavigate,  useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -69,10 +69,8 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>;
 
 export function NewCouponPage() {
-  const { t } = useTranslation('adminCoupons');
+  const { t, i18n } = useTranslation('adminCoupons');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = params.locale as string;
   const createMutation = useCreateCoupon();
   const [isBackLoading, setIsBackLoading] = useState(false);
 
@@ -98,7 +96,7 @@ export function NewCouponPage() {
       code: values.code.toUpperCase() };
 
     await createMutation.mutateAsync(data);
-    navigate(`/${locale}/admin/coupons`);
+    navigate(`/${i18n.language}/admin/coupons`);
   };
 
   return (
@@ -111,7 +109,7 @@ export function NewCouponPage() {
           size="icon"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/admin/coupons`);
+            navigate(`/${i18n.language}/admin/coupons`);
           }}
           disabled={isBackLoading}
         >
@@ -466,7 +464,7 @@ export function NewCouponPage() {
               variant="outline"
               onClick={() => {
                 setIsBackLoading(true);
-                navigate(`/${locale}/admin/coupons`);
+                navigate(`/${i18n.language}/admin/coupons`);
               }}
               disabled={isBackLoading}
             >

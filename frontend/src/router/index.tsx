@@ -1,13 +1,14 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { RootLayout } from '../layouts/RootLayout';
-// import { AdminLayout } from '../layouts/AdminLayout';
-// import { AuthorLayout } from '../layouts/AuthorLayout';
-// import { ReaderLayout } from '../layouts/ReaderLayout';
-// import { AffiliateLayout } from '../layouts/AffiliateLayout';
-// import { CloserLayout } from '../layouts/CloserLayout';
-// import { ProtectedRoute } from './ProtectedRoute';
-// import { RoleGuard } from './RoleGuard';
+import { PublicLayout } from '../layouts/PublicLayout';
+import { AdminLayout } from '../layouts/AdminLayout';
+import { AuthorLayout } from '../layouts/AuthorLayout';
+import { ReaderLayout } from '../layouts/ReaderLayout';
+import { AffiliateLayout } from '../layouts/AffiliateLayout';
+import { CloserLayout } from '../layouts/CloserLayout';
+import { ProtectedRoute } from './ProtectedRoute';
+import { RoleGuard } from './RoleGuard';
 import { Loader2 } from 'lucide-react';
 
 // Loading component for lazy loaded pages
@@ -17,337 +18,340 @@ const PageLoader = () => (
   </div>
 );
 
-// Lazy load wrapper
-const lazyLoad = (importFn: () => Promise<{ [key: string]: React.ComponentType }>, exportName: string) => {
-  const Component = lazy(() => importFn().then(module => ({ default: (module as Record<string, React.ComponentType>)[exportName] })));
+// Lazy route wrapper component - Clean React pattern
+function LazyRoute({ component: Component }: { component: React.LazyExoticComponent<React.ComponentType> }) {
   return (
     <Suspense fallback={<PageLoader />}>
       <Component />
     </Suspense>
   );
-};
+}
 
 // ============================================
-// PUBLIC PAGES - ACTIVE
+// PUBLIC PAGES
 // ============================================
-const LandingPage = lazyLoad(() => import('../pages/landing/Landing'), 'LandingPage');
+const LandingPage = lazy(() => import('../pages/landing/Landing').then(m => ({ default: m.LandingPage })));
 
 // ============================================
-// AUTH PAGES - COMMENTED OUT
+// AUTH PAGES
 // ============================================
-// const LoginPage = lazyLoad(() => import('../pages/auth/Login'), 'LoginPage');
-// const RegisterPage = lazyLoad(() => import('../pages/auth/Register'), 'RegisterPage');
-// const ForgotPasswordPage = lazyLoad(() => import('../pages/auth/ForgotPassword'), 'ForgotPasswordPage');
-// const ResetPasswordPage = lazyLoad(() => import('../pages/auth/ResetPassword'), 'ResetPasswordPage');
-// const VerifyEmailPage = lazyLoad(() => import('../pages/auth/VerifyEmail'), 'VerifyEmailPage');
-// const VerifyEmailRequiredPage = lazyLoad(() => import('../pages/auth/VerifyEmailRequired'), 'VerifyEmailRequiredPage');
-// const AcceptTermsPage = lazyLoad(() => import('../pages/auth/AcceptTerms'), 'AcceptTermsPage');
+const LoginPage = lazy(() => import('../pages/auth/Login').then(m => ({ default: m.LoginPage })));
+const RegisterPage = lazy(() => import('../pages/auth/Register').then(m => ({ default: m.RegisterPage })));
+const ForgotPasswordPage = lazy(() => import('../pages/auth/ForgotPassword').then(m => ({ default: m.ForgotPasswordPage })));
+const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPassword').then(m => ({ default: m.ResetPasswordPage })));
+const VerifyEmailPage = lazy(() => import('../pages/auth/VerifyEmail').then(m => ({ default: m.VerifyEmailPage })));
+const VerifyEmailRequiredPage = lazy(() => import('../pages/auth/VerifyEmailRequired').then(m => ({ default: m.VerifyEmailRequiredPage })));
+const AcceptTermsPage = lazy(() => import('../pages/auth/AcceptTerms').then(m => ({ default: m.AcceptTermsPage })));
 
 // ============================================
-// LEGAL PAGES - COMMENTED OUT
+// LEGAL PAGES
 // ============================================
-// const TermsPage = lazyLoad(() => import('../pages/legal/Terms'), 'TermsPage');
-// const PrivacyPage = lazyLoad(() => import('../pages/legal/Privacy'), 'PrivacyPage');
-// const CookiesPage = lazyLoad(() => import('../pages/legal/Cookies'), 'CookiesPage');
+const TermsPage = lazy(() => import('../pages/legal/Terms').then(m => ({ default: m.TermsOfServicePage })));
+const PrivacyPage = lazy(() => import('../pages/legal/Privacy').then(m => ({ default: m.PrivacyPolicyPage })));
+const CookiesPage = lazy(() => import('../pages/legal/Cookies').then(m => ({ default: m.CookiePolicyPage })));
 
 // ============================================
-// PUBLIC PAGES - COMMENTED OUT
+// PUBLIC PAGES
 // ============================================
-// const PublicCampaignsPage = lazyLoad(() => import('../pages/public/Campaigns'), 'CampaignsPage');
-// const ForbiddenPage = lazyLoad(() => import('../pages/forbidden/Forbidden'), 'ForbiddenPage');
+const PublicCampaignsPage = lazy(() => import('../pages/public/Campaigns').then(m => ({ default: m.PublicCampaignPage })));
+const ForbiddenPage = lazy(() => import('../pages/forbidden/Forbidden').then(m => ({ default: m.ForbiddenPage })));
 
 // ============================================
-// ADMIN PAGES - COMMENTED OUT
+// ADMIN PAGES
 // ============================================
-// const AdminDashboardPage = lazyLoad(() => import('../pages/admin/Dashboard'), 'AdminDashboardPage');
-// const AdminValidationPage = lazyLoad(() => import('../pages/admin/Validation'), 'AdminValidationPage');
-// const AdminAuthorsPage = lazyLoad(() => import('../pages/admin/Authors'), 'AdminAuthorsPage');
-// const AdminReadersPage = lazyLoad(() => import('../pages/admin/Readers'), 'AdminReadersPage');
-// const AdminCampaignsPage = lazyLoad(() => import('../pages/admin/Campaigns'), 'AdminCampaignsPage');
-// const AdminCampaignControlsPage = lazyLoad(() => import('../pages/admin/campaigns/Controls'), 'AdminCampaignControlsPage');
-// const AdminDisputesPage = lazyLoad(() => import('../pages/admin/Disputes'), 'AdminDisputesPage');
-// const AdminIssuesPage = lazyLoad(() => import('../pages/admin/Issues'), 'AdminIssuesPage');
-// const AdminExceptionsPage = lazyLoad(() => import('../pages/admin/Exceptions'), 'AdminExceptionsPage');
-// const AdminPayoutsPage = lazyLoad(() => import('../pages/admin/Payouts'), 'AdminPayoutsPage');
-// const AdminRefundsPage = lazyLoad(() => import('../pages/admin/Refunds'), 'AdminRefundsPage');
-// const AdminPaymentIssuesPage = lazyLoad(() => import('../pages/admin/PaymentIssues'), 'AdminPaymentIssuesPage');
-// const AdminTeamPage = lazyLoad(() => import('../pages/admin/Team'), 'AdminTeamPage');
-// const AdminSettingsPage = lazyLoad(() => import('../pages/admin/Settings'), 'AdminSettingsPage');
-// const AdminNotificationsPage = lazyLoad(() => import('../pages/admin/Notifications'), 'AdminNotificationsPage');
-// const AdminNotificationsSettingsPage = lazyLoad(() => import('../pages/admin/notifications/Settings'), 'AdminNotificationsSettingsPage');
-// const AdminCouponsPage = lazyLoad(() => import('../pages/admin/Coupons'), 'AdminCouponsPage');
-// const AdminCouponsNewPage = lazyLoad(() => import('../pages/admin/coupons/New'), 'AdminCouponsNewPage');
-// const AdminCouponsEditPage = lazyLoad(() => import('../pages/admin/coupons/Edit'), 'AdminCouponsEditPage');
-// const AdminCouponsUsagePage = lazyLoad(() => import('../pages/admin/coupons/Usage'), 'AdminCouponsUsagePage');
-// const AdminKeywordResearchPage = lazyLoad(() => import('../pages/admin/KeywordResearch'), 'AdminKeywordResearchPage');
-// const AdminAffiliatesPage = lazyLoad(() => import('../pages/admin/Affiliates'), 'AdminAffiliatesPage');
-// const AdminAffiliatesPayoutsPage = lazyLoad(() => import('../pages/admin/affiliates/Payouts'), 'AdminAffiliatesPayoutsPage');
-// const AdminAuthorsTransactionsPage = lazyLoad(() => import('../pages/admin/authors/Transactions'), 'AdminAuthorsTransactionsPage');
-// const AdminLandingPagesPage = lazyLoad(() => import('../pages/admin/LandingPages'), 'AdminLandingPagesPage');
-// const AdminLandingPagesContentPage = lazyLoad(() => import('../pages/admin/landing-pages/Content'), 'AdminLandingPagesContentPage');
-// const AdminReaderBehaviorPage = lazyLoad(() => import('../pages/admin/ReaderBehavior'), 'AdminReaderBehaviorPage');
-// const AdminPackageApprovalsPage = lazyLoad(() => import('../pages/admin/PackageApprovals'), 'AdminPackageApprovalsPage');
-// const AdminLogsActivityPage = lazyLoad(() => import('../pages/admin/logs/Activity'), 'AdminLogsActivityPage');
-// const AdminLogsEmailsPage = lazyLoad(() => import('../pages/admin/logs/Emails'), 'AdminLogsEmailsPage');
-// const AdminLogsErrorsPage = lazyLoad(() => import('../pages/admin/logs/Errors'), 'AdminLogsErrorsPage');
-// const AdminReportsFinancialPage = lazyLoad(() => import('../pages/admin/reports/Financial'), 'AdminReportsFinancialPage');
-// const AdminReportsOperationalPage = lazyLoad(() => import('../pages/admin/reports/Operational'), 'AdminReportsOperationalPage');
-// const AdminReportsAffiliatesPage = lazyLoad(() => import('../pages/admin/reports/Affiliates'), 'AdminReportsAffiliatesPage');
+const AdminDashboardPage = lazy(() => import('../pages/admin/Dashboard').then(m => ({ default: m.AdminDashboardPage })));
+const AdminValidationPage = lazy(() => import('../pages/admin/Validation').then(m => ({ default: m.AdminValidationPage })));
+const AdminAuthorsPage = lazy(() => import('../pages/admin/Authors').then(m => ({ default: m.AdminAuthorsPage })));
+const AdminReadersPage = lazy(() => import('../pages/admin/Readers').then(m => ({ default: m.AdminReaderDetailPage })));
+const AdminCampaignsPage = lazy(() => import('../pages/admin/Campaigns').then(m => ({ default: m.AdminCampaignDetailPage })));
+const AdminCampaignControlsPage = lazy(() => import('../pages/admin/campaigns/Controls').then(m => ({ default: m.CampaignControlsPage })));
+const AdminDisputesPage = lazy(() => import('../pages/admin/Disputes').then(m => ({ default: m.DisputesPage })));
+const AdminIssuesPage = lazy(() => import('../pages/admin/Issues').then(m => ({ default: m.AdminIssuesPage })));
+const AdminExceptionsPage = lazy(() => import('../pages/admin/Exceptions').then(m => ({ default: m.ExceptionsPage })));
+const AdminPayoutsPage = lazy(() => import('../pages/admin/Payouts').then(m => ({ default: m.AdminPayoutsPage })));
+const AdminRefundsPage = lazy(() => import('../pages/admin/Refunds').then(m => ({ default: m.AdminRefundsPage })));
+const AdminPaymentIssuesPage = lazy(() => import('../pages/admin/PaymentIssues').then(m => ({ default: m.PaymentIssuesPage })));
+const AdminTeamPage = lazy(() => import('../pages/admin/Team').then(m => ({ default: m.AdminTeamPage })));
+const AdminSettingsPage = lazy(() => import('../pages/admin/Settings').then(m => ({ default: m.AdminSettingsPage })));
+const AdminNotificationsPage = lazy(() => import('../pages/admin/Notifications').then(m => ({ default: m.NotificationsPage })));
+const AdminNotificationsSettingsPage = lazy(() => import('../pages/admin/notifications/Settings').then(m => ({ default: m.NotificationSettingsPage })));
+const AdminCouponsPage = lazy(() => import('../pages/admin/Coupons').then(m => ({ default: m.CouponDetailPage })));
+const AdminCouponsNewPage = lazy(() => import('../pages/admin/coupons/New').then(m => ({ default: m.NewCouponPage })));
+const AdminCouponsEditPage = lazy(() => import('../pages/admin/coupons/Edit').then(m => ({ default: m.EditCouponPage })));
+const AdminCouponsUsagePage = lazy(() => import('../pages/admin/coupons/Usage').then(m => ({ default: m.CouponUsagePage })));
+const AdminKeywordResearchPage = lazy(() => import('../pages/admin/KeywordResearch').then(m => ({ default: m.AdminKeywordResearchPage })));
+const AdminAffiliatesPage = lazy(() => import('../pages/admin/Affiliates').then(m => ({ default: m.AdminAffiliateDetailsPage })));
+const AdminAffiliatesPayoutsPage = lazy(() => import('../pages/admin/affiliates/Payouts').then(m => ({ default: m.AdminAffiliatePayoutsPage })));
+const AdminAuthorsTransactionsPage = lazy(() => import('../pages/admin/authors/Transactions').then(m => ({ default: m.AuthorTransactionsPage })));
+const AdminLandingPagesPage = lazy(() => import('../pages/admin/LandingPages').then(m => ({ default: m.AdminLandingPagesPage })));
+const AdminLandingPagesContentPage = lazy(() => import('../pages/admin/landing-pages/Content').then(m => ({ default: m.LandingPageContentEditor })));
+const AdminReaderBehaviorPage = lazy(() => import('../pages/admin/ReaderBehavior').then(m => ({ default: m.ReaderBehaviorPage })));
+const AdminPackageApprovalsPage = lazy(() => import('../pages/admin/PackageApprovals').then(m => ({ default: m.PackageApprovalsPage })));
+// Log pages - not yet implemented
+// const AdminLogsActivityPage = lazy(() => import('../pages/admin/logs/Activity').then(m => ({ default: m.ActivityLogsPage })));
+// const AdminLogsEmailsPage = lazy(() => import('../pages/admin/logs/Emails').then(m => ({ default: m.EmailLogsPage })));
+// const AdminLogsErrorsPage = lazy(() => import('../pages/admin/logs/Errors').then(m => ({ default: m.ErrorLogsPage })));
+const AdminReportsFinancialPage = lazy(() => import('../pages/admin/reports/Financial').then(m => ({ default: m.AdminFinancialReportsPage })));
+const AdminReportsOperationalPage = lazy(() => import('../pages/admin/reports/Operational').then(m => ({ default: m.AdminOperationalReportsPage })));
+const AdminReportsAffiliatesPage = lazy(() => import('../pages/admin/reports/Affiliates').then(m => ({ default: m.AdminAffiliateReportsPage })));
 
 // ============================================
-// AUTHOR PAGES - COMMENTED OUT
+// AUTHOR PAGES
 // ============================================
-// const AuthorDashboardPage = lazyLoad(() => import('../pages/author/Author'), 'AuthorPage');
-// const AuthorCampaignsPage = lazyLoad(() => import('../pages/author/Campaigns'), 'AuthorCampaignsPage');
-// const AuthorCampaignsNewPage = lazyLoad(() => import('../pages/author/campaigns/New'), 'AuthorCampaignsNewPage');
-// const AuthorCampaignsEditPage = lazyLoad(() => import('../pages/author/campaigns/Edit'), 'AuthorCampaignsEditPage');
-// const AuthorCampaignsAnalyticsPage = lazyLoad(() => import('../pages/author/campaigns/Analytics'), 'AuthorCampaignsAnalyticsPage');
-// const AuthorCreditsPage = lazyLoad(() => import('../pages/author/Credits'), 'AuthorCreditsPage');
-// const AuthorCreditsPurchasePage = lazyLoad(() => import('../pages/author/credits/Purchase'), 'AuthorCreditsPurchasePage');
-// const AuthorCreditsSuccessPage = lazyLoad(() => import('../pages/author/credits/Success'), 'AuthorCreditsSuccessPage');
-// const AuthorCreditsCancelPage = lazyLoad(() => import('../pages/author/credits/Cancel'), 'AuthorCreditsCancelPage');
-// const AuthorTransactionsPage = lazyLoad(() => import('../pages/author/Transactions'), 'AuthorTransactionsPage');
-// const AuthorReportsPage = lazyLoad(() => import('../pages/author/Reports'), 'AuthorReportsPage');
-// const AuthorSettingsPage = lazyLoad(() => import('../pages/author/Settings'), 'AuthorSettingsPage');
-// const AuthorSupportPage = lazyLoad(() => import('../pages/author/Support'), 'AuthorSupportPage');
-// const AuthorNotificationsPage = lazyLoad(() => import('../pages/author/Notifications'), 'AuthorNotificationsPage');
-// const AuthorNotificationsSettingsPage = lazyLoad(() => import('../pages/author/notifications/Settings'), 'AuthorNotificationsSettingsPage');
-// const AuthorSubscriptionPage = lazyLoad(() => import('../pages/author/Subscription'), 'AuthorSubscriptionPage');
-// const AuthorKeywordResearchPage = lazyLoad(() => import('../pages/author/KeywordResearch'), 'AuthorKeywordResearchPage');
-// const AuthorKeywordResearchNewPage = lazyLoad(() => import('../pages/author/keyword-research/New'), 'AuthorKeywordResearchNewPage');
-// const AuthorKeywordResearchEditPage = lazyLoad(() => import('../pages/author/keyword-research/Edit'), 'AuthorKeywordResearchEditPage');
+const AuthorDashboardPage = lazy(() => import('../pages/author/Author').then(m => ({ default: m.AuthorDashboardPage })));
+const AuthorCampaignsPage = lazy(() => import('../pages/author/Campaigns').then(m => ({ default: m.CampaignDetailPage })));
+const AuthorCampaignsNewPage = lazy(() => import('../pages/author/campaigns/New').then(m => ({ default: m.NewCampaignPage })));
+const AuthorCampaignsEditPage = lazy(() => import('../pages/author/campaigns/Edit').then(m => ({ default: m.EditCampaignPage })));
+const AuthorCampaignsAnalyticsPage = lazy(() => import('../pages/author/campaigns/Analytics').then(m => ({ default: m.CampaignAnalyticsPage })));
+const AuthorCreditsPage = lazy(() => import('../pages/author/Credits').then(m => ({ default: m.CreditPurchasePage })));
+const AuthorCreditsPurchasePage = lazy(() => import('../pages/author/credits/Purchase').then(m => ({ default: m.CreditPurchasePage })));
+const AuthorCreditsSuccessPage = lazy(() => import('../pages/author/credits/Success').then(m => ({ default: m.CreditPurchaseSuccessPage })));
+const AuthorCreditsCancelPage = lazy(() => import('../pages/author/credits/Cancel').then(m => ({ default: m.CreditPurchaseCancelPage })));
+const AuthorTransactionsPage = lazy(() => import('../pages/author/Transactions').then(m => ({ default: m.TransactionsPage })));
+const AuthorReportsPage = lazy(() => import('../pages/author/Reports').then(m => ({ default: m.ReportsPage })));
+const AuthorSettingsPage = lazy(() => import('../pages/author/Settings').then(m => ({ default: m.SettingsPage })));
+const AuthorSupportPage = lazy(() => import('../pages/author/Support').then(m => ({ default: m.AuthorSupportPage })));
+const AuthorNotificationsPage = lazy(() => import('../pages/author/Notifications').then(m => ({ default: m.NotificationsPage })));
+const AuthorNotificationsSettingsPage = lazy(() => import('../pages/author/notifications/Settings').then(m => ({ default: m.NotificationSettingsPage })));
+const AuthorSubscriptionPage = lazy(() => import('../pages/author/Subscription').then(m => ({ default: m.SubscriptionPage })));
+const AuthorKeywordResearchPage = lazy(() => import('../pages/author/KeywordResearch').then(m => ({ default: m.KeywordResearchDetailsPage })));
+const AuthorKeywordResearchNewPage = lazy(() => import('../pages/author/keyword-research/New').then(m => ({ default: m.NewKeywordResearchPage })));
+const AuthorKeywordResearchEditPage = lazy(() => import('../pages/author/keyword-research/Edit').then(m => ({ default: m.EditKeywordResearchPage })));
 
 // ============================================
-// READER PAGES - COMMENTED OUT
+// READER PAGES
 // ============================================
-// const ReaderDashboardPage = lazyLoad(() => import('../pages/reader/Reader'), 'ReaderPage');
-// const ReaderCampaignsPage = lazyLoad(() => import('../pages/reader/Campaigns'), 'ReaderCampaignsPage');
-// const ReaderAssignmentsPage = lazyLoad(() => import('../pages/reader/Assignments'), 'ReaderAssignmentsPage');
-// const ReaderAssignmentsSubmitReviewPage = lazyLoad(() => import('../pages/reader/assignments/SubmitReview'), 'ReaderAssignmentsSubmitReviewPage');
-// const ReaderWalletPage = lazyLoad(() => import('../pages/reader/Wallet'), 'ReaderWalletPage');
-// const ReaderWalletPayoutPage = lazyLoad(() => import('../pages/reader/wallet/Payout'), 'ReaderWalletPayoutPage');
-// const ReaderProfilePage = lazyLoad(() => import('../pages/reader/Profile'), 'ReaderProfilePage');
-// const ReaderSettingsPage = lazyLoad(() => import('../pages/reader/Settings'), 'ReaderSettingsPage');
-// const ReaderSupportPage = lazyLoad(() => import('../pages/reader/Support'), 'ReaderSupportPage');
-// const ReaderStatsPage = lazyLoad(() => import('../pages/reader/Stats'), 'ReaderStatsPage');
-// const ReaderNotificationsPage = lazyLoad(() => import('../pages/reader/Notifications'), 'ReaderNotificationsPage');
-// const ReaderNotificationsSettingsPage = lazyLoad(() => import('../pages/reader/notifications/Settings'), 'ReaderNotificationsSettingsPage');
+const ReaderDashboardPage = lazy(() => import('../pages/reader/Reader').then(m => ({ default: m.ReaderDashboard })));
+const ReaderCampaignsPage = lazy(() => import('../pages/reader/Campaigns').then(m => ({ default: m.CampaignsPage })));
+const ReaderAssignmentsPage = lazy(() => import('../pages/reader/Assignments').then(m => ({ default: m.AssignmentDetailPage })));
+const ReaderAssignmentsSubmitReviewPage = lazy(() => import('../pages/reader/assignments/SubmitReview').then(m => ({ default: m.SubmitReviewPage })));
+const ReaderWalletPage = lazy(() => import('../pages/reader/Wallet').then(m => ({ default: m.WalletPage })));
+const ReaderWalletPayoutPage = lazy(() => import('../pages/reader/wallet/Payout').then(m => ({ default: m.RequestPayoutPage })));
+const ReaderProfilePage = lazy(() => import('../pages/reader/Profile').then(m => ({ default: m.ReaderProfilePage })));
+const ReaderSettingsPage = lazy(() => import('../pages/reader/Settings').then(m => ({ default: m.SettingsPage })));
+const ReaderSupportPage = lazy(() => import('../pages/reader/Support').then(m => ({ default: m.ReaderSupportPage })));
+const ReaderStatsPage = lazy(() => import('../pages/reader/Stats').then(m => ({ default: m.ReaderStatsPage })));
+const ReaderNotificationsPage = lazy(() => import('../pages/reader/Notifications').then(m => ({ default: m.NotificationsPage })));
+const ReaderNotificationsSettingsPage = lazy(() => import('../pages/reader/notifications/Settings').then(m => ({ default: m.NotificationSettingsPage })));
 
 // ============================================
-// AFFILIATE PAGES - COMMENTED OUT
+// AFFILIATE PAGES
 // ============================================
-// const AffiliateDashboardPage = lazyLoad(() => import('../pages/affiliate/Dashboard'), 'AffiliateDashboardPage');
-// const AffiliateRegisterPage = lazyLoad(() => import('../pages/affiliate/Register'), 'AffiliateRegisterPage');
-// const AffiliateCommissionsPage = lazyLoad(() => import('../pages/affiliate/Commissions'), 'AffiliateCommissionsPage');
-// const AffiliatePayoutsPage = lazyLoad(() => import('../pages/affiliate/Payouts'), 'AffiliatePayoutsPage');
-// const AffiliateReferralLinksPage = lazyLoad(() => import('../pages/affiliate/ReferralLinks'), 'AffiliateReferralLinksPage');
-// const AffiliateMarketingMaterialsPage = lazyLoad(() => import('../pages/affiliate/MarketingMaterials'), 'AffiliateMarketingMaterialsPage');
-// const AffiliateReferredAuthorsPage = lazyLoad(() => import('../pages/affiliate/ReferredAuthors'), 'AffiliateReferredAuthorsPage');
-// const AffiliateSettingsPage = lazyLoad(() => import('../pages/affiliate/Settings'), 'AffiliateSettingsPage');
-// const AffiliateNotificationsPage = lazyLoad(() => import('../pages/affiliate/Notifications'), 'AffiliateNotificationsPage');
-// const AffiliateNotificationsSettingsPage = lazyLoad(() => import('../pages/affiliate/notifications/Settings'), 'AffiliateNotificationsSettingsPage');
+const AffiliateDashboardPage = lazy(() => import('../pages/affiliate/Dashboard').then(m => ({ default: m.AffiliateDashboardPage })));
+const AffiliateRegisterPage = lazy(() => import('../pages/affiliate/Register').then(m => ({ default: m.AffiliateRegisterPage })));
+const AffiliateCommissionsPage = lazy(() => import('../pages/affiliate/Commissions').then(m => ({ default: m.AffiliateCommissionsPage })));
+const AffiliatePayoutsPage = lazy(() => import('../pages/affiliate/Payouts').then(m => ({ default: m.AffiliatePayoutsPage })));
+const AffiliateReferralLinksPage = lazy(() => import('../pages/affiliate/ReferralLinks').then(m => ({ default: m.AffiliateReferralLinksPage })));
+const AffiliateMarketingMaterialsPage = lazy(() => import('../pages/affiliate/MarketingMaterials').then(m => ({ default: m.MarketingMaterialsPage })));
+const AffiliateReferredAuthorsPage = lazy(() => import('../pages/affiliate/ReferredAuthors').then(m => ({ default: m.ReferredAuthorsPage })));
+const AffiliateSettingsPage = lazy(() => import('../pages/affiliate/Settings').then(m => ({ default: m.SettingsPage })));
+const AffiliateNotificationsPage = lazy(() => import('../pages/affiliate/Notifications').then(m => ({ default: m.NotificationsPage })));
+const AffiliateNotificationsSettingsPage = lazy(() => import('../pages/affiliate/notifications/Settings').then(m => ({ default: m.NotificationSettingsPage })));
 
 // ============================================
-// CLOSER PAGES - COMMENTED OUT
+// CLOSER PAGES
 // ============================================
-// const CloserDashboardPage = lazyLoad(() => import('../pages/closer/Closer'), 'CloserPage');
-// const CloserPackagesPage = lazyLoad(() => import('../pages/closer/Packages'), 'CloserPackagesPage');
-// const CloserPackagesNewPage = lazyLoad(() => import('../pages/closer/packages/New'), 'CloserPackagesNewPage');
-// const CloserInvoicesPage = lazyLoad(() => import('../pages/closer/Invoices'), 'CloserInvoicesPage');
-// const CloserSalesPage = lazyLoad(() => import('../pages/closer/Sales'), 'CloserSalesPage');
+const CloserDashboardPage = lazy(() => import('../pages/closer/Closer').then(m => ({ default: m.CloserDashboardPage })));
+const CloserPackagesPage = lazy(() => import('../pages/closer/Packages').then(m => ({ default: m.PackageDetailPage })));
+const CloserPackagesNewPage = lazy(() => import('../pages/closer/packages/New').then(m => ({ default: m.CreatePackagePage })));
+const CloserInvoicesPage = lazy(() => import('../pages/closer/Invoices').then(m => ({ default: m.InvoicesPage })));
+const CloserSalesPage = lazy(() => import('../pages/closer/Sales').then(m => ({ default: m.SalesHistoryPage })));
 
 // ============================================
-// CHECKOUT PAGES - COMMENTED OUT
+// CHECKOUT PAGES
 // ============================================
-// const CheckoutCustomPage = lazyLoad(() => import('../pages/checkout/Custom'), 'CheckoutCustomPage');
-// const CheckoutCustomSuccessPage = lazyLoad(() => import('../pages/checkout/custom/Success'), 'CheckoutCustomSuccessPage');
+const CheckoutCustomPage = lazy(() => import('../pages/checkout/Custom').then(m => ({ default: m.CustomPackageCheckoutPage })));
+const CheckoutCustomSuccessPage = lazy(() => import('../pages/checkout/custom/Success').then(m => ({ default: m.CustomPackageSuccessPage })));
 
 export const router = createBrowserRouter([
   {
     path: '/:locale',
     element: <RootLayout />,
     children: [
-      // Landing page - ACTIVE
-      { index: true, element: LandingPage },
+      // Public pages with Header/Footer layout
+      {
+        element: <PublicLayout />,
+        children: [
+          // Landing page
+          { index: true, element: <LazyRoute component={LandingPage} /> },
 
-      // ============================================
-      // ALL OTHER ROUTES - COMMENTED OUT
-      // ============================================
+          // Public auth routes
+          { path: 'login', element: <LazyRoute component={LoginPage} /> },
+          { path: 'register', element: <LazyRoute component={RegisterPage} /> },
+          { path: 'forgot-password', element: <LazyRoute component={ForgotPasswordPage} /> },
+          { path: 'reset-password', element: <LazyRoute component={ResetPasswordPage} /> },
+          { path: 'verify-email', element: <LazyRoute component={VerifyEmailPage} /> },
+          { path: 'verify-email-required', element: <LazyRoute component={VerifyEmailRequiredPage} /> },
+          { path: 'accept-terms', element: <LazyRoute component={AcceptTermsPage} /> },
 
-      // // Public auth routes
-      // { path: 'login', element: LoginPage },
-      // { path: 'register', element: RegisterPage },
-      // { path: 'forgot-password', element: ForgotPasswordPage },
-      // { path: 'reset-password', element: ResetPasswordPage },
-      // { path: 'verify-email', element: VerifyEmailPage },
-      // { path: 'verify-email-required', element: VerifyEmailRequiredPage },
-      // { path: 'accept-terms', element: AcceptTermsPage },
+          // Legal pages
+          { path: 'terms', element: <LazyRoute component={TermsPage} /> },
+          { path: 'privacy', element: <LazyRoute component={PrivacyPage} /> },
+          { path: 'cookies', element: <LazyRoute component={CookiesPage} /> },
 
-      // // Legal pages
-      // { path: 'terms', element: TermsPage },
-      // { path: 'privacy', element: PrivacyPage },
-      // { path: 'cookies', element: CookiesPage },
+          // Public pages
+          { path: 'forbidden', element: <LazyRoute component={ForbiddenPage} /> },
+          { path: 'campaigns/:slug/:lang', element: <LazyRoute component={PublicCampaignsPage} /> },
+        ],
+      },
 
-      // // Public pages
-      // { path: 'forbidden', element: ForbiddenPage },
-      // { path: 'campaigns/:slug/:lang', element: PublicCampaignsPage },
+      // Checkout routes (semi-protected, no header/footer)
+      { path: 'checkout/custom/:token', element: <LazyRoute component={CheckoutCustomPage} /> },
+      { path: 'checkout/custom/:token/success', element: <LazyRoute component={CheckoutCustomSuccessPage} /> },
 
-      // // Checkout routes (semi-protected)
-      // { path: 'checkout/custom/:token', element: CheckoutCustomPage },
-      // { path: 'checkout/custom/:token/success', element: CheckoutCustomSuccessPage },
+      // Protected routes
+      {
+        element: <ProtectedRoute />,
+        children: [
+          // Admin routes
+          {
+            path: 'admin',
+            element: (
+              <RoleGuard allowedRoles={['ADMIN']}>
+                <AdminLayout />
+              </RoleGuard>
+            ),
+            children: [
+              { path: 'dashboard', element: <LazyRoute component={AdminDashboardPage} /> },
+              { path: 'validation', element: <LazyRoute component={AdminValidationPage} /> },
+              { path: 'authors', element: <LazyRoute component={AdminAuthorsPage} /> },
+              { path: 'authors/:id/transactions', element: <LazyRoute component={AdminAuthorsTransactionsPage} /> },
+              { path: 'readers', element: <LazyRoute component={AdminReadersPage} /> },
+              { path: 'readers/:id', element: <LazyRoute component={AdminReadersPage} /> },
+              { path: 'campaigns', element: <LazyRoute component={AdminCampaignsPage} /> },
+              { path: 'campaigns/:id', element: <LazyRoute component={AdminCampaignsPage} /> },
+              { path: 'campaigns/:id/controls', element: <LazyRoute component={AdminCampaignControlsPage} /> },
+              { path: 'disputes', element: <LazyRoute component={AdminDisputesPage} /> },
+              { path: 'issues', element: <LazyRoute component={AdminIssuesPage} /> },
+              { path: 'exceptions', element: <LazyRoute component={AdminExceptionsPage} /> },
+              { path: 'payouts', element: <LazyRoute component={AdminPayoutsPage} /> },
+              { path: 'refunds', element: <LazyRoute component={AdminRefundsPage} /> },
+              { path: 'payment-issues', element: <LazyRoute component={AdminPaymentIssuesPage} /> },
+              { path: 'team', element: <LazyRoute component={AdminTeamPage} /> },
+              { path: 'settings', element: <LazyRoute component={AdminSettingsPage} /> },
+              { path: 'notifications', element: <LazyRoute component={AdminNotificationsPage} /> },
+              { path: 'notifications/settings', element: <LazyRoute component={AdminNotificationsSettingsPage} /> },
+              { path: 'coupons', element: <LazyRoute component={AdminCouponsPage} /> },
+              { path: 'coupons/new', element: <LazyRoute component={AdminCouponsNewPage} /> },
+              { path: 'coupons/:id', element: <LazyRoute component={AdminCouponsPage} /> },
+              { path: 'coupons/:id/edit', element: <LazyRoute component={AdminCouponsEditPage} /> },
+              { path: 'coupons/:id/usage', element: <LazyRoute component={AdminCouponsUsagePage} /> },
+              { path: 'keyword-research', element: <LazyRoute component={AdminKeywordResearchPage} /> },
+              { path: 'affiliates', element: <LazyRoute component={AdminAffiliatesPage} /> },
+              { path: 'affiliates/:id', element: <LazyRoute component={AdminAffiliatesPage} /> },
+              { path: 'affiliates/payouts', element: <LazyRoute component={AdminAffiliatesPayoutsPage} /> },
+              { path: 'landing-pages', element: <LazyRoute component={AdminLandingPagesPage} /> },
+              { path: 'landing-pages/content', element: <LazyRoute component={AdminLandingPagesContentPage} /> },
+              { path: 'reader-behavior', element: <LazyRoute component={AdminReaderBehaviorPage} /> },
+              { path: 'package-approvals', element: <LazyRoute component={AdminPackageApprovalsPage} /> },
+              // Log routes - not yet implemented
+              // { path: 'logs/activity', element: <LazyRoute component={AdminLogsActivityPage} /> },
+              // { path: 'logs/emails', element: <LazyRoute component={AdminLogsEmailsPage} /> },
+              // { path: 'logs/errors', element: <LazyRoute component={AdminLogsErrorsPage} /> },
+              { path: 'reports/financial', element: <LazyRoute component={AdminReportsFinancialPage} /> },
+              { path: 'reports/operational', element: <LazyRoute component={AdminReportsOperationalPage} /> },
+              { path: 'reports/affiliates', element: <LazyRoute component={AdminReportsAffiliatesPage} /> },
+            ],
+          },
 
-      // // Protected routes
-      // {
-      //   element: <ProtectedRoute />,
-      //   children: [
-      //     // Admin routes
-      //     {
-      //       path: 'admin',
-      //       element: (
-      //         <RoleGuard allowedRoles={['ADMIN']}>
-      //           <AdminLayout />
-      //         </RoleGuard>
-      //       ),
-      //       children: [
-      //         { path: 'dashboard', element: AdminDashboardPage },
-      //         { path: 'validation', element: AdminValidationPage },
-      //         { path: 'authors', element: AdminAuthorsPage },
-      //         { path: 'authors/:id/transactions', element: AdminAuthorsTransactionsPage },
-      //         { path: 'readers', element: AdminReadersPage },
-      //         { path: 'readers/:id', element: AdminReadersPage },
-      //         { path: 'campaigns', element: AdminCampaignsPage },
-      //         { path: 'campaigns/:id', element: AdminCampaignsPage },
-      //         { path: 'campaigns/:id/controls', element: AdminCampaignControlsPage },
-      //         { path: 'disputes', element: AdminDisputesPage },
-      //         { path: 'issues', element: AdminIssuesPage },
-      //         { path: 'exceptions', element: AdminExceptionsPage },
-      //         { path: 'payouts', element: AdminPayoutsPage },
-      //         { path: 'refunds', element: AdminRefundsPage },
-      //         { path: 'payment-issues', element: AdminPaymentIssuesPage },
-      //         { path: 'team', element: AdminTeamPage },
-      //         { path: 'settings', element: AdminSettingsPage },
-      //         { path: 'notifications', element: AdminNotificationsPage },
-      //         { path: 'notifications/settings', element: AdminNotificationsSettingsPage },
-      //         { path: 'coupons', element: AdminCouponsPage },
-      //         { path: 'coupons/new', element: AdminCouponsNewPage },
-      //         { path: 'coupons/:id', element: AdminCouponsPage },
-      //         { path: 'coupons/:id/edit', element: AdminCouponsEditPage },
-      //         { path: 'coupons/:id/usage', element: AdminCouponsUsagePage },
-      //         { path: 'keyword-research', element: AdminKeywordResearchPage },
-      //         { path: 'affiliates', element: AdminAffiliatesPage },
-      //         { path: 'affiliates/:id', element: AdminAffiliatesPage },
-      //         { path: 'affiliates/payouts', element: AdminAffiliatesPayoutsPage },
-      //         { path: 'landing-pages', element: AdminLandingPagesPage },
-      //         { path: 'landing-pages/content', element: AdminLandingPagesContentPage },
-      //         { path: 'reader-behavior', element: AdminReaderBehaviorPage },
-      //         { path: 'package-approvals', element: AdminPackageApprovalsPage },
-      //         { path: 'logs/activity', element: AdminLogsActivityPage },
-      //         { path: 'logs/emails', element: AdminLogsEmailsPage },
-      //         { path: 'logs/errors', element: AdminLogsErrorsPage },
-      //         { path: 'reports/financial', element: AdminReportsFinancialPage },
-      //         { path: 'reports/operational', element: AdminReportsOperationalPage },
-      //         { path: 'reports/affiliates', element: AdminReportsAffiliatesPage },
-      //       ],
-      //     },
+          // Author routes
+          {
+            path: 'author',
+            element: (
+              <RoleGuard allowedRoles={['AUTHOR']}>
+                <AuthorLayout />
+              </RoleGuard>
+            ),
+            children: [
+              { index: true, element: <LazyRoute component={AuthorDashboardPage} /> },
+              { path: 'campaigns', element: <LazyRoute component={AuthorCampaignsPage} /> },
+              { path: 'campaigns/new', element: <LazyRoute component={AuthorCampaignsNewPage} /> },
+              { path: 'campaigns/:id', element: <LazyRoute component={AuthorCampaignsPage} /> },
+              { path: 'campaigns/:id/edit', element: <LazyRoute component={AuthorCampaignsEditPage} /> },
+              { path: 'campaigns/:id/analytics', element: <LazyRoute component={AuthorCampaignsAnalyticsPage} /> },
+              { path: 'credits', element: <LazyRoute component={AuthorCreditsPage} /> },
+              { path: 'credits/purchase', element: <LazyRoute component={AuthorCreditsPurchasePage} /> },
+              { path: 'credits/success', element: <LazyRoute component={AuthorCreditsSuccessPage} /> },
+              { path: 'credits/cancel', element: <LazyRoute component={AuthorCreditsCancelPage} /> },
+              { path: 'transactions', element: <LazyRoute component={AuthorTransactionsPage} /> },
+              { path: 'reports', element: <LazyRoute component={AuthorReportsPage} /> },
+              { path: 'settings', element: <LazyRoute component={AuthorSettingsPage} /> },
+              { path: 'support', element: <LazyRoute component={AuthorSupportPage} /> },
+              { path: 'notifications', element: <LazyRoute component={AuthorNotificationsPage} /> },
+              { path: 'notifications/settings', element: <LazyRoute component={AuthorNotificationsSettingsPage} /> },
+              { path: 'subscription', element: <LazyRoute component={AuthorSubscriptionPage} /> },
+              { path: 'keyword-research', element: <LazyRoute component={AuthorKeywordResearchPage} /> },
+              { path: 'keyword-research/new', element: <LazyRoute component={AuthorKeywordResearchNewPage} /> },
+              { path: 'keyword-research/:id', element: <LazyRoute component={AuthorKeywordResearchPage} /> },
+              { path: 'keyword-research/:id/edit', element: <LazyRoute component={AuthorKeywordResearchEditPage} /> },
+            ],
+          },
 
-      //     // Author routes
-      //     {
-      //       path: 'author',
-      //       element: (
-      //         <RoleGuard allowedRoles={['AUTHOR']}>
-      //           <AuthorLayout />
-      //         </RoleGuard>
-      //       ),
-      //       children: [
-      //         { index: true, element: AuthorDashboardPage },
-      //         { path: 'campaigns', element: AuthorCampaignsPage },
-      //         { path: 'campaigns/new', element: AuthorCampaignsNewPage },
-      //         { path: 'campaigns/:id', element: AuthorCampaignsPage },
-      //         { path: 'campaigns/:id/edit', element: AuthorCampaignsEditPage },
-      //         { path: 'campaigns/:id/analytics', element: AuthorCampaignsAnalyticsPage },
-      //         { path: 'credits', element: AuthorCreditsPage },
-      //         { path: 'credits/purchase', element: AuthorCreditsPurchasePage },
-      //         { path: 'credits/success', element: AuthorCreditsSuccessPage },
-      //         { path: 'credits/cancel', element: AuthorCreditsCancelPage },
-      //         { path: 'transactions', element: AuthorTransactionsPage },
-      //         { path: 'reports', element: AuthorReportsPage },
-      //         { path: 'settings', element: AuthorSettingsPage },
-      //         { path: 'support', element: AuthorSupportPage },
-      //         { path: 'notifications', element: AuthorNotificationsPage },
-      //         { path: 'notifications/settings', element: AuthorNotificationsSettingsPage },
-      //         { path: 'subscription', element: AuthorSubscriptionPage },
-      //         { path: 'keyword-research', element: AuthorKeywordResearchPage },
-      //         { path: 'keyword-research/new', element: AuthorKeywordResearchNewPage },
-      //         { path: 'keyword-research/:id', element: AuthorKeywordResearchPage },
-      //         { path: 'keyword-research/:id/edit', element: AuthorKeywordResearchEditPage },
-      //       ],
-      //     },
+          // Reader routes
+          {
+            path: 'reader',
+            element: (
+              <RoleGuard allowedRoles={['READER']}>
+                <ReaderLayout />
+              </RoleGuard>
+            ),
+            children: [
+              { index: true, element: <LazyRoute component={ReaderDashboardPage} /> },
+              { path: 'campaigns', element: <LazyRoute component={ReaderCampaignsPage} /> },
+              { path: 'assignments/:id', element: <LazyRoute component={ReaderAssignmentsPage} /> },
+              { path: 'assignments/:id/submit-review', element: <LazyRoute component={ReaderAssignmentsSubmitReviewPage} /> },
+              { path: 'wallet', element: <LazyRoute component={ReaderWalletPage} /> },
+              { path: 'wallet/payout', element: <LazyRoute component={ReaderWalletPayoutPage} /> },
+              { path: 'profile', element: <LazyRoute component={ReaderProfilePage} /> },
+              { path: 'settings', element: <LazyRoute component={ReaderSettingsPage} /> },
+              { path: 'support', element: <LazyRoute component={ReaderSupportPage} /> },
+              { path: 'stats', element: <LazyRoute component={ReaderStatsPage} /> },
+              { path: 'notifications', element: <LazyRoute component={ReaderNotificationsPage} /> },
+              { path: 'notifications/settings', element: <LazyRoute component={ReaderNotificationsSettingsPage} /> },
+            ],
+          },
 
-      //     // Reader routes
-      //     {
-      //       path: 'reader',
-      //       element: (
-      //         <RoleGuard allowedRoles={['READER']}>
-      //           <ReaderLayout />
-      //         </RoleGuard>
-      //       ),
-      //       children: [
-      //         { index: true, element: ReaderDashboardPage },
-      //         { path: 'campaigns', element: ReaderCampaignsPage },
-      //         { path: 'assignments/:id', element: ReaderAssignmentsPage },
-      //         { path: 'assignments/:id/submit-review', element: ReaderAssignmentsSubmitReviewPage },
-      //         { path: 'wallet', element: ReaderWalletPage },
-      //         { path: 'wallet/payout', element: ReaderWalletPayoutPage },
-      //         { path: 'profile', element: ReaderProfilePage },
-      //         { path: 'settings', element: ReaderSettingsPage },
-      //         { path: 'support', element: ReaderSupportPage },
-      //         { path: 'stats', element: ReaderStatsPage },
-      //         { path: 'notifications', element: ReaderNotificationsPage },
-      //         { path: 'notifications/settings', element: ReaderNotificationsSettingsPage },
-      //       ],
-      //     },
+          // Affiliate routes
+          {
+            path: 'affiliate',
+            element: (
+              <RoleGuard allowedRoles={['AFFILIATE']}>
+                <AffiliateLayout />
+              </RoleGuard>
+            ),
+            children: [
+              { path: 'dashboard', element: <LazyRoute component={AffiliateDashboardPage} /> },
+              { path: 'register', element: <LazyRoute component={AffiliateRegisterPage} /> },
+              { path: 'commissions', element: <LazyRoute component={AffiliateCommissionsPage} /> },
+              { path: 'payouts', element: <LazyRoute component={AffiliatePayoutsPage} /> },
+              { path: 'referral-links', element: <LazyRoute component={AffiliateReferralLinksPage} /> },
+              { path: 'marketing-materials', element: <LazyRoute component={AffiliateMarketingMaterialsPage} /> },
+              { path: 'referred-authors', element: <LazyRoute component={AffiliateReferredAuthorsPage} /> },
+              { path: 'settings', element: <LazyRoute component={AffiliateSettingsPage} /> },
+              { path: 'notifications', element: <LazyRoute component={AffiliateNotificationsPage} /> },
+              { path: 'notifications/settings', element: <LazyRoute component={AffiliateNotificationsSettingsPage} /> },
+            ],
+          },
 
-      //     // Affiliate routes
-      //     {
-      //       path: 'affiliate',
-      //       element: (
-      //         <RoleGuard allowedRoles={['AFFILIATE']}>
-      //           <AffiliateLayout />
-      //         </RoleGuard>
-      //       ),
-      //       children: [
-      //         { path: 'dashboard', element: AffiliateDashboardPage },
-      //         { path: 'register', element: AffiliateRegisterPage },
-      //         { path: 'commissions', element: AffiliateCommissionsPage },
-      //         { path: 'payouts', element: AffiliatePayoutsPage },
-      //         { path: 'referral-links', element: AffiliateReferralLinksPage },
-      //         { path: 'marketing-materials', element: AffiliateMarketingMaterialsPage },
-      //         { path: 'referred-authors', element: AffiliateReferredAuthorsPage },
-      //         { path: 'settings', element: AffiliateSettingsPage },
-      //         { path: 'notifications', element: AffiliateNotificationsPage },
-      //         { path: 'notifications/settings', element: AffiliateNotificationsSettingsPage },
-      //       ],
-      //     },
-
-      //     // Closer routes
-      //     {
-      //       path: 'closer',
-      //       element: (
-      //         <RoleGuard allowedRoles={['CLOSER']}>
-      //           <CloserLayout />
-      //         </RoleGuard>
-      //       ),
-      //       children: [
-      //         { index: true, element: CloserDashboardPage },
-      //         { path: 'packages', element: CloserPackagesPage },
-      //         { path: 'packages/new', element: CloserPackagesNewPage },
-      //         { path: 'packages/:id', element: CloserPackagesPage },
-      //         { path: 'invoices', element: CloserInvoicesPage },
-      //         { path: 'sales', element: CloserSalesPage },
-      //       ],
-      //     },
-      //   ],
-      // },
+          // Closer routes
+          {
+            path: 'closer',
+            element: (
+              <RoleGuard allowedRoles={['CLOSER']}>
+                <CloserLayout />
+              </RoleGuard>
+            ),
+            children: [
+              { index: true, element: <LazyRoute component={CloserDashboardPage} /> },
+              { path: 'packages', element: <LazyRoute component={CloserPackagesPage} /> },
+              { path: 'packages/new', element: <LazyRoute component={CloserPackagesNewPage} /> },
+              { path: 'packages/:id', element: <LazyRoute component={CloserPackagesPage} /> },
+              { path: 'invoices', element: <LazyRoute component={CloserInvoicesPage} /> },
+              { path: 'sales', element: <LazyRoute component={CloserSalesPage} /> },
+            ],
+          },
+        ],
+      },
     ],
   },
 

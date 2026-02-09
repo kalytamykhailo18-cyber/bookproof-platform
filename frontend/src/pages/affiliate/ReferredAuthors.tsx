@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useReferredAuthors, useReferredAuthorDetail } from '@/hooks/useAffiliates';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,7 @@ import { Users, DollarSign, ShoppingBag, Calendar } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
 export function ReferredAuthorsPage() {
-  const { t } = useTranslation('affiliates.referredAuthors');
+  const { t, i18n } = useTranslation('affiliates.referredAuthors');
   const [selectedReferralId, setSelectedReferralId] = useState<string | null>(null);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
 

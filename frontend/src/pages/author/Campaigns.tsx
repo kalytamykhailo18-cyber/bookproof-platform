@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useCampaign, useCampaigns } from '@/hooks/useCampaigns';
 import { Language } from '@/lib/api/campaigns';
 import { useCredits } from '@/hooks/useCredits';
@@ -40,11 +40,9 @@ import {
   DialogTitle } from '@/components/ui/dialog';
 
 export function CampaignDetailPage() {
-  const params = useParams();
   const navigate = useNavigate();
   const campaignId = params.id as string;
-  const locale = (params.locale as string) || 'en';
-  const { t } = useTranslation('author.campaigns.detail');
+  const { t, i18n } = useTranslation('author.campaigns.detail');
 
   const { campaign, isLoading, refetch } = useCampaign(campaignId);
   const {
@@ -205,7 +203,7 @@ export function CampaignDetailPage() {
               type="button"
               onClick={() => {
                 setIsBackLoading(true);
-                navigate(`/${locale}/author`);
+                navigate(`/${i18n.language}/author`);
               }}
               className="mt-4"
               disabled={isBackLoading}
@@ -234,7 +232,7 @@ export function CampaignDetailPage() {
           variant="ghost"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/author`);
+            navigate(`/${i18n.language}/author`);
           }}
           className="mb-4"
           disabled={isBackLoading}
@@ -267,7 +265,7 @@ export function CampaignDetailPage() {
                   size="sm"
                   onClick={() => {
                     setIsAnalyticsLoading(true);
-                    navigate(`/${locale}/author/campaigns/${campaign.id}/analytics`);
+                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}/analytics`);
                   }}
                   disabled={isAnalyticsLoading}
                 >
@@ -714,7 +712,7 @@ export function CampaignDetailPage() {
                   className="w-full"
                   onClick={() => {
                     setIsEditLoading(true);
-                    navigate(`/${locale}/author/campaigns/${campaign.id}/edit`);
+                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}/edit`);
                   }}
                   disabled={isEditLoading}
                 >
@@ -767,7 +765,7 @@ export function CampaignDetailPage() {
                   className="w-full"
                   onClick={() => {
                     setIsAnalyticsLoading(true);
-                    navigate(`/${locale}/author/campaigns/${campaign.id}/analytics`);
+                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}/analytics`);
                   }}
                   disabled={isAnalyticsLoading}
                 >
@@ -813,7 +811,7 @@ export function CampaignDetailPage() {
                   className="w-full"
                   onClick={() => {
                     setIsAnalyticsLoading(true);
-                    navigate(`/${locale}/author/campaigns/${campaign.id}/analytics`);
+                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}/analytics`);
                   }}
                   disabled={isAnalyticsLoading}
                 >
@@ -837,7 +835,7 @@ export function CampaignDetailPage() {
                   className="w-full"
                   onClick={() => {
                     setIsAnalyticsLoading(true);
-                    navigate(`/${locale}/author/campaigns/${campaign.id}/analytics`);
+                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}/analytics`);
                   }}
                   disabled={isAnalyticsLoading}
                 >

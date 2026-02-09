@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import {
   CheckCircle,
@@ -48,7 +48,7 @@ interface PayoutData {
 }
 
 export function AdminPayoutsPage() {
-  const { t } = useTranslation('adminPayouts');
+  const { t, i18n } = useTranslation('adminPayouts');
   const { data: allPayouts, isLoading } = useAllPayouts();
 
   const [selectedPayoutId, setSelectedPayoutId] = useState<string | null>(null);

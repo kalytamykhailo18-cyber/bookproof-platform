@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { ArrowLeft, DollarSign, Users, Hash, BarChart3, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -18,11 +18,9 @@ import {
 import { formatDate } from '@/lib/utils';
 
 export function CouponUsagePage() {
-  const { t } = useTranslation('adminCoupons');
-  const params = useParams();
+  const { t, i18n } = useTranslation('adminCoupons');
   const navigate = useNavigate();
   const id = params.id as string;
-  const locale = (params.locale as string) || 'en';
 
   const { data: coupon, isLoading: couponLoading } = useCoupon(id);
   const { data: stats, isLoading: statsLoading } = useCouponUsageStats(id);
@@ -63,7 +61,7 @@ export function CouponUsagePage() {
           size="icon"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/admin/coupons/${id}`);
+            navigate(`/${i18n.language}/admin/coupons/${id}`);
           }}
           disabled={isBackLoading}
         >

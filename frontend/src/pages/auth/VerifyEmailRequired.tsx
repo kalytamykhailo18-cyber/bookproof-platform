@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Mail, Loader2, LogOut } from 'lucide-react';
@@ -13,8 +13,7 @@ import { authApi } from '@/lib/api/auth';
  * Shows when a user tries to access a protected route without email verification
  */
 export function VerifyEmailRequiredPage() {
-  const { t } = useTranslation('auth.verifyEmail');
-  const params = useParams();
+  const { t, i18n } = useTranslation('auth.verifyEmail');
   // locale available if needed for future use
   const _locale = (params.locale as string) || 'en';
   void _locale; // silence unused variable warning

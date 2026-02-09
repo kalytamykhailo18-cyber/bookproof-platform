@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useCredits } from '@/hooks/useCredits';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,11 +8,9 @@ import { CheckCircle2, Search, Sparkles, Loader2 } from 'lucide-react';
 import { useNavigate,  useParams, useSearchParams } from 'react-router-dom';
 
 export function CreditPurchaseSuccessPage() {
-  const { t } = useTranslation('author.credits.success');
+  const { t, i18n } = useTranslation('author.credits.success');
   const navigate = useNavigate();
-  const params = useParams();
   const [searchParams] = useSearchParams();
-  const locale = (params.locale as string) || 'en';
   const { refetchBalance } = useCredits();
 
   // Check if keyword research was included in purchase (Section 9.1)
@@ -53,7 +51,7 @@ export function CreditPurchaseSuccessPage() {
                   className="mt-3"
                   onClick={() => {
                     setIsKeywordLoading(true);
-                    navigate(`/${locale}/author/keyword-research/new?fromCreditPurchase=true`);
+                    navigate(`/${i18n.language}/author/keyword-research/new?fromCreditPurchase=true`);
                   }}
                   disabled={isKeywordLoading}
                 >
@@ -73,7 +71,7 @@ export function CreditPurchaseSuccessPage() {
               type="button"
               onClick={() => {
                 setIsCampaignLoading(true);
-                navigate(`/${locale}/author/campaigns/new`);
+                navigate(`/${i18n.language}/author/campaigns/new`);
               }}
               disabled={isCampaignLoading}
             >
@@ -85,7 +83,7 @@ export function CreditPurchaseSuccessPage() {
               variant="outline"
               onClick={() => {
                 setIsDashboardLoading(true);
-                navigate(`/${locale}/author`);
+                navigate(`/${i18n.language}/author`);
               }}
               disabled={isDashboardLoading}
             >

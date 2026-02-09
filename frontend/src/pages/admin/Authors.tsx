@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useAdminControls } from '@/hooks/useAdminControls';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -51,10 +51,8 @@ import {
 import type { AuthorListItemDto } from '@/lib/api/admin-controls';
 
 export function AdminAuthorsPage() {
-  const { t } = useTranslation('adminAuthors');
+  const { t, i18n } = useTranslation('adminAuthors');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { useAllAuthors, addCredits, removeCredits, suspendAuthor, unsuspendAuthor, updateAuthorNotes } = useAdminControls();
 
   const { data: authors, isLoading } = useAllAuthors();
@@ -428,7 +426,7 @@ export function AdminAuthorsPage() {
                           size="sm"
                           onClick={() => {
                             setLoadingAuthorId(author.id);
-                            navigate(`/${locale}/admin/authors/${author.id}/transactions`);
+                            navigate(`/${i18n.language}/admin/authors/${author.id}/transactions`);
                           }}
                           disabled={loadingAuthorId === author.id}
                         >

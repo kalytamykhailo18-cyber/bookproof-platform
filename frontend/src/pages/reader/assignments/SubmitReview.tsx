@@ -11,16 +11,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { AlertCircle, CheckCircle, ArrowLeft, Star, Send, Loader2 } from 'lucide-react';
 import { useNavigate,  useParams } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export function SubmitReviewPage({ params }: { params: { id: string } }) {
-  const { t } = useTranslation('reviews.submit');
+  const { t, i18n } = useTranslation('reviews.submit');
   const assignmentId = params.id;
   const { assignment, isLoading: isLoadingAssignment } = useAssignment(assignmentId);
   const { review, isLoadingReview, submitReview, isSubmitting, isSubmitSuccess } = useReviewSubmission(assignmentId);
   const navigate = useNavigate();
   const routeParams = useParams();
-  const locale = (routeParams.locale as string) || 'en';
 
   const [amazonReviewLink, setAmazonReviewLink] = useState('');
   const [internalRating, setInternalRating] = useState(5);
@@ -129,7 +128,7 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
           <CardContent className="py-16 text-center">
             <AlertCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="mb-2 text-lg font-semibold">{t('notFound.title')}</h3>
-            <Button type="button" className="mt-4" onClick={() => navigate(`/${locale}/reader`)}>
+            <Button type="button" className="mt-4" onClick={() => navigate(`/${i18n.language}/reader`)}>
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -142,7 +141,7 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
   if (review || isSubmitSuccess) {
     return (
       <div className="container mx-auto space-y-6 p-6">
-        <Button type="button" variant="ghost" className="animate-fade-right" onClick={() => navigate(`/${locale}/reader/assignments/${assignmentId}`)}>
+        <Button type="button" variant="ghost" className="animate-fade-right" onClick={() => navigate(`/${i18n.language}/reader/assignments/${assignmentId}`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToAssignment')}
         </Button>
@@ -157,10 +156,10 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
               {t('success.description')}
             </p>
             <div className="flex justify-center gap-2">
-              <Button type="button" onClick={() => navigate(`/${locale}/reader`)}>
+              <Button type="button" onClick={() => navigate(`/${i18n.language}/reader`)}>
                 {t('backToDashboard')}
               </Button>
-              <Button type="button" variant="outline" onClick={() => navigate(`/${locale}/reader/profile`)}>
+              <Button type="button" variant="outline" onClick={() => navigate(`/${i18n.language}/reader/profile`)}>
                 {t('viewWallet')}
               </Button>
             </div>
@@ -174,7 +173,7 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <Button type="button" variant="ghost" className="mb-4" onClick={() => navigate(`/${locale}/reader/assignments/${assignmentId}`)}>
+        <Button type="button" variant="ghost" className="mb-4" onClick={() => navigate(`/${i18n.language}/reader/assignments/${assignmentId}`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToAssignment')}
         </Button>
@@ -363,7 +362,7 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
               >
                 {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="mr-2 h-4 w-4" />{t('form.submit')}</>}
               </Button>
-              <Button type="button" variant="outline" onClick={() => router.back()}>
+              <Button type="button" variant="outline" onClick={() => navigate(-1)}>
                 {t('form.cancel')}
               </Button>
             </div>

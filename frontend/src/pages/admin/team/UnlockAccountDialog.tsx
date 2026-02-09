@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -40,7 +40,7 @@ const unlockAccountSchema = z.object({
 type UnlockAccountFormData = z.infer<typeof unlockAccountSchema>;
 
 export function UnlockAccountDialog() {
-  const { t } = useTranslation('adminTeam');
+  const { t, i18n } = useTranslation('adminTeam');
   const [open, setOpen] = useState(false);
   const unlockAccountMutation = useUnlockAccount();
 

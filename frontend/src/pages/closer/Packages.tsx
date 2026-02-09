@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate,  useParams } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useCloserPackage, useUpdatePackage, useSendPackage } from '@/hooks/useCloser';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,10 +27,8 @@ import { CustomPackageStatus } from '@/lib/api/closer';
 import { toast } from 'sonner';
 
 export function PackageDetailPage() {
-  const { t } = useTranslation('closer');
+  const { t, i18n } = useTranslation('closer');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = params.locale as string;
   const packageId = params.id as string;
 
   const { data: pkg, isLoading } = useCloserPackage(packageId);
@@ -171,7 +169,7 @@ export function PackageDetailPage() {
             className="mt-4"
             onClick={() => {
               setIsBackLoading(true);
-              navigate(`/${locale}/closer/packages`);
+              navigate(`/${i18n.language}/closer/packages`);
             }}
             disabled={isBackLoading}
           >
@@ -196,7 +194,7 @@ export function PackageDetailPage() {
             size="icon"
             onClick={() => {
               setIsBackLoading(true);
-              navigate(`/${locale}/closer/packages`);
+              navigate(`/${i18n.language}/closer/packages`);
             }}
             disabled={isBackLoading}
           >

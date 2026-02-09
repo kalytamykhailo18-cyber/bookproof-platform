@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useCredits } from '@/hooks/useCredits';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,7 +17,7 @@ import { Loader2, Check, CreditCard, Star, FileSearch } from 'lucide-react';
 import { PackageTier } from '@/lib/api/credits';
 
 export function CreditPurchasePage() {
-  const { t } = useTranslation('author.credits');
+  const { t, i18n } = useTranslation('author.credits');
   const { packageTiers, isLoadingPackages, purchaseCredits, isPurchasing, creditBalance } =
     useCredits();
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);

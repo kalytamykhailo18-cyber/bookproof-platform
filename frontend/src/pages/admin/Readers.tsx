@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate,  useSearchParams } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useAdminReaders } from '@/hooks/useAdminReaders';
 import {
   useBanUser,
@@ -67,10 +67,8 @@ import {
   Loader2 } from 'lucide-react';
 
 export function AdminReaderDetailPage() {
-  const { t } = useTranslation('adminReaders');
-  const params = useParams();
+  const { t, i18n } = useTranslation('adminReaders');
   const navigate = useNavigate();
-  const locale = (params.locale as string) || 'en';
   const [searchParams] = useSearchParams();
   const readerId = params.id as string;
   const initialTab = searchParams.get('tab') || 'overview';
@@ -367,7 +365,7 @@ export function AdminReaderDetailPage() {
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-semibold">{t('notFound.title')}</h3>
             <p className="text-muted-foreground">{t('notFound.description')}</p>
-            <Button type="button" className="mt-4" onClick={() => navigate(`/${locale}/admin/readers`)}>
+            <Button type="button" className="mt-4" onClick={() => navigate(`/${i18n.language}/admin/readers`)}>
               {t('notFound.backToList')}
             </Button>
           </CardContent>
@@ -386,7 +384,7 @@ export function AdminReaderDetailPage() {
           size="sm"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/admin/readers`);
+            navigate(`/${i18n.language}/admin/readers`);
           }}
           disabled={isBackLoading}
         >

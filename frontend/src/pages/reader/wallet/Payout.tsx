@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -45,10 +45,8 @@ const payoutSchema = z.object({
 type PayoutFormData = z.infer<typeof payoutSchema>;
 
 export function RequestPayoutPage() {
-  const { t } = useTranslation('payouts');
+  const { t, i18n } = useTranslation('payouts');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { stats, isLoadingStats: statsLoading } = useReaderStats();
   const { mutate: requestPayout, isPending } = useRequestPayout();
 
@@ -86,7 +84,7 @@ export function RequestPayoutPage() {
         notes: data.notes },
       {
         onSuccess: () => {
-          navigate(`/${locale}/reader/wallet`);
+          navigate(`/${i18n.language}/reader/wallet`);
         } },
     );
   };
@@ -213,7 +211,7 @@ export function RequestPayoutPage() {
         size="sm"
         onClick={() => {
           setIsBackLoading(true);
-          navigate(`/${locale}/reader/wallet`);
+          navigate(`/${i18n.language}/reader/wallet`);
         }}
         className="mb-6 animate-fade-right-fast"
         disabled={isBackLoading}
@@ -359,7 +357,7 @@ export function RequestPayoutPage() {
                 variant="outline"
                 onClick={() => {
                   setIsCancelLoading(true);
-                  router.back();
+                  navigate(-1);
                 }}
                 disabled={isPending || isCancelLoading}
                 className="flex-1"

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useDashboards } from '@/hooks/useDashboards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -39,10 +39,8 @@ import { CampaignSectionItemDto } from '@/lib/api/dashboards';
 import { useAuthStore } from '@/stores/authStore';
 
 export function AdminDashboardPage() {
-  const { t } = useTranslation('adminDashboard');
+  const { t, i18n } = useTranslation('adminDashboard');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { useAdminDashboard, useAdminRevenueAnalytics } = useDashboards();
   const { isSuperAdmin } = useAuthStore();
 
@@ -57,7 +55,7 @@ export function AdminDashboardPage() {
 
   const navigateTo = (path: string) => {
     setLoadingPath(path);
-    navigate(`/${locale}/admin/${path}`);
+    navigate(`/${i18n.language}/admin/${path}`);
   };
 
   if (dashboardLoading) {

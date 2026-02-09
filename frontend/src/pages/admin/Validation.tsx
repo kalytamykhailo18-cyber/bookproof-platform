@@ -30,10 +30,10 @@ import {
   Clock } from 'lucide-react';
 import { Review, ValidationAction, IssueType, IssueSeverity } from '@/lib/api/reviews';
 import { formatDistanceToNow } from 'date-fns';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export function AdminValidationPage() {
-  const { t } = useTranslation('adminValidation');
+  const { t, i18n } = useTranslation('adminValidation');
   const {
     pendingReviews,
     isLoadingPending,

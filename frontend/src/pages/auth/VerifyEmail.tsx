@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate,  useParams } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 
 export function VerifyEmailPage() {
-  const { t } = useTranslation('auth.verifyEmail');
+  const { t, i18n } = useTranslation('auth.verifyEmail');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { verifyEmail } = useAuth();
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
   const [errorMessage, setErrorMessage] = useState('');
@@ -91,13 +89,13 @@ export function VerifyEmailPage() {
 
       <CardFooter className="flex flex-col space-y-2">
         {status === 'success' && (
-          <Button type="button" className="w-full" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${locale}/login`); }}>
+          <Button type="button" className="w-full" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${i18n.language}/login`); }}>
             {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('loginButton')}
           </Button>
         )}
 
         {status === 'error' && (
-          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${locale}/register`); }} variant="outline" className="w-full">
+          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${i18n.language}/register`); }} variant="outline" className="w-full">
             {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('resendButton')}
           </Button>
         )}

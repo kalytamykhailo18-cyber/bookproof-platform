@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSearchParams, useNavigate,  useParams } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -48,11 +48,9 @@ const resetPasswordSchema = z
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 export function ResetPasswordPage() {
-  const { t } = useTranslation('auth.resetPassword');
+  const { t, i18n } = useTranslation('auth.resetPassword');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { resetPasswordAsync, isResettingPassword } = useAuth();
   const [resetSuccess, setResetSuccess] = useState(false);
   const [isNavLoading, setIsNavLoading] = useState(false);
@@ -107,7 +105,7 @@ export function ResetPasswordPage() {
           <p className="text-muted-foreground">{t('errorInvalidToken')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
-          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${locale}/forgot-password`); }} className="w-full">
+          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${i18n.language}/forgot-password`); }} className="w-full">
             {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Request New Link'}
           </Button>
         </CardFooter>
@@ -130,7 +128,7 @@ export function ResetPasswordPage() {
           <p className="animate-fade-up text-center text-muted-foreground">{t('successMessage')}</p>
         </CardContent>
         <CardFooter className="animate-fade-up-slow">
-          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${locale}/login`); }} className="w-full">
+          <Button type="button" disabled={isNavLoading} onClick={() => { setIsNavLoading(true); navigate(`/${i18n.language}/login`); }} className="w-full">
             {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('loginButton')}
           </Button>
         </CardFooter>

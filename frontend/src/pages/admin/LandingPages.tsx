@@ -1,5 +1,5 @@
 import { useState, createContext, useContext } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -686,10 +686,8 @@ function CtaSettingsTabContent() {
 
 // Main Page Component
 export function AdminLandingPagesPage() {
-  const { t } = useTranslation('admin-landing-pages');
+  const { t, i18n } = useTranslation('admin-landing-pages');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const [isContentEditorLoading, setIsContentEditorLoading] = useState(false);
 
   return (
@@ -758,7 +756,7 @@ export function AdminLandingPagesPage() {
                           type="button"
                           onClick={() => {
                             setIsContentEditorLoading(true);
-                            navigate(`/${locale}/admin/landing-pages/content`);
+                            navigate(`/${i18n.language}/admin/landing-pages/content`);
                           }}
                           disabled={isContentEditorLoading}
                         >

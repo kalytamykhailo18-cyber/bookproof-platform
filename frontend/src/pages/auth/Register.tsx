@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useForm } from 'react-hook-form';
@@ -110,10 +110,8 @@ const registerSchema = z
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 export function RegisterPage() {
-  const { t } = useTranslation('auth.register');
+  const { t, i18n } = useTranslation('auth.register');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { registerAsync, isRegistering } = useAuth();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
 
@@ -622,7 +620,7 @@ export function RegisterPage() {
             className="cursor-pointer font-medium text-primary hover:underline"
             onClick={() => {
               setIsLoginLoading(true);
-              navigate(`/${locale}/login`);
+              navigate(`/${i18n.language}/login`);
             }}
           >
             {isLoginLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('signIn')}
