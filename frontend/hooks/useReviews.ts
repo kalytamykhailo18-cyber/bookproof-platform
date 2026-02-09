@@ -91,6 +91,7 @@ export function useAdminValidation() {
   const {
     data: pendingReviews,
     isLoading: isLoadingPending,
+    isFetching: isFetchingPending,
     refetch: refetchPending,
   } = useQuery({
     queryKey: ['pending-reviews'],
@@ -109,14 +110,34 @@ export function useAdminValidation() {
     staleTime: 5 * 60 * 1000, // 5 minutes // 30 seconds
   });
 
-  // Validate review mutation
+  // Validate review mutation with optimistic update
   const validateReviewMutation = useMutation({
     mutationFn: ({ reviewId, data }: { reviewId: string; data: ValidateReviewRequest }) => {
       startLoading('Validating review...');
       return reviewsApi.validateReview(reviewId, data);
     },
+    // Optimistic update: immediately remove the review from the pending list
+    onMutate: async (variables) => {
+      // Cancel any outgoing refetches to prevent overwriting optimistic update
+      await queryClient.cancelQueries({ queryKey: ['pending-reviews'] });
+
+      // Snapshot the previous value
+      const previousPendingReviews = queryClient.getQueryData<Review[]>(['pending-reviews']);
+
+      // Optimistically remove the review from the list
+      if (previousPendingReviews) {
+        queryClient.setQueryData<Review[]>(
+          ['pending-reviews'],
+          previousPendingReviews.filter((review) => review.id !== variables.reviewId)
+        );
+      }
+
+      // Return context with the snapshot for rollback
+      return { previousPendingReviews };
+    },
     onSuccess: (_, variables) => {
       stopLoading();
+      // Invalidate to sync with server (but keep optimistic data)
       queryClient.invalidateQueries({ queryKey: ['pending-reviews'] });
       queryClient.invalidateQueries({ queryKey: ['pending-reviews-stats'] });
       queryClient.invalidateQueries({ queryKey: ['review', variables.reviewId] });
@@ -130,18 +151,40 @@ export function useAdminValidation() {
 
       toast.success(actionMessages[variables.data.action] || 'Review validated successfully');
     },
-    onError: (error: any) => {
+    onError: (error: any, _, context) => {
       stopLoading();
+      // Rollback to previous data on error
+      if (context?.previousPendingReviews) {
+        queryClient.setQueryData(['pending-reviews'], context.previousPendingReviews);
+      }
       const message = error.response?.data?.message || 'Failed to validate review';
       toast.error(message);
     },
   });
 
-  // Bulk validate mutation
+  // Bulk validate mutation with optimistic update
   const bulkValidateMutation = useMutation({
     mutationFn: (data: BulkValidateReviewsRequest) => {
       startLoading(`Validating ${data.reviewIds.length} reviews...`);
       return reviewsApi.bulkValidateReviews(data);
+    },
+    // Optimistic update: immediately remove the reviews from the pending list
+    onMutate: async (variables) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['pending-reviews'] });
+
+      // Snapshot the previous value
+      const previousPendingReviews = queryClient.getQueryData<Review[]>(['pending-reviews']);
+
+      // Optimistically remove all selected reviews from the list
+      if (previousPendingReviews) {
+        queryClient.setQueryData<Review[]>(
+          ['pending-reviews'],
+          previousPendingReviews.filter((review) => !variables.reviewIds.includes(review.id))
+        );
+      }
+
+      return { previousPendingReviews };
     },
     onSuccess: (results) => {
       stopLoading();
@@ -149,8 +192,12 @@ export function useAdminValidation() {
       queryClient.invalidateQueries({ queryKey: ['pending-reviews-stats'] });
       toast.success(`Successfully validated ${results.length} reviews`);
     },
-    onError: (error: any) => {
+    onError: (error: any, _, context) => {
       stopLoading();
+      // Rollback on error
+      if (context?.previousPendingReviews) {
+        queryClient.setQueryData(['pending-reviews'], context.previousPendingReviews);
+      }
       const message = error.response?.data?.message || 'Failed to bulk validate reviews';
       toast.error(message);
     },
@@ -159,6 +206,7 @@ export function useAdminValidation() {
   return {
     pendingReviews,
     isLoadingPending,
+    isFetchingPending,
     refetchPending,
     stats,
     isLoadingStats,

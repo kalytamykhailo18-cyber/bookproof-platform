@@ -58,7 +58,8 @@
     "processedAt": "Processed Date",
     "transactionId": "Transaction ID",
     "rejectionReason": "Rejection Reason",
-    "adminNotes": "Admin Notes"
+    "adminNotes": "Admin Notes",
+    "status": "Status"
   },
   "approve": {
     "notesLabel": "Admin Notes (Optional)",
