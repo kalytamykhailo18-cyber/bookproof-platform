@@ -42,6 +42,7 @@ export default function AdminValidationPage() {
   const {
     pendingReviews,
     isLoadingPending,
+    isFetchingPending,
     stats,
     isLoadingStats,
     validateReview,
@@ -239,11 +240,19 @@ export default function AdminValidationPage() {
           </div>
         </CardHeader>
         <CardContent>
-          {!pendingReviews || pendingReviews.length === 0 ? (
+          {/* Only show empty state when we have definitively fetched data and it's empty */}
+          {/* Don't show empty state while fetching to prevent flash of empty content */}
+          {!isFetchingPending && (!pendingReviews || pendingReviews.length === 0) ? (
             <div className="animate-fade-up py-16 text-center">
               <CheckCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-green-500" />
               <h3 className="mb-2 text-lg font-semibold">{t('empty.title')}</h3>
               <p className="text-muted-foreground">{t('empty.description')}</p>
+            </div>
+          ) : isFetchingPending && (!pendingReviews || pendingReviews.length === 0) ? (
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-48 animate-pulse" />
+              ))}
             </div>
           ) : (
             <div className="space-y-4">

@@ -58,7 +58,8 @@
     "processedAt": "Data do Processamento",
     "transactionId": "ID da Transação",
     "rejectionReason": "Motivo da Rejeição",
-    "adminNotes": "Notas do Administrador"
+    "adminNotes": "Notas do Administrador",
+    "status": "Status"
   },
   "approve": {
     "notesLabel": "Notas do Administrador (Opcional)",
