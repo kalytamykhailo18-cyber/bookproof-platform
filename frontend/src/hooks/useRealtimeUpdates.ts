@@ -150,7 +150,7 @@ export function useRealtimeUpdates(options: UseRealtimeUpdatesOptions = {}) {
       eventSourceRef.current.close();
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
     const sseUrl = `${apiUrl}/api/v1/realtime/events`;
 
     // Note: EventSource doesn't support custom headers, so we use a different approach

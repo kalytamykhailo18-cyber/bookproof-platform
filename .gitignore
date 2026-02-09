@@ -40,3 +40,5 @@ logs/
 .claude
 .husky
 CLAUDE.md
+.next
+*.md
