@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -43,9 +44,8 @@ interface NavSection {
 
 export function AdminSidebar() {
   const navigate = useNavigate();
-  const params = useParams();
   const { pathname } = useLocation();
-  const locale = (params?.locale as string) || 'en';
+  const { i18n } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
 
@@ -58,62 +58,63 @@ export function AdminSidebar() {
     {
       title: 'Overview',
       items: [
-        { title: 'Dashboard', href: `/${locale}/admin/dashboard`, icon: LayoutDashboard },
+        { title: 'Dashboard', href: `/${i18n.language}/admin/dashboard`, icon: LayoutDashboard },
       ],
     },
     {
       title: 'Users',
       items: [
-        { title: 'Authors', href: `/${locale}/admin/authors`, icon: Users },
-        { title: 'Readers', href: `/${locale}/admin/readers`, icon: UserCheck },
-        { title: 'Affiliates', href: `/${locale}/admin/affiliates`, icon: UsersRound },
-        { title: 'Team', href: `/${locale}/admin/team`, icon: Users },
+        { title: 'Authors', href: `/${i18n.language}/admin/authors`, icon: Users },
+        { title: 'Readers', href: `/${i18n.language}/admin/readers`, icon: UserCheck },
+        { title: 'Affiliates', href: `/${i18n.language}/admin/affiliates`, icon: UsersRound },
+        { title: 'Team', href: `/${i18n.language}/admin/team`, icon: Users },
       ],
     },
     {
       title: 'Campaigns',
       items: [
-        { title: 'All Campaigns', href: `/${locale}/admin/campaigns`, icon: BookOpen },
-        { title: 'Validation Queue', href: `/${locale}/admin/validation`, icon: Flag },
-        { title: 'Disputes', href: `/${locale}/admin/disputes`, icon: MessageSquare },
-        { title: 'Issues', href: `/${locale}/admin/issues`, icon: AlertTriangle },
-        { title: 'Exceptions', href: `/${locale}/admin/exceptions`, icon: AlertCircle },
+        { title: 'All Campaigns', href: `/${i18n.language}/admin/campaigns`, icon: BookOpen },
+        { title: 'Validation Queue', href: `/${i18n.language}/admin/validation`, icon: Flag },
+        { title: 'Disputes', href: `/${i18n.language}/admin/disputes`, icon: MessageSquare },
+        { title: 'Issues', href: `/${i18n.language}/admin/issues`, icon: AlertTriangle },
+        { title: 'Exceptions', href: `/${i18n.language}/admin/exceptions`, icon: AlertCircle },
       ],
     },
     {
       title: 'Finance',
       items: [
-        { title: 'Payouts', href: `/${locale}/admin/payouts`, icon: CreditCard },
-        { title: 'Refunds', href: `/${locale}/admin/refunds`, icon: Receipt },
-        { title: 'Payment Issues', href: `/${locale}/admin/payment-issues`, icon: AlertTriangle },
-        { title: 'Coupons', href: `/${locale}/admin/coupons`, icon: Ticket },
-        { title: 'Package Approvals', href: `/${locale}/admin/package-approvals`, icon: Package },
+        { title: 'Payouts', href: `/${i18n.language}/admin/payouts`, icon: CreditCard },
+        { title: 'Refunds', href: `/${i18n.language}/admin/refunds`, icon: Receipt },
+        { title: 'Payment Issues', href: `/${i18n.language}/admin/payment-issues`, icon: AlertTriangle },
+        { title: 'Coupons', href: `/${i18n.language}/admin/coupons`, icon: Ticket },
+        { title: 'Package Approvals', href: `/${i18n.language}/admin/package-approvals`, icon: Package },
       ],
     },
     {
       title: 'Content',
       items: [
-        { title: 'Keyword Research', href: `/${locale}/admin/keyword-research`, icon: Search },
-        { title: 'Landing Pages', href: `/${locale}/admin/landing-pages`, icon: Globe },
-        { title: 'Notifications', href: `/${locale}/admin/notifications`, icon: Bell },
+        { title: 'Keyword Research', href: `/${i18n.language}/admin/keyword-research`, icon: Search },
+        { title: 'Landing Pages', href: `/${i18n.language}/admin/landing-pages`, icon: Globe },
+        { title: 'Notifications', href: `/${i18n.language}/admin/notifications`, icon: Bell },
       ],
     },
     {
       title: 'Reports',
       items: [
-        { title: 'Financial', href: `/${locale}/admin/reports/financial`, icon: FileText },
-        { title: 'Operational', href: `/${locale}/admin/reports/operational`, icon: Activity },
-        { title: 'Affiliates', href: `/${locale}/admin/reports/affiliates`, icon: UsersRound },
+        { title: 'Financial', href: `/${i18n.language}/admin/reports/financial`, icon: FileText },
+        { title: 'Operational', href: `/${i18n.language}/admin/reports/operational`, icon: Activity },
+        { title: 'Affiliates', href: `/${i18n.language}/admin/reports/affiliates`, icon: UsersRound },
       ],
     },
     {
       title: 'System',
       items: [
-        { title: 'Activity Logs', href: `/${locale}/admin/logs/activity`, icon: Activity },
-        { title: 'Email Logs', href: `/${locale}/admin/logs/emails`, icon: Mail },
-        { title: 'Error Logs', href: `/${locale}/admin/logs/errors`, icon: AlertCircle },
-        { title: 'Reader Behavior', href: `/${locale}/admin/reader-behavior`, icon: UserCheck },
-        { title: 'Settings', href: `/${locale}/admin/settings`, icon: Settings },
+        // Note: Log routes commented out in router as they don't exist yet
+        // { title: 'Activity Logs', href: `/${i18n.language}/admin/logs/activity`, icon: Activity },
+        // { title: 'Email Logs', href: `/${i18n.language}/admin/logs/emails`, icon: Mail },
+        // { title: 'Error Logs', href: `/${i18n.language}/admin/logs/errors`, icon: AlertCircle },
+        { title: 'Reader Behavior', href: `/${i18n.language}/admin/reader-behavior`, icon: UserCheck },
+        { title: 'Settings', href: `/${i18n.language}/admin/settings`, icon: Settings },
       ],
     },
   ];
@@ -121,14 +122,14 @@ export function AdminSidebar() {
   const handleNavigation = (href: string) => {
     // Don't navigate if already on this page
     // pathname doesn't include locale, href does, so strip locale from href
-    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    const hrefWithoutLocale = href.replace(`/${i18n.language}`, '');
     if (pathname === hrefWithoutLocale) return;
     setLoadingPath(href);
     navigate(href);
   };
 
   const isActive = (href: string) => {
-    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    const hrefWithoutLocale = href.replace(`/${i18n.language}`, '');
     return pathname === hrefWithoutLocale;
   };
 
@@ -141,7 +142,7 @@ export function AdminSidebar() {
     >
       {/* Logo */}
       <div className="flex h-16 items-center justify-between border-b px-4">
-        <button onClick={() => navigate(`/${locale}/admin/dashboard`)} className="flex items-center gap-2">
+        <button onClick={() => navigate(`/${i18n.language}/admin/dashboard`)} className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
             B
           </div>
