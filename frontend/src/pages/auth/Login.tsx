@@ -28,7 +28,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginPage() {
-  const { t, i18n } = useTranslation('auth.login');
+  const { t, i18n } = useTranslation('auth');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { loginAsync, isLoggingIn } = useAuth();
@@ -62,7 +62,7 @@ export function LoginPage() {
       }
 
       await loginAsync({ ...data, captchaToken, rememberMe });
-      toast.success(t('success'));
+      toast.success(t('login.success'));
 
       // Section 16.1: Redirect to intended destination after successful login
       if (returnUrl) {
@@ -71,7 +71,7 @@ export function LoginPage() {
       // Otherwise, useAuth hook will handle default redirect based on role
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } }; message?: string };
-      const errorMessage = err?.response?.data?.message || err?.message || t('error');
+      const errorMessage = err?.response?.data?.message || err?.message || t('login.error');
       if (errorMessage.includes('CAPTCHA')) {
         toast.error('Security verification failed. Please try again.');
       } else if (errorMessage.toLowerCase().includes('verify your email')) {
@@ -93,10 +93,10 @@ export function LoginPage() {
     setIsResendingVerification(true);
     try {
       await authApi.resendVerificationEmail(email);
-      toast.success(t('verificationSent') || 'Verification email sent! Please check your inbox.');
+      toast.success(t('login.verificationSent') || 'Verification email sent! Please check your inbox.');
       setShowVerificationNeeded(false);
     } catch {
-      toast.error(t('verificationError') || 'Failed to send verification email. Please try again.');
+      toast.error(t('login.verificationError') || 'Failed to send verification email. Please try again.');
     } finally {
       setIsResendingVerification(false);
     }
@@ -107,16 +107,16 @@ export function LoginPage() {
       <div className="w-full max-w-md">
         <Card className="animate-fade-up">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-center text-2xl font-bold">{t('title')}</CardTitle>
-        <CardDescription className="text-center">{t('subtitle')}</CardDescription>
+        <CardTitle className="text-center text-2xl font-bold">{t('login.title')}</CardTitle>
+        <CardDescription className="text-center">{t('login.subtitle')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">{t('email')}</Label>
+          <Label htmlFor="email">{t('login.email')}</Label>
           <Input
             id="email"
             type="email"
-            placeholder={t('emailPlaceholder')}
+            placeholder={t('login.emailPlaceholder')}
             {...register('email')}
             className={errors.email ? 'border-destructive' : ''}
             disabled={isLoggingIn}
@@ -125,11 +125,11 @@ export function LoginPage() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password">{t('password')}</Label>
+          <Label htmlFor="password">{t('login.password')}</Label>
           <Input
             id="password"
             type="password"
-            placeholder={t('passwordPlaceholder')}
+            placeholder={t('login.passwordPlaceholder')}
             {...register('password')}
             className={errors.password ? 'border-destructive' : ''}
             disabled={isLoggingIn}
@@ -146,7 +146,7 @@ export function LoginPage() {
               disabled={isLoggingIn}
             />
             <Label htmlFor="remember" className="cursor-pointer text-sm font-normal">
-              {t('rememberMe')}
+              {t('login.rememberMe')}
             </Label>
           </div>
           <span
@@ -156,7 +156,7 @@ export function LoginPage() {
               navigate(`/${i18n.language}/forgot-password`);
             }}
           >
-            {isForgotLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('forgotPassword')}
+            {isForgotLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('login.forgotPassword')}
           </span>
         </div>
 
@@ -166,10 +166,10 @@ export function LoginPage() {
               <Mail className="mt-0.5 h-5 w-5 text-amber-600 dark:text-amber-400" />
               <div className="flex-1 space-y-2">
                 <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                  {t('emailNotVerified') || 'Email not verified'}
+                  {t('login.emailNotVerified') || 'Email not verified'}
                 </p>
                 <p className="text-sm text-amber-700 dark:text-amber-300">
-                  {t('emailNotVerifiedDesc') || 'Please verify your email address before logging in. Check your inbox for the verification link.'}
+                  {t('login.emailNotVerifiedDesc') || 'Please verify your email address before logging in. Check your inbox for the verification link.'}
                 </p>
                 <Button
                   type="button"
@@ -184,7 +184,7 @@ export function LoginPage() {
                   ) : (
                     <Mail className="mr-2 h-4 w-4" />
                   )}
-                  {t('resendVerification') || 'Resend verification email'}
+                  {t('login.resendVerification') || 'Resend verification email'}
                 </Button>
               </div>
             </div>
@@ -194,11 +194,11 @@ export function LoginPage() {
 
       <CardFooter className="flex flex-col space-y-4">
         <Button type="button" className="w-full" disabled={isLoggingIn} onClick={handleLogin}>
-          {isLoggingIn ? <Loader2 className="h-4 w-4 animate-spin" /> : t('submitButton')}
+          {isLoggingIn ? <Loader2 className="h-4 w-4 animate-spin" /> : t('login.submitButton')}
         </Button>
 
         <p className="text-center text-sm text-muted-foreground">
-          {t('noAccount')}{' '}
+          {t('login.noAccount')}{' '}
           <span
             className="cursor-pointer font-medium text-primary hover:underline"
             onClick={() => {
@@ -206,7 +206,7 @@ export function LoginPage() {
               navigate(`/${i18n.language}/register`);
             }}
           >
-            {isSignupLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('signUp')}
+            {isSignupLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('login.signUp')}
           </span>
         </p>
       </CardFooter>

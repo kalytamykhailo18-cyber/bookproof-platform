@@ -199,3 +199,52 @@ export async function getGlobalAnalytics(): Promise<GlobalAnalytics> {
   const response = await apiClient.get<GlobalAnalytics>('/landing-pages/analytics/global');
   return response.data;
 }
+
+/**
+ * Track landing page view (public endpoint)
+ */
+export interface TrackViewRequest {
+  language: Language;
+  source?: string;      // utm_source
+  medium?: string;      // utm_medium
+  campaign?: string;    // utm_campaign
+  content?: string;     // utm_content
+  term?: string;        // utm_term
+  affiliateRef?: string; // ref parameter
+  referrer?: string;    // document.referrer
+}
+
+export async function trackView(data: TrackViewRequest): Promise<{ success: boolean }> {
+  const response = await apiClient.post<{ success: boolean }>('/landing-pages/track-view', data);
+  return response.data;
+}
+
+/**
+ * Submit lead form (public endpoint)
+ */
+export interface SubmitLeadRequest {
+  email: string;
+  name?: string;
+  userType: string;
+  language: Language;
+  marketingConsent: boolean;
+  source?: string;
+  medium?: string;
+  campaign?: string;
+  content?: string;
+  term?: string;
+  affiliateRef?: string;
+  referrer?: string;
+  captchaToken?: string;
+}
+
+export interface SubmitLeadResponse {
+  success: boolean;
+  message?: string;
+  leadId?: string;
+}
+
+export async function submitLead(data: SubmitLeadRequest): Promise<SubmitLeadResponse> {
+  const response = await apiClient.post<SubmitLeadResponse>('/landing-pages/leads', data);
+  return response.data;
+}
