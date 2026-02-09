@@ -756,7 +756,7 @@ export function AdminLandingPagesPage() {
                           type="button"
                           onClick={() => {
                             setIsContentEditorLoading(true);
-                            navigate(`/${i18n.language}/admin/landing-pages/content`);
+                            navigate(`/admin/landing-pages/content`);
                           }}
                           disabled={isContentEditorLoading}
                         >

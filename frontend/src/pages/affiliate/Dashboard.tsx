@@ -133,7 +133,7 @@ export function AffiliateDashboardPage() {
               className="ml-2 h-auto p-0"
               onClick={() => {
                 setIsRegisterLoading(true);
-                navigate(`/${i18n.language}/affiliate/register`);
+                navigate(`/affiliate/register`);
               }}
               disabled={isRegisterLoading}
             >
@@ -176,7 +176,7 @@ export function AffiliateDashboardPage() {
             type="button"
             onClick={() => {
               setIsReferralLinksLoading(true);
-              navigate(`/${i18n.language}/affiliate/referral-links`);
+              navigate(`/affiliate/referral-links`);
             }}
             disabled={isReferralLinksLoading}
           >
@@ -188,7 +188,7 @@ export function AffiliateDashboardPage() {
             variant="outline"
             onClick={() => {
               setIsReferredAuthorsLoading(true);
-              navigate(`/${i18n.language}/affiliate/referred-authors`);
+              navigate(`/affiliate/referred-authors`);
             }}
             disabled={isReferredAuthorsLoading}
           >
@@ -200,7 +200,7 @@ export function AffiliateDashboardPage() {
             variant="outline"
             onClick={() => {
               setIsPayoutsNavLoading(true);
-              navigate(`/${i18n.language}/affiliate/payouts`);
+              navigate(`/affiliate/payouts`);
             }}
             disabled={isPayoutsNavLoading}
           >
@@ -414,7 +414,7 @@ export function AffiliateDashboardPage() {
               size="sm"
               onClick={() => {
                 setIsCommissionsLoading(true);
-                navigate(`/${i18n.language}/affiliate/commissions`);
+                navigate(`/affiliate/commissions`);
               }}
               disabled={isCommissionsLoading}
             >
@@ -475,7 +475,7 @@ export function AffiliateDashboardPage() {
               size="sm"
               onClick={() => {
                 setIsPayoutsViewLoading(true);
-                navigate(`/${i18n.language}/affiliate/payouts`);
+                navigate(`/affiliate/payouts`);
               }}
               disabled={isPayoutsViewLoading}
             >

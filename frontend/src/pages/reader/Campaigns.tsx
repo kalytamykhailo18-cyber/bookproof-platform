@@ -611,7 +611,7 @@ export function CampaignsPage() {
 
   // Redirect to profile creation if no profile
   if (!isLoadingProfile && !profile) {
-    navigate(`/${i18n.language}/reader/profile`);
+    navigate(`/reader/profile`);
     return null;
   }
 
@@ -661,7 +661,7 @@ export function CampaignsPage() {
               variant="ghost"
               size="sm"
               className="animate-fade-right"
-              onClick={() => navigate(`/${i18n.language}/reader`)}
+              onClick={() => navigate(`/reader`)}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               {t('backToDashboard')}

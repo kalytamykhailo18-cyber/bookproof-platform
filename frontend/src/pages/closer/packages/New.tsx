@@ -59,7 +59,7 @@ export function CreatePackagePage() {
       },
       {
         onSuccess: () => {
-          navigate(`/${i18n.language}/closer/packages`);
+          navigate(`/closer/packages`);
         } },
     );
   };
@@ -82,7 +82,7 @@ export function CreatePackagePage() {
           size="icon"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/closer/packages`);
+            navigate(`/closer/packages`);
           }}
           disabled={isBackLoading}
         >
@@ -345,7 +345,7 @@ export function CreatePackagePage() {
               variant="outline"
               onClick={() => {
                 setIsBackLoading(true);
-                navigate(`/${i18n.language}/closer/packages`);
+                navigate(`/closer/packages`);
               }}
               disabled={isBackLoading}
             >

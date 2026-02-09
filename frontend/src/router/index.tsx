@@ -165,7 +165,7 @@ const CheckoutCustomSuccessPage = lazy(() => import('../pages/checkout/custom/Su
 
 export const router = createBrowserRouter([
   {
-    path: '/:locale',
+    path: '/',
     element: <RootLayout />,
     children: [
       // Public pages with Header/Footer layout
@@ -354,9 +354,6 @@ export const router = createBrowserRouter([
       },
     ],
   },
-
-  // Redirect root to default locale
-  { path: '/', element: <Navigate to="/en" replace /> },
 
   // 404
   { path: '*', element: <div className="flex min-h-screen items-center justify-center"><h1 className="text-2xl font-bold">Page Not Found</h1></div> },

@@ -17,7 +17,7 @@ export function Footer() {
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
                   onClick={() => {
-                    navigate(`/${i18n.language}`);
+                    navigate('/');
                     setTimeout(() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }), 100);
                   }}
                 >
@@ -28,7 +28,7 @@ export function Footer() {
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
                   onClick={() => {
-                    navigate(`/${i18n.language}`);
+                    navigate('/');
                     setTimeout(() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }), 100);
                   }}
                 >
@@ -39,7 +39,7 @@ export function Footer() {
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
                   onClick={() => {
-                    navigate(`/${i18n.language}`);
+                    navigate('/');
                     setTimeout(() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' }), 100);
                   }}
                 >
@@ -55,7 +55,7 @@ export function Footer() {
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
                   onClick={() => {
-                    navigate(`/${i18n.language}`);
+                    navigate('/');
                     setTimeout(() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }), 100);
                   }}
                 >
@@ -66,7 +66,7 @@ export function Footer() {
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
                   onClick={() => {
-                    navigate(`/${i18n.language}`);
+                    navigate('/');
                     setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100);
                   }}
                 >
@@ -81,7 +81,7 @@ export function Footer() {
               <li>
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => navigate(`/${i18n.language}/privacy`)}
+                  onClick={() => navigate(`/privacy`)}
                 >
                   {t('links.legal.privacy')}
                 </span>
@@ -89,7 +89,7 @@ export function Footer() {
               <li>
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => navigate(`/${i18n.language}/terms`)}
+                  onClick={() => navigate(`/terms`)}
                 >
                   {t('links.legal.terms')}
                 </span>
@@ -97,7 +97,7 @@ export function Footer() {
               <li>
                 <span
                   className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => navigate(`/${i18n.language}/cookies`)}
+                  onClick={() => navigate(`/cookies`)}
                 >
                   {t('links.legal.cookies')}
                 </span>

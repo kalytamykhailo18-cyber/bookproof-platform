@@ -141,6 +141,7 @@
     "notFound": {
       "title": "Campaign Not Found",
       "description": "The campaign you're looking for doesn't exist or has been removed."
-    }
+    },
+    "backToCampaigns": "Back to Campaigns"
   }
 }

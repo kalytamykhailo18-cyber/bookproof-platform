@@ -28,7 +28,7 @@ export function CreditPurchaseCancelPage() {
               type="button"
               onClick={() => {
                 setIsTryAgainLoading(true);
-                navigate(`/${i18n.language}/author/credits`);
+                navigate(`/author/credits`);
               }}
               disabled={isTryAgainLoading}
             >
@@ -40,7 +40,7 @@ export function CreditPurchaseCancelPage() {
               variant="outline"
               onClick={() => {
                 setIsDashboardLoading(true);
-                navigate(`/${i18n.language}/author`);
+                navigate(`/author`);
               }}
               disabled={isDashboardLoading}
             >

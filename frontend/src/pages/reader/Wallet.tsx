@@ -102,7 +102,7 @@ export function WalletPage() {
           className="animate-fade-left-fast"
           onClick={() => {
             setIsPayoutLoading(true);
-            navigate(`/${i18n.language}/reader/wallet/payout`);
+            navigate(`/reader/wallet/payout`);
           }}
         >
           {isPayoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
@@ -243,7 +243,7 @@ export function WalletPage() {
                 disabled={availableBalance < 50 || isPayoutLoading}
                 onClick={() => {
                   setIsPayoutLoading(true);
-                  navigate(`/${i18n.language}/reader/wallet/payout`);
+                  navigate(`/reader/wallet/payout`);
                 }}
               >
                 {isPayoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}

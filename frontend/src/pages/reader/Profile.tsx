@@ -144,7 +144,7 @@ export function ReaderProfilePage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" onClick={() => navigate(`/${i18n.language}/reader`)}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => navigate(`/reader`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToDashboard')}
         </Button>
@@ -428,7 +428,7 @@ export function ReaderProfilePage() {
                 {/* Payout Request Button */}
                 {profile.walletBalance > 0 && (
                   <div className="pt-4">
-                    <Button type="button" className="w-full" onClick={() => navigate(`/${i18n.language}/reader/wallet`)}>
+                    <Button type="button" className="w-full" onClick={() => navigate(`/reader/wallet`)}>
                       <TrendingUp className="mr-2 h-4 w-4" />
                       Request Payout
                     </Button>

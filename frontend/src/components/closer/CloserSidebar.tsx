@@ -41,15 +41,15 @@ export function CloserSidebar() {
     {
       title: 'Overview',
       items: [
-        { title: 'Dashboard', href: `/${locale}/closer`, icon: LayoutDashboard },
+        { title: 'Dashboard', href: '/closer', icon: LayoutDashboard },
       ],
     },
     {
       title: 'Sales',
       items: [
-        { title: 'Custom Packages', href: `/${locale}/closer/packages`, icon: Package },
-        { title: 'Sales History', href: `/${locale}/closer/sales`, icon: DollarSign },
-        { title: 'Invoices', href: `/${locale}/closer/invoices`, icon: FileText },
+        { title: 'Custom Packages', href: '/closer/packages', icon: Package },
+        { title: 'Sales History', href: '/closer/sales', icon: DollarSign },
+        { title: 'Invoices', href: '/closer/invoices', icon: FileText },
       ],
     },
   ];
@@ -57,20 +57,20 @@ export function CloserSidebar() {
   const handleNavigation = (href: string) => {
     // Don't navigate if already on this page
     // pathname doesn't include locale, href does, so strip locale from href
-    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    const hrefWithoutLocale = href;
     if (pathname === hrefWithoutLocale) return;
     setLoadingPath(href);
     navigate(href);
   };
 
   const isActive = (href: string) => {
-    const hrefWithoutLocale = href.replace(`/${locale}`, '');
+    const hrefWithoutLocale = href;
     // Exact match
     if (pathname === hrefWithoutLocale) return true;
     // Check if pathname starts with this href
     if (pathname?.startsWith(hrefWithoutLocale + '/')) {
       // But only highlight if there's no more specific nav item that matches
-      const allHrefs = navSections.flatMap((s) => s.items.map((i) => i.href.replace(`/${locale}`, '')));
+      const allHrefs = navSections.flatMap((s) => s.items.map((i) => i.href));
       const hasMoreSpecificMatch = allHrefs.some(
         (h) => h !== hrefWithoutLocale && pathname?.startsWith(h) && h.startsWith(hrefWithoutLocale)
       );
@@ -90,7 +90,7 @@ export function CloserSidebar() {
       <div className="flex h-16 items-center justify-between border-b px-4">
         <button
           type="button"
-          onClick={() => handleNavigation(`/${locale}/closer`)}
+          onClick={() => handleNavigation('/closer')}
           className="flex items-center gap-2"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">

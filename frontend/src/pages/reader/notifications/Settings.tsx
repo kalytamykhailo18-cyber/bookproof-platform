@@ -102,7 +102,7 @@ export function NotificationSettingsPage() {
           className="mb-4"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/reader/notifications`);
+            navigate(`/reader/notifications`);
           }}
           disabled={isBackLoading}
         >

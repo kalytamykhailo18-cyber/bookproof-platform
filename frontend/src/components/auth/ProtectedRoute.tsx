@@ -29,27 +29,27 @@ export function ProtectedRoute({
       const [params] = searchParams;
       const currentPath = pathname + (params.toString() ? `?${params.toString()}` : '');
       const returnUrl = encodeURIComponent(currentPath);
-      navigate(`/${locale}/login?returnUrl=${returnUrl}`);
+      navigate(`/login?returnUrl=${returnUrl}`);
     }
   }, [isAuthenticated, isLoadingProfile, navigate, pathname, searchParams, locale]);
 
   // Section 16.1: Forbidden (403) - Redirect to forbidden page
   useEffect(() => {
     if (user && allowedRoles && !allowedRoles.includes(user.role)) {
-      navigate(`/${locale}/forbidden`);
+      navigate(`/forbidden`);
     }
   }, [user, allowedRoles, navigate, locale]);
 
   useEffect(() => {
     if (user && requireEmailVerified && !user.emailVerified) {
-      navigate(`/${locale}/verify-email-required`);
+      navigate(`/verify-email-required`);
     }
   }, [user, requireEmailVerified, navigate, locale]);
 
   // Check if author needs to accept terms of service
   useEffect(() => {
     if (user && requireTermsAccepted && user.role === 'AUTHOR' && user.termsAccepted === false) {
-      navigate(`/${locale}/accept-terms`);
+      navigate(`/accept-terms`);
     }
   }, [user, requireTermsAccepted, navigate, locale]);
 

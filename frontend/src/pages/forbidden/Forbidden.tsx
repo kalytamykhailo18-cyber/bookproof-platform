@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate,  useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ShieldX, Home, ArrowLeft, Loader2 } from 'lucide-react';
 
@@ -42,7 +42,7 @@ export function ForbiddenPage() {
             className="gap-2"
             onClick={() => {
               setIsHomeLoading(true);
-              navigate(`/${locale}`);
+              navigate('/');
             }}
             disabled={isHomeLoading}
           >

@@ -87,7 +87,7 @@ export function ForgotPasswordPage() {
             disabled={isBackLoading}
             onClick={() => {
               setIsBackLoading(true);
-              navigate(`/${i18n.language}/login`);
+              navigate(`/login`);
             }}
           >
             {isBackLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><ArrowLeft className="mr-2 h-4 w-4" />{t('backToLogin')}</>}
@@ -139,7 +139,7 @@ export function ForgotPasswordPage() {
           disabled={isBackLoading}
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/login`);
+            navigate(`/login`);
           }}
         >
           {isBackLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><ArrowLeft className="mr-2 h-4 w-4" />{t('backToLogin')}</>}

@@ -96,7 +96,7 @@ export function NewCouponPage() {
       code: values.code.toUpperCase() };
 
     await createMutation.mutateAsync(data);
-    navigate(`/${i18n.language}/admin/coupons`);
+    navigate(`/admin/coupons`);
   };
 
   return (
@@ -109,7 +109,7 @@ export function NewCouponPage() {
           size="icon"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/admin/coupons`);
+            navigate(`/admin/coupons`);
           }}
           disabled={isBackLoading}
         >
@@ -464,7 +464,7 @@ export function NewCouponPage() {
               variant="outline"
               onClick={() => {
                 setIsBackLoading(true);
-                navigate(`/${i18n.language}/admin/coupons`);
+                navigate(`/admin/coupons`);
               }}
               disabled={isBackLoading}
             >

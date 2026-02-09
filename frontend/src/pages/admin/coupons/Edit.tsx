@@ -116,7 +116,7 @@ export function EditCouponPage() {
     const values = form.getValues();
     const data: UpdateCouponDto = values;
     await updateMutation.mutateAsync({ id, data });
-    navigate(`/${i18n.language}/admin/coupons/${id}`);
+    navigate(`/admin/coupons/${id}`);
   };
 
   if (isLoading) {
@@ -146,7 +146,7 @@ export function EditCouponPage() {
           size="icon"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/admin/coupons/${id}`);
+            navigate(`/admin/coupons/${id}`);
           }}
           disabled={isBackLoading}
         >
@@ -497,7 +497,7 @@ export function EditCouponPage() {
               variant="outline"
               onClick={() => {
                 setIsBackLoading(true);
-                navigate(`/${i18n.language}/admin/coupons/${id}`);
+                navigate(`/admin/coupons/${id}`);
               }}
               disabled={isBackLoading}
             >

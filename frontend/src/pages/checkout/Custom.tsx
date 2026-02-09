@@ -49,8 +49,8 @@ export function CustomPackageCheckoutPage() {
       setIsProcessing(true);
       const baseUrl = window.location.origin;
       const result = await customPackageApi.createCheckout(token, {
-        successUrl: `${baseUrl}/${i18n.language}/checkout/custom/${token}/success`,
-        cancelUrl: `${baseUrl}/${i18n.language}/checkout/custom/${token}` });
+        successUrl: `${baseUrl}/checkout/custom/${token}/success`,
+        cancelUrl: `${baseUrl}/checkout/custom/${token}` });
 
       // Redirect to Stripe checkout
       window.location.href = result.checkoutUrl;
@@ -97,7 +97,7 @@ export function CustomPackageCheckoutPage() {
         <CardFooter>
           <Button type="button" variant="outline" onClick={() => {
             setIsHomeLoading(true);
-            navigate(`/${locale}`);
+            navigate('/');
           }} disabled={isHomeLoading}>
             {isHomeLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Go to Homepage
@@ -150,7 +150,7 @@ export function CustomPackageCheckoutPage() {
         <CardFooter>
           <Button type="button" onClick={() => {
             setIsLoginLoading(true);
-            navigate(`/${i18n.language}/login`);
+            navigate(`/login`);
           }} disabled={isLoginLoading}>
             {isLoginLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Go to Login

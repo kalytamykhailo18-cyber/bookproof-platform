@@ -246,7 +246,7 @@ export function AdminKeywordResearchPage() {
                           <DropdownMenuItem
                             onClick={() => {
                               setLoadingResearchId(research.id);
-                              navigate(`/${i18n.language}/author/keyword-research/${research.id}`);
+                              navigate(`/author/keyword-research/${research.id}`);
                             }}
                             disabled={loadingResearchId === research.id}
                           >

@@ -68,63 +68,63 @@ export function AdminSidebar() {
     {
       title: 'Overview',
       items: [
-        { title: 'Dashboard', href: `/${i18n.language}/admin/dashboard`, icon: LayoutDashboard },
+        { title: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
       ],
     },
     {
       title: 'Users',
       items: [
-        { title: 'Authors', href: `/${i18n.language}/admin/authors`, icon: Users },
-        { title: 'Readers', href: `/${i18n.language}/admin/readers`, icon: UserCheck },
-        { title: 'Affiliates', href: `/${i18n.language}/admin/affiliates`, icon: UsersRound },
-        { title: 'Team', href: `/${i18n.language}/admin/team`, icon: Users },
+        { title: 'Authors', href: '/admin/authors', icon: Users },
+        { title: 'Readers', href: '/admin/readers', icon: UserCheck },
+        { title: 'Affiliates', href: '/admin/affiliates', icon: UsersRound },
+        { title: 'Team', href: '/admin/team', icon: Users },
       ],
     },
     {
       title: 'Campaigns',
       items: [
-        { title: 'All Campaigns', href: `/${i18n.language}/admin/campaigns`, icon: BookOpen },
-        { title: 'Validation Queue', href: `/${i18n.language}/admin/validation`, icon: Flag },
-        { title: 'Disputes', href: `/${i18n.language}/admin/disputes`, icon: MessageSquare },
-        { title: 'Issues', href: `/${i18n.language}/admin/issues`, icon: AlertTriangle },
-        { title: 'Exceptions', href: `/${i18n.language}/admin/exceptions`, icon: AlertCircle },
+        { title: 'All Campaigns', href: '/admin/campaigns', icon: BookOpen },
+        { title: 'Validation Queue', href: '/admin/validation', icon: Flag },
+        { title: 'Disputes', href: '/admin/disputes', icon: MessageSquare },
+        { title: 'Issues', href: '/admin/issues', icon: AlertTriangle },
+        { title: 'Exceptions', href: '/admin/exceptions', icon: AlertCircle },
       ],
     },
     {
       title: 'Finance',
       items: [
-        { title: 'Payouts', href: `/${i18n.language}/admin/payouts`, icon: CreditCard },
-        { title: 'Refunds', href: `/${i18n.language}/admin/refunds`, icon: Receipt },
-        { title: 'Payment Issues', href: `/${i18n.language}/admin/payment-issues`, icon: AlertTriangle },
-        { title: 'Coupons', href: `/${i18n.language}/admin/coupons`, icon: Ticket },
-        { title: 'Package Approvals', href: `/${i18n.language}/admin/package-approvals`, icon: Package },
+        { title: 'Payouts', href: '/admin/payouts', icon: CreditCard },
+        { title: 'Refunds', href: '/admin/refunds', icon: Receipt },
+        { title: 'Payment Issues', href: '/admin/payment-issues', icon: AlertTriangle },
+        { title: 'Coupons', href: '/admin/coupons', icon: Ticket },
+        { title: 'Package Approvals', href: '/admin/package-approvals', icon: Package },
       ],
     },
     {
       title: 'Content',
       items: [
-        { title: 'Keyword Research', href: `/${i18n.language}/admin/keyword-research`, icon: Search },
-        { title: 'Landing Pages', href: `/${i18n.language}/admin/landing-pages`, icon: Globe },
-        { title: 'Notifications', href: `/${i18n.language}/admin/notifications`, icon: Bell },
+        { title: 'Keyword Research', href: '/admin/keyword-research', icon: Search },
+        { title: 'Landing Pages', href: '/admin/landing-pages', icon: Globe },
+        { title: 'Notifications', href: '/admin/notifications', icon: Bell },
       ],
     },
     {
       title: 'Reports',
       items: [
-        { title: 'Financial', href: `/${i18n.language}/admin/reports/financial`, icon: FileText },
-        { title: 'Operational', href: `/${i18n.language}/admin/reports/operational`, icon: Activity },
-        { title: 'Affiliates', href: `/${i18n.language}/admin/reports/affiliates`, icon: UsersRound },
+        { title: 'Financial', href: '/admin/reports/financial', icon: FileText },
+        { title: 'Operational', href: '/admin/reports/operational', icon: Activity },
+        { title: 'Affiliates', href: '/admin/reports/affiliates', icon: UsersRound },
       ],
     },
     {
       title: 'System',
       items: [
         // Note: Log routes commented out in router as they don't exist yet
-        // { title: 'Activity Logs', href: `/${i18n.language}/admin/logs/activity`, icon: Activity },
-        // { title: 'Email Logs', href: `/${i18n.language}/admin/logs/emails`, icon: Mail },
-        // { title: 'Error Logs', href: `/${i18n.language}/admin/logs/errors`, icon: AlertCircle },
-        { title: 'Reader Behavior', href: `/${i18n.language}/admin/reader-behavior`, icon: UserCheck },
-        { title: 'Settings', href: `/${i18n.language}/admin/settings`, icon: Settings },
+        // { title: 'Activity Logs', href: `/admin/logs/activity`, icon: Activity },
+        // { title: 'Email Logs', href: `/admin/logs/emails`, icon: Mail },
+        // { title: 'Error Logs', href: `/admin/logs/errors`, icon: AlertCircle },
+        { title: 'Reader Behavior', href: '/admin/reader-behavior', icon: UserCheck },
+        { title: 'Settings', href: '/admin/settings', icon: Settings },
       ],
     },
   ];
@@ -132,7 +132,7 @@ export function AdminSidebar() {
   const handleNavigation = (href: string) => {
     // Don't navigate if already on this page
     // pathname doesn't include locale, href does, so strip locale from href
-    const hrefWithoutLocale = href.replace(`/${i18n.language}`, '');
+    const hrefWithoutLocale = href;
     // Normalize paths by removing trailing slashes for comparison
     const normalizedPathname = pathname.replace(/\/$/, '');
     const normalizedHref = hrefWithoutLocale.replace(/\/$/, '');
@@ -147,7 +147,7 @@ export function AdminSidebar() {
   };
 
   const isActive = (href: string) => {
-    const hrefWithoutLocale = href.replace(`/${i18n.language}`, '');
+    const hrefWithoutLocale = href;
     // Normalize paths by removing trailing slashes for comparison
     const normalizedPathname = pathname.replace(/\/$/, '');
     const normalizedHref = hrefWithoutLocale.replace(/\/$/, '');
@@ -163,7 +163,7 @@ export function AdminSidebar() {
     >
       {/* Logo */}
       <div className="flex h-16 items-center justify-between border-b px-4">
-        <button onClick={() => navigate(`/${i18n.language}/admin/dashboard`)} className="flex items-center gap-2">
+        <button onClick={() => navigate('/admin/dashboard')} className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
             B
           </div>
@@ -206,7 +206,7 @@ export function AdminSidebar() {
                         active && 'cursor-default'
                       )}
                       onClick={() => handleNavigation(item.href)}
-                      disabled={loading || active}
+                      // disabled={loading || active}
                     >
                       {loading ? (
                         <Loader2 className={cn('h-4 w-4 animate-spin', !collapsed && 'mr-2')} />

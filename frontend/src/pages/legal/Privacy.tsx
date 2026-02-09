@@ -336,7 +336,7 @@ export function PrivacyPolicyPage() {
                   onClick={() => {
                     if (isTermsLoading) return;
                     setIsTermsLoading(true);
-                    navigate(`/${i18n.language}/terms`);
+                    navigate(`/terms`);
                   }}
                   className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isTermsLoading ? 'opacity-70' : ''}`}
                 >
@@ -347,7 +347,7 @@ export function PrivacyPolicyPage() {
                   onClick={() => {
                     if (isCookiesLoading) return;
                     setIsCookiesLoading(true);
-                    navigate(`/${i18n.language}/cookies`);
+                    navigate(`/cookies`);
                   }}
                   className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isCookiesLoading ? 'opacity-70' : ''}`}
                 >

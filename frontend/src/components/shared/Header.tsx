@@ -13,7 +13,7 @@ export function Header() {
         <div className="flex animate-fade-right-fast items-center gap-2">
           <span
             className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-2xl font-bold text-transparent cursor-pointer"
-            onClick={() => navigate(`/${i18n.language}`)}
+            onClick={() => navigate('/')}
           >
             {t('app.name')}
           </span>
@@ -24,14 +24,14 @@ export function Header() {
             type="button"
             variant="ghost"
             className="animate-fade-left-fast"
-            onClick={() => navigate(`/${i18n.language}/login`)}
+            onClick={() => navigate(`/login`)}
           >
             {t('nav.login')}
           </Button>
           <Button
             type="button"
             className="animate-fade-left"
-            onClick={() => navigate(`/${i18n.language}/register`)}
+            onClick={() => navigate(`/register`)}
           >
             {t('nav.signup')}
           </Button>

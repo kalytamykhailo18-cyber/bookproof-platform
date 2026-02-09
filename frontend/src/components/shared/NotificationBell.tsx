@@ -91,7 +91,7 @@ export function NotificationBell() {
           break;
       }
     }
-    navigate(`/${locale}/${basePath}/notifications`);
+    navigate(`/${basePath}/notifications`);
   };
 
   return (

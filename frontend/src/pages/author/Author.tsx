@@ -85,7 +85,7 @@ export function AuthorDashboardPage() {
 
   const navigateTo = (path: string) => {
     setLoadingPath(path);
-    navigate(`/${i18n.language}/author/${path}`);
+    navigate(`/author/${path}`);
   };
 
   // Page loading skeleton
@@ -334,7 +334,7 @@ export function AuthorDashboardPage() {
                   className={`cursor-pointer transition-shadow hover:shadow-md ${loadingCampaignId === campaign.id ? 'pointer-events-none opacity-70' : ''} ${animationClass}`}
                   onClick={() => {
                     setLoadingCampaignId(campaign.id);
-                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}`);
+                    navigate(`/author/campaigns/${campaign.id}`);
                   }}
                 >
                   <CardHeader>

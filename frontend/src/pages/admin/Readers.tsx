@@ -366,7 +366,7 @@ export function AdminReaderDetailPage() {
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-semibold">{t('notFound.title')}</h3>
             <p className="text-muted-foreground">{t('notFound.description')}</p>
-            <Button type="button" className="mt-4" onClick={() => navigate(`/${i18n.language}/admin/readers`)}>
+            <Button type="button" className="mt-4" onClick={() => navigate(`/admin/readers`)}>
               {t('notFound.backToList')}
             </Button>
           </CardContent>
@@ -385,7 +385,7 @@ export function AdminReaderDetailPage() {
           size="sm"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/admin/readers`);
+            navigate(`/admin/readers`);
           }}
           disabled={isBackLoading}
         >

@@ -105,7 +105,7 @@ export function EditKeywordResearchPage() {
     const data = form.getValues();
     try {
       await updateMutation.mutateAsync({ id, data });
-      navigate(`/${i18n.language}/author/keyword-research/${id}`);
+      navigate(`/author/keyword-research/${id}`);
     } catch (error) {
       console.error('Failed to update keyword research:', error);
     }
@@ -175,7 +175,7 @@ export function EditKeywordResearchPage() {
           <AlertDescription>{tEdit('cannotEdit')}</AlertDescription>
         </Alert>
         <div className="mt-4">
-          <Button type="button" variant="outline" onClick={() => navigate(`/${i18n.language}/author/keyword-research/${id}`)}>
+          <Button type="button" variant="outline" onClick={() => navigate(`/author/keyword-research/${id}`)}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Details
           </Button>
@@ -190,7 +190,7 @@ export function EditKeywordResearchPage() {
       <div className="mb-8">
         <Button
           variant="ghost"
-          onClick={() => navigate(`/${i18n.language}/author/keyword-research/${id}`)}
+          onClick={() => navigate(`/author/keyword-research/${id}`)}
           className="mb-4"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -431,7 +431,7 @@ export function EditKeywordResearchPage() {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate(`/${i18n.language}/author/keyword-research/${id}`)}
+              onClick={() => navigate(`/author/keyword-research/${id}`)}
             >
               Cancel
             </Button>

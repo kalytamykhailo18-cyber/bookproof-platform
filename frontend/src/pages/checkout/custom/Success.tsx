@@ -80,7 +80,7 @@ export function CustomPackageSuccessPage() {
       <CardFooter className="flex flex-col gap-3">
         <Button className="w-full" size="lg" onClick={() => {
           setIsLoginLoading(true);
-          navigate(`/${i18n.language}/login`);
+          navigate(`/login`);
         }} disabled={isLoginLoading}>
           {isLoginLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
           Go to Login

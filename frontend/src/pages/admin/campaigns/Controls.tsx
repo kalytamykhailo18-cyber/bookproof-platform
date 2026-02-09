@@ -343,7 +343,7 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
           className="mb-4"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${i18n.language}/admin/campaigns/${bookId}`);
+            navigate(`/admin/campaigns/${bookId}`);
           }}
           disabled={isBackLoading}
         >
