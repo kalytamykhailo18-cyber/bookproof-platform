@@ -1,4 +1,5 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { NotificationBell } from './NotificationBell';
 import { Button } from '@/components/ui/button';
@@ -28,8 +29,7 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ showLogo = false }: DashboardHeaderProps) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params?.locale as string) || 'en';
+  const { i18n } = useTranslation();
 
   // Get the base path based on user role
   const getBasePath = () => {
@@ -52,18 +52,18 @@ export function DashboardHeader({ showLogo = false }: DashboardHeaderProps) {
   const getDashboardPath = () => {
     switch (user?.role) {
       case 'ADMIN':
-        return `/${locale}/admin/dashboard`;
+        return `/${i18n.language}/admin/dashboard`;
       case 'AFFILIATE':
-        return `/${locale}/affiliate/dashboard`;
+        return `/${i18n.language}/affiliate/dashboard`;
       default:
-        return `/${locale}/${getBasePath()}`;
+        return `/${i18n.language}/${getBasePath()}`;
     }
   };
 
   const basePath = getBasePath();
 
   const handleNavigate = (path: string) => {
-    navigate(`/${locale}/${basePath}/${path}`);
+    navigate(`/${i18n.language}/${basePath}/${path}`);
   };
 
   const getInitials = (name?: string | null) => {
