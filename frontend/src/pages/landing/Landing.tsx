@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { LanguageSelector } from '@/components/shared/LanguageSelector';
 import { Button } from '@/components/ui/button';
+import { trackView, submitLead, type Language } from '@/lib/api/landing-pages';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -55,61 +55,10 @@ const leadFormSchema = z.object({
 
 type LeadFormData = z.infer<typeof leadFormSchema>;
 
-// Header Component
-function Header() {
-  const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
-  const [isLoginLoading, setIsLoginLoading] = useState(false);
-  const [isSignupLoading, setIsSignupLoading] = useState(false);
-
-  const handleLoginClick = () => {
-    setIsLoginLoading(true);
-    navigate(`/${i18n.language}/login`);
-  };
-
-  const handleSignupClick = () => {
-    setIsSignupLoading(true);
-    navigate(`/${i18n.language}/register`);
-  };
-
-  return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex animate-fade-right-fast items-center gap-2">
-          <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-2xl font-bold text-transparent">
-            {t('app.name')}
-          </span>
-        </div>
-        <div className="flex items-center gap-4">
-          <LanguageSelector />
-          <Button type="button" variant="ghost" className="animate-fade-left-fast" onClick={handleLoginClick} disabled={isLoginLoading}>
-            {isLoginLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('nav.login')}
-          </Button>
-          <Button type="button" className="animate-fade-left" onClick={handleSignupClick} disabled={isSignupLoading}>
-            {isSignupLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('nav.signup')}
-          </Button>
-        </div>
-      </div>
-    </header>
-  );
-}
-
 // Hero Section
 function HeroSection() {
   const { t, i18n } = useTranslation('hero');
   const navigate = useNavigate();
-  const [isPrimaryLoading, setIsPrimaryLoading] = useState(false);
-  const [isSecondaryLoading, setIsSecondaryLoading] = useState(false);
-
-  const handlePrimaryClick = () => {
-    setIsPrimaryLoading(true);
-    navigate(`/${i18n.language}/register`);
-  };
-
-  const handleSecondaryClick = () => {
-    setIsSecondaryLoading(true);
-    navigate(`/${i18n.language}/login`);
-  };
 
   return (
     <section className="py-20 md:py-32">
@@ -123,11 +72,11 @@ function HeroSection() {
               {t('subtitle')}
             </p>
             <div className="flex animate-fade-up-slow flex-col gap-4 sm:flex-row">
-              <Button type="button" size="lg" className="text-lg" onClick={handlePrimaryClick} disabled={isPrimaryLoading}>
-                {isPrimaryLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : t('cta.primary')}
+              <Button type="button" size="lg" className="text-lg" onClick={() => navigate(`/${i18n.language}/register`)}>
+                {t('cta.primary')}
               </Button>
-              <Button type="button" size="lg" variant="outline" className="text-lg" onClick={handleSecondaryClick} disabled={isSecondaryLoading}>
-                {isSecondaryLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : t('cta.secondary')}
+              <Button type="button" size="lg" variant="outline" className="text-lg" onClick={() => navigate(`/${i18n.language}/login`)}>
+                {t('cta.secondary')}
               </Button>
             </div>
             <div className="grid animate-fade-up-very-slow grid-cols-3 gap-6 pt-8">
@@ -163,7 +112,7 @@ function StatsCard({ label, value }: { label: string; value: string }) {
 
 // How It Works Section
 function HowItWorksSection() {
-  const { t, i18n } = useTranslation('howItWorks');
+  const { t } = useTranslation('howItWorks');
 
   const steps = [
     {
@@ -212,7 +161,7 @@ function HowItWorksSection() {
 
 // Features Section
 function FeaturesSection() {
-  const { t, i18n } = useTranslation('features');
+  const { t } = useTranslation('features');
 
   const features = [
     {
@@ -274,7 +223,7 @@ function FeaturesSection() {
 
 // Reader Benefits Section
 function ReaderBenefitsSection() {
-  const { t, i18n } = useTranslation('readerBenefits');
+  const { t } = useTranslation('readerBenefits');
 
   const benefits = [
     {
@@ -321,7 +270,7 @@ function ReaderBenefitsSection() {
 
 // Testimonials Section - Per Requirements 10.1
 function TestimonialsSection() {
-  const { t, i18n } = useTranslation('testimonials');
+  const { t } = useTranslation('testimonials');
 
   const testimonials = [
     { quoteKey: 'items.t1.quote', authorKey: 'items.t1.author', titleKey: 'items.t1.title', rating: 5, photo: 'https://randomuser.me/api/portraits/women/44.jpg' },
@@ -405,12 +354,6 @@ function TestimonialsSection() {
 function PricingSection() {
   const { t, i18n } = useTranslation('pricing');
   const navigate = useNavigate();
-  const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
-
-  const handleGetStarted = (index: number) => {
-    setLoadingIndex(index);
-    navigate(`/${i18n.language}/register`);
-  };
 
   const packages = [
     {
@@ -500,8 +443,8 @@ function PricingSection() {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full" variant={pkg.popular ? 'default' : 'outline'} onClick={() => handleGetStarted(index)} disabled={loadingIndex === index}>
-                  {loadingIndex === index ? <Loader2 className="h-4 w-4 animate-spin" /> : t('cta')}
+                <Button className="w-full" variant={pkg.popular ? 'default' : 'outline'} onClick={() => navigate(`/${i18n.language}/register`)}>
+                  {t('cta')}
                 </Button>
               </CardContent>
             </Card>
@@ -549,19 +492,16 @@ function LeadCaptureForm() {
     setUtmParams(params);
 
     // Track page view
-    fetch(`${import.meta.env.VITE_API_URL}/api/v1/landing-pages/track-view`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        language: i18n.language.toUpperCase(),
-        source: params.utm_source,
-        medium: params.utm_medium,
-        campaign: params.utm_campaign,
-        content: params.utm_content,
-        term: params.utm_term,
-        affiliateRef: params.ref,
-        referrer: document.referrer || undefined }) }).catch(() => {
+    trackView({
+      language: i18n.language.toUpperCase() as Language,
+      source: params.utm_source,
+      medium: params.utm_medium,
+      campaign: params.utm_campaign,
+      content: params.utm_content,
+      term: params.utm_term,
+      affiliateRef: params.ref,
+      referrer: document.referrer || undefined,
+    }).catch(() => {
       // Silent fail for tracking
     });
   }, [searchParams, i18n.language]);
@@ -578,59 +518,45 @@ function LeadCaptureForm() {
       if (isRecaptchaEnabled) {
         try {
           captchaToken = await executeRecaptcha('lead_capture');
-        } catch (captchaError) {
+        } catch {
           toast.error('Security verification failed. Please try again.');
           setIsSubmitting(false);
           return;
         }
       }
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/landing-pages/leads`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...data,
-            language: i18n.language.toUpperCase(),
-            source: utmParams.utm_source,
-            medium: utmParams.utm_medium,
-            campaign: utmParams.utm_campaign,
-            content: utmParams.utm_content,
-            term: utmParams.utm_term,
-            affiliateRef: utmParams.ref,
-            referrer: document.referrer || undefined,
-            captchaToken, // Section 15.2: CAPTCHA token for bot protection
-          }) },
-      );
+      const result = await submitLead({
+        email: data.email,
+        name: data.name,
+        userType: data.userType || 'both',
+        marketingConsent: data.marketingConsent ?? false,
+        language: i18n.language.toUpperCase() as Language,
+        source: utmParams.utm_source,
+        medium: utmParams.utm_medium,
+        campaign: utmParams.utm_campaign,
+        content: utmParams.utm_content,
+        term: utmParams.utm_term,
+        affiliateRef: utmParams.ref,
+        referrer: document.referrer || undefined,
+        captchaToken, // Section 15.2: CAPTCHA token for bot protection
+      });
 
-      if (response.ok) {
-        const result = await response.json();
-        // Check if this is a duplicate submission (already on waitlist)
-        if (result.message?.includes('already')) {
-          toast.info(t('alreadySubscribed'));
-        } else {
-          toast.success(t('success'));
-        }
-        setIsSubmitted(true);
-        reset();
+      // Check if this is a duplicate submission (already on waitlist)
+      if (result.message?.includes('already')) {
+        toast.info(t('alreadySubscribed'));
       } else {
-        // Handle error response - check for CAPTCHA failure
-        try {
-          const errorResult = await response.json();
-          if (errorResult.message?.includes('CAPTCHA')) {
-            toast.error('Security verification failed. Please try again.');
-          } else {
-            toast.error(t('error'));
-          }
-        } catch {
-          toast.error(t('error'));
-        }
+        toast.success(t('success'));
       }
-    } catch (error) {
-      toast.error(t('error'));
-    } finally {
+      setIsSubmitted(true);
+      reset();
+    } catch (error: unknown) {
+      // Handle error response - check for CAPTCHA failure
+      const err = error as { response?: { data?: { message?: string } } };
+      if (err.response?.data?.message?.includes('CAPTCHA')) {
+        toast.error('Security verification failed. Please try again.');
+      } else {
+        toast.error(t('error'));
+      }
       setIsSubmitting(false);
     }
   };
@@ -722,7 +648,7 @@ function LeadCaptureForm() {
 
 // FAQ Section
 function FAQSection() {
-  const { t, i18n } = useTranslation('faq');
+  const { t } = useTranslation('faq');
 
   const faqItems = [
     { id: 'q1', questionKey: 'items.q1.question', answerKey: 'items.q1.answer' },
@@ -768,7 +694,7 @@ function FAQSection() {
 
 // Contact Section
 function ContactSection() {
-  const { t, i18n } = useTranslation('contact');
+  const { t } = useTranslation('contact');
 
   return (
     <section id="contact" className="bg-muted/50 py-20">
@@ -812,126 +738,6 @@ function ContactSection() {
         </div>
       </div>
     </section>
-  );
-}
-
-// Footer Component
-function Footer() {
-  const { t, i18n } = useTranslation('footer');
-  const navigate = useNavigate();
-  const [isPrivacyLoading, setIsPrivacyLoading] = useState(false);
-  const [isTermsLoading, setIsTermsLoading] = useState(false);
-  const [isCookiesLoading, setIsCookiesLoading] = useState(false);
-
-  return (
-    <footer className="border-t bg-background py-12">
-      <div className="container">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          <div className="animate-fade-right">
-            <h3 className="mb-4 text-lg font-bold">{t('links.product.title')}</h3>
-            <ul className="space-y-2">
-              <li>
-                <span
-                  className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  {t('links.product.features')}
-                </span>
-              </li>
-              <li>
-                <span
-                  className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  {t('links.product.pricing')}
-                </span>
-              </li>
-              <li>
-                <span
-                  className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  {t('links.product.faq')}
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div className="animate-fade-up">
-            <h3 className="mb-4 text-lg font-bold">{t('links.company.title')}</h3>
-            <ul className="space-y-2">
-              <li>
-                <span
-                  className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  {t('links.company.about')}
-                </span>
-              </li>
-              <li>
-                <span
-                  className="cursor-pointer text-muted-foreground hover:text-foreground"
-                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  {t('links.company.contact')}
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div className="animate-fade-down">
-            <h3 className="mb-4 text-lg font-bold">{t('links.legal.title')}</h3>
-            <ul className="space-y-2">
-              <li>
-                <span
-                  className={`cursor-pointer text-muted-foreground hover:text-foreground flex items-center gap-2 ${isPrivacyLoading ? 'opacity-70' : ''}`}
-                  onClick={() => {
-                    if (isPrivacyLoading) return;
-                    setIsPrivacyLoading(true);
-                    navigate(`/${i18n.language}/privacy`);
-                  }}
-                >
-                  {isPrivacyLoading && <Loader2 className="h-3 w-3 animate-spin" />}
-                  {t('links.legal.privacy')}
-                </span>
-              </li>
-              <li>
-                <span
-                  className={`cursor-pointer text-muted-foreground hover:text-foreground flex items-center gap-2 ${isTermsLoading ? 'opacity-70' : ''}`}
-                  onClick={() => {
-                    if (isTermsLoading) return;
-                    setIsTermsLoading(true);
-                    navigate(`/${i18n.language}/terms`);
-                  }}
-                >
-                  {isTermsLoading && <Loader2 className="h-3 w-3 animate-spin" />}
-                  {t('links.legal.terms')}
-                </span>
-              </li>
-              <li>
-                <span
-                  className={`cursor-pointer text-muted-foreground hover:text-foreground flex items-center gap-2 ${isCookiesLoading ? 'opacity-70' : ''}`}
-                  onClick={() => {
-                    if (isCookiesLoading) return;
-                    setIsCookiesLoading(true);
-                    navigate(`/${i18n.language}/cookies`);
-                  }}
-                >
-                  {isCookiesLoading && <Loader2 className="h-3 w-3 animate-spin" />}
-                  {t('links.legal.cookies')}
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div className="animate-fade-left">
-            <h3 className="mb-4 text-lg font-bold">BookProof</h3>
-            <p className="mb-4 text-sm text-muted-foreground">{t('tagline')}</p>
-            <LanguageSelector />
-          </div>
-        </div>
-        <div className="mt-12 border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>{t('copyright')}</p>
-        </div>
-      </div>
-    </footer>
   );
 }
 

@@ -360,4 +360,8 @@ export const router = createBrowserRouter([
 
   // 404
   { path: '*', element: <div className="flex min-h-screen items-center justify-center"><h1 className="text-2xl font-bold">Page Not Found</h1></div> },
-]);
+], {
+  future: {
+    v7_startTransition: true,
+  },
+});
