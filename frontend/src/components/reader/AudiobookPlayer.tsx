@@ -47,7 +47,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
     // Build full URL with token for authentication
     // The audioUrl from backend is: /api/queue/assignments/:id/stream-audio
     // We need to add the API base URL and token
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
     const fullUrl = audioUrl.startsWith('/api/')
       ? `${baseUrl}/api/v1${audioUrl.replace('/api', '')}?token=${encodeURIComponent(token)}`
       : `${audioUrl}?token=${encodeURIComponent(token)}`;

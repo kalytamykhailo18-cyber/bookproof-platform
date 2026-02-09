@@ -1,4 +1,4 @@
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { LanguageSelector } from '@/components/shared/LanguageSelector';
 import { Button } from '@/components/ui/button';
@@ -551,7 +551,7 @@ function LeadCaptureForm() {
     setUtmParams(params);
 
     // Track page view
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/landing-pages/track-view`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/v1/landing-pages/track-view`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json' },
@@ -588,7 +588,7 @@ function LeadCaptureForm() {
       }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/landing-pages/leads`,
+        `${import.meta.env.VITE_API_URL}/api/v1/landing-pages/leads`,
         {
           method: 'POST',
           headers: {

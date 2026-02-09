@@ -1,6 +1,6 @@
 import i18n from 'i18next';
-import { initReactI18next } from 'node_modules/react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector/cjs';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 
 // English translations
 import enAdminAffiliateDetails from '../locales/en/admin-affiliate-details.json';

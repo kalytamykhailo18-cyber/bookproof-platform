@@ -132,7 +132,7 @@ export function AssignmentDetailPage({ params }: { params: { id: string } }) {
         return;
       }
 
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
       const authenticatedUrl = assignment.ebookStreamUrl.startsWith('/api/')
         ? `${baseUrl}/api/v1${assignment.ebookStreamUrl.replace('/api', '')}?token=${encodeURIComponent(token)}`
         : `${assignment.ebookStreamUrl}?token=${encodeURIComponent(token)}`;
@@ -157,7 +157,7 @@ export function AssignmentDetailPage({ params }: { params: { id: string } }) {
         return;
       }
 
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
       const authenticatedUrl = assignment.synopsisStreamUrl.startsWith('/api/')
         ? `${baseUrl}/api/v1${assignment.synopsisStreamUrl.replace('/api', '')}?token=${encodeURIComponent(token)}`
         : `${assignment.synopsisStreamUrl}?token=${encodeURIComponent(token)}`;
