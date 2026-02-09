@@ -148,7 +148,10 @@ export function AdminSidebar() {
 
   const isActive = (href: string) => {
     const hrefWithoutLocale = href.replace(`/${i18n.language}`, '');
-    return pathname === hrefWithoutLocale;
+    // Normalize paths by removing trailing slashes for comparison
+    const normalizedPathname = pathname.replace(/\/$/, '');
+    const normalizedHref = hrefWithoutLocale.replace(/\/$/, '');
+    return normalizedPathname === normalizedHref;
   };
 
   return (

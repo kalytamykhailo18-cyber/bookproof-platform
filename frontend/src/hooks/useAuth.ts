@@ -174,7 +174,7 @@ export function useAuth() {
   } = useQuery({
     queryKey: ['user'],
     queryFn: authApi.getProfile,
-    enabled: isAuthenticated && !!tokenManager.getToken(),
+    enabled: !!tokenManager.getToken(),
     retry: false,
     staleTime: 5 * 60 * 1000, // 5 minutes - don't refetch if data is fresh
     gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
