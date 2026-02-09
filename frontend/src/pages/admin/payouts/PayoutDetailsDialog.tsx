@@ -1,4 +1,4 @@
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { PayoutResponse } from '@/lib/api/payouts';
 import {
@@ -20,7 +20,7 @@ export default function PayoutDetailsDialog({
   payout,
   open,
   onOpenChange }: PayoutDetailsDialogProps) {
-  const { t } = useTranslation('admin-payouts');
+  const { t, i18n } = useTranslation('admin-payouts');
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

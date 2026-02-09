@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -56,13 +56,11 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export function EditKeywordResearchPage() {
-  const { t } = useTranslation('keyword-research');
+  const { t, i18n } = useTranslation('keyword-research');
   const tNew = useTranslations('keyword-research.new');
   const tEdit = useTranslations('keyword-research.edit');
-  const params = useParams();
   const navigate = useNavigate();
   const id = params.id as string;
-  const locale = (params.locale as string) || 'en';
 
   const { data: research, isLoading } = useKeywordResearch(id);
   const updateMutation = useUpdateKeywordResearch();
@@ -107,7 +105,7 @@ export function EditKeywordResearchPage() {
     const data = form.getValues();
     try {
       await updateMutation.mutateAsync({ id, data });
-      navigate(`/${locale}/author/keyword-research/${id}`);
+      navigate(`/${i18n.language}/author/keyword-research/${id}`);
     } catch (error) {
       console.error('Failed to update keyword research:', error);
     }
@@ -177,7 +175,7 @@ export function EditKeywordResearchPage() {
           <AlertDescription>{tEdit('cannotEdit')}</AlertDescription>
         </Alert>
         <div className="mt-4">
-          <Button type="button" variant="outline" onClick={() => navigate(`/${locale}/author/keyword-research/${id}`)}>
+          <Button type="button" variant="outline" onClick={() => navigate(`/${i18n.language}/author/keyword-research/${id}`)}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Details
           </Button>
@@ -192,7 +190,7 @@ export function EditKeywordResearchPage() {
       <div className="mb-8">
         <Button
           variant="ghost"
-          onClick={() => navigate(`/${locale}/author/keyword-research/${id}`)}
+          onClick={() => navigate(`/${i18n.language}/author/keyword-research/${id}`)}
           className="mb-4"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -433,7 +431,7 @@ export function EditKeywordResearchPage() {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate(`/${locale}/author/keyword-research/${id}`)}
+              onClick={() => navigate(`/${i18n.language}/author/keyword-research/${id}`)}
             >
               Cancel
             </Button>

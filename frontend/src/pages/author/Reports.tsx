@@ -1,4 +1,4 @@
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -19,7 +19,7 @@ import { Progress } from '@/components/ui/progress';
 import { useMemo } from 'react';
 
 export function ReportsPage() {
-  const { t } = useTranslation('reports');
+  const { t, i18n } = useTranslation('reports');
   const { data: reports, isLoading: reportsLoading } = useReports();
   const { campaigns, isLoadingCampaigns } = useCampaigns();
   const { mutate: downloadReport, isPending: isDownloading } = useDownloadReport();

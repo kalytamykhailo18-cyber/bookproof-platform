@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
   useAffiliateProfile,
   useAffiliateStats,
@@ -42,10 +42,8 @@ import { formatDate } from '@/lib/utils';
 import { CommissionStatus, PayoutRequestStatus } from '@/lib/api/affiliates';
 
 export function AffiliateDashboardPage() {
-  const { t } = useTranslation('affiliates.dashboard');
+  const { t, i18n } = useTranslation('affiliates.dashboard');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { data: profile, isLoading: profileLoading } = useAffiliateProfile();
   const { data: stats, isLoading: statsLoading } = useAffiliateStats();
   const { data: chartData, isLoading: chartLoading } = useAffiliateChartData();
@@ -135,7 +133,7 @@ export function AffiliateDashboardPage() {
               className="ml-2 h-auto p-0"
               onClick={() => {
                 setIsRegisterLoading(true);
-                navigate(`/${locale}/affiliate/register`);
+                navigate(`/${i18n.language}/affiliate/register`);
               }}
               disabled={isRegisterLoading}
             >
@@ -178,7 +176,7 @@ export function AffiliateDashboardPage() {
             type="button"
             onClick={() => {
               setIsReferralLinksLoading(true);
-              navigate(`/${locale}/affiliate/referral-links`);
+              navigate(`/${i18n.language}/affiliate/referral-links`);
             }}
             disabled={isReferralLinksLoading}
           >
@@ -190,7 +188,7 @@ export function AffiliateDashboardPage() {
             variant="outline"
             onClick={() => {
               setIsReferredAuthorsLoading(true);
-              navigate(`/${locale}/affiliate/referred-authors`);
+              navigate(`/${i18n.language}/affiliate/referred-authors`);
             }}
             disabled={isReferredAuthorsLoading}
           >
@@ -202,7 +200,7 @@ export function AffiliateDashboardPage() {
             variant="outline"
             onClick={() => {
               setIsPayoutsNavLoading(true);
-              navigate(`/${locale}/affiliate/payouts`);
+              navigate(`/${i18n.language}/affiliate/payouts`);
             }}
             disabled={isPayoutsNavLoading}
           >
@@ -416,7 +414,7 @@ export function AffiliateDashboardPage() {
               size="sm"
               onClick={() => {
                 setIsCommissionsLoading(true);
-                navigate(`/${locale}/affiliate/commissions`);
+                navigate(`/${i18n.language}/affiliate/commissions`);
               }}
               disabled={isCommissionsLoading}
             >
@@ -477,7 +475,7 @@ export function AffiliateDashboardPage() {
               size="sm"
               onClick={() => {
                 setIsPayoutsViewLoading(true);
-                navigate(`/${locale}/affiliate/payouts`);
+                navigate(`/${i18n.language}/affiliate/payouts`);
               }}
               disabled={isPayoutsViewLoading}
             >

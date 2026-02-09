@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Edit, TrendingUp, Trash2, Loader2 } from 'lucide-react';
 import { useCoupon, useDeleteCoupon } from '@/hooks/useCoupons';
@@ -21,11 +21,9 @@ import {
 import { formatDate } from '@/lib/utils';
 
 export function CouponDetailPage() {
-  const { t } = useTranslation('adminCoupons');
-  const params = useParams();
+  const { t, i18n } = useTranslation('adminCoupons');
   const navigate = useNavigate();
   const id = params.id as string;
-  const locale = params.locale as string;
 
   const { data: coupon, isLoading } = useCoupon(id);
   const deleteMutation = useDeleteCoupon();
@@ -36,7 +34,7 @@ export function CouponDetailPage() {
 
   const handleDelete = async () => {
     await deleteMutation.mutateAsync(id);
-    navigate(`/${locale}/admin/coupons`);
+    navigate(`/${i18n.language}/admin/coupons`);
   };
 
   const getCouponTypeBadge = (type: CouponType) => {
@@ -120,7 +118,7 @@ export function CouponDetailPage() {
             size="icon"
             onClick={() => {
               setIsBackLoading(true);
-              navigate(`/${locale}/admin/coupons`);
+              navigate(`/${i18n.language}/admin/coupons`);
             }}
             disabled={isBackLoading}
           >
@@ -137,7 +135,7 @@ export function CouponDetailPage() {
             variant="outline"
             onClick={() => {
               setIsUsageLoading(true);
-              navigate(`/${locale}/admin/coupons/${id}/usage`);
+              navigate(`/${i18n.language}/admin/coupons/${id}/usage`);
             }}
             disabled={isUsageLoading}
           >
@@ -149,7 +147,7 @@ export function CouponDetailPage() {
             variant="outline"
             onClick={() => {
               setIsEditLoading(true);
-              navigate(`/${locale}/admin/coupons/${id}/edit`);
+              navigate(`/${i18n.language}/admin/coupons/${id}/edit`);
             }}
             disabled={isEditLoading}
           >

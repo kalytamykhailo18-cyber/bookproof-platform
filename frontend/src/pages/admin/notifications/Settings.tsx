@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import {
   useNotificationSettings,
@@ -40,10 +40,8 @@ const notificationTypes = [
 ];
 
 export function NotificationSettingsPage() {
-  const { t } = useTranslation('notifications.settings');
+  const { t, i18n } = useTranslation('notifications.settings');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { data: settings, isLoading } = useNotificationSettings();
   const { mutate: updateSettings, isPending } = useUpdateNotificationSettings();
   const [isBackLoading, setIsBackLoading] = useState(false);
@@ -104,7 +102,7 @@ export function NotificationSettingsPage() {
           className="mb-4"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/admin/notifications`);
+            navigate(`/${i18n.language}/admin/notifications`);
           }}
           disabled={isBackLoading}
         >

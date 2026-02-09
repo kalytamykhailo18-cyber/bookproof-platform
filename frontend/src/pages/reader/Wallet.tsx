@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import {
   DollarSign,
@@ -57,10 +57,8 @@ const transactionColors: Record<WalletTransactionType, string> = {
   REVERSAL: 'text-orange-500' };
 
 export function WalletPage() {
-  const { t } = useTranslation('payouts');
+  const { t, i18n } = useTranslation('payouts');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { stats, isLoadingStats: statsLoading } = useReaderStats();
   const { profile, isLoadingProfile } = useReaderProfile();
   const { data: payouts, isLoading: payoutsLoading } = useMyPayouts();
@@ -104,7 +102,7 @@ export function WalletPage() {
           className="animate-fade-left-fast"
           onClick={() => {
             setIsPayoutLoading(true);
-            navigate(`/${locale}/reader/wallet/payout`);
+            navigate(`/${i18n.language}/reader/wallet/payout`);
           }}
         >
           {isPayoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
@@ -245,7 +243,7 @@ export function WalletPage() {
                 disabled={availableBalance < 50 || isPayoutLoading}
                 onClick={() => {
                   setIsPayoutLoading(true);
-                  navigate(`/${locale}/reader/wallet/payout`);
+                  navigate(`/${i18n.language}/reader/wallet/payout`);
                 }}
               >
                 {isPayoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}

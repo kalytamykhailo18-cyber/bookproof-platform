@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -72,10 +72,8 @@ const processPayoutSchema = z
 type ProcessPayoutFormData = z.infer<typeof processPayoutSchema>;
 
 export function AdminAffiliatePayoutsPage() {
-  const { t } = useTranslation('adminAffiliatePayouts');
+  const { t, i18n } = useTranslation('adminAffiliatePayouts');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const [statusFilter, setStatusFilter] = useState<PayoutRequestStatus | undefined>(undefined);
   const [selectedPayout, setSelectedPayout] = useState<PayoutResponseDto | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -172,7 +170,7 @@ export function AdminAffiliatePayoutsPage() {
           size="sm"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/admin/affiliates`);
+            navigate(`/${i18n.language}/admin/affiliates`);
           }}
           disabled={isBackLoading}
         >

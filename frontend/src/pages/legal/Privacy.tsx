@@ -18,8 +18,6 @@ import { Loader2 } from 'lucide-react';
  */
 export function PrivacyPolicyPage() {
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const [isTermsLoading, setIsTermsLoading] = useState(false);
   const [isCookiesLoading, setIsCookiesLoading] = useState(false);
 
@@ -338,7 +336,7 @@ export function PrivacyPolicyPage() {
                   onClick={() => {
                     if (isTermsLoading) return;
                     setIsTermsLoading(true);
-                    navigate(`/${locale}/terms`);
+                    navigate(`/${i18n.language}/terms`);
                   }}
                   className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isTermsLoading ? 'opacity-70' : ''}`}
                 >
@@ -349,7 +347,7 @@ export function PrivacyPolicyPage() {
                   onClick={() => {
                     if (isCookiesLoading) return;
                     setIsCookiesLoading(true);
-                    navigate(`/${locale}/cookies`);
+                    navigate(`/${i18n.language}/cookies`);
                   }}
                   className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isCookiesLoading ? 'opacity-70' : ''}`}
                 >

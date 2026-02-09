@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useReferralLink, useAffiliateStats } from '@/hooks/useAffiliates';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { Copy, CheckCircle, MousePointerClick, Users, TrendingUp, Share2, QrCode, Download } from 'lucide-react';
 
 export function AffiliateReferralLinksPage() {
-  const { t } = useTranslation('affiliates.referralLinks');
+  const { t, i18n } = useTranslation('affiliates.referralLinks');
   const { data: referralLinkData, isLoading } = useReferralLink();
   const { data: stats } = useAffiliateStats();
   const [copied, setCopied] = useState(false);

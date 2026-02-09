@@ -1,4 +1,4 @@
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate,  useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import {
@@ -25,12 +25,10 @@ import { KeywordResearchStatus, TargetMarket } from '@/lib/api/keywords';
 import { toast } from 'sonner';
 
 export function KeywordResearchDetailsPage() {
-  const { t } = useTranslation('keyword-research.details');
-  const params = useParams();
+  const { t, i18n } = useTranslation('keyword-research.details');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const id = params.id as string;
-  const locale = (params.locale as string) || 'en';
 
   const { data: research, isLoading, refetch } = useKeywordResearch(id);
   const downloadMutation = useDownloadKeywordResearchPdf();
@@ -46,10 +44,10 @@ export function KeywordResearchDetailsPage() {
       // Refetch to get updated status
       refetch();
       // Clean up URL
-      navigate(`/${locale}/author/keyword-research/${id}`);
+      navigate(`/${i18n.language}/author/keyword-research/${id}`);
     } else if (cancelled === 'true') {
       toast.error('Payment was cancelled. Please try again.');
-      navigate(`/${locale}/author/keyword-research/${id}`);
+      navigate(`/${i18n.language}/author/keyword-research/${id}`);
     }
   }, [searchParams, id, router, refetch]);
 
@@ -58,7 +56,7 @@ export function KeywordResearchDetailsPage() {
   };
 
   const handleEdit = () => {
-    navigate(`/${locale}/author/keyword-research/${id}/edit`);
+    navigate(`/${i18n.language}/author/keyword-research/${id}/edit`);
   };
 
   const handlePayNow = () => {
@@ -66,8 +64,8 @@ export function KeywordResearchDetailsPage() {
     checkoutMutation.mutate({
       id,
       data: {
-        successUrl: `${baseUrl}/${locale}/author/keyword-research/${id}?success=true`,
-        cancelUrl: `${baseUrl}/${locale}/author/keyword-research/${id}?cancelled=true` } });
+        successUrl: `${baseUrl}/${i18n.language}/author/keyword-research/${id}?success=true`,
+        cancelUrl: `${baseUrl}/${i18n.language}/author/keyword-research/${id}?cancelled=true` } });
   };
 
   const getStatusColor = (status: KeywordResearchStatus) => {

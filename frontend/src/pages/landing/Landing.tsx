@@ -163,7 +163,7 @@ function StatsCard({ label, value }: { label: string; value: string }) {
 
 // How It Works Section
 function HowItWorksSection() {
-  const { t } = useTranslation('howItWorks');
+  const { t, i18n } = useTranslation('howItWorks');
 
   const steps = [
     {
@@ -212,7 +212,7 @@ function HowItWorksSection() {
 
 // Features Section
 function FeaturesSection() {
-  const { t } = useTranslation('features');
+  const { t, i18n } = useTranslation('features');
 
   const features = [
     {
@@ -274,7 +274,7 @@ function FeaturesSection() {
 
 // Reader Benefits Section
 function ReaderBenefitsSection() {
-  const { t } = useTranslation('readerBenefits');
+  const { t, i18n } = useTranslation('readerBenefits');
 
   const benefits = [
     {
@@ -321,7 +321,7 @@ function ReaderBenefitsSection() {
 
 // Testimonials Section - Per Requirements 10.1
 function TestimonialsSection() {
-  const { t } = useTranslation('testimonials');
+  const { t, i18n } = useTranslation('testimonials');
 
   const testimonials = [
     { quoteKey: 'items.t1.quote', authorKey: 'items.t1.author', titleKey: 'items.t1.title', rating: 5, photo: 'https://randomuser.me/api/portraits/women/44.jpg' },
@@ -722,7 +722,7 @@ function LeadCaptureForm() {
 
 // FAQ Section
 function FAQSection() {
-  const { t } = useTranslation('faq');
+  const { t, i18n } = useTranslation('faq');
 
   const faqItems = [
     { id: 'q1', questionKey: 'items.q1.question', answerKey: 'items.q1.answer' },
@@ -768,7 +768,7 @@ function FAQSection() {
 
 // Contact Section
 function ContactSection() {
-  const { t } = useTranslation('contact');
+  const { t, i18n } = useTranslation('contact');
 
   return (
     <section id="contact" className="bg-muted/50 py-20">
@@ -939,19 +939,15 @@ function Footer() {
 export function LandingPage() {
   return (
     <>
-      <Header />
-      <main>
-        <HeroSection />
-        <HowItWorksSection />
-        <FeaturesSection />
-        <ReaderBenefitsSection />
-        <PricingSection />
-        <TestimonialsSection />
-        <FAQSection />
-        <LeadCaptureForm />
-        <ContactSection />
-      </main>
-      <Footer />
+      <HeroSection />
+      <HowItWorksSection />
+      <FeaturesSection />
+      <ReaderBenefitsSection />
+      <PricingSection />
+      <TestimonialsSection />
+      <FAQSection />
+      <LeadCaptureForm />
+      <ContactSection />
     </>
   );
 }

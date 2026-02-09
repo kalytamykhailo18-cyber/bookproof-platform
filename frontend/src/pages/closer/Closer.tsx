@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
   useCloserDashboardStats,
   useCloserPackageStats,
@@ -28,10 +28,8 @@ import {
 import { useNavigate,  useParams } from 'react-router-dom';
 
 export function CloserDashboardPage() {
-  const { t } = useTranslation('closer');
+  const { t, i18n } = useTranslation('closer');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = params.locale as string;
   const { data: stats, isLoading: statsLoading } = useCloserDashboardStats();
   const { data: packageStats, isLoading: packageStatsLoading } = useCloserPackageStats();
   const { data: salesHistory, isLoading: salesLoading } = useCloserSalesHistory(5);
@@ -82,7 +80,7 @@ export function CloserDashboardPage() {
           type="button"
           onClick={() => {
             setIsCreateLoading(true);
-            navigate(`/${locale}/closer/packages/new`);
+            navigate(`/${i18n.language}/closer/packages/new`);
           }}
           disabled={isCreateLoading}
         >
@@ -257,7 +255,7 @@ export function CloserDashboardPage() {
             size="sm"
             onClick={() => {
               setIsViewAllLoading(true);
-              navigate(`/${locale}/closer/sales`);
+              navigate(`/${i18n.language}/closer/sales`);
             }}
             disabled={isViewAllLoading}
           >

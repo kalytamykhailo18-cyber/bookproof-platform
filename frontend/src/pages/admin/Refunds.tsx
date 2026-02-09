@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
   useAdminRefundRequests,
   useProcessRefundRequest } from '@/hooks/useRefunds';
@@ -81,7 +81,7 @@ const getReasonLabel = (reason: RefundReason) => {
 };
 
 export function AdminRefundsPage() {
-  const { t } = useTranslation('adminRefunds');
+  const { t, i18n } = useTranslation('adminRefunds');
 
   const [statusFilter, setStatusFilter] = useState<RefundRequestStatus | 'all'>('all');
   const [page, setPage] = useState(0);

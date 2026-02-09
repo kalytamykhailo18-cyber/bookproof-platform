@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -83,11 +83,9 @@ const STEPS = ['basic', 'details', 'settings'] as const;
 type Step = (typeof STEPS)[number];
 
 export function EditCampaignPage() {
-  const params = useParams();
   const navigate = useNavigate();
   const campaignId = params.id as string;
-  const locale = (params.locale as string) || 'en';
-  const { t } = useTranslation('author.campaigns.edit');
+  const { t, i18n } = useTranslation('author.campaigns.edit');
   const tNew = useTranslations('author.campaigns.new');
 
   const { campaign, isLoading: isLoadingCampaign } = useCampaign(campaignId);
@@ -172,7 +170,7 @@ export function EditCampaignPage() {
       { id: campaignId, data: cleanData },
       {
         onSuccess: () => {
-          navigate(`/${locale}/author/campaigns/${campaignId}`);
+          navigate(`/${i18n.language}/author/campaigns/${campaignId}`);
         } },
     );
   };
@@ -195,7 +193,7 @@ export function EditCampaignPage() {
               type="button"
               onClick={() => {
                 setIsDashboardLoading(true);
-                navigate(`/${locale}/author`);
+                navigate(`/${i18n.language}/author`);
               }}
               className="mt-4"
               disabled={isDashboardLoading}
@@ -220,7 +218,7 @@ export function EditCampaignPage() {
               type="button"
               onClick={() => {
                 setIsCampaignLoading(true);
-                navigate(`/${locale}/author/campaigns/${campaignId}`);
+                navigate(`/${i18n.language}/author/campaigns/${campaignId}`);
               }}
               className="mt-4"
               disabled={isCampaignLoading}
@@ -243,7 +241,7 @@ export function EditCampaignPage() {
           variant="ghost"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/author/campaigns/${campaignId}`);
+            navigate(`/${i18n.language}/author/campaigns/${campaignId}`);
           }}
           className="mb-4"
           disabled={isBackLoading}

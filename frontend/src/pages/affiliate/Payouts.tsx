@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -52,7 +52,7 @@ const requestPayoutSchema = z.object({
 type RequestPayoutFormData = z.infer<typeof requestPayoutSchema>;
 
 export function AffiliatePayoutsPage() {
-  const { t } = useTranslation('affiliates.payouts');
+  const { t, i18n } = useTranslation('affiliates.payouts');
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { data: stats, isLoading: statsLoading } = useAffiliateStats();

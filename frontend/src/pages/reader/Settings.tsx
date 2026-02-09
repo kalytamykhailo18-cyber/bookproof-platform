@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
   Download,
   Trash2,
@@ -44,10 +44,8 @@ import {
  * - Consent management
  */
 export function SettingsPage() {
-  const { t } = useTranslation('settings');
+  const { t, i18n } = useTranslation('settings');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const {
     exportData,
     isExporting,

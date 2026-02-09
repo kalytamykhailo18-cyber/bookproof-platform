@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -59,9 +59,7 @@ interface LandingPageContent {
 }
 
 export function LandingPageContentEditor() {
-  const params = useParams();
-  const locale = params.locale as string;
-  const { t } = useTranslation('admin-landing-pages');
+  const { t, i18n } = useTranslation('admin-landing-pages');
 
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('EN');
   const { data: landingPage, isLoading } = useLandingPage(selectedLanguage);

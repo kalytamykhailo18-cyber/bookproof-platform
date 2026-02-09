@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate,  useParams } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useCreatePackage } from '@/hooks/useCloser';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,10 +17,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeft, Save, Search, Loader2 } from 'lucide-react';
 
 export function CreatePackagePage() {
-  const { t } = useTranslation('closer');
+  const { t, i18n } = useTranslation('closer');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = params.locale as string;
   const createPackage = useCreatePackage();
 
   const [isBackLoading, setIsBackLoading] = useState(false);
@@ -61,7 +59,7 @@ export function CreatePackagePage() {
       },
       {
         onSuccess: () => {
-          navigate(`/${locale}/closer/packages`);
+          navigate(`/${i18n.language}/closer/packages`);
         } },
     );
   };
@@ -84,7 +82,7 @@ export function CreatePackagePage() {
           size="icon"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/closer/packages`);
+            navigate(`/${i18n.language}/closer/packages`);
           }}
           disabled={isBackLoading}
         >
@@ -347,7 +345,7 @@ export function CreatePackagePage() {
               variant="outline"
               onClick={() => {
                 setIsBackLoading(true);
-                navigate(`/${locale}/closer/packages`);
+                navigate(`/${i18n.language}/closer/packages`);
               }}
               disabled={isBackLoading}
             >

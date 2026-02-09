@@ -7,8 +7,6 @@ import { Loader2 } from 'lucide-react';
  */
 export function CookiePolicyPage() {
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const [isPrivacyLoading, setIsPrivacyLoading] = useState(false);
   const [isTermsLoading, setIsTermsLoading] = useState(false);
 
@@ -161,7 +159,7 @@ export function CookiePolicyPage() {
                   onClick={() => {
                     if (isPrivacyLoading) return;
                     setIsPrivacyLoading(true);
-                    navigate(`/${locale}/privacy`);
+                    navigate(`/${i18n.language}/privacy`);
                   }}
                   className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isPrivacyLoading ? 'opacity-70' : ''}`}
                 >
@@ -172,7 +170,7 @@ export function CookiePolicyPage() {
                   onClick={() => {
                     if (isTermsLoading) return;
                     setIsTermsLoading(true);
-                    navigate(`/${locale}/terms`);
+                    navigate(`/${i18n.language}/terms`);
                   }}
                   className={`text-blue-600 hover:text-blue-800 hover:underline text-left cursor-pointer flex items-center gap-2 ${isTermsLoading ? 'opacity-70' : ''}`}
                 >

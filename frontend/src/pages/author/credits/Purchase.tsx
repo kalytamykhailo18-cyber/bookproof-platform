@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useCredits } from '@/hooks/useCredits';
 import { useStripePayments } from '@/hooks/useStripePayments';
@@ -49,8 +49,6 @@ export function CreditPurchasePage() {
   const _t = useTranslations('credits');
   void _t; // Will use later for translations
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { packageTiers, isLoadingPackages, purchaseCredits, isPurchasing } = useCredits();
   const { useTransactions } = useStripePayments();
   const { data: transactions, isLoading: transactionsLoading } = useTransactions();
@@ -298,7 +296,7 @@ export function CreditPurchasePage() {
                 type="button"
                 variant="link"
                 className="h-auto p-0 text-primary underline"
-                onClick={() => navigate(`/${locale}/author/keyword-research/new`)}
+                onClick={() => navigate(`/${i18n.language}/author/keyword-research/new`)}
               >
                 order keyword research separately
               </Button>

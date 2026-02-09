@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useClosersList, useAdminsList } from '@/hooks/useAdminTeam';
 import { CreateCloserDialog } from './team/CreateCloserDialog';
 import { CreateAdminDialog } from './team/CreateAdminDialog';
@@ -35,7 +35,7 @@ import {
 import { formatDate } from '@/lib/utils';
 
 export function AdminTeamPage() {
-  const { t } = useTranslation('adminTeam');
+  const { t, i18n } = useTranslation('adminTeam');
   const [activeTab, setActiveTab] = useState('closers');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');

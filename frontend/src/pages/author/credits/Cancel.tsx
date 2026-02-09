@@ -1,15 +1,13 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { XCircle, Loader2 } from 'lucide-react';
 import { useNavigate,  useParams } from 'react-router-dom';
 
 export function CreditPurchaseCancelPage() {
-  const { t } = useTranslation('author.credits.cancel');
+  const { t, i18n } = useTranslation('author.credits.cancel');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const [isTryAgainLoading, setIsTryAgainLoading] = useState(false);
   const [isDashboardLoading, setIsDashboardLoading] = useState(false);
 
@@ -30,7 +28,7 @@ export function CreditPurchaseCancelPage() {
               type="button"
               onClick={() => {
                 setIsTryAgainLoading(true);
-                navigate(`/${locale}/author/credits`);
+                navigate(`/${i18n.language}/author/credits`);
               }}
               disabled={isTryAgainLoading}
             >
@@ -42,7 +40,7 @@ export function CreditPurchaseCancelPage() {
               variant="outline"
               onClick={() => {
                 setIsDashboardLoading(true);
-                navigate(`/${locale}/author`);
+                navigate(`/${i18n.language}/author`);
               }}
               disabled={isDashboardLoading}
             >

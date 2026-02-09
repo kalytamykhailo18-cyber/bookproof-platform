@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useNavigate,  useSearchParams, useParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
@@ -28,11 +28,9 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginPage() {
-  const { t } = useTranslation('auth.login');
+  const { t, i18n } = useTranslation('auth.login');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { loginAsync, isLoggingIn } = useAuth();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
   const [rememberMe, setRememberMe] = useState(false);
@@ -105,7 +103,9 @@ export function LoginPage() {
   };
 
   return (
-    <Card className="animate-fade-up">
+    <div className="container flex min-h-[calc(100vh-theme(spacing.16)-theme(spacing.32))] items-center justify-center py-12">
+      <div className="w-full max-w-md">
+        <Card className="animate-fade-up">
       <CardHeader className="space-y-1">
         <CardTitle className="text-center text-2xl font-bold">{t('title')}</CardTitle>
         <CardDescription className="text-center">{t('subtitle')}</CardDescription>
@@ -153,7 +153,7 @@ export function LoginPage() {
             className="cursor-pointer text-sm text-primary hover:underline"
             onClick={() => {
               setIsForgotLoading(true);
-              navigate(`/${locale}/forgot-password`);
+              navigate(`/${i18n.language}/forgot-password`);
             }}
           >
             {isForgotLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('forgotPassword')}
@@ -203,13 +203,15 @@ export function LoginPage() {
             className="cursor-pointer font-medium text-primary hover:underline"
             onClick={() => {
               setIsSignupLoading(true);
-              navigate(`/${locale}/register`);
+              navigate(`/${i18n.language}/register`);
             }}
           >
             {isSignupLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('signUp')}
           </span>
         </p>
       </CardFooter>
-    </Card>
+        </Card>
+      </div>
+    </div>
   );
 }

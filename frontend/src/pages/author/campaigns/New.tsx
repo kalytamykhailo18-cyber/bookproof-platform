@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -121,7 +121,7 @@ const STEPS = ['bookInfo', 'files', 'landingPage', 'credits', 'review'] as const
 type Step = (typeof STEPS)[number];
 
 export function NewCampaignPage() {
-  const { t } = useTranslation('author.campaigns.new');
+  const { t, i18n } = useTranslation('author.campaigns.new');
   const navigate = useNavigate();
   const { createCampaign, isCreating } = useCampaigns();
   const { creditBalance } = useCredits();
@@ -340,7 +340,7 @@ export function NewCampaignPage() {
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Header */}
       <div className="mb-8 animate-fade-up">
-        <Button type="button" variant="ghost" onClick={() => router.back()} className="mb-4">
+        <Button type="button" variant="ghost" onClick={() => navigate(-1)} className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('back') || 'Back'}
         </Button>

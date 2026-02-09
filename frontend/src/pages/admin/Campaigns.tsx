@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useAdminControls } from '@/hooks/useAdminControls';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,10 +43,8 @@ import {
   Loader2 } from 'lucide-react';
 
 export function AdminCampaignDetailPage() {
-  const params = useParams();
   const navigate = useNavigate();
-  const locale = (params.locale as string) || 'en';
-  const { t } = useTranslation('adminCampaigns.detail');
+  const { t, i18n } = useTranslation('adminCampaigns.detail');
   const campaignId = params.id as string;
 
   const {
@@ -160,7 +158,7 @@ export function AdminCampaignDetailPage() {
             <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="text-lg font-semibold">{t('notFound.title')}</h3>
             <p className="text-muted-foreground">{t('notFound.description')}</p>
-            <Button className="mt-4" onClick={() => navigate(`/${locale}/admin/campaigns`)}>
+            <Button className="mt-4" onClick={() => navigate(`/${i18n.language}/admin/campaigns`)}>
               {t('backToCampaigns')}
             </Button>
           </CardContent>
@@ -179,7 +177,7 @@ export function AdminCampaignDetailPage() {
           className="mb-4"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/admin/campaigns`);
+            navigate(`/${i18n.language}/admin/campaigns`);
           }}
           disabled={isBackLoading}
         >
@@ -289,7 +287,7 @@ export function AdminCampaignDetailPage() {
               variant="outline"
               onClick={() => {
                 setIsControlsLoading(true);
-                navigate(`/${locale}/admin/campaigns/${campaignId}/controls`);
+                navigate(`/${i18n.language}/admin/campaigns/${campaignId}/controls`);
               }}
               disabled={isControlsLoading}
             >

@@ -21,7 +21,7 @@ import {
 import { LucideIcon } from 'lucide-react';
 import { AssignmentStatus, Assignment } from '@/lib/api/queue';
 import { formatDistanceToNow } from 'date-fns';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 
 function StatsCard({
   title,
@@ -58,9 +58,7 @@ function formatTimeRemaining(hoursRemaining: number): string {
 
 function AssignmentCard({ assignment, className }: { assignment: Assignment; className?: string }) {
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
-  const { t } = useTranslation('reader.dashboard');
+  const { t, i18n } = useTranslation('reader.dashboard');
   const [isNavLoading, setIsNavLoading] = useState(false);
 
   const getStatusVariant = (
@@ -111,7 +109,7 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
 
   const handleCardClick = () => {
     setIsNavLoading(true);
-    navigate(`/${locale}/reader/assignments/${assignment.id}`);
+    navigate(`/${i18n.language}/reader/assignments/${assignment.id}`);
   };
 
   return (
@@ -199,13 +197,11 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
 }
 
 export function ReaderDashboard() {
-  const { t } = useTranslation('reader.dashboard');
+  const { t, i18n } = useTranslation('reader.dashboard');
   const { isLoadingProfile, hasProfile } = useReaderProfile();
   const { stats, isLoadingStats } = useReaderStats();
   const { assignments, groupedAssignments, isLoadingAssignments } = useMyAssignments();
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
 
   const [isCampaignsLoading, setIsCampaignsLoading] = useState(false);
   const [isPayoutLoading, setIsPayoutLoading] = useState(false);
@@ -213,7 +209,7 @@ export function ReaderDashboard() {
 
   // Redirect to profile creation if no profile exists
   if (!isLoadingProfile && !hasProfile) {
-    navigate(`/${locale}/reader/profile`);
+    navigate(`/${i18n.language}/reader/profile`);
     return null;
   }
 
@@ -264,7 +260,7 @@ export function ReaderDashboard() {
             className="animate-fade-left"
             onClick={() => {
               setIsCampaignsLoading(true);
-              navigate(`/${locale}/reader/campaigns`);
+              navigate(`/${i18n.language}/reader/campaigns`);
             }}
             disabled={isCampaignsLoading}
           >
@@ -277,7 +273,7 @@ export function ReaderDashboard() {
             className="animate-fade-left-slow"
             onClick={() => {
               setIsPayoutLoading(true);
-              navigate(`/${locale}/reader/wallet/payout`);
+              navigate(`/${i18n.language}/reader/wallet/payout`);
             }}
             disabled={isPayoutLoading || (stats?.walletBalance || 0) < 50}
             title={(stats?.walletBalance || 0) < 50 ? t('payoutMinimumRequired', { amount: '$50' }) : undefined}
@@ -291,7 +287,7 @@ export function ReaderDashboard() {
             className="animate-fade-left-light-slow"
             onClick={() => {
               setIsStatsLoading(true);
-              navigate(`/${locale}/reader/stats`);
+              navigate(`/${i18n.language}/reader/stats`);
             }}
             disabled={isStatsLoading}
           >
@@ -414,7 +410,7 @@ export function ReaderDashboard() {
               type="button"
               onClick={() => {
                 setIsCampaignsLoading(true);
-                navigate(`/${locale}/reader/campaigns`);
+                navigate(`/${i18n.language}/reader/campaigns`);
               }}
               disabled={isCampaignsLoading}
             >

@@ -11,9 +11,7 @@ import {
 import { CheckCircle, Mail, ArrowRight, Loader2 } from 'lucide-react';
 
 export function CustomPackageSuccessPage() {
-  const params = useParams();
   const navigate = useNavigate();
-  const locale = (params.locale as string) || 'en';
   const [isLoginLoading, setIsLoginLoading] = useState(false);
 
   return (
@@ -82,7 +80,7 @@ export function CustomPackageSuccessPage() {
       <CardFooter className="flex flex-col gap-3">
         <Button className="w-full" size="lg" onClick={() => {
           setIsLoginLoading(true);
-          navigate(`/${locale}/login`);
+          navigate(`/${i18n.language}/login`);
         }} disabled={isLoginLoading}>
           {isLoginLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
           Go to Login

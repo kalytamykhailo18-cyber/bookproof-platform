@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useForm } from 'react-hook-form';
@@ -25,10 +25,8 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export function ForgotPasswordPage() {
-  const { t } = useTranslation('auth.forgotPassword');
+  const { t, i18n } = useTranslation('auth.forgotPassword');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { requestPasswordResetAsync, isRequestingReset } = useAuth();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
   const [emailSent, setEmailSent] = useState(false);
@@ -89,7 +87,7 @@ export function ForgotPasswordPage() {
             disabled={isBackLoading}
             onClick={() => {
               setIsBackLoading(true);
-              navigate(`/${locale}/login`);
+              navigate(`/${i18n.language}/login`);
             }}
           >
             {isBackLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><ArrowLeft className="mr-2 h-4 w-4" />{t('backToLogin')}</>}
@@ -141,7 +139,7 @@ export function ForgotPasswordPage() {
           disabled={isBackLoading}
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/login`);
+            navigate(`/${i18n.language}/login`);
           }}
         >
           {isBackLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><ArrowLeft className="mr-2 h-4 w-4" />{t('backToLogin')}</>}

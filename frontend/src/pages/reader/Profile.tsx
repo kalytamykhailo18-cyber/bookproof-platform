@@ -27,7 +27,7 @@ import {
   XCircle,
   Loader2 } from 'lucide-react';
 import { ContentPreference } from '@/lib/api/readers';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useNavigate,  useParams } from 'react-router-dom';
 
 const GENRE_OPTIONS = [
@@ -49,10 +49,8 @@ const GENRE_OPTIONS = [
 ];
 
 export function ReaderProfilePage() {
-  const { t } = useTranslation('reader.profile');
+  const { t, i18n } = useTranslation('reader.profile');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const {
     profile,
     isLoadingProfile,
@@ -146,7 +144,7 @@ export function ReaderProfilePage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" onClick={() => navigate(`/${locale}/reader`)}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => navigate(`/${i18n.language}/reader`)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToDashboard')}
         </Button>
@@ -430,7 +428,7 @@ export function ReaderProfilePage() {
                 {/* Payout Request Button */}
                 {profile.walletBalance > 0 && (
                   <div className="pt-4">
-                    <Button type="button" className="w-full" onClick={() => navigate(`/${locale}/reader/wallet`)}>
+                    <Button type="button" className="w-full" onClick={() => navigate(`/${i18n.language}/reader/wallet`)}>
                       <TrendingUp className="mr-2 h-4 w-4" />
                       Request Payout
                     </Button>

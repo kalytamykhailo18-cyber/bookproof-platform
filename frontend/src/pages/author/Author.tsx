@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useCredits } from '@/hooks/useCredits';
 import { useCampaigns } from '@/hooks/useCampaigns';
 import { useDashboards } from '@/hooks/useDashboards';
@@ -25,11 +25,9 @@ import { CampaignStatus } from '@/lib/api/campaigns';
 import { AuthorActivityType } from '@/lib/api/dashboards';
 
 export function AuthorDashboardPage() {
-  const { t } = useTranslation('author.dashboard');
+  const { t, i18n } = useTranslation('author.dashboard');
   const navigate = useNavigate();
-  const params = useParams();
   const { pathname } = useLocation();
-  const locale = (params.locale as string) || 'en';
   const { creditBalance, isLoadingBalance } = useCredits();
   const { campaigns, isLoadingCampaigns } = useCampaigns();
   const { useAuthorActivityFeed } = useDashboards();
@@ -87,7 +85,7 @@ export function AuthorDashboardPage() {
 
   const navigateTo = (path: string) => {
     setLoadingPath(path);
-    navigate(`/${locale}/author/${path}`);
+    navigate(`/${i18n.language}/author/${path}`);
   };
 
   // Page loading skeleton
@@ -336,7 +334,7 @@ export function AuthorDashboardPage() {
                   className={`cursor-pointer transition-shadow hover:shadow-md ${loadingCampaignId === campaign.id ? 'pointer-events-none opacity-70' : ''} ${animationClass}`}
                   onClick={() => {
                     setLoadingCampaignId(campaign.id);
-                    navigate(`/${locale}/author/campaigns/${campaign.id}`);
+                    navigate(`/${i18n.language}/author/campaigns/${campaign.id}`);
                   }}
                 >
                   <CardHeader>

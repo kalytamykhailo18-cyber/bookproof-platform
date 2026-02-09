@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useAdminControls } from '@/hooks/useAdminControls';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -36,11 +36,9 @@ import {
   Loader2 } from 'lucide-react';
 
 export function CampaignControlsPage() {
-  const params = useParams();
   const navigate = useNavigate();
-  const locale = (params.locale as string) || 'en';
   const bookId = params.id as string;
-  const { t } = useTranslation('adminControls');
+  const { t, i18n } = useTranslation('adminControls');
 
   const {
     useCampaignHealth,
@@ -345,7 +343,7 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
           className="mb-4"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/admin/campaigns/${bookId}`);
+            navigate(`/${i18n.language}/admin/campaigns/${bookId}`);
           }}
           disabled={isBackLoading}
         >

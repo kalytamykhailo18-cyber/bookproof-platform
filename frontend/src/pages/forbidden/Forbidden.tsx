@@ -9,8 +9,6 @@ import { ShieldX, Home, ArrowLeft, Loader2 } from 'lucide-react';
  */
 export function ForbiddenPage() {
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const [isHomeLoading, setIsHomeLoading] = useState(false);
 
   return (
@@ -57,7 +55,7 @@ export function ForbiddenPage() {
             variant="outline"
             size="lg"
             className="gap-2"
-            onClick={() => router.back()}
+            onClick={() => navigate(-1)}
           >
             <ArrowLeft className="h-4 w-4" />
             Go Back

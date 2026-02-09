@@ -2,9 +2,48 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-// Clean React + Vite i18n setup
-// Uses dynamic imports for code splitting
+// Import all translation files directly
+import commonEN from '../locales/en/common.json';
+import commonES from '../locales/es/common.json';
+import commonPT from '../locales/pt/common.json';
 
+import landingEN from '../locales/en/landing.json';
+import landingES from '../locales/es/landing.json';
+import landingPT from '../locales/pt/landing.json';
+
+import authEN from '../locales/en/auth.json';
+import authES from '../locales/es/auth.json';
+import authPT from '../locales/pt/auth.json';
+
+// Helper to flatten landing page sections into separate namespaces
+function flattenLanding(landingData: any) {
+  const flattened: Record<string, any> = {};
+  Object.keys(landingData).forEach((key) => {
+    flattened[key] = landingData[key];
+  });
+  return flattened;
+}
+
+// Build resources object with all translations
+const resources = {
+  en: {
+    common: commonEN,
+    auth: authEN,
+    ...flattenLanding(landingEN),
+  },
+  es: {
+    common: commonES,
+    auth: authES,
+    ...flattenLanding(landingES),
+  },
+  pt: {
+    common: commonPT,
+    auth: authPT,
+    ...flattenLanding(landingPT),
+  },
+};
+
+// Initialize i18next
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -12,53 +51,31 @@ i18n
     fallbackLng: 'en',
     supportedLngs: ['en', 'es', 'pt'],
     defaultNS: 'common',
+    load: 'languageOnly', // Load 'en' instead of 'en-US'
+    debug: true, // Enable debugging to see translation loading
 
     interpolation: {
       escapeValue: false, // React already escapes
     },
 
     detection: {
-      order: ['path', 'localStorage', 'navigator'],
+      // Don't auto-detect from path - RootLayout handles that via React Router
+      order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
     },
 
-    resources: {}, // Will be loaded dynamically
+    resources, // Load translations synchronously
+
+    react: {
+      useSuspense: false, // Disable suspense to avoid loading delays
+    },
+  })
+  .then(() => {
+    console.log('i18n initialized with language:', i18n.language);
+    console.log('Available namespaces:', Object.keys(resources.en));
+  })
+  .catch((err) => {
+    console.error('i18n initialization failed:', err);
   });
-
-// Dynamically load and register translations
-async function loadTranslations(lng: string) {
-  try {
-    // Load common namespace
-    const common = await import(`../locales/${lng}/common.json`);
-    i18n.addResourceBundle(lng, 'common', common.default, true, true);
-
-    // Load landing and flatten its sections into separate namespaces
-    // This allows components to use useTranslation('hero'), useTranslation('features'), etc.
-    const landing = await import(`../locales/${lng}/landing.json`);
-    const landingData = landing.default;
-
-    // Flatten: { hero: {...}, features: {...} } → separate namespaces
-    Object.keys(landingData).forEach((key) => {
-      i18n.addResourceBundle(lng, key, landingData[key], true, true);
-    });
-
-    // Load auth
-    const auth = await import(`../locales/${lng}/auth.json`);
-    i18n.addResourceBundle(lng, 'auth', auth.default, true, true);
-
-    // Add more namespaces as needed when migrating other pages
-  } catch (error) {
-    console.error(`Failed to load ${lng} translations:`, error);
-  }
-}
-
-// Preload translations for all supported languages
-const initTranslations = async () => {
-  const languages = ['en', 'es', 'pt'];
-  await Promise.all(languages.map((lng) => loadTranslations(lng)));
-};
-
-// Initialize
-initTranslations();
 
 export default i18n;

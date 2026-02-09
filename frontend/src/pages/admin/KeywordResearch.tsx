@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
   useKeywordResearchForAdmin,
   useRegenerateKeywordResearch,
@@ -40,11 +40,9 @@ import { formatDate } from '@/lib/utils';
 import { KeywordResearchStatus } from '@/lib/api/keywords';
 
 export function AdminKeywordResearchPage() {
-  const { t } = useTranslation('adminKeywordResearch');
+  const { t, i18n } = useTranslation('adminKeywordResearch');
   const { t: tCommon } = useTranslation('keywordResearch');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
 
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -248,7 +246,7 @@ export function AdminKeywordResearchPage() {
                           <DropdownMenuItem
                             onClick={() => {
                               setLoadingResearchId(research.id);
-                              navigate(`/${locale}/author/keyword-research/${research.id}`);
+                              navigate(`/${i18n.language}/author/keyword-research/${research.id}`);
                             }}
                             disabled={loadingResearchId === research.id}
                           >

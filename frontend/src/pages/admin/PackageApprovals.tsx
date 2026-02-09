@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import {
   usePackagesPendingApproval,
   useApprovePackage,
@@ -28,7 +28,7 @@ import { CheckCircle, XCircle, AlertTriangle, Package } from 'lucide-react';
 import { CustomPackageResponse } from '@/lib/api/closer';
 
 export function PackageApprovalsPage() {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const { data: pendingPackages, isLoading } = usePackagesPendingApproval();
   const approvePackage = useApprovePackage();
   const rejectPackage = useRejectPackage();

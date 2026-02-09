@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -72,7 +72,7 @@ const ALL_PERMISSIONS = [
 const SUPER_ADMIN_PERMISSIONS = [AdminPermission.MANAGE_ADMINS, AdminPermission.MANAGE_FINANCIALS];
 
 export function CreateAdminDialog() {
-  const { t } = useTranslation('adminTeam');
+  const { t, i18n } = useTranslation('adminTeam');
   const [open, setOpen] = useState(false);
   const createAdminMutation = useCreateAdmin();
 

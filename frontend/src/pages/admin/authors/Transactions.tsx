@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useAdminControls } from '@/hooks/useAdminControls';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -65,11 +65,9 @@ const getTransactionTypeColor = (type: CreditTransactionType) => {
 };
 
 export function AuthorTransactionsPage() {
-  const params = useParams();
   const navigate = useNavigate();
-  const locale = (params.locale as string) || 'en';
   const authorId = params.id as string;
-  const { t } = useTranslation('adminAuthorTransactions');
+  const { t, i18n } = useTranslation('adminAuthorTransactions');
 
   const { useAuthorTransactionHistory } = useAdminControls();
 
@@ -106,7 +104,7 @@ export function AuthorTransactionsPage() {
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-semibold">{t('error.title')}</h3>
             <p className="text-muted-foreground">{t('error.description')}</p>
-            <Button type="button" className="mt-4" onClick={() => navigate(`/${locale}/admin/authors`)}>
+            <Button type="button" className="mt-4" onClick={() => navigate(`/${i18n.language}/admin/authors`)}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               {t('backToAuthors')}
             </Button>
@@ -126,7 +124,7 @@ export function AuthorTransactionsPage() {
           size="icon"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/admin/authors`);
+            navigate(`/${i18n.language}/admin/authors`);
           }}
           disabled={isBackLoading}
         >

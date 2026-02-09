@@ -14,10 +14,8 @@ import { Loader2, CreditCard, Clock, AlertTriangle, CheckCircle, Package } from 
 import { customPackageApi, CustomPackagePublicDto } from '@/lib/api/stripe';
 
 export function CustomPackageCheckoutPage() {
-  const params = useParams();
   const navigate = useNavigate();
   const token = params.token as string;
-  const locale = (params.locale as string) || 'en';
 
   const [packageData, setPackageData] = useState<CustomPackagePublicDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,8 +49,8 @@ export function CustomPackageCheckoutPage() {
       setIsProcessing(true);
       const baseUrl = window.location.origin;
       const result = await customPackageApi.createCheckout(token, {
-        successUrl: `${baseUrl}/${locale}/checkout/custom/${token}/success`,
-        cancelUrl: `${baseUrl}/${locale}/checkout/custom/${token}` });
+        successUrl: `${baseUrl}/${i18n.language}/checkout/custom/${token}/success`,
+        cancelUrl: `${baseUrl}/${i18n.language}/checkout/custom/${token}` });
 
       // Redirect to Stripe checkout
       window.location.href = result.checkoutUrl;
@@ -152,7 +150,7 @@ export function CustomPackageCheckoutPage() {
         <CardFooter>
           <Button type="button" onClick={() => {
             setIsLoginLoading(true);
-            navigate(`/${locale}/login`);
+            navigate(`/${i18n.language}/login`);
           }} disabled={isLoginLoading}>
             {isLoginLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Go to Login

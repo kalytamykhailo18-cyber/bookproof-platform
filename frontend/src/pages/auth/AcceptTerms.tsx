@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useNavigate,  useParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -19,10 +19,8 @@ import { Label } from '@/components/ui/label';
 import { FileText, Shield, CheckCircle, Loader2 } from 'lucide-react';
 
 export function AcceptTermsPage() {
-  const { t } = useTranslation('auth.acceptTerms');
+  const { t, i18n } = useTranslation('auth.acceptTerms');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const queryClient = useQueryClient();
   const { user, logout } = useAuth();
   const { startLoading, stopLoading } = useLoading();
@@ -39,7 +37,7 @@ export function AcceptTermsPage() {
       // Invalidate user query to refresh profile data
       queryClient.invalidateQueries({ queryKey: ['user'] });
       // Redirect to author dashboard
-      navigate(`/${locale}/author`);
+      navigate(`/${i18n.language}/author`);
     },
     onError: (error: unknown) => {
       stopLoading();
@@ -58,7 +56,7 @@ export function AcceptTermsPage() {
 
   // If user already accepted terms, redirect to dashboard
   if (user?.termsAccepted) {
-    navigate(`/${locale}/author`);
+    navigate(`/${i18n.language}/author`);
     return null;
   }
 

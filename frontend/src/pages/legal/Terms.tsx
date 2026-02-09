@@ -157,7 +157,7 @@ export function TermsOfServicePage() {
             <button
               onClick={() => {
                 setIsBackLoading(true);
-                router.back();
+                navigate(-1);
               }}
               disabled={isBackLoading}
               className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-70 flex items-center gap-2"

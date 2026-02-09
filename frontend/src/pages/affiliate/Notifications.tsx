@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useNotifications, useMarkAsRead, useMarkAllAsRead } from '@/hooks/useNotifications';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -13,8 +13,6 @@ import { NotificationType } from '@/lib/api/notifications';
 export function NotificationsPage() {
   useTranslations('notifications'); // Namespace loaded for nested components
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [typeFilter, setTypeFilter] = useState<NotificationType | 'ALL'>('ALL');
   const [isSettingsLoading, setIsSettingsLoading] = useState(false);
@@ -76,7 +74,7 @@ export function NotificationsPage() {
             className="animate-fade-left"
             onClick={() => {
               setIsSettingsLoading(true);
-              navigate(`/${locale}/affiliate/notifications/settings`);
+              navigate(`/${i18n.language}/affiliate/notifications/settings`);
             }}
             disabled={isSettingsLoading}
           >

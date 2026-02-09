@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useAdminExceptions } from '@/hooks/useAdminExceptions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -32,7 +32,7 @@ import {
 import { Clock, Users, XCircle, AlertCircle } from 'lucide-react';
 
 export function ExceptionsPage() {
-  const { t } = useTranslation('adminExceptions');
+  const { t, i18n } = useTranslation('adminExceptions');
 
   const {
     useExceptions,

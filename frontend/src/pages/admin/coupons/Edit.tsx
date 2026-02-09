@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -69,11 +69,9 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>;
 
 export function EditCouponPage() {
-  const { t } = useTranslation('adminCoupons');
-  const params = useParams();
+  const { t, i18n } = useTranslation('adminCoupons');
   const navigate = useNavigate();
   const id = params.id as string;
-  const locale = (params.locale as string) || 'en';
 
   const { data: coupon, isLoading } = useCoupon(id);
   const updateMutation = useUpdateCoupon();
@@ -118,7 +116,7 @@ export function EditCouponPage() {
     const values = form.getValues();
     const data: UpdateCouponDto = values;
     await updateMutation.mutateAsync({ id, data });
-    navigate(`/${locale}/admin/coupons/${id}`);
+    navigate(`/${i18n.language}/admin/coupons/${id}`);
   };
 
   if (isLoading) {
@@ -148,7 +146,7 @@ export function EditCouponPage() {
           size="icon"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/${locale}/admin/coupons/${id}`);
+            navigate(`/${i18n.language}/admin/coupons/${id}`);
           }}
           disabled={isBackLoading}
         >
@@ -499,7 +497,7 @@ export function EditCouponPage() {
               variant="outline"
               onClick={() => {
                 setIsBackLoading(true);
-                navigate(`/${locale}/admin/coupons/${id}`);
+                navigate(`/${i18n.language}/admin/coupons/${id}`);
               }}
               disabled={isBackLoading}
             >

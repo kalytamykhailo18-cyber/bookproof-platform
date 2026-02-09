@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useCommissions } from '@/hooks/useAffiliates';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -22,7 +22,7 @@ import { formatDate } from '@/lib/utils';
 import { CommissionStatus } from '@/lib/api/affiliates';
 
 export function AffiliateCommissionsPage() {
-  const { t } = useTranslation('affiliates.commissions');
+  const { t, i18n } = useTranslation('affiliates.commissions');
   const [statusFilter, setStatusFilter] = useState<CommissionStatus | undefined>(undefined);
 
   const { data: commissions, isLoading } = useCommissions(statusFilter);

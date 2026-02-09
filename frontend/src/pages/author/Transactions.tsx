@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useDashboards } from '@/hooks/useDashboards';
 import { useStripePayments } from '@/hooks/useStripePayments';
@@ -84,7 +84,7 @@ const getRefundStatusBadge = (status: RefundRequestStatus) => {
 };
 
 export function TransactionsPage() {
-  const { t } = useTranslation('author.transactions');
+  const { t, i18n } = useTranslation('author.transactions');
   const { useTransactionHistory } = useDashboards();
   const { useTransactions } = useStripePayments();
 

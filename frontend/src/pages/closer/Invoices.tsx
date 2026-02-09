@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useCloserInvoices, useCloserInvoiceStats, useCreateInvoice } from '@/hooks/useCloser';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -42,7 +42,7 @@ import { PaymentStatus } from '@/lib/api/closer';
 import { toast } from 'sonner';
 
 export function InvoicesPage() {
-  const { t } = useTranslation('closer');
+  const { t, i18n } = useTranslation('closer');
   const [statusFilter, setStatusFilter] = useState<PaymentStatus | 'ALL'>('ALL');
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 

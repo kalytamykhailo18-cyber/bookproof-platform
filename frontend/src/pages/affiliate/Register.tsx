@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useNavigate,  useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -40,10 +40,8 @@ const registerAffiliateSchema = z.object({
 type RegisterAffiliateFormData = z.infer<typeof registerAffiliateSchema>;
 
 export function AffiliateRegisterPage() {
-  const { t } = useTranslation('affiliates.register');
+  const { t, i18n } = useTranslation('affiliates.register');
   const navigate = useNavigate();
-  const params = useParams();
-  const locale = (params.locale as string) || 'en';
   const { data: existingProfile, isLoading: checkingProfile } = useAffiliateProfile();
   const registerMutation = useRegisterAffiliate();
   const [isDashboardLoading, setIsDashboardLoading] = useState(false);
@@ -63,7 +61,7 @@ export function AffiliateRegisterPage() {
 
     const data = form.getValues();
     await registerMutation.mutateAsync(data);
-    navigate(`/${locale}/affiliate/dashboard`);
+    navigate(`/${i18n.language}/affiliate/dashboard`);
   };
 
   // If user already has profile, show status
@@ -110,7 +108,7 @@ export function AffiliateRegisterPage() {
               type="button"
               onClick={() => {
                 setIsDashboardLoading(true);
-                navigate(`/${locale}/affiliate/dashboard`);
+                navigate(`/${i18n.language}/affiliate/dashboard`);
               }}
               disabled={isDashboardLoading}
             >

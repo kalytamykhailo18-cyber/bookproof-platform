@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { PayoutResponse } from '@/lib/api/payouts';
 import { useApprovePayout } from '@/hooks/usePayouts';
 import {
@@ -24,7 +24,7 @@ export default function ApprovePayoutDialog({
   payout,
   open,
   onOpenChange }: ApprovePayoutDialogProps) {
-  const { t } = useTranslation('admin-payouts');
+  const { t, i18n } = useTranslation('admin-payouts');
   const { mutate: approvePayout, isPending } = useApprovePayout();
   const [notes, setNotes] = useState('');
 

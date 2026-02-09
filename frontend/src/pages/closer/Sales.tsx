@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useCloserSalesHistory, useCloserDashboardStats } from '@/hooks/useCloser';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,7 @@ import {
   ChevronRight } from 'lucide-react';
 
 export function SalesHistoryPage() {
-  const { t } = useTranslation('closer');
+  const { t, i18n } = useTranslation('closer');
   const [page, setPage] = useState(0);
   const limit = 20;
 
