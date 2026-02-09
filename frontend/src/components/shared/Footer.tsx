@@ -1,15 +1,10 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { LanguageSelector } from './LanguageSelector';
-import { Loader2 } from 'lucide-react';
 
 export function Footer() {
   const { t, i18n } = useTranslation('footer');
   const navigate = useNavigate();
-  const [isPrivacyLoading, setIsPrivacyLoading] = useState(false);
-  const [isTermsLoading, setIsTermsLoading] = useState(false);
-  const [isCookiesLoading, setIsCookiesLoading] = useState(false);
 
   return (
     <footer className="border-t bg-background py-12">
@@ -85,40 +80,25 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <span
-                  className={`cursor-pointer text-muted-foreground hover:text-foreground flex items-center gap-2 ${isPrivacyLoading ? 'opacity-70' : ''}`}
-                  onClick={() => {
-                    if (isPrivacyLoading) return;
-                    setIsPrivacyLoading(true);
-                    navigate(`/${i18n.language}/privacy`);
-                  }}
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => navigate(`/${i18n.language}/privacy`)}
                 >
-                  {isPrivacyLoading && <Loader2 className="h-3 w-3 animate-spin" />}
                   {t('links.legal.privacy')}
                 </span>
               </li>
               <li>
                 <span
-                  className={`cursor-pointer text-muted-foreground hover:text-foreground flex items-center gap-2 ${isTermsLoading ? 'opacity-70' : ''}`}
-                  onClick={() => {
-                    if (isTermsLoading) return;
-                    setIsTermsLoading(true);
-                    navigate(`/${i18n.language}/terms`);
-                  }}
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => navigate(`/${i18n.language}/terms`)}
                 >
-                  {isTermsLoading && <Loader2 className="h-3 w-3 animate-spin" />}
                   {t('links.legal.terms')}
                 </span>
               </li>
               <li>
                 <span
-                  className={`cursor-pointer text-muted-foreground hover:text-foreground flex items-center gap-2 ${isCookiesLoading ? 'opacity-70' : ''}`}
-                  onClick={() => {
-                    if (isCookiesLoading) return;
-                    setIsCookiesLoading(true);
-                    navigate(`/${i18n.language}/cookies`);
-                  }}
+                  className="cursor-pointer text-muted-foreground hover:text-foreground"
+                  onClick={() => navigate(`/${i18n.language}/cookies`)}
                 >
-                  {isCookiesLoading && <Loader2 className="h-3 w-3 animate-spin" />}
                   {t('links.legal.cookies')}
                 </span>
               </li>
