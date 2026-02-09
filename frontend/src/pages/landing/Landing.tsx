@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LanguageSelector } from '@/components/shared/LanguageSelector';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -56,20 +56,20 @@ const leadFormSchema = z.object({
 type LeadFormData = z.infer<typeof leadFormSchema>;
 
 // Header Component
-function Header({ locale }: { locale: string }) {
-  const { t } = useTranslation();
+function Header() {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [isSignupLoading, setIsSignupLoading] = useState(false);
 
   const handleLoginClick = () => {
     setIsLoginLoading(true);
-    navigate(`/${locale}/login`);
+    navigate(`/${i18n.language}/login`);
   };
 
   const handleSignupClick = () => {
     setIsSignupLoading(true);
-    navigate(`/${locale}/register`);
+    navigate(`/${i18n.language}/register`);
   };
 
   return (
@@ -81,7 +81,7 @@ function Header({ locale }: { locale: string }) {
           </span>
         </div>
         <div className="flex items-center gap-4">
-          <LanguageSelector currentLocale={locale} />
+          <LanguageSelector />
           <Button type="button" variant="ghost" className="animate-fade-left-fast" onClick={handleLoginClick} disabled={isLoginLoading}>
             {isLoginLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('nav.login')}
           </Button>
@@ -95,20 +95,20 @@ function Header({ locale }: { locale: string }) {
 }
 
 // Hero Section
-function HeroSection({ locale }: { locale: string }) {
-  const { t } = useTranslation('hero');
+function HeroSection() {
+  const { t, i18n } = useTranslation('hero');
   const navigate = useNavigate();
   const [isPrimaryLoading, setIsPrimaryLoading] = useState(false);
   const [isSecondaryLoading, setIsSecondaryLoading] = useState(false);
 
   const handlePrimaryClick = () => {
     setIsPrimaryLoading(true);
-    navigate(`/${locale}/register`);
+    navigate(`/${i18n.language}/register`);
   };
 
   const handleSecondaryClick = () => {
     setIsSecondaryLoading(true);
-    navigate(`/${locale}/login`);
+    navigate(`/${i18n.language}/login`);
   };
 
   return (
@@ -402,14 +402,14 @@ function TestimonialsSection() {
 }
 
 // Pricing Section
-function PricingSection({ locale }: { locale: string }) {
-  const { t } = useTranslation('pricing');
+function PricingSection() {
+  const { t, i18n } = useTranslation('pricing');
   const navigate = useNavigate();
   const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
 
   const handleGetStarted = (index: number) => {
     setLoadingIndex(index);
-    navigate(`/${locale}/register`);
+    navigate(`/${i18n.language}/register`);
   };
 
   const packages = [
@@ -514,9 +514,7 @@ function PricingSection({ locale }: { locale: string }) {
 
 // Lead Capture Form
 function LeadCaptureForm() {
-  const { t } = useTranslation('leadForm');
-  const params = useParams();
-  const locale = params.locale as string;
+  const { t, i18n } = useTranslation('leadForm');
   const [searchParams] = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -556,7 +554,7 @@ function LeadCaptureForm() {
       headers: {
         'Content-Type': 'application/json' },
       body: JSON.stringify({
-        language: locale.toUpperCase(),
+        language: i18n.language.toUpperCase(),
         source: params.utm_source,
         medium: params.utm_medium,
         campaign: params.utm_campaign,
@@ -566,7 +564,7 @@ function LeadCaptureForm() {
         referrer: document.referrer || undefined }) }).catch(() => {
       // Silent fail for tracking
     });
-  }, [searchParams, locale]);
+  }, [searchParams, i18n.language]);
 
   const handleFormSubmit = async () => {
     const isValid = await trigger();
@@ -595,7 +593,7 @@ function LeadCaptureForm() {
             'Content-Type': 'application/json' },
           body: JSON.stringify({
             ...data,
-            language: locale.toUpperCase(),
+            language: i18n.language.toUpperCase(),
             source: utmParams.utm_source,
             medium: utmParams.utm_medium,
             campaign: utmParams.utm_campaign,
@@ -818,8 +816,8 @@ function ContactSection() {
 }
 
 // Footer Component
-function Footer({ locale }: { locale: string }) {
-  const { t } = useTranslation('footer');
+function Footer() {
+  const { t, i18n } = useTranslation('footer');
   const navigate = useNavigate();
   const [isPrivacyLoading, setIsPrivacyLoading] = useState(false);
   const [isTermsLoading, setIsTermsLoading] = useState(false);
@@ -888,7 +886,7 @@ function Footer({ locale }: { locale: string }) {
                   onClick={() => {
                     if (isPrivacyLoading) return;
                     setIsPrivacyLoading(true);
-                    navigate(`/${locale}/privacy`);
+                    navigate(`/${i18n.language}/privacy`);
                   }}
                 >
                   {isPrivacyLoading && <Loader2 className="h-3 w-3 animate-spin" />}
@@ -901,7 +899,7 @@ function Footer({ locale }: { locale: string }) {
                   onClick={() => {
                     if (isTermsLoading) return;
                     setIsTermsLoading(true);
-                    navigate(`/${locale}/terms`);
+                    navigate(`/${i18n.language}/terms`);
                   }}
                 >
                   {isTermsLoading && <Loader2 className="h-3 w-3 animate-spin" />}
@@ -914,7 +912,7 @@ function Footer({ locale }: { locale: string }) {
                   onClick={() => {
                     if (isCookiesLoading) return;
                     setIsCookiesLoading(true);
-                    navigate(`/${locale}/cookies`);
+                    navigate(`/${i18n.language}/cookies`);
                   }}
                 >
                   {isCookiesLoading && <Loader2 className="h-3 w-3 animate-spin" />}
@@ -926,7 +924,7 @@ function Footer({ locale }: { locale: string }) {
           <div className="animate-fade-left">
             <h3 className="mb-4 text-lg font-bold">BookProof</h3>
             <p className="mb-4 text-sm text-muted-foreground">{t('tagline')}</p>
-            <LanguageSelector currentLocale={locale} />
+            <LanguageSelector />
           </div>
         </div>
         <div className="mt-12 border-t pt-8 text-center text-sm text-muted-foreground">
@@ -939,24 +937,21 @@ function Footer({ locale }: { locale: string }) {
 
 // Main Landing Page
 export function LandingPage() {
-  const params = useParams();
-  const locale = params.locale as string;
-
   return (
     <>
-      <Header locale={locale} />
+      <Header />
       <main>
-        <HeroSection locale={locale} />
+        <HeroSection />
         <HowItWorksSection />
         <FeaturesSection />
         <ReaderBenefitsSection />
-        <PricingSection locale={locale} />
+        <PricingSection />
         <TestimonialsSection />
         <FAQSection />
         <LeadCaptureForm />
         <ContactSection />
       </main>
-      <Footer locale={locale} />
+      <Footer />
     </>
   );
 }
