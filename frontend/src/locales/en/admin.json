@@ -1,0 +1,33 @@
+{
+  "common": {
+    "actions": "Actions",
+    "cancel": "Cancel"
+  },
+  "packageApprovals": {
+    "title": "Package Approvals",
+    "description": "Review and approve custom packages with pricing below the 80% threshold",
+    "pricingInfo": "Pricing Threshold Information",
+    "standardRate": "Standard Rate",
+    "minimumThreshold": "Minimum Threshold (80%)",
+    "requiresApproval": "Requires Approval",
+    "pendingPackages": "Pending Packages",
+    "packagesAwaitingApproval": "packages awaiting approval",
+    "package": "Package",
+    "client": "Client",
+    "credits": "Credits",
+    "price": "Price",
+    "ratePerCredit": "Rate/Credit",
+    "discount": "Discount",
+    "created": "Created",
+    "approve": "Approve",
+    "reject": "Reject",
+    "noPending": "No packages pending approval",
+    "allCaughtUp": "All custom packages with special pricing have been reviewed",
+    "rejectPackage": "Reject Package",
+    "rejectDescription": "Please provide a reason for rejecting this package. The closer will be notified.",
+    "rejectionReason": "Rejection Reason",
+    "rejectionReasonPlaceholder": "E.g., Discount too steep for this client segment...",
+    "rejecting": "Rejecting...",
+    "confirmReject": "Reject Package"
+  }
+}

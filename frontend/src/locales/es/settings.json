@@ -1,0 +1,86 @@
+{
+  "title": "Configuración de Cuenta",
+  "subtitle": "Administra tu privacidad, datos y preferencias de cuenta",
+  "password": {
+    "title": "Cambiar Contraseña",
+    "description": "Actualiza tu contraseña para mantener tu cuenta segura",
+    "currentPassword": "Contraseña Actual",
+    "currentPasswordPlaceholder": "Ingresa tu contraseña actual",
+    "newPassword": "Nueva Contraseña",
+    "newPasswordPlaceholder": "Ingresa tu nueva contraseña",
+    "confirmNewPassword": "Confirmar Nueva Contraseña",
+    "confirmNewPasswordPlaceholder": "Confirma tu nueva contraseña",
+    "requirements": "Requisitos de contraseña:",
+    "minLength": "Al menos 8 caracteres",
+    "uppercase": "Al menos una letra mayúscula",
+    "lowercase": "Al menos una letra minúscula",
+    "number": "Al menos un número",
+    "special": "Al menos un carácter especial",
+    "button": "Cambiar Contraseña",
+    "changing": "Cambiando...",
+    "errors": {
+      "currentRequired": "La contraseña actual es requerida",
+      "newRequired": "La nueva contraseña es requerida",
+      "minLength": "La contraseña debe tener al menos 8 caracteres",
+      "uppercase": "La contraseña debe contener al menos una letra mayúscula",
+      "lowercase": "La contraseña debe contener al menos una letra minúscula",
+      "number": "La contraseña debe contener al menos un número",
+      "special": "La contraseña debe contener al menos un carácter especial",
+      "mismatch": "Las nuevas contraseñas no coinciden"
+    }
+  },
+  "export": {
+    "title": "Exportar Tus Datos",
+    "description": "Descarga una copia completa de todos tus datos personales en formato JSON (cumplimiento GDPR)",
+    "includes": "Tu exportación incluirá:",
+    "personalInfo": "Información personal (email, nombre, datos de perfil)",
+    "campaigns": "Historial de campañas y transacciones (si eres autor)",
+    "reviews": "Asignaciones y envíos de reseñas (si eres lector)",
+    "affiliate": "Datos de afiliado y comisiones (si eres afiliado)",
+    "consents": "Registros de consentimiento y logs de actividad",
+    "button": "Descargar Mis Datos",
+    "exporting": "Exportando..."
+  },
+  "privacy": {
+    "title": "Privacidad y Consentimiento",
+    "description": "Administra cómo usamos tus datos (puedes retirar el consentimiento en cualquier momento)",
+    "marketing": {
+      "title": "Comunicaciones de Marketing",
+      "description": "Recibe emails promocionales sobre nuevas funciones, ofertas y actualizaciones de la plataforma"
+    },
+    "analytics": {
+      "title": "Analíticas y Rendimiento",
+      "description": "Ayúdanos a mejorar permitiendo analíticas de uso anónimas y seguimiento de errores"
+    },
+    "personalization": {
+      "title": "Personalización",
+      "description": "Personaliza tu experiencia con recomendaciones y contenido personalizado"
+    }
+  },
+  "delete": {
+    "title": "Zona de Peligro",
+    "description": "Eliminar permanentemente tu cuenta y todos los datos asociados",
+    "button": "Eliminar Mi Cuenta",
+    "dialog": {
+      "title": "¿Estás absolutamente seguro?",
+      "warning": "Esta acción programará la eliminación de tu cuenta:",
+      "gracePeriod": "30 días de gracia antes de la eliminación permanente",
+      "dataRemoved": "Todos los datos personales serán eliminados permanentemente",
+      "contentDeleted": "Campañas, reseñas y transacciones serán eliminadas",
+      "cancelable": "Puedes cancelar dentro del período de gracia",
+      "confirmLabel": "Escribe {phrase} para confirmar:",
+      "confirmPhrase": "DELETE MY ACCOUNT",
+      "reasonLabel": "Razón (opcional - nos ayuda a mejorar):",
+      "reasonPlaceholder": "Cuéntanos por qué te vas...",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar Cuenta",
+      "deleting": "Eliminando..."
+    },
+    "note": "Las solicitudes de eliminación de cuenta incluyen un período de gracia de 30 días. Durante este tiempo, puedes iniciar sesión y cancelar la solicitud de eliminación si cambias de opinión."
+  },
+  "privacyPolicy": {
+    "title": "Política de Privacidad",
+    "description": "Aprende más sobre cómo protegemos tus datos",
+    "button": "Leer Política"
+  }
+}

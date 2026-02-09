@@ -1,0 +1,462 @@
+{
+  "register": {
+    "title": "Torne-se um Afiliado",
+    "description": "Junte-se ao nosso programa de afiliados e ganhe 20% de comissão vitalícia em cada indicação",
+    "benefits": {
+      "title": "Por que se juntar ao nosso programa de afiliados?",
+      "commission": "Ganhe 20% de comissão vitalícia em todas as compras feitas por suas indicações",
+      "lifetime": "Comissões vitalícias - ganhe de cada compra que suas indicações fizerem, para sempre",
+      "tracking": "Rastreamento avançado com janela de cookie de 90 dias e análises detalhadas",
+      "payout": "Limite mínimo de pagamento de $50 com múltiplas opções de pagamento"
+    },
+    "form": {
+      "title": "Formulário de Inscrição",
+      "description": "Por favor, preencha este formulário para se inscrever. Nossa equipe revisará sua inscrição em 2-3 dias úteis.",
+      "websiteUrl": {
+        "label": "URL do site",
+        "description": "Seu site ou blog principal onde você promoverá nosso serviço"
+      },
+      "socialMediaUrls": {
+        "label": "URLs das redes sociais (Opcional)",
+        "description": "Lista separada por vírgulas dos seus perfis de redes sociais (Twitter, Instagram, etc.)"
+      },
+      "promotionPlan": {
+        "label": "Plano de Promoção",
+        "description": "Descreva como você planeja promover nosso serviço (mínimo de 50 caracteres)",
+        "placeholder": "Exemplo: Pretendo escrever artigos de avaliação detalhados, criar vídeos tutoriais e compartilhar em minha newsletter com 10.000 assinantes..."
+      },
+      "estimatedReach": {
+        "label": "Alcance Estimado (Opcional)",
+        "description": "Seu tamanho estimado de audiência mensal (visitantes, assinantes, seguidores)"
+      },
+      "customSlug": {
+        "label": "Slug de Referência Personalizado (Opcional)",
+        "description": "Crie uma URL personalizada (ex., 'meu-blog' → bookproof.app?ref=meu-blog)"
+      },
+      "submit": "Enviar Inscrição",
+      "submitting": "Enviando..."
+    },
+    "existingApplication": {
+      "title": "Status da Inscrição de Afiliado",
+      "pending": "Sua inscrição de afiliado está atualmente em revisão. Nós o notificaremos assim que for processada.",
+      "approved": "Sua inscrição de afiliado foi aprovada! Agora você pode começar a promover e ganhar comissões.",
+      "rejected": "Sua inscrição de afiliado foi rejeitada",
+      "goToDashboard": "Ir para o Painel"
+    }
+  },
+  "dashboard": {
+    "title": "Painel de Afiliados",
+    "subtitle": "Seu código de referência",
+    "getReferralLink": "Obter Link de Indicação",
+    "requestPayout": "Solicitar Pagamento",
+    "noProfile": "Você ainda não tem um perfil de afiliado.",
+    "register": "Inscrever-se Agora",
+    "applicationPending": "Sua inscrição de afiliado está pendente de aprovação.",
+    "applicationRejected": "Sua inscrição de afiliado foi rejeitada",
+    "referredAuthors": "Autores Indicados",
+    "stats": {
+      "totalEarnings": "Ganhos Totais",
+      "approvedEarnings": "Disponível",
+      "pendingEarnings": "Pendente",
+      "pendingDescription": "Período de retenção de 14 dias",
+      "totalClicks": "Cliques Totais",
+      "conversionRate": "Taxa de Conversão",
+      "totalReferrals": "Indicações Totais",
+      "activeReferrals": "Ativos",
+      "commissionRate": "Taxa de Comissão",
+      "commissionRateDescription": "Sua porcentagem de ganhos em cada compra de indicação",
+      "availableForPayout": "Disponível para Saque",
+      "availableDescription": "Comissões liberadas e prontas para saque",
+      "totalPaid": "Total Pago",
+      "totalPaidDescription": "Valor total pago a você"
+    },
+    "charts": {
+      "clicksTitle": "Cliques ao Longo do Tempo",
+      "conversionsTitle": "Conversões ao Longo do Tempo",
+      "clicks": "Cliques",
+      "conversions": "Conversões"
+    },
+    "recentCommissions": {
+      "title": "Comissões Recentes",
+      "empty": "Ainda não há comissões. Comece a promover para ganhar comissões!",
+      "table": {
+        "amount": "Compra",
+        "commission": "Comissão",
+        "status": "Status",
+        "date": "Data"
+      }
+    },
+    "recentPayouts": {
+      "title": "Pagamentos Recentes",
+      "empty": "Ainda não há solicitações de pagamento.",
+      "table": {
+        "amount": "Valor",
+        "method": "Método",
+        "status": "Status",
+        "requestedAt": "Solicitado",
+        "processedAt": "Processado"
+      }
+    },
+    "viewAll": "Ver Tudo",
+    "commissionStatus": {
+      "pending": "Pendente",
+      "approved": "Aprovado",
+      "paid": "Pago",
+      "cancelled": "Cancelado"
+    },
+    "payoutStatus": {
+      "requested": "Solicitado",
+      "pending_review": "Revisão Pendente",
+      "approved": "Aprovado",
+      "processing": "Processando",
+      "completed": "Concluído",
+      "rejected": "Rejeitado",
+      "cancelled": "Cancelado"
+    }
+  },
+  "referralLinks": {
+    "title": "Links de Indicação",
+    "description": "Compartilhe seu link de indicação exclusivo e comece a ganhar comissões",
+    "yourLink": {
+      "title": "Seu Link de Indicação",
+      "description": "Compartilhe este link em seu site, blog, redes sociais ou onde seu público possa vê-lo"
+    },
+    "copy": "Copiar Link",
+    "copied": "Link copiado para a área de transferência!",
+    "shareTo": {
+      "title": "Compartilhar nas Redes Sociais",
+      "email": "E-mail"
+    },
+    "shareText": "Confira o BookProof - a melhor plataforma para marketing de livros e engajamento com leitores!",
+    "emailSubject": "Descubra o BookProof",
+    "performance": {
+      "title": "Desempenho do Link",
+      "description": "Rastreie o desempenho do seu link de indicação",
+      "clicks": "Cliques Totais",
+      "conversions": "Conversões",
+      "conversionRate": "Taxa de Conversão"
+    },
+    "howItWorks": {
+      "title": "Como Funciona",
+      "step1": {
+        "title": "Compartilhe Seu Link",
+        "description": "Copie seu link de indicação exclusivo e compartilhe-o com seu público"
+      },
+      "step2": {
+        "title": "Usuários Clicam no Seu Link",
+        "description": "Quando alguém clica no seu link, um cookie de rastreamento de 90 dias é definido"
+      },
+      "step3": {
+        "title": "Usuário se Registra e Compra",
+        "description": "Se eles se registrarem dentro de 90 dias e fizerem uma compra, você ganha uma comissão"
+      },
+      "step4": {
+        "title": "Ganhe Comissões Vitalícias",
+        "description": "Você ganha 20% em cada compra que eles fazem - para sempre!"
+      }
+    },
+    "qrCode": {
+      "title": "Código QR",
+      "description": "Escaneie este código QR para acessar seu link de indicação",
+      "download": "Baixar Código QR"
+    }
+  },
+  "commissions": {
+    "title": "Comissões",
+    "description": "Veja e rastreie todos os seus ganhos de comissão",
+    "summary": {
+      "total": "Total Ganho",
+      "pending": "Pendente",
+      "approved": "Aprovado",
+      "paid": "Pago"
+    },
+    "filters": {
+      "title": "Filtros",
+      "allStatuses": "Todos os Status"
+    },
+    "status": {
+      "pending": "Pendente",
+      "approved": "Aprovado",
+      "paid": "Pago",
+      "cancelled": "Cancelado"
+    },
+    "table": {
+      "title": "Todas as Comissões",
+      "description": "Histórico completo dos seus ganhos de comissão",
+      "empty": "Ainda não há comissões",
+      "author": "Autor",
+      "purchaseAmount": "Valor da Compra",
+      "commissionAmount": "Comissão",
+      "rate": "Taxa",
+      "status": "Status",
+      "createdAt": "Criado",
+      "approvedAt": "Aprovado",
+      "paidAt": "Pago"
+    },
+    "info": {
+      "title": "Informações sobre o Status da Comissão",
+      "pending": "Pendente: Comissões são retidas por 14 dias para permitir possíveis reembolsos",
+      "approved": "Aprovado: Comissões prontas para serem incluídas em sua próxima solicitação de pagamento",
+      "paid": "Pago: Comissões que foram pagas a você"
+    }
+  },
+  "payouts": {
+    "title": "Pagamentos",
+    "description": "Solicite pagamentos e veja seu histórico de pagamentos",
+    "requestPayout": "Solicitar Pagamento",
+    "balance": {
+      "title": "Seu Saldo",
+      "approved": "Disponível para Saque",
+      "pending": "Pendente (retenção de 14 dias)",
+      "paid": "Total Pago"
+    },
+    "pendingPayoutNotice": "Você tem uma solicitação de pagamento pendente. Por favor, aguarde que ela seja processada antes de solicitar outro pagamento.",
+    "request": {
+      "title": "Solicitar Pagamento",
+      "description": "O valor mínimo de pagamento é $50",
+      "availableBalance": "Saldo Disponível",
+      "form": {
+        "amount": {
+          "label": "Valor",
+          "description": "Mínimo $50"
+        },
+        "paymentMethod": {
+          "label": "Método de Pagamento",
+          "description": "Selecione seu método de pagamento preferido",
+          "bankTransfer": "Transferência Bancária",
+          "crypto": "Criptomoeda"
+        },
+        "paymentDetails": {
+          "label": "Detalhes de Pagamento",
+          "description": "Insira os detalhes da sua conta de pagamento (e-mail, endereço de carteira, etc.)",
+          "placeholder": "pagamento@example.com ou endereço de carteira"
+        },
+        "notes": {
+          "label": "Notas (Opcional)",
+          "description": "Qualquer informação adicional para o administrador",
+          "placeholder": "ex., Moeda preferida, instruções especiais..."
+        },
+        "submit": "Enviar Solicitação",
+        "submitting": "Enviando..."
+      }
+    },
+    "history": {
+      "title": "Histórico de Pagamentos",
+      "description": "Veja todas as suas solicitações de pagamento e seu status",
+      "empty": "Ainda não há solicitações de pagamento",
+      "table": {
+        "amount": "Valor",
+        "method": "Método de Pagamento",
+        "status": "Status",
+        "requestedAt": "Solicitado",
+        "processedAt": "Processado",
+        "transactionId": "ID da Transação"
+      }
+    },
+    "status": {
+      "requested": "Solicitado",
+      "pending_review": "Revisão Pendente",
+      "approved": "Aprovado",
+      "processing": "Processando",
+      "completed": "Concluído",
+      "rejected": "Rejeitado",
+      "cancelled": "Cancelado"
+    }
+  },
+  "admin": {
+    "list": {
+      "title": "Gerenciamento de Afiliados",
+      "description": "Gerencie inscrições de afiliados e monitore o desempenho",
+      "stats": {
+        "total": "Afiliados Totais",
+        "approved": "Aprovados",
+        "pending": "Pendentes",
+        "totalEarnings": "Ganhos Totais"
+      },
+      "filters": {
+        "title": "Filtros",
+        "allApproval": "Todas as Inscrições",
+        "approved": "Apenas Aprovados",
+        "pending": "Apenas Pendentes",
+        "allStatus": "Todos os Status",
+        "active": "Apenas Ativos",
+        "inactive": "Apenas Inativos",
+        "search": "Buscar por nome, e-mail ou código..."
+      },
+      "table": {
+        "empty": "Nenhum afiliado encontrado",
+        "user": "Usuário",
+        "referralCode": "Código de Referência",
+        "commissionRate": "Taxa",
+        "earnings": "Ganhos",
+        "approved": "Aprovado",
+        "clicks": "Cliques",
+        "conversions": "Conversões",
+        "status": "Status",
+        "createdAt": "Criado",
+        "actions": "Ações",
+        "view": "Ver Detalhes"
+      },
+      "status": {
+        "approved": "Aprovado",
+        "pending": "Pendente",
+        "active": "Ativo",
+        "inactive": "Inativo"
+      }
+    },
+    "details": {
+      "title": "Detalhes do Afiliado",
+      "notFound": "Afiliado não encontrado",
+      "actions": {
+        "approve": "Aprovar",
+        "reject": "Rejeitar"
+      },
+      "status": {
+        "approved": "Aprovado em",
+        "rejected": "Rejeitado"
+      },
+      "stats": {
+        "totalEarnings": "Ganhos Totais",
+        "approved": "Aprovado",
+        "clicks": "Cliques Totais",
+        "conversionRate": "Taxa de Conversão",
+        "referrals": "Indicações Totais",
+        "active": "Ativos",
+        "commissionRate": "Taxa de Comissão"
+      },
+      "application": {
+        "title": "Detalhes da Inscrição",
+        "referralCode": "Código de Referência",
+        "customSlug": "Slug Personalizado",
+        "websiteUrl": "Site",
+        "socialMedia": "Redes Sociais",
+        "promotionPlan": "Plano de Promoção",
+        "estimatedReach": "Alcance Estimado",
+        "createdAt": "Inscrito em"
+      },
+      "commissions": {
+        "title": "Comissões",
+        "description": "Todas as comissões ganhas por este afiliado",
+        "empty": "Ainda não há comissões",
+        "table": {
+          "purchase": "Compra",
+          "commission": "Comissão",
+          "status": "Status",
+          "created": "Criado",
+          "approved": "Aprovado"
+        }
+      },
+      "commissionStatus": {
+        "pending": "Pendente",
+        "approved": "Aprovado",
+        "paid": "Pago",
+        "cancelled": "Cancelado"
+      },
+      "approveDialog": {
+        "title": "Aprovar Afiliado",
+        "description": "Defina a taxa de comissão e aprove esta inscrição de afiliado",
+        "commissionRateLabel": "Taxa de Comissão (%)",
+        "commissionRateDescription": "O padrão é 20%. Você pode definir uma taxa personalizada entre 0-50%",
+        "confirm": "Aprovar Afiliado",
+        "submitting": "Aprovando..."
+      },
+      "rejectDialog": {
+        "title": "Rejeitar Afiliado",
+        "description": "Por favor, forneça um motivo para rejeitar esta inscrição",
+        "reasonLabel": "Motivo da Rejeição",
+        "reasonPlaceholder": "ex., O site não atende às nossas diretrizes...",
+        "confirm": "Rejeitar Inscrição",
+        "submitting": "Rejeitando..."
+      }
+    },
+    "payouts": {
+      "title": "Gerenciamento de Pagamentos",
+      "description": "Processar solicitações de pagamento de afiliados",
+      "stats": {
+        "total": "Valor Total",
+        "requested": "Solicitado",
+        "approved": "Aprovado",
+        "completed": "Concluído",
+        "rejected": "Rejeitado"
+      },
+      "filters": {
+        "title": "Filtros",
+        "allStatuses": "Todos os Status"
+      },
+      "status": {
+        "requested": "Solicitado",
+        "approved": "Aprovado",
+        "processing": "Processando",
+        "completed": "Concluído",
+        "rejected": "Rejeitado"
+      },
+      "table": {
+        "empty": "Nenhuma solicitação de pagamento",
+        "affiliate": "Afiliado",
+        "amount": "Valor",
+        "method": "Método",
+        "status": "Status",
+        "requestedAt": "Solicitado",
+        "processedAt": "Processado",
+        "transactionId": "ID da Transação",
+        "actions": "Ações"
+      },
+      "actions": {
+        "approve": "Aprovar",
+        "reject": "Rejeitar",
+        "complete": "Concluir"
+      },
+      "dialog": {
+        "approveTitle": "Aprovar Pagamento",
+        "rejectTitle": "Rejeitar Pagamento",
+        "completeTitle": "Concluir Pagamento",
+        "amount": "Valor",
+        "rejectionReasonLabel": "Motivo da Rejeição",
+        "rejectionReasonPlaceholder": "Por que este pagamento está sendo rejeitado?",
+        "transactionIdLabel": "ID da Transação",
+        "transactionIdPlaceholder": "Insira o ID da transação do pagamento",
+        "transactionIdDescription": "ID da transação do PayPal, referência de transferência bancária, etc.",
+        "notesLabel": "Notas (Opcional)",
+        "notesPlaceholder": "Quaisquer notas adicionais...",
+        "confirm": "Confirmar",
+        "submitting": "Processando..."
+      }
+    }
+  },
+  "referredAuthors": {
+    "title": "Autores Indicados",
+    "description": "Veja todos os autores que você indicou e suas atividades de compra",
+    "stats": {
+      "totalReferrals": "Total de Autores Indicados",
+      "totalPurchases": "Total de Compras",
+      "totalCommission": "Comissão Total Ganha"
+    },
+    "table": {
+      "title": "Lista de Autores Indicados",
+      "description": "Clique em um autor para ver seu histórico de compras",
+      "empty": "Nenhum autor indicado ainda",
+      "emptyDescription": "Compartilhe seu link de indicação para começar a ganhar comissões!",
+      "author": "Autor",
+      "signUpDate": "Data de Cadastro",
+      "totalPurchases": "Total de Compras",
+      "commissionEarned": "Comissão Ganha",
+      "lastPurchase": "Última Compra",
+      "actions": "Ações",
+      "viewDetails": "Ver Detalhes"
+    },
+    "detail": {
+      "title": "Histórico de Compras do Autor",
+      "description": "Histórico de compras e detalhamento de comissões",
+      "author": "Autor",
+      "signUpDate": "Data de Cadastro",
+      "totalPurchases": "Compras",
+      "totalCommission": "Comissão Total",
+      "purchaseHistory": "Histórico de Compras (Apenas Valores)",
+      "noPurchases": "Nenhuma compra ainda",
+      "date": "Data",
+      "purchaseAmount": "Valor da Compra",
+      "commission": "Sua Comissão",
+      "notFound": "Autor não encontrado"
+    }
+  }
+}

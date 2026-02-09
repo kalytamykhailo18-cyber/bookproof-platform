@@ -1,0 +1,146 @@
+{
+  "title": "Gerenciamento de Campanhas",
+  "subtitle": "Gerenciar todas as campanhas da plataforma",
+  "stats": {
+    "total": "Campanhas Totais",
+    "allCampaigns": "Todas as campanhas",
+    "active": "Ativas",
+    "currentlyRunning": "Em execução atualmente",
+    "paused": "Pausadas",
+    "onHold": "Em espera",
+    "completed": "Concluídas",
+    "fullyDelivered": "Totalmente entregues"
+  },
+  "status": {
+    "active": "Ativa",
+    "paused": "Pausada",
+    "completed": "Concluída",
+    "draft": "Rascunho"
+  },
+  "health": {
+    "onTrack": "No Prazo",
+    "delayed": "Atrasada",
+    "aheadOfSchedule": "Adiantada",
+    "issues": "Com Problemas"
+  },
+  "filters": {
+    "title": "Filtros",
+    "searchPlaceholder": "Buscar por título do livro...",
+    "status": "Status",
+    "allStatuses": "Todos os Status",
+    "health": "Saúde",
+    "allHealth": "Todos os Status de Saúde"
+  },
+  "table": {
+    "title": "Todas as Campanhas",
+    "description": "Visualizar e gerenciar todas as campanhas",
+    "bookTitle": "Título do Livro",
+    "status": "Status",
+    "health": "Saúde",
+    "progress": "Progresso",
+    "reviewsPerWeek": "Avaliações/Semana",
+    "weekProgress": "Progresso Semanal",
+    "actions": "Ações",
+    "week": "Semana",
+    "manual": "Manual"
+  },
+  "empty": {
+    "title": "Nenhuma campanha encontrada",
+    "description": "Nenhuma campanha corresponde aos seus filtros atuais."
+  },
+  "detail": {
+    "backToCampaigns": "Voltar para Campanhas",
+    "status": {
+      "active": "Ativa",
+      "paused": "Pausada",
+      "completed": "Concluída"
+    },
+    "health": {
+      "onTrack": "No Prazo",
+      "delayed": "Atrasada",
+      "aheadOfSchedule": "Adiantada",
+      "issues": "Com Problemas"
+    },
+    "actions": {
+      "pause": "Pausar Campanha",
+      "resume": "Retomar Campanha",
+      "controls": "Controles Avançados",
+      "pausing": "Pausando...",
+      "resuming": "Retomando...",
+      "confirmPause": "Confirmar Pausa",
+      "confirmResume": "Confirmar Retomada",
+      "pauseDialog": {
+        "title": "Pausar Campanha",
+        "description": "Isso interromperá novas atribuições de leitores. Leitores em andamento podem concluir.",
+        "reason": "Motivo",
+        "reasonPlaceholder": "Por que você está pausando esta campanha?",
+        "notes": "Notas Adicionais",
+        "notesPlaceholder": "Quaisquer notas adicionais..."
+      },
+      "resumeDialog": {
+        "title": "Retomar Campanha",
+        "description": "Isso reativará a campanha e retomará o processamento da fila.",
+        "reason": "Motivo",
+        "reasonPlaceholder": "Por que você está retomando esta campanha?",
+        "notes": "Notas Adicionais",
+        "notesPlaceholder": "Quaisquer notas adicionais..."
+      }
+    },
+    "stats": {
+      "progress": "Progresso",
+      "reviews": "avaliações",
+      "weekProgress": "Progresso Semanal",
+      "weeksCompleted": "semanas concluídas",
+      "avgRating": "Avaliação Média",
+      "internalRating": "Avaliação interna",
+      "variance": "Variação do Cronograma",
+      "days": "dias",
+      "scheduleVariance": "Dias fora do cronograma"
+    },
+    "tabs": {
+      "overview": "Visão Geral",
+      "distribution": "Distribuição",
+      "performance": "Desempenho"
+    },
+    "overview": {
+      "campaignInfo": "Informações da Campanha",
+      "targetReviews": "Avaliações Meta",
+      "reviewsDelivered": "Avaliações Entregues",
+      "reviewsValidated": "Avaliações Validadas",
+      "reviewsRejected": "Avaliações Rejeitadas",
+      "reviewsExpired": "Avaliações Expiradas",
+      "completionPercentage": "Conclusão",
+      "timeline": "Cronograma",
+      "startDate": "Data de Início",
+      "expectedEndDate": "Data de Término Esperada",
+      "projectedEndDate": "Data de Término Projetada"
+    },
+    "distribution": {
+      "title": "Distribuição Semanal",
+      "adjust": "Ajustar Taxa",
+      "reviewsPerWeek": "Avaliações Por Semana",
+      "currentWeek": "Semana Atual",
+      "totalWeeks": "Semanas Totais",
+      "manualOverride": "Ajuste Manual",
+      "adjusting": "Ajustando...",
+      "confirm": "Confirmar Ajuste",
+      "adjustDialog": {
+        "title": "Ajustar Distribuição Semanal",
+        "description": "Alterar o número de avaliações distribuídas por semana.",
+        "reviewsPerWeek": "Avaliações Por Semana",
+        "reason": "Motivo",
+        "reasonPlaceholder": "Por que você está alterando a taxa de distribuição?"
+      }
+    },
+    "performance": {
+      "title": "Métricas de Desempenho",
+      "avgRating": "Avaliação Média",
+      "onTimeDelivery": "Entrega no Prazo",
+      "validationRate": "Taxa de Validação"
+    },
+    "notFound": {
+      "title": "Campanha Não Encontrada",
+      "description": "A campanha que você procura não existe ou foi removida."
+    }
+  }
+}

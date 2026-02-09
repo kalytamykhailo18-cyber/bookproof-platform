@@ -1,0 +1,29 @@
+{
+  "app": {
+    "name": "BookProof",
+    "tagline": "Conectando Autores con Lectores"
+  },
+  "nav": {
+    "home": "Inicio",
+    "features": "Características",
+    "pricing": "Precios",
+    "about": "Acerca de",
+    "login": "Iniciar sesión",
+    "signup": "Registrarse",
+    "dashboard": "Panel"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "submit": "Enviar"
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "dashboard": {
+    "title": "Panel del Lector",
+    "subtitle": "¡Bienvenido de nuevo! Rastrea tus asignaciones y ganancias.",
+    "browseBooks": "Explorar Libros",
+    "byAuthor": "por {author}",
+    "credit": "crédito",
+    "credits": "créditos",
+    "queuePosition": "Posición en cola: {position}",
+    "scheduledFor": "Programado para: {date}",
+    "deadline": "Fecha límite",
+    "remaining": "restantes",
+    "payoutMinimumRequired": "Mínimo {amount} requerido para retiro",
+    "requestPayout": "Solicitar Retiro",
+    "viewMyReviews": "Ver Mis Reseñas",
+    "stats": {
+      "walletBalance": "Saldo de Cartera",
+      "totalEarned": "Total ganado: {amount}",
+      "activeAssignments": "Asignaciones Activas",
+      "currentlyWorking": "Trabajando actualmente",
+      "completedReviews": "Reseñas Completadas",
+      "completionRate": "{rate}% tasa de finalización",
+      "reliabilityScore": "Puntuación de Confiabilidad",
+      "performanceRating": "Tu calificación de rendimiento",
+      "pendingPayouts": "Retiros Pendientes",
+      "awaitingProcessing": "Esperando procesamiento"
+    },
+    "sections": {
+      "activeAssignments": "Asignaciones Activas",
+      "activeDescription": "Libros a los que puedes acceder ahora - ¡completa antes de la fecha límite!",
+      "upcomingAssignments": "Asignaciones Próximas",
+      "upcomingDescription": "Libros programados para ti - los materiales se liberarán en la fecha programada",
+      "completedSubmitted": "Completadas y Enviadas",
+      "completedDescription": "Tu historial de reseñas"
+    },
+    "empty": {
+      "title": "Aún no hay asignaciones",
+      "description": "Explora libros disponibles y postúlate para comenzar a ganar"
+    },
+    "status": {
+      "waiting": "Esperando en Cola",
+      "scheduled": "Programado",
+      "approved": "Materiales Disponibles",
+      "inProgress": "En Progreso",
+      "submitted": "Enviado",
+      "completed": "Completado",
+      "expired": "Expirado"
+    }
+  },
+  "campaigns": {
+    "title": "Explorar Libros",
+    "subtitle": "Encuentra libros para reseñar y comienza a ganar",
+    "backToDashboard": "Volver al Panel",
+    "filters": {
+      "title": "Filtros",
+      "search": "Buscar",
+      "searchPlaceholder": "Título, autor...",
+      "genre": "Género",
+      "allGenres": "Todos los Géneros",
+      "language": "Idioma",
+      "allLanguages": "Todos los Idiomas",
+      "format": "Formato",
+      "allFormats": "Todos los Formatos"
+    },
+    "resultsCount": "Mostrando {count} libro",
+    "resultsCount_plural": "Mostrando {count} libros",
+    "campaign": {
+      "byAuthor": "por {author}",
+      "target": "Objetivo",
+      "delivered": "Entregado",
+      "rate": "Tasa",
+      "perWeek": "/semana",
+      "queuePosition": "Posición en Cola",
+      "estimatedWait": "Espera estimada",
+      "week": "semana",
+      "weeks": "semanas",
+      "selectFormat": "Seleccionar Formato",
+      "alreadyApplied": "Ya Postulado",
+      "formatNotAvailable": "Formato No Disponible",
+      "applyToReview": "Postularse para Reseñar",
+      "applying": "Postulando..."
+    },
+    "emptyState": {
+      "title": "No se encontraron libros",
+      "description": "Intenta ajustar tus filtros o vuelve más tarde"
+    },
+    "modal": {
+      "synopsis": "Sinopsis",
+      "applyToReviewThisBook": "Postularse para Reseñar Este Libro"
+    },
+    "apply": {
+      "back": "Atrás",
+      "next": "Siguiente",
+      "submit": "Enviar Postulación",
+      "submitting": "Enviando...",
+      "selectedFormat": "Formato Seleccionado",
+      "step1": {
+        "title": "Seleccionar Formato",
+        "description": "Elige el formato que deseas reseñar"
+      },
+      "step2": {
+        "title": "Confirmar Postulación",
+        "description": "Revisa y confirma tu postulación"
+      },
+      "confirm1": "Entiendo que recibiré acceso a los materiales de reseña",
+      "confirm2": "Me comprometo a completar la reseña antes de la fecha límite",
+      "confirm3": "Acepto proporcionar una reseña honesta y detallada",
+      "success": {
+        "title": "¡Postulación Enviada!",
+        "description": "Tu postulación ha sido recibida",
+        "status": "Estado",
+        "waitingForAccess": "Esperando acceso",
+        "queuePosition": "Posición en Cola",
+        "estimatedWeek": "Semana Estimada",
+        "weekNumber": "Semana {number}",
+        "notification": "Serás notificado cuando los materiales estén disponibles",
+        "done": "Listo"
+      }
+    }
+  },
+  "assignment": {
+    "backToDashboard": "Volver al Panel",
+    "notFound": {
+      "title": "Asignación no encontrada",
+      "description": "La asignación que estás buscando no existe o ha sido eliminada."
+    },
+    "deadline": {
+      "urgent": "URGENTE: ¡Fecha Límite Aproximándose!",
+      "reminder": "Recordatorio de Fecha Límite",
+      "due": "Vence {time}",
+      "hoursRemaining": "horas restantes"
+    },
+    "sections": {
+      "synopsis": "Sinopsis",
+      "ebookDownload": "Descarga de eBook",
+      "ebookDownloadDesc": "Descarga el eBook a tu dispositivo",
+      "downloadButton": "Descargar eBook (PDF/EPUB)",
+      "downloaded": "Descargado {time}",
+      "audiobookPlayer": "Reproductor de Audiolibro"
+    },
+    "materialsNotAvailable": {
+      "title": "Materiales Aún No Disponibles",
+      "waiting": "Estás en la cola en la posición {position}. Los materiales se liberarán cuando llegue tu turno.",
+      "scheduled": "Los materiales se liberarán el {date}",
+      "expired": "Esta asignación ha expirado y ya no está disponible."
+    },
+    "details": {
+      "title": "Detalles de la Asignación",
+      "genre": "Género",
+      "format": "Formato",
+      "credits": "Créditos",
+      "queuePosition": "Posición en Cola",
+      "week": "Semana",
+      "released": "Liberado"
+    },
+    "timeline": {
+      "title": "Línea de Tiempo",
+      "applied": "Postulado",
+      "materialsReleased": "Materiales Liberados",
+      "deadline": "Fecha Límite",
+      "at": "a las"
+    },
+    "actions": {
+      "title": "Acciones",
+      "withdraw": "Retirarse de la Asignación",
+      "withdrawing": "Retirándose...",
+      "withdrawDialog": {
+        "title": "¿Retirarse de la Asignación?",
+        "description": "¿Estás seguro de que quieres retirarte de esta asignación? Esta acción no se puede deshacer. Puedes volver a postularte más tarde si cambias de opinión.",
+        "cancel": "Cancelar",
+        "confirm": "Sí, Retirarse"
+      }
+    }
+  },
+  "profile": {
+    "title": "Perfil del Lector",
+    "subtitle": "Gestiona tus preferencias de lectura y ganancias",
+    "backToDashboard": "Volver al Panel",
+    "editProfile": "Editar Perfil",
+    "sections": {
+      "profileSettings": "Configuración del Perfil",
+      "createDesc": "Crea tu perfil de lector para comenzar a postularte a libros",
+      "editDesc": "Actualiza tus preferencias de lectura",
+      "currentDesc": "Tus preferencias actuales",
+      "amazonProfiles": "Perfiles de Amazon",
+      "amazonProfilesDesc": "Agrega hasta 3 URLs de perfil de Amazon para validación de reseñas (requerido para ganancias)"
+    },
+    "contentPreference": {
+      "label": "Preferencia de Contenido",
+      "ebook": "Solo eBook (1 crédito por reseña)",
+      "audiobook": "Solo Audiolibro (2 créditos por reseña)",
+      "both": "Ambos Formatos (flexible)",
+      "help": "Esto determina qué formatos de libros puedes postularte"
+    },
+    "genres": {
+      "label": "Géneros Preferidos",
+      "help": "Selecciona los géneros que disfrutas leer (ayuda con recomendaciones de libros)"
+    },
+    "amazonProfiles": {
+      "verified": "Verificado",
+      "pending": "Verificación Pendiente",
+      "addLabel": "Agregar URL de Perfil de Amazon ({count}/3)",
+      "placeholder": "https://amazon.com/gp/profile/...",
+      "example": "Ejemplo: https://amazon.com/gp/profile/XXXXXXXXXXXXX",
+      "maxReached": "Has alcanzado el máximo de 3 perfiles de Amazon. Elimina uno para agregar un nuevo perfil."
+    },
+    "actions": {
+      "save": "Guardar Cambios",
+      "saving": "Guardando...",
+      "create": "Crear Perfil",
+      "cancel": "Cancelar"
+    },
+    "stats": {
+      "title": "Ganancias y Rendimiento",
+      "walletBalance": "Saldo de Cartera",
+      "totalEarned": "Total Ganado",
+      "totalWithdrawn": "Total Retirado",
+      "completed": "Completados",
+      "expired": "Expirados",
+      "rejected": "Rechazados",
+      "reliabilityScore": "Puntuación de Confiabilidad",
+      "completionRate": "Tasa de Finalización",
+      "accountFlagged": "Cuenta Marcada"
+    },
+    "createPrompt": {
+      "title": "Crea Tu Perfil",
+      "description": "¡Completa tu perfil para comenzar a explorar libros y ganar dinero con reseñas!"
+    }
+  },
+  "audiobook": {
+    "nowPlaying": "Reproduciendo Ahora",
+    "streamingOnly": "Solo Streaming",
+    "streamingWarning": "Este audiolibro está disponible solo para streaming. La URL firmada expira en 7 días.",
+    "skipBack": "Retroceder 15 segundos",
+    "skipForward": "Avanzar 15 segundos"
+  }
+}

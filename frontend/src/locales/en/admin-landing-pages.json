@@ -1,0 +1,66 @@
+{
+  "title": "Landing Pages Management",
+  "subtitle": "Manage landing page analytics, leads, and CTA settings",
+  "tabs": {
+    "analytics": "Analytics",
+    "leads": "Leads",
+    "settings": "CTA Settings"
+  },
+  "analytics": {
+    "title": "Global Analytics",
+    "refresh": "Refresh",
+    "totalViews": "Total Page Views",
+    "totalLeads": "Total Leads",
+    "conversionRate": "Conversion Rate",
+    "byLanguage": "Analytics by Language"
+  },
+  "leads": {
+    "title": "Email Leads",
+    "filters": {
+      "language": "Language",
+      "userType": "User Type",
+      "all": "All"
+    },
+    "export": "Export CSV",
+    "table": {
+      "email": "Email",
+      "name": "Name",
+      "language": "Language",
+      "userType": "User Type",
+      "source": "Source",
+      "welcomeEmail": "Welcome Email",
+      "converted": "Converted",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "sent": "Sent",
+    "pending": "Pending",
+    "noLeads": "No leads found"
+  },
+  "settings": {
+    "title": "CTA & Publishing Settings",
+    "selectLanguage": "Select Language",
+    "mode": {
+      "label": "Landing Page Mode",
+      "preLaunch": "Pre-Launch (Waitlist / Email Capture)",
+      "live": "Live (Registration / Login)",
+      "description": "Pre-Launch mode shows waitlist buttons. Live mode directs to registration."
+    },
+    "ctaText": {
+      "label": "CTA Button Text",
+      "placeholder": "Join Waitlist",
+      "description": "The text displayed on the main call-to-action button."
+    },
+    "ctaLink": {
+      "label": "CTA Button Link",
+      "placeholder": "/auth/register",
+      "description": "Where the button should link to. Use # for scroll to form, or /auth/register for live mode."
+    },
+    "published": {
+      "label": "Published",
+      "description": "When published, the landing page is visible to the public."
+    },
+    "save": "Save Changes",
+    "saving": "Saving..."
+  }
+}

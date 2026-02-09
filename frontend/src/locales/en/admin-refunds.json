@@ -1,0 +1,67 @@
+{
+  "title": "Refund Management",
+  "description": "Review and process author refund requests",
+
+  "stats": {
+    "pending": "Pending",
+    "pendingDesc": "Awaiting review",
+    "approved": "Approved",
+    "approvedDesc": "Successfully refunded",
+    "rejected": "Rejected",
+    "rejectedDesc": "Not eligible",
+    "totalRefunded": "Total Refunded",
+    "totalRefundedDesc": "All time"
+  },
+
+  "table": {
+    "title": "Refund Requests",
+    "totalRequests": "total requests",
+    "date": "Date",
+    "author": "Author",
+    "amount": "Amount",
+    "credits": "Credits",
+    "reason": "Reason",
+    "eligibility": "Eligibility",
+    "status": "Status",
+    "actions": "Actions"
+  },
+
+  "filters": {
+    "all": "All Statuses",
+    "pending": "Pending",
+    "approved": "Approved",
+    "partiallyApproved": "Partially Approved",
+    "rejected": "Rejected",
+    "processing": "Processing",
+    "completed": "Completed"
+  },
+
+  "dialog": {
+    "title": "Process Refund Request",
+    "description": "Review and make a decision on this refund request.",
+    "decision": "Decision",
+    "partialAmount": "Refund Amount",
+    "notes": "Admin Notes"
+  },
+
+  "decisions": {
+    "approve": "Approve Full Refund",
+    "approvePartial": "Approve Partial Refund",
+    "reject": "Reject Request"
+  },
+
+  "reasons": {
+    "DIDNT_NEED_CREDITS": "Didn't need credits",
+    "WRONG_PACKAGE": "Wrong package",
+    "ACCIDENTAL_PURCHASE": "Accidental purchase",
+    "SERVICE_NOT_AS_EXPECTED": "Service not as expected",
+    "OTHER": "Other"
+  },
+
+  "empty": {
+    "title": "No refund requests",
+    "description": "There are no refund requests to review."
+  },
+
+  "loading": "Loading refund requests..."
+}

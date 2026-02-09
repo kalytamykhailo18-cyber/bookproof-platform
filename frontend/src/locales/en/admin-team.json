@@ -1,0 +1,161 @@
+{
+  "title": "Team Management",
+  "subtitle": "Manage admin and closer accounts",
+  "tabs": {
+    "closers": "Closers",
+    "admins": "Admins"
+  },
+  "stats": {
+    "totalClosers": "Total Closers",
+    "activeClosers": "Active Closers",
+    "totalAdmins": "Total Admins",
+    "superAdmins": "Super Admins",
+    "totalSales": "Total Sales",
+    "totalCommission": "Total Commission"
+  },
+  "closers": {
+    "title": "Closers",
+    "description": "Sales team members who create custom packages for authors",
+    "addCloser": "Add Closer",
+    "empty": {
+      "title": "No closers found",
+      "description": "Create your first closer account to get started"
+    },
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "commission": "Commission Rate",
+      "sales": "Total Sales",
+      "packages": "Packages Sold",
+      "status": "Status",
+      "joined": "Joined",
+      "actions": "Actions"
+    }
+  },
+  "admins": {
+    "title": "Admins",
+    "description": "Administrative users with platform management access",
+    "addAdmin": "Add Admin",
+    "empty": {
+      "title": "No admins found",
+      "description": "Create your first admin account to get started"
+    },
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "permissions": "Permissions",
+      "status": "Status",
+      "joined": "Joined",
+      "actions": "Actions"
+    },
+    "roles": {
+      "SUPER_ADMIN": "Super Admin",
+      "ADMIN": "Admin",
+      "MODERATOR": "Moderator",
+      "SUPPORT": "Support"
+    }
+  },
+  "createCloser": {
+    "title": "Create Closer Account",
+    "description": "Add a new sales team member",
+    "fields": {
+      "email": "Email Address",
+      "emailPlaceholder": "closer@example.com",
+      "emailDescription": "The closer will receive login credentials at this email",
+      "name": "Full Name",
+      "namePlaceholder": "John Doe",
+      "nameDescription": "Full name of the closer (2-100 characters)",
+      "password": "Password (Optional)",
+      "passwordPlaceholder": "Leave blank to auto-generate",
+      "passwordDescription": "If not provided, a temporary password will be generated and sent via email",
+      "commissionRate": "Commission Rate (%)",
+      "commissionRatePlaceholder": "0",
+      "commissionRateDescription": "Percentage of sales the closer earns (0-100%)",
+      "isActive": "Active Account",
+      "isActiveDescription": "Allow the closer to log in and create packages"
+    },
+    "submit": "Create Closer",
+    "cancel": "Cancel",
+    "creating": "Creating..."
+  },
+  "createAdmin": {
+    "title": "Create Admin Account",
+    "description": "Add a new administrator (Super Admin only)",
+    "fields": {
+      "email": "Email Address",
+      "emailPlaceholder": "admin@example.com",
+      "emailDescription": "The admin will receive login credentials at this email",
+      "name": "Full Name",
+      "namePlaceholder": "Jane Admin",
+      "nameDescription": "Full name of the admin (2-100 characters)",
+      "password": "Password (Optional)",
+      "passwordPlaceholder": "Leave blank to auto-generate",
+      "passwordDescription": "If not provided, a temporary password will be generated and sent via email",
+      "adminLevel": "Admin Level",
+      "adminLevelDescription": "Super Admin has full access, Regular Admin has limited permissions",
+      "permissions": "Permissions",
+      "permissionsDescription": "Select specific permissions for this admin"
+    },
+    "levels": {
+      "SUPER_ADMIN": "Super Admin",
+      "SUPER_ADMIN_DESC": "Full access to all features including creating other admins and financial settings",
+      "REGULAR_ADMIN": "Regular Admin",
+      "REGULAR_ADMIN_DESC": "Access to most features, cannot create admins or access financial settings"
+    },
+    "permissions": {
+      "MANAGE_USERS": "Manage Users",
+      "MANAGE_CAMPAIGNS": "Manage Campaigns",
+      "MANAGE_REVIEWS": "Manage Reviews",
+      "MANAGE_READERS": "Manage Readers",
+      "MANAGE_AUTHORS": "Manage Authors",
+      "MANAGE_AFFILIATES": "Manage Affiliates",
+      "MANAGE_CLOSERS": "Manage Closers",
+      "MANAGE_COUPONS": "Manage Coupons",
+      "PROCESS_PAYOUTS": "Process Payouts",
+      "VIEW_ANALYTICS": "View Analytics",
+      "MANAGE_SETTINGS": "Manage Settings",
+      "MANAGE_ADMINS": "Manage Admins",
+      "MANAGE_FINANCIALS": "Manage Financials"
+    },
+    "submit": "Create Admin",
+    "cancel": "Cancel",
+    "creating": "Creating..."
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "actions": {
+    "view": "View",
+    "edit": "Edit",
+    "deactivate": "Deactivate",
+    "activate": "Activate"
+  },
+  "filters": {
+    "title": "Filters",
+    "search": "Search",
+    "searchPlaceholder": "Search by name or email...",
+    "status": "Status",
+    "allStatus": "All Status",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "unlockAccount": {
+    "button": "Unlock Account",
+    "title": "Unlock Locked Account",
+    "description": "Unlock an account that has been temporarily locked due to too many failed login attempts",
+    "fields": {
+      "email": "User Email",
+      "emailPlaceholder": "user@example.com",
+      "emailDescription": "Enter the email address of the locked account",
+      "reason": "Reason (Optional)",
+      "reasonPlaceholder": "e.g., User confirmed identity via phone call",
+      "reasonDescription": "Optional note for audit purposes"
+    },
+    "info": "This will immediately unlock the account if it is currently locked. Accounts are automatically locked after 5 failed login attempts (15 min) or 10 failed attempts (1 hour).",
+    "submit": "Unlock Account",
+    "cancel": "Cancel",
+    "unlocking": "Unlocking..."
+  }
+}

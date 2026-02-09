@@ -1,0 +1,232 @@
+{
+  "title": "Investigación de Palabras Clave",
+  "subtitle": "Investigación profesional de palabras clave impulsada por IA para tus libros",
+  "createNew": "Ordenar Investigación de Palabras Clave",
+  "myOrders": "Mis Órdenes de Investigación",
+  "adminMonitor": "Monitorear Todas las Órdenes",
+  "price": "Precio por libro",
+  "priceValue": "$49.99",
+
+  "status": {
+    "pending": "Pago Pendiente",
+    "processing": "Procesando",
+    "completed": "Completado",
+    "failed": "Fallido"
+  },
+
+  "list": {
+    "title": "Órdenes de Investigación de Palabras Clave",
+    "empty": "Aún no hay órdenes de investigación",
+    "emptyDescription": "Ordena tu primera investigación de palabras clave para obtener palabras clave optimizadas para Amazon KDP con IA.",
+    "table": {
+      "bookTitle": "Título del Libro",
+      "status": "Estado",
+      "price": "Precio",
+      "paid": "Pagado",
+      "createdAt": "Creado",
+      "completedAt": "Completado",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "view": "Ver Resultados",
+      "download": "Descargar PDF",
+      "regenerate": "Regenerar"
+    }
+  },
+
+  "new": {
+    "title": "Ordenar Investigación de Palabras Clave",
+    "subtitle": "Obtén recomendaciones de palabras clave impulsadas por IA para tu libro",
+    "draft": {
+      "restored": "Borrador restaurado de tu sesión anterior",
+      "lastSaved": "Último guardado",
+      "clear": "Limpiar Borrador",
+      "cleared": "Borrador limpiado"
+    },
+    "steps": {
+      "bookInfo": "Información del Libro",
+      "details": "Detalles del Libro",
+      "review": "Revisar y Pagar"
+    },
+    "fields": {
+      "bookId": {
+        "label": "Seleccionar Libro",
+        "placeholder": "Elige un libro de tus campañas",
+        "description": "Selecciona el libro para el que deseas investigación de palabras clave"
+      },
+      "bookTitle": {
+        "label": "Título del Libro",
+        "placeholder": "La Guía Completa para Autopublicar",
+        "description": "El título completo de tu libro"
+      },
+      "genre": {
+        "label": "Género",
+        "placeholder": "No Ficción",
+        "description": "Género o categoría principal"
+      },
+      "category": {
+        "label": "Categoría de Amazon",
+        "placeholder": "Negocios y Dinero > Marketing",
+        "description": "Ruta específica de categoría de Amazon"
+      },
+      "description": {
+        "label": "Descripción del Libro",
+        "placeholder": "Una guía completa para autores que quieren autopublicar...",
+        "description": "Breve descripción del contenido y valor de tu libro"
+      },
+      "targetAudience": {
+        "label": "Público Objetivo",
+        "placeholder": "Autores aspirantes, autopublicadores, escritores independientes",
+        "description": "¿Para quién es este libro?"
+      },
+      "competingBooks": {
+        "label": "Libros Competidores (Opcional)",
+        "placeholder": "Marketing de Libros Simplificado, APE: Autor Editor Emprendedor",
+        "description": "Libros similares o ASINs para analizar"
+      },
+      "bookLanguage": {
+        "label": "Idioma del Libro",
+        "description": "Idioma principal de tu libro"
+      },
+      "targetMarket": {
+        "label": "Mercado Amazon Objetivo",
+        "description": "Selecciona el marketplace de Amazon para la optimización de palabras clave. Cada pedido es para UN mercado.",
+        "us": "Amazon Estados Unidos (amazon.com)",
+        "br": "Amazon Brasil (amazon.com.br)"
+      },
+      "additionalNotes": {
+        "label": "Notas Adicionales (Opcional)",
+        "placeholder": "Enfócate en palabras clave para optimización de Amazon KDP...",
+        "description": "Cualquier requisito específico o área de enfoque"
+      },
+      "couponCode": {
+        "label": "Código de Cupón (Opcional)",
+        "placeholder": "KEYWORDS20",
+        "description": "Ingresa un código de cupón si tienes uno",
+        "apply": "Aplicar",
+        "applied": "Cupón aplicado",
+        "invalid": "Cupón inválido o expirado"
+      }
+    },
+    "review": {
+      "title": "Revisa Tu Orden",
+      "bookInfo": "Información del Libro",
+      "pricing": "Precios",
+      "subtotal": "Subtotal",
+      "discount": "Descuento",
+      "total": "Total",
+      "termsAgree": "Acepto los términos y condiciones",
+      "termsLink": "Ver términos"
+    },
+    "submit": "Realizar Pedido",
+    "submitting": "Creando orden...",
+    "success": "¡Orden de investigación de palabras clave creada exitosamente!",
+    "error": "Error al crear la orden"
+  },
+
+  "edit": {
+    "title": "Editar Investigación de Palabras Clave",
+    "subtitle": "Actualiza los detalles del libro antes de completar el pago",
+    "submit": "Guardar Cambios",
+    "submitting": "Guardando...",
+    "success": "Cambios guardados exitosamente",
+    "error": "Error al guardar cambios",
+    "cannotEdit": "Esta orden ya no puede ser editada porque ya está siendo procesada o completada."
+  },
+
+  "details": {
+    "title": "Resultados de Investigación de Palabras Clave",
+    "bookInfo": "Información del Libro",
+    "orderInfo": "Información del Pedido",
+    "orderId": "ID de Orden",
+    "createdAt": "Creado",
+    "completedAt": "Completado",
+    "status": "Estado",
+    "targetMarket": "Mercado Objetivo",
+    "targetMarketUS": "Amazon Estados Unidos (amazon.com)",
+    "targetMarketBR": "Amazon Brasil (amazon.com.br)",
+    "processing": "Tu investigación de palabras clave está siendo procesada. Esto suele tardar 5-10 minutos.",
+    "failed": "La generación de investigación de palabras clave falló. Por favor contacta soporte.",
+    "downloadPdf": "Descargar Reporte PDF",
+    "downloadCount": "Descargado {count} veces",
+    "edit": "Editar Detalles",
+    "pendingNote": "Esta orden está pendiente de pago. Puedes editar los detalles del libro antes de completar el pago.",
+
+    "keywords": {
+      "title": "Palabras Clave",
+      "primary": {
+        "title": "Palabras Clave Primarias",
+        "description": "Términos de búsqueda amplios y de alto volumen"
+      },
+      "secondary": {
+        "title": "Palabras Clave Secundarias",
+        "description": "Términos específicos de subtemas"
+      },
+      "longTail": {
+        "title": "Palabras Clave de Cola Larga",
+        "description": "Frases específicas de 3-5 palabras con menor competencia"
+      }
+    },
+
+    "usage": {
+      "title": "Guías de Uso",
+      "howToUse": "Cómo Usar Estas Palabras Clave"
+    },
+
+    "kdp": {
+      "title": "Palabras Clave Backend de Amazon KDP",
+      "description": "Usa estos conjuntos de palabras clave en tu backend de KDP (7 cajas, máx. 50 caracteres cada una)",
+      "box": "Caja {number}"
+    },
+
+    "actions": {
+      "regenerate": "Regenerar Palabras Clave",
+      "regenerateConfirm": "¿Estás seguro de que deseas regenerar esta investigación de palabras clave? Esto creará nuevas palabras clave generadas por IA.",
+      "regenerateSuccess": "Regeneración iniciada",
+      "regenerateError": "Error al regenerar"
+    }
+  },
+
+  "admin": {
+    "title": "Órdenes de Investigación de Palabras Clave - Admin",
+    "filters": {
+      "all": "Todas las Órdenes",
+      "pending": "Pendiente",
+      "processing": "Procesando",
+      "completed": "Completado",
+      "failed": "Fallido"
+    },
+    "table": {
+      "author": "Autor",
+      "bookTitle": "Título del Libro",
+      "status": "Estado",
+      "price": "Precio",
+      "paid": "Pagado",
+      "createdAt": "Creado",
+      "completedAt": "Completado",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "view": "Ver",
+      "regenerate": "Regenerar",
+      "downloadPdf": "Descargar PDF"
+    },
+    "stats": {
+      "totalOrders": "Total de Órdenes",
+      "processing": "Procesando",
+      "completed": "Completado",
+      "failed": "Fallido",
+      "totalRevenue": "Ingresos Totales"
+    }
+  },
+
+  "errors": {
+    "bookNotFound": "Libro no encontrado",
+    "alreadyExists": "Ya existe investigación de palabras clave para este libro",
+    "notAuthorized": "No autorizado para acceder a esta investigación",
+    "pdfNotReady": "PDF aún no generado",
+    "createFailed": "Error al crear orden de investigación de palabras clave",
+    "loadFailed": "Error al cargar investigación de palabras clave",
+    "downloadFailed": "Error al descargar PDF"
+  }
+}

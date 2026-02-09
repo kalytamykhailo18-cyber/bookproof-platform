@@ -1,0 +1,85 @@
+{
+  "title": "Panel de Administración",
+  "subtitle": "Resumen de la plataforma y métricas clave",
+  "stats": {
+    "totalCampaigns": "Total de Campañas",
+    "active": "{count} activas",
+    "totalAuthors": "Total de Autores",
+    "platformWide": "En toda la plataforma",
+    "totalReaders": "Total de Lectores",
+    "activeReaders": "activos",
+    "pendingReviews": "Reseñas Pendientes",
+    "awaitingValidation": "Esperando validación"
+  },
+  "revenue": {
+    "thisMonth": "Ingresos Este Mes",
+    "fromLastMonth": "del mes pasado",
+    "totalAllTime": "Ingresos Totales (Histórico)",
+    "lifetimeEarnings": "Ganancias totales",
+    "activeSubscriptions": "Suscripciones Activas"
+  },
+  "revenueBreakdown": {
+    "title": "Desglose de Ingresos",
+    "description": "Ingresos por fuente",
+    "creditPurchases": "Compra de Créditos",
+    "oneTimePayments": "Pagos únicos",
+    "subscriptions": "Suscripciones",
+    "recurringRevenue": "Ingresos recurrentes"
+  },
+  "campaigns": {
+    "reviews": "reseñas",
+    "behind": "atrasado",
+    "weekOf": "Semana {current} de {total}",
+    "healthy": {
+      "title": "Campañas Saludables",
+      "description": "{count} campañas en tiempo",
+      "onTrack": "En Tiempo",
+      "empty": "No hay campañas saludables"
+    },
+    "delayed": {
+      "title": "Campañas Atrasadas",
+      "description": "{count} campañas con retraso",
+      "empty": "No hay campañas atrasadas"
+    },
+    "issues": {
+      "title": "Campañas con Problemas",
+      "description": "{count} campañas con problemas críticos",
+      "empty": "No hay campañas con problemas"
+    }
+  },
+  "attention": {
+    "title": "Campañas que Requieren Atención",
+    "description": "Problemas que necesitan revisión del admin",
+    "columns": {
+      "bookTitle": "Título del Libro",
+      "author": "Autor",
+      "issue": "Problema",
+      "severity": "Severidad"
+    },
+    "empty": "Ninguna campaña requiere atención"
+  },
+  "activity": {
+    "title": "Actividad Reciente",
+    "description": "Últimas acciones administrativas",
+    "empty": "No hay actividad reciente"
+  },
+  "health": {
+    "completionRate": "Tasa de Finalización",
+    "averageCompletion": "Promedio de finalización de reseñas",
+    "readerReliability": "Confiabilidad del Lector",
+    "averageReliability": "Puntuación promedio de confiabilidad",
+    "validationTime": "Tiempo de Validación",
+    "avgTimeToValidate": "Tiempo promedio para validar reseñas",
+    "amazonRemovalRate": "Tasa de Eliminación Amazon",
+    "reviewsRemoved": "Reseñas eliminadas por Amazon"
+  },
+  "payouts": {
+    "pending": "Pagos Pendientes",
+    "description": "Solicitudes de pago de lectores y afiliados esperando procesamiento"
+  },
+  "validation": {
+    "queue": "Cola de Validación",
+    "description": "Reseñas esperando validación del admin"
+  },
+  "loading": "Cargando panel..."
+}

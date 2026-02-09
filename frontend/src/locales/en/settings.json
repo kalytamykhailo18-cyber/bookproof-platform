@@ -1,0 +1,86 @@
+{
+  "title": "Account Settings",
+  "subtitle": "Manage your privacy, data, and account preferences",
+  "password": {
+    "title": "Change Password",
+    "description": "Update your password to keep your account secure",
+    "currentPassword": "Current Password",
+    "currentPasswordPlaceholder": "Enter your current password",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmNewPassword": "Confirm New Password",
+    "confirmNewPasswordPlaceholder": "Confirm your new password",
+    "requirements": "Password requirements:",
+    "minLength": "At least 8 characters",
+    "uppercase": "At least one uppercase letter",
+    "lowercase": "At least one lowercase letter",
+    "number": "At least one number",
+    "special": "At least one special character",
+    "button": "Change Password",
+    "changing": "Changing...",
+    "errors": {
+      "currentRequired": "Current password is required",
+      "newRequired": "New password is required",
+      "minLength": "Password must be at least 8 characters",
+      "uppercase": "Password must contain at least one uppercase letter",
+      "lowercase": "Password must contain at least one lowercase letter",
+      "number": "Password must contain at least one number",
+      "special": "Password must contain at least one special character",
+      "mismatch": "New passwords do not match"
+    }
+  },
+  "export": {
+    "title": "Export Your Data",
+    "description": "Download a complete copy of all your personal data in JSON format (GDPR compliance)",
+    "includes": "Your export will include:",
+    "personalInfo": "Personal information (email, name, profile data)",
+    "campaigns": "Campaign history and transactions (if author)",
+    "reviews": "Review assignments and submissions (if reader)",
+    "affiliate": "Affiliate data and commissions (if affiliate)",
+    "consents": "Consent records and activity logs",
+    "button": "Download My Data",
+    "exporting": "Exporting..."
+  },
+  "privacy": {
+    "title": "Privacy & Consent",
+    "description": "Manage how we use your data (you can withdraw consent anytime)",
+    "marketing": {
+      "title": "Marketing Communications",
+      "description": "Receive promotional emails about new features, offers, and platform updates"
+    },
+    "analytics": {
+      "title": "Analytics & Performance",
+      "description": "Help us improve by allowing anonymous usage analytics and error tracking"
+    },
+    "personalization": {
+      "title": "Personalization",
+      "description": "Personalize your experience with recommendations and customized content"
+    }
+  },
+  "delete": {
+    "title": "Danger Zone",
+    "description": "Permanently delete your account and all associated data",
+    "button": "Delete My Account",
+    "dialog": {
+      "title": "Are you absolutely sure?",
+      "warning": "This action will schedule your account for deletion:",
+      "gracePeriod": "30-day grace period before permanent deletion",
+      "dataRemoved": "All personal data will be permanently removed",
+      "contentDeleted": "Campaigns, reviews, and transactions will be deleted",
+      "cancelable": "You can cancel within the grace period",
+      "confirmLabel": "Type {phrase} to confirm:",
+      "confirmPhrase": "DELETE MY ACCOUNT",
+      "reasonLabel": "Reason (optional - helps us improve):",
+      "reasonPlaceholder": "Tell us why you're leaving...",
+      "cancel": "Cancel",
+      "confirm": "Delete Account",
+      "deleting": "Deleting..."
+    },
+    "note": "Account deletion requests include a 30-day grace period. During this time, you can log in and cancel the deletion request if you change your mind."
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "description": "Learn more about how we protect your data",
+    "button": "Read Policy"
+  }
+}

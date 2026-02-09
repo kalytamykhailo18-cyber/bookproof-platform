@@ -1,0 +1,93 @@
+{
+  "activity": {
+    "title": "Activity Logs",
+    "description": "Track system activity and user actions",
+    "logsTable": "Activity Logs",
+    "showing": "Showing {from} to {to} of {total} entries"
+  },
+  "stats": {
+    "totalLogs": "Total Logs",
+    "allTime": "All time",
+    "recentLogs": "Recent Logs",
+    "last24h": "Last 24 hours",
+    "warningLogs": "Warning Logs",
+    "warnings": "Warnings",
+    "errorLogs": "Error Logs",
+    "errors": "Errors",
+    "criticalLogs": "Critical Logs",
+    "critical": "Critical issues"
+  },
+  "filters": {
+    "title": "Filters",
+    "search": "Search",
+    "searchPlaceholder": "Search logs...",
+    "action": "Action",
+    "actionPlaceholder": "Filter by action...",
+    "entity": "Entity",
+    "entityPlaceholder": "Filter by entity...",
+    "severity": "Severity",
+    "allSeverities": "All Severities",
+    "userRole": "User Role",
+    "allRoles": "All Roles",
+    "apply": "Apply Filters",
+    "clear": "Clear",
+    "status": "Status",
+    "allStatuses": "All Statuses",
+    "emailSearchPlaceholder": "Search by type or subject...",
+    "recipient": "Recipient",
+    "recipientPlaceholder": "Filter by recipient email...",
+    "errorSearchPlaceholder": "Search error logs...",
+    "allErrorSeverities": "All Error Severities"
+  },
+  "table": {
+    "timestamp": "Timestamp",
+    "severity": "Severity",
+    "action": "Action",
+    "entity": "Entity",
+    "user": "User",
+    "description": "Description",
+    "ipAddress": "IP Address",
+    "viewDetails": "View Details"
+  },
+  "empty": {
+    "title": "No logs found",
+    "description": "No activity logs match your filters",
+    "noEmails": "No email logs match your filters",
+    "noErrors": "No error logs found"
+  },
+  "pagination": {
+    "page": "Page {current} of {total}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "emails": {
+    "title": "Email Logs",
+    "description": "Track sent emails and their delivery status",
+    "logsTable": "Email Logs"
+  },
+  "emailStats": {
+    "totalEmails": "Total Emails",
+    "allTime": "All time",
+    "sentEmails": "Sent Emails",
+    "sent": "Successfully sent",
+    "deliveredEmails": "Delivered Emails",
+    "delivered": "Confirmed delivery",
+    "failedEmails": "Failed Emails",
+    "failed": "Delivery failed",
+    "pendingEmails": "Pending Emails",
+    "pending": "Awaiting delivery"
+  },
+  "emailTable": {
+    "timestamp": "Timestamp",
+    "recipient": "Recipient",
+    "subject": "Subject",
+    "type": "Type",
+    "status": "Status",
+    "delivered": "Delivered"
+  },
+  "errors": {
+    "title": "Error Logs",
+    "description": "Monitor application errors and critical issues",
+    "logsTable": "Error Logs"
+  }
+}

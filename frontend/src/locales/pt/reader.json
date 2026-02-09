@@ -1,0 +1,237 @@
+{
+  "dashboard": {
+    "title": "Painel do Leitor",
+    "subtitle": "Bem-vindo de volta! Acompanhe suas atribuições e ganhos.",
+    "browseBooks": "Buscar Livros",
+    "byAuthor": "por {author}",
+    "credit": "crédito",
+    "credits": "créditos",
+    "queuePosition": "Posição na fila: {position}",
+    "scheduledFor": "Agendado para: {date}",
+    "deadline": "Prazo",
+    "remaining": "restantes",
+    "payoutMinimumRequired": "Mínimo {amount} necessário para saque",
+    "requestPayout": "Solicitar Saque",
+    "viewMyReviews": "Ver Minhas Avaliações",
+    "stats": {
+      "walletBalance": "Saldo da Carteira",
+      "totalEarned": "Total ganho: {amount}",
+      "activeAssignments": "Atribuições Ativas",
+      "currentlyWorking": "Trabalhando atualmente",
+      "completedReviews": "Avaliações Concluídas",
+      "completionRate": "{rate}% taxa de conclusão",
+      "reliabilityScore": "Pontuação de Confiabilidade",
+      "performanceRating": "Sua classificação de desempenho",
+      "pendingPayouts": "Saques Pendentes",
+      "awaitingProcessing": "Aguardando processamento"
+    },
+    "sections": {
+      "activeAssignments": "Atribuições Ativas",
+      "activeDescription": "Livros que você pode acessar agora - conclua antes do prazo!",
+      "upcomingAssignments": "Atribuições Futuras",
+      "upcomingDescription": "Livros agendados para você - os materiais serão liberados na data agendada",
+      "completedSubmitted": "Concluídas e Enviadas",
+      "completedDescription": "Seu histórico de avaliações"
+    },
+    "empty": {
+      "title": "Nenhuma atribuição ainda",
+      "description": "Navegue pelos livros disponíveis e candidate-se para começar a ganhar"
+    },
+    "status": {
+      "waiting": "Aguardando na Fila",
+      "scheduled": "Agendado",
+      "approved": "Materiais Disponíveis",
+      "inProgress": "Em Andamento",
+      "submitted": "Enviado",
+      "completed": "Concluído",
+      "expired": "Expirado"
+    }
+  },
+  "campaigns": {
+    "title": "Buscar Livros",
+    "subtitle": "Encontre livros para avaliar e comece a ganhar",
+    "backToDashboard": "Voltar ao Painel",
+    "filters": {
+      "title": "Filtros",
+      "search": "Buscar",
+      "searchPlaceholder": "Título, autor...",
+      "genre": "Gênero",
+      "allGenres": "Todos os Gêneros",
+      "language": "Idioma",
+      "allLanguages": "Todos os Idiomas",
+      "format": "Formato",
+      "allFormats": "Todos os Formatos"
+    },
+    "resultsCount": "Mostrando {count} livro",
+    "resultsCount_plural": "Mostrando {count} livros",
+    "campaign": {
+      "byAuthor": "por {author}",
+      "target": "Meta",
+      "delivered": "Entregue",
+      "rate": "Taxa",
+      "perWeek": "/semana",
+      "queuePosition": "Posição na Fila",
+      "estimatedWait": "Espera estimada",
+      "week": "semana",
+      "weeks": "semanas",
+      "selectFormat": "Selecionar Formato",
+      "alreadyApplied": "Já Candidatado",
+      "formatNotAvailable": "Formato Não Disponível",
+      "applyToReview": "Candidatar-se para Avaliar",
+      "applying": "Candidatando..."
+    },
+    "emptyState": {
+      "title": "Nenhum livro encontrado",
+      "description": "Tente ajustar seus filtros ou volte mais tarde"
+    },
+    "modal": {
+      "synopsis": "Sinopse",
+      "applyToReviewThisBook": "Candidatar-se para Avaliar Este Livro"
+    },
+    "apply": {
+      "back": "Voltar",
+      "next": "Próximo",
+      "submit": "Enviar Candidatura",
+      "submitting": "Enviando...",
+      "selectedFormat": "Formato Selecionado",
+      "step1": {
+        "title": "Selecionar Formato",
+        "description": "Escolha o formato que deseja avaliar"
+      },
+      "step2": {
+        "title": "Confirmar Candidatura",
+        "description": "Revise e confirme sua candidatura"
+      },
+      "confirm1": "Entendo que receberei acesso aos materiais de avaliação",
+      "confirm2": "Comprometo-me a concluir a avaliação antes do prazo",
+      "confirm3": "Concordo em fornecer uma avaliação honesta e detalhada",
+      "success": {
+        "title": "Candidatura Enviada!",
+        "description": "Sua candidatura foi recebida",
+        "status": "Status",
+        "waitingForAccess": "Aguardando acesso",
+        "queuePosition": "Posição na Fila",
+        "estimatedWeek": "Semana Estimada",
+        "weekNumber": "Semana {number}",
+        "notification": "Você será notificado quando os materiais estiverem disponíveis",
+        "done": "Concluído"
+      }
+    }
+  },
+  "assignment": {
+    "backToDashboard": "Voltar ao Painel",
+    "notFound": {
+      "title": "Atribuição não encontrada",
+      "description": "A atribuição que você está procurando não existe ou foi removida."
+    },
+    "deadline": {
+      "urgent": "URGENTE: Prazo se Aproximando!",
+      "reminder": "Lembrete de Prazo",
+      "due": "Vence {time}",
+      "hoursRemaining": "horas restantes"
+    },
+    "sections": {
+      "synopsis": "Sinopse",
+      "ebookDownload": "Download do eBook",
+      "ebookDownloadDesc": "Baixe o eBook para o seu dispositivo",
+      "downloadButton": "Baixar eBook (PDF/EPUB)",
+      "downloaded": "Baixado {time}",
+      "audiobookPlayer": "Player de Audiolivro"
+    },
+    "materialsNotAvailable": {
+      "title": "Materiais Ainda Não Disponíveis",
+      "waiting": "Você está na fila na posição {position}. Os materiais serão liberados quando chegar sua vez.",
+      "scheduled": "Os materiais serão liberados em {date}",
+      "expired": "Esta atribuição expirou e não está mais disponível."
+    },
+    "details": {
+      "title": "Detalhes da Atribuição",
+      "genre": "Gênero",
+      "format": "Formato",
+      "credits": "Créditos",
+      "queuePosition": "Posição na Fila",
+      "week": "Semana",
+      "released": "Liberado"
+    },
+    "timeline": {
+      "title": "Linha do Tempo",
+      "applied": "Candidatado",
+      "materialsReleased": "Materiais Liberados",
+      "deadline": "Prazo",
+      "at": "às"
+    },
+    "actions": {
+      "title": "Ações",
+      "withdraw": "Retirar da Atribuição",
+      "withdrawing": "Retirando...",
+      "withdrawDialog": {
+        "title": "Retirar da Atribuição?",
+        "description": "Tem certeza de que deseja se retirar desta atribuição? Esta ação não pode ser desfeita. Você pode se candidatar novamente mais tarde se mudar de ideia.",
+        "cancel": "Cancelar",
+        "confirm": "Sim, Retirar"
+      }
+    }
+  },
+  "profile": {
+    "title": "Perfil do Leitor",
+    "subtitle": "Gerencie suas preferências de leitura e ganhos",
+    "backToDashboard": "Voltar ao Painel",
+    "editProfile": "Editar Perfil",
+    "sections": {
+      "profileSettings": "Configurações do Perfil",
+      "createDesc": "Crie seu perfil de leitor para começar a se candidatar a livros",
+      "editDesc": "Atualize suas preferências de leitura",
+      "currentDesc": "Suas preferências atuais",
+      "amazonProfiles": "Perfis da Amazon",
+      "amazonProfilesDesc": "Adicione até 3 URLs de perfil da Amazon para validação de avaliações (necessário para ganhos)"
+    },
+    "contentPreference": {
+      "label": "Preferência de Conteúdo",
+      "ebook": "Apenas eBook (1 crédito por avaliação)",
+      "audiobook": "Apenas Audiolivro (2 créditos por avaliação)",
+      "both": "Ambos os Formatos (flexível)",
+      "help": "Isso determina quais formatos de livro você pode se candidatar"
+    },
+    "genres": {
+      "label": "Gêneros Preferidos",
+      "help": "Selecione os gêneros que você gosta de ler (ajuda com recomendações de livros)"
+    },
+    "amazonProfiles": {
+      "verified": "Verificado",
+      "pending": "Verificação Pendente",
+      "addLabel": "Adicionar URL do Perfil da Amazon ({count}/3)",
+      "placeholder": "https://amazon.com/gp/profile/...",
+      "example": "Exemplo: https://amazon.com/gp/profile/XXXXXXXXXXXXX",
+      "maxReached": "Você atingiu o máximo de 3 perfis da Amazon. Remova um para adicionar um novo perfil."
+    },
+    "actions": {
+      "save": "Salvar Alterações",
+      "saving": "Salvando...",
+      "create": "Criar Perfil",
+      "cancel": "Cancelar"
+    },
+    "stats": {
+      "title": "Ganhos e Desempenho",
+      "walletBalance": "Saldo da Carteira",
+      "totalEarned": "Total Ganho",
+      "totalWithdrawn": "Total Sacado",
+      "completed": "Concluídos",
+      "expired": "Expirados",
+      "rejected": "Rejeitados",
+      "reliabilityScore": "Pontuação de Confiabilidade",
+      "completionRate": "Taxa de Conclusão",
+      "accountFlagged": "Conta Sinalizada"
+    },
+    "createPrompt": {
+      "title": "Crie Seu Perfil",
+      "description": "Complete seu perfil para começar a navegar pelos livros e ganhar dinheiro com avaliações!"
+    }
+  },
+  "audiobook": {
+    "nowPlaying": "Tocando Agora",
+    "streamingOnly": "Apenas Streaming",
+    "streamingWarning": "Este audiolivro está disponível apenas para streaming. A URL assinada expira em 7 dias.",
+    "skipBack": "Retroceder 15 segundos",
+    "skipForward": "Avançar 15 segundos"
+  }
+}

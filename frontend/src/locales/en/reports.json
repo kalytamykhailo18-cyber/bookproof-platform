@@ -1,0 +1,56 @@
+{
+  "title": "Campaign Reports",
+  "description": "View and download detailed campaign reports",
+  "noReports": "No campaign reports available yet",
+  "noReportsDescription": "Reports are automatically generated when campaigns are completed",
+  "viewReport": "View Report",
+  "downloadPdf": "Download PDF",
+  "regenerate": "Regenerate",
+  "regenerating": "Regenerating...",
+  "downloading": "Downloading...",
+  "generatedAt": "Generated",
+  "metrics": {
+    "totalReviews": "Total Reviews",
+    "validatedReviews": "Validated Reviews",
+    "averageRating": "Average Rating",
+    "successRate": "Success Rate",
+    "delays": "Delays",
+    "replacements": "Replacements",
+    "campaignDuration": "Campaign Duration",
+    "weeks": "weeks"
+  },
+  "ratingDistribution": {
+    "title": "Rating Distribution",
+    "fiveStar": "5 Stars",
+    "fourStar": "4 Stars",
+    "threeStar": "3 Stars",
+    "twoStar": "2 Stars",
+    "oneStar": "1 Star",
+    "reviews": "reviews"
+  },
+  "ratingTrends": {
+    "title": "Rating Trends Over Time",
+    "description": "Weekly average ratings throughout your campaign"
+  },
+  "performance": {
+    "title": "Performance Metrics",
+    "successRate": "Success Rate",
+    "delays": "Delays Encountered",
+    "replacements": "Replacements Provided"
+  },
+  "duration": {
+    "title": "Campaign Duration",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "totalWeeks": "Total Weeks"
+  },
+  "feedback": {
+    "title": "Anonymous Reader Feedback",
+    "description": "Selected feedback from readers about your book (reader identities are protected)"
+  },
+  "actions": {
+    "viewDetails": "View Details",
+    "download": "Download PDF",
+    "regenerate": "Regenerate Report"
+  }
+}
