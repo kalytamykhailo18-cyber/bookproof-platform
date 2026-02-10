@@ -24,6 +24,10 @@ import adminAuthorsEN from '../locales/en/admin-authors.json';
 import adminAuthorsES from '../locales/es/admin-authors.json';
 import adminAuthorsPT from '../locales/pt/admin-authors.json';
 
+import adminAuthorTransactionsEN from '../locales/en/admin-author-transactions.json';
+import adminAuthorTransactionsES from '../locales/es/admin-author-transactions.json';
+import adminAuthorTransactionsPT from '../locales/pt/admin-author-transactions.json';
+
 import adminReadersEN from '../locales/en/admin-readers.json';
 import adminReadersES from '../locales/es/admin-readers.json';
 import adminReadersPT from '../locales/pt/admin-readers.json';
@@ -88,6 +92,7 @@ const resources = {
     auth: authEN,
     adminDashboard: adminDashboardEN,
     adminAuthors: adminAuthorsEN,
+    adminAuthorTransactions: adminAuthorTransactionsEN,
     adminReaders: adminReadersEN,
     adminAffiliates: adminAffiliatesEN,
     adminAffiliateDetails: adminAffiliateDetailsEN,
@@ -107,6 +112,7 @@ const resources = {
     auth: authES,
     adminDashboard: adminDashboardES,
     adminAuthors: adminAuthorsES,
+    adminAuthorTransactions: adminAuthorTransactionsES,
     adminReaders: adminReadersES,
     adminAffiliates: adminAffiliatesES,
     adminAffiliateDetails: adminAffiliateDetailsES,
@@ -126,6 +132,7 @@ const resources = {
     auth: authPT,
     adminDashboard: adminDashboardPT,
     adminAuthors: adminAuthorsPT,
+    adminAuthorTransactions: adminAuthorTransactionsPT,
     adminReaders: adminReadersPT,
     adminAffiliates: adminAffiliatesPT,
     adminAffiliateDetails: adminAffiliateDetailsPT,
