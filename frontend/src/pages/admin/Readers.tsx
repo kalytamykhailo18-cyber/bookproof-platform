@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate,  useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { adminReadersApi } from '@/lib/api/admin-readers';
@@ -73,7 +73,10 @@ export function AdminReaderDetailPage() {
   // Data state
   const [reader, setReader] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [reviewHistory, setReviewHistory] = useState<any[]>([]);
+  const [reviewHistory, setReviewHistory] = useState<any>(null);
+
+  // Safety mechanism: prevent duplicate fetches
+  const hasFetchedRef = useRef(false);
 
   // Mutation loading states
   const [isSuspending, setIsSuspending] = useState(false);
@@ -94,9 +97,20 @@ export function AdminReaderDetailPage() {
 
   // Fetch reader details and review history
   useEffect(() => {
-    const fetchData = async () => {
-      if (!readerId) return;
+    // If no readerId, set loading to false and show "not found" state
+    if (!readerId) {
+      setIsLoading(false);
+      return;
+    }
 
+    // Only fetch once per reader
+    if (hasFetchedRef.current) {
+      return;
+    }
+
+    hasFetchedRef.current = true;
+
+    const fetchData = async () => {
       try {
         setIsLoading(true);
 
@@ -108,9 +122,16 @@ export function AdminReaderDetailPage() {
 
         setReader(readerData);
         setReviewHistory(reviewData);
-      } catch (err) {
-        console.error('Reader data error:', err);
+      } catch (err: any) {
+        console.error('[ReaderDetail] Fetch error:', err);
+        console.error('[ReaderDetail] Error details:', {
+          message: err?.message,
+          response: err?.response?.data,
+          status: err?.response?.status
+        });
         toast.error('Failed to load reader details');
+        // Reset on error so user can retry
+        hasFetchedRef.current = false;
       } finally {
         setIsLoading(false);
       }
@@ -175,12 +196,7 @@ export function AdminReaderDetailPage() {
       toast.success('Reader suspended successfully');
 
       // Refetch data
-      const [readerData, reviewData] = await Promise.all([
-        adminReadersApi.getReaderDetails(readerId),
-        adminReadersApi.getReaderReviewHistory(readerId, 20)
-      ]);
-      setReader(readerData);
-      setReviewHistory(reviewData);
+      await refetchReaderData();
 
       // Reset form
       setSuspendDialogOpen(false);
@@ -206,12 +222,7 @@ export function AdminReaderDetailPage() {
       toast.success('Reader unsuspended successfully');
 
       // Refetch data
-      const [readerData, reviewData] = await Promise.all([
-        adminReadersApi.getReaderDetails(readerId),
-        adminReadersApi.getReaderReviewHistory(readerId, 20)
-      ]);
-      setReader(readerData);
-      setReviewHistory(reviewData);
+      await refetchReaderData();
 
       // Reset form
       setUnsuspendDialogOpen(false);
@@ -242,12 +253,7 @@ export function AdminReaderDetailPage() {
       toast.success('Wallet adjusted successfully');
 
       // Refetch data
-      const [readerData, reviewData] = await Promise.all([
-        adminReadersApi.getReaderDetails(readerId),
-        adminReadersApi.getReaderReviewHistory(readerId, 20)
-      ]);
-      setReader(readerData);
-      setReviewHistory(reviewData);
+      await refetchReaderData();
 
       // Reset form
       setWalletDialogOpen(false);
@@ -274,12 +280,7 @@ export function AdminReaderDetailPage() {
       toast.success('Reader flagged successfully');
 
       // Refetch data
-      const [readerData, reviewData] = await Promise.all([
-        adminReadersApi.getReaderDetails(readerId),
-        adminReadersApi.getReaderReviewHistory(readerId, 20)
-      ]);
-      setReader(readerData);
-      setReviewHistory(reviewData);
+      await refetchReaderData();
 
       // Reset form
       setFlagDialogOpen(false);
@@ -305,12 +306,7 @@ export function AdminReaderDetailPage() {
       toast.success('Reader unflagged successfully');
 
       // Refetch data
-      const [readerData, reviewData] = await Promise.all([
-        adminReadersApi.getReaderDetails(readerId),
-        adminReadersApi.getReaderReviewHistory(readerId, 20)
-      ]);
-      setReader(readerData);
-      setReviewHistory(reviewData);
+      await refetchReaderData();
 
       // Reset form
       setUnflagDialogOpen(false);
@@ -333,12 +329,7 @@ export function AdminReaderDetailPage() {
       toast.success('Note added successfully');
 
       // Refetch data
-      const [readerData, reviewData] = await Promise.all([
-        adminReadersApi.getReaderDetails(readerId),
-        adminReadersApi.getReaderReviewHistory(readerId, 20)
-      ]);
-      setReader(readerData);
-      setReviewHistory(reviewData);
+      await refetchReaderData();
 
       // Reset form
       setNoteDialogOpen(false);
@@ -360,12 +351,7 @@ export function AdminReaderDetailPage() {
       toast.success('Note deleted successfully');
 
       // Refetch data
-      const [readerData, reviewData] = await Promise.all([
-        adminReadersApi.getReaderDetails(readerId),
-        adminReadersApi.getReaderReviewHistory(readerId, 20)
-      ]);
-      setReader(readerData);
-      setReviewHistory(reviewData);
+      await refetchReaderData();
     } catch (error: any) {
       console.error('Delete note error:', error);
       toast.error(error.response?.data?.message || 'Failed to delete note');
@@ -383,12 +369,7 @@ export function AdminReaderDetailPage() {
       toast.success('Amazon profile verified successfully');
 
       // Refetch data
-      const [readerData, reviewData] = await Promise.all([
-        adminReadersApi.getReaderDetails(readerId),
-        adminReadersApi.getReaderReviewHistory(readerId, 20)
-      ]);
-      setReader(readerData);
-      setReviewHistory(reviewData);
+      await refetchReaderData();
     } catch (error: any) {
       console.error('Verify Amazon error:', error);
       toast.error(error.response?.data?.message || 'Failed to verify Amazon profile');
@@ -901,7 +882,7 @@ export function AdminReaderDetailPage() {
               <CardDescription>{t('reviews.description')}</CardDescription>
             </CardHeader>
             <CardContent>
-              {!reviewHistory || reviewHistory.reviews.length === 0 ? (
+              {!reviewHistory || !reviewHistory.reviews || reviewHistory.reviews.length === 0 ? (
                 <p className="py-8 text-center text-muted-foreground">{t('reviews.empty')}</p>
               ) : (
                 <Table>

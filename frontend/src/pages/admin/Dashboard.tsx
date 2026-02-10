@@ -62,7 +62,6 @@ export function AdminDashboardPage() {
   useEffect(() => {
     // If we've already fetched for this user, skip
     if (hasFetchedRef.current && currentUserIdRef.current === user?.id) {
-      console.log('[Dashboard] Skipping fetch - already fetched for user:', user?.id);
       return;
     }
 
@@ -78,8 +77,6 @@ export function AdminDashboardPage() {
       try {
         setDashboardLoading(true);
         setError(null);
-
-        console.log('[Dashboard] Fetching dashboard data for user:', user?.id);
 
         // Fetch dashboard data
         const dashboardData = await dashboardsApi.getAdminDashboard();

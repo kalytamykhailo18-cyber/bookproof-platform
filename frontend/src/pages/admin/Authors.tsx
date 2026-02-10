@@ -88,7 +88,6 @@ export function AdminAuthorsPage() {
   const fetchAuthors = async () => {
     try {
       setIsLoading(true);
-      console.log('[Authors] Fetching authors...');
       const data = await adminControlsApi.getAllAuthors();
       setAuthors(data);
     } catch (error: any) {

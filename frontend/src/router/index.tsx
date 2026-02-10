@@ -62,7 +62,8 @@ const ForbiddenPage = lazy(() => import('../pages/forbidden/Forbidden').then(m =
 const AdminDashboardPage = lazy(() => import('../pages/admin/Dashboard').then(m => ({ default: m.AdminDashboardPage })));
 const AdminValidationPage = lazy(() => import('../pages/admin/Validation').then(m => ({ default: m.AdminValidationPage })));
 const AdminAuthorsPage = lazy(() => import('../pages/admin/Authors').then(m => ({ default: m.AdminAuthorsPage })));
-const AdminReadersPage = lazy(() => import('../pages/admin/Readers').then(m => ({ default: m.AdminReaderDetailPage })));
+const AdminReadersListPage = lazy(() => import('../pages/admin/ReadersList').then(m => ({ default: m.AdminReadersListPage })));
+const AdminReaderDetailPage = lazy(() => import('../pages/admin/Readers').then(m => ({ default: m.AdminReaderDetailPage })));
 const AdminCampaignsPage = lazy(() => import('../pages/admin/Campaigns').then(m => ({ default: m.AdminCampaignDetailPage })));
 const AdminCampaignControlsPage = lazy(() => import('../pages/admin/campaigns/Controls').then(m => ({ default: m.CampaignControlsPage })));
 const AdminDisputesPage = lazy(() => import('../pages/admin/Disputes').then(m => ({ default: m.DisputesPage })));
@@ -216,8 +217,8 @@ export const router = createBrowserRouter([
               { path: 'validation', element: <LazyRoute component={AdminValidationPage} /> },
               { path: 'authors', element: <LazyRoute component={AdminAuthorsPage} /> },
               { path: 'authors/:id/transactions', element: <LazyRoute component={AdminAuthorsTransactionsPage} /> },
-              { path: 'readers', element: <LazyRoute component={AdminReadersPage} /> },
-              { path: 'readers/:id', element: <LazyRoute component={AdminReadersPage} /> },
+              { path: 'readers', element: <LazyRoute component={AdminReadersListPage} /> },
+              { path: 'readers/:id', element: <LazyRoute component={AdminReaderDetailPage} /> },
               { path: 'campaigns', element: <LazyRoute component={AdminCampaignsPage} /> },
               { path: 'campaigns/:id', element: <LazyRoute component={AdminCampaignsPage} /> },
               { path: 'campaigns/:id/controls', element: <LazyRoute component={AdminCampaignControlsPage} /> },
