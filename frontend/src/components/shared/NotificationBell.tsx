@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -32,8 +32,8 @@ export function NotificationBell() {
   const [notificationData, setNotificationData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch unread count and notifications
-  const fetchNotifications = async () => {
+  // Fetch unread count and notifications - memoized to prevent recreation
+  const fetchNotifications = useCallback(async () => {
     try {
       setIsLoading(true);
       const [countData, notifData] = await Promise.all([
@@ -47,21 +47,24 @@ export function NotificationBell() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchNotifications();
-  }, []);
+  }, [fetchNotifications]);
+
+  // Memoize onEvent to prevent SSE reconnection loop
+  const realtimeEventHandlers = useMemo(() => ({
+    [RealtimeEventType.NOTIFICATION]: () => {
+      // Refetch notifications on new notification event
+      fetchNotifications();
+    },
+  }), [fetchNotifications]);
 
   // Subscribe to real-time notification events
   useRealtimeUpdates({
     showNotifications: false, // We'll handle display manually
-    onEvent: {
-      [RealtimeEventType.NOTIFICATION]: () => {
-        // Refetch notifications on new notification event
-        fetchNotifications();
-      },
-    },
+    onEvent: realtimeEventHandlers,
   });
 
   // Handle notification click
