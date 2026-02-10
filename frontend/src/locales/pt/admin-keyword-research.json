@@ -1,0 +1,56 @@
+{
+  "title": "Pedidos de Pesquisa de Palavras-Chave",
+  "description": "Monitorar e gerenciar todos os pedidos de pesquisa de palavras-chave",
+  "stats": {
+    "totalOrders": "Total de Pedidos",
+    "processing": "Em Processamento",
+    "completed": "Concluídos",
+    "failed": "Falhados",
+    "totalRevenue": "Receita Total"
+  },
+  "filters": {
+    "title": "Filtros",
+    "status": "Status",
+    "all": "Todos os Status",
+    "pending": "Pendente",
+    "processing": "Em Processamento",
+    "completed": "Concluído",
+    "failed": "Falhado"
+  },
+  "table": {
+    "title": "Pedidos de Pesquisa de Palavras-Chave",
+    "ordersCount": "{{count}} pedidos",
+    "filteredBy": "(filtrado por {{filter}})",
+    "noOrders": "Nenhum pedido encontrado",
+    "bookTitle": "Título do Livro",
+    "status": "Status",
+    "price": "Preço",
+    "paid": "Pago",
+    "createdAt": "Criado",
+    "completedAt": "Concluído",
+    "actions": "Ações"
+  },
+  "paid": {
+    "yes": "Sim",
+    "no": "Não"
+  },
+  "actions": {
+    "view": "Ver Detalhes",
+    "downloadPdf": "Baixar PDF",
+    "regenerate": "Regenerar"
+  },
+  "regenerateDialog": {
+    "title": "Regenerar Pesquisa de Palavras-Chave",
+    "description": "Tem certeza de que deseja regenerar esta pesquisa de palavras-chave? Isso criará novas palavras-chave geradas por IA e um novo relatório em PDF.",
+    "cancel": "Cancelar",
+    "confirm": "Regenerar",
+    "regenerating": "Regenerando..."
+  },
+  "messages": {
+    "loadError": "Erro ao carregar pesquisas de palavras-chave",
+    "regenerateSuccess": "Regeneração de pesquisa de palavras-chave iniciada",
+    "regenerateError": "Erro ao regenerar pesquisa de palavras-chave",
+    "downloadSuccess": "Download do PDF iniciado",
+    "downloadError": "Erro ao baixar PDF"
+  }
+}

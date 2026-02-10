@@ -1,0 +1,56 @@
+{
+  "title": "Keyword Research Orders",
+  "description": "Monitor and manage all keyword research orders",
+  "stats": {
+    "totalOrders": "Total Orders",
+    "processing": "Processing",
+    "completed": "Completed",
+    "failed": "Failed",
+    "totalRevenue": "Total Revenue"
+  },
+  "filters": {
+    "title": "Filters",
+    "status": "Status",
+    "all": "All Statuses",
+    "pending": "Pending",
+    "processing": "Processing",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
+  "table": {
+    "title": "Keyword Research Orders",
+    "ordersCount": "{{count}} orders",
+    "filteredBy": "(filtered by {{filter}})",
+    "noOrders": "No orders found",
+    "bookTitle": "Book Title",
+    "status": "Status",
+    "price": "Price",
+    "paid": "Paid",
+    "createdAt": "Created",
+    "completedAt": "Completed",
+    "actions": "Actions"
+  },
+  "paid": {
+    "yes": "Yes",
+    "no": "No"
+  },
+  "actions": {
+    "view": "View Details",
+    "downloadPdf": "Download PDF",
+    "regenerate": "Regenerate"
+  },
+  "regenerateDialog": {
+    "title": "Regenerate Keyword Research",
+    "description": "Are you sure you want to regenerate this keyword research? This will create new AI-generated keywords and a new PDF report.",
+    "cancel": "Cancel",
+    "confirm": "Regenerate",
+    "regenerating": "Regenerating..."
+  },
+  "messages": {
+    "loadError": "Failed to load keyword researches",
+    "regenerateSuccess": "Keyword research regeneration started",
+    "regenerateError": "Failed to regenerate keyword research",
+    "downloadSuccess": "PDF download started",
+    "downloadError": "Failed to download PDF"
+  }
+}

@@ -60,7 +60,7 @@ export function AdminKeywordResearchPage() {
       setResearches(data);
     } catch (error: any) {
       console.error('Researches error:', error);
-      toast.error('Failed to load keyword researches');
+      toast.error(t('messages.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -68,6 +68,7 @@ export function AdminKeywordResearchPage() {
 
   useEffect(() => {
     fetchResearches();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getStatusColor = (status: KeywordResearchStatus) => {
@@ -90,14 +91,14 @@ export function AdminKeywordResearchPage() {
       try {
         setIsRegenerating(true);
         const data = await keywordsApi.regenerate(selectedId);
-        toast.success('Keyword research regeneration started');
+        toast.success(t('messages.regenerateSuccess'));
         setShowRegenerateDialog(false);
         setSelectedId(null);
         // Refetch researches list
         await fetchResearches();
       } catch (error: any) {
         console.error('Regenerate error:', error);
-        const message = error.response?.data?.message || 'Failed to regenerate keyword research';
+        const message = error.response?.data?.message || t('messages.regenerateError');
         toast.error(message);
       } finally {
         setIsRegenerating(false);
@@ -111,10 +112,10 @@ export function AdminKeywordResearchPage() {
       const data = await keywordsApi.downloadPdf(id);
       // Open PDF in new tab
       window.open(data.url, '_blank');
-      toast.success('PDF download started');
+      toast.success(t('messages.downloadSuccess'));
     } catch (error: any) {
       console.error('Download error:', error);
-      const message = error.response?.data?.message || 'Failed to download PDF';
+      const message = error.response?.data?.message || t('messages.downloadError');
       toast.error(message);
     } finally {
       setIsDownloading(false);
@@ -141,7 +142,7 @@ export function AdminKeywordResearchPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold">{t('title')}</h1>
-        <p className="mt-2 text-muted-foreground">Monitor and manage all keyword research orders</p>
+        <p className="mt-2 text-muted-foreground">{t('description')}</p>
       </div>
 
       {/* Stats Cards */}
@@ -191,12 +192,12 @@ export function AdminKeywordResearchPage() {
       {/* Filters */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Filters</CardTitle>
+          <CardTitle>{t('filters.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4">
             <div className="w-64">
-              <label className="mb-2 block text-sm font-medium">Status</label>
+              <label className="mb-2 block text-sm font-medium">{t('filters.status')}</label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue />
@@ -217,10 +218,10 @@ export function AdminKeywordResearchPage() {
       {/* Orders Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Keyword Research Orders</CardTitle>
+          <CardTitle>{t('table.title')}</CardTitle>
           <CardDescription>
-            {filteredResearches?.length || 0} orders{' '}
-            {statusFilter !== 'all' && `(filtered by ${statusFilter})`}
+            {t('table.ordersCount', { count: filteredResearches?.length || 0 })}{' '}
+            {statusFilter !== 'all' && t('table.filteredBy', { filter: statusFilter })}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -230,7 +231,7 @@ export function AdminKeywordResearchPage() {
             </div>
           ) : !filteredResearches || filteredResearches.length === 0 ? (
             <div className="py-12 text-center">
-              <p className="text-muted-foreground">No orders found</p>
+              <p className="text-muted-foreground">{t('table.noOrders')}</p>
             </div>
           ) : (
             <Table>
@@ -261,14 +262,14 @@ export function AdminKeywordResearchPage() {
                           variant="outline"
                           className="border-green-200 bg-green-50 text-green-700"
                         >
-                          Yes
+                          {t('paid.yes')}
                         </Badge>
                       ) : (
                         <Badge
                           variant="outline"
                           className="border-yellow-200 bg-yellow-50 text-yellow-700"
                         >
-                          No
+                          {t('paid.no')}
                         </Badge>
                       )}
                     </TableCell>
@@ -329,22 +330,21 @@ export function AdminKeywordResearchPage() {
       <AlertDialog open={showRegenerateDialog} onOpenChange={setShowRegenerateDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Regenerate Keyword Research</AlertDialogTitle>
+            <AlertDialogTitle>{t('regenerateDialog.title')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to regenerate this keyword research? This will create new
-              AI-generated keywords and a new PDF report.
+              {t('regenerateDialog.description')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('regenerateDialog.cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={handleRegenerate} disabled={isRegenerating}>
               {isRegenerating ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Regenerating...
+                  {t('regenerateDialog.regenerating')}
                 </>
               ) : (
-                'Regenerate'
+                t('regenerateDialog.confirm')
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
