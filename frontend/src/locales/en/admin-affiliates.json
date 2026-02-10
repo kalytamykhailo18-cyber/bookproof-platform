@@ -1,9 +1,15 @@
 {
   "title": "Affiliate Management",
   "subtitle": "Manage affiliate partners and track their performance",
+  "list": {
+    "title": "Affiliates",
+    "description": "Manage all affiliate partners"
+  },
   "stats": {
+    "total": "Total Affiliates",
     "totalAffiliates": "Total Affiliates",
     "registered": "registered partners",
+    "active": "Active Affiliates",
     "approved": "Approved",
     "activePartners": "active partners",
     "pending": "Pending",
@@ -15,20 +21,31 @@
   },
   "filters": {
     "title": "Filters",
+    "description": "Filter and search affiliates",
+    "search": "Search",
     "searchPlaceholder": "Search by name, email, or referral code...",
     "approval": "Approval Status",
     "allApproval": "All Approval Status",
     "approved": "Approved",
     "pending": "Pending",
+    "rejected": "Rejected",
     "status": "Active Status",
     "allStatus": "All Status",
+    "activeStatus": "Active Status",
+    "allActive": "All Active Status",
     "active": "Active",
     "inactive": "Inactive"
   },
   "table": {
     "title": "Affiliates",
     "description": "View and manage all affiliate partners",
+    "showing": "Showing",
+    "of": "of",
+    "affiliates": "affiliates",
+    "noResults": "No Affiliates Found",
+    "noResultsDescription": "Try adjusting your filters or search query",
     "affiliate": "Affiliate",
+    "code": "Code",
     "referralCode": "Referral Code",
     "commission": "Commission",
     "earnings": "Earnings",
@@ -36,8 +53,11 @@
     "clicks": "Clicks",
     "conversions": "Conversions",
     "status": "Status",
+    "active": "Active",
+    "stats": "Stats",
     "joined": "Joined",
-    "actions": "Actions"
+    "actions": "Actions",
+    "view": "View Details"
   },
   "status": {
     "approved": "Approved",

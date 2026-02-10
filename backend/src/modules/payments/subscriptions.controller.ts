@@ -85,7 +85,7 @@ export class SubscriptionsController {
         webhookSecret,
       );
     } catch (error) {
-      console.error('Webhook signature verification failed:', error.message);
+      console.error('Webhook signature verification failed:');
       throw new Error('Webhook signature verification failed');
     }
 

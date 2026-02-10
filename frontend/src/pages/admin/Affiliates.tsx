@@ -1,24 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { affiliatesApi } from '@/lib/api/affiliates';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -50,30 +40,6 @@ import {
 import { formatDate } from '@/lib/utils';
 import { CommissionStatus } from '@/lib/api/affiliates';
 
-const approveSchema = z
-  .object({
-    approve: z.boolean(),
-    commissionRate: z.coerce.number().min(0).max(50).optional(),
-    rejectionReason: z.string().optional() })
-  .refine(
-    (data) => {
-      if (!data.approve && !data.rejectionReason) {
-        return false;
-      }
-      return true;
-    },
-    {
-      message: 'Rejection reason is required when rejecting',
-      path: ['rejectionReason'] },
-  );
-
-type ApproveFormData = z.infer<typeof approveSchema>;
-
-const commissionRateSchema = z.object({
-  commissionRate: z.coerce.number().min(0).max(100) });
-
-type CommissionRateFormData = z.infer<typeof commissionRateSchema>;
-
 export function AdminAffiliateDetailsPage() {
   const { t, i18n } = useTranslation('adminAffiliateDetails');
   const navigate = useNavigate();
@@ -93,6 +59,11 @@ export function AdminAffiliateDetailsPage() {
   const [isTogglingActive, setIsTogglingActive] = useState(false);
   const [isUpdatingRate, setIsUpdatingRate] = useState(false);
 
+  // Form state
+  const [approveCommissionRate, setApproveCommissionRate] = useState(20);
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [newCommissionRate, setNewCommissionRate] = useState(20);
+
   // Fetch data
   useEffect(() => {
     if (!id) return;
@@ -102,7 +73,7 @@ export function AdminAffiliateDetailsPage() {
         setIsLoading(true);
         setCommissionsLoading(true);
         const [affiliateData, commissionsData] = await Promise.all([
-          affiliatesApi.getAffiliateByIdForAdmin(id),
+          affiliatesApi.getByIdForAdmin(id),
           affiliatesApi.getCommissionsForAdmin(id)
         ]);
         setAffiliate(affiliateData);
@@ -122,7 +93,7 @@ export function AdminAffiliateDetailsPage() {
     if (!id) return;
     try {
       const [affiliateData, commissionsData] = await Promise.all([
-        affiliatesApi.getAffiliateByIdForAdmin(id),
+        affiliatesApi.getByIdForAdmin(id),
         affiliatesApi.getCommissionsForAdmin(id)
       ]);
       setAffiliate(affiliateData);
@@ -132,31 +103,18 @@ export function AdminAffiliateDetailsPage() {
     }
   };
 
-  const approveForm = useForm<ApproveFormData>({
-    resolver: zodResolver(approveSchema),
-    defaultValues: {
-      approve: true,
-      commissionRate: 20 } });
-
-  const rejectForm = useForm<ApproveFormData>({
-    resolver: zodResolver(approveSchema),
-    defaultValues: {
-      approve: false,
-      rejectionReason: '' } });
-
-  const commissionRateForm = useForm<CommissionRateFormData>({
-    resolver: zodResolver(commissionRateSchema),
-    defaultValues: {
-      commissionRate: affiliate?.commissionRate || 20 } });
-
   const handleApprove = async () => {
-    const isValid = await approveForm.trigger();
-    if (!isValid) return;
+    if (!approveCommissionRate || approveCommissionRate < 0 || approveCommissionRate > 50) {
+      toast.error('Commission rate must be between 0 and 50');
+      return;
+    }
 
-    const data = approveForm.getValues();
     try {
       setIsApproving(true);
-      await affiliatesApi.approveAffiliate(id, data);
+      await affiliatesApi.approveAffiliate(id, {
+        approve: true,
+        commissionRate: approveCommissionRate
+      });
       toast.success('Affiliate approved successfully');
       setApproveDialogOpen(false);
       await refetchData();
@@ -168,15 +126,20 @@ export function AdminAffiliateDetailsPage() {
   };
 
   const handleReject = async () => {
-    const isValid = await rejectForm.trigger();
-    if (!isValid) return;
+    if (!rejectionReason || rejectionReason.trim() === '') {
+      toast.error('Rejection reason is required');
+      return;
+    }
 
-    const data = rejectForm.getValues();
     try {
       setIsApproving(true);
-      await affiliatesApi.approveAffiliate(id, data);
+      await affiliatesApi.approveAffiliate(id, {
+        approve: false,
+        rejectionReason: rejectionReason
+      });
       toast.success('Affiliate rejected');
       setRejectDialogOpen(false);
+      setRejectionReason('');
       await refetchData();
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Failed to reject affiliate');
@@ -199,13 +162,14 @@ export function AdminAffiliateDetailsPage() {
   };
 
   const handleUpdateCommissionRate = async () => {
-    const isValid = await commissionRateForm.trigger();
-    if (!isValid) return;
+    if (!newCommissionRate || newCommissionRate < 0 || newCommissionRate > 100) {
+      toast.error('Commission rate must be between 0 and 100');
+      return;
+    }
 
-    const data = commissionRateForm.getValues();
     try {
       setIsUpdatingRate(true);
-      await affiliatesApi.updateCommissionRate(id, data.commissionRate);
+      await affiliatesApi.updateCommissionRate(id, newCommissionRate);
       toast.success('Commission rate updated successfully');
       setCommissionRateDialogOpen(false);
       await refetchData();
@@ -215,6 +179,13 @@ export function AdminAffiliateDetailsPage() {
       setIsUpdatingRate(false);
     }
   };
+
+  // Update form values when affiliate data loads
+  useEffect(() => {
+    if (affiliate) {
+      setNewCommissionRate(affiliate.commissionRate || 20);
+    }
+  }, [affiliate]);
 
   const getCommissionStatusBadge = (status: CommissionStatus) => {
     const variants: Record<
@@ -308,43 +279,34 @@ export function AdminAffiliateDetailsPage() {
                     <DialogTitle>{t('rejectDialog.title')}</DialogTitle>
                     <DialogDescription>{t('rejectDialog.description')}</DialogDescription>
                   </DialogHeader>
-                  <Form {...rejectForm}>
-                    <div className="space-y-4">
-                      <FormField
-                        control={rejectForm.control}
-                        name="rejectionReason"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t('rejectDialog.reasonLabel')}</FormLabel>
-                            <FormControl>
-                              <Textarea
-                                placeholder={t('rejectDialog.reasonPlaceholder')}
-                                rows={4}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="rejectionReason">{t('rejectDialog.reasonLabel')}</Label>
+                      <Textarea
+                        id="rejectionReason"
+                        placeholder={t('rejectDialog.reasonPlaceholder')}
+                        rows={4}
+                        value={rejectionReason}
+                        onChange={(e) => setRejectionReason(e.target.value)}
                       />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        className="w-full"
-                        onClick={handleReject}
-                        disabled={isApproving}
-                      >
-                        {isApproving ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            {t('rejectDialog.submitting')}
-                          </>
-                        ) : (
-                          t('rejectDialog.confirm')
-                        )}
-                      </Button>
                     </div>
-                  </Form>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      className="w-full"
+                      onClick={handleReject}
+                      disabled={isApproving}
+                    >
+                      {isApproving ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {t('rejectDialog.submitting')}
+                        </>
+                      ) : (
+                        t('rejectDialog.confirm')
+                      )}
+                    </Button>
+                  </div>
                 </DialogContent>
               </Dialog>
 
@@ -360,41 +322,38 @@ export function AdminAffiliateDetailsPage() {
                     <DialogTitle>{t('approveDialog.title')}</DialogTitle>
                     <DialogDescription>{t('approveDialog.description')}</DialogDescription>
                   </DialogHeader>
-                  <Form {...approveForm}>
-                    <div className="space-y-4">
-                      <FormField
-                        control={approveForm.control}
-                        name="commissionRate"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t('approveDialog.commissionRateLabel')}</FormLabel>
-                            <FormControl>
-                              <Input type="number" step="0.01" min="0" max="50" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                              {t('approveDialog.commissionRateDescription')}
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="commissionRate">{t('approveDialog.commissionRateLabel')}</Label>
+                      <Input
+                        id="commissionRate"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="50"
+                        value={approveCommissionRate}
+                        onChange={(e) => setApproveCommissionRate(Number(e.target.value))}
                       />
-                      <Button
-                        type="button"
-                        className="w-full"
-                        onClick={handleApprove}
-                        disabled={isApproving}
-                      >
-                        {isApproving ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            {t('approveDialog.submitting')}
-                          </>
-                        ) : (
-                          t('approveDialog.confirm')
-                        )}
-                      </Button>
+                      <p className="text-sm text-muted-foreground">
+                        {t('approveDialog.commissionRateDescription')}
+                      </p>
                     </div>
-                  </Form>
+                    <Button
+                      type="button"
+                      className="w-full"
+                      onClick={handleApprove}
+                      disabled={isApproving}
+                    >
+                      {isApproving ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {t('approveDialog.submitting')}
+                        </>
+                      ) : (
+                        t('approveDialog.confirm')
+                      )}
+                    </Button>
+                  </div>
                 </DialogContent>
               </Dialog>
             </>
@@ -430,41 +389,38 @@ export function AdminAffiliateDetailsPage() {
                     <DialogTitle>{t('commissionRateDialog.title')}</DialogTitle>
                     <DialogDescription>{t('commissionRateDialog.description')}</DialogDescription>
                   </DialogHeader>
-                  <Form {...commissionRateForm}>
-                    <div className="space-y-4">
-                      <FormField
-                        control={commissionRateForm.control}
-                        name="commissionRate"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t('commissionRateDialog.label')}</FormLabel>
-                            <FormControl>
-                              <Input type="number" step="0.01" min="0" max="100" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                              {t('commissionRateDialog.currentRate')}: {affiliate.commissionRate}%
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="newCommissionRate">{t('commissionRateDialog.label')}</Label>
+                      <Input
+                        id="newCommissionRate"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        value={newCommissionRate}
+                        onChange={(e) => setNewCommissionRate(Number(e.target.value))}
                       />
-                      <Button
-                        type="button"
-                        className="w-full"
-                        onClick={handleUpdateCommissionRate}
-                        disabled={isUpdatingRate}
-                      >
-                        {isUpdatingRate ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            {t('commissionRateDialog.submitting')}
-                          </>
-                        ) : (
-                          t('commissionRateDialog.confirm')
-                        )}
-                      </Button>
+                      <p className="text-sm text-muted-foreground">
+                        {t('commissionRateDialog.currentRate')}: {affiliate.commissionRate}%
+                      </p>
                     </div>
-                  </Form>
+                    <Button
+                      type="button"
+                      className="w-full"
+                      onClick={handleUpdateCommissionRate}
+                      disabled={isUpdatingRate}
+                    >
+                      {isUpdatingRate ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {t('commissionRateDialog.submitting')}
+                        </>
+                      ) : (
+                        t('commissionRateDialog.confirm')
+                      )}
+                    </Button>
+                  </div>
                 </DialogContent>
               </Dialog>
             </>
