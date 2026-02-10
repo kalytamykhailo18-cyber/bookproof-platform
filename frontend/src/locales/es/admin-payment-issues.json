@@ -1,0 +1,122 @@
+{
+  "title": "Problemas de Pago",
+  "description": "Gestionar discrepancias de pago, reembolsos y problemas de facturación",
+  "loading": "Cargando problemas de pago...",
+
+  "stats": {
+    "totalIssues": "Total de Problemas",
+    "open": "Abiertos",
+    "inProgress": "En Progreso",
+    "resolved": "Resueltos",
+    "totalAmount": "Monto Total"
+  },
+
+  "table": {
+    "title": "Problemas de Pago Abiertos",
+    "description": "Problemas de pago que requieren atención",
+    "id": "ID",
+    "type": "Tipo",
+    "amount": "Monto",
+    "priority": "Prioridad",
+    "status": "Estado",
+    "description_col": "Descripción",
+    "created": "Creado",
+    "actions": "Acciones"
+  },
+
+  "types": {
+    "PAYMENT_FAILED": "Pago Fallido",
+    "PAYMENT_DISPUTE": "Disputa de Pago",
+    "REFUND_REQUEST": "Solicitud de Reembolso",
+    "PAYOUT_ISSUE": "Problema de Pago",
+    "DUPLICATE_PAYMENT": "Pago Duplicado",
+    "CREDIT_MISMATCH": "Desajuste de Crédito",
+    "OTHER": "Otro"
+  },
+
+  "statuses": {
+    "OPEN": "Abierto",
+    "IN_PROGRESS": "En Progreso",
+    "ESCALATED": "Escalado",
+    "RESOLVED": "Resuelto",
+    "REJECTED": "Rechazado"
+  },
+
+  "actions": {
+    "updateStatusTitle": "Actualizar Estado",
+    "processRefundTitle": "Procesar Reembolso",
+    "reconcileTitle": "Conciliar",
+    "resolveTitle": "Resolver"
+  },
+
+  "updateStatusDialog": {
+    "title": "Actualizar Estado del Problema",
+    "description": "Actualizar el estado y agregar notas a este problema",
+    "statusLabel": "Estado *",
+    "statusPlaceholder": "Seleccionar estado",
+    "adminNotesLabel": "Notas del Administrador",
+    "adminNotesPlaceholder": "Agregar notas para registro de auditoría",
+    "cancel": "Cancelar",
+    "updating": "Actualizando...",
+    "updateButton": "Actualizar Estado"
+  },
+
+  "refundDialog": {
+    "title": "Procesar Reembolso",
+    "description": "Procesar un reembolso para este pago",
+    "amountLabel": "Monto del Reembolso *",
+    "reasonLabel": "Razón *",
+    "reasonPlaceholder": "Explicar por qué se está procesando el reembolso",
+    "cancel": "Cancelar",
+    "processing": "Procesando...",
+    "processButton": "Procesar Reembolso"
+  },
+
+  "reconcileDialog": {
+    "title": "Conciliar Pago",
+    "description": "Marcar este pago como conciliado",
+    "notesLabel": "Notas de Conciliación *",
+    "notesPlaceholder": "Explicar los detalles de la conciliación",
+    "cancel": "Cancelar",
+    "reconciling": "Conciliando...",
+    "reconcileButton": "Conciliar"
+  },
+
+  "resolveDialog": {
+    "title": "Resolver Problema de Pago",
+    "description": "Proporcionar una resolución para este problema de pago",
+    "actionLabel": "Acción Tomada *",
+    "actionPlaceholder": "Seleccionar acción",
+    "resolutionLabel": "Resolución *",
+    "resolutionPlaceholder": "Describir cómo se resolvió el problema",
+    "stripeRefundIdLabel": "ID de Reembolso de Stripe (opcional)",
+    "stripeRefundIdPlaceholder": "re_xxxxxx",
+    "cancel": "Cancelar",
+    "resolving": "Resolviendo...",
+    "resolveButton": "Resolver Problema"
+  },
+
+  "resolveActions": {
+    "REFUNDED": "Reembolsado",
+    "CORRECTED": "Corregido",
+    "RECONCILED": "Conciliado",
+    "CREDITED": "Acreditado",
+    "NO_ACTION": "Sin Acción"
+  },
+
+  "empty": {
+    "message": "No se encontraron problemas de pago abiertos"
+  },
+
+  "messages": {
+    "loadError": "Error al cargar problemas de pago",
+    "resolveSuccess": "Problema de pago resuelto exitosamente",
+    "resolveError": "Error al resolver problema de pago",
+    "refundSuccess": "Reembolso procesado exitosamente",
+    "refundError": "Error al procesar reembolso",
+    "reconcileSuccess": "Pago conciliado exitosamente",
+    "reconcileError": "Error al conciliar pago",
+    "updateStatusSuccess": "Estado del problema de pago actualizado",
+    "updateStatusError": "Error al actualizar estado del problema de pago"
+  }
+}

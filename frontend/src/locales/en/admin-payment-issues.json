@@ -1,0 +1,122 @@
+{
+  "title": "Payment Issues",
+  "description": "Manage payment discrepancies, refunds, and billing issues",
+  "loading": "Loading payment issues...",
+
+  "stats": {
+    "totalIssues": "Total Issues",
+    "open": "Open",
+    "inProgress": "In Progress",
+    "resolved": "Resolved",
+    "totalAmount": "Total Amount"
+  },
+
+  "table": {
+    "title": "Open Payment Issues",
+    "description": "Payment issues requiring attention",
+    "id": "ID",
+    "type": "Type",
+    "amount": "Amount",
+    "priority": "Priority",
+    "status": "Status",
+    "description_col": "Description",
+    "created": "Created",
+    "actions": "Actions"
+  },
+
+  "types": {
+    "PAYMENT_FAILED": "Payment Failed",
+    "PAYMENT_DISPUTE": "Payment Dispute",
+    "REFUND_REQUEST": "Refund Request",
+    "PAYOUT_ISSUE": "Payout Issue",
+    "DUPLICATE_PAYMENT": "Duplicate Payment",
+    "CREDIT_MISMATCH": "Credit Mismatch",
+    "OTHER": "Other"
+  },
+
+  "statuses": {
+    "OPEN": "Open",
+    "IN_PROGRESS": "In Progress",
+    "ESCALATED": "Escalated",
+    "RESOLVED": "Resolved",
+    "REJECTED": "Rejected"
+  },
+
+  "actions": {
+    "updateStatusTitle": "Update Status",
+    "processRefundTitle": "Process Refund",
+    "reconcileTitle": "Reconcile",
+    "resolveTitle": "Resolve"
+  },
+
+  "updateStatusDialog": {
+    "title": "Update Issue Status",
+    "description": "Update the status and add notes to this issue",
+    "statusLabel": "Status *",
+    "statusPlaceholder": "Select status",
+    "adminNotesLabel": "Admin Notes",
+    "adminNotesPlaceholder": "Add notes for audit trail",
+    "cancel": "Cancel",
+    "updating": "Updating...",
+    "updateButton": "Update Status"
+  },
+
+  "refundDialog": {
+    "title": "Process Refund",
+    "description": "Process a refund for this payment",
+    "amountLabel": "Refund Amount *",
+    "reasonLabel": "Reason *",
+    "reasonPlaceholder": "Explain why the refund is being processed",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+    "processButton": "Process Refund"
+  },
+
+  "reconcileDialog": {
+    "title": "Reconcile Payment",
+    "description": "Mark this payment as reconciled",
+    "notesLabel": "Reconciliation Notes *",
+    "notesPlaceholder": "Explain the reconciliation details",
+    "cancel": "Cancel",
+    "reconciling": "Reconciling...",
+    "reconcileButton": "Reconcile"
+  },
+
+  "resolveDialog": {
+    "title": "Resolve Payment Issue",
+    "description": "Provide a resolution for this payment issue",
+    "actionLabel": "Action Taken *",
+    "actionPlaceholder": "Select action",
+    "resolutionLabel": "Resolution *",
+    "resolutionPlaceholder": "Describe how the issue was resolved",
+    "stripeRefundIdLabel": "Stripe Refund ID (optional)",
+    "stripeRefundIdPlaceholder": "re_xxxxxx",
+    "cancel": "Cancel",
+    "resolving": "Resolving...",
+    "resolveButton": "Resolve Issue"
+  },
+
+  "resolveActions": {
+    "REFUNDED": "Refunded",
+    "CORRECTED": "Corrected",
+    "RECONCILED": "Reconciled",
+    "CREDITED": "Credited",
+    "NO_ACTION": "No Action"
+  },
+
+  "empty": {
+    "message": "No open payment issues found"
+  },
+
+  "messages": {
+    "loadError": "Failed to load payment issues",
+    "resolveSuccess": "Payment issue resolved successfully",
+    "resolveError": "Failed to resolve payment issue",
+    "refundSuccess": "Refund processed successfully",
+    "refundError": "Failed to process refund",
+    "reconcileSuccess": "Payment reconciled successfully",
+    "reconcileError": "Failed to reconcile payment",
+    "updateStatusSuccess": "Payment issue status updated",
+    "updateStatusError": "Failed to update payment issue status"
+  }
+}
