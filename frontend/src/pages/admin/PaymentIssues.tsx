@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { paymentIssuesApi } from '@/lib/api/payment-issues';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,6 +37,8 @@ import {
   PaymentIssueAction } from '@/lib/api/payment-issues';
 
 export function PaymentIssuesPage() {
+  const { t } = useTranslation('adminPaymentIssues');
+
   const [issues, setIssues] = useState<any>(null);
   const [stats, setStats] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -81,7 +84,7 @@ export function PaymentIssuesPage() {
       setStats(statsData);
     } catch (error: any) {
       console.error('Payment issues error:', error);
-      toast.error('Failed to load payment issues');
+      toast.error(t('messages.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -99,7 +102,7 @@ export function PaymentIssuesPage() {
         action: resolveAction,
         stripeRefundId: stripeRefundId || undefined
       });
-      toast.success('Payment issue resolved successfully');
+      toast.success(t('messages.resolveSuccess'));
       setResolveDialogOpen(false);
       setResolution('');
       setResolveAction(PaymentIssueAction.CORRECTED);
@@ -107,7 +110,7 @@ export function PaymentIssuesPage() {
       await fetchData();
     } catch (error: any) {
       console.error('Resolve error:', error);
-      toast.error(error.response?.data?.message || 'Failed to resolve payment issue');
+      toast.error(error.response?.data?.message || t('messages.resolveError'));
     } finally {
       setIsResolving(false);
     }
@@ -120,14 +123,14 @@ export function PaymentIssuesPage() {
         amount: refundAmount,
         reason: refundReason
       });
-      toast.success('Refund processed successfully');
+      toast.success(t('messages.refundSuccess'));
       setRefundDialogOpen(false);
       setRefundAmount(0);
       setRefundReason('');
       await fetchData();
     } catch (error: any) {
       console.error('Refund error:', error);
-      toast.error(error.response?.data?.message || 'Failed to process refund');
+      toast.error(error.response?.data?.message || t('messages.refundError'));
     } finally {
       setIsRefunding(false);
     }
@@ -137,13 +140,13 @@ export function PaymentIssuesPage() {
     try {
       setIsReconciling(true);
       await paymentIssuesApi.reconcilePayment(selectedIssueId, reconcileNotes);
-      toast.success('Payment reconciled successfully');
+      toast.success(t('messages.reconcileSuccess'));
       setReconcileDialogOpen(false);
       setReconcileNotes('');
       await fetchData();
     } catch (error: any) {
       console.error('Reconcile error:', error);
-      toast.error(error.response?.data?.message || 'Failed to reconcile payment');
+      toast.error(error.response?.data?.message || t('messages.reconcileError'));
     } finally {
       setIsReconciling(false);
     }
@@ -156,14 +159,14 @@ export function PaymentIssuesPage() {
         status: newStatus,
         adminNotes: adminNotes || undefined
       });
-      toast.success('Payment issue status updated');
+      toast.success(t('messages.updateStatusSuccess'));
       setStatusDialogOpen(false);
       setNewStatus(PaymentIssueStatus.IN_PROGRESS);
       setAdminNotes('');
       await fetchData();
     } catch (error: any) {
       console.error('Update status error:', error);
-      toast.error(error.response?.data?.message || 'Failed to update payment issue status');
+      toast.error(error.response?.data?.message || t('messages.updateStatusError'));
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -204,19 +207,19 @@ export function PaymentIssuesPage() {
   const getTypeLabel = (type: PaymentIssueType) => {
     switch (type) {
       case PaymentIssueType.PAYMENT_FAILED:
-        return 'Payment Failed';
+        return t('types.PAYMENT_FAILED');
       case PaymentIssueType.PAYMENT_DISPUTE:
-        return 'Payment Dispute';
+        return t('types.PAYMENT_DISPUTE');
       case PaymentIssueType.REFUND_REQUEST:
-        return 'Refund Request';
+        return t('types.REFUND_REQUEST');
       case PaymentIssueType.PAYOUT_ISSUE:
-        return 'Payout Issue';
+        return t('types.PAYOUT_ISSUE');
       case PaymentIssueType.DUPLICATE_PAYMENT:
-        return 'Duplicate Payment';
+        return t('types.DUPLICATE_PAYMENT');
       case PaymentIssueType.CREDIT_MISMATCH:
-        return 'Credit Mismatch';
+        return t('types.CREDIT_MISMATCH');
       case PaymentIssueType.OTHER:
-        return 'Other';
+        return t('types.OTHER');
       default:
         return type;
     }
@@ -226,7 +229,7 @@ export function PaymentIssuesPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 items-center justify-center">
-          <p className="text-muted-foreground">Loading payment issues...</p>
+          <p className="text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
@@ -236,10 +239,8 @@ export function PaymentIssuesPage() {
     <div className="container mx-auto space-y-6 px-4 py-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Payment Issues</h1>
-          <p className="text-muted-foreground">
-            Manage payment discrepancies, refunds, and billing issues
-          </p>
+          <h1 className="text-3xl font-bold">{t('title')}</h1>
+          <p className="text-muted-foreground">{t('description')}</p>
         </div>
       </div>
 
@@ -247,31 +248,31 @@ export function PaymentIssuesPage() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total Issues</CardDescription>
+            <CardDescription>{t('stats.totalIssues')}</CardDescription>
             <CardTitle className="text-2xl">{stats?.total || 0}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Open</CardDescription>
+            <CardDescription>{t('stats.open')}</CardDescription>
             <CardTitle className="text-2xl text-yellow-600">{stats?.open || 0}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>In Progress</CardDescription>
+            <CardDescription>{t('stats.inProgress')}</CardDescription>
             <CardTitle className="text-2xl text-blue-600">{stats?.inProgress || 0}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Resolved</CardDescription>
+            <CardDescription>{t('stats.resolved')}</CardDescription>
             <CardTitle className="text-2xl text-green-600">{stats?.resolved || 0}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total Amount</CardDescription>
+            <CardDescription>{t('stats.totalAmount')}</CardDescription>
             <CardTitle className="text-2xl text-red-600">
               ${stats?.totalAmount?.toFixed(2) || '0.00'}
             </CardTitle>
@@ -282,21 +283,21 @@ export function PaymentIssuesPage() {
       {/* Payment Issues Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Open Payment Issues</CardTitle>
-          <CardDescription>Payment issues requiring attention</CardDescription>
+          <CardTitle>{t('table.title')}</CardTitle>
+          <CardDescription>{t('table.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Priority</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{t('table.id')}</TableHead>
+                <TableHead>{t('table.type')}</TableHead>
+                <TableHead>{t('table.amount')}</TableHead>
+                <TableHead>{t('table.priority')}</TableHead>
+                <TableHead>{t('table.status')}</TableHead>
+                <TableHead>{t('table.description_col')}</TableHead>
+                <TableHead>{t('table.created')}</TableHead>
+                <TableHead>{t('table.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -329,65 +330,65 @@ export function PaymentIssuesPage() {
                           }}
                         >
                           <DialogTrigger asChild>
-                            <Button variant="outline" size="sm" title="Update Status">
+                            <Button variant="outline" size="sm" title={t('actions.updateStatusTitle')}>
                               <MessageSquare className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Update Issue Status</DialogTitle>
+                              <DialogTitle>{t('updateStatusDialog.title')}</DialogTitle>
                               <DialogDescription>
-                                Update the status and add notes to this issue
+                                {t('updateStatusDialog.description')}
                               </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="newStatus">Status *</Label>
+                                <Label htmlFor="newStatus">{t('updateStatusDialog.statusLabel')}</Label>
                                 <Select
                                   value={newStatus}
                                   onValueChange={(value: PaymentIssueStatus) => setNewStatus(value)}
                                 >
                                   <SelectTrigger>
-                                    <SelectValue placeholder="Select status" />
+                                    <SelectValue placeholder={t('updateStatusDialog.statusPlaceholder')} />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value={PaymentIssueStatus.OPEN}>Open</SelectItem>
+                                    <SelectItem value={PaymentIssueStatus.OPEN}>{t('statuses.OPEN')}</SelectItem>
                                     <SelectItem value={PaymentIssueStatus.IN_PROGRESS}>
-                                      In Progress
+                                      {t('statuses.IN_PROGRESS')}
                                     </SelectItem>
                                     <SelectItem value={PaymentIssueStatus.ESCALATED}>
-                                      Escalated
+                                      {t('statuses.ESCALATED')}
                                     </SelectItem>
                                     <SelectItem value={PaymentIssueStatus.RESOLVED}>
-                                      Resolved
+                                      {t('statuses.RESOLVED')}
                                     </SelectItem>
                                     <SelectItem value={PaymentIssueStatus.REJECTED}>
-                                      Rejected
+                                      {t('statuses.REJECTED')}
                                     </SelectItem>
                                   </SelectContent>
                                 </Select>
                               </div>
                               <div>
-                                <Label htmlFor="adminNotes">Admin Notes</Label>
+                                <Label htmlFor="adminNotes">{t('updateStatusDialog.adminNotesLabel')}</Label>
                                 <Textarea
                                   id="adminNotes"
                                   value={adminNotes}
                                   onChange={(e) => setAdminNotes(e.target.value)}
-                                  placeholder="Add notes for audit trail"
+                                  placeholder={t('updateStatusDialog.adminNotesPlaceholder')}
                                   rows={3}
                                 />
                               </div>
                             </div>
                             <DialogFooter>
                               <Button type="button" variant="outline" onClick={() => setStatusDialogOpen(false)}>
-                                Cancel
+                                {t('updateStatusDialog.cancel')}
                               </Button>
                               <Button
                                 type="button"
                                 onClick={handleUpdateStatus}
                                 disabled={isUpdatingStatus}
                               >
-                                {isUpdatingStatus ? 'Updating...' : 'Update Status'}
+                                {isUpdatingStatus ? t('updateStatusDialog.updating') : t('updateStatusDialog.updateButton')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -405,20 +406,18 @@ export function PaymentIssuesPage() {
                           }}
                         >
                           <DialogTrigger asChild>
-                            <Button variant="outline" size="sm" title="Process Refund">
+                            <Button variant="outline" size="sm" title={t('actions.processRefundTitle')}>
                               <DollarSign className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Process Refund</DialogTitle>
-                              <DialogDescription>
-                                Process a refund for this payment
-                              </DialogDescription>
+                              <DialogTitle>{t('refundDialog.title')}</DialogTitle>
+                              <DialogDescription>{t('refundDialog.description')}</DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="refundAmount">Refund Amount *</Label>
+                                <Label htmlFor="refundAmount">{t('refundDialog.amountLabel')}</Label>
                                 <Input
                                   id="refundAmount"
                                   type="number"
@@ -430,19 +429,19 @@ export function PaymentIssuesPage() {
                                 />
                               </div>
                               <div>
-                                <Label htmlFor="refundReason">Reason *</Label>
+                                <Label htmlFor="refundReason">{t('refundDialog.reasonLabel')}</Label>
                                 <Textarea
                                   id="refundReason"
                                   value={refundReason}
                                   onChange={(e) => setRefundReason(e.target.value)}
-                                  placeholder="Explain why the refund is being processed"
+                                  placeholder={t('refundDialog.reasonPlaceholder')}
                                   rows={3}
                                 />
                               </div>
                             </div>
                             <DialogFooter>
                               <Button type="button" variant="outline" onClick={() => setRefundDialogOpen(false)}>
-                                Cancel
+                                {t('refundDialog.cancel')}
                               </Button>
                               <Button
                                 type="button"
@@ -452,7 +451,7 @@ export function PaymentIssuesPage() {
                                   !refundReason || refundAmount <= 0 || isRefunding
                                 }
                               >
-                                {isRefunding ? 'Processing...' : 'Process Refund'}
+                                {isRefunding ? t('refundDialog.processing') : t('refundDialog.processButton')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -467,23 +466,23 @@ export function PaymentIssuesPage() {
                           }}
                         >
                           <DialogTrigger asChild>
-                            <Button variant="outline" size="sm" title="Reconcile">
+                            <Button variant="outline" size="sm" title={t('actions.reconcileTitle')}>
                               <RefreshCw className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Reconcile Payment</DialogTitle>
-                              <DialogDescription>Mark this payment as reconciled</DialogDescription>
+                              <DialogTitle>{t('reconcileDialog.title')}</DialogTitle>
+                              <DialogDescription>{t('reconcileDialog.description')}</DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="reconcileNotes">Reconciliation Notes *</Label>
+                                <Label htmlFor="reconcileNotes">{t('reconcileDialog.notesLabel')}</Label>
                                 <Textarea
                                   id="reconcileNotes"
                                   value={reconcileNotes}
                                   onChange={(e) => setReconcileNotes(e.target.value)}
-                                  placeholder="Explain the reconciliation details"
+                                  placeholder={t('reconcileDialog.notesPlaceholder')}
                                   rows={3}
                                 />
                               </div>
@@ -493,13 +492,13 @@ export function PaymentIssuesPage() {
                                 variant="outline"
                                 onClick={() => setReconcileDialogOpen(false)}
                               >
-                                Cancel
+                                {t('reconcileDialog.cancel')}
                               </Button>
                               <Button
                                 onClick={handleReconcile}
                                 disabled={!reconcileNotes || isReconciling}
                               >
-                                {isReconciling ? 'Reconciling...' : 'Reconcile'}
+                                {isReconciling ? t('reconcileDialog.reconciling') : t('reconcileDialog.reconcileButton')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -514,20 +513,18 @@ export function PaymentIssuesPage() {
                           }}
                         >
                           <DialogTrigger asChild>
-                            <Button variant="outline" size="sm" title="Resolve">
+                            <Button variant="outline" size="sm" title={t('actions.resolveTitle')}>
                               <CheckCircle className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Resolve Payment Issue</DialogTitle>
-                              <DialogDescription>
-                                Provide a resolution for this payment issue
-                              </DialogDescription>
+                              <DialogTitle>{t('resolveDialog.title')}</DialogTitle>
+                              <DialogDescription>{t('resolveDialog.description')}</DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="resolveAction">Action Taken *</Label>
+                                <Label htmlFor="resolveAction">{t('resolveDialog.actionLabel')}</Label>
                                 <Select
                                   value={resolveAction}
                                   onValueChange={(value: PaymentIssueAction) =>
@@ -535,57 +532,57 @@ export function PaymentIssuesPage() {
                                   }
                                 >
                                   <SelectTrigger>
-                                    <SelectValue placeholder="Select action" />
+                                    <SelectValue placeholder={t('resolveDialog.actionPlaceholder')} />
                                   </SelectTrigger>
                                   <SelectContent>
                                     <SelectItem value={PaymentIssueAction.REFUNDED}>
-                                      Refunded
+                                      {t('resolveActions.REFUNDED')}
                                     </SelectItem>
                                     <SelectItem value={PaymentIssueAction.CORRECTED}>
-                                      Corrected
+                                      {t('resolveActions.CORRECTED')}
                                     </SelectItem>
                                     <SelectItem value={PaymentIssueAction.RECONCILED}>
-                                      Reconciled
+                                      {t('resolveActions.RECONCILED')}
                                     </SelectItem>
                                     <SelectItem value={PaymentIssueAction.CREDITED}>
-                                      Credited
+                                      {t('resolveActions.CREDITED')}
                                     </SelectItem>
                                     <SelectItem value={PaymentIssueAction.NO_ACTION}>
-                                      No Action
+                                      {t('resolveActions.NO_ACTION')}
                                     </SelectItem>
                                   </SelectContent>
                                 </Select>
                               </div>
                               <div>
-                                <Label htmlFor="resolution">Resolution *</Label>
+                                <Label htmlFor="resolution">{t('resolveDialog.resolutionLabel')}</Label>
                                 <Textarea
                                   id="resolution"
                                   value={resolution}
                                   onChange={(e) => setResolution(e.target.value)}
-                                  placeholder="Describe how the issue was resolved"
+                                  placeholder={t('resolveDialog.resolutionPlaceholder')}
                                   rows={4}
                                 />
                               </div>
                               <div>
-                                <Label htmlFor="stripeRefundId">Stripe Refund ID (optional)</Label>
+                                <Label htmlFor="stripeRefundId">{t('resolveDialog.stripeRefundIdLabel')}</Label>
                                 <Input
                                   id="stripeRefundId"
                                   value={stripeRefundId}
                                   onChange={(e) => setStripeRefundId(e.target.value)}
-                                  placeholder="re_xxxxxx"
+                                  placeholder={t('resolveDialog.stripeRefundIdPlaceholder')}
                                 />
                               </div>
                             </div>
                             <DialogFooter>
                               <Button type="button" variant="outline" onClick={() => setResolveDialogOpen(false)}>
-                                Cancel
+                                {t('resolveDialog.cancel')}
                               </Button>
                               <Button
                                 type="button"
                                 onClick={handleResolve}
                                 disabled={!resolution || isResolving}
                               >
-                                {isResolving ? 'Resolving...' : 'Resolve Issue'}
+                                {isResolving ? t('resolveDialog.resolving') : t('resolveDialog.resolveButton')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -597,7 +594,7 @@ export function PaymentIssuesPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={8} className="text-center text-muted-foreground">
-                    No open payment issues found
+                    {t('empty.message')}
                   </TableCell>
                 </TableRow>
               )}

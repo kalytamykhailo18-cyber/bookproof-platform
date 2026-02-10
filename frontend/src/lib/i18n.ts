@@ -60,6 +60,10 @@ import adminRefundsEN from '../locales/en/admin-refunds.json';
 import adminRefundsES from '../locales/es/admin-refunds.json';
 import adminRefundsPT from '../locales/pt/admin-refunds.json';
 
+import adminPaymentIssuesEN from '../locales/en/admin-payment-issues.json';
+import adminPaymentIssuesES from '../locales/es/admin-payment-issues.json';
+import adminPaymentIssuesPT from '../locales/pt/admin-payment-issues.json';
+
 import adminCouponsEN from '../locales/en/admin-coupons.json';
 import adminCouponsES from '../locales/es/admin-coupons.json';
 import adminCouponsPT from '../locales/pt/admin-coupons.json';
@@ -105,6 +109,7 @@ const resources = {
     adminValidation: adminValidationEN,
     adminPayouts: adminPayoutsEN,
     adminRefunds: adminRefundsEN,
+    adminPaymentIssues: adminPaymentIssuesEN,
     adminCoupons: adminCouponsEN,
     adminSettings: adminSettingsEN,
     adminTeam: adminTeamEN,
@@ -126,6 +131,7 @@ const resources = {
     adminValidation: adminValidationES,
     adminPayouts: adminPayoutsES,
     adminRefunds: adminRefundsES,
+    adminPaymentIssues: adminPaymentIssuesES,
     adminCoupons: adminCouponsES,
     adminSettings: adminSettingsES,
     adminTeam: adminTeamES,
@@ -147,6 +153,7 @@ const resources = {
     adminValidation: adminValidationPT,
     adminPayouts: adminPayoutsPT,
     adminRefunds: adminRefundsPT,
+    adminPaymentIssues: adminPaymentIssuesPT,
     adminCoupons: adminCouponsPT,
     adminSettings: adminSettingsPT,
     adminTeam: adminTeamPT,
