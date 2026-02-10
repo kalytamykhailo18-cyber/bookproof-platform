@@ -375,7 +375,31 @@ export class KeywordsService {
       },
     });
 
-    return research.pdfUrl;
+    // Check if R2 is properly configured (not placeholder)
+    const r2Endpoint = this.configService.get<string>('r2.endpoint');
+    const isR2Configured = r2Endpoint && !r2Endpoint.includes('placeholder');
+
+    if (!isR2Configured) {
+      // In development/local without R2 configured, return stored URL directly
+      this.logger.warn('R2 not configured - returning stored PDF URL directly. Configure R2 credentials for production.');
+      return research.pdfUrl;
+    }
+
+    // In production with R2 configured, generate signed URL
+    try {
+      // Extract the key from the stored URL
+      // URL format: https://files.bookproof.app/keyword-research/keyword-research-{id}.pdf
+      // We need: keyword-research/keyword-research-{id}.pdf
+      const urlPath = new URL(research.pdfUrl).pathname;
+      const key = urlPath.startsWith('/') ? urlPath.substring(1) : urlPath;
+
+      // Generate signed URL valid for 1 hour (3600 seconds)
+      const signedUrl = await this.filesService.getSignedUrl(key, 3600);
+      return signedUrl;
+    } catch (error) {
+      this.logger.error('Failed to generate signed URL, falling back to stored URL', error);
+      return research.pdfUrl;
+    }
   }
 
   /**

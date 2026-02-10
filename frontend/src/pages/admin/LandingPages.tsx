@@ -1,6 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -20,7 +19,7 @@ import {
   ChevronLeft,
   ChevronRight,
   FileEdit,
-  ExternalLink } from 'lucide-react';
+  AlertCircle } from 'lucide-react';
 
 import {
   getAllLandingPages,
@@ -803,8 +802,6 @@ function CtaSettingsTabContent() {
 // Main Page Component
 export function AdminLandingPagesPage() {
   const { t, i18n } = useTranslation('adminLandingPages');
-  const navigate = useNavigate();
-  const [isContentEditorLoading, setIsContentEditorLoading] = useState(false);
 
   return (
     <TranslationContext.Provider value={t as TFunction}>
@@ -850,46 +847,36 @@ export function AdminLandingPagesPage() {
           </TabsContent>
 
           <TabsContent value="content" className="mt-6">
-            <Card>
+            <Card className="border-yellow-200 bg-yellow-50/50">
               <CardHeader>
-                <CardTitle>Content Management System</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <FileEdit className="h-5 w-5" />
+                  Content Management System (CMS)
+                  <Badge variant="outline" className="ml-2 border-yellow-600 text-yellow-700">
+                    Coming Soon
+                  </Badge>
+                </CardTitle>
                 <CardDescription>
-                  Edit landing page sections without touching code: Hero, Features, Testimonials, FAQs
+                  Visual editor for landing page content - Hero, Features, Testimonials, FAQs
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="rounded-lg border p-6 space-y-4">
+                <div className="rounded-lg border border-yellow-200 bg-white p-6">
                   <div className="flex items-start gap-4">
-                    <FileEdit className="h-8 w-8 text-primary" />
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg mb-2">Visual Content Editor</h3>
-                      <p className="text-muted-foreground mb-4">
-                        Edit all landing page content blocks including hero section, features, testimonials, and FAQs.
-                        Changes are saved per language and can be previewed before publishing.
+                    <AlertCircle className="h-6 w-6 text-yellow-600 flex-shrink-0" />
+                    <div className="flex-1 space-y-3">
+                      <h3 className="font-semibold text-lg">Feature Under Development</h3>
+                      <p className="text-muted-foreground">
+                        This CMS feature will allow you to edit all landing page content without touching code.
+                        Currently, landing page content is managed via i18n translation files.
                       </p>
-                      <div className="flex gap-2">
-                        <Button
-                          type="button"
-                          onClick={() => {
-                            setIsContentEditorLoading(true);
-                            navigate(`/admin/landing-pages/content`);
-                          }}
-                          disabled={isContentEditorLoading}
-                        >
-                          {isContentEditorLoading ? (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          ) : (
-                            <FileEdit className="mr-2 h-4 w-4" />
-                          )}
-                          Open Content Editor
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => window.open('/', '_blank')}
-                        >
-                          <ExternalLink className="mr-2 h-4 w-4" />
-                          Preview Landing Page
-                        </Button>
+                      <div className="rounded-md bg-yellow-50 p-4 text-sm">
+                        <p className="font-medium mb-2">Current Implementation:</p>
+                        <ul className="space-y-1 text-muted-foreground">
+                          <li>• Content stored in: <code className="text-xs bg-white px-1 py-0.5 rounded">frontend/src/locales/[lang]/</code></li>
+                          <li>• Files: hero.json, features.json, testimonials.json, faq.json</li>
+                          <li>• Languages: EN, PT, ES</li>
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -898,24 +885,24 @@ export function AdminLandingPagesPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-base">Editable Sections</CardTitle>
+                      <CardTitle className="text-base">Planned Features</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <ul className="space-y-2 text-sm">
+                      <ul className="space-y-2 text-sm text-muted-foreground">
                         <li className="flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
                           Hero section (headline, subtitle, CTAs, image)
                         </li>
                         <li className="flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
                           Features list (add/edit/remove/reorder)
                         </li>
                         <li className="flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
                           Testimonials (quotes, authors, ratings)
                         </li>
                         <li className="flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
                           FAQs (questions and answers)
                         </li>
                       </ul>
@@ -928,20 +915,20 @@ export function AdminLandingPagesPage() {
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-muted-foreground mb-3">
-                        Content is managed separately for each language:
+                        Content will be managed separately for each language:
                       </p>
                       <ul className="space-y-2 text-sm">
                         <li className="flex items-center gap-2">
                           <Badge variant="outline">EN</Badge>
-                          <span>English</span>
+                          <span className="text-muted-foreground">English</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <Badge variant="outline">PT</Badge>
-                          <span>Portuguese</span>
+                          <span className="text-muted-foreground">Portuguese</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <Badge variant="outline">ES</Badge>
-                          <span>Spanish</span>
+                          <span className="text-muted-foreground">Spanish</span>
                         </li>
                       </ul>
                     </CardContent>
@@ -952,6 +939,20 @@ export function AdminLandingPagesPage() {
           </TabsContent>
 
           <TabsContent value="settings" className="mt-6">
+            <Card className="border-yellow-200 bg-yellow-50/50 mb-4">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <p className="font-medium text-sm">Note: CTA Settings Placeholder</p>
+                    <p className="text-sm text-muted-foreground">
+                      These settings are saved to the database but not yet connected to the landing page.
+                      The landing page currently uses hardcoded i18n translation files for CTA buttons.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
             <CtaSettingsTabContent />
           </TabsContent>
         </Tabs>
