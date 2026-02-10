@@ -242,8 +242,9 @@ export function useRealtimeUpdates(options: UseRealtimeUpdatesOptions = {}) {
   }, [connect]);
 
   // Connect when enabled and authenticated
+  // Use user?.id instead of user object to prevent reconnection loops when user object reference changes
   useEffect(() => {
-    if (enabled && user && token) {
+    if (enabled && user?.id && token) {
       connect();
     }
 
@@ -255,7 +256,7 @@ export function useRealtimeUpdates(options: UseRealtimeUpdatesOptions = {}) {
         clearTimeout(reconnectTimeoutRef.current);
       }
     };
-  }, [enabled, user, token, connect]);
+  }, [enabled, user?.id, token, connect]);
 
   // Manual disconnect function
   const disconnect = useCallback(() => {

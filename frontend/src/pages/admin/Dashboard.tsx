@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { dashboardsApi, AdminDashboardDto, AdminRevenueAnalyticsDto } from '@/lib/api/dashboards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -49,12 +49,12 @@ export function AdminDashboardPage() {
   const [dashboardLoading, setDashboardLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Check if current admin has access to financial data
-  const canViewFinancials = isSuperAdmin();
+  // Memoize to prevent re-renders
+  const canViewFinancials = useMemo(() => isSuperAdmin(), [isSuperAdmin]);
 
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
 
-  // Fetch dashboard data
+  // Fetch dashboard data - Only runs once when user ID changes (not on every user object change)
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -78,10 +78,10 @@ export function AdminDashboardPage() {
       }
     };
 
-    if (user) {
+    if (user?.id) {
       fetchDashboardData();
     }
-  }, [user, canViewFinancials]);
+  }, [user?.id, canViewFinancials]);
 
   const navigateTo = (path: string) => {
     setLoadingPath(path);
