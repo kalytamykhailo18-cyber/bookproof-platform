@@ -1,9 +1,15 @@
 {
   "title": "Gestión de Afiliados",
   "subtitle": "Gestiona socios afiliados y rastrea su rendimiento",
+  "list": {
+    "title": "Afiliados",
+    "description": "Gestionar todos los socios afiliados"
+  },
   "stats": {
+    "total": "Total de Afiliados",
     "totalAffiliates": "Total Afiliados",
     "registered": "socios registrados",
+    "active": "Afiliados Activos",
     "approved": "Aprobados",
     "activePartners": "socios activos",
     "pending": "Pendientes",
@@ -15,20 +21,31 @@
   },
   "filters": {
     "title": "Filtros",
+    "description": "Filtrar y buscar afiliados",
+    "search": "Buscar",
     "searchPlaceholder": "Buscar por nombre, email o código de referencia...",
     "approval": "Estado de Aprobación",
     "allApproval": "Todos los Estados",
     "approved": "Aprobado",
     "pending": "Pendiente",
+    "rejected": "Rechazado",
     "status": "Estado Activo",
     "allStatus": "Todos los Estados",
+    "activeStatus": "Estado Activo",
+    "allActive": "Todos los Estados Activos",
     "active": "Activo",
     "inactive": "Inactivo"
   },
   "table": {
     "title": "Afiliados",
     "description": "Ver y gestionar todos los socios afiliados",
+    "showing": "Mostrando",
+    "of": "de",
+    "affiliates": "afiliados",
+    "noResults": "No se Encontraron Afiliados",
+    "noResultsDescription": "Intenta ajustar tus filtros o búsqueda",
     "affiliate": "Afiliado",
+    "code": "Código",
     "referralCode": "Código de Referencia",
     "commission": "Comisión",
     "earnings": "Ganancias",
@@ -36,8 +53,11 @@
     "clicks": "Clics",
     "conversions": "Conversiones",
     "status": "Estado",
+    "active": "Activo",
+    "stats": "Estadísticas",
     "joined": "Registrado",
-    "actions": "Acciones"
+    "actions": "Acciones",
+    "view": "Ver Detalles"
   },
   "status": {
     "approved": "Aprobado",

@@ -81,7 +81,8 @@ const AdminCouponsNewPage = lazy(() => import('../pages/admin/coupons/New').then
 const AdminCouponsEditPage = lazy(() => import('../pages/admin/coupons/Edit').then(m => ({ default: m.EditCouponPage })));
 const AdminCouponsUsagePage = lazy(() => import('../pages/admin/coupons/Usage').then(m => ({ default: m.CouponUsagePage })));
 const AdminKeywordResearchPage = lazy(() => import('../pages/admin/KeywordResearch').then(m => ({ default: m.AdminKeywordResearchPage })));
-const AdminAffiliatesPage = lazy(() => import('../pages/admin/Affiliates').then(m => ({ default: m.AdminAffiliateDetailsPage })));
+const AdminAffiliatesListPage = lazy(() => import('../pages/admin/AffiliatesList').then(m => ({ default: m.AdminAffiliatesListPage })));
+const AdminAffiliateDetailsPage = lazy(() => import('../pages/admin/Affiliates').then(m => ({ default: m.AdminAffiliateDetailsPage })));
 const AdminAffiliatesPayoutsPage = lazy(() => import('../pages/admin/affiliates/Payouts').then(m => ({ default: m.AdminAffiliatePayoutsPage })));
 const AdminAuthorsTransactionsPage = lazy(() => import('../pages/admin/authors/Transactions').then(m => ({ default: m.AuthorTransactionsPage })));
 const AdminLandingPagesPage = lazy(() => import('../pages/admin/LandingPages').then(m => ({ default: m.AdminLandingPagesPage })));
@@ -238,8 +239,8 @@ export const router = createBrowserRouter([
               { path: 'coupons/:id/edit', element: <LazyRoute component={AdminCouponsEditPage} /> },
               { path: 'coupons/:id/usage', element: <LazyRoute component={AdminCouponsUsagePage} /> },
               { path: 'keyword-research', element: <LazyRoute component={AdminKeywordResearchPage} /> },
-              { path: 'affiliates', element: <LazyRoute component={AdminAffiliatesPage} /> },
-              { path: 'affiliates/:id', element: <LazyRoute component={AdminAffiliatesPage} /> },
+              { path: 'affiliates', element: <LazyRoute component={AdminAffiliatesListPage} /> },
+              { path: 'affiliates/:id', element: <LazyRoute component={AdminAffiliateDetailsPage} /> },
               { path: 'affiliates/payouts', element: <LazyRoute component={AdminAffiliatesPayoutsPage} /> },
               { path: 'landing-pages', element: <LazyRoute component={AdminLandingPagesPage} /> },
               { path: 'landing-pages/content', element: <LazyRoute component={AdminLandingPagesContentPage} /> },
