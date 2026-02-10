@@ -41,7 +41,9 @@
       "notesPlaceholder": "Notas opcionais para trilha de auditoria",
       "cancel": "Cancelar",
       "confirm": "Estender Prazo",
-      "confirming": "Estendendo..."
+      "confirming": "Estendendo...",
+      "success": "Prazo estendido com sucesso",
+      "error": "Falha ao estender o prazo"
     },
     "reassignReader": {
       "title": "Reatribuir Leitor",
@@ -54,7 +56,9 @@
       "notesPlaceholder": "Notas opcionais para trilha de auditoria",
       "cancel": "Cancelar",
       "confirm": "Reatribuir Leitor",
-      "confirming": "Reatribuindo..."
+      "confirming": "Reatribuindo...",
+      "success": "Leitor reatribuído com sucesso",
+      "error": "Falha ao reatribuir o leitor"
     },
     "bulkReassign": {
       "title": "Reatribuição em Massa",
@@ -65,7 +69,9 @@
       "reasonPlaceholder": "Explique por que essas atribuições estão sendo reatribuídas",
       "cancel": "Cancelar",
       "confirm": "Reatribuição em Massa",
-      "confirming": "Reatribuindo..."
+      "confirming": "Reatribuindo...",
+      "success": "Reatribuição em massa concluída com sucesso",
+      "error": "Falha na reatribuição em massa"
     },
     "cancelAssignment": {
       "title": "Cancelar Atribuição",
@@ -75,7 +81,9 @@
       "refundLabel": "Reembolsar créditos ao autor",
       "cancel": "Cancelar",
       "confirm": "Cancelar Atribuição",
-      "confirming": "Cancelando..."
+      "confirming": "Cancelando...",
+      "success": "Atribuição cancelada com sucesso",
+      "error": "Falha ao cancelar a atribuição"
     },
     "correctError": {
       "title": "Corrigir Erro de Atribuição",
@@ -88,8 +96,14 @@
       "notesPlaceholder": "Notas opcionais para trilha de auditoria",
       "cancel": "Cancelar",
       "confirm": "Corrigir Erro",
-      "confirming": "Corrigindo..."
+      "confirming": "Corrigindo...",
+      "success": "Erro corrigido com sucesso",
+      "error": "Falha ao corrigir o erro"
     }
+  },
+
+  "errors": {
+    "loadFailed": "Falha ao carregar exceções"
   },
 
   "errorTypes": {

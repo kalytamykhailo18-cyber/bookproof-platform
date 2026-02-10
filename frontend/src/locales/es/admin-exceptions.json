@@ -41,7 +41,9 @@
       "notesPlaceholder": "Notas opcionales para registro de auditoría",
       "cancel": "Cancelar",
       "confirm": "Extender Plazo",
-      "confirming": "Extendiendo..."
+      "confirming": "Extendiendo...",
+      "success": "Plazo extendido exitosamente",
+      "error": "Error al extender el plazo"
     },
     "reassignReader": {
       "title": "Reasignar Lector",
@@ -54,7 +56,9 @@
       "notesPlaceholder": "Notas opcionales para registro de auditoría",
       "cancel": "Cancelar",
       "confirm": "Reasignar Lector",
-      "confirming": "Reasignando..."
+      "confirming": "Reasignando...",
+      "success": "Lector reasignado exitosamente",
+      "error": "Error al reasignar el lector"
     },
     "bulkReassign": {
       "title": "Reasignación Masiva",
@@ -65,7 +69,9 @@
       "reasonPlaceholder": "Explique por qué estas asignaciones se están reasignando",
       "cancel": "Cancelar",
       "confirm": "Reasignación Masiva",
-      "confirming": "Reasignando..."
+      "confirming": "Reasignando...",
+      "success": "Reasignación masiva completada exitosamente",
+      "error": "Error en la reasignación masiva"
     },
     "cancelAssignment": {
       "title": "Cancelar Asignación",
@@ -75,7 +81,9 @@
       "refundLabel": "Reembolsar créditos al autor",
       "cancel": "Cancelar",
       "confirm": "Cancelar Asignación",
-      "confirming": "Cancelando..."
+      "confirming": "Cancelando...",
+      "success": "Asignación cancelada exitosamente",
+      "error": "Error al cancelar la asignación"
     },
     "correctError": {
       "title": "Corregir Error de Asignación",
@@ -88,8 +96,14 @@
       "notesPlaceholder": "Notas opcionales para registro de auditoría",
       "cancel": "Cancelar",
       "confirm": "Corregir Error",
-      "confirming": "Corrigiendo..."
+      "confirming": "Corrigiendo...",
+      "success": "Error corregido exitosamente",
+      "error": "Error al corregir el error"
     }
+  },
+
+  "errors": {
+    "loadFailed": "Error al cargar las excepciones"
   },
 
   "errorTypes": {

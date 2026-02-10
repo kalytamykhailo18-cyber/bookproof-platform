@@ -26,7 +26,7 @@ export default function ApprovePayoutDialog({
   open,
   onOpenChange,
   onRefetch }: ApprovePayoutDialogProps) {
-  const { t, i18n } = useTranslation('admin-payouts');
+  const { t, i18n } = useTranslation('adminPayouts');
   const [notes, setNotes] = useState('');
   const [isPending, setIsPending] = useState(false);
 

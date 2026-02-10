@@ -26,7 +26,7 @@ export default function RejectPayoutDialog({
   open,
   onOpenChange,
   onRefetch }: RejectPayoutDialogProps) {
-  const { t, i18n } = useTranslation('admin-payouts');
+  const { t, i18n } = useTranslation('adminPayouts');
   const [reason, setReason] = useState('');
   const [error, setError] = useState('');
   const [isPending, setIsPending] = useState(false);

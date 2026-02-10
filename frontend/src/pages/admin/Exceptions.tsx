@@ -55,7 +55,7 @@ export function ExceptionsPage() {
         setExceptions(data);
       } catch (err) {
         console.error('Exceptions error:', err);
-        toast.error('Failed to load exceptions');
+        toast.error(t('errors.loadFailed'));
       } finally {
         setIsLoading(false);
       }
@@ -102,11 +102,12 @@ export function ExceptionsPage() {
         reason: extendReason,
         notes: extendNotes || undefined
       });
-      toast.success('Deadline extended successfully');
 
       // Refetch exceptions
       const data = await adminExceptionsApi.getExceptions();
       setExceptions(data);
+
+      toast.success(t('dialogs.extendDeadline.success'));
 
       // Reset form
       setExtendDialogOpen(false);
@@ -115,7 +116,7 @@ export function ExceptionsPage() {
       setExtendNotes('');
     } catch (error: any) {
       console.error('Extend deadline error:', error);
-      toast.error(error.response?.data?.message || 'Failed to extend deadline');
+      toast.error(error.response?.data?.message || t('dialogs.extendDeadline.error'));
     } finally {
       setIsExtending(false);
     }
@@ -129,11 +130,12 @@ export function ExceptionsPage() {
         reason: reassignReason,
         notes: reassignNotes || undefined
       });
-      toast.success('Reader reassigned successfully');
 
       // Refetch exceptions
       const data = await adminExceptionsApi.getExceptions();
       setExceptions(data);
+
+      toast.success(t('dialogs.reassignReader.success'));
 
       // Reset form
       setReassignDialogOpen(false);
@@ -142,7 +144,7 @@ export function ExceptionsPage() {
       setReassignNotes('');
     } catch (error: any) {
       console.error('Reassign reader error:', error);
-      toast.error(error.response?.data?.message || 'Failed to reassign reader');
+      toast.error(error.response?.data?.message || t('dialogs.reassignReader.error'));
     } finally {
       setIsReassigning(false);
     }
@@ -156,11 +158,12 @@ export function ExceptionsPage() {
         targetBookId: bulkTargetBookId,
         reason: bulkReassignReason
       });
-      toast.success('Bulk reassignment completed successfully');
 
       // Refetch exceptions
       const data = await adminExceptionsApi.getExceptions();
       setExceptions(data);
+
+      toast.success(t('dialogs.bulkReassign.success'));
 
       // Reset form
       setBulkReassignDialogOpen(false);
@@ -169,7 +172,7 @@ export function ExceptionsPage() {
       setBulkReassignReason('');
     } catch (error: any) {
       console.error('Bulk reassign error:', error);
-      toast.error(error.response?.data?.message || 'Failed to bulk reassign');
+      toast.error(error.response?.data?.message || t('dialogs.bulkReassign.error'));
     } finally {
       setIsBulkReassigning(false);
     }
@@ -182,11 +185,12 @@ export function ExceptionsPage() {
         reason: cancelReason,
         refundCredits
       });
-      toast.success('Assignment cancelled successfully');
 
       // Refetch exceptions
       const data = await adminExceptionsApi.getExceptions();
       setExceptions(data);
+
+      toast.success(t('dialogs.cancelAssignment.success'));
 
       // Reset form
       setCancelDialogOpen(false);
@@ -194,7 +198,7 @@ export function ExceptionsPage() {
       setRefundCredits(true);
     } catch (error: any) {
       console.error('Cancel assignment error:', error);
-      toast.error(error.response?.data?.message || 'Failed to cancel assignment');
+      toast.error(error.response?.data?.message || t('dialogs.cancelAssignment.error'));
     } finally {
       setIsCancelling(false);
     }
@@ -211,11 +215,12 @@ export function ExceptionsPage() {
         description: errorType, // Using errorType as description
         notes: correctionNotes || undefined
       });
-      toast.success('Error corrected successfully');
 
       // Refetch exceptions
       const data = await adminExceptionsApi.getExceptions();
       setExceptions(data);
+
+      toast.success(t('dialogs.correctError.success'));
 
       // Reset form
       setCorrectErrorDialogOpen(false);
@@ -224,7 +229,7 @@ export function ExceptionsPage() {
       setCorrectionNotes('');
     } catch (error: any) {
       console.error('Correct error error:', error);
-      toast.error(error.response?.data?.message || 'Failed to correct error');
+      toast.error(error.response?.data?.message || t('dialogs.correctError.error'));
     } finally {
       setIsCorrecting(false);
     }
@@ -272,42 +277,42 @@ export function ExceptionsPage() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Bulk Reassign Assignments</DialogTitle>
+                <DialogTitle>{t('dialogs.bulkReassign.title')}</DialogTitle>
                 <DialogDescription>
-                  Reassign {selectedAssignments.length} selected assignments to a different book
+                  {t('dialogs.bulkReassign.description', { count: selectedAssignments.length })}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="bulkTargetBookId">Target Book ID</Label>
+                  <Label htmlFor="bulkTargetBookId">{t('dialogs.bulkReassign.targetBookIdLabel')}</Label>
                   <Input
                     id="bulkTargetBookId"
                     value={bulkTargetBookId}
                     onChange={(e) => setBulkTargetBookId(e.target.value)}
-                    placeholder="Enter target book ID"
+                    placeholder={t('dialogs.bulkReassign.targetBookIdPlaceholder')}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="bulkReassignReason">Reason *</Label>
+                  <Label htmlFor="bulkReassignReason">{t('dialogs.bulkReassign.reasonLabel')}</Label>
                   <Textarea
                     id="bulkReassignReason"
                     value={bulkReassignReason}
                     onChange={(e) => setBulkReassignReason(e.target.value)}
-                    placeholder="Explain why these assignments are being reassigned"
+                    placeholder={t('dialogs.bulkReassign.reasonPlaceholder')}
                     rows={3}
                   />
                 </div>
               </div>
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setBulkReassignDialogOpen(false)}>
-                  Cancel
+                  {t('dialogs.bulkReassign.cancel')}
                 </Button>
                 <Button
                   type="button"
                   onClick={handleBulkReassign}
                   disabled={!bulkTargetBookId || !bulkReassignReason || isBulkReassigning}
                 >
-                  {isBulkReassigning ? 'Reassigning...' : 'Bulk Reassign'}
+                  {isBulkReassigning ? t('dialogs.bulkReassign.confirming') : t('dialogs.bulkReassign.confirm')}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -388,13 +393,13 @@ export function ExceptionsPage() {
                     }}
                   />
                 </TableHead>
-                <TableHead>Assignment ID</TableHead>
-                <TableHead>Book Title</TableHead>
-                <TableHead>Reader</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Reason</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{t('table.assignmentId')}</TableHead>
+                <TableHead>{t('table.bookTitle')}</TableHead>
+                <TableHead>{t('table.reader')}</TableHead>
+                <TableHead>{t('table.status')}</TableHead>
+                <TableHead>{t('table.reason')}</TableHead>
+                <TableHead>{t('table.type')}</TableHead>
+                <TableHead>{t('table.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -456,14 +461,14 @@ export function ExceptionsPage() {
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Extend Deadline</DialogTitle>
+                              <DialogTitle>{t('dialogs.extendDeadline.title')}</DialogTitle>
                               <DialogDescription>
-                                Extend the deadline for this assignment
+                                {t('dialogs.extendDeadline.description')}
                               </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="extensionHours">Extension Hours *</Label>
+                                <Label htmlFor="extensionHours">{t('dialogs.extendDeadline.hoursLabel')}</Label>
                                 <Input
                                   id="extensionHours"
                                   type="number"
@@ -474,36 +479,36 @@ export function ExceptionsPage() {
                                 />
                               </div>
                               <div>
-                                <Label htmlFor="extendReason">Reason *</Label>
+                                <Label htmlFor="extendReason">{t('dialogs.extendDeadline.reasonLabel')}</Label>
                                 <Textarea
                                   id="extendReason"
                                   value={extendReason}
                                   onChange={(e) => setExtendReason(e.target.value)}
-                                  placeholder="Explain why deadline is being extended"
+                                  placeholder={t('dialogs.extendDeadline.reasonPlaceholder')}
                                   rows={3}
                                 />
                               </div>
                               <div>
-                                <Label htmlFor="extendNotes">Additional Notes</Label>
+                                <Label htmlFor="extendNotes">{t('dialogs.extendDeadline.notesLabel')}</Label>
                                 <Textarea
                                   id="extendNotes"
                                   value={extendNotes}
                                   onChange={(e) => setExtendNotes(e.target.value)}
-                                  placeholder="Optional notes for audit trail"
+                                  placeholder={t('dialogs.extendDeadline.notesPlaceholder')}
                                   rows={2}
                                 />
                               </div>
                             </div>
                             <DialogFooter>
                               <Button type="button" variant="outline" onClick={() => setExtendDialogOpen(false)}>
-                                Cancel
+                                {t('dialogs.extendDeadline.cancel')}
                               </Button>
                               <Button
                                 type="button"
                                 onClick={handleExtendDeadline}
                                 disabled={!extendReason || isExtending}
                               >
-                                {isExtending ? 'Extending...' : 'Extend Deadline'}
+                                {isExtending ? t('dialogs.extendDeadline.confirming') : t('dialogs.extendDeadline.confirm')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -523,38 +528,38 @@ export function ExceptionsPage() {
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Reassign Reader</DialogTitle>
+                              <DialogTitle>{t('dialogs.reassignReader.title')}</DialogTitle>
                               <DialogDescription>
-                                Reassign this reader to a different book
+                                {t('dialogs.reassignReader.description')}
                               </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="targetBookId">Target Book ID *</Label>
+                                <Label htmlFor="targetBookId">{t('dialogs.reassignReader.targetBookIdLabel')}</Label>
                                 <Input
                                   id="targetBookId"
                                   value={targetBookId}
                                   onChange={(e) => setTargetBookId(e.target.value)}
-                                  placeholder="Enter target book ID"
+                                  placeholder={t('dialogs.reassignReader.targetBookIdPlaceholder')}
                                 />
                               </div>
                               <div>
-                                <Label htmlFor="reassignReason">Reason *</Label>
+                                <Label htmlFor="reassignReason">{t('dialogs.reassignReader.reasonLabel')}</Label>
                                 <Textarea
                                   id="reassignReason"
                                   value={reassignReason}
                                   onChange={(e) => setReassignReason(e.target.value)}
-                                  placeholder="Explain why reader is being reassigned"
+                                  placeholder={t('dialogs.reassignReader.reasonPlaceholder')}
                                   rows={3}
                                 />
                               </div>
                               <div>
-                                <Label htmlFor="reassignNotes">Additional Notes</Label>
+                                <Label htmlFor="reassignNotes">{t('dialogs.reassignReader.notesLabel')}</Label>
                                 <Textarea
                                   id="reassignNotes"
                                   value={reassignNotes}
                                   onChange={(e) => setReassignNotes(e.target.value)}
-                                  placeholder="Optional notes for audit trail"
+                                  placeholder={t('dialogs.reassignReader.notesPlaceholder')}
                                   rows={2}
                                 />
                               </div>
@@ -564,7 +569,7 @@ export function ExceptionsPage() {
                                 variant="outline"
                                 onClick={() => setReassignDialogOpen(false)}
                               >
-                                Cancel
+                                {t('dialogs.reassignReader.cancel')}
                               </Button>
                               <Button
                                 onClick={handleReassignReader}
@@ -572,7 +577,7 @@ export function ExceptionsPage() {
                                   !targetBookId || !reassignReason || isReassigning
                                 }
                               >
-                                {isReassigning ? 'Reassigning...' : 'Reassign Reader'}
+                                {isReassigning ? t('dialogs.reassignReader.confirming') : t('dialogs.reassignReader.confirm')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -592,19 +597,19 @@ export function ExceptionsPage() {
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Cancel Assignment</DialogTitle>
+                              <DialogTitle>{t('dialogs.cancelAssignment.title')}</DialogTitle>
                               <DialogDescription>
-                                Cancel this assignment and optionally refund credits
+                                {t('dialogs.cancelAssignment.description')}
                               </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="cancelReason">Reason *</Label>
+                                <Label htmlFor="cancelReason">{t('dialogs.cancelAssignment.reasonLabel')}</Label>
                                 <Textarea
                                   id="cancelReason"
                                   value={cancelReason}
                                   onChange={(e) => setCancelReason(e.target.value)}
-                                  placeholder="Explain why assignment is being cancelled"
+                                  placeholder={t('dialogs.cancelAssignment.reasonPlaceholder')}
                                   rows={3}
                                 />
                               </div>
@@ -615,12 +620,12 @@ export function ExceptionsPage() {
                                   checked={refundCredits}
                                   onChange={(e) => setRefundCredits(e.target.checked)}
                                 />
-                                <Label htmlFor="refundCredits">Refund credits to author</Label>
+                                <Label htmlFor="refundCredits">{t('dialogs.cancelAssignment.refundLabel')}</Label>
                               </div>
                             </div>
                             <DialogFooter>
                               <Button type="button" variant="outline" onClick={() => setCancelDialogOpen(false)}>
-                                Cancel
+                                {t('dialogs.cancelAssignment.cancel')}
                               </Button>
                               <Button
                                 type="button"
@@ -628,7 +633,7 @@ export function ExceptionsPage() {
                                 onClick={handleCancelAssignment}
                                 disabled={!cancelReason || isCancelling}
                               >
-                                {isCancelling ? 'Cancelling...' : 'Cancel Assignment'}
+                                {isCancelling ? t('dialogs.cancelAssignment.confirming') : t('dialogs.cancelAssignment.confirm')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -648,47 +653,47 @@ export function ExceptionsPage() {
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Correct Assignment Error</DialogTitle>
+                              <DialogTitle>{t('dialogs.correctError.title')}</DialogTitle>
                               <DialogDescription>
-                                Correct an error in this assignment
+                                {t('dialogs.correctError.description')}
                               </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="errorType">Error Type *</Label>
+                                <Label htmlFor="errorType">{t('dialogs.correctError.errorTypeLabel')}</Label>
                                 <Select
                                   value={errorType}
                                   onValueChange={(value: ErrorType) => setErrorType(value)}
                                 >
                                   <SelectTrigger id="errorType">
-                                    <SelectValue placeholder="Select error type" />
+                                    <SelectValue placeholder={t('dialogs.correctError.errorTypePlaceholder')} />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="WRONG_FORMAT">Wrong Format</SelectItem>
-                                    <SelectItem value="WRONG_BOOK">Wrong Book</SelectItem>
-                                    <SelectItem value="DUPLICATE">Duplicate</SelectItem>
-                                    <SelectItem value="MISSING_CREDITS">Missing Credits</SelectItem>
-                                    <SelectItem value="OTHER">Other</SelectItem>
+                                    <SelectItem value="WRONG_FORMAT">{t('errorTypes.WRONG_FORMAT')}</SelectItem>
+                                    <SelectItem value="WRONG_BOOK">{t('errorTypes.WRONG_BOOK')}</SelectItem>
+                                    <SelectItem value="DUPLICATE">{t('errorTypes.DUPLICATE')}</SelectItem>
+                                    <SelectItem value="MISSING_CREDITS">{t('errorTypes.MISSING_CREDITS')}</SelectItem>
+                                    <SelectItem value="OTHER">{t('errorTypes.OTHER')}</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </div>
                               <div>
-                                <Label htmlFor="correctionAction">Correction Action *</Label>
+                                <Label htmlFor="correctionAction">{t('dialogs.correctError.correctionActionLabel')}</Label>
                                 <Textarea
                                   id="correctionAction"
                                   value={correctionAction}
                                   onChange={(e) => setCorrectionAction(e.target.value)}
-                                  placeholder="Describe what action was taken to correct the error"
+                                  placeholder={t('dialogs.correctError.correctionActionPlaceholder')}
                                   rows={3}
                                 />
                               </div>
                               <div>
-                                <Label htmlFor="correctionNotes">Additional Notes</Label>
+                                <Label htmlFor="correctionNotes">{t('dialogs.correctError.notesLabel')}</Label>
                                 <Textarea
                                   id="correctionNotes"
                                   value={correctionNotes}
                                   onChange={(e) => setCorrectionNotes(e.target.value)}
-                                  placeholder="Optional notes for audit trail"
+                                  placeholder={t('dialogs.correctError.notesPlaceholder')}
                                   rows={2}
                                 />
                               </div>
@@ -698,13 +703,13 @@ export function ExceptionsPage() {
                                 variant="outline"
                                 onClick={() => setCorrectErrorDialogOpen(false)}
                               >
-                                Cancel
+                                {t('dialogs.correctError.cancel')}
                               </Button>
                               <Button
                                 onClick={handleCorrectError}
                                 disabled={!errorType || !correctionAction || isCorrecting}
                               >
-                                {isCorrecting ? 'Correcting...' : 'Correct Error'}
+                                {isCorrecting ? t('dialogs.correctError.confirming') : t('dialogs.correctError.confirm')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -716,7 +721,7 @@ export function ExceptionsPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={8} className="text-center text-muted-foreground">
-                    No exceptions found
+                    {t('table.noData')}
                   </TableCell>
                 </TableRow>
               )}
