@@ -42,37 +42,37 @@ import {
   Loader2 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
-const getStatusBadge = (status: RefundRequestStatus) => {
+const getStatusBadge = (status: RefundRequestStatus, t: any) => {
   switch (status) {
     case RefundRequestStatus.PENDING:
-      return <Badge variant="secondary"><Clock className="mr-1 h-3 w-3" />Pending</Badge>;
+      return <Badge variant="secondary"><Clock className="mr-1 h-3 w-3" />{t('status.PENDING')}</Badge>;
     case RefundRequestStatus.APPROVED:
-      return <Badge className="bg-green-100 text-green-800"><CheckCircle className="mr-1 h-3 w-3" />Approved</Badge>;
+      return <Badge className="bg-green-100 text-green-800"><CheckCircle className="mr-1 h-3 w-3" />{t('status.APPROVED')}</Badge>;
     case RefundRequestStatus.PARTIALLY_APPROVED:
-      return <Badge className="bg-yellow-100 text-yellow-800"><CheckCircle className="mr-1 h-3 w-3" />Partial</Badge>;
+      return <Badge className="bg-yellow-100 text-yellow-800"><CheckCircle className="mr-1 h-3 w-3" />{t('status.PARTIALLY_APPROVED')}</Badge>;
     case RefundRequestStatus.REJECTED:
-      return <Badge variant="destructive"><XCircle className="mr-1 h-3 w-3" />Rejected</Badge>;
+      return <Badge variant="destructive"><XCircle className="mr-1 h-3 w-3" />{t('status.REJECTED')}</Badge>;
     case RefundRequestStatus.PROCESSING:
-      return <Badge className="bg-blue-100 text-blue-800"><RefreshCw className="mr-1 h-3 w-3" />Processing</Badge>;
+      return <Badge className="bg-blue-100 text-blue-800"><RefreshCw className="mr-1 h-3 w-3" />{t('status.PROCESSING')}</Badge>;
     case RefundRequestStatus.COMPLETED:
-      return <Badge className="bg-green-500 text-white"><CheckCircle className="mr-1 h-3 w-3" />Completed</Badge>;
+      return <Badge className="bg-green-500 text-white"><CheckCircle className="mr-1 h-3 w-3" />{t('status.COMPLETED')}</Badge>;
     default:
       return <Badge variant="outline">{status}</Badge>;
   }
 };
 
-const getReasonLabel = (reason: RefundReason) => {
+const getReasonLabel = (reason: RefundReason, t: any) => {
   switch (reason) {
     case RefundReason.DIDNT_NEED_CREDITS:
-      return "Didn't need credits";
+      return t('reasons.DIDNT_NEED_CREDITS');
     case RefundReason.WRONG_PACKAGE:
-      return 'Wrong package';
+      return t('reasons.WRONG_PACKAGE');
     case RefundReason.ACCIDENTAL_PURCHASE:
-      return 'Accidental purchase';
+      return t('reasons.ACCIDENTAL_PURCHASE');
     case RefundReason.SERVICE_NOT_AS_EXPECTED:
-      return 'Service not as expected';
+      return t('reasons.SERVICE_NOT_AS_EXPECTED');
     case RefundReason.OTHER:
-      return 'Other';
+      return t('reasons.OTHER');
     default:
       return reason;
   }
@@ -102,7 +102,7 @@ export function AdminRefundsPage() {
       setData(result);
     } catch (err) {
       console.error('Refund requests error:', err);
-      toast.error('Failed to load refund requests');
+      toast.error(t('messages.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -142,14 +142,14 @@ export function AdminRefundsPage() {
         adminNotes: adminNotes || undefined,
         refundAmount: decision === 'approve_partial' ? partialAmount : undefined
       });
-      toast.success('Refund processed successfully');
+      toast.success(t('messages.processSuccess'));
       setDialogOpen(false);
       setSelectedRequest(null);
       setAdminNotes('');
       await fetchRefunds();
     } catch (error: any) {
       console.error('Process refund error:', error);
-      toast.error(error.response?.data?.message || 'Failed to process refund');
+      toast.error(error.response?.data?.message || t('messages.processError'));
     } finally {
       setIsProcessing(false);
     }
@@ -187,52 +187,50 @@ export function AdminRefundsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <h1 className="text-3xl font-bold">{t('title') || 'Refund Management'}</h1>
-        <p className="text-muted-foreground">
-          {t('description') || 'Review and process author refund requests'}
-        </p>
+        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <p className="text-muted-foreground">{t('description')}</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card className="animate-fade-up-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.pending') || 'Pending'}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.pending')}</CardTitle>
             <Clock className="h-4 w-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">{pendingCount}</div>
-            <p className="text-xs text-muted-foreground">{t('stats.pendingDesc') || 'Awaiting review'}</p>
+            <p className="text-xs text-muted-foreground">{t('stats.pendingDesc')}</p>
           </CardContent>
         </Card>
         <Card className="animate-fade-up-light-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.approved') || 'Approved'}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.approved')}</CardTitle>
             <CheckCircle className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">{approvedCount}</div>
-            <p className="text-xs text-muted-foreground">{t('stats.approvedDesc') || 'Successfully refunded'}</p>
+            <p className="text-xs text-muted-foreground">{t('stats.approvedDesc')}</p>
           </CardContent>
         </Card>
         <Card className="animate-fade-up-medium-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.rejected') || 'Rejected'}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.rejected')}</CardTitle>
             <XCircle className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">{rejectedCount}</div>
-            <p className="text-xs text-muted-foreground">{t('stats.rejectedDesc') || 'Not eligible'}</p>
+            <p className="text-xs text-muted-foreground">{t('stats.rejectedDesc')}</p>
           </CardContent>
         </Card>
         <Card className="animate-fade-up-heavy-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.totalRefunded') || 'Total Refunded'}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.totalRefunded')}</CardTitle>
             <DollarSign className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">${totalRefunded.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">{t('stats.totalRefundedDesc') || 'All time'}</p>
+            <p className="text-xs text-muted-foreground">{t('stats.totalRefundedDesc')}</p>
           </CardContent>
         </Card>
       </div>
@@ -242,9 +240,9 @@ export function AdminRefundsPage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>{t('table.title') || 'Refund Requests'}</CardTitle>
+              <CardTitle>{t('table.title')}</CardTitle>
               <CardDescription>
-                {data?.total || 0} {t('table.totalRequests') || 'total requests'}
+                {data?.total || 0} {t('table.totalRequests')}
               </CardDescription>
             </div>
             <div className="w-48">
@@ -253,16 +251,16 @@ export function AdminRefundsPage() {
                 onValueChange={(v) => setStatusFilter(v as RefundRequestStatus | 'all')}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Filter by status" />
+                  <SelectValue placeholder={t('filters.placeholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('filters.all') || 'All Statuses'}</SelectItem>
-                  <SelectItem value={RefundRequestStatus.PENDING}>Pending</SelectItem>
-                  <SelectItem value={RefundRequestStatus.APPROVED}>Approved</SelectItem>
-                  <SelectItem value={RefundRequestStatus.PARTIALLY_APPROVED}>Partially Approved</SelectItem>
-                  <SelectItem value={RefundRequestStatus.REJECTED}>Rejected</SelectItem>
-                  <SelectItem value={RefundRequestStatus.PROCESSING}>Processing</SelectItem>
-                  <SelectItem value={RefundRequestStatus.COMPLETED}>Completed</SelectItem>
+                  <SelectItem value="all">{t('filters.all')}</SelectItem>
+                  <SelectItem value={RefundRequestStatus.PENDING}>{t('filters.pending')}</SelectItem>
+                  <SelectItem value={RefundRequestStatus.APPROVED}>{t('filters.approved')}</SelectItem>
+                  <SelectItem value={RefundRequestStatus.PARTIALLY_APPROVED}>{t('filters.partiallyApproved')}</SelectItem>
+                  <SelectItem value={RefundRequestStatus.REJECTED}>{t('filters.rejected')}</SelectItem>
+                  <SelectItem value={RefundRequestStatus.PROCESSING}>{t('filters.processing')}</SelectItem>
+                  <SelectItem value={RefundRequestStatus.COMPLETED}>{t('filters.completed')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -272,14 +270,14 @@ export function AdminRefundsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('table.date') || 'Date'}</TableHead>
-                <TableHead>{t('table.author') || 'Author'}</TableHead>
-                <TableHead>{t('table.amount') || 'Amount'}</TableHead>
-                <TableHead>{t('table.credits') || 'Credits'}</TableHead>
-                <TableHead>{t('table.reason') || 'Reason'}</TableHead>
-                <TableHead>{t('table.eligibility') || 'Eligibility'}</TableHead>
-                <TableHead>{t('table.status') || 'Status'}</TableHead>
-                <TableHead>{t('table.actions') || 'Actions'}</TableHead>
+                <TableHead>{t('table.date')}</TableHead>
+                <TableHead>{t('table.author')}</TableHead>
+                <TableHead>{t('table.amount')}</TableHead>
+                <TableHead>{t('table.credits')}</TableHead>
+                <TableHead>{t('table.reason')}</TableHead>
+                <TableHead>{t('table.eligibility')}</TableHead>
+                <TableHead>{t('table.status')}</TableHead>
+                <TableHead>{t('table.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -304,15 +302,15 @@ export function AdminRefundsPage() {
                     </TableCell>
                     <TableCell>
                       <div>
-                        <p>{request.creditsAmount} credits</p>
+                        <p>{request.creditsAmount} {t('credits.label')}</p>
                         <p className="text-xs text-muted-foreground">
-                          {request.creditsUsed} used, {request.creditsRemaining} remaining
+                          {request.creditsUsed} {t('credits.used')}, {request.creditsRemaining} {t('credits.remaining')}
                         </p>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div>
-                        <Badge variant="outline">{getReasonLabel(request.reason)}</Badge>
+                        <Badge variant="outline">{getReasonLabel(request.reason, t)}</Badge>
                         {request.explanation && (
                           <p className="mt-1 max-w-xs truncate text-xs text-muted-foreground">
                             {request.explanation}
@@ -324,13 +322,13 @@ export function AdminRefundsPage() {
                       {request.isEligible ? (
                         <Badge className="bg-green-100 text-green-800">
                           <CheckCircle className="mr-1 h-3 w-3" />
-                          Eligible
+                          {t('eligibility.eligible')}
                         </Badge>
                       ) : (
                         <div>
                           <Badge variant="destructive">
                             <XCircle className="mr-1 h-3 w-3" />
-                            Not Eligible
+                            {t('eligibility.notEligible')}
                           </Badge>
                           {request.ineligibilityReason && (
                             <p className="mt-1 max-w-xs truncate text-xs text-muted-foreground">
@@ -340,7 +338,7 @@ export function AdminRefundsPage() {
                         </div>
                       )}
                     </TableCell>
-                    <TableCell>{getStatusBadge(request.status)}</TableCell>
+                    <TableCell>{getStatusBadge(request.status, t)}</TableCell>
                     <TableCell>
                       {request.status === RefundRequestStatus.PENDING ? (
                         <Button
@@ -348,11 +346,11 @@ export function AdminRefundsPage() {
                           variant="outline"
                           onClick={() => handleOpenDialog(request.id)}
                         >
-                          Review
+                          {t('actions.review')}
                         </Button>
                       ) : (
                         <span className="text-xs text-muted-foreground">
-                          {request.processedAt ? `Processed ${formatDate(request.processedAt)}` : '-'}
+                          {request.processedAt ? `${t('actions.processed')} ${formatDate(request.processedAt)}` : '-'}
                         </span>
                       )}
                     </TableCell>
@@ -362,10 +360,8 @@ export function AdminRefundsPage() {
                 <TableRow>
                   <TableCell colSpan={8} className="py-16 text-center">
                     <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-                    <h3 className="text-lg font-semibold">{t('empty.title') || 'No refund requests'}</h3>
-                    <p className="text-muted-foreground">
-                      {t('empty.description') || 'There are no refund requests to review.'}
-                    </p>
+                    <h3 className="text-lg font-semibold">{t('empty.title')}</h3>
+                    <p className="text-muted-foreground">{t('empty.description')}</p>
                   </TableCell>
                 </TableRow>
               )}
@@ -376,7 +372,7 @@ export function AdminRefundsPage() {
           {data && data.total > limit && (
             <div className="mt-4 flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
-                Showing {page * limit + 1} - {Math.min((page + 1) * limit, data.total)} of {data.total}
+                {t('pagination.showing')} {page * limit + 1} - {Math.min((page + 1) * limit, data.total)} {t('pagination.of')} {data.total}
               </p>
               <div className="flex gap-2">
                 <Button
@@ -385,7 +381,7 @@ export function AdminRefundsPage() {
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
                   disabled={page === 0}
                 >
-                  Previous
+                  {t('pagination.previous')}
                 </Button>
                 <Button
                   variant="outline"
@@ -393,7 +389,7 @@ export function AdminRefundsPage() {
                   onClick={() => setPage((p) => p + 1)}
                   disabled={(page + 1) * limit >= data.total}
                 >
-                  Next
+                  {t('pagination.next')}
                 </Button>
               </div>
             </div>
@@ -405,10 +401,8 @@ export function AdminRefundsPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>{t('dialog.title') || 'Process Refund Request'}</DialogTitle>
-            <DialogDescription>
-              {t('dialog.description') || 'Review and make a decision on this refund request.'}
-            </DialogDescription>
+            <DialogTitle>{t('dialog.title')}</DialogTitle>
+            <DialogDescription>{t('dialog.description')}</DialogDescription>
           </DialogHeader>
 
           {selectedRequestData && (
@@ -439,27 +433,27 @@ export function AdminRefundsPage() {
                 </div>
                 <div className="mt-3">
                   <p className="text-sm text-muted-foreground">
-                    <strong>Reason:</strong> {getReasonLabel(selectedRequestData.reason)}
+                    <strong>{t('dialog.reasonLabel')}</strong> {getReasonLabel(selectedRequestData.reason, t)}
                   </p>
                   {selectedRequestData.explanation && (
                     <p className="mt-1 text-sm text-muted-foreground">
-                      <strong>Explanation:</strong> {selectedRequestData.explanation}
+                      <strong>{t('dialog.explanationLabel')}</strong> {selectedRequestData.explanation}
                     </p>
                   )}
                   <p className="mt-1 text-sm text-muted-foreground">
-                    <strong>Days since purchase:</strong> {selectedRequestData.daysSincePurchase}
+                    <strong>{t('dialog.daysSincePurchase')}</strong> {selectedRequestData.daysSincePurchase}
                   </p>
                 </div>
                 <div className="mt-3">
                   {selectedRequestData.isEligible ? (
                     <Badge className="bg-green-100 text-green-800">
                       <CheckCircle className="mr-1 h-3 w-3" />
-                      Eligible for refund
+                      {t('eligibility.eligibleForRefund')}
                     </Badge>
                   ) : (
                     <Badge variant="destructive">
                       <XCircle className="mr-1 h-3 w-3" />
-                      {selectedRequestData.ineligibilityReason || 'Not eligible'}
+                      {selectedRequestData.ineligibilityReason || t('eligibility.notEligibleDefault')}
                     </Badge>
                   )}
                 </div>
@@ -467,7 +461,7 @@ export function AdminRefundsPage() {
 
               {/* Decision */}
               <div>
-                <Label>{t('dialog.decision') || 'Decision'}</Label>
+                <Label>{t('dialog.decision')}</Label>
                 <Select value={decision} onValueChange={(v) => setDecision(v as typeof decision)}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
@@ -476,19 +470,19 @@ export function AdminRefundsPage() {
                     <SelectItem value="approve">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                        Approve Full Refund
+                        {t('decisions.approve')}
                       </div>
                     </SelectItem>
                     <SelectItem value="approve_partial">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-yellow-600" />
-                        Approve Partial Refund
+                        {t('decisions.approvePartial')}
                       </div>
                     </SelectItem>
                     <SelectItem value="reject">
                       <div className="flex items-center gap-2">
                         <XCircle className="h-4 w-4 text-red-600" />
-                        Reject Request
+                        {t('decisions.reject')}
                       </div>
                     </SelectItem>
                   </SelectContent>
@@ -498,7 +492,7 @@ export function AdminRefundsPage() {
               {/* Partial Refund Amount */}
               {decision === 'approve_partial' && (
                 <div>
-                  <Label htmlFor="partialAmount">{t('dialog.partialAmount') || 'Refund Amount'}</Label>
+                  <Label htmlFor="partialAmount">{t('dialog.partialAmount')}</Label>
                   <div className="relative mt-1">
                     <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
@@ -513,19 +507,19 @@ export function AdminRefundsPage() {
                     />
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Maximum: ${selectedRequestData.originalAmount.toFixed(2)}
+                    {t('dialog.maximumAmount')} ${selectedRequestData.originalAmount.toFixed(2)}
                   </p>
                 </div>
               )}
 
               {/* Admin Notes */}
               <div>
-                <Label htmlFor="adminNotes">{t('dialog.notes') || 'Admin Notes'}</Label>
+                <Label htmlFor="adminNotes">{t('dialog.notes')}</Label>
                 <Textarea
                   id="adminNotes"
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
-                  placeholder="Optional notes about your decision..."
+                  placeholder={t('dialog.notesPlaceholder')}
                   rows={3}
                   className="mt-1"
                 />
@@ -535,7 +529,7 @@ export function AdminRefundsPage() {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-              Cancel
+              {t('dialog.cancel')}
             </Button>
             <Button
               type="button"
@@ -546,14 +540,14 @@ export function AdminRefundsPage() {
               {isProcessing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Processing...
+                  {t('dialog.processing')}
                 </>
               ) : decision === 'approve' ? (
-                'Approve Refund'
+                t('dialog.approveButton')
               ) : decision === 'approve_partial' ? (
-                `Approve $${partialAmount.toFixed(2)} Refund`
+                t('dialog.approvePartialButton', { amount: `$${partialAmount.toFixed(2)}` })
               ) : (
-                'Reject Request'
+                t('dialog.rejectButton')
               )}
             </Button>
           </DialogFooter>
