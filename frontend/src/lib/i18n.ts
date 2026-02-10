@@ -44,6 +44,10 @@ import adminCampaignsEN from '../locales/en/admin-campaigns.json';
 import adminCampaignsES from '../locales/es/admin-campaigns.json';
 import adminCampaignsPT from '../locales/pt/admin-campaigns.json';
 
+import adminControlsEN from '../locales/en/admin-controls.json';
+import adminControlsES from '../locales/es/admin-controls.json';
+import adminControlsPT from '../locales/pt/admin-controls.json';
+
 import adminValidationEN from '../locales/en/admin-validation.json';
 import adminValidationES from '../locales/es/admin-validation.json';
 import adminValidationPT from '../locales/pt/admin-validation.json';
@@ -97,6 +101,7 @@ const resources = {
     adminAffiliates: adminAffiliatesEN,
     adminAffiliateDetails: adminAffiliateDetailsEN,
     adminCampaigns: adminCampaignsEN,
+    adminControls: adminControlsEN,
     adminValidation: adminValidationEN,
     adminPayouts: adminPayoutsEN,
     adminRefunds: adminRefundsEN,
@@ -117,6 +122,7 @@ const resources = {
     adminAffiliates: adminAffiliatesES,
     adminAffiliateDetails: adminAffiliateDetailsES,
     adminCampaigns: adminCampaignsES,
+    adminControls: adminControlsES,
     adminValidation: adminValidationES,
     adminPayouts: adminPayoutsES,
     adminRefunds: adminRefundsES,
@@ -137,6 +143,7 @@ const resources = {
     adminAffiliates: adminAffiliatesPT,
     adminAffiliateDetails: adminAffiliateDetailsPT,
     adminCampaigns: adminCampaignsPT,
+    adminControls: adminControlsPT,
     adminValidation: adminValidationPT,
     adminPayouts: adminPayoutsPT,
     adminRefunds: adminRefundsPT,

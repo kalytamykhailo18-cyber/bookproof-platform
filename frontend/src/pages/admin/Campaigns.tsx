@@ -259,31 +259,31 @@ export function AdminCampaignDetailPage() {
                 <DialogTrigger asChild>
                   <Button variant="destructive">
                     <Pause className="mr-2 h-4 w-4" />
-                    {t('actions.pause')}
+                    {t('detail.actions.pause')}
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>{t('actions.pauseDialog.title')}</DialogTitle>
-                    <DialogDescription>{t('actions.pauseDialog.description')}</DialogDescription>
+                    <DialogTitle>{t('detail.actions.pauseDialog.title')}</DialogTitle>
+                    <DialogDescription>{t('detail.actions.pauseDialog.description')}</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="pause-reason">{t('actions.pauseDialog.reason')}</Label>
+                      <Label htmlFor="pause-reason">{t('detail.actions.pauseDialog.reason')}</Label>
                       <Input
                         id="pause-reason"
                         value={pauseReason}
                         onChange={(e) => setPauseReason(e.target.value)}
-                        placeholder={t('actions.pauseDialog.reasonPlaceholder')}
+                        placeholder={t('detail.actions.pauseDialog.reasonPlaceholder')}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="pause-notes">{t('actions.pauseDialog.notes')}</Label>
+                      <Label htmlFor="pause-notes">{t('detail.actions.pauseDialog.notes')}</Label>
                       <Textarea
                         id="pause-notes"
                         value={pauseNotes}
                         onChange={(e) => setPauseNotes(e.target.value)}
-                        placeholder={t('actions.pauseDialog.notesPlaceholder')}
+                        placeholder={t('detail.actions.pauseDialog.notesPlaceholder')}
                       />
                     </div>
                     <Button
@@ -292,7 +292,7 @@ export function AdminCampaignDetailPage() {
                       disabled={!pauseReason || isPausing}
                       className="w-full"
                     >
-                      {isPausing ? <Loader2 className="h-4 w-4 animate-spin" /> : t('actions.confirmPause')}
+                      {isPausing ? <Loader2 className="h-4 w-4 animate-spin" /> : t('detail.actions.confirmPause')}
                     </Button>
                   </div>
                 </DialogContent>
@@ -302,31 +302,31 @@ export function AdminCampaignDetailPage() {
                 <DialogTrigger asChild>
                   <Button>
                     <Play className="mr-2 h-4 w-4" />
-                    {t('actions.resume')}
+                    {t('detail.actions.resume')}
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>{t('actions.resumeDialog.title')}</DialogTitle>
-                    <DialogDescription>{t('actions.resumeDialog.description')}</DialogDescription>
+                    <DialogTitle>{t('detail.actions.resumeDialog.title')}</DialogTitle>
+                    <DialogDescription>{t('detail.actions.resumeDialog.description')}</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="resume-reason">{t('actions.resumeDialog.reason')}</Label>
+                      <Label htmlFor="resume-reason">{t('detail.actions.resumeDialog.reason')}</Label>
                       <Input
                         id="resume-reason"
                         value={resumeReason}
                         onChange={(e) => setResumeReason(e.target.value)}
-                        placeholder={t('actions.resumeDialog.reasonPlaceholder')}
+                        placeholder={t('detail.actions.resumeDialog.reasonPlaceholder')}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="resume-notes">{t('actions.resumeDialog.notes')}</Label>
+                      <Label htmlFor="resume-notes">{t('detail.actions.resumeDialog.notes')}</Label>
                       <Textarea
                         id="resume-notes"
                         value={resumeNotes}
                         onChange={(e) => setResumeNotes(e.target.value)}
-                        placeholder={t('actions.resumeDialog.notesPlaceholder')}
+                        placeholder={t('detail.actions.resumeDialog.notesPlaceholder')}
                       />
                     </div>
                     <Button
@@ -337,7 +337,7 @@ export function AdminCampaignDetailPage() {
                     >
                       {isResuming
                         ? <Loader2 className="h-4 w-4 animate-spin" />
-                        : t('actions.confirmResume')}
+                        : t('detail.actions.confirmResume')}
                     </Button>
                   </div>
                 </DialogContent>
@@ -353,7 +353,7 @@ export function AdminCampaignDetailPage() {
               disabled={isControlsLoading}
             >
               {isControlsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Settings className="mr-2 h-4 w-4" />}
-              {t('actions.controls')}
+              {t('detail.actions.controls')}
             </Button>
           </div>
         </div>
@@ -363,47 +363,47 @@ export function AdminCampaignDetailPage() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card className="animate-fade-up-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.progress')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('detail.stats.progress')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{health.completionPercentage.toFixed(1)}%</div>
             <Progress value={health.completionPercentage} className="mt-2 h-2" />
             <p className="mt-1 text-xs text-muted-foreground">
-              {health.reviewsDelivered} / {health.targetReviews} {t('stats.reviews')}
+              {health.reviewsDelivered} / {health.targetReviews} {t('detail.stats.reviews')}
             </p>
           </CardContent>
         </Card>
 
         <Card className="animate-fade-up-light-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.weekProgress')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('detail.stats.weekProgress')}</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {health.weeksElapsed} / {health.totalPlannedWeeks}
             </div>
-            <p className="text-xs text-muted-foreground">{t('stats.weeksCompleted')}</p>
+            <p className="text-xs text-muted-foreground">{t('detail.stats.weeksCompleted')}</p>
           </CardContent>
         </Card>
 
         <Card className="animate-fade-up-medium-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.avgRating')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('detail.stats.avgRating')}</CardTitle>
             <Star className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {analytics.performance.averageRating.toFixed(1)}
             </div>
-            <p className="text-xs text-muted-foreground">{t('stats.internalRating')}</p>
+            <p className="text-xs text-muted-foreground">{t('detail.stats.internalRating')}</p>
           </CardContent>
         </Card>
 
         <Card className="animate-fade-up-heavy-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('stats.variance')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('detail.stats.variance')}</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -411,9 +411,9 @@ export function AdminCampaignDetailPage() {
               className={`text-2xl font-bold ${health.daysOffSchedule > 0 ? 'text-red-600' : 'text-green-600'}`}
             >
               {health.daysOffSchedule > 0 ? '+' : ''}
-              {health.daysOffSchedule} {t('stats.days')}
+              {health.daysOffSchedule} {t('detail.stats.days')}
             </div>
-            <p className="text-xs text-muted-foreground">{t('stats.scheduleVariance')}</p>
+            <p className="text-xs text-muted-foreground">{t('detail.stats.scheduleVariance')}</p>
           </CardContent>
         </Card>
       </div>
@@ -421,9 +421,9 @@ export function AdminCampaignDetailPage() {
       {/* Tabs */}
       <Tabs defaultValue="overview" className="animate-zoom-in">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="overview">{t('tabs.overview')}</TabsTrigger>
-          <TabsTrigger value="distribution">{t('tabs.distribution')}</TabsTrigger>
-          <TabsTrigger value="performance">{t('tabs.performance')}</TabsTrigger>
+          <TabsTrigger value="overview">{t('detail.tabs.overview')}</TabsTrigger>
+          <TabsTrigger value="distribution">{t('detail.tabs.distribution')}</TabsTrigger>
+          <TabsTrigger value="performance">{t('detail.tabs.performance')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -431,25 +431,25 @@ export function AdminCampaignDetailPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BookOpen className="h-5 w-5" />
-                {t('overview.campaignInfo')}
+                {t('detail.overview.campaignInfo')}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-3">
                   <div>
-                    <Label className="text-muted-foreground">{t('overview.targetReviews')}</Label>
+                    <Label className="text-muted-foreground">{t('detail.overview.targetReviews')}</Label>
                     <p className="text-lg font-semibold">{analytics.campaign.targetReviews}</p>
                   </div>
                   <div>
                     <Label className="text-muted-foreground">
-                      {t('overview.reviewsDelivered')}
+                      {t('detail.overview.reviewsDelivered')}
                     </Label>
                     <p className="text-lg font-semibold">{analytics.progress.reviewsDelivered}</p>
                   </div>
                   <div>
                     <Label className="text-muted-foreground">
-                      {t('overview.reviewsValidated')}
+                      {t('detail.overview.reviewsValidated')}
                     </Label>
                     <p className="text-lg font-semibold text-green-600">
                       {analytics.progress.reviewsValidated}
@@ -458,20 +458,20 @@ export function AdminCampaignDetailPage() {
                 </div>
                 <div className="space-y-3">
                   <div>
-                    <Label className="text-muted-foreground">{t('overview.reviewsRejected')}</Label>
+                    <Label className="text-muted-foreground">{t('detail.overview.reviewsRejected')}</Label>
                     <p className="text-lg font-semibold text-red-600">
                       {analytics.progress.reviewsRejected}
                     </p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">{t('overview.reviewsExpired')}</Label>
+                    <Label className="text-muted-foreground">{t('detail.overview.reviewsExpired')}</Label>
                     <p className="text-lg font-semibold text-yellow-600">
                       {analytics.progress.reviewsExpired}
                     </p>
                   </div>
                   <div>
                     <Label className="text-muted-foreground">
-                      {t('overview.completionPercentage')}
+                      {t('detail.overview.completionPercentage')}
                     </Label>
                     <p className="text-lg font-semibold">
                       {analytics.progress.completionPercentage.toFixed(1)}%
@@ -486,25 +486,25 @@ export function AdminCampaignDetailPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Calendar className="h-5 w-5" />
-                {t('overview.timeline')}
+                {t('detail.overview.timeline')}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-3">
                 <div>
-                  <Label className="text-muted-foreground">{t('overview.startDate')}</Label>
+                  <Label className="text-muted-foreground">{t('detail.overview.startDate')}</Label>
                   <p className="text-lg font-semibold">
                     {new Date(analytics.timeline.startDate).toLocaleDateString()}
                   </p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{t('overview.expectedEndDate')}</Label>
+                  <Label className="text-muted-foreground">{t('detail.overview.expectedEndDate')}</Label>
                   <p className="text-lg font-semibold">
                     {new Date(analytics.timeline.expectedEndDate).toLocaleDateString()}
                   </p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{t('overview.projectedEndDate')}</Label>
+                  <Label className="text-muted-foreground">{t('detail.overview.projectedEndDate')}</Label>
                   <p className="text-lg font-semibold">
                     {new Date(analytics.timeline.projectedEndDate).toLocaleDateString()}
                   </p>
@@ -520,25 +520,25 @@ export function AdminCampaignDetailPage() {
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <RefreshCw className="h-5 w-5" />
-                  {t('distribution.title')}
+                  {t('detail.distribution.title')}
                 </CardTitle>
                 <Dialog open={distributionDialogOpen} onOpenChange={setDistributionDialogOpen}>
                   <DialogTrigger asChild>
                     <Button variant="outline" size="sm">
-                      {t('distribution.adjust')}
+                      {t('detail.distribution.adjust')}
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>{t('distribution.adjustDialog.title')}</DialogTitle>
+                      <DialogTitle>{t('detail.distribution.adjustDialog.title')}</DialogTitle>
                       <DialogDescription>
-                        {t('distribution.adjustDialog.description')}
+                        {t('detail.distribution.adjustDialog.description')}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div>
                         <Label htmlFor="new-distribution">
-                          {t('distribution.adjustDialog.reviewsPerWeek')}
+                          {t('detail.distribution.adjustDialog.reviewsPerWeek')}
                         </Label>
                         <Input
                           id="new-distribution"
@@ -549,12 +549,12 @@ export function AdminCampaignDetailPage() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="dist-reason">{t('distribution.adjustDialog.reason')}</Label>
+                        <Label htmlFor="dist-reason">{t('detail.distribution.adjustDialog.reason')}</Label>
                         <Textarea
                           id="dist-reason"
                           value={distributionReason}
                           onChange={(e) => setDistributionReason(e.target.value)}
-                          placeholder={t('distribution.adjustDialog.reasonPlaceholder')}
+                          placeholder={t('detail.distribution.adjustDialog.reasonPlaceholder')}
                         />
                       </div>
                       <Button
@@ -566,8 +566,8 @@ export function AdminCampaignDetailPage() {
                         className="w-full"
                       >
                         {isAdjusting
-                          ? t('distribution.adjusting')
-                          : t('distribution.confirm')}
+                          ? t('detail.distribution.adjusting')
+                          : t('detail.distribution.confirm')}
                       </Button>
                     </div>
                   </DialogContent>
@@ -578,21 +578,21 @@ export function AdminCampaignDetailPage() {
               <div className="grid gap-4 md:grid-cols-3">
                 <div>
                   <Label className="text-muted-foreground">
-                    {t('distribution.reviewsPerWeek')}
+                    {t('detail.distribution.reviewsPerWeek')}
                   </Label>
                   <div className="flex items-center gap-2">
                     <p className="text-2xl font-bold">{analytics.distribution.reviewsPerWeek}</p>
                     {analytics.distribution.manualOverride && (
-                      <Badge variant="outline">{t('distribution.manualOverride')}</Badge>
+                      <Badge variant="outline">{t('detail.distribution.manualOverride')}</Badge>
                     )}
                   </div>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{t('distribution.currentWeek')}</Label>
+                  <Label className="text-muted-foreground">{t('detail.distribution.currentWeek')}</Label>
                   <p className="text-2xl font-bold">{analytics.distribution.currentWeek}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{t('distribution.totalWeeks')}</Label>
+                  <Label className="text-muted-foreground">{t('detail.distribution.totalWeeks')}</Label>
                   <p className="text-2xl font-bold">{analytics.distribution.totalWeeks}</p>
                 </div>
               </div>
@@ -605,7 +605,7 @@ export function AdminCampaignDetailPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Star className="h-5 w-5" />
-                {t('performance.title')}
+                {t('detail.performance.title')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -614,19 +614,19 @@ export function AdminCampaignDetailPage() {
                   <div className="text-4xl font-bold text-yellow-500">
                     {analytics.performance.averageRating.toFixed(1)}
                   </div>
-                  <p className="text-sm text-muted-foreground">{t('performance.avgRating')}</p>
+                  <p className="text-sm text-muted-foreground">{t('detail.performance.avgRating')}</p>
                 </div>
                 <div className="text-center">
                   <div className="text-4xl font-bold text-green-600">
                     {(analytics.performance.onTimeDeliveryRate * 100).toFixed(0)}%
                   </div>
-                  <p className="text-sm text-muted-foreground">{t('performance.onTimeDelivery')}</p>
+                  <p className="text-sm text-muted-foreground">{t('detail.performance.onTimeDelivery')}</p>
                 </div>
                 <div className="text-center">
                   <div className="text-4xl font-bold text-blue-600">
                     {(analytics.performance.validationRate * 100).toFixed(0)}%
                   </div>
-                  <p className="text-sm text-muted-foreground">{t('performance.validationRate')}</p>
+                  <p className="text-sm text-muted-foreground">{t('detail.performance.validationRate')}</p>
                 </div>
               </div>
             </CardContent>

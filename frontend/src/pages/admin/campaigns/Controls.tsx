@@ -14,6 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger } from '@/components/ui/dialog';
@@ -568,6 +569,7 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>{t('actions.pauseDialog.title')}</DialogTitle>
+                    <DialogDescription>{t('actions.pauseDialog.description')}</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
@@ -610,6 +612,7 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>{t('actions.resumeDialog.title')}</DialogTitle>
+                    <DialogDescription>{t('actions.resumeDialog.description')}</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
@@ -655,6 +658,7 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>{t('actions.distributionDialog.title')}</DialogTitle>
+                  <DialogDescription>{t('actions.distributionDialog.description')}</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
@@ -702,6 +706,7 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>{t('actions.creditDialog.title')}</DialogTitle>
+                  <DialogDescription>{t('actions.creditDialog.description')}</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
@@ -745,6 +750,7 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>{t('actions.overbookingDialog.title')}</DialogTitle>
+                  <DialogDescription>{t('actions.overbookingDialog.description')}</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2">
@@ -821,7 +827,8 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Force Complete Campaign</DialogTitle>
+                  <DialogTitle>{t('actions.forceCompleteDialog.title')}</DialogTitle>
+                  <DialogDescription>{t('actions.forceCompleteDialog.description')}</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <p className="text-sm text-muted-foreground">
@@ -881,7 +888,8 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Manually Grant Reader Access</DialogTitle>
+                  <DialogTitle>{t('actions.grantAccessDialog.title')}</DialogTitle>
+                  <DialogDescription>{t('actions.grantAccessDialog.description')}</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <p className="text-sm text-muted-foreground">
@@ -951,7 +959,8 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Remove Reader from Campaign</DialogTitle>
+                  <DialogTitle>{t('actions.removeReaderDialog.title')}</DialogTitle>
+                  <DialogDescription>{t('actions.removeReaderDialog.description')}</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <p className="text-sm text-muted-foreground">
@@ -1028,7 +1037,8 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>Campaign Report</DialogTitle>
+                  <DialogTitle>{t('actions.reportDialog.title')}</DialogTitle>
+                  <DialogDescription>{t('actions.reportDialog.description')}</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   {reportLoading ? (

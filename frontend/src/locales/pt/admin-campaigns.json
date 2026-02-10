@@ -15,7 +15,62 @@
     "active": "Ativa",
     "paused": "Pausada",
     "completed": "Concluída",
-    "draft": "Rascunho"
+    "draft": "Rascunho",
+    "cancelled": "Cancelada"
+  },
+  "list": {
+    "title": "Todas as Campanhas",
+    "description": "Gerenciar e monitorar todas as campanhas da plataforma",
+    "refresh": "Atualizar",
+    "stats": {
+      "total": "Campanhas Totais",
+      "totalDesc": "Em todos os autores",
+      "active": "Ativas",
+      "activeDesc": "Em execução",
+      "paused": "Pausadas",
+      "pausedDesc": "Temporariamente suspensas",
+      "completed": "Concluídas",
+      "completedDesc": "Finalizadas com sucesso"
+    },
+    "filters": {
+      "title": "Filtros",
+      "searchPlaceholder": "Buscar campanhas...",
+      "statusPlaceholder": "Status",
+      "allStatus": "Todos os Status",
+      "active": "Ativa",
+      "paused": "Pausada",
+      "completed": "Concluída",
+      "draft": "Rascunho",
+      "cancelled": "Cancelada"
+    },
+    "table": {
+      "title": "Campanhas ({{count}})",
+      "description": "Ver detalhes e gerenciar campanhas individuais",
+      "campaign": "Campanha",
+      "status": "Status",
+      "progress": "Progresso",
+      "reviews": "Avaliações",
+      "week": "Semana",
+      "rating": "Nota",
+      "timeline": "Cronograma",
+      "actions": "Ações",
+      "validated": "validadas",
+      "start": "Início",
+      "end": "Fim",
+      "viewDetails": "Ver Detalhes",
+      "empty": {
+        "title": "Nenhuma campanha encontrada",
+        "tryFilters": "Tente ajustar seus filtros",
+        "noCampaigns": "Nenhuma campanha foi criada ainda"
+      }
+    },
+    "status": {
+      "active": "Ativa",
+      "paused": "Pausada",
+      "completed": "Concluída",
+      "draft": "Rascunho",
+      "cancelled": "Cancelada"
+    }
   },
   "health": {
     "onTrack": "No Prazo",
