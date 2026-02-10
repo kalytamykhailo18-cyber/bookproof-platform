@@ -376,6 +376,18 @@ export const affiliatesApi = {
     return response.data;
   },
 
+  getReferredAuthorsForAdmin: async (id: string): Promise<ReferredAuthorDto[]> => {
+    const response = await apiClient.get<ReferredAuthorDto[]>(
+      `/affiliates/admin/${id}/referred-authors`,
+    );
+    return response.data;
+  },
+
+  getPayoutsForAdmin: async (id: string): Promise<PayoutResponseDto[]> => {
+    const response = await apiClient.get<PayoutResponseDto[]>(`/affiliates/admin/${id}/payouts`);
+    return response.data;
+  },
+
   getAllPayoutsForAdmin: async (status?: PayoutRequestStatus): Promise<PayoutResponseDto[]> => {
     const params = status ? { status } : {};
     const response = await apiClient.get<PayoutResponseDto[]>('/affiliates/admin/payouts/all', {

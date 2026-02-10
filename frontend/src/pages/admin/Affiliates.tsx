@@ -53,8 +53,12 @@ export function AdminAffiliateDetailsPage() {
 
   const [affiliate, setAffiliate] = useState<any>(null);
   const [commissions, setCommissions] = useState<any[]>([]);
+  const [referredAuthors, setReferredAuthors] = useState<any[]>([]);
+  const [payouts, setPayouts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [commissionsLoading, setCommissionsLoading] = useState(true);
+  const [referredAuthorsLoading, setReferredAuthorsLoading] = useState(true);
+  const [payoutsLoading, setPayoutsLoading] = useState(true);
   const [isApproving, setIsApproving] = useState(false);
   const [isTogglingActive, setIsTogglingActive] = useState(false);
   const [isUpdatingRate, setIsUpdatingRate] = useState(false);
@@ -72,18 +76,28 @@ export function AdminAffiliateDetailsPage() {
       try {
         setIsLoading(true);
         setCommissionsLoading(true);
-        const [affiliateData, commissionsData] = await Promise.all([
+        setReferredAuthorsLoading(true);
+        setPayoutsLoading(true);
+
+        const [affiliateData, commissionsData, referredAuthorsData, payoutsData] = await Promise.all([
           affiliatesApi.getByIdForAdmin(id),
-          affiliatesApi.getCommissionsForAdmin(id)
+          affiliatesApi.getCommissionsForAdmin(id),
+          affiliatesApi.getReferredAuthorsForAdmin(id),
+          affiliatesApi.getPayoutsForAdmin(id)
         ]);
+
         setAffiliate(affiliateData);
         setCommissions(commissionsData);
+        setReferredAuthors(referredAuthorsData);
+        setPayouts(payoutsData);
       } catch (error: any) {
         console.error('Affiliate details error:', error);
         toast.error('Failed to load affiliate details');
       } finally {
         setIsLoading(false);
         setCommissionsLoading(false);
+        setReferredAuthorsLoading(false);
+        setPayoutsLoading(false);
       }
     };
     fetchData();
@@ -92,12 +106,16 @@ export function AdminAffiliateDetailsPage() {
   const refetchData = async () => {
     if (!id) return;
     try {
-      const [affiliateData, commissionsData] = await Promise.all([
+      const [affiliateData, commissionsData, referredAuthorsData, payoutsData] = await Promise.all([
         affiliatesApi.getByIdForAdmin(id),
-        affiliatesApi.getCommissionsForAdmin(id)
+        affiliatesApi.getCommissionsForAdmin(id),
+        affiliatesApi.getReferredAuthorsForAdmin(id),
+        affiliatesApi.getPayoutsForAdmin(id)
       ]);
       setAffiliate(affiliateData);
       setCommissions(commissionsData);
+      setReferredAuthors(referredAuthorsData);
+      setPayouts(payoutsData);
     } catch (error: any) {
       console.error('Refetch error:', error);
     }
@@ -624,6 +642,110 @@ export function AdminAffiliateDetailsPage() {
                     <TableCell>{formatDate(commission.createdAt)}</TableCell>
                     <TableCell>
                       {commission.approvedAt ? formatDate(commission.approvedAt) : '-'}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Referred Authors */}
+      <Card className="animate-fade-up">
+        <CardHeader>
+          <CardTitle>{t('referredAuthors.title')}</CardTitle>
+          <CardDescription>{t('referredAuthors.description')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {referredAuthorsLoading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : !referredAuthors || referredAuthors.length === 0 ? (
+            <div className="py-8 text-center text-muted-foreground">{t('referredAuthors.empty')}</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('referredAuthors.table.author')}</TableHead>
+                  <TableHead>{t('referredAuthors.table.signUpDate')}</TableHead>
+                  <TableHead>{t('referredAuthors.table.purchases')}</TableHead>
+                  <TableHead>{t('referredAuthors.table.commission')}</TableHead>
+                  <TableHead>{t('referredAuthors.table.lastPurchase')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {referredAuthors.map((author, index) => (
+                  <TableRow
+                    key={author.id}
+                    className={`animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}
+                  >
+                    <TableCell className="font-medium">{author.authorIdentifier}</TableCell>
+                    <TableCell>{formatDate(author.signUpDate)}</TableCell>
+                    <TableCell>{author.totalPurchases}</TableCell>
+                    <TableCell className="font-semibold text-green-600">
+                      ${author.totalCommissionEarned.toFixed(2)}
+                    </TableCell>
+                    <TableCell>
+                      {author.lastPurchaseDate ? formatDate(author.lastPurchaseDate) : '-'}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Payout History */}
+      <Card className="animate-fade-up">
+        <CardHeader>
+          <CardTitle>{t('payouts.title')}</CardTitle>
+          <CardDescription>{t('payouts.description')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {payoutsLoading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : !payouts || payouts.length === 0 ? (
+            <div className="py-8 text-center text-muted-foreground">{t('payouts.empty')}</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('payouts.table.amount')}</TableHead>
+                  <TableHead>{t('payouts.table.method')}</TableHead>
+                  <TableHead>{t('payouts.table.status')}</TableHead>
+                  <TableHead>{t('payouts.table.requested')}</TableHead>
+                  <TableHead>{t('payouts.table.processed')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {payouts.map((payout, index) => (
+                  <TableRow
+                    key={payout.id}
+                    className={`animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}
+                  >
+                    <TableCell className="font-semibold">${payout.amount.toFixed(2)}</TableCell>
+                    <TableCell>{payout.paymentMethod}</TableCell>
+                    <TableCell>
+                      <Badge
+                        className={
+                          payout.status === 'COMPLETED'
+                            ? 'bg-green-100 text-green-800'
+                            : payout.status === 'REQUESTED'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-blue-100 text-blue-800'
+                        }
+                      >
+                        {payout.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{formatDate(payout.requestedAt)}</TableCell>
+                    <TableCell>
+                      {payout.processedAt ? formatDate(payout.processedAt) : '-'}
                     </TableCell>
                   </TableRow>
                 ))}

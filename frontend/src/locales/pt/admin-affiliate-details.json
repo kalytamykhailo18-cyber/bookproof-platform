@@ -72,5 +72,29 @@
     "currentRate": "Taxa atual",
     "submitting": "Atualizando...",
     "confirm": "Atualizar Taxa"
+  },
+  "referredAuthors": {
+    "title": "Autores Referenciados",
+    "description": "Autores que se cadastraram através do link de referência deste afiliado",
+    "empty": "Nenhum autor referenciado ainda",
+    "table": {
+      "author": "Autor",
+      "signUpDate": "Data de Cadastro",
+      "purchases": "Compras",
+      "commission": "Comissão Total",
+      "lastPurchase": "Última Compra"
+    }
+  },
+  "payouts": {
+    "title": "Histórico de Pagamentos",
+    "description": "Todas as solicitações de pagamento e seu status",
+    "empty": "Nenhuma solicitação de pagamento ainda",
+    "table": {
+      "amount": "Valor",
+      "method": "Método de Pagamento",
+      "status": "Status",
+      "requested": "Solicitado",
+      "processed": "Processado"
+    }
   }
 }
