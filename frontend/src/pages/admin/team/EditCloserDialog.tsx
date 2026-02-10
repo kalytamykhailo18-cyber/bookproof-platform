@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader2, UserPlus } from 'lucide-react';
+import { Loader2, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { authApi, CreateCloserRequest } from '@/lib/api/auth';
+import { teamApi, CloserListItem, UpdateCloserRequest } from '@/lib/api/team';
 import {
   Dialog,
   DialogContent,
@@ -18,24 +18,36 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 
-interface CreateCloserDialogProps {
+interface EditCloserDialogProps {
+  closer: CloserListItem;
   onSuccess?: () => void;
+  trigger?: React.ReactNode;
 }
 
-export function CreateCloserDialog({ onSuccess }: CreateCloserDialogProps) {
+export function EditCloserDialog({ closer, onSuccess, trigger }: EditCloserDialogProps) {
   const { t } = useTranslation('adminTeam');
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form fields
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [commissionRate, setCommissionRate] = useState(0);
-  const [isActive, setIsActive] = useState(true);
+  const [email, setEmail] = useState(closer.email);
+  const [name, setName] = useState(closer.name);
+  const [commissionRate, setCommissionRate] = useState(closer.commissionRate);
+  const [commissionEnabled, setCommissionEnabled] = useState(closer.commissionEnabled);
 
   // Errors
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Reset form when dialog opens with new closer data
+  useEffect(() => {
+    if (open) {
+      setEmail(closer.email);
+      setName(closer.name);
+      setCommissionRate(closer.commissionRate);
+      setCommissionEnabled(closer.commissionEnabled);
+      setErrors({});
+    }
+  }, [open, closer]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -54,11 +66,6 @@ export function CreateCloserDialog({ onSuccess }: CreateCloserDialogProps) {
       newErrors.name = 'Name must be at least 2 characters';
     } else if (name.length > 100) {
       newErrors.name = 'Name must not exceed 100 characters';
-    }
-
-    // Password validation (optional)
-    if (password && password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
     }
 
     // Commission rate validation
@@ -80,127 +87,96 @@ export function CreateCloserDialog({ onSuccess }: CreateCloserDialogProps) {
     try {
       setIsSubmitting(true);
 
-      const payload: CreateCloserRequest = {
+      const payload: UpdateCloserRequest = {
         email,
         name,
-        password: password || undefined,
         commissionRate,
-        isActive,
+        commissionEnabled,
       };
 
-      const response = await authApi.createCloser(payload);
+      await teamApi.updateCloser(closer.id, payload);
 
-      toast.success(`Closer account created for ${response.email}`, {
-        description: response.temporaryPasswordSent
-          ? 'Temporary password sent via email'
-          : 'Account created successfully',
+      toast.success('Closer updated successfully', {
+        description: `${name}'s details have been updated`,
       });
 
       setOpen(false);
-      resetForm();
 
       // Call parent callback to refresh data
       onSuccess?.();
     } catch (error: any) {
       const message =
-        error?.response?.data?.message || error?.message || 'Failed to create closer account';
+        error?.response?.data?.message || error?.message || 'Failed to update closer';
       toast.error('Error', { description: message });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const resetForm = () => {
-    setEmail('');
-    setName('');
-    setPassword('');
-    setCommissionRate(0);
-    setIsActive(true);
-    setErrors({});
-  };
-
   const handleOpenChange = (newOpen: boolean) => {
     if (!isSubmitting) {
       setOpen(newOpen);
-      if (!newOpen) {
-        resetForm();
-      }
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button>
-          <UserPlus className="mr-2 h-4 w-4" />
-          {t('closers.addCloser')}
-        </Button>
+        {trigger || (
+          <Button variant="ghost" size="sm">
+            <Edit className="h-4 w-4" />
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{t('createCloser.title')}</DialogTitle>
-          <DialogDescription>{t('createCloser.description')}</DialogDescription>
+          <DialogTitle>Edit Closer</DialogTitle>
+          <DialogDescription>
+            Update closer details and commission settings
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           {/* Email Field */}
           <div className="space-y-2">
-            <Label htmlFor="email">{t('createCloser.fields.email')}</Label>
+            <Label htmlFor="edit-email">Email Address</Label>
             <Input
-              id="email"
+              id="edit-email"
               type="email"
-              placeholder={t('createCloser.fields.emailPlaceholder')}
+              placeholder="closer@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
             <p className="text-sm text-muted-foreground">
-              {t('createCloser.fields.emailDescription')}
+              The closer will receive notifications at this email
             </p>
           </div>
 
           {/* Name Field */}
           <div className="space-y-2">
-            <Label htmlFor="name">{t('createCloser.fields.name')}</Label>
+            <Label htmlFor="edit-name">Full Name</Label>
             <Input
-              id="name"
-              placeholder={t('createCloser.fields.namePlaceholder')}
+              id="edit-name"
+              placeholder="John Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
             {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
-            <p className="text-sm text-muted-foreground">
-              {t('createCloser.fields.nameDescription')}
-            </p>
-          </div>
-
-          {/* Password Field (Optional) */}
-          <div className="space-y-2">
-            <Label htmlFor="password">{t('createCloser.fields.password')}</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder={t('createCloser.fields.passwordPlaceholder')}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
-            <p className="text-sm text-muted-foreground">
-              {t('createCloser.fields.passwordDescription')}
-            </p>
+            <p className="text-sm text-muted-foreground">Full name of the closer (2-100 characters)</p>
           </div>
 
           {/* Commission Rate Field */}
           <div className="space-y-2">
-            <Label htmlFor="commissionRate">{t('createCloser.fields.commissionRate')}</Label>
+            <Label htmlFor="edit-commissionRate">Commission Rate (%)</Label>
             <div className="relative">
               <Input
-                id="commissionRate"
+                id="edit-commissionRate"
                 type="number"
                 min={0}
                 max={100}
                 step={0.1}
-                placeholder={t('createCloser.fields.commissionRatePlaceholder')}
+                placeholder="0"
                 value={commissionRate}
                 onChange={(e) => setCommissionRate(parseFloat(e.target.value) || 0)}
               />
@@ -212,19 +188,19 @@ export function CreateCloserDialog({ onSuccess }: CreateCloserDialogProps) {
               <p className="text-sm text-destructive">{errors.commissionRate}</p>
             )}
             <p className="text-sm text-muted-foreground">
-              {t('createCloser.fields.commissionRateDescription')}
+              Percentage of sales the closer earns (0-100%)
             </p>
           </div>
 
-          {/* Active Status Field */}
+          {/* Commission Enabled Field */}
           <div className="flex flex-row items-center justify-between rounded-lg border p-4">
             <div className="space-y-0.5">
-              <Label className="text-base">{t('createCloser.fields.isActive')}</Label>
+              <Label className="text-base">Commission Enabled</Label>
               <p className="text-sm text-muted-foreground">
-                {t('createCloser.fields.isActiveDescription')}
+                Allow the closer to earn commission on sales
               </p>
             </div>
-            <Switch checked={isActive} onCheckedChange={setIsActive} />
+            <Switch checked={commissionEnabled} onCheckedChange={setCommissionEnabled} />
           </div>
 
           <DialogFooter>
@@ -234,16 +210,16 @@ export function CreateCloserDialog({ onSuccess }: CreateCloserDialogProps) {
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
             >
-              {t('createCloser.cancel')}
+              Cancel
             </Button>
             <Button type="button" disabled={isSubmitting} onClick={handleSubmit}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t('createCloser.creating')}
+                  Updating...
                 </>
               ) : (
-                t('createCloser.submit')
+                'Save Changes'
               )}
             </Button>
           </DialogFooter>

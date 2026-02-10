@@ -1,8 +1,5 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Loader2, Unlock } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -18,84 +15,87 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-
-/**
- * Zod schema for unlock account form
- * Per requirements.md Section 1.1: Admin can manually unlock accounts
- */
-const unlockAccountSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Please provide a valid email address'),
-  reason: z.string().max(500, 'Reason must not exceed 500 characters').optional(),
-});
-
-type UnlockAccountFormData = z.infer<typeof unlockAccountSchema>;
 
 export function UnlockAccountDialog() {
   const { t } = useTranslation('adminTeam');
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<UnlockAccountFormData>({
-    resolver: zodResolver(unlockAccountSchema),
-    defaultValues: {
-      email: '',
-      reason: '',
-    },
-  });
+  // Form fields
+  const [email, setEmail] = useState('');
+  const [reason, setReason] = useState('');
 
-  const onSubmit = async (data: UnlockAccountFormData) => {
+  // Errors
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    // Email validation
+    if (!email) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = 'Please provide a valid email address';
+    }
+
+    // Reason validation (optional, but check length if provided)
+    if (reason && reason.length > 500) {
+      newErrors.reason = 'Reason must not exceed 500 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       setIsSubmitting(true);
 
       const payload: UnlockAccountRequest = {
-        email: data.email,
-        reason: data.reason || undefined,
+        email,
+        reason: reason || undefined,
       };
 
       const response = await authApi.unlockAccount(payload);
 
       if (response.wasLocked) {
         toast.success('Account unlocked successfully', {
-          description: `Account for ${data.email} has been unlocked`,
+          description: `Account for ${email} has been unlocked`,
         });
       } else {
         toast.info('Account was not locked', {
-          description: `Account for ${data.email} was not locked`,
+          description: `Account for ${email} was not locked`,
         });
       }
 
       setOpen(false);
-      form.reset();
-    } catch (error) {
+      resetForm();
+    } catch (error: any) {
       const message =
-        error instanceof Error
-          ? error.message
-          : typeof error === 'object' && error !== null && 'response' in error
-            ? (error as { response?: { data?: { message?: string } } }).response?.data
-                ?.message || 'Failed to unlock account'
-            : 'Failed to unlock account';
-
+        error?.response?.data?.message || error?.message || 'Failed to unlock account';
       toast.error('Error', { description: message });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const resetForm = () => {
+    setEmail('');
+    setReason('');
+    setErrors({});
+  };
+
   const handleOpenChange = (newOpen: boolean) => {
     if (!isSubmitting) {
       setOpen(newOpen);
       if (!newOpen) {
-        form.reset();
+        resetForm();
       }
     }
   };
@@ -114,76 +114,64 @@ export function UnlockAccountDialog() {
           <DialogDescription>{t('unlockAccount.description')}</DialogDescription>
         </DialogHeader>
 
-        <Form {...form}>
-          <div className="space-y-4">
-            {/* Email Field */}
-            <FormField
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('unlockAccount.fields.email')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder={t('unlockAccount.fields.emailPlaceholder')}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>{t('unlockAccount.fields.emailDescription')}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
+        <div className="space-y-4">
+          {/* Email Field */}
+          <div className="space-y-2">
+            <Label htmlFor="email">{t('unlockAccount.fields.email')}</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder={t('unlockAccount.fields.emailPlaceholder')}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-
-            {/* Reason Field (Optional) */}
-            <FormField
-              name="reason"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('unlockAccount.fields.reason')}</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder={t('unlockAccount.fields.reasonPlaceholder')}
-                      rows={3}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>{t('unlockAccount.fields.reasonDescription')}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-              <p className="text-sm text-amber-800">{t('unlockAccount.info')}</p>
-            </div>
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleOpenChange(false)}
-                disabled={isSubmitting}
-              >
-                {t('unlockAccount.cancel')}
-              </Button>
-              <Button
-                type="button"
-                disabled={isSubmitting}
-                onClick={form.handleSubmit(onSubmit)}
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t('unlockAccount.unlocking')}
-                  </>
-                ) : (
-                  t('unlockAccount.submit')
-                )}
-              </Button>
-            </DialogFooter>
+            {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+            <p className="text-sm text-muted-foreground">
+              {t('unlockAccount.fields.emailDescription')}
+            </p>
           </div>
-        </Form>
+
+          {/* Reason Field (Optional) */}
+          <div className="space-y-2">
+            <Label htmlFor="reason">{t('unlockAccount.fields.reason')}</Label>
+            <Textarea
+              id="reason"
+              placeholder={t('unlockAccount.fields.reasonPlaceholder')}
+              rows={3}
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+            />
+            {errors.reason && <p className="text-sm text-destructive">{errors.reason}</p>}
+            <p className="text-sm text-muted-foreground">
+              {t('unlockAccount.fields.reasonDescription')}
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+            <p className="text-sm text-amber-800">{t('unlockAccount.info')}</p>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => handleOpenChange(false)}
+              disabled={isSubmitting}
+            >
+              {t('unlockAccount.cancel')}
+            </Button>
+            <Button type="button" disabled={isSubmitting} onClick={handleSubmit}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t('unlockAccount.unlocking')}
+                </>
+              ) : (
+                t('unlockAccount.submit')
+              )}
+            </Button>
+          </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -1,13 +1,18 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { apiClient } from '@/lib/api/client';
+import { teamApi } from '@/lib/api/team';
 import { CreateCloserDialog } from './team/CreateCloserDialog';
 import { CreateAdminDialog } from './team/CreateAdminDialog';
 import { UnlockAccountDialog } from './team/UnlockAccountDialog';
+import { EditCloserDialog } from './team/EditCloserDialog';
+import { EditAdminDialog } from './team/EditAdminDialog';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -22,7 +27,16 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue } from '@/components/ui/select';
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   Users,
   Shield,
@@ -31,7 +45,13 @@ import {
   DollarSign,
   Package,
   UserCheck,
-  AlertCircle } from 'lucide-react';
+  AlertCircle,
+  MoreHorizontal,
+  Edit,
+  Power,
+  PowerOff,
+  Loader2,
+} from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
 interface CloserListItem {
@@ -108,6 +128,51 @@ export function AdminTeamPage() {
   useEffect(() => {
     fetchAdmins();
   }, []);
+
+  // Toggle active status handlers
+  const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
+
+  const handleToggleCloserActive = async (closerId: string, currentStatus: boolean) => {
+    try {
+      setTogglingIds((prev) => new Set(prev).add(closerId));
+      await teamApi.toggleCloserActive(closerId, { isActive: !currentStatus });
+      toast.success(
+        `Closer ${!currentStatus ? 'activated' : 'deactivated'} successfully`,
+      );
+      fetchClosers(); // Refresh list
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message || error?.message || 'Failed to update status';
+      toast.error('Error', { description: message });
+    } finally {
+      setTogglingIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(closerId);
+        return newSet;
+      });
+    }
+  };
+
+  const handleToggleAdminActive = async (adminId: string, currentStatus: boolean) => {
+    try {
+      setTogglingIds((prev) => new Set(prev).add(adminId));
+      await teamApi.toggleAdminActive(adminId, { isActive: !currentStatus });
+      toast.success(
+        `Admin ${!currentStatus ? 'activated' : 'deactivated'} successfully`,
+      );
+      fetchAdmins(); // Refresh list
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message || error?.message || 'Failed to update status';
+      toast.error('Error', { description: message });
+    } finally {
+      setTogglingIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(adminId);
+        return newSet;
+      });
+    }
+  };
 
   // Filter closers
   const filteredClosers = useMemo(() => {
@@ -329,6 +394,7 @@ export function AdminTeamPage() {
                       <TableHead>{t('closers.table.packages')}</TableHead>
                       <TableHead>{t('closers.table.status')}</TableHead>
                       <TableHead>{t('closers.table.joined')}</TableHead>
+                      <TableHead className="text-right">{t('closers.table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -350,6 +416,42 @@ export function AdminTeamPage() {
                           )}
                         </TableCell>
                         <TableCell>{formatDate(closer.createdAt)}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>{t('actions.view')}</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <EditCloserDialog
+                                closer={closer}
+                                onSuccess={fetchClosers}
+                                trigger={
+                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                    <Edit className="mr-2 h-4 w-4" />
+                                    {t('actions.edit')}
+                                  </DropdownMenuItem>
+                                }
+                              />
+                              <DropdownMenuItem
+                                onClick={() => handleToggleCloserActive(closer.id, closer.isActive)}
+                                disabled={togglingIds.has(closer.id)}
+                              >
+                                {togglingIds.has(closer.id) ? (
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : closer.isActive ? (
+                                  <PowerOff className="mr-2 h-4 w-4" />
+                                ) : (
+                                  <Power className="mr-2 h-4 w-4" />
+                                )}
+                                {closer.isActive ? t('actions.deactivate') : t('actions.activate')}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -383,6 +485,7 @@ export function AdminTeamPage() {
                       <TableHead>{t('admins.table.permissions')}</TableHead>
                       <TableHead>{t('admins.table.status')}</TableHead>
                       <TableHead>{t('admins.table.joined')}</TableHead>
+                      <TableHead className="text-right">{t('admins.table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -414,6 +517,42 @@ export function AdminTeamPage() {
                           )}
                         </TableCell>
                         <TableCell>{formatDate(admin.createdAt)}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>{t('actions.view')}</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <EditAdminDialog
+                                admin={admin}
+                                onSuccess={fetchAdmins}
+                                trigger={
+                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                    <Edit className="mr-2 h-4 w-4" />
+                                    {t('actions.edit')}
+                                  </DropdownMenuItem>
+                                }
+                              />
+                              <DropdownMenuItem
+                                onClick={() => handleToggleAdminActive(admin.id, admin.isActive)}
+                                disabled={togglingIds.has(admin.id)}
+                              >
+                                {togglingIds.has(admin.id) ? (
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : admin.isActive ? (
+                                  <PowerOff className="mr-2 h-4 w-4" />
+                                ) : (
+                                  <Power className="mr-2 h-4 w-4" />
+                                )}
+                                {admin.isActive ? t('actions.deactivate') : t('actions.activate')}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
