@@ -46,7 +46,7 @@ export function CouponUsagePage() {
         setCoupon(data);
       } catch (err) {
         console.error('Coupon error:', err);
-        toast.error('Failed to load coupon');
+        toast.error(t('messages.loadError'));
       } finally {
         setCouponLoading(false);
       }
@@ -91,7 +91,7 @@ export function CouponUsagePage() {
   if (!coupon || !stats) {
     return (
       <div className="container mx-auto max-w-6xl py-6">
-        <p className="text-center text-muted-foreground">Coupon not found</p>
+        <p className="text-center text-muted-foreground">{t('messages.notFound')}</p>
       </div>
     );
   }
@@ -116,13 +116,13 @@ export function CouponUsagePage() {
           <h1 className="text-3xl font-bold">
             {t('usage.title')}: <span className="font-mono">{coupon.code}</span>
           </h1>
-          <p className="text-muted-foreground">
+          <div className="mt-2">
             {coupon.isActive ? (
               <Badge variant="default">{t('status.active')}</Badge>
             ) : (
               <Badge variant="secondary">{t('status.inactive')}</Badge>
             )}
-          </p>
+          </div>
         </div>
       </div>
 
@@ -151,7 +151,7 @@ export function CouponUsagePage() {
             <p className="text-xs text-muted-foreground">
               {stats.totalUses > 0
                 ? `${((stats.uniqueUsers / stats.totalUses) * 100).toFixed(0)}% unique`
-                : 'No uses yet'}
+                : t('messages.noUsesYet')}
             </p>
           </CardContent>
         </Card>
@@ -243,7 +243,7 @@ export function CouponUsagePage() {
             </Table>
           ) : (
             <div className="py-12 text-center text-muted-foreground">
-              No usage data yet. This coupon has not been used.
+              {t('messages.noUsesYet')}
             </div>
           )}
         </CardContent>

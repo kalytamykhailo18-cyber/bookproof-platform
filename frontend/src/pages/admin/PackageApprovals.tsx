@@ -46,16 +46,17 @@ export function PackageApprovalsPage() {
         setPendingPackages(data);
       } catch (error: any) {
         console.error('Pending packages error:', error);
-        toast.error('Failed to load pending packages');
+        toast.error(t('packageApprovals.messages.loadError'));
       } finally {
         setIsLoading(false);
       }
     };
     fetchPendingPackages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const formatCurrency = (amount: number, currency: string = 'USD') => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat(i18n.language, {
       style: 'currency',
       currency }).format(amount);
   };
@@ -78,13 +79,13 @@ export function PackageApprovalsPage() {
     try {
       setIsApproving(true);
       await closerApi.approvePackage(packageId);
-      toast.success('Package approved successfully');
+      toast.success(t('packageApprovals.messages.approveSuccess'));
       // Refetch pending packages
       const data = await closerApi.getPackagesPendingApproval();
       setPendingPackages(data);
     } catch (error: any) {
       console.error('Approve error:', error);
-      toast.error(error.response?.data?.message || 'Failed to approve package');
+      toast.error(error.response?.data?.message || t('packageApprovals.messages.approveError'));
     } finally {
       setIsApproving(false);
     }
@@ -95,7 +96,7 @@ export function PackageApprovalsPage() {
       try {
         setIsRejecting(true);
         await closerApi.rejectPackage(selectedPackage.id, rejectionReason);
-        toast.success('Package rejected');
+        toast.success(t('packageApprovals.messages.rejectSuccess'));
         setRejectDialogOpen(false);
         setSelectedPackage(null);
         setRejectionReason('');
@@ -104,7 +105,7 @@ export function PackageApprovalsPage() {
         setPendingPackages(data);
       } catch (error: any) {
         console.error('Reject error:', error);
-        toast.error(error.response?.data?.message || 'Failed to reject package');
+        toast.error(error.response?.data?.message || t('packageApprovals.messages.rejectError'));
       } finally {
         setIsRejecting(false);
       }
@@ -135,9 +136,9 @@ export function PackageApprovalsPage() {
         <div className="flex items-center gap-3">
           <Package className="h-8 w-8 text-orange-500" />
           <div>
-            <h1 className="text-3xl font-bold">{t('packageApprovals.title') || 'Package Approvals'}</h1>
+            <h1 className="text-3xl font-bold">{t('packageApprovals.title')}</h1>
             <p className="text-muted-foreground">
-              {t('packageApprovals.description') || 'Review and approve custom packages with pricing below the 80% threshold'}
+              {t('packageApprovals.description')}
             </p>
           </div>
         </div>
@@ -148,21 +149,21 @@ export function PackageApprovalsPage() {
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-orange-700 dark:text-orange-300">
             <AlertTriangle className="h-5 w-5" />
-            {t('packageApprovals.pricingInfo') || 'Pricing Threshold Information'}
+            {t('packageApprovals.pricingInfo')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 text-sm md:grid-cols-3">
             <div>
-              <p className="text-muted-foreground">{t('packageApprovals.standardRate') || 'Standard Rate'}</p>
+              <p className="text-muted-foreground">{t('packageApprovals.standardRate')}</p>
               <p className="font-semibold">${STANDARD_RATE.toFixed(2)} / credit</p>
             </div>
             <div>
-              <p className="text-muted-foreground">{t('packageApprovals.minimumThreshold') || 'Minimum Threshold (80%)'}</p>
+              <p className="text-muted-foreground">{t('packageApprovals.minimumThreshold')}</p>
               <p className="font-semibold">${MIN_RATE.toFixed(2)} / credit</p>
             </div>
             <div>
-              <p className="text-muted-foreground">{t('packageApprovals.requiresApproval') || 'Requires Approval'}</p>
+              <p className="text-muted-foreground">{t('packageApprovals.requiresApproval')}</p>
               <p className="font-semibold">&lt; ${MIN_RATE.toFixed(2)} / credit</p>
             </div>
           </div>
@@ -172,9 +173,9 @@ export function PackageApprovalsPage() {
       {/* Pending Packages Table */}
       <Card className="animate-fade-up-slow">
         <CardHeader>
-          <CardTitle>{t('packageApprovals.pendingPackages') || 'Pending Packages'}</CardTitle>
+          <CardTitle>{t('packageApprovals.pendingPackages')}</CardTitle>
           <CardDescription>
-            {pendingPackages?.length || 0} {t('packageApprovals.packagesAwaitingApproval') || 'packages awaiting approval'}
+            {pendingPackages?.length || 0} {t('packageApprovals.packagesAwaitingApproval')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -182,14 +183,14 @@ export function PackageApprovalsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('packageApprovals.package') || 'Package'}</TableHead>
-                  <TableHead>{t('packageApprovals.client') || 'Client'}</TableHead>
-                  <TableHead>{t('packageApprovals.credits') || 'Credits'}</TableHead>
-                  <TableHead>{t('packageApprovals.price') || 'Price'}</TableHead>
-                  <TableHead>{t('packageApprovals.ratePerCredit') || 'Rate/Credit'}</TableHead>
-                  <TableHead>{t('packageApprovals.discount') || 'Discount'}</TableHead>
-                  <TableHead>{t('packageApprovals.created') || 'Created'}</TableHead>
-                  <TableHead className="text-right">{t('common.actions') || 'Actions'}</TableHead>
+                  <TableHead>{t('packageApprovals.package')}</TableHead>
+                  <TableHead>{t('packageApprovals.client')}</TableHead>
+                  <TableHead>{t('packageApprovals.credits')}</TableHead>
+                  <TableHead>{t('packageApprovals.price')}</TableHead>
+                  <TableHead>{t('packageApprovals.ratePerCredit')}</TableHead>
+                  <TableHead>{t('packageApprovals.discount')}</TableHead>
+                  <TableHead>{t('packageApprovals.created')}</TableHead>
+                  <TableHead className="text-right">{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -237,7 +238,7 @@ export function PackageApprovalsPage() {
                             disabled={isApproving}
                           >
                             <CheckCircle className="mr-1 h-4 w-4" />
-                            {t('packageApprovals.approve') || 'Approve'}
+                            {t('packageApprovals.approve')}
                           </Button>
                           <Button
                             size="sm"
@@ -246,7 +247,7 @@ export function PackageApprovalsPage() {
                             disabled={isRejecting}
                           >
                             <XCircle className="mr-1 h-4 w-4" />
-                            {t('packageApprovals.reject') || 'Reject'}
+                            {t('packageApprovals.reject')}
                           </Button>
                         </div>
                       </TableCell>
@@ -258,9 +259,9 @@ export function PackageApprovalsPage() {
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <CheckCircle className="mb-4 h-12 w-12 text-green-500" />
-              <p className="text-lg font-medium">{t('packageApprovals.noPending') || 'No packages pending approval'}</p>
+              <p className="text-lg font-medium">{t('packageApprovals.noPending')}</p>
               <p className="text-muted-foreground">
-                {t('packageApprovals.allCaughtUp') || 'All custom packages with special pricing have been reviewed'}
+                {t('packageApprovals.allCaughtUp')}
               </p>
             </div>
           )}
@@ -271,9 +272,9 @@ export function PackageApprovalsPage() {
       <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('packageApprovals.rejectPackage') || 'Reject Package'}</DialogTitle>
+            <DialogTitle>{t('packageApprovals.rejectPackage')}</DialogTitle>
             <DialogDescription>
-              {t('packageApprovals.rejectDescription') || 'Please provide a reason for rejecting this package. The closer will be notified.'}
+              {t('packageApprovals.rejectDescription')}
             </DialogDescription>
           </DialogHeader>
           {selectedPackage && (
@@ -288,10 +289,10 @@ export function PackageApprovalsPage() {
             </div>
           )}
           <div className="space-y-2">
-            <Label htmlFor="rejectionReason">{t('packageApprovals.rejectionReason') || 'Rejection Reason'} *</Label>
+            <Label htmlFor="rejectionReason">{t('packageApprovals.rejectionReason')} *</Label>
             <Textarea
               id="rejectionReason"
-              placeholder={t('packageApprovals.rejectionReasonPlaceholder') || 'E.g., Discount too steep for this client segment...'}
+              placeholder={t('packageApprovals.rejectionReasonPlaceholder')}
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
               rows={3}
@@ -299,7 +300,7 @@ export function PackageApprovalsPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRejectDialogOpen(false)}>
-              {t('common.cancel') || 'Cancel'}
+              {t('common.cancel')}
             </Button>
             <Button
               variant="destructive"
@@ -307,8 +308,8 @@ export function PackageApprovalsPage() {
               disabled={!rejectionReason.trim() || isRejecting}
             >
               {isRejecting
-                ? t('packageApprovals.rejecting') || 'Rejecting...'
-                : t('packageApprovals.confirmReject') || 'Reject Package'}
+                ? t('packageApprovals.rejecting')
+                : t('packageApprovals.confirmReject')}
             </Button>
           </DialogFooter>
         </DialogContent>

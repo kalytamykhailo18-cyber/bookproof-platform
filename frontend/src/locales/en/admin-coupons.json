@@ -173,5 +173,26 @@
       "date": "Date",
       "order": "Order"
     }
+  },
+
+  "messages": {
+    "loadError": "Failed to load coupon",
+    "loadStatsError": "Failed to load usage statistics",
+    "createSuccess": "Coupon created successfully",
+    "createError": "Failed to create coupon",
+    "updateSuccess": "Coupon updated successfully",
+    "updateError": "Failed to update coupon",
+    "deleteSuccess": "Coupon deleted successfully",
+    "deleteError": "Failed to delete coupon",
+    "noExpiration": "No expiration",
+    "noUsesYet": "No uses yet",
+    "notFound": "Coupon not found",
+    "created": "Created"
+  },
+
+  "validation": {
+    "codeMinLength": "Code must be at least 2 characters",
+    "discountPercentRequired": "Discount percentage is required for percentage type coupons",
+    "discountAmountRequired": "Discount amount is required for fixed amount type coupons"
   }
 }

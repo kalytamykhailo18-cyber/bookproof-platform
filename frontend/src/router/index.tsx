@@ -77,7 +77,8 @@ const AdminTeamPage = lazy(() => import('../pages/admin/Team').then(m => ({ defa
 const AdminSettingsPage = lazy(() => import('../pages/admin/Settings').then(m => ({ default: m.AdminSettingsPage })));
 const AdminNotificationsPage = lazy(() => import('../pages/admin/Notifications').then(m => ({ default: m.NotificationsPage })));
 const AdminNotificationsSettingsPage = lazy(() => import('../pages/admin/notifications/Settings').then(m => ({ default: m.NotificationSettingsPage })));
-const AdminCouponsPage = lazy(() => import('../pages/admin/Coupons').then(m => ({ default: m.CouponDetailPage })));
+const AdminCouponsListPage = lazy(() => import('../pages/admin/coupons/List').then(m => ({ default: m.CouponsListPage })));
+const AdminCouponsDetailPage = lazy(() => import('../pages/admin/Coupons').then(m => ({ default: m.CouponDetailPage })));
 const AdminCouponsNewPage = lazy(() => import('../pages/admin/coupons/New').then(m => ({ default: m.NewCouponPage })));
 const AdminCouponsEditPage = lazy(() => import('../pages/admin/coupons/Edit').then(m => ({ default: m.EditCouponPage })));
 const AdminCouponsUsagePage = lazy(() => import('../pages/admin/coupons/Usage').then(m => ({ default: m.CouponUsagePage })));
@@ -234,9 +235,9 @@ export const router = createBrowserRouter([
               { path: 'settings', element: <LazyRoute component={AdminSettingsPage} /> },
               { path: 'notifications', element: <LazyRoute component={AdminNotificationsPage} /> },
               { path: 'notifications/settings', element: <LazyRoute component={AdminNotificationsSettingsPage} /> },
-              { path: 'coupons', element: <LazyRoute component={AdminCouponsPage} /> },
+              { path: 'coupons', element: <LazyRoute component={AdminCouponsListPage} /> },
               { path: 'coupons/new', element: <LazyRoute component={AdminCouponsNewPage} /> },
-              { path: 'coupons/:id', element: <LazyRoute component={AdminCouponsPage} /> },
+              { path: 'coupons/:id', element: <LazyRoute component={AdminCouponsDetailPage} /> },
               { path: 'coupons/:id/edit', element: <LazyRoute component={AdminCouponsEditPage} /> },
               { path: 'coupons/:id/usage', element: <LazyRoute component={AdminCouponsUsagePage} /> },
               { path: 'keyword-research', element: <LazyRoute component={AdminKeywordResearchPage} /> },

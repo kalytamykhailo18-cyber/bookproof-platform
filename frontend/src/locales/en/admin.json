@@ -28,6 +28,13 @@
     "rejectionReason": "Rejection Reason",
     "rejectionReasonPlaceholder": "E.g., Discount too steep for this client segment...",
     "rejecting": "Rejecting...",
-    "confirmReject": "Reject Package"
+    "confirmReject": "Reject Package",
+    "messages": {
+      "loadError": "Failed to load pending packages",
+      "approveSuccess": "Package approved successfully",
+      "approveError": "Failed to approve package",
+      "rejectSuccess": "Package rejected successfully",
+      "rejectError": "Failed to reject package"
+    }
   }
 }

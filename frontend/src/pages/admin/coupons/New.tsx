@@ -27,10 +27,10 @@ import {
   SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 
-// Form validation schema
+// Form validation schema - error messages will be set dynamically
 const formSchema = z
   .object({
-    code: z.string().min(2, 'Code must be at least 2 characters').toUpperCase(),
+    code: z.string().min(2).toUpperCase(),
     type: z.nativeEnum(CouponType),
     appliesTo: z.nativeEnum(CouponAppliesTo),
     discountPercent: z.number().min(0).max(100).optional(),
@@ -51,7 +51,7 @@ const formSchema = z
       return true;
     },
     {
-      message: 'Discount percentage is required for percentage type coupons',
+      message: 'validation.discountPercentRequired',
       path: ['discountPercent'] },
   )
   .refine(
@@ -62,7 +62,7 @@ const formSchema = z
       return true;
     },
     {
-      message: 'Discount amount is required for fixed amount type coupons',
+      message: 'validation.discountAmountRequired',
       path: ['discountAmount'] },
   );
 
@@ -98,10 +98,10 @@ export function NewCouponPage() {
     try {
       setIsCreating(true);
       await couponsApi.create(data);
-      toast.success('Coupon created successfully');
+      toast.success(t('messages.createSuccess'));
       navigate(`/admin/coupons`);
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Failed to create coupon';
+      const message = error.response?.data?.message || t('messages.createError');
       toast.error(message);
     } finally {
       setIsCreating(false);

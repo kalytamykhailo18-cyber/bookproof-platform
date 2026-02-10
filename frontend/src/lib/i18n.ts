@@ -84,6 +84,10 @@ import adminExceptionsEN from '../locales/en/admin-exceptions.json';
 import adminExceptionsES from '../locales/es/admin-exceptions.json';
 import adminExceptionsPT from '../locales/pt/admin-exceptions.json';
 
+import adminEN from '../locales/en/admin.json';
+import adminES from '../locales/es/admin.json';
+import adminPT from '../locales/pt/admin.json';
+
 // Helper to flatten landing page sections into separate namespaces
 function flattenLanding(landingData: any) {
   const flattened: Record<string, any> = {};
@@ -98,6 +102,7 @@ const resources = {
   en: {
     common: commonEN,
     auth: authEN,
+    admin: adminEN,
     adminDashboard: adminDashboardEN,
     adminAuthors: adminAuthorsEN,
     adminAuthorTransactions: adminAuthorTransactionsEN,
@@ -120,6 +125,7 @@ const resources = {
   es: {
     common: commonES,
     auth: authES,
+    admin: adminES,
     adminDashboard: adminDashboardES,
     adminAuthors: adminAuthorsES,
     adminAuthorTransactions: adminAuthorTransactionsES,
@@ -142,6 +148,7 @@ const resources = {
   pt: {
     common: commonPT,
     auth: authPT,
+    admin: adminPT,
     adminDashboard: adminDashboardPT,
     adminAuthors: adminAuthorsPT,
     adminAuthorTransactions: adminAuthorTransactionsPT,
