@@ -1,84 +1,121 @@
 {
+  "backToCampaign": "Voltar para Campanha",
   "title": "Controles de Campanha",
-  "description": "Gerenciar operações e configurações de campanha",
   "health": {
     "title": "Saúde da Campanha",
+    "description": "Monitorar progresso e métricas de desempenho da campanha",
     "status": "Status",
     "completion": "Conclusão",
-    "variance": "Variância",
-    "daysOffSchedule": "Dias Fora do Cronograma",
-    "onTrack": "No Prazo",
-    "delayed": "Atrasado",
-    "issues": "Problemas",
-    "aheadOfSchedule": "Adiantado"
+    "variance": "Variação",
+    "daysOff": "Dias Fora do Cronograma",
+    "delivered": "Entregues",
+    "weeksProgress": "Progresso de Semanas"
   },
   "analytics": {
-    "title": "Análises da Campanha",
-    "totalReviews": "Total de Avaliações",
-    "completed": "Concluídas",
-    "inProgress": "Em Progresso",
-    "creditsUsed": "Créditos Usados",
-    "creditsRemaining": "Créditos Restantes"
+    "title": "Análise de Campanha",
+    "reviewsPerWeek": "Avaliações Por Semana",
+    "manualOverride": "Ajuste Manual",
+    "currentWeek": "Semana Atual",
+    "averageRating": "Avaliação Média",
+    "delivered": "Entregues",
+    "validated": "Validadas",
+    "rejected": "Rejeitadas"
   },
   "actions": {
+    "title": "Ações da Campanha",
+    "description": "Gerenciar operações e configurações da campanha",
     "pause": "Pausar Campanha",
     "resume": "Retomar Campanha",
     "adjustDistribution": "Ajustar Distribuição",
     "allocateCredits": "Alocar Créditos",
-    "adjustOverbooking": "Ajustar Overbooking"
-  },
-  "dialogs": {
-    "pause": {
+    "adjustOverbooking": "Ajustar Overbooking",
+    "adjusting": "Ajustando...",
+    "allocating": "Alocando...",
+    "confirm": "Confirmar",
+    "confirmPause": "Confirmar Pausa",
+    "confirmResume": "Confirmar Retomada",
+    "pauseDialog": {
       "title": "Pausar Campanha",
-      "description": "Pausar esta campanha e interromper novas atribuições",
-      "reasonLabel": "Motivo *",
-      "reasonPlaceholder": "Explique por que a campanha está sendo pausada",
-      "notesLabel": "Notas Adicionais",
-      "notesPlaceholder": "Notas opcionais para trilha de auditoria",
-      "cancel": "Cancelar",
-      "confirm": "Pausar Campanha",
-      "confirming": "Pausando..."
+      "description": "Isso interromperá novas atribuições de leitores. Leitores em andamento podem concluir.",
+      "reason": "Motivo *",
+      "reasonPlaceholder": "Por que você está pausando esta campanha?",
+      "notes": "Notas Adicionais",
+      "notesPlaceholder": "Quaisquer notas adicionais..."
     },
-    "resume": {
+    "resumeDialog": {
       "title": "Retomar Campanha",
-      "description": "Retomar esta campanha e permitir novas atribuições",
-      "notesLabel": "Notas",
-      "notesPlaceholder": "Notas opcionais sobre a retomada",
-      "cancel": "Cancelar",
-      "confirm": "Retomar Campanha",
-      "confirming": "Retomando..."
+      "description": "Isso reativará a campanha e retomará o processamento da fila.",
+      "reason": "Motivo",
+      "reasonPlaceholder": "Por que você está retomando esta campanha?",
+      "notes": "Notas Adicionais",
+      "notesPlaceholder": "Quaisquer notas adicionais..."
     },
-    "adjustDistribution": {
+    "distributionDialog": {
       "title": "Ajustar Distribuição Semanal",
-      "description": "Alterar o número de avaliações por semana",
-      "reviewsPerWeekLabel": "Avaliações Por Semana *",
-      "reasonLabel": "Motivo *",
-      "reasonPlaceholder": "Explique por que a distribuição está sendo ajustada",
-      "cancel": "Cancelar",
-      "confirm": "Ajustar Distribuição",
-      "confirming": "Ajustando..."
+      "description": "Alterar o número de avaliações distribuídas por semana.",
+      "reviewsPerWeek": "Avaliações Por Semana *",
+      "placeholder": "Digite avaliações por semana",
+      "reason": "Motivo *",
+      "reasonPlaceholder": "Por que você está alterando a taxa de distribuição?"
     },
-    "allocateCredits": {
-      "title": "Alocar Créditos para Campanha",
-      "description": "Adicionar créditos do saldo do autor a esta campanha",
-      "creditsLabel": "Créditos a Alocar *",
-      "reasonLabel": "Motivo *",
-      "reasonPlaceholder": "Explique por que os créditos estão sendo alocados",
-      "cancel": "Cancelar",
-      "confirm": "Alocar Créditos",
-      "confirming": "Alocando..."
+    "creditDialog": {
+      "title": "Alocar Créditos para a Campanha",
+      "description": "Adicionar créditos do saldo do autor a esta campanha.",
+      "amount": "Créditos a Alocar *",
+      "placeholder": "Digite a quantidade de créditos",
+      "reason": "Motivo *",
+      "reasonPlaceholder": "Por que você está alocando créditos?"
     },
-    "adjustOverbooking": {
+    "overbookingDialog": {
       "title": "Ajustar Overbooking",
-      "description": "Alterar a porcentagem de overbooking para esta campanha",
-      "percentageLabel": "Porcentagem de Overbooking *",
-      "reasonLabel": "Motivo *",
-      "reasonPlaceholder": "Explique por que o overbooking está sendo ajustado",
-      "cancel": "Cancelar",
-      "confirm": "Ajustar Overbooking",
-      "confirming": "Ajustando..."
+      "description": "Alterar a porcentagem de overbooking para esta campanha.",
+      "enableLabel": "Habilitar Overbooking",
+      "percentage": "Porcentagem de Overbooking *",
+      "placeholder": "Digite a porcentagem",
+      "reason": "Motivo *",
+      "reasonPlaceholder": "Por que você está ajustando o overbooking?"
+    },
+    "forceCompleteDialog": {
+      "title": "Forçar Conclusão da Campanha",
+      "description": "Marcar manualmente esta campanha como concluída independentemente do progresso.",
+      "reason": "Motivo *",
+      "reasonPlaceholder": "Por que você está forçando a conclusão desta campanha?",
+      "notes": "Notas Adicionais",
+      "notesPlaceholder": "Notas opcionais para trilha de auditoria",
+      "confirm": "Forçar Conclusão"
+    },
+    "grantAccessDialog": {
+      "title": "Conceder Acesso Manual ao Leitor",
+      "description": "Ignorar a fila normal para conceder acesso imediato a um leitor específico a esta campanha.",
+      "readerId": "ID do Perfil do Leitor *",
+      "readerIdPlaceholder": "Digite o ID do perfil do leitor",
+      "format": "Formato Preferido",
+      "formatPlaceholder": "Selecionar formato",
+      "formatEbook": "E-book",
+      "formatAudiobook": "Audiolivro",
+      "reason": "Motivo *",
+      "reasonPlaceholder": "ex., Revisor prioritário, solicitação especial",
+      "notes": "Notas Adicionais",
+      "notesPlaceholder": "Notas opcionais para trilha de auditoria",
+      "confirm": "Conceder Acesso",
+      "granting": "Concedendo Acesso..."
+    },
+    "removeReaderDialog": {
+      "title": "Remover Leitor da Campanha",
+      "description": "Remover a atribuição de um leitor desta campanha. Esta ação pode ser registrada e opcionalmente notificar o leitor.",
+      "assignmentId": "ID da Atribuição *",
+      "assignmentIdPlaceholder": "Digite o ID da atribuição a remover",
+      "reason": "Motivo *",
+      "reasonPlaceholder": "ex., Violação do leitor, atribuição duplicada",
+      "notes": "Notas Adicionais",
+      "notesPlaceholder": "Notas opcionais",
+      "confirm": "Remover Leitor",
+      "removing": "Removendo..."
+    },
+    "reportDialog": {
+      "title": "Relatório da Campanha",
+      "description": "Gerar um relatório detalhado do desempenho desta campanha.",
+      "generating": "Gerando relatório..."
     }
-  },
-  "loading": "Carregando dados da campanha...",
-  "notFound": "Campanha não encontrada"
+  }
 }

@@ -1,84 +1,121 @@
 {
+  "backToCampaign": "Back to Campaign",
   "title": "Campaign Controls",
-  "description": "Manage campaign operations and settings",
   "health": {
     "title": "Campaign Health",
+    "description": "Monitor campaign progress and performance metrics",
     "status": "Status",
     "completion": "Completion",
     "variance": "Variance",
-    "daysOffSchedule": "Days Off Schedule",
-    "onTrack": "On Track",
-    "delayed": "Delayed",
-    "issues": "Issues",
-    "aheadOfSchedule": "Ahead of Schedule"
+    "daysOff": "Days Off Schedule",
+    "delivered": "Delivered",
+    "weeksProgress": "Weeks Progress"
   },
   "analytics": {
     "title": "Campaign Analytics",
-    "totalReviews": "Total Reviews",
-    "completed": "Completed",
-    "inProgress": "In Progress",
-    "creditsUsed": "Credits Used",
-    "creditsRemaining": "Credits Remaining"
+    "reviewsPerWeek": "Reviews Per Week",
+    "manualOverride": "Manual Override",
+    "currentWeek": "Current Week",
+    "averageRating": "Average Rating",
+    "delivered": "Delivered",
+    "validated": "Validated",
+    "rejected": "Rejected"
   },
   "actions": {
+    "title": "Campaign Actions",
+    "description": "Manage campaign operations and settings",
     "pause": "Pause Campaign",
     "resume": "Resume Campaign",
     "adjustDistribution": "Adjust Distribution",
     "allocateCredits": "Allocate Credits",
-    "adjustOverbooking": "Adjust Overbooking"
-  },
-  "dialogs": {
-    "pause": {
+    "adjustOverbooking": "Adjust Overbooking",
+    "adjusting": "Adjusting...",
+    "allocating": "Allocating...",
+    "confirm": "Confirm",
+    "confirmPause": "Confirm Pause",
+    "confirmResume": "Confirm Resume",
+    "pauseDialog": {
       "title": "Pause Campaign",
-      "description": "Pause this campaign and stop new assignments",
-      "reasonLabel": "Reason *",
-      "reasonPlaceholder": "Explain why campaign is being paused",
-      "notesLabel": "Additional Notes",
-      "notesPlaceholder": "Optional notes for audit trail",
-      "cancel": "Cancel",
-      "confirm": "Pause Campaign",
-      "confirming": "Pausing..."
+      "description": "This will stop new reader assignments. Readers in progress can complete.",
+      "reason": "Reason *",
+      "reasonPlaceholder": "Why are you pausing this campaign?",
+      "notes": "Additional Notes",
+      "notesPlaceholder": "Any additional notes..."
     },
-    "resume": {
+    "resumeDialog": {
       "title": "Resume Campaign",
-      "description": "Resume this campaign and allow new assignments",
-      "notesLabel": "Notes",
-      "notesPlaceholder": "Optional notes about resuming",
-      "cancel": "Cancel",
-      "confirm": "Resume Campaign",
-      "confirming": "Resuming..."
+      "description": "This will reactivate the campaign and resume queue processing.",
+      "reason": "Reason",
+      "reasonPlaceholder": "Why are you resuming this campaign?",
+      "notes": "Additional Notes",
+      "notesPlaceholder": "Any additional notes..."
     },
-    "adjustDistribution": {
+    "distributionDialog": {
       "title": "Adjust Weekly Distribution",
-      "description": "Change the number of reviews per week",
-      "reviewsPerWeekLabel": "Reviews Per Week *",
-      "reasonLabel": "Reason *",
-      "reasonPlaceholder": "Explain why distribution is being adjusted",
-      "cancel": "Cancel",
-      "confirm": "Adjust Distribution",
-      "confirming": "Adjusting..."
+      "description": "Change the number of reviews distributed per week.",
+      "reviewsPerWeek": "Reviews Per Week *",
+      "placeholder": "Enter reviews per week",
+      "reason": "Reason *",
+      "reasonPlaceholder": "Why are you changing the distribution rate?"
     },
-    "allocateCredits": {
+    "creditDialog": {
       "title": "Allocate Credits to Campaign",
-      "description": "Add credits from author balance to this campaign",
-      "creditsLabel": "Credits to Allocate *",
-      "reasonLabel": "Reason *",
-      "reasonPlaceholder": "Explain why credits are being allocated",
-      "cancel": "Cancel",
-      "confirm": "Allocate Credits",
-      "confirming": "Allocating..."
+      "description": "Add credits from author balance to this campaign.",
+      "amount": "Credits to Allocate *",
+      "placeholder": "Enter credit amount",
+      "reason": "Reason *",
+      "reasonPlaceholder": "Why are you allocating credits?"
     },
-    "adjustOverbooking": {
+    "overbookingDialog": {
       "title": "Adjust Overbooking",
-      "description": "Change the overbooking percentage for this campaign",
-      "percentageLabel": "Overbooking Percentage *",
-      "reasonLabel": "Reason *",
-      "reasonPlaceholder": "Explain why overbooking is being adjusted",
-      "cancel": "Cancel",
-      "confirm": "Adjust Overbooking",
-      "confirming": "Adjusting..."
+      "description": "Change the overbooking percentage for this campaign.",
+      "enableLabel": "Enable Overbooking",
+      "percentage": "Overbooking Percentage *",
+      "placeholder": "Enter percentage",
+      "reason": "Reason *",
+      "reasonPlaceholder": "Why are you adjusting overbooking?"
+    },
+    "forceCompleteDialog": {
+      "title": "Force Complete Campaign",
+      "description": "Manually mark this campaign as completed regardless of progress.",
+      "reason": "Reason *",
+      "reasonPlaceholder": "Why are you force completing this campaign?",
+      "notes": "Additional Notes",
+      "notesPlaceholder": "Optional notes for audit trail",
+      "confirm": "Force Complete"
+    },
+    "grantAccessDialog": {
+      "title": "Manually Grant Reader Access",
+      "description": "Bypass the normal queue to grant a specific reader immediate access to this campaign.",
+      "readerId": "Reader Profile ID *",
+      "readerIdPlaceholder": "Enter reader profile ID",
+      "format": "Preferred Format",
+      "formatPlaceholder": "Select format",
+      "formatEbook": "E-book",
+      "formatAudiobook": "Audiobook",
+      "reason": "Reason *",
+      "reasonPlaceholder": "e.g., Priority reviewer, special request",
+      "notes": "Additional Notes",
+      "notesPlaceholder": "Optional notes for audit trail",
+      "confirm": "Grant Access",
+      "granting": "Granting Access..."
+    },
+    "removeReaderDialog": {
+      "title": "Remove Reader from Campaign",
+      "description": "Remove a reader's assignment from this campaign. This action can be logged and optionally notify the reader.",
+      "assignmentId": "Assignment ID *",
+      "assignmentIdPlaceholder": "Enter assignment ID to remove",
+      "reason": "Reason *",
+      "reasonPlaceholder": "e.g., Reader violation, duplicate assignment",
+      "notes": "Additional Notes",
+      "notesPlaceholder": "Optional notes",
+      "confirm": "Remove Reader",
+      "removing": "Removing..."
+    },
+    "reportDialog": {
+      "title": "Campaign Report",
+      "description": "Generate a detailed report of this campaign's performance.",
+      "generating": "Generating report..."
     }
-  },
-  "loading": "Loading campaign data...",
-  "notFound": "Campaign not found"
+  }
 }

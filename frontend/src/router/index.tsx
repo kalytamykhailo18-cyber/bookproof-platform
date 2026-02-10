@@ -64,7 +64,8 @@ const AdminValidationPage = lazy(() => import('../pages/admin/Validation').then(
 const AdminAuthorsPage = lazy(() => import('../pages/admin/Authors').then(m => ({ default: m.AdminAuthorsPage })));
 const AdminReadersListPage = lazy(() => import('../pages/admin/ReadersList').then(m => ({ default: m.AdminReadersListPage })));
 const AdminReaderDetailPage = lazy(() => import('../pages/admin/Readers').then(m => ({ default: m.AdminReaderDetailPage })));
-const AdminCampaignsPage = lazy(() => import('../pages/admin/Campaigns').then(m => ({ default: m.AdminCampaignDetailPage })));
+const AdminCampaignsListPage = lazy(() => import('../pages/admin/CampaignsList').then(m => ({ default: m.AdminCampaignsListPage })));
+const AdminCampaignDetailPage = lazy(() => import('../pages/admin/Campaigns').then(m => ({ default: m.AdminCampaignDetailPage })));
 const AdminCampaignControlsPage = lazy(() => import('../pages/admin/campaigns/Controls').then(m => ({ default: m.CampaignControlsPage })));
 const AdminDisputesPage = lazy(() => import('../pages/admin/Disputes').then(m => ({ default: m.DisputesPage })));
 const AdminIssuesPage = lazy(() => import('../pages/admin/Issues').then(m => ({ default: m.AdminIssuesPage })));
@@ -220,8 +221,8 @@ export const router = createBrowserRouter([
               { path: 'authors/:id/transactions', element: <LazyRoute component={AdminAuthorsTransactionsPage} /> },
               { path: 'readers', element: <LazyRoute component={AdminReadersListPage} /> },
               { path: 'readers/:id', element: <LazyRoute component={AdminReaderDetailPage} /> },
-              { path: 'campaigns', element: <LazyRoute component={AdminCampaignsPage} /> },
-              { path: 'campaigns/:id', element: <LazyRoute component={AdminCampaignsPage} /> },
+              { path: 'campaigns', element: <LazyRoute component={AdminCampaignsListPage} /> },
+              { path: 'campaigns/:id', element: <LazyRoute component={AdminCampaignDetailPage} /> },
               { path: 'campaigns/:id/controls', element: <LazyRoute component={AdminCampaignControlsPage} /> },
               { path: 'disputes', element: <LazyRoute component={AdminDisputesPage} /> },
               { path: 'issues', element: <LazyRoute component={AdminIssuesPage} /> },

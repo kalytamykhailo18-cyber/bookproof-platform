@@ -15,7 +15,62 @@
     "active": "Active",
     "paused": "Paused",
     "completed": "Completed",
-    "draft": "Draft"
+    "draft": "Draft",
+    "cancelled": "Cancelled"
+  },
+  "list": {
+    "title": "All Campaigns",
+    "description": "Manage and monitor all platform campaigns",
+    "refresh": "Refresh",
+    "stats": {
+      "total": "Total Campaigns",
+      "totalDesc": "Across all authors",
+      "active": "Active",
+      "activeDesc": "Currently running",
+      "paused": "Paused",
+      "pausedDesc": "Temporarily halted",
+      "completed": "Completed",
+      "completedDesc": "Successfully finished"
+    },
+    "filters": {
+      "title": "Filters",
+      "searchPlaceholder": "Search campaigns...",
+      "statusPlaceholder": "Status",
+      "allStatus": "All Status",
+      "active": "Active",
+      "paused": "Paused",
+      "completed": "Completed",
+      "draft": "Draft",
+      "cancelled": "Cancelled"
+    },
+    "table": {
+      "title": "Campaigns ({{count}})",
+      "description": "View details and manage individual campaigns",
+      "campaign": "Campaign",
+      "status": "Status",
+      "progress": "Progress",
+      "reviews": "Reviews",
+      "week": "Week",
+      "rating": "Rating",
+      "timeline": "Timeline",
+      "actions": "Actions",
+      "validated": "validated",
+      "start": "Start",
+      "end": "End",
+      "viewDetails": "View Details",
+      "empty": {
+        "title": "No campaigns found",
+        "tryFilters": "Try adjusting your filters",
+        "noCampaigns": "No campaigns have been created yet"
+      }
+    },
+    "status": {
+      "active": "Active",
+      "paused": "Paused",
+      "completed": "Completed",
+      "draft": "Draft",
+      "cancelled": "Cancelled"
+    }
   },
   "health": {
     "onTrack": "On Track",
