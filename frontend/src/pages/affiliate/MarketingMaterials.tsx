@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { useMarketingMaterials, useTrackMaterialDownload } from '@/hooks/useAffiliates';
+import { useState, useEffect } from 'react';
 import {
   MarketingMaterialType,
   Language,
-  MarketingMaterialResponseDto } from '@/lib/api/affiliates';
+  MarketingMaterialResponseDto,
+  affiliatesApi } from '@/lib/api/affiliates';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -34,8 +34,26 @@ export function MarketingMaterialsPage() {
     ...(typeFilter !== 'all' && { type: typeFilter }),
     ...(languageFilter !== 'all' && { language: languageFilter }) };
 
-  const { data: materials, isLoading } = useMarketingMaterials(query);
-  const trackDownload = useTrackMaterialDownload();
+  const [materials, setMaterials] = useState<MarketingMaterialResponseDto[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isTracking, setIsTracking] = useState(false);
+
+  // Fetch marketing materials
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        setIsLoading(true);
+        const data = await affiliatesApi.getMarketingMaterials(query);
+        setMaterials(data);
+      } catch (error: any) {
+        console.error('Marketing materials error:', error);
+        toast.error('Failed to load marketing materials');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchMaterials();
+  }, [typeFilter, languageFilter]);
 
   const getTypeIcon = (type: MarketingMaterialType) => {
     switch (type) {
@@ -75,7 +93,8 @@ export function MarketingMaterialsPage() {
     }
 
     try {
-      await trackDownload.mutateAsync(material.id);
+      setIsTracking(true);
+      await affiliatesApi.trackMaterialDownload(material.id);
 
       // Open in new tab
       window.open(material.fileUrl, '_blank');
@@ -83,6 +102,8 @@ export function MarketingMaterialsPage() {
       toast.success('Material downloaded successfully');
     } catch (error) {
       console.error('Download error:', error);
+    } finally {
+      setIsTracking(false);
     }
   };
 
@@ -93,8 +114,9 @@ export function MarketingMaterialsPage() {
     }
 
     try {
+      setIsTracking(true);
       await navigator.clipboard.writeText(material.content);
-      await trackDownload.mutateAsync(material.id);
+      await affiliatesApi.trackMaterialDownload(material.id);
 
       setCopiedId(material.id);
       setTimeout(() => setCopiedId(null), 2000);
@@ -102,6 +124,8 @@ export function MarketingMaterialsPage() {
       toast.success('Content copied to clipboard');
     } catch (error) {
       toast.error('Failed to copy content');
+    } finally {
+      setIsTracking(false);
     }
   };
 
@@ -234,7 +258,7 @@ export function MarketingMaterialsPage() {
                       type="button"
                       onClick={() => handleDownload(material)}
                       className="flex-1"
-                      disabled={trackDownload.isPending}
+                      disabled={isTracking}
                     >
                       <Download className="mr-2 h-4 w-4" />
                       Download
@@ -247,7 +271,7 @@ export function MarketingMaterialsPage() {
                       variant="outline"
                       onClick={() => handleCopyContent(material)}
                       className={`flex-1 ${copiedId === material.id ? 'bg-green-50' : ''}`}
-                      disabled={trackDownload.isPending}
+                      disabled={isTracking}
                     >
                       {copiedId === material.id ? (
                         <>

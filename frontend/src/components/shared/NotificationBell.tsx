@@ -8,11 +8,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { useUnreadCount, useNotifications, useMarkAsRead, useMarkAllAsRead } from '@/hooks/useNotifications';
+import { getNotifications, getUnreadCount, markNotificationsAsRead, markAllNotificationsAsRead } from '@/lib/api/notifications';
+import { toast } from 'sonner';
 import { NotificationList } from './NotificationList';
 import { useRealtimeUpdates, RealtimeEventType } from '@/hooks/useRealtimeUpdates';
-import { useQueryClient } from '@tanstack/react-query';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
 
 /**
  * Notification Bell Component
@@ -23,40 +23,58 @@ import { useAuth } from '@/hooks/useAuth';
  */
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const params = useParams();
   const locale = (params?.locale as string) || 'en';
-  const { user } = useAuth();
+  const { user } = useAuthStore();
 
-  // Get unread count
-  const { data: unreadCount = 0 } = useUnreadCount();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notificationData, setNotificationData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Get recent notifications (limit to 10 for dropdown)
-  const { data: notificationData, isLoading } = useNotifications({
-    page: 1,
-    limit: 10,
-  });
+  // Fetch unread count and notifications
+  const fetchNotifications = async () => {
+    try {
+      setIsLoading(true);
+      const [countData, notifData] = await Promise.all([
+        getUnreadCount(),
+        getNotifications({ page: 1, limit: 10 })
+      ]);
+      setUnreadCount(countData);
+      setNotificationData(notifData);
+    } catch (error: any) {
+      console.error('Notifications error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  // Mark as read mutation
-  const { mutate: markAsRead } = useMarkAsRead();
-  const { mutate: markAllAsRead } = useMarkAllAsRead();
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   // Subscribe to real-time notification events
   useRealtimeUpdates({
     showNotifications: false, // We'll handle display manually
     onEvent: {
       [RealtimeEventType.NOTIFICATION]: () => {
-        // Invalidate queries to refetch notifications
-        queryClient.invalidateQueries({ queryKey: ['notifications'] });
+        // Refetch notifications on new notification event
+        fetchNotifications();
       },
     },
   });
 
   // Handle notification click
-  const handleNotificationClick = (notificationId: string, actionUrl?: string) => {
-    // Mark as read
-    markAsRead([notificationId]);
+  const handleNotificationClick = async (notificationId: string, actionUrl?: string) => {
+    try {
+      // Mark as read
+      await markNotificationsAsRead([notificationId]);
+      // Refetch notifications
+      await fetchNotifications();
+    } catch (error: any) {
+      console.error('Mark as read error:', error);
+      toast.error('Failed to mark notifications as read');
+    }
 
     // Navigate if actionUrl exists
     if (actionUrl) {
@@ -65,8 +83,20 @@ export function NotificationBell() {
   };
 
   // Handle mark all as read
-  const handleMarkAllAsRead = () => {
-    markAllAsRead();
+  const handleMarkAllAsRead = async () => {
+    try {
+      const data = await markAllNotificationsAsRead();
+      if (data.updated > 0) {
+        toast.success('All notifications marked as read', {
+          description: `${data.updated} notification${data.updated > 1 ? 's' : ''} updated`,
+        });
+      }
+      // Refetch notifications
+      await fetchNotifications();
+    } catch (error: any) {
+      console.error('Mark all as read error:', error);
+      toast.error('Failed to mark all notifications as read');
+    }
   };
 
   // Handle view all click - navigate based on user role (Requirement 13.1)

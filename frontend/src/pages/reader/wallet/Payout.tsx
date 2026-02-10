@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,8 +6,9 @@ import * as z from 'zod';
 import { DollarSign, Wallet, ArrowLeft, Loader2 } from 'lucide-react';
 import { useNavigate,  useParams } from 'react-router-dom';
 
-import { useReaderStats } from '@/hooks/useReaders';
-import { useRequestPayout } from '@/hooks/usePayouts';
+import { readersApi, ReaderStats } from '@/lib/api/readers';
+import { requestPayout } from '@/lib/api/payouts';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -47,8 +48,26 @@ type PayoutFormData = z.infer<typeof payoutSchema>;
 export function RequestPayoutPage() {
   const { t, i18n } = useTranslation('payouts');
   const navigate = useNavigate();
-  const { stats, isLoadingStats: statsLoading } = useReaderStats();
-  const { mutate: requestPayout, isPending } = useRequestPayout();
+
+  const [stats, setStats] = useState<ReaderStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [isPending, setIsPending] = useState(false);
+
+  // Fetch stats
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setStatsLoading(true);
+        const data = await readersApi.getStats();
+        setStats(data);
+      } catch (err) {
+        console.error('Stats error:', err);
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
 
   const [selectedMethod, setSelectedMethod] = useState<string>('');
   const [isBackLoading, setIsBackLoading] = useState(false);
@@ -76,17 +95,23 @@ export function RequestPayoutPage() {
     if (!isValid) return;
 
     const data = getValues();
-    requestPayout(
-      {
+
+    try {
+      setIsPending(true);
+      await requestPayout({
         amount: data.amount,
         paymentMethod: data.paymentMethod,
         paymentDetails: data.paymentDetails,
-        notes: data.notes },
-      {
-        onSuccess: () => {
-          navigate(`/reader/wallet`);
-        } },
-    );
+        notes: data.notes
+      });
+      toast.success('Payout request submitted successfully');
+      navigate(`/reader/wallet`);
+    } catch (error: any) {
+      console.error('Request payout error:', error);
+      toast.error(error.response?.data?.message || 'Failed to submit payout request');
+    } finally {
+      setIsPending(false);
+    }
   };
 
   const renderPaymentFields = () => {

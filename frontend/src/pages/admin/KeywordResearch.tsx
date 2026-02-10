@@ -1,9 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  useKeywordResearchForAdmin,
-  useRegenerateKeywordResearch,
-  useDownloadKeywordResearchPdf } from '@/hooks/useKeywordResearch';
+import { keywordsApi } from '@/lib/api/keywords';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -49,9 +47,28 @@ export function AdminKeywordResearchPage() {
   const [showRegenerateDialog, setShowRegenerateDialog] = useState(false);
   const [loadingResearchId, setLoadingResearchId] = useState<string | null>(null);
 
-  const { data: researches, isLoading } = useKeywordResearchForAdmin();
-  const regenerateMutation = useRegenerateKeywordResearch();
-  const downloadMutation = useDownloadKeywordResearchPdf();
+  const [researches, setResearches] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRegenerating, setIsRegenerating] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  // Fetch keyword research for admin
+  const fetchResearches = async () => {
+    try {
+      setIsLoading(true);
+      const data = await keywordsApi.getAllForAdmin();
+      setResearches(data);
+    } catch (error: any) {
+      console.error('Researches error:', error);
+      toast.error('Failed to load keyword researches');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchResearches();
+  }, []);
 
   const getStatusColor = (status: KeywordResearchStatus) => {
     switch (status) {
@@ -68,16 +85,40 @@ export function AdminKeywordResearchPage() {
     }
   };
 
-  const handleRegenerate = () => {
+  const handleRegenerate = async () => {
     if (selectedId) {
-      regenerateMutation.mutate(selectedId);
-      setShowRegenerateDialog(false);
-      setSelectedId(null);
+      try {
+        setIsRegenerating(true);
+        const data = await keywordsApi.regenerate(selectedId);
+        toast.success('Keyword research regeneration started');
+        setShowRegenerateDialog(false);
+        setSelectedId(null);
+        // Refetch researches list
+        await fetchResearches();
+      } catch (error: any) {
+        console.error('Regenerate error:', error);
+        const message = error.response?.data?.message || 'Failed to regenerate keyword research';
+        toast.error(message);
+      } finally {
+        setIsRegenerating(false);
+      }
     }
   };
 
-  const handleDownload = (id: string) => {
-    downloadMutation.mutate(id);
+  const handleDownload = async (id: string) => {
+    try {
+      setIsDownloading(true);
+      const data = await keywordsApi.downloadPdf(id);
+      // Open PDF in new tab
+      window.open(data.url, '_blank');
+      toast.success('PDF download started');
+    } catch (error: any) {
+      console.error('Download error:', error);
+      const message = error.response?.data?.message || 'Failed to download PDF';
+      toast.error(message);
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   // Filter researches based on status
@@ -296,8 +337,8 @@ export function AdminKeywordResearchPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleRegenerate} disabled={regenerateMutation.isPending}>
-              {regenerateMutation.isPending ? (
+            <AlertDialogAction onClick={handleRegenerate} disabled={isRegenerating}>
+              {isRegenerating ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Regenerating...

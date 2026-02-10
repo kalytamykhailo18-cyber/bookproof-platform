@@ -4,9 +4,9 @@ import { useNavigate,  useParams, useSearchParams, useLocation } from 'react-rou
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useCreateKeywordResearch } from '@/hooks/useKeywordResearch';
-import { useValidateCoupon } from '@/hooks/useCoupons';
-import { usePublicKeywordResearchPricing } from '@/hooks/useSettings';
+import { keywordsApi } from '@/lib/api/keywords';
+import { couponsApi } from '@/lib/api/coupons';
+import { settingsApi } from '@/lib/api/settings';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -30,7 +30,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, CheckCircle, AlertCircle, Save, Trash2 } from 'lucide-react';
 import { Language, TargetMarket } from '@/lib/api/keywords';
 import { campaignsApi } from '@/lib/api/campaigns';
-import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 const DRAFT_STORAGE_KEY = 'keyword-research-draft';
@@ -68,9 +67,7 @@ export function NewKeywordResearchPage() {
   const { t, i18n } = useTranslation('keyword-research.new');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const createMutation = useCreateKeywordResearch();
-  const validateCouponMutation = useValidateCoupon();
-  const { data: pricing } = usePublicKeywordResearchPricing();
+  const [pricing, setPricing] = useState<any>(null);
 
   // Check if coming from credit purchase (Section 9.1)
   const fromCreditPurchase = searchParams.get('fromCreditPurchase') === 'true';
@@ -78,6 +75,19 @@ export function NewKeywordResearchPage() {
   // Get dynamic price from settings, fallback to $49.99
   // If from credit purchase, it's already paid so price is 0
   const basePrice = fromCreditPurchase ? 0 : (pricing?.price ?? 49.99);
+
+  // Fetch pricing
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        const data = await settingsApi.getPublicKeywordResearchPricing();
+        setPricing(data);
+      } catch (err) {
+        console.error('Pricing error:', err);
+      }
+    };
+    fetchPricing();
+  }, []);
 
   const [couponValidation, setCouponValidation] = useState<{
     valid: boolean;
@@ -87,11 +97,28 @@ export function NewKeywordResearchPage() {
 
   const [hasDraft, setHasDraft] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [isValidating, setIsValidating] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   // Fetch user's campaigns/books
-  const { data: campaigns, isLoading: isLoadingCampaigns } = useQuery({
-    queryKey: ['campaigns'],
-    queryFn: () => campaignsApi.getCampaigns() });
+  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(true);
+
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        setIsLoadingCampaigns(true);
+        const data = await campaignsApi.getCampaigns();
+        setCampaigns(data);
+      } catch (error: any) {
+        console.error('Campaigns error:', error);
+        toast.error('Failed to load campaigns');
+      } finally {
+        setIsLoadingCampaigns(false);
+      }
+    };
+    fetchCampaigns();
+  }, []);
 
   // Load draft from localStorage on mount
   const loadDraft = useCallback(() => {
@@ -203,14 +230,24 @@ export function NewKeywordResearchPage() {
     const couponCode = form.getValues('couponCode');
     if (!couponCode) return;
 
-    const result = await validateCouponMutation.mutateAsync({
-      code: couponCode,
-      purchaseAmount: basePrice });
+    try {
+      setIsValidating(true);
+      const result = await couponsApi.validateCoupon({
+        code: couponCode,
+        purchaseAmount: basePrice });
 
-    setCouponValidation({
-      valid: result.valid,
-      discountAmount: result.discountAmount,
-      finalPrice: result.finalPrice });
+      setCouponValidation({
+        valid: result.valid,
+        discountAmount: result.discountAmount,
+        finalPrice: result.finalPrice });
+    } catch (error) {
+      setCouponValidation({
+        valid: false,
+        discountAmount: 0,
+        finalPrice: basePrice });
+    } finally {
+      setIsValidating(false);
+    }
   };
 
   const handleSubmit = async () => {
@@ -219,16 +256,27 @@ export function NewKeywordResearchPage() {
 
     const data = form.getValues();
     try {
+      setIsCreating(true);
       // If from credit purchase, use pending credit (Section 9.1)
       const submitData = fromCreditPurchase
         ? { ...data, usePendingCredit: true }
         : data;
-      const result = await createMutation.mutateAsync(submitData);
+      const result = await keywordsApi.create(submitData);
+      // Success handling
+      if (result.paid) {
+        toast.success('Keyword research order created! Processing will begin shortly.');
+      } else {
+        toast.success('Keyword research order created! Please complete payment to start processing.');
+      }
       // Clear draft on successful submission
       localStorage.removeItem(DRAFT_STORAGE_KEY);
       navigate(`/author/keyword-research/${result.id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to create keyword research:', error);
+      const message = error.response?.data?.message || 'Failed to create keyword research order';
+      toast.error(message);
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -605,9 +653,9 @@ export function NewKeywordResearchPage() {
                           type="button"
                           variant="outline"
                           onClick={handleValidateCoupon}
-                          disabled={!field.value || validateCouponMutation.isPending}
+                          disabled={!field.value || isValidating}
                         >
-                          {validateCouponMutation.isPending ? (
+                          {isValidating ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                           ) : (
                             t('fields.couponCode.apply')
@@ -677,9 +725,9 @@ export function NewKeywordResearchPage() {
                 className="w-full"
                 size="lg"
                 onClick={handleSubmit}
-                disabled={createMutation.isPending}
+                disabled={isCreating}
               >
-                {createMutation.isPending ? (
+                {isCreating ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {t('submitting')}

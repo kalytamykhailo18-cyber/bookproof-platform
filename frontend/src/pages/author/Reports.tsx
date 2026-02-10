@@ -12,18 +12,58 @@ import {
   AlertCircle,
   MessageSquare,
   Loader2 } from 'lucide-react';
-import { useReports, useDownloadReport, useRegenerateReport } from '@/hooks/useReports';
-import { useCampaigns } from '@/hooks/useCampaigns';
+import { getReports, regenerateCampaignReport, downloadCampaignReport, CampaignReport } from '@/lib/api/reports';
+import { campaignsApi } from '@/lib/api/campaigns';
 import { format } from 'date-fns';
 import { Progress } from '@/components/ui/progress';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
 export function ReportsPage() {
   const { t, i18n } = useTranslation('reports');
-  const { data: reports, isLoading: reportsLoading } = useReports();
-  const { campaigns, isLoadingCampaigns } = useCampaigns();
-  const { mutate: downloadReport, isPending: isDownloading } = useDownloadReport();
-  const { mutate: regenerateReport, isPending: isRegenerating } = useRegenerateReport();
+
+  // Campaigns state
+  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(true);
+
+  // Reports state
+  const [reports, setReports] = useState<CampaignReport[]>([]);
+  const [reportsLoading, setReportsLoading] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
+
+  // Fetch campaigns
+  const fetchCampaigns = async () => {
+    try {
+      setIsLoadingCampaigns(true);
+      const data = await campaignsApi.getCampaigns();
+      setCampaigns(data);
+    } catch (err) {
+      console.error('Campaigns error:', err);
+      toast.error('Failed to load campaigns');
+    } finally {
+      setIsLoadingCampaigns(false);
+    }
+  };
+
+  // Fetch reports
+  const fetchReports = async () => {
+    try {
+      setReportsLoading(true);
+      const data = await getReports();
+      setReports(data);
+    } catch (err) {
+      console.error('Reports error:', err);
+      toast.error('Failed to load reports');
+    } finally {
+      setReportsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCampaigns();
+    fetchReports();
+  }, []);
 
   const isLoading = reportsLoading || isLoadingCampaigns;
 
@@ -39,12 +79,33 @@ export function ReportsPage() {
     });
   }, [reports, campaigns]);
 
-  const handleDownload = (bookId: string) => {
-    downloadReport(bookId);
+  const handleDownload = async (bookId: string) => {
+    try {
+      setIsDownloading(true);
+      const data = await downloadCampaignReport(bookId);
+      // Open download URL in new tab
+      window.open(data.url, '_blank');
+    } catch (error: any) {
+      console.error('Download report error:', error);
+      toast.error(error.response?.data?.message || 'Failed to download report');
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
-  const handleRegenerate = (bookId: string) => {
-    regenerateReport(bookId);
+  const handleRegenerate = async (bookId: string) => {
+    try {
+      setIsRegenerating(true);
+      await regenerateCampaignReport(bookId);
+      toast.success('Report regenerated successfully');
+      // Refetch reports
+      await fetchReports();
+    } catch (error: any) {
+      console.error('Regenerate report error:', error);
+      toast.error(error.response?.data?.message || 'Failed to regenerate report');
+    } finally {
+      setIsRegenerating(false);
+    }
   };
 
   if (isLoading) {

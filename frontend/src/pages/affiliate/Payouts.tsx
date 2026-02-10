@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useAffiliateStats, usePayouts, useRequestPayout } from '@/hooks/useAffiliates';
+import { affiliatesApi } from '@/lib/api/affiliates';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -55,9 +56,34 @@ export function AffiliatePayoutsPage() {
   const { t, i18n } = useTranslation('affiliates.payouts');
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { data: stats, isLoading: statsLoading } = useAffiliateStats();
-  const { data: payouts, isLoading: payoutsLoading } = usePayouts();
-  const requestMutation = useRequestPayout();
+  const [stats, setStats] = useState<any>(null);
+  const [payouts, setPayouts] = useState<any[]>([]);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [payoutsLoading, setPayoutsLoading] = useState(true);
+  const [isRequesting, setIsRequesting] = useState(false);
+
+  // Fetch data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setStatsLoading(true);
+        setPayoutsLoading(true);
+        const [statsData, payoutsData] = await Promise.all([
+          affiliatesApi.getStats(),
+          affiliatesApi.getPayouts()
+        ]);
+        setStats(statsData);
+        setPayouts(payoutsData);
+      } catch (error: any) {
+        console.error('Payouts page error:', error);
+        toast.error('Failed to load payout data');
+      } finally {
+        setStatsLoading(false);
+        setPayoutsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const form = useForm<RequestPayoutFormData>({
     resolver: zodResolver(requestPayoutSchema),
@@ -72,9 +98,24 @@ export function AffiliatePayoutsPage() {
     if (!isValid) return;
 
     const data = form.getValues();
-    await requestMutation.mutateAsync(data);
-    setDialogOpen(false);
-    form.reset();
+    try {
+      setIsRequesting(true);
+      await affiliatesApi.requestPayout(data);
+      toast.success('Payout request submitted successfully');
+      setDialogOpen(false);
+      form.reset();
+      // Refetch data
+      const [statsData, payoutsData] = await Promise.all([
+        affiliatesApi.getStats(),
+        affiliatesApi.getPayouts()
+      ]);
+      setStats(statsData);
+      setPayouts(payoutsData);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to request payout');
+    } finally {
+      setIsRequesting(false);
+    }
   };
 
   const getPayoutStatusBadge = (status: PayoutRequestStatus) => {
@@ -223,9 +264,9 @@ export function AffiliatePayoutsPage() {
                   type="button"
                   className="w-full"
                   onClick={handleSubmit}
-                  disabled={requestMutation.isPending}
+                  disabled={isRequesting}
                 >
-                  {requestMutation.isPending ? (
+                  {isRequesting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       {t('request.form.submitting')}

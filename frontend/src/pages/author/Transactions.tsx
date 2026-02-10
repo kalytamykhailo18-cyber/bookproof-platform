@@ -1,14 +1,8 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { useDashboards } from '@/hooks/useDashboards';
-import { useStripePayments } from '@/hooks/useStripePayments';
-import {
-  useMyRefundRequests,
-  useRefundEligibility,
-  useCreateRefundRequest,
-  useCancelRefundRequest } from '@/hooks/useRefunds';
-import { RefundReason, RefundRequestStatus } from '@/lib/api/refunds';
+import { dashboardsApi, AuthorTransactionDto } from '@/lib/api/dashboards';
+import { refundsApi, RefundReason, RefundRequestStatus } from '@/lib/api/refunds';
 import { stripeApi } from '@/lib/api/stripe';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -85,12 +79,68 @@ const getRefundStatusBadge = (status: RefundRequestStatus) => {
 
 export function TransactionsPage() {
   const { t, i18n } = useTranslation('author.transactions');
-  const { useTransactionHistory } = useDashboards();
-  const { useTransactions } = useStripePayments();
 
-  const { data: history, isLoading: historyLoading } = useTransactionHistory();
-  const { data: stripeTransactions, isLoading: stripeLoading } = useTransactions();
-  const { data: myRefundRequests } = useMyRefundRequests();
+  // Transaction history state
+  const [history, setHistory] = useState<any>(null);
+  const [historyLoading, setHistoryLoading] = useState(true);
+
+  const [stripeTransactions, setStripeTransactions] = useState<any[]>([]);
+  const [isLoadingStripe, setIsLoadingStripe] = useState(true);
+
+  // Refund requests state
+  const [myRefundRequests, setMyRefundRequests] = useState<any[]>([]);
+  const [refundRequestsLoading, setRefundRequestsLoading] = useState(true);
+
+  // Fetch Stripe transactions
+  useEffect(() => {
+    const fetchStripeTransactions = async () => {
+      try {
+        setIsLoadingStripe(true);
+        const data = await stripeApi.payments.getTransactions();
+        setStripeTransactions(data);
+      } catch (err) {
+        console.error('Stripe transactions error:', err);
+      } finally {
+        setIsLoadingStripe(false);
+      }
+    };
+
+    fetchStripeTransactions();
+  }, []);
+
+  // Fetch transaction history
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        setHistoryLoading(true);
+        const data = await dashboardsApi.getTransactionHistory();
+        setHistory(data);
+      } catch (err) {
+        console.error('Transaction history error:', err);
+      } finally {
+        setHistoryLoading(false);
+      }
+    };
+
+    fetchHistory();
+  }, []);
+
+  // Fetch refund requests
+  useEffect(() => {
+    const fetchRefundRequests = async () => {
+      try {
+        setRefundRequestsLoading(true);
+        const data = await refundsApi.getMyRequests();
+        setMyRefundRequests(data);
+      } catch (err) {
+        console.error('Refund requests error:', err);
+      } finally {
+        setRefundRequestsLoading(false);
+      }
+    };
+
+    fetchRefundRequests();
+  }, []);
 
   const [filterType, setFilterType] = useState<'all' | 'purchase' | 'subscription' | 'usage'>(
     'all',
@@ -130,12 +180,33 @@ export function TransactionsPage() {
   const [selectedPurchaseId, setSelectedPurchaseId] = useState<string | null>(null);
   const [refundReason, setRefundReason] = useState<RefundReason>(RefundReason.OTHER);
   const [refundExplanation, setRefundExplanation] = useState('');
+  const [eligibility, setEligibility] = useState<any>(null);
+  const [eligibilityLoading, setEligibilityLoading] = useState(false);
+  const [isCreatingRefund, setIsCreatingRefund] = useState(false);
+  const [isCancelingRefund, setIsCancelingRefund] = useState(false);
 
-  const { data: eligibility, isLoading: eligibilityLoading } = useRefundEligibility(
-    refundDialogOpen ? selectedPurchaseId || undefined : undefined
-  );
-  const createRefund = useCreateRefundRequest();
-  const cancelRefund = useCancelRefundRequest();
+  // Fetch eligibility when dialog opens
+  useEffect(() => {
+    const fetchEligibility = async () => {
+      if (!refundDialogOpen || !selectedPurchaseId) {
+        setEligibility(null);
+        return;
+      }
+
+      try {
+        setEligibilityLoading(true);
+        const data = await refundsApi.checkEligibility(selectedPurchaseId);
+        setEligibility(data);
+      } catch (err) {
+        console.error('Eligibility error:', err);
+        toast.error('Failed to check refund eligibility');
+      } finally {
+        setEligibilityLoading(false);
+      }
+    };
+
+    fetchEligibility();
+  }, [refundDialogOpen, selectedPurchaseId]);
 
   const handleOpenRefundDialog = (purchaseId: string) => {
     setSelectedPurchaseId(purchaseId);
@@ -144,25 +215,45 @@ export function TransactionsPage() {
     setRefundDialogOpen(true);
   };
 
-  const handleSubmitRefund = () => {
+  const handleSubmitRefund = async () => {
     if (!selectedPurchaseId) return;
 
-    createRefund.mutate(
-      {
+    try {
+      setIsCreatingRefund(true);
+      await refundsApi.createRequest({
         creditPurchaseId: selectedPurchaseId,
         reason: refundReason,
-        explanation: refundExplanation || undefined },
-      {
-        onSuccess: () => {
-          setRefundDialogOpen(false);
-          setSelectedPurchaseId(null);
-        } },
-    );
+        explanation: refundExplanation || undefined
+      });
+      toast.success('Refund request submitted successfully');
+      setRefundDialogOpen(false);
+      setSelectedPurchaseId(null);
+      // Refetch refund requests
+      const data = await refundsApi.getMyRequests();
+      setMyRefundRequests(data);
+    } catch (error: any) {
+      console.error('Submit refund error:', error);
+      toast.error(error.response?.data?.message || 'Failed to submit refund request');
+    } finally {
+      setIsCreatingRefund(false);
+    }
   };
 
-  const handleCancelRefundRequest = (requestId: string) => {
-    if (confirm('Are you sure you want to cancel this refund request?')) {
-      cancelRefund.mutate(requestId);
+  const handleCancelRefundRequest = async (requestId: string) => {
+    if (!confirm('Are you sure you want to cancel this refund request?')) return;
+
+    try {
+      setIsCancelingRefund(true);
+      await refundsApi.cancelRequest(requestId);
+      toast.success('Refund request cancelled successfully');
+      // Refetch refund requests
+      const data = await refundsApi.getMyRequests();
+      setMyRefundRequests(data);
+    } catch (error: any) {
+      console.error('Cancel refund error:', error);
+      toast.error(error.response?.data?.message || 'Failed to cancel refund request');
+    } finally {
+      setIsCancelingRefund(false);
     }
   };
 
@@ -353,7 +444,7 @@ export function TransactionsPage() {
       .reduce((sum, tx) => sum + tx.amount, 0);
   }, [unifiedTransactions]);
 
-  if (historyLoading || stripeLoading) {
+  if (historyLoading || isLoadingStripe) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 items-center justify-center">
@@ -677,7 +768,7 @@ export function TransactionsPage() {
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => handleCancelRefundRequest(existingRefund.id)}
-                                    disabled={cancelRefund.isPending}
+                                    disabled={isCancelingRefund}
                                   >
                                     <XCircle className="h-4 w-4 text-red-500" />
                                   </Button>
@@ -804,7 +895,7 @@ export function TransactionsPage() {
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => handleCancelRefundRequest(existingRefund.id)}
-                                    disabled={cancelRefund.isPending}
+                                    disabled={isCancelingRefund}
                                   >
                                     <XCircle className="h-4 w-4 text-red-500" />
                                   </Button>
@@ -885,9 +976,9 @@ export function TransactionsPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleCancelRefundRequest(request.id)}
-                          disabled={cancelRefund.isPending}
+                          disabled={isCancelingRefund}
                         >
-                          {cancelRefund.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Cancel'}
+                          {isCancelingRefund ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Cancel'}
                         </Button>
                       )}
                       {request.adminNotes && (
@@ -1015,11 +1106,11 @@ export function TransactionsPage() {
               onClick={handleSubmitRefund}
               disabled={
                 !eligibility?.isEligible ||
-                createRefund.isPending ||
+                isCreatingRefund ||
                 eligibilityLoading
               }
             >
-              {createRefund.isPending ? (
+              {isCreatingRefund ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Submitting...

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useCampaign, useCampaigns } from '@/hooks/useCampaigns';
+import { campaignsApi } from '@/lib/api/campaigns';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -84,16 +86,38 @@ type Step = (typeof STEPS)[number];
 
 export function EditCampaignPage() {
   const navigate = useNavigate();
+  const params = useParams();
   const campaignId = params.id as string;
   const { t, i18n } = useTranslation('author.campaigns.edit');
-  const tNew = useTranslations('author.campaigns.new');
+  const { t: tNew } = useTranslation('author.campaigns.new');
+  const { startLoading, stopLoading } = useLoading();
 
-  const { campaign, isLoading: isLoadingCampaign } = useCampaign(campaignId);
-  const { updateCampaign, isUpdating } = useCampaigns();
+  const [campaign, setCampaign] = useState<any>(null);
+  const [isLoadingCampaign, setIsLoadingCampaign] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [currentStep, setCurrentStep] = useState<Step>('basic');
   const [isBackLoading, setIsBackLoading] = useState(false);
   const [isDashboardLoading, setIsDashboardLoading] = useState(false);
   const [isCampaignLoading, setIsCampaignLoading] = useState(false);
+
+  // Fetch campaign
+  useEffect(() => {
+    const fetchCampaign = async () => {
+      try {
+        setIsLoadingCampaign(true);
+        const data = await campaignsApi.getCampaign(campaignId);
+        setCampaign(data);
+      } catch (error: any) {
+        console.error('Campaign error:', error);
+        toast.error('Failed to load campaign');
+      } finally {
+        setIsLoadingCampaign(false);
+      }
+    };
+    if (campaignId) {
+      fetchCampaign();
+    }
+  }, [campaignId]);
 
   const {
     register,
@@ -166,13 +190,20 @@ export function EditCampaignPage() {
       seriesNumber: data.seriesNumber || undefined,
       readingInstructions: data.readingInstructions || undefined };
 
-    updateCampaign(
-      { id: campaignId, data: cleanData },
-      {
-        onSuccess: () => {
-          navigate(`/author/campaigns/${campaignId}`);
-        } },
-    );
+    try {
+      setIsUpdating(true);
+      startLoading('Updating campaign...');
+      await campaignsApi.updateCampaign(campaignId, cleanData);
+      stopLoading();
+      toast.success('Campaign updated successfully!');
+      navigate(`/author/campaigns/${campaignId}`);
+    } catch (error: any) {
+      stopLoading();
+      const message = error.response?.data?.message || 'Failed to update campaign';
+      toast.error(message);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   if (isLoadingCampaign) {

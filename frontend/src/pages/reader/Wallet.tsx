@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import {
@@ -17,9 +17,9 @@ import {
   Loader2 } from 'lucide-react';
 import { useNavigate,  useParams } from 'react-router-dom';
 
-import { useReaderStats, useReaderProfile } from '@/hooks/useReaders';
-import { useMyPayouts, useWalletTransactions } from '@/hooks/usePayouts';
-import { WalletTransactionType } from '@/lib/api/payouts';
+import { readersApi, ReaderProfile, ReaderStats } from '@/lib/api/readers';
+import { getMyPayouts, getWalletTransactions, WalletTransactionType, PayoutResponse, WalletTransaction } from '@/lib/api/payouts';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -59,12 +59,82 @@ const transactionColors: Record<WalletTransactionType, string> = {
 export function WalletPage() {
   const { t, i18n } = useTranslation('payouts');
   const navigate = useNavigate();
-  const { stats, isLoadingStats: statsLoading } = useReaderStats();
-  const { profile, isLoadingProfile } = useReaderProfile();
-  const { data: payouts, isLoading: payoutsLoading } = useMyPayouts();
-  const { data: transactions, isLoading: transactionsLoading } = useWalletTransactions();
 
+  // Payout and transaction state
+  const [payouts, setPayouts] = useState<PayoutResponse[]>([]);
+  const [payoutsLoading, setPayoutsLoading] = useState(true);
+  const [transactions, setTransactions] = useState<WalletTransaction[]>([]);
+  const [transactionsLoading, setTransactionsLoading] = useState(true);
+
+  const [profile, setProfile] = useState<ReaderProfile | null>(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [stats, setStats] = useState<ReaderStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
   const [isPayoutLoading, setIsPayoutLoading] = useState(false);
+
+  // Fetch payouts and transactions
+  useEffect(() => {
+    const fetchPayouts = async () => {
+      try {
+        setPayoutsLoading(true);
+        const data = await getMyPayouts();
+        setPayouts(data);
+      } catch (err) {
+        console.error('Payouts error:', err);
+        toast.error('Failed to load payouts');
+      } finally {
+        setPayoutsLoading(false);
+      }
+    };
+
+    const fetchTransactions = async () => {
+      try {
+        setTransactionsLoading(true);
+        const data = await getWalletTransactions();
+        setTransactions(data);
+      } catch (err) {
+        console.error('Transactions error:', err);
+        toast.error('Failed to load transactions');
+      } finally {
+        setTransactionsLoading(false);
+      }
+    };
+
+    fetchPayouts();
+    fetchTransactions();
+  }, []);
+
+  // Fetch profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setIsLoadingProfile(true);
+        const data = await readersApi.getProfile();
+        setProfile(data);
+      } catch (err) {
+        console.error('Profile error:', err);
+      } finally {
+        setIsLoadingProfile(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  // Fetch stats
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setStatsLoading(true);
+        const data = await readersApi.getStats();
+        setStats(data);
+      } catch (err) {
+        console.error('Stats error:', err);
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
 
   const availableBalance = stats?.walletBalance || 0;
   const totalEarned = stats?.totalEarned || 0;

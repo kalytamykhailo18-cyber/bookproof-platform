@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNotifications, useMarkAsRead, useMarkAllAsRead } from '@/hooks/useNotifications';
+import { getNotifications, markNotificationsAsRead, markAllNotificationsAsRead } from '@/lib/api/notifications';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -16,25 +17,62 @@ export function NotificationsPage() {
   const [typeFilter, setTypeFilter] = useState<NotificationType | 'ALL'>('ALL');
   const [isSettingsLoading, setIsSettingsLoading] = useState(false);
 
-  // Get notifications
-  const { data: notificationData, isLoading } = useNotifications({
-    page: 1,
-    limit: 50,
-    unreadOnly: filter === 'unread',
-    type: typeFilter !== 'ALL' ? typeFilter : undefined });
+  const [notificationData, setNotificationData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMarkingAll, setIsMarkingAll] = useState(false);
 
-  const { mutate: markAsRead } = useMarkAsRead();
-  const { mutate: markAllAsRead, isPending: isMarkingAll } = useMarkAllAsRead();
+  // Fetch notifications
+  const fetchNotifications = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getNotifications({
+        page: 1,
+        limit: 50,
+        unreadOnly: filter === 'unread',
+        type: typeFilter !== 'ALL' ? typeFilter : undefined
+      });
+      setNotificationData(data);
+    } catch (error: any) {
+      console.error('Notifications error:', error);
+      toast.error('Failed to load notifications');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const handleNotificationClick = (notificationId: string, actionUrl?: string) => {
-    markAsRead([notificationId]);
+  useEffect(() => {
+    fetchNotifications();
+  }, [filter, typeFilter]);
+
+  const handleNotificationClick = async (notificationId: string, actionUrl?: string) => {
+    try {
+      await markNotificationsAsRead([notificationId]);
+      await fetchNotifications();
+    } catch (error: any) {
+      console.error('Mark as read error:', error);
+      toast.error('Failed to mark notifications as read');
+    }
     if (actionUrl) {
       navigate(actionUrl);
     }
   };
 
-  const handleMarkAllAsRead = () => {
-    markAllAsRead();
+  const handleMarkAllAsRead = async () => {
+    try {
+      setIsMarkingAll(true);
+      const data = await markAllNotificationsAsRead();
+      if (data.updated > 0) {
+        toast.success('All notifications marked as read', {
+          description: `${data.updated} notification${data.updated > 1 ? 's' : ''} updated`,
+        });
+      }
+      await fetchNotifications();
+    } catch (error: any) {
+      console.error('Mark all as read error:', error);
+      toast.error('Failed to mark all notifications as read');
+    } finally {
+      setIsMarkingAll(false);
+    }
   };
 
   return (

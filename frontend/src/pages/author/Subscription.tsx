@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useStripePayments } from '@/hooks/useStripePayments';
+import { stripeApi } from '@/lib/api/stripe';
+import { toast } from 'sonner';
 import {
   Card,
   CardContent,
@@ -31,14 +32,52 @@ import {
   Loader2 } from 'lucide-react';
 
 export function SubscriptionPage() {
-  const _t = useTranslations('subscription');
+  const { t: _t } = useTranslation('subscription');
   void _t; // Will use later for translations
-  const { useMySubscription, createSubscriptionCheckout, cancelSubscription } = useStripePayments();
-  const { data: subscription, isLoading } = useMySubscription();
+
+  const [subscription, setSubscription] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCreatingCheckout, setIsCreatingCheckout] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
   const [cancelFeedback, setCancelFeedback] = useState('');
+
+  // Fetch subscription
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      try {
+        setIsLoading(true);
+        const data = await stripeApi.subscriptions.getMySubscription();
+        setSubscription(data);
+      } catch (error: any) {
+        // Return null for 404 (no subscription)
+        if (error.response?.status === 404) {
+          setSubscription(null);
+        } else {
+          console.error('Subscription error:', error);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSubscription();
+  }, []);
+
+  const refetchSubscription = async () => {
+    try {
+      const data = await stripeApi.subscriptions.getMySubscription();
+      setSubscription(data);
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        setSubscription(null);
+      } else {
+        console.error('Subscription refetch error:', error);
+      }
+    }
+  };
 
   // Example subscription plans - these would typically come from an API
   const plans = [
@@ -84,32 +123,52 @@ export function SubscriptionPage() {
       popular: false },
   ];
 
-  const handleSubscribe = (stripePriceId: string) => {
+  const handleSubscribe = async (stripePriceId: string) => {
     const successUrl = `${window.location.origin}/author/subscription/success`;
     const cancelUrl = `${window.location.origin}/author/subscription`;
 
-    createSubscriptionCheckout.mutate({
-      stripePriceId,
-      successUrl,
-      cancelUrl });
+    try {
+      setIsCreatingCheckout(true);
+      const response = await stripeApi.subscriptions.createCheckout({
+        stripePriceId,
+        successUrl,
+        cancelUrl,
+      });
+
+      // Redirect to Stripe checkout
+      if (response.checkoutUrl) {
+        window.location.href = response.checkoutUrl;
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to create subscription checkout');
+    } finally {
+      setIsCreatingCheckout(false);
+    }
   };
 
-  const handleCancelSubscription = () => {
+  const handleCancelSubscription = async () => {
     if (!subscription) return;
 
-    cancelSubscription.mutate(
-      {
-        subscriptionId: subscription.subscription.id,
-        data: {
+    try {
+      setIsCancelling(true);
+      const response = await stripeApi.subscriptions.cancelSubscription(
+        subscription.subscription.id,
+        {
           cancelImmediately: false,
-          cancellationReason: cancelReason || cancelFeedback || undefined } },
-      {
-        onSuccess: () => {
-          setCancelDialogOpen(false);
-          setCancelReason('');
-          setCancelFeedback('');
-        } },
-    );
+          cancellationReason: cancelReason || cancelFeedback || undefined,
+        }
+      );
+
+      toast.success(response.message);
+      await refetchSubscription();
+      setCancelDialogOpen(false);
+      setCancelReason('');
+      setCancelFeedback('');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to cancel subscription');
+    } finally {
+      setIsCancelling(false);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -264,9 +323,9 @@ export function SubscriptionPage() {
                     type="button"
                     variant="destructive"
                     onClick={handleCancelSubscription}
-                    disabled={!cancelReason || cancelSubscription.isPending}
+                    disabled={!cancelReason || isCancelling}
                   >
-                    {cancelSubscription.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Confirm Cancellation'}
+                    {isCancelling ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Confirm Cancellation'}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -346,10 +405,10 @@ export function SubscriptionPage() {
                     className="w-full"
                     variant={plan.popular ? 'default' : 'outline'}
                     onClick={() => handleSubscribe(plan.id)}
-                    disabled={createSubscriptionCheckout.isPending}
+                    disabled={isCreatingCheckout}
                   >
                     <CreditCard className="mr-2 h-4 w-4" />
-                    {createSubscriptionCheckout.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Subscribe Now'}
+                    {isCreatingCheckout ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Subscribe Now'}
                   </Button>
                 </CardFooter>
               </Card>

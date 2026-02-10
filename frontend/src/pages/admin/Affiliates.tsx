@@ -1,15 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {
-  useAffiliateByIdForAdmin,
-  useCommissionsForAdmin,
-  useApproveAffiliate,
-  useToggleAffiliateActive,
-  useUpdateCommissionRate } from '@/hooks/useAffiliates';
+import { affiliatesApi } from '@/lib/api/affiliates';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -89,11 +85,52 @@ export function AdminAffiliateDetailsPage() {
   const [commissionRateDialogOpen, setCommissionRateDialogOpen] = useState(false);
   const [isBackLoading, setIsBackLoading] = useState(false);
 
-  const { data: affiliate, isLoading } = useAffiliateByIdForAdmin(id);
-  const { data: commissions, isLoading: commissionsLoading } = useCommissionsForAdmin(id);
-  const approveMutation = useApproveAffiliate();
-  const toggleActiveMutation = useToggleAffiliateActive();
-  const updateCommissionRateMutation = useUpdateCommissionRate();
+  const [affiliate, setAffiliate] = useState<any>(null);
+  const [commissions, setCommissions] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [commissionsLoading, setCommissionsLoading] = useState(true);
+  const [isApproving, setIsApproving] = useState(false);
+  const [isTogglingActive, setIsTogglingActive] = useState(false);
+  const [isUpdatingRate, setIsUpdatingRate] = useState(false);
+
+  // Fetch data
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setCommissionsLoading(true);
+        const [affiliateData, commissionsData] = await Promise.all([
+          affiliatesApi.getAffiliateByIdForAdmin(id),
+          affiliatesApi.getCommissionsForAdmin(id)
+        ]);
+        setAffiliate(affiliateData);
+        setCommissions(commissionsData);
+      } catch (error: any) {
+        console.error('Affiliate details error:', error);
+        toast.error('Failed to load affiliate details');
+      } finally {
+        setIsLoading(false);
+        setCommissionsLoading(false);
+      }
+    };
+    fetchData();
+  }, [id]);
+
+  const refetchData = async () => {
+    if (!id) return;
+    try {
+      const [affiliateData, commissionsData] = await Promise.all([
+        affiliatesApi.getAffiliateByIdForAdmin(id),
+        affiliatesApi.getCommissionsForAdmin(id)
+      ]);
+      setAffiliate(affiliateData);
+      setCommissions(commissionsData);
+    } catch (error: any) {
+      console.error('Refetch error:', error);
+    }
+  };
 
   const approveForm = useForm<ApproveFormData>({
     resolver: zodResolver(approveSchema),
@@ -117,8 +154,17 @@ export function AdminAffiliateDetailsPage() {
     if (!isValid) return;
 
     const data = approveForm.getValues();
-    await approveMutation.mutateAsync({ id, data });
-    setApproveDialogOpen(false);
+    try {
+      setIsApproving(true);
+      await affiliatesApi.approveAffiliate(id, data);
+      toast.success('Affiliate approved successfully');
+      setApproveDialogOpen(false);
+      await refetchData();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to approve affiliate');
+    } finally {
+      setIsApproving(false);
+    }
   };
 
   const handleReject = async () => {
@@ -126,12 +172,30 @@ export function AdminAffiliateDetailsPage() {
     if (!isValid) return;
 
     const data = rejectForm.getValues();
-    await approveMutation.mutateAsync({ id, data });
-    setRejectDialogOpen(false);
+    try {
+      setIsApproving(true);
+      await affiliatesApi.approveAffiliate(id, data);
+      toast.success('Affiliate rejected');
+      setRejectDialogOpen(false);
+      await refetchData();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to reject affiliate');
+    } finally {
+      setIsApproving(false);
+    }
   };
 
   const handleToggleActive = async () => {
-    await toggleActiveMutation.mutateAsync(id);
+    try {
+      setIsTogglingActive(true);
+      await affiliatesApi.toggleAffiliateActive(id);
+      toast.success(`Affiliate ${affiliate?.isActive ? 'disabled' : 'enabled'} successfully`);
+      await refetchData();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to toggle affiliate status');
+    } finally {
+      setIsTogglingActive(false);
+    }
   };
 
   const handleUpdateCommissionRate = async () => {
@@ -139,8 +203,17 @@ export function AdminAffiliateDetailsPage() {
     if (!isValid) return;
 
     const data = commissionRateForm.getValues();
-    await updateCommissionRateMutation.mutateAsync({ id, commissionRate: data.commissionRate });
-    setCommissionRateDialogOpen(false);
+    try {
+      setIsUpdatingRate(true);
+      await affiliatesApi.updateCommissionRate(id, data.commissionRate);
+      toast.success('Commission rate updated successfully');
+      setCommissionRateDialogOpen(false);
+      await refetchData();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to update commission rate');
+    } finally {
+      setIsUpdatingRate(false);
+    }
   };
 
   const getCommissionStatusBadge = (status: CommissionStatus) => {
@@ -259,9 +332,9 @@ export function AdminAffiliateDetailsPage() {
                         variant="destructive"
                         className="w-full"
                         onClick={handleReject}
-                        disabled={approveMutation.isPending}
+                        disabled={isApproving}
                       >
-                        {approveMutation.isPending ? (
+                        {isApproving ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             {t('rejectDialog.submitting')}
@@ -309,9 +382,9 @@ export function AdminAffiliateDetailsPage() {
                         type="button"
                         className="w-full"
                         onClick={handleApprove}
-                        disabled={approveMutation.isPending}
+                        disabled={isApproving}
                       >
-                        {approveMutation.isPending ? (
+                        {isApproving ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             {t('approveDialog.submitting')}
@@ -334,9 +407,9 @@ export function AdminAffiliateDetailsPage() {
               <Button
                 variant={affiliate.isActive ? 'outline' : 'default'}
                 onClick={handleToggleActive}
-                disabled={toggleActiveMutation.isPending}
+                disabled={isTogglingActive}
               >
-                {toggleActiveMutation.isPending ? (
+                {isTogglingActive ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   <Power className="mr-2 h-4 w-4" />
@@ -379,9 +452,9 @@ export function AdminAffiliateDetailsPage() {
                         type="button"
                         className="w-full"
                         onClick={handleUpdateCommissionRate}
-                        disabled={updateCommissionRateMutation.isPending}
+                        disabled={isUpdatingRate}
                       >
-                        {updateCommissionRateMutation.isPending ? (
+                        {isUpdatingRate ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             {t('commissionRateDialog.submitting')}

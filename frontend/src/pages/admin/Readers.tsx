@@ -1,13 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate,  useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAdminReaders } from '@/hooks/useAdminReaders';
-import {
-  useBanUser,
-  useUnbanUser,
-  useResetUserPassword,
-  useUpdateEmailVerification,
-  useSendUserEmail } from '@/hooks/useAdminUsers';
+import { adminReadersApi } from '@/lib/api/admin-readers';
+import { adminUsersApi } from '@/lib/api/admin-users';
+import { toast } from 'sonner';
 import { ContentPreference } from '@/lib/api/readers';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -74,27 +70,69 @@ export function AdminReaderDetailPage() {
   const readerId = params.id as string;
   const initialTab = searchParams.get('tab') || 'overview';
 
-  const {
-    useReaderDetails,
-    useReaderReviewHistory,
-    suspendReader,
-    unsuspendReader,
-    adjustWallet,
-    flagReader,
-    unflagReader,
-    addAdminNote,
-    deleteAdminNote,
-    verifyAmazonProfile } = useAdminReaders();
+  // Data state
+  const [reader, setReader] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [reviewHistory, setReviewHistory] = useState<any[]>([]);
 
-  // User management mutations (Section 5.2)
-  const banUser = useBanUser();
-  const unbanUser = useUnbanUser();
-  const resetPassword = useResetUserPassword();
-  const updateEmailVerification = useUpdateEmailVerification();
-  const sendUserEmail = useSendUserEmail();
+  // Mutation loading states
+  const [isSuspending, setIsSuspending] = useState(false);
+  const [isUnsuspending, setIsUnsuspending] = useState(false);
+  const [isAdjustingWallet, setIsAdjustingWallet] = useState(false);
+  const [isFlagging, setIsFlagging] = useState(false);
+  const [isUnflagging, setIsUnflagging] = useState(false);
+  const [isAddingNote, setIsAddingNote] = useState(false);
+  const [isDeletingNote, setIsDeletingNote] = useState(false);
+  const [isVerifyingAmazon, setIsVerifyingAmazon] = useState(false);
 
-  const { data: reader, isLoading } = useReaderDetails(readerId);
-  const { data: reviewHistory } = useReaderReviewHistory(readerId, 20);
+  // User management loading states (Section 5.2)
+  const [isBanning, setIsBanning] = useState(false);
+  const [isUnbanning, setIsUnbanning] = useState(false);
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const [isUpdatingEmailVerification, setIsUpdatingEmailVerification] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+
+  // Fetch reader details and review history
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!readerId) return;
+
+      try {
+        setIsLoading(true);
+
+        // Fetch reader details and review history in parallel
+        const [readerData, reviewData] = await Promise.all([
+          adminReadersApi.getReaderDetails(readerId),
+          adminReadersApi.getReaderReviewHistory(readerId, 20)
+        ]);
+
+        setReader(readerData);
+        setReviewHistory(reviewData);
+      } catch (err) {
+        console.error('Reader data error:', err);
+        toast.error('Failed to load reader details');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [readerId]);
+
+  // Refetch reader data
+  const refetchReaderData = async () => {
+    if (!readerId) return;
+    try {
+      const [readerData, reviewData] = await Promise.all([
+        adminReadersApi.getReaderDetails(readerId),
+        adminReadersApi.getReaderReviewHistory(readerId, 20)
+      ]);
+      setReader(readerData);
+      setReviewHistory(reviewData);
+    } catch (error: any) {
+      console.error('Refetch reader data error:', error);
+    }
+  };
 
   // Dialog states
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
@@ -125,183 +163,336 @@ export function AdminReaderDetailPage() {
   const [emailMessage, setEmailMessage] = useState('');
   const [isBackLoading, setIsBackLoading] = useState(false);
 
-  const handleSuspend = () => {
+  const handleSuspend = async () => {
     if (!actionReason.trim()) return;
-    suspendReader.mutate(
-      {
-        readerProfileId: readerId,
-        data: { reason: actionReason, notes: actionNotes || undefined } },
-      {
-        onSuccess: () => {
-          setSuspendDialogOpen(false);
-          setActionReason('');
-          setActionNotes('');
-        } },
-    );
-  };
 
-  const handleUnsuspend = () => {
-    if (!actionReason.trim()) return;
-    unsuspendReader.mutate(
-      {
-        readerProfileId: readerId,
-        data: { reason: actionReason, notes: actionNotes || undefined } },
-      {
-        onSuccess: () => {
-          setUnsuspendDialogOpen(false);
-          setActionReason('');
-          setActionNotes('');
-        } },
-    );
-  };
+    try {
+      setIsSuspending(true);
+      await adminReadersApi.suspendReader(readerId, {
+        reason: actionReason,
+        notes: actionNotes || undefined
+      });
+      toast.success('Reader suspended successfully');
 
-  const handleWalletAdjust = () => {
-    const amount = parseFloat(walletAmount);
-    if (isNaN(amount) || amount <= 0 || !actionReason.trim()) return;
-    // Amount is positive for addition, negative for deduction
-    const adjustedAmount = walletType === 'ADD' ? amount : -amount;
-    adjustWallet.mutate(
-      {
-        readerProfileId: readerId,
-        data: { amount: adjustedAmount, reason: actionReason, notes: actionNotes || undefined } },
-      {
-        onSuccess: () => {
-          setWalletDialogOpen(false);
-          setWalletAmount('');
-          setActionReason('');
-          setActionNotes('');
-        } },
-    );
-  };
+      // Refetch data
+      const [readerData, reviewData] = await Promise.all([
+        adminReadersApi.getReaderDetails(readerId),
+        adminReadersApi.getReaderReviewHistory(readerId, 20)
+      ]);
+      setReader(readerData);
+      setReviewHistory(reviewData);
 
-  const handleFlag = () => {
-    if (!actionReason.trim()) return;
-    flagReader.mutate(
-      {
-        readerProfileId: readerId,
-        data: { reason: actionReason, notes: actionNotes || undefined } },
-      {
-        onSuccess: () => {
-          setFlagDialogOpen(false);
-          setActionReason('');
-          setActionNotes('');
-        } },
-    );
-  };
-
-  const handleUnflag = () => {
-    if (!actionReason.trim()) return;
-    unflagReader.mutate(
-      {
-        readerProfileId: readerId,
-        data: { reason: actionReason, notes: actionNotes || undefined } },
-      {
-        onSuccess: () => {
-          setUnflagDialogOpen(false);
-          setActionReason('');
-          setActionNotes('');
-        } },
-    );
-  };
-
-  const handleAddNote = () => {
-    if (!noteContent.trim()) return;
-    addAdminNote.mutate(
-      { readerProfileId: readerId, data: { content: noteContent } },
-      {
-        onSuccess: () => {
-          setNoteDialogOpen(false);
-          setNoteContent('');
-        } },
-    );
-  };
-
-  const handleDeleteNote = (noteId: string) => {
-    if (confirm(t('notes.confirmDelete'))) {
-      deleteAdminNote.mutate({ readerProfileId: readerId, noteId });
+      // Reset form
+      setSuspendDialogOpen(false);
+      setActionReason('');
+      setActionNotes('');
+    } catch (error: any) {
+      console.error('Suspend reader error:', error);
+      toast.error(error.response?.data?.message || 'Failed to suspend reader');
+    } finally {
+      setIsSuspending(false);
     }
   };
 
-  const handleVerifyAmazon = (amazonProfileId: string) => {
-    if (confirm(t('amazon.confirmVerify'))) {
-      verifyAmazonProfile.mutate({ readerProfileId: readerId, amazonProfileId });
+  const handleUnsuspend = async () => {
+    if (!actionReason.trim()) return;
+
+    try {
+      setIsUnsuspending(true);
+      await adminReadersApi.unsuspendReader(readerId, {
+        reason: actionReason,
+        notes: actionNotes || undefined
+      });
+      toast.success('Reader unsuspended successfully');
+
+      // Refetch data
+      const [readerData, reviewData] = await Promise.all([
+        adminReadersApi.getReaderDetails(readerId),
+        adminReadersApi.getReaderReviewHistory(readerId, 20)
+      ]);
+      setReader(readerData);
+      setReviewHistory(reviewData);
+
+      // Reset form
+      setUnsuspendDialogOpen(false);
+      setActionReason('');
+      setActionNotes('');
+    } catch (error: any) {
+      console.error('Unsuspend reader error:', error);
+      toast.error(error.response?.data?.message || 'Failed to unsuspend reader');
+    } finally {
+      setIsUnsuspending(false);
+    }
+  };
+
+  const handleWalletAdjust = async () => {
+    const amount = parseFloat(walletAmount);
+    if (isNaN(amount) || amount <= 0 || !actionReason.trim()) return;
+
+    // Amount is positive for addition, negative for deduction
+    const adjustedAmount = walletType === 'ADD' ? amount : -amount;
+
+    try {
+      setIsAdjustingWallet(true);
+      await adminReadersApi.adjustWallet(readerId, {
+        amount: adjustedAmount,
+        reason: actionReason,
+        notes: actionNotes || undefined
+      });
+      toast.success('Wallet adjusted successfully');
+
+      // Refetch data
+      const [readerData, reviewData] = await Promise.all([
+        adminReadersApi.getReaderDetails(readerId),
+        adminReadersApi.getReaderReviewHistory(readerId, 20)
+      ]);
+      setReader(readerData);
+      setReviewHistory(reviewData);
+
+      // Reset form
+      setWalletDialogOpen(false);
+      setWalletAmount('');
+      setActionReason('');
+      setActionNotes('');
+    } catch (error: any) {
+      console.error('Adjust wallet error:', error);
+      toast.error(error.response?.data?.message || 'Failed to adjust wallet');
+    } finally {
+      setIsAdjustingWallet(false);
+    }
+  };
+
+  const handleFlag = async () => {
+    if (!actionReason.trim()) return;
+
+    try {
+      setIsFlagging(true);
+      await adminReadersApi.flagReader(readerId, {
+        reason: actionReason,
+        notes: actionNotes || undefined
+      });
+      toast.success('Reader flagged successfully');
+
+      // Refetch data
+      const [readerData, reviewData] = await Promise.all([
+        adminReadersApi.getReaderDetails(readerId),
+        adminReadersApi.getReaderReviewHistory(readerId, 20)
+      ]);
+      setReader(readerData);
+      setReviewHistory(reviewData);
+
+      // Reset form
+      setFlagDialogOpen(false);
+      setActionReason('');
+      setActionNotes('');
+    } catch (error: any) {
+      console.error('Flag reader error:', error);
+      toast.error(error.response?.data?.message || 'Failed to flag reader');
+    } finally {
+      setIsFlagging(false);
+    }
+  };
+
+  const handleUnflag = async () => {
+    if (!actionReason.trim()) return;
+
+    try {
+      setIsUnflagging(true);
+      await adminReadersApi.unflagReader(readerId, {
+        reason: actionReason,
+        notes: actionNotes || undefined
+      });
+      toast.success('Reader unflagged successfully');
+
+      // Refetch data
+      const [readerData, reviewData] = await Promise.all([
+        adminReadersApi.getReaderDetails(readerId),
+        adminReadersApi.getReaderReviewHistory(readerId, 20)
+      ]);
+      setReader(readerData);
+      setReviewHistory(reviewData);
+
+      // Reset form
+      setUnflagDialogOpen(false);
+      setActionReason('');
+      setActionNotes('');
+    } catch (error: any) {
+      console.error('Unflag reader error:', error);
+      toast.error(error.response?.data?.message || 'Failed to unflag reader');
+    } finally {
+      setIsUnflagging(false);
+    }
+  };
+
+  const handleAddNote = async () => {
+    if (!noteContent.trim()) return;
+
+    try {
+      setIsAddingNote(true);
+      await adminReadersApi.addAdminNote(readerId, { content: noteContent });
+      toast.success('Note added successfully');
+
+      // Refetch data
+      const [readerData, reviewData] = await Promise.all([
+        adminReadersApi.getReaderDetails(readerId),
+        adminReadersApi.getReaderReviewHistory(readerId, 20)
+      ]);
+      setReader(readerData);
+      setReviewHistory(reviewData);
+
+      // Reset form
+      setNoteDialogOpen(false);
+      setNoteContent('');
+    } catch (error: any) {
+      console.error('Add note error:', error);
+      toast.error(error.response?.data?.message || 'Failed to add note');
+    } finally {
+      setIsAddingNote(false);
+    }
+  };
+
+  const handleDeleteNote = async (noteId: string) => {
+    if (!confirm(t('notes.confirmDelete'))) return;
+
+    try {
+      setIsDeletingNote(true);
+      await adminReadersApi.deleteAdminNote(readerId, noteId);
+      toast.success('Note deleted successfully');
+
+      // Refetch data
+      const [readerData, reviewData] = await Promise.all([
+        adminReadersApi.getReaderDetails(readerId),
+        adminReadersApi.getReaderReviewHistory(readerId, 20)
+      ]);
+      setReader(readerData);
+      setReviewHistory(reviewData);
+    } catch (error: any) {
+      console.error('Delete note error:', error);
+      toast.error(error.response?.data?.message || 'Failed to delete note');
+    } finally {
+      setIsDeletingNote(false);
+    }
+  };
+
+  const handleVerifyAmazon = async (amazonProfileId: string) => {
+    if (!confirm(t('amazon.confirmVerify'))) return;
+
+    try {
+      setIsVerifyingAmazon(true);
+      await adminReadersApi.verifyAmazonProfile(readerId, amazonProfileId);
+      toast.success('Amazon profile verified successfully');
+
+      // Refetch data
+      const [readerData, reviewData] = await Promise.all([
+        adminReadersApi.getReaderDetails(readerId),
+        adminReadersApi.getReaderReviewHistory(readerId, 20)
+      ]);
+      setReader(readerData);
+      setReviewHistory(reviewData);
+    } catch (error: any) {
+      console.error('Verify Amazon error:', error);
+      toast.error(error.response?.data?.message || 'Failed to verify Amazon profile');
+    } finally {
+      setIsVerifyingAmazon(false);
     }
   };
 
   // User management handlers (Section 5.2)
-  const handleBanUser = () => {
+  const handleBanUser = async () => {
     if (!reader?.userId || !banReason.trim()) return;
-    banUser.mutate(
-      {
-        userId: reader.userId,
-        data: { reason: banReason, notes: banNotes || undefined } },
-      {
-        onSuccess: () => {
-          setBanDialogOpen(false);
-          setBanReason('');
-          setBanNotes('');
-        } },
-    );
+    try {
+      setIsBanning(true);
+      await adminUsersApi.banUser(reader.userId, {
+        reason: banReason,
+        notes: banNotes || undefined
+      });
+      toast.success('User has been permanently banned');
+      setBanDialogOpen(false);
+      setBanReason('');
+      setBanNotes('');
+      await refetchReaderData();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to ban user');
+    } finally {
+      setIsBanning(false);
+    }
   };
 
-  const handleUnbanUser = () => {
+  const handleUnbanUser = async () => {
     if (!reader?.userId || !actionReason.trim()) return;
-    unbanUser.mutate(
-      {
-        userId: reader.userId,
-        data: { reason: actionReason, notes: actionNotes || undefined } },
-      {
-        onSuccess: () => {
-          setUnbanDialogOpen(false);
-          setActionReason('');
-          setActionNotes('');
-        } },
-    );
+    try {
+      setIsUnbanning(true);
+      await adminUsersApi.unbanUser(reader.userId, {
+        reason: actionReason,
+        notes: actionNotes || undefined
+      });
+      toast.success('User has been unbanned');
+      setUnbanDialogOpen(false);
+      setActionReason('');
+      setActionNotes('');
+      await refetchReaderData();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to unban user');
+    } finally {
+      setIsUnbanning(false);
+    }
   };
 
-  const handleResetPassword = () => {
+  const handleResetPassword = async () => {
     if (!reader?.userId) return;
-    resetPassword.mutate(
-      {
-        userId: reader.userId,
-        data: { sendEmail: true, reason: actionReason || 'Admin initiated password reset' } },
-      {
-        onSuccess: () => {
-          setResetPasswordDialogOpen(false);
-          setActionReason('');
-        } },
-    );
+    try {
+      setIsResettingPassword(true);
+      const result = await adminUsersApi.resetUserPassword(reader.userId, {
+        sendEmail: true,
+        reason: actionReason || 'Admin initiated password reset'
+      });
+      toast.success(result.message);
+      setResetPasswordDialogOpen(false);
+      setActionReason('');
+      await refetchReaderData();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to reset password');
+    } finally {
+      setIsResettingPassword(false);
+    }
   };
 
-  const handleToggleEmailVerification = () => {
+  const handleToggleEmailVerification = async () => {
     if (!reader?.userId) return;
-    updateEmailVerification.mutate(
-      {
-        userId: reader.userId,
-        data: {
-          verified: !reader.emailVerified,
-          reason: actionReason || 'Admin manual verification' } },
-      {
-        onSuccess: () => {
-          setVerifyEmailDialogOpen(false);
-          setActionReason('');
-        } },
-    );
+    try {
+      setIsUpdatingEmailVerification(true);
+      const result = await adminUsersApi.updateEmailVerification(reader.userId, {
+        verified: !reader.emailVerified,
+        reason: actionReason || 'Admin manual verification'
+      });
+      toast.success(`Email ${result.emailVerified ? 'verified' : 'unverified'} successfully`);
+      setVerifyEmailDialogOpen(false);
+      setActionReason('');
+      await refetchReaderData();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to update email verification');
+    } finally {
+      setIsUpdatingEmailVerification(false);
+    }
   };
 
-  const handleSendEmail = () => {
+  const handleSendEmail = async () => {
     if (!reader?.userId || !emailSubject.trim() || !emailMessage.trim()) return;
-    sendUserEmail.mutate(
-      {
-        userId: reader.userId,
-        data: { subject: emailSubject, message: emailMessage } },
-      {
-        onSuccess: () => {
-          setSendEmailDialogOpen(false);
-          setEmailSubject('');
-          setEmailMessage('');
-        } },
-    );
+    try {
+      setIsSendingEmail(true);
+      const result = await adminUsersApi.sendEmailToUser(reader.userId, {
+        subject: emailSubject,
+        message: emailMessage
+      });
+      toast.success(result.message);
+      setSendEmailDialogOpen(false);
+      setEmailSubject('');
+      setEmailMessage('');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to send email');
+    } finally {
+      setIsSendingEmail(false);
+    }
   };
 
   const getStatusBadge = () => {
@@ -1216,9 +1407,9 @@ export function AdminReaderDetailPage() {
               type="button"
               variant="destructive"
               onClick={handleSuspend}
-              disabled={!actionReason.trim() || suspendReader.isPending}
+              disabled={!actionReason.trim() || isSuspending}
             >
-              {suspendReader.isPending ? t('dialogs.processing') : t('dialogs.suspend.confirm')}
+              {isSuspending ? t('dialogs.processing') : t('dialogs.suspend.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1258,9 +1449,9 @@ export function AdminReaderDetailPage() {
             <Button
               type="button"
               onClick={handleUnsuspend}
-              disabled={!actionReason.trim() || unsuspendReader.isPending}
+              disabled={!actionReason.trim() || isUnsuspending}
             >
-              {unsuspendReader.isPending ? t('dialogs.processing') : t('dialogs.unsuspend.confirm')}
+              {isUnsuspending ? t('dialogs.processing') : t('dialogs.unsuspend.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1331,10 +1522,10 @@ export function AdminReaderDetailPage() {
                 !walletAmount ||
                 parseFloat(walletAmount) <= 0 ||
                 !actionReason.trim() ||
-                adjustWallet.isPending
+                isAdjustingWallet
               }
             >
-              {adjustWallet.isPending ? t('dialogs.processing') : t('dialogs.wallet.confirm')}
+              {isAdjustingWallet ? t('dialogs.processing') : t('dialogs.wallet.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1375,9 +1566,9 @@ export function AdminReaderDetailPage() {
               type="button"
               variant="destructive"
               onClick={handleFlag}
-              disabled={!actionReason.trim() || flagReader.isPending}
+              disabled={!actionReason.trim() || isFlagging}
             >
-              {flagReader.isPending ? t('dialogs.processing') : t('dialogs.flag.confirm')}
+              {isFlagging ? t('dialogs.processing') : t('dialogs.flag.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1417,9 +1608,9 @@ export function AdminReaderDetailPage() {
             <Button
               type="button"
               onClick={handleUnflag}
-              disabled={!actionReason.trim() || unflagReader.isPending}
+              disabled={!actionReason.trim() || isUnflagging}
             >
-              {unflagReader.isPending ? t('dialogs.processing') : t('dialogs.unflag.confirm')}
+              {isUnflagging ? t('dialogs.processing') : t('dialogs.unflag.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1451,9 +1642,9 @@ export function AdminReaderDetailPage() {
             <Button
               type="button"
               onClick={handleAddNote}
-              disabled={!noteContent.trim() || addAdminNote.isPending}
+              disabled={!noteContent.trim() || isAddingNote}
             >
-              {addAdminNote.isPending ? t('dialogs.processing') : t('dialogs.note.confirm')}
+              {isAddingNote ? t('dialogs.processing') : t('dialogs.note.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1499,9 +1690,9 @@ export function AdminReaderDetailPage() {
               type="button"
               variant="destructive"
               onClick={handleBanUser}
-              disabled={!banReason.trim() || banUser.isPending}
+              disabled={!banReason.trim() || isBanning}
             >
-              {banUser.isPending ? 'Banning...' : 'Ban User'}
+              {isBanning ? 'Banning...' : 'Ban User'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1543,9 +1734,9 @@ export function AdminReaderDetailPage() {
             <Button
               type="button"
               onClick={handleUnbanUser}
-              disabled={!actionReason.trim() || unbanUser.isPending}
+              disabled={!actionReason.trim() || isUnbanning}
             >
-              {unbanUser.isPending ? 'Unbanning...' : 'Unban User'}
+              {isUnbanning ? 'Unbanning...' : 'Unban User'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1584,9 +1775,9 @@ export function AdminReaderDetailPage() {
             <Button
               type="button"
               onClick={handleResetPassword}
-              disabled={resetPassword.isPending}
+              disabled={isResettingPassword}
             >
-              {resetPassword.isPending ? 'Sending...' : 'Send Reset Email'}
+              {isResettingPassword ? 'Sending...' : 'Send Reset Email'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1636,9 +1827,9 @@ export function AdminReaderDetailPage() {
             <Button
               type="button"
               onClick={handleToggleEmailVerification}
-              disabled={updateEmailVerification.isPending}
+              disabled={isUpdatingEmailVerification}
             >
-              {updateEmailVerification.isPending
+              {isUpdatingEmailVerification
                 ? 'Updating...'
                 : reader?.emailVerified
                   ? 'Unverify Email'
@@ -1690,9 +1881,9 @@ export function AdminReaderDetailPage() {
             <Button
               type="button"
               onClick={handleSendEmail}
-              disabled={!emailSubject.trim() || !emailMessage.trim() || sendUserEmail.isPending}
+              disabled={!emailSubject.trim() || !emailMessage.trim() || isSendingEmail}
             >
-              {sendUserEmail.isPending ? 'Sending...' : 'Send Email'}
+              {isSendingEmail ? 'Sending...' : 'Send Email'}
             </Button>
           </DialogFooter>
         </DialogContent>

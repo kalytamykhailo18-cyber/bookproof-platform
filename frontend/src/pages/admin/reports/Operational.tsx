@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useOperationalReport, useExportOperationalCsv, useExportOperationalPdf } from '@/hooks/useAdminReports';
+import { adminReportsApi, OperationalReportDto } from '@/lib/api/admin-reports';
+import { toast } from 'sonner';
 import {
   Download,
   FileText,
@@ -21,24 +22,71 @@ export function AdminOperationalReportsPage() {
     startDate: format(startOfMonth(new Date()), 'yyyy-MM-dd'),
     endDate: format(endOfMonth(new Date()), 'yyyy-MM-dd') });
 
-  const { data: report, isLoading } = useOperationalReport(
-    dateRange.startDate,
-    dateRange.endDate,
-  );
+  // Data state
+  const [report, setReport] = useState<OperationalReportDto | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const exportCsvMutation = useExportOperationalCsv();
-  const exportPdfMutation = useExportOperationalPdf();
+  // Export loading states
+  const [isExportingCsv, setIsExportingCsv] = useState(false);
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
 
-  const handleExportCsv = () => {
-    exportCsvMutation.mutate({
-      startDate: dateRange.startDate,
-      endDate: dateRange.endDate });
+  // Fetch report when date range changes
+  useEffect(() => {
+    const fetchReport = async () => {
+      if (!dateRange.startDate || !dateRange.endDate) return;
+
+      try {
+        setIsLoading(true);
+        const data = await adminReportsApi.getOperationalReport(
+          dateRange.startDate,
+          dateRange.endDate
+        );
+        setReport(data);
+      } catch (err) {
+        console.error('Operational report error:', err);
+        toast.error('Failed to load operational report');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReport();
+  }, [dateRange.startDate, dateRange.endDate]);
+
+  const handleExportCsv = async () => {
+    try {
+      setIsExportingCsv(true);
+      const blob = await adminReportsApi.downloadOperationalReportCsv(
+        dateRange.startDate,
+        dateRange.endDate
+      );
+      const filename = `operational-report-${dateRange.startDate}-to-${dateRange.endDate}.csv`;
+      adminReportsApi.triggerFileDownload(blob, filename);
+      toast.success('Operational report exported successfully');
+    } catch (error: any) {
+      console.error('Export CSV error:', error);
+      toast.error(error.response?.data?.message || 'Failed to export CSV');
+    } finally {
+      setIsExportingCsv(false);
+    }
   };
 
-  const handleExportPdf = () => {
-    exportPdfMutation.mutate({
-      startDate: dateRange.startDate,
-      endDate: dateRange.endDate });
+  const handleExportPdf = async () => {
+    try {
+      setIsExportingPdf(true);
+      const blob = await adminReportsApi.downloadOperationalReportPdf(
+        dateRange.startDate,
+        dateRange.endDate
+      );
+      const filename = `operational-report-${dateRange.startDate}-to-${dateRange.endDate}.pdf`;
+      adminReportsApi.triggerFileDownload(blob, filename);
+      toast.success('Operational report exported successfully');
+    } catch (error: any) {
+      console.error('Export PDF error:', error);
+      toast.error(error.response?.data?.message || 'Failed to export PDF');
+    } finally {
+      setIsExportingPdf(false);
+    }
   };
 
   const handleDateRangeChange = (start: string, end: string) => {
@@ -60,19 +108,19 @@ export function AdminOperationalReportsPage() {
             type="button"
             variant="outline"
             onClick={handleExportCsv}
-            disabled={exportCsvMutation.isPending}
+            disabled={isExportingCsv}
           >
             <Download className="mr-2 h-4 w-4" />
-            {exportCsvMutation.isPending ? 'Exporting...' : 'Export CSV'}
+            {isExportingCsv ? 'Exporting...' : 'Export CSV'}
           </Button>
           <Button
             type="button"
             variant="outline"
             onClick={handleExportPdf}
-            disabled={exportPdfMutation.isPending}
+            disabled={isExportingPdf}
           >
             <FileDown className="mr-2 h-4 w-4" />
-            {exportPdfMutation.isPending ? 'Exporting...' : 'Export PDF'}
+            {isExportingPdf ? 'Exporting...' : 'Export PDF'}
           </Button>
         </div>
       </div>

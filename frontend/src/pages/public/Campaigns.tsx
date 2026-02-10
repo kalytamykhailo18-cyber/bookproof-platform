@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { publicCampaignsApi, PublicCampaign, BookFormat, CampaignStatus } from '@/lib/api/campaigns';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -26,8 +26,9 @@ import { Loader2, BookOpen, Headphones, Clock, FileText, ExternalLink, CheckCirc
  */
 export function PublicCampaignPage() {
   const navigate = useNavigate();
+  const params = useParams();
   const { t, i18n } = useTranslation('campaigns.public');
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthStore();
 
   const slug = params.slug as string;
   const lang = params.lang as string;

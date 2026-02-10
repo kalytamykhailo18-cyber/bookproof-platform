@@ -1,9 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useCampaign, useCampaigns } from '@/hooks/useCampaigns';
+import { toast } from 'sonner';
+import { campaignsApi } from '@/lib/api/campaigns';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { Language } from '@/lib/api/campaigns';
-import { useCredits } from '@/hooks/useCredits';
+import { creditsApi, CreditBalance } from '@/lib/api/credits';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -41,28 +43,57 @@ import {
 
 export function CampaignDetailPage() {
   const navigate = useNavigate();
+  const params = useParams();
   const campaignId = params.id as string;
   const { t, i18n } = useTranslation('author.campaigns.detail');
+  const { startLoading, stopLoading } = useLoading();
 
-  const { campaign, isLoading, refetch } = useCampaign(campaignId);
-  const {
-    uploadEbook,
-    uploadAudiobook,
-    uploadCover,
-    uploadSynopsis,
-    isUploadingEbook,
-    isUploadingAudiobook,
-    isUploadingCover,
-    isUploadingSynopsis,
-    activateCampaign,
-    isActivating,
-    pauseCampaign,
-    isPausing,
-    resumeCampaign,
-    isResuming,
-    deleteCampaign,
-    isDeleting } = useCampaigns();
-  const { creditBalance } = useCredits();
+  const [campaign, setCampaign] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUploadingEbook, setIsUploadingEbook] = useState(false);
+  const [isUploadingAudiobook, setIsUploadingAudiobook] = useState(false);
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [isUploadingSynopsis, setIsUploadingSynopsis] = useState(false);
+  const [isActivating, setIsActivating] = useState(false);
+  const [isPausing, setIsPausing] = useState(false);
+  const [isResuming, setIsResuming] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Fetch campaign
+  const refetch = async () => {
+    try {
+      setIsLoading(true);
+      const data = await campaignsApi.getCampaign(campaignId);
+      setCampaign(data);
+    } catch (error: any) {
+      console.error('Campaign error:', error);
+      toast.error('Failed to load campaign');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (campaignId) {
+      refetch();
+    }
+  }, [campaignId]);
+
+  // Credit balance state
+  const [creditBalance, setCreditBalance] = useState<CreditBalance | null>(null);
+
+  // Fetch credit balance
+  useEffect(() => {
+    const fetchCreditBalance = async () => {
+      try {
+        const data = await creditsApi.getCreditBalance();
+        setCreditBalance(data);
+      } catch (err) {
+        console.error('Credit balance error:', err);
+      }
+    };
+    fetchCreditBalance();
+  }, []);
 
   const [showActivateDialog, setShowActivateDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -76,66 +107,122 @@ export function CampaignDetailPage() {
   const coverInputRef = useRef<HTMLInputElement>(null);
   const synopsisInputRef = useRef<HTMLInputElement>(null);
 
-  const handleEbookUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEbookUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && campaign) {
-      uploadEbook(
-        { id: campaign.id, file },
-        {
-          onSuccess: () => refetch() },
-      );
+      try {
+        setIsUploadingEbook(true);
+        startLoading('Uploading ebook...');
+        await campaignsApi.uploadEbook(campaign.id, file);
+        stopLoading();
+        toast.success('Ebook uploaded successfully!');
+        await refetch();
+      } catch (error: any) {
+        stopLoading();
+        const message = error.response?.data?.message || 'Failed to upload ebook';
+        toast.error(message);
+      } finally {
+        setIsUploadingEbook(false);
+      }
     }
   };
 
-  const handleAudiobookUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAudiobookUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && campaign) {
-      uploadAudiobook(
-        { id: campaign.id, file },
-        {
-          onSuccess: () => refetch() },
-      );
+      try {
+        setIsUploadingAudiobook(true);
+        startLoading('Uploading audiobook...');
+        await campaignsApi.uploadAudiobook(campaign.id, file);
+        stopLoading();
+        toast.success('Audiobook uploaded successfully!');
+        await refetch();
+      } catch (error: any) {
+        stopLoading();
+        const message = error.response?.data?.message || 'Failed to upload audiobook';
+        toast.error(message);
+      } finally {
+        setIsUploadingAudiobook(false);
+      }
     }
   };
 
-  const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && campaign) {
-      uploadCover(
-        { id: campaign.id, file },
-        {
-          onSuccess: () => refetch() },
-      );
+      try {
+        setIsUploadingCover(true);
+        startLoading('Uploading cover image...');
+        await campaignsApi.uploadCover(campaign.id, file);
+        stopLoading();
+        toast.success('Cover image uploaded successfully!');
+        await refetch();
+      } catch (error: any) {
+        stopLoading();
+        const message = error.response?.data?.message || 'Failed to upload cover image';
+        toast.error(message);
+      } finally {
+        setIsUploadingCover(false);
+      }
     }
   };
 
-  const handleSynopsisUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSynopsisUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && campaign) {
-      uploadSynopsis(
-        { id: campaign.id, file },
-        {
-          onSuccess: () => refetch() },
-      );
+      try {
+        setIsUploadingSynopsis(true);
+        startLoading('Uploading synopsis...');
+        await campaignsApi.uploadSynopsis(campaign.id, file);
+        stopLoading();
+        toast.success('Synopsis uploaded successfully!');
+        await refetch();
+      } catch (error: any) {
+        stopLoading();
+        const message = error.response?.data?.message || 'Failed to upload synopsis';
+        toast.error(message);
+      } finally {
+        setIsUploadingSynopsis(false);
+      }
     }
   };
 
-  const handleActivate = () => {
+  const handleActivate = async () => {
     if (campaign && creditsToAllocate > 0) {
-      activateCampaign(
-        { id: campaign.id, data: { creditsToAllocate } },
-        {
-          onSuccess: () => {
-            setShowActivateDialog(false);
-            refetch();
-          } },
-      );
+      try {
+        setIsActivating(true);
+        startLoading('Activating campaign...');
+        await campaignsApi.activateCampaign(campaign.id, { creditsToAllocate });
+        stopLoading();
+        toast.success('Campaign activated successfully!');
+        setShowActivateDialog(false);
+        await refetch();
+      } catch (error: any) {
+        stopLoading();
+        const message = error.response?.data?.message || 'Failed to activate campaign';
+        toast.error(message);
+      } finally {
+        setIsActivating(false);
+      }
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (campaign) {
-      deleteCampaign(campaign.id);
+      try {
+        setIsDeleting(true);
+        startLoading('Deleting campaign...');
+        await campaignsApi.deleteCampaign(campaign.id);
+        stopLoading();
+        toast.success('Campaign deleted successfully!');
+        navigate('/author/campaigns');
+      } catch (error: any) {
+        stopLoading();
+        const message = error.response?.data?.message || 'Failed to delete campaign';
+        toast.error(message);
+      } finally {
+        setIsDeleting(false);
+      }
     }
   };
 
@@ -745,9 +832,21 @@ export function CampaignDetailPage() {
                   type="button"
                   variant="outline"
                   className="w-full"
-                  onClick={() => {
-                    pauseCampaign(campaign.id, {
-                      onSuccess: () => refetch() });
+                  onClick={async () => {
+                    try {
+                      setIsPausing(true);
+                      startLoading('Pausing campaign...');
+                      await campaignsApi.pauseCampaign(campaign.id);
+                      stopLoading();
+                      toast.success('Campaign paused successfully!');
+                      await refetch();
+                    } catch (error: any) {
+                      stopLoading();
+                      const message = error.response?.data?.message || 'Failed to pause campaign';
+                      toast.error(message);
+                    } finally {
+                      setIsPausing(false);
+                    }
                   }}
                   disabled={isPausing}
                 >
@@ -791,9 +890,21 @@ export function CampaignDetailPage() {
                 <Button
                   type="button"
                   className="w-full"
-                  onClick={() => {
-                    resumeCampaign(campaign.id, {
-                      onSuccess: () => refetch() });
+                  onClick={async () => {
+                    try {
+                      setIsResuming(true);
+                      startLoading('Resuming campaign...');
+                      await campaignsApi.resumeCampaign(campaign.id);
+                      stopLoading();
+                      toast.success('Campaign resumed successfully!');
+                      await refetch();
+                    } catch (error: any) {
+                      stopLoading();
+                      const message = error.response?.data?.message || 'Failed to resume campaign';
+                      toast.error(message);
+                    } finally {
+                      setIsResuming(false);
+                    }
                   }}
                   disabled={isResuming}
                 >

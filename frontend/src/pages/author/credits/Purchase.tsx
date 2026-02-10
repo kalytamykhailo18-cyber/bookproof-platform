@@ -1,12 +1,11 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { useCredits } from '@/hooks/useCredits';
-import { useStripePayments } from '@/hooks/useStripePayments';
-import { usePublicKeywordResearchPricing } from '@/hooks/useSettings';
-import { useValidateCoupon } from '@/hooks/useCoupons';
+import { creditsApi, PackageTier as PackageTierType } from '@/lib/api/credits';
+import { useLoading } from '@/components/providers/LoadingProvider';
+import { settingsApi } from '@/lib/api/settings';
 import { PackageTier } from '@/lib/api/credits';
-import { CouponValidationResponseDto } from '@/lib/api/coupons';
+import { CouponValidationResponseDto, couponsApi } from '@/lib/api/coupons';
 import { stripeApi } from '@/lib/api/stripe';
 import {
   Card,
@@ -46,19 +45,71 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useNavigate,  useParams } from 'react-router-dom';
 
 export function CreditPurchasePage() {
-  const _t = useTranslations('credits');
+  const { t: _t } = useTranslation('credits');
   void _t; // Will use later for translations
   const navigate = useNavigate();
-  const { packageTiers, isLoadingPackages, purchaseCredits, isPurchasing } = useCredits();
-  const { useTransactions } = useStripePayments();
-  const { data: transactions, isLoading: transactionsLoading } = useTransactions();
-  const { data: keywordPricing } = usePublicKeywordResearchPricing();
-  const validateCouponMutation = useValidateCoupon();
+  const { startLoading, stopLoading } = useLoading();
+
+  // Package tiers state
+  const [packageTiers, setPackageTiers] = useState<PackageTierType[]>([]);
+  const [isLoadingPackages, setIsLoadingPackages] = useState(true);
+  const [isPurchasing, setIsPurchasing] = useState(false);
+
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
+  const [keywordPricing, setKeywordPricing] = useState<any>(null);
 
   const [couponCode, setCouponCode] = useState('');
   const [includeKeywordResearch, setIncludeKeywordResearch] = useState(false);
   const [validatedCoupon, setValidatedCoupon] = useState<CouponValidationResponseDto | null>(null);
   const [downloadingReceiptId, setDownloadingReceiptId] = useState<string | null>(null);
+  const [isValidating, setIsValidating] = useState(false);
+
+  // Fetch transactions
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        setIsLoadingTransactions(true);
+        const data = await stripeApi.payments.getTransactions();
+        setTransactions(data);
+      } catch (err) {
+        console.error('Transactions error:', err);
+      } finally {
+        setIsLoadingTransactions(false);
+      }
+    };
+    fetchTransactions();
+  }, []);
+
+  // Fetch keyword pricing
+  useEffect(() => {
+    const fetchKeywordPricing = async () => {
+      try {
+        const data = await settingsApi.getPublicKeywordResearchPricing();
+        setKeywordPricing(data);
+      } catch (err) {
+        console.error('Keyword pricing error:', err);
+      }
+    };
+    fetchKeywordPricing();
+  }, []);
+
+  // Fetch package tiers
+  useEffect(() => {
+    const fetchPackageTiers = async () => {
+      try {
+        setIsLoadingPackages(true);
+        const data = await creditsApi.getPackageTiers();
+        setPackageTiers(data);
+      } catch (err) {
+        console.error('Package tiers error:', err);
+        toast.error('Failed to load package tiers');
+      } finally {
+        setIsLoadingPackages(false);
+      }
+    };
+    fetchPackageTiers();
+  }, []);
 
   // Handle receipt download
   const handleDownloadReceipt = useCallback(async (transactionId: string) => {
@@ -94,21 +145,54 @@ export function CreditPurchasePage() {
   };
   const popularIndex = getPopularIndex(packages);
 
-  const handlePurchase = (packageId: string) => {
-    purchaseCredits(packageId, validatedCoupon?.valid ? couponCode : undefined, includeKeywordResearch || undefined);
+  const handlePurchase = async (packageId: string) => {
+    try {
+      setIsPurchasing(true);
+      startLoading('Creating checkout session...');
+
+      const successUrl = includeKeywordResearch
+        ? `${window.location.origin}/author/credits/success?includeKeywordResearch=true`
+        : `${window.location.origin}/author/credits/success`;
+      const cancelUrl = `${window.location.origin}/author/credits/cancel`;
+
+      const response = await creditsApi.createCheckoutSession({
+        packageTierId: packageId,
+        couponCode: validatedCoupon?.valid ? couponCode : undefined,
+        includeKeywordResearch: includeKeywordResearch || undefined,
+        successUrl,
+        cancelUrl
+      });
+
+      stopLoading();
+
+      // Redirect to Stripe checkout
+      if (typeof window !== 'undefined' && response.url) {
+        window.location.href = response.url;
+      }
+    } catch (error: any) {
+      console.error('Purchase error:', error);
+      stopLoading();
+      const message = error.response?.data?.message || 'Failed to create checkout session';
+      toast.error(message);
+    } finally {
+      setIsPurchasing(false);
+    }
   };
 
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) return;
 
     try {
-      const result = await validateCouponMutation.mutateAsync({
+      setIsValidating(true);
+      const result = await couponsApi.validateCoupon({
         code: couponCode });
       setValidatedCoupon(result);
     } catch {
       setValidatedCoupon({
         valid: false,
         error: 'Failed to validate coupon' });
+    } finally {
+      setIsValidating(false);
     }
   };
 
@@ -343,10 +427,10 @@ export function CreditPurchasePage() {
                 <Button
                   type="button"
                   variant="outline"
-                  disabled={!couponCode || validateCouponMutation.isPending}
+                  disabled={!couponCode || isValidating}
                   onClick={handleApplyCoupon}
                 >
-                  {validateCouponMutation.isPending ? (
+                  {isValidating ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Validating...
@@ -398,7 +482,7 @@ export function CreditPurchasePage() {
           <CardDescription>Your credit purchase transactions</CardDescription>
         </CardHeader>
         <CardContent>
-          {transactionsLoading ? (
+          {isLoadingTransactions ? (
             <div className="flex items-center justify-center py-8">
               <p className="text-muted-foreground">Loading transactions...</p>
             </div>

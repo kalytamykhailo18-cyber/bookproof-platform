@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAdminControls } from '@/hooks/useAdminControls';
+import { adminControlsApi } from '@/lib/api/admin-controls';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -48,21 +49,20 @@ export function AdminCampaignDetailPage() {
   const params = useParams();
   const campaignId = params.id as string;
 
-  const {
-    useCampaignHealth,
-    useCampaignAnalytics,
-    pauseCampaign,
-    resumeCampaign,
-    adjustDistribution } = useAdminControls();
-
-  const { data: health, isLoading: healthLoading } = useCampaignHealth(campaignId);
-  const { data: analytics, isLoading: analyticsLoading } = useCampaignAnalytics(campaignId);
+  const [health, setHealth] = useState<any>(null);
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [healthLoading, setHealthLoading] = useState(true);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
 
   const [pauseDialogOpen, setPauseDialogOpen] = useState(false);
   const [resumeDialogOpen, setResumeDialogOpen] = useState(false);
   const [distributionDialogOpen, setDistributionDialogOpen] = useState(false);
   const [isBackLoading, setIsBackLoading] = useState(false);
   const [isControlsLoading, setIsControlsLoading] = useState(false);
+
+  const [isPausing, setIsPausing] = useState(false);
+  const [isResuming, setIsResuming] = useState(false);
+  const [isAdjusting, setIsAdjusting] = useState(false);
 
   const [pauseReason, setPauseReason] = useState('');
   const [pauseNotes, setPauseNotes] = useState('');
@@ -71,42 +71,102 @@ export function AdminCampaignDetailPage() {
   const [newDistribution, setNewDistribution] = useState('');
   const [distributionReason, setDistributionReason] = useState('');
 
-  const handlePause = () => {
-    pauseCampaign.mutate(
-      { bookId: campaignId, data: { reason: pauseReason, notes: pauseNotes || undefined } },
-      {
-        onSuccess: () => {
-          setPauseDialogOpen(false);
-          setPauseReason('');
-          setPauseNotes('');
-        } },
-    );
+  // Fetch campaign health
+  const fetchHealth = async () => {
+    if (!campaignId) {
+      setHealthLoading(false);
+      return;
+    }
+    try {
+      setHealthLoading(true);
+      const data = await adminControlsApi.getCampaignHealth(campaignId);
+      setHealth(data);
+    } catch (error: any) {
+      console.error('Campaign health error:', error);
+      toast.error('Failed to load campaign health');
+    } finally {
+      setHealthLoading(false);
+    }
   };
 
-  const handleResume = () => {
-    resumeCampaign.mutate(
-      { bookId: campaignId, data: { reason: resumeReason, notes: resumeNotes || undefined } },
-      {
-        onSuccess: () => {
-          setResumeDialogOpen(false);
-          setResumeReason('');
-          setResumeNotes('');
-        } },
-    );
+  // Fetch campaign analytics
+  const fetchAnalytics = async () => {
+    if (!campaignId) {
+      setAnalyticsLoading(false);
+      return;
+    }
+    try {
+      setAnalyticsLoading(true);
+      const data = await adminControlsApi.getCampaignAnalytics(campaignId);
+      setAnalytics(data);
+    } catch (error: any) {
+      console.error('Campaign analytics error:', error);
+      toast.error('Failed to load campaign analytics');
+    } finally {
+      setAnalyticsLoading(false);
+    }
   };
 
-  const handleAdjustDistribution = () => {
-    adjustDistribution.mutate(
-      {
-        bookId: campaignId,
-        data: { reviewsPerWeek: parseInt(newDistribution), reason: distributionReason } },
-      {
-        onSuccess: () => {
-          setDistributionDialogOpen(false);
-          setNewDistribution('');
-          setDistributionReason('');
-        } },
-    );
+  useEffect(() => {
+    fetchHealth();
+    fetchAnalytics();
+  }, [campaignId]);
+
+  const handlePause = async () => {
+    try {
+      setIsPausing(true);
+      await adminControlsApi.pauseCampaign(campaignId, {
+        reason: pauseReason,
+        notes: pauseNotes || undefined
+      });
+      toast.success('Campaign paused successfully');
+      setPauseDialogOpen(false);
+      setPauseReason('');
+      setPauseNotes('');
+      await Promise.all([fetchHealth(), fetchAnalytics()]);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to pause campaign');
+    } finally {
+      setIsPausing(false);
+    }
+  };
+
+  const handleResume = async () => {
+    try {
+      setIsResuming(true);
+      await adminControlsApi.resumeCampaign(campaignId, {
+        reason: resumeReason,
+        notes: resumeNotes || undefined
+      });
+      toast.success('Campaign resumed successfully');
+      setResumeDialogOpen(false);
+      setResumeReason('');
+      setResumeNotes('');
+      await Promise.all([fetchHealth(), fetchAnalytics()]);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to resume campaign');
+    } finally {
+      setIsResuming(false);
+    }
+  };
+
+  const handleAdjustDistribution = async () => {
+    try {
+      setIsAdjusting(true);
+      await adminControlsApi.adjustWeeklyDistribution(campaignId, {
+        reviewsPerWeek: parseInt(newDistribution),
+        reason: distributionReason
+      });
+      toast.success('Weekly distribution adjusted successfully');
+      setDistributionDialogOpen(false);
+      setNewDistribution('');
+      setDistributionReason('');
+      await Promise.all([fetchHealth(), fetchAnalytics()]);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to adjust distribution');
+    } finally {
+      setIsAdjusting(false);
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -229,10 +289,10 @@ export function AdminCampaignDetailPage() {
                     <Button
                       type="button"
                       onClick={handlePause}
-                      disabled={!pauseReason || pauseCampaign.isPending}
+                      disabled={!pauseReason || isPausing}
                       className="w-full"
                     >
-                      {pauseCampaign.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : t('actions.confirmPause')}
+                      {isPausing ? <Loader2 className="h-4 w-4 animate-spin" /> : t('actions.confirmPause')}
                     </Button>
                   </div>
                 </DialogContent>
@@ -272,10 +332,10 @@ export function AdminCampaignDetailPage() {
                     <Button
                       type="button"
                       onClick={handleResume}
-                      disabled={!resumeReason || resumeCampaign.isPending}
+                      disabled={!resumeReason || isResuming}
                       className="w-full"
                     >
-                      {resumeCampaign.isPending
+                      {isResuming
                         ? <Loader2 className="h-4 w-4 animate-spin" />
                         : t('actions.confirmResume')}
                     </Button>
@@ -501,11 +561,11 @@ export function AdminCampaignDetailPage() {
                         type="button"
                         onClick={handleAdjustDistribution}
                         disabled={
-                          !newDistribution || !distributionReason || adjustDistribution.isPending
+                          !newDistribution || !distributionReason || isAdjusting
                         }
                         className="w-full"
                       >
-                        {adjustDistribution.isPending
+                        {isAdjusting
                           ? t('distribution.adjusting')
                           : t('distribution.confirm')}
                       </Button>

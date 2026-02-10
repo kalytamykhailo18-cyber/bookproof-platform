@@ -1,8 +1,9 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCredits } from '@/hooks/useCredits';
-import { useCampaigns } from '@/hooks/useCampaigns';
-import { useDashboards } from '@/hooks/useDashboards';
+import { creditsApi, CreditBalance } from '@/lib/api/credits';
+import { campaignsApi } from '@/lib/api/campaigns';
+import { dashboardsApi, AuthorActivityFeedDto } from '@/lib/api/dashboards';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -28,13 +29,71 @@ export function AuthorDashboardPage() {
   const { t, i18n } = useTranslation('author.dashboard');
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { creditBalance, isLoadingBalance } = useCredits();
-  const { campaigns, isLoadingCampaigns } = useCampaigns();
-  const { useAuthorActivityFeed } = useDashboards();
-  const { data: activityFeed, isLoading: isLoadingActivity } = useAuthorActivityFeed();
+
+  // Campaigns state
+  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(true);
+
+  // Credit balance state
+  const [creditBalance, setCreditBalance] = useState<CreditBalance | null>(null);
+  const [isLoadingBalance, setIsLoadingBalance] = useState(true);
+
+  // Activity feed state
+  const [activityFeed, setActivityFeed] = useState<AuthorActivityFeedDto | null>(null);
+  const [isLoadingActivity, setIsLoadingActivity] = useState(true);
 
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
   const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(null);
+
+  // Fetch campaigns
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        setIsLoadingCampaigns(true);
+        const data = await campaignsApi.getCampaigns();
+        setCampaigns(data);
+      } catch (err) {
+        console.error('Campaigns error:', err);
+        toast.error('Failed to load campaigns');
+      } finally {
+        setIsLoadingCampaigns(false);
+      }
+    };
+    fetchCampaigns();
+  }, []);
+
+  // Fetch credit balance
+  useEffect(() => {
+    const fetchCreditBalance = async () => {
+      try {
+        setIsLoadingBalance(true);
+        const data = await creditsApi.getCreditBalance();
+        setCreditBalance(data);
+      } catch (err) {
+        console.error('Credit balance error:', err);
+      } finally {
+        setIsLoadingBalance(false);
+      }
+    };
+    fetchCreditBalance();
+  }, []);
+
+  // Fetch activity feed
+  useEffect(() => {
+    const fetchActivityFeed = async () => {
+      try {
+        setIsLoadingActivity(true);
+        const data = await dashboardsApi.getAuthorActivityFeed();
+        setActivityFeed(data); // API already returns { activities: [...], total: ... }
+      } catch (err) {
+        console.error('Activity feed error:', err);
+      } finally {
+        setIsLoadingActivity(false);
+      }
+    };
+
+    fetchActivityFeed();
+  }, []);
 
   // Reset loading state when navigation completes
   useEffect(() => {

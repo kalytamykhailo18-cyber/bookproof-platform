@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAdminExceptions } from '@/hooks/useAdminExceptions';
+import { adminExceptionsApi, AssignmentExceptionDto } from '@/lib/api/admin-exceptions';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
@@ -34,15 +35,33 @@ import { Clock, Users, XCircle, AlertCircle } from 'lucide-react';
 export function ExceptionsPage() {
   const { t, i18n } = useTranslation('adminExceptions');
 
-  const {
-    useExceptions,
-    extendDeadline,
-    reassignReader,
-    bulkReassign,
-    cancelAssignment,
-    correctError } = useAdminExceptions();
+  // Data state
+  const [exceptions, setExceptions] = useState<AssignmentExceptionDto[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data: exceptions, isLoading } = useExceptions();
+  // Mutation loading states
+  const [isExtending, setIsExtending] = useState(false);
+  const [isReassigning, setIsReassigning] = useState(false);
+  const [isBulkReassigning, setIsBulkReassigning] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [isCorrecting, setIsCorrecting] = useState(false);
+
+  // Fetch exceptions
+  useEffect(() => {
+    const fetchExceptions = async () => {
+      try {
+        setIsLoading(true);
+        const data = await adminExceptionsApi.getExceptions();
+        setExceptions(data);
+      } catch (err) {
+        console.error('Exceptions error:', err);
+        toast.error('Failed to load exceptions');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchExceptions();
+  }, []);
 
   // Extend Deadline Dialog State
   const [extendDialogOpen, setExtendDialogOpen] = useState(false);
@@ -75,92 +94,140 @@ export function ExceptionsPage() {
   const [correctionAction, setCorrectionAction] = useState('');
   const [correctionNotes, setCorrectionNotes] = useState('');
 
-  const handleExtendDeadline = () => {
-    extendDeadline.mutate(
-      {
-        assignmentId: selectedAssignmentId,
-        data: {
-          extensionHours,
-          reason: extendReason,
-          notes: extendNotes || undefined } },
-      {
-        onSuccess: () => {
-          setExtendDialogOpen(false);
-          setExtensionHours(24);
-          setExtendReason('');
-          setExtendNotes('');
-        } },
-    );
+  const handleExtendDeadline = async () => {
+    try {
+      setIsExtending(true);
+      await adminExceptionsApi.extendDeadline(selectedAssignmentId, {
+        extensionHours,
+        reason: extendReason,
+        notes: extendNotes || undefined
+      });
+      toast.success('Deadline extended successfully');
+
+      // Refetch exceptions
+      const data = await adminExceptionsApi.getExceptions();
+      setExceptions(data);
+
+      // Reset form
+      setExtendDialogOpen(false);
+      setExtensionHours(24);
+      setExtendReason('');
+      setExtendNotes('');
+    } catch (error: any) {
+      console.error('Extend deadline error:', error);
+      toast.error(error.response?.data?.message || 'Failed to extend deadline');
+    } finally {
+      setIsExtending(false);
+    }
   };
 
-  const handleReassignReader = () => {
-    reassignReader.mutate(
-      {
-        assignmentId: selectedAssignmentId,
-        data: {
-          targetBookId,
-          reason: reassignReason,
-          notes: reassignNotes || undefined } },
-      {
-        onSuccess: () => {
-          setReassignDialogOpen(false);
-          setTargetBookId('');
-          setReassignReason('');
-          setReassignNotes('');
-        } },
-    );
+  const handleReassignReader = async () => {
+    try {
+      setIsReassigning(true);
+      await adminExceptionsApi.reassignReader(selectedAssignmentId, {
+        targetBookId,
+        reason: reassignReason,
+        notes: reassignNotes || undefined
+      });
+      toast.success('Reader reassigned successfully');
+
+      // Refetch exceptions
+      const data = await adminExceptionsApi.getExceptions();
+      setExceptions(data);
+
+      // Reset form
+      setReassignDialogOpen(false);
+      setTargetBookId('');
+      setReassignReason('');
+      setReassignNotes('');
+    } catch (error: any) {
+      console.error('Reassign reader error:', error);
+      toast.error(error.response?.data?.message || 'Failed to reassign reader');
+    } finally {
+      setIsReassigning(false);
+    }
   };
 
-  const handleBulkReassign = () => {
-    bulkReassign.mutate(
-      {
+  const handleBulkReassign = async () => {
+    try {
+      setIsBulkReassigning(true);
+      await adminExceptionsApi.bulkReassign({
         assignmentIds: selectedAssignments,
         targetBookId: bulkTargetBookId,
-        reason: bulkReassignReason },
-      {
-        onSuccess: () => {
-          setBulkReassignDialogOpen(false);
-          setSelectedAssignments([]);
-          setBulkTargetBookId('');
-          setBulkReassignReason('');
-        } },
-    );
+        reason: bulkReassignReason
+      });
+      toast.success('Bulk reassignment completed successfully');
+
+      // Refetch exceptions
+      const data = await adminExceptionsApi.getExceptions();
+      setExceptions(data);
+
+      // Reset form
+      setBulkReassignDialogOpen(false);
+      setSelectedAssignments([]);
+      setBulkTargetBookId('');
+      setBulkReassignReason('');
+    } catch (error: any) {
+      console.error('Bulk reassign error:', error);
+      toast.error(error.response?.data?.message || 'Failed to bulk reassign');
+    } finally {
+      setIsBulkReassigning(false);
+    }
   };
 
-  const handleCancelAssignment = () => {
-    cancelAssignment.mutate(
-      {
-        assignmentId: selectedAssignmentId,
-        data: {
-          reason: cancelReason,
-          refundCredits } },
-      {
-        onSuccess: () => {
-          setCancelDialogOpen(false);
-          setCancelReason('');
-          setRefundCredits(true);
-        } },
-    );
+  const handleCancelAssignment = async () => {
+    try {
+      setIsCancelling(true);
+      await adminExceptionsApi.cancelAssignment(selectedAssignmentId, {
+        reason: cancelReason,
+        refundCredits
+      });
+      toast.success('Assignment cancelled successfully');
+
+      // Refetch exceptions
+      const data = await adminExceptionsApi.getExceptions();
+      setExceptions(data);
+
+      // Reset form
+      setCancelDialogOpen(false);
+      setCancelReason('');
+      setRefundCredits(true);
+    } catch (error: any) {
+      console.error('Cancel assignment error:', error);
+      toast.error(error.response?.data?.message || 'Failed to cancel assignment');
+    } finally {
+      setIsCancelling(false);
+    }
   };
 
-  const handleCorrectError = () => {
+  const handleCorrectError = async () => {
     if (!errorType) return; // Guard: errorType must be set
-    correctError.mutate(
-      {
-        assignmentId: selectedAssignmentId,
-        data: {
-          errorType,
-          correctionAction,
-          description: errorType, // Using errorType as description
-          notes: correctionNotes || undefined } },
-      {
-        onSuccess: () => {
-          setCorrectErrorDialogOpen(false);
-          setErrorType('');
-          setCorrectionAction('');
-          setCorrectionNotes('');
-        } },
-    );
+
+    try {
+      setIsCorrecting(true);
+      await adminExceptionsApi.correctError(selectedAssignmentId, {
+        errorType,
+        correctionAction,
+        description: errorType, // Using errorType as description
+        notes: correctionNotes || undefined
+      });
+      toast.success('Error corrected successfully');
+
+      // Refetch exceptions
+      const data = await adminExceptionsApi.getExceptions();
+      setExceptions(data);
+
+      // Reset form
+      setCorrectErrorDialogOpen(false);
+      setErrorType('');
+      setCorrectionAction('');
+      setCorrectionNotes('');
+    } catch (error: any) {
+      console.error('Correct error error:', error);
+      toast.error(error.response?.data?.message || 'Failed to correct error');
+    } finally {
+      setIsCorrecting(false);
+    }
   };
 
   const toggleAssignmentSelection = (assignmentId: string) => {
@@ -238,9 +305,9 @@ export function ExceptionsPage() {
                 <Button
                   type="button"
                   onClick={handleBulkReassign}
-                  disabled={!bulkTargetBookId || !bulkReassignReason || bulkReassign.isPending}
+                  disabled={!bulkTargetBookId || !bulkReassignReason || isBulkReassigning}
                 >
-                  {bulkReassign.isPending ? 'Reassigning...' : 'Bulk Reassign'}
+                  {isBulkReassigning ? 'Reassigning...' : 'Bulk Reassign'}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -434,9 +501,9 @@ export function ExceptionsPage() {
                               <Button
                                 type="button"
                                 onClick={handleExtendDeadline}
-                                disabled={!extendReason || extendDeadline.isPending}
+                                disabled={!extendReason || isExtending}
                               >
-                                {extendDeadline.isPending ? 'Extending...' : 'Extend Deadline'}
+                                {isExtending ? 'Extending...' : 'Extend Deadline'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -502,10 +569,10 @@ export function ExceptionsPage() {
                               <Button
                                 onClick={handleReassignReader}
                                 disabled={
-                                  !targetBookId || !reassignReason || reassignReader.isPending
+                                  !targetBookId || !reassignReason || isReassigning
                                 }
                               >
-                                {reassignReader.isPending ? 'Reassigning...' : 'Reassign Reader'}
+                                {isReassigning ? 'Reassigning...' : 'Reassign Reader'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -559,9 +626,9 @@ export function ExceptionsPage() {
                                 type="button"
                                 variant="destructive"
                                 onClick={handleCancelAssignment}
-                                disabled={!cancelReason || cancelAssignment.isPending}
+                                disabled={!cancelReason || isCancelling}
                               >
-                                {cancelAssignment.isPending ? 'Cancelling...' : 'Cancel Assignment'}
+                                {isCancelling ? 'Cancelling...' : 'Cancel Assignment'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -635,9 +702,9 @@ export function ExceptionsPage() {
                               </Button>
                               <Button
                                 onClick={handleCorrectError}
-                                disabled={!errorType || !correctionAction || correctError.isPending}
+                                disabled={!errorType || !correctionAction || isCorrecting}
                               >
-                                {correctError.isPending ? 'Correcting...' : 'Correct Error'}
+                                {isCorrecting ? 'Correcting...' : 'Correct Error'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
 import { Loader2 } from 'lucide-react';
 
 interface ProtectedRouteProps {
@@ -16,7 +16,7 @@ export function ProtectedRoute({
   requireEmailVerified = false,
   requireTermsAccepted = false,
 }: ProtectedRouteProps) {
-  const { user, isAuthenticated, isLoadingProfile } = useAuth();
+  const { user, isAuthenticated, _hasHydrated } = useAuthStore();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const searchParams = useSearchParams();
@@ -25,13 +25,13 @@ export function ProtectedRoute({
 
   // Section 16.1: Unauthorized (401) - Preserve intended destination
   useEffect(() => {
-    if (!isLoadingProfile && !isAuthenticated) {
+    if (_hasHydrated && !isAuthenticated) {
       const [params] = searchParams;
       const currentPath = pathname + (params.toString() ? `?${params.toString()}` : '');
       const returnUrl = encodeURIComponent(currentPath);
       navigate(`/login?returnUrl=${returnUrl}`);
     }
-  }, [isAuthenticated, isLoadingProfile, navigate, pathname, searchParams, locale]);
+  }, [isAuthenticated, _hasHydrated, navigate, pathname, searchParams, locale]);
 
   // Section 16.1: Forbidden (403) - Redirect to forbidden page
   useEffect(() => {
@@ -53,9 +53,9 @@ export function ProtectedRoute({
     }
   }, [user, requireTermsAccepted, navigate, locale]);
 
-  // Only show loading spinner if we don't have user data yet
+  // Only show loading spinner if store hasn't hydrated yet
   // This prevents the loading spinner on every navigation when user is already loaded
-  if (isLoadingProfile && !user) {
+  if (!_hasHydrated) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-4">

@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate,  useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useRegisterAffiliate, useAffiliateProfile } from '@/hooks/useAffiliates';
+import { affiliatesApi } from '@/lib/api/affiliates';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -42,9 +43,30 @@ type RegisterAffiliateFormData = z.infer<typeof registerAffiliateSchema>;
 export function AffiliateRegisterPage() {
   const { t, i18n } = useTranslation('affiliates.register');
   const navigate = useNavigate();
-  const { data: existingProfile, isLoading: checkingProfile } = useAffiliateProfile();
-  const registerMutation = useRegisterAffiliate();
+
+  const [existingProfile, setExistingProfile] = useState<any>(null);
+  const [checkingProfile, setCheckingProfile] = useState(true);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [isDashboardLoading, setIsDashboardLoading] = useState(false);
+
+  // Fetch affiliate profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setCheckingProfile(true);
+        const data = await affiliatesApi.getMe();
+        setExistingProfile(data);
+      } catch (error: any) {
+        // 404 means no profile exists, which is expected
+        if (error.response?.status !== 404) {
+          console.error('Profile check error:', error);
+        }
+      } finally {
+        setCheckingProfile(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const form = useForm<RegisterAffiliateFormData>({
     resolver: zodResolver(registerAffiliateSchema),
@@ -60,8 +82,17 @@ export function AffiliateRegisterPage() {
     if (!isValid) return;
 
     const data = form.getValues();
-    await registerMutation.mutateAsync(data);
-    navigate(`/affiliate/dashboard`);
+    try {
+      setIsRegistering(true);
+      await affiliatesApi.register(data);
+      toast.success('Affiliate application submitted! Awaiting admin approval.');
+      navigate(`/affiliate/dashboard`);
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Failed to submit affiliate application';
+      toast.error(message);
+    } finally {
+      setIsRegistering(false);
+    }
   };
 
   // If user already has profile, show status
@@ -251,9 +282,9 @@ export function AffiliateRegisterPage() {
                 type="button"
                 className="w-full"
                 onClick={handleSubmit}
-                disabled={registerMutation.isPending}
+                disabled={isRegistering}
               >
-                {registerMutation.isPending ? (
+                {isRegistering ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {t('form.submitting')}

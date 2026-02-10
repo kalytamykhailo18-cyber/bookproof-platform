@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/hooks/useAuth';
+import { authApi } from '@/lib/api/auth';
+import { useAuthStore } from '@/stores/authStore';
+import { tokenManager } from '@/lib/api/client';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -112,10 +115,12 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export function RegisterPage() {
   const { t, i18n } = useTranslation('auth.register');
   const navigate = useNavigate();
-  const { registerAsync, isRegistering } = useAuth();
+  const { setUser } = useAuthStore();
+  const { startLoading, stopLoading } = useLoading();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
 
   const [amazonLinks, setAmazonLinks] = useState<string[]>(['']);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
 
   const {
@@ -174,10 +179,39 @@ export function RegisterPage() {
         captchaToken = await executeRecaptcha('register');
       }
 
+      setIsRegistering(true);
+      startLoading('Creating your account...');
+
       const { confirmPassword: _, ...registerData } = data;
       void _; // Explicitly mark as intentionally unused
-      await registerAsync({ ...registerData, captchaToken });
+
+      const response = await authApi.register({ ...registerData, captchaToken });
+
+      // Set token and user
+      tokenManager.setToken(response.accessToken);
+      setUser(response.user);
+
       toast.success(t('success'));
+
+      // If email is not verified, redirect to verification required page
+      if (!response.user.emailVerified) {
+        navigate('/verify-email-required');
+      } else {
+        // Email already verified (dev mode), redirect to role-based dashboard
+        switch (response.user.role) {
+          case 'AUTHOR':
+            navigate('/author');
+            break;
+          case 'READER':
+            navigate('/reader');
+            break;
+          case 'AFFILIATE':
+            navigate('/affiliate/dashboard');
+            break;
+          default:
+            navigate('/');
+        }
+      }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } }; message?: string };
       const errorMessage = err?.response?.data?.message || err?.message || t('error');
@@ -188,6 +222,9 @@ export function RegisterPage() {
       } else {
         toast.error(errorMessage);
       }
+    } finally {
+      setIsRegistering(false);
+      stopLoading();
     }
   };
 

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate,  useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useCreatePackage } from '@/hooks/useCloser';
+import { closerApi } from '@/lib/api/closer';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,8 +20,8 @@ import { ArrowLeft, Save, Search, Loader2 } from 'lucide-react';
 export function CreatePackagePage() {
   const { t, i18n } = useTranslation('closer');
   const navigate = useNavigate();
-  const createPackage = useCreatePackage();
 
+  const [isCreating, setIsCreating] = useState(false);
   const [isBackLoading, setIsBackLoading] = useState(false);
   const [formData, setFormData] = useState({
     packageName: '',
@@ -39,9 +40,10 @@ export function CreatePackagePage() {
     keywordResearchCredits: 0, // Number of keyword research credits (per Section 5.2)
   });
 
-  const handleFormSubmit = () => {
-    createPackage.mutate(
-      {
+  const handleFormSubmit = async () => {
+    try {
+      setIsCreating(true);
+      await closerApi.createPackage({
         packageName: formData.packageName,
         description: formData.description || undefined,
         credits: formData.credits,
@@ -56,12 +58,15 @@ export function CreatePackagePage() {
         clientPhone: formData.clientPhone || undefined, // Per Section 5.2
         includeKeywordResearch: formData.includeKeywordResearch, // Per Section 5.2
         keywordResearchCredits: formData.includeKeywordResearch ? formData.keywordResearchCredits : 0, // Per Section 5.2
-      },
-      {
-        onSuccess: () => {
-          navigate(`/closer/packages`);
-        } },
-    );
+      });
+      toast.success('Package created successfully');
+      navigate(`/closer/packages`);
+    } catch (error: any) {
+      console.error('Create error:', error);
+      toast.error(error.response?.data?.message || 'Failed to create package');
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const updateField = (field: string, value: string | number | boolean) => {
@@ -352,8 +357,8 @@ export function CreatePackagePage() {
               {isBackLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('createPackage.cancel')}
             </Button>
-            <Button type="button" onClick={handleFormSubmit} disabled={createPackage.isPending}>
-              {createPackage.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+            <Button type="button" onClick={handleFormSubmit} disabled={isCreating}>
+              {isCreating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
               {t('createPackage.create')}
             </Button>
           </div>

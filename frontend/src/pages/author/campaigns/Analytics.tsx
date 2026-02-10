@@ -1,6 +1,7 @@
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useDashboards } from '@/hooks/useDashboards';
+import { dashboardsApi, CampaignTrackingDto } from '@/lib/api/dashboards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -29,11 +30,35 @@ import { useNavigate } from 'react-router-dom';
 
 export function CampaignAnalyticsPage() {
   const navigate = useNavigate();
+  const params = useParams();
   const bookId = params.id as string;
   const { t, i18n } = useTranslation('campaignAnalytics');
 
-  const { useCampaignTracking } = useDashboards();
-  const { data: tracking, isLoading } = useCampaignTracking(bookId);
+  // Campaign tracking state
+  const [tracking, setTracking] = useState<CampaignTrackingDto | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch campaign tracking
+  useEffect(() => {
+    if (!bookId) {
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchTracking = async () => {
+      try {
+        setIsLoading(true);
+        const data = await dashboardsApi.getCampaignTracking(bookId);
+        setTracking(data);
+      } catch (err) {
+        console.error('Campaign tracking error:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTracking();
+  }, [bookId]);
 
   const isCompleted = tracking?.campaign.status === 'completed';
 

@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { ArrowLeft, Loader2 } from 'lucide-react';
-import { useCreateCoupon } from '@/hooks/useCoupons';
-import { CreateCouponDto, CouponType, CouponAppliesTo } from '@/lib/api/coupons';
+import { couponsApi, CreateCouponDto, CouponType, CouponAppliesTo } from '@/lib/api/coupons';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -71,7 +71,7 @@ type FormValues = z.infer<typeof formSchema>;
 export function NewCouponPage() {
   const { t, i18n } = useTranslation('adminCoupons');
   const navigate = useNavigate();
-  const createMutation = useCreateCoupon();
+  const [isCreating, setIsCreating] = useState(false);
   const [isBackLoading, setIsBackLoading] = useState(false);
 
   const form = useForm<FormValues>({
@@ -95,8 +95,17 @@ export function NewCouponPage() {
       ...values,
       code: values.code.toUpperCase() };
 
-    await createMutation.mutateAsync(data);
-    navigate(`/admin/coupons`);
+    try {
+      setIsCreating(true);
+      await couponsApi.create(data);
+      toast.success('Coupon created successfully');
+      navigate(`/admin/coupons`);
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Failed to create coupon';
+      toast.error(message);
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   return (
@@ -471,8 +480,8 @@ export function NewCouponPage() {
               {isBackLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('new.actions.cancel')}
             </Button>
-            <Button type="button" onClick={handleSubmit} disabled={createMutation.isPending}>
-              {createMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            <Button type="button" onClick={handleSubmit} disabled={isCreating}>
+              {isCreating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               {t('new.actions.create')}
             </Button>
           </div>

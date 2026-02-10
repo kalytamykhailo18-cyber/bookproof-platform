@@ -1,9 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  usePackagesPendingApproval,
-  useApprovePackage,
-  useRejectPackage } from '@/hooks/useCloser';
+import { closerApi } from '@/lib/api/closer';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,13 +27,32 @@ import { CustomPackageResponse } from '@/lib/api/closer';
 
 export function PackageApprovalsPage() {
   const { t, i18n } = useTranslation('admin');
-  const { data: pendingPackages, isLoading } = usePackagesPendingApproval();
-  const approvePackage = useApprovePackage();
-  const rejectPackage = useRejectPackage();
+
+  const [pendingPackages, setPendingPackages] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isApproving, setIsApproving] = useState(false);
+  const [isRejecting, setIsRejecting] = useState(false);
 
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<CustomPackageResponse | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
+
+  // Fetch pending packages
+  useEffect(() => {
+    const fetchPendingPackages = async () => {
+      try {
+        setIsLoading(true);
+        const data = await closerApi.getPackagesPendingApproval();
+        setPendingPackages(data);
+      } catch (error: any) {
+        console.error('Pending packages error:', error);
+        toast.error('Failed to load pending packages');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPendingPackages();
+  }, []);
 
   const formatCurrency = (amount: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
@@ -57,21 +74,40 @@ export function PackageApprovalsPage() {
     return discount.toFixed(1);
   };
 
-  const handleApprove = (packageId: string) => {
-    approvePackage.mutate(packageId);
+  const handleApprove = async (packageId: string) => {
+    try {
+      setIsApproving(true);
+      await closerApi.approvePackage(packageId);
+      toast.success('Package approved successfully');
+      // Refetch pending packages
+      const data = await closerApi.getPackagesPendingApproval();
+      setPendingPackages(data);
+    } catch (error: any) {
+      console.error('Approve error:', error);
+      toast.error(error.response?.data?.message || 'Failed to approve package');
+    } finally {
+      setIsApproving(false);
+    }
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
     if (selectedPackage && rejectionReason.trim()) {
-      rejectPackage.mutate(
-        { packageId: selectedPackage.id, rejectionReason },
-        {
-          onSuccess: () => {
-            setRejectDialogOpen(false);
-            setSelectedPackage(null);
-            setRejectionReason('');
-          } },
-      );
+      try {
+        setIsRejecting(true);
+        await closerApi.rejectPackage(selectedPackage.id, rejectionReason);
+        toast.success('Package rejected');
+        setRejectDialogOpen(false);
+        setSelectedPackage(null);
+        setRejectionReason('');
+        // Refetch pending packages
+        const data = await closerApi.getPackagesPendingApproval();
+        setPendingPackages(data);
+      } catch (error: any) {
+        console.error('Reject error:', error);
+        toast.error(error.response?.data?.message || 'Failed to reject package');
+      } finally {
+        setIsRejecting(false);
+      }
     }
   };
 
@@ -198,7 +234,7 @@ export function PackageApprovalsPage() {
                             variant="default"
                             className="bg-green-600 hover:bg-green-700"
                             onClick={() => handleApprove(pkg.id)}
-                            disabled={approvePackage.isPending}
+                            disabled={isApproving}
                           >
                             <CheckCircle className="mr-1 h-4 w-4" />
                             {t('packageApprovals.approve') || 'Approve'}
@@ -207,7 +243,7 @@ export function PackageApprovalsPage() {
                             size="sm"
                             variant="destructive"
                             onClick={() => openRejectDialog(pkg)}
-                            disabled={rejectPackage.isPending}
+                            disabled={isRejecting}
                           >
                             <XCircle className="mr-1 h-4 w-4" />
                             {t('packageApprovals.reject') || 'Reject'}
@@ -268,9 +304,9 @@ export function PackageApprovalsPage() {
             <Button
               variant="destructive"
               onClick={handleReject}
-              disabled={!rejectionReason.trim() || rejectPackage.isPending}
+              disabled={!rejectionReason.trim() || isRejecting}
             >
-              {rejectPackage.isPending
+              {isRejecting
                 ? t('packageApprovals.rejecting') || 'Rejecting...'
                 : t('packageApprovals.confirmReject') || 'Reject Package'}
             </Button>

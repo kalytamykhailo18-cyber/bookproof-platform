@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { usePayoutsForAdmin, useProcessPayout } from '@/hooks/useAffiliates';
+import { affiliatesApi } from '@/lib/api/affiliates';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -80,8 +81,26 @@ export function AdminAffiliatePayoutsPage() {
   const [actionType, setActionType] = useState<'approve' | 'reject' | 'complete'>('approve');
   const [isBackLoading, setIsBackLoading] = useState(false);
 
-  const { data: payouts, isLoading } = usePayoutsForAdmin(statusFilter);
-  const processMutation = useProcessPayout();
+  const [payouts, setPayouts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Fetch payouts
+  useEffect(() => {
+    const fetchPayouts = async () => {
+      try {
+        setIsLoading(true);
+        const data = await affiliatesApi.getPayoutsForAdmin(statusFilter);
+        setPayouts(data);
+      } catch (error: any) {
+        console.error('Payouts error:', error);
+        toast.error('Failed to load payouts');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPayouts();
+  }, [statusFilter]);
 
   const form = useForm<ProcessPayoutFormData>({
     resolver: zodResolver(processPayoutSchema),
@@ -115,12 +134,20 @@ export function AdminAffiliatePayoutsPage() {
     if (!isValid) return;
 
     const data = form.getValues();
-    await processMutation.mutateAsync({
-      id: selectedPayout.id,
-      data });
-
-    setDialogOpen(false);
-    setSelectedPayout(null);
+    try {
+      setIsProcessing(true);
+      await affiliatesApi.processPayout(selectedPayout.id, data);
+      toast.success('Payout processed successfully');
+      setDialogOpen(false);
+      setSelectedPayout(null);
+      // Refetch payouts
+      const updatedPayouts = await affiliatesApi.getPayoutsForAdmin(statusFilter);
+      setPayouts(updatedPayouts);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to process payout');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const getPayoutStatusBadge = (status: PayoutRequestStatus) => {
@@ -460,9 +487,9 @@ export function AdminAffiliatePayoutsPage() {
                 className="w-full"
                 variant={actionType === 'reject' ? 'destructive' : 'default'}
                 onClick={handleSubmit}
-                disabled={processMutation.isPending}
+                disabled={isProcessing}
               >
-                {processMutation.isPending ? (
+                {isProcessing ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {t('dialog.submitting')}

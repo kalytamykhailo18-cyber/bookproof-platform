@@ -1,9 +1,7 @@
-import { useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import {
-  useUserDisputes,
-  useCreateDispute,
-  useFileAppeal } from '@/hooks/useDisputes';
+import { useState, useEffect } from 'react';
+import { useAuthStore } from '@/stores/authStore';
+import { disputesApi } from '@/lib/api/disputes';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -34,11 +32,36 @@ import { Plus, Scale, MessageSquare, HelpCircle, Loader2 } from 'lucide-react';
 import { DisputeStatus, DisputeType, DisputePriority, AppealStatus } from '@/lib/api/disputes';
 
 export function AuthorSupportPage() {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const userId = user?.id || '';
-  const { data: disputes, isLoading } = useUserDisputes(userId);
-  const createDispute = useCreateDispute();
-  const fileAppeal = useFileAppeal();
+
+  // Data state
+  const [disputes, setDisputes] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCreatingDispute, setIsCreatingDispute] = useState(false);
+  const [isFilingAppeal, setIsFilingAppeal] = useState(false);
+
+  // Fetch user disputes
+  const fetchDisputes = async () => {
+    if (!userId) {
+      setIsLoading(false);
+      return;
+    }
+    try {
+      setIsLoading(true);
+      const data = await disputesApi.getDisputesByUser(userId);
+      setDisputes(data);
+    } catch (err) {
+      console.error('User disputes error:', err);
+      toast.error('Failed to load disputes');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDisputes();
+  }, [userId]);
 
   // Create Dispute Dialog
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -50,33 +73,42 @@ export function AuthorSupportPage() {
   const [selectedDisputeId, setSelectedDisputeId] = useState('');
   const [appealReason, setAppealReason] = useState('');
 
-  const handleCreateDispute = () => {
-    createDispute.mutate(
-      {
+  const handleCreateDispute = async () => {
+    try {
+      setIsCreatingDispute(true);
+      await disputesApi.createDispute({
         type: disputeType,
         description: disputeDescription,
-        priority: DisputePriority.MEDIUM },
-      {
-        onSuccess: () => {
-          setCreateDialogOpen(false);
-          setDisputeType(DisputeType.AUTHOR_COMPLAINT);
-          setDisputeDescription('');
-        } },
-    );
+        priority: DisputePriority.MEDIUM
+      });
+      toast.success('Dispute created successfully');
+      setCreateDialogOpen(false);
+      setDisputeType(DisputeType.AUTHOR_COMPLAINT);
+      setDisputeDescription('');
+      // Refetch disputes
+      await fetchDisputes();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to create dispute');
+    } finally {
+      setIsCreatingDispute(false);
+    }
   };
 
-  const handleFileAppeal = () => {
-    fileAppeal.mutate(
-      {
-        disputeId: selectedDisputeId,
-        data: { reason: appealReason } },
-      {
-        onSuccess: () => {
-          setAppealDialogOpen(false);
-          setAppealReason('');
-          setSelectedDisputeId('');
-        } },
-    );
+  const handleFileAppeal = async () => {
+    try {
+      setIsFilingAppeal(true);
+      await disputesApi.fileAppeal(selectedDisputeId, { reason: appealReason });
+      toast.success('Appeal filed successfully');
+      setAppealDialogOpen(false);
+      setAppealReason('');
+      setSelectedDisputeId('');
+      // Refetch disputes
+      await fetchDisputes();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to file appeal');
+    } finally {
+      setIsFilingAppeal(false);
+    }
   };
 
   const getStatusColor = (status: DisputeStatus) => {
@@ -204,9 +236,9 @@ export function AuthorSupportPage() {
               <Button
                 type="button"
                 onClick={handleCreateDispute}
-                disabled={disputeDescription.length < 10 || createDispute.isPending}
+                disabled={disputeDescription.length < 10 || isCreatingDispute}
               >
-                {createDispute.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Submit Request'}
+                {isCreatingDispute ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Submit Request'}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -318,9 +350,9 @@ export function AuthorSupportPage() {
                               <Button
                                 type="button"
                                 onClick={handleFileAppeal}
-                                disabled={appealReason.length < 20 || fileAppeal.isPending}
+                                disabled={appealReason.length < 20 || isFilingAppeal}
                               >
-                                {fileAppeal.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Submit Appeal'}
+                                {isFilingAppeal ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Submit Appeal'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>

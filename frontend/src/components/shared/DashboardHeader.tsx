@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
+import { tokenManager } from '@/lib/api/client';
+import { toast } from 'sonner';
 import { NotificationBell } from './NotificationBell';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -27,9 +29,16 @@ interface DashboardHeaderProps {
  * - User dropdown with profile/settings/logout
  */
 export function DashboardHeader({ showLogo = false }: DashboardHeaderProps) {
-  const { user, logout } = useAuth();
+  const { user, clearUser } = useAuthStore();
   const navigate = useNavigate();
   const { i18n } = useTranslation();
+
+  const logout = () => {
+    tokenManager.clearToken();
+    clearUser();
+    navigate('/login');
+    toast.success('Logged out successfully');
+  };
 
   // Get the base path based on user role
   const getBasePath = () => {

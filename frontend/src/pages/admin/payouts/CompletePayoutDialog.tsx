@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PayoutResponse } from '@/lib/api/payouts';
-import { useCompletePayout } from '@/hooks/usePayouts';
+import { PayoutResponse, completePayout as completePayoutApi } from '@/lib/api/payouts';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -19,34 +19,41 @@ interface CompletePayoutDialogProps {
   payout: PayoutResponse;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onRefetch: () => void;
 }
 
 export default function CompletePayoutDialog({
   payout,
   open,
-  onOpenChange }: CompletePayoutDialogProps) {
+  onOpenChange,
+  onRefetch }: CompletePayoutDialogProps) {
   const { t, i18n } = useTranslation('admin-payouts');
-  const { mutate: completePayout, isPending } = useCompletePayout();
   const [transactionId, setTransactionId] = useState('');
   const [notes, setNotes] = useState('');
   const [error, setError] = useState('');
+  const [isPending, setIsPending] = useState(false);
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     if (transactionId.trim().length < 5) {
       setError(t('complete.validation.transactionIdMinLength'));
       return;
     }
 
-    completePayout(
-      { id: payout.id, data: { transactionId, notes: notes || undefined } },
-      {
-        onSuccess: () => {
-          setTransactionId('');
-          setNotes('');
-          setError('');
-          onOpenChange(false);
-        } },
-    );
+    try {
+      setIsPending(true);
+      await completePayoutApi(payout.id, { transactionId, notes: notes || undefined });
+      toast.success('Payout marked as completed');
+      setTransactionId('');
+      setNotes('');
+      setError('');
+      onOpenChange(false);
+      onRefetch();
+    } catch (error: any) {
+      console.error('Complete payout error:', error);
+      toast.error(error.response?.data?.message || 'Failed to complete payout');
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (

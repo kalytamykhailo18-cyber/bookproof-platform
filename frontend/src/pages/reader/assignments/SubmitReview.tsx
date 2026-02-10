@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { useReviewSubmission } from '@/hooks/useReviews';
-import { useAssignment } from '@/hooks/useQueue';
+import { useState, useEffect } from 'react';
+import { reviewsApi } from '@/lib/api/reviews';
+import { queueApi, Assignment } from '@/lib/api/queue';
+import { toast } from 'sonner';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,11 +18,18 @@ import { useTranslation } from 'react-i18next';
 export function SubmitReviewPage({ params }: { params: { id: string } }) {
   const { t, i18n } = useTranslation('reviews.submit');
   const assignmentId = params.id;
-  const { assignment, isLoading: isLoadingAssignment } = useAssignment(assignmentId);
-  const { review, isLoadingReview, submitReview, isSubmitting, isSubmitSuccess } = useReviewSubmission(assignmentId);
   const navigate = useNavigate();
   const routeParams = useParams();
+  const { startLoading, stopLoading } = useLoading();
 
+  // Review state
+  const [review, setReview] = useState<any>(null);
+  const [isLoadingReview, setIsLoadingReview] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
+
+  const [assignment, setAssignment] = useState<Assignment | null>(null);
+  const [isLoadingAssignment, setIsLoadingAssignment] = useState(true);
   const [amazonReviewLink, setAmazonReviewLink] = useState('');
   const [internalRating, setInternalRating] = useState(5);
   const [internalFeedback, setInternalFeedback] = useState('');
@@ -29,6 +38,46 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
   const [acknowledgedGuidelines, setAcknowledgedGuidelines] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Fetch review for assignment
+  useEffect(() => {
+    if (!assignmentId) {
+      setIsLoadingReview(false);
+      return;
+    }
+    const fetchReview = async () => {
+      try {
+        setIsLoadingReview(true);
+        const data = await reviewsApi.getReviewByAssignment(assignmentId);
+        setReview(data);
+      } catch (err) {
+        console.error('Review error:', err);
+      } finally {
+        setIsLoadingReview(false);
+      }
+    };
+    fetchReview();
+  }, [assignmentId]);
+
+  // Fetch assignment
+  useEffect(() => {
+    if (!assignmentId) {
+      setIsLoadingAssignment(false);
+      return;
+    }
+    const fetchAssignment = async () => {
+      try {
+        setIsLoadingAssignment(true);
+        const data = await queueApi.getAssignment(assignmentId);
+        setAssignment(data);
+      } catch (err) {
+        console.error('Assignment error:', err);
+      } finally {
+        setIsLoadingAssignment(false);
+      }
+    };
+    fetchAssignment();
+  }, [assignmentId]);
 
   // Character count limits for review feedback (per Milestone 4.4)
   const MIN_FEEDBACK_CHARACTERS = 150;
@@ -97,18 +146,32 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
     return true;
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
     if (!validateForm()) {
       return;
     }
 
-    submitReview({
-      amazonReviewLink: amazonReviewLink.trim(),
-      internalRating,
-      internalFeedback: internalFeedback.trim(),
-      publishedOnAmazon,
-      agreedToAmazonTos,
-      acknowledgedGuidelines });
+    try {
+      setIsSubmitting(true);
+      startLoading('Submitting review...');
+      await reviewsApi.submitReview(assignmentId, {
+        amazonReviewLink: amazonReviewLink.trim(),
+        internalRating,
+        internalFeedback: internalFeedback.trim(),
+        publishedOnAmazon,
+        agreedToAmazonTos,
+        acknowledgedGuidelines
+      });
+      stopLoading();
+      setIsSubmitSuccess(true);
+      toast.success('Review submitted successfully! It will be validated by our team.');
+    } catch (error: any) {
+      stopLoading();
+      const message = error.response?.data?.message || 'Failed to submit review';
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isLoadingAssignment || isLoadingReview) {

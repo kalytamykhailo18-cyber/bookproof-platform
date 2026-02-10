@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import {
@@ -10,7 +10,8 @@ import {
   AlertCircle,
   TrendingUp } from 'lucide-react';
 
-import { useAllPayouts } from '@/hooks/usePayouts';
+import { getAllPayouts, PayoutResponse } from '@/lib/api/payouts';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -49,13 +50,34 @@ interface PayoutData {
 
 export function AdminPayoutsPage() {
   const { t, i18n } = useTranslation('adminPayouts');
-  const { data: allPayouts, isLoading } = useAllPayouts();
+
+  // Data state
+  const [allPayouts, setAllPayouts] = useState<PayoutResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [selectedPayoutId, setSelectedPayoutId] = useState<string | null>(null);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [approveDialogOpen, setApproveDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [completeDialogOpen, setCompleteDialogOpen] = useState(false);
+
+  // Fetch all payouts
+  const fetchPayouts = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getAllPayouts();
+      setAllPayouts(data);
+    } catch (err) {
+      console.error('Payouts error:', err);
+      toast.error('Failed to load payouts');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPayouts();
+  }, []);
 
   const selectedPayout = allPayouts?.find((p) => p.id === selectedPayoutId);
 
@@ -330,16 +352,19 @@ export function AdminPayoutsPage() {
             payout={selectedPayout}
             open={approveDialogOpen}
             onOpenChange={setApproveDialogOpen}
+            onRefetch={fetchPayouts}
           />
           <RejectPayoutDialog
             payout={selectedPayout}
             open={rejectDialogOpen}
             onOpenChange={setRejectDialogOpen}
+            onRefetch={fetchPayouts}
           />
           <CompletePayoutDialog
             payout={selectedPayout}
             open={completeDialogOpen}
             onOpenChange={setCompleteDialogOpen}
+            onRefetch={fetchPayouts}
           />
         </>
       )}

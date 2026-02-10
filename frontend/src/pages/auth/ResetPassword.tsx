@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useSearchParams, useNavigate,  useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/hooks/useAuth';
+import { authApi } from '@/lib/api/auth';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -51,8 +52,9 @@ export function ResetPasswordPage() {
   const { t, i18n } = useTranslation('auth.resetPassword');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { resetPasswordAsync, isResettingPassword } = useAuth();
+  const { startLoading, stopLoading } = useLoading();
   const [resetSuccess, setResetSuccess] = useState(false);
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
   const [isNavLoading, setIsNavLoading] = useState(false);
   const token = searchParams.get('token');
 
@@ -74,7 +76,9 @@ export function ResetPasswordPage() {
 
     const data = getValues();
     try {
-      await resetPasswordAsync({
+      setIsResettingPassword(true);
+      startLoading('Resetting your password...');
+      await authApi.resetPassword({
         token,
         newPassword: data.password });
       setResetSuccess(true);
@@ -90,6 +94,9 @@ export function ResetPasswordPage() {
       } else {
         toast.error(t('error'));
       }
+    } finally {
+      setIsResettingPassword(false);
+      stopLoading();
     }
   };
 

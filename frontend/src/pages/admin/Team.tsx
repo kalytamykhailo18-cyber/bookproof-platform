@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useClosersList, useAdminsList } from '@/hooks/useAdminTeam';
+import { apiClient } from '@/lib/api/client';
 import { CreateCloserDialog } from './team/CreateCloserDialog';
 import { CreateAdminDialog } from './team/CreateAdminDialog';
 import { UnlockAccountDialog } from './team/UnlockAccountDialog';
@@ -34,14 +34,80 @@ import {
   AlertCircle } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
+interface CloserListItem {
+  id: string;
+  userId: string;
+  email: string;
+  name: string;
+  commissionRate: number;
+  commissionEnabled: boolean;
+  commissionEarned: number;
+  commissionPaid: number;
+  totalSales: number;
+  totalClients: number;
+  totalPackagesSold: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface AdminListItem {
+  id: string;
+  userId: string;
+  email: string;
+  name: string;
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'MODERATOR' | 'SUPPORT';
+  permissions: string[];
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export function AdminTeamPage() {
-  const { t, i18n } = useTranslation('adminTeam');
+  const { t } = useTranslation('adminTeam');
   const [activeTab, setActiveTab] = useState('closers');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  const { data: closers, isLoading: closersLoading } = useClosersList();
-  const { data: admins, isLoading: adminsLoading } = useAdminsList();
+  // Team data state
+  const [closers, setClosers] = useState<CloserListItem[]>([]);
+  const [admins, setAdmins] = useState<AdminListItem[]>([]);
+  const [closersLoading, setClosersLoading] = useState(true);
+  const [adminsLoading, setAdminsLoading] = useState(true);
+
+  // Fetch closers
+  const fetchClosers = async () => {
+    try {
+      setClosersLoading(true);
+      const response = await apiClient.get<CloserListItem[]>('/admin/team/closers');
+      setClosers(response.data);
+    } catch (err) {
+      console.error('Closers error:', err);
+    } finally {
+      setClosersLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchClosers();
+  }, []);
+
+  // Fetch admins
+  const fetchAdmins = async () => {
+    try {
+      setAdminsLoading(true);
+      const response = await apiClient.get<AdminListItem[]>('/admin/team/admins');
+      setAdmins(response.data);
+    } catch (err) {
+      console.error('Admins error:', err);
+    } finally {
+      setAdminsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAdmins();
+  }, []);
 
   // Filter closers
   const filteredClosers = useMemo(() => {
@@ -129,8 +195,8 @@ export function AdminTeamPage() {
         </div>
         <div className="flex gap-2">
           <UnlockAccountDialog />
-          <CreateAdminDialog />
-          <CreateCloserDialog />
+          <CreateAdminDialog onSuccess={fetchAdmins} />
+          <CreateCloserDialog onSuccess={fetchClosers} />
         </div>
       </div>
 

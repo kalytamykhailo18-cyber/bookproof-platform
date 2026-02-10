@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAdminControls } from '@/hooks/useAdminControls';
+import { adminControlsApi } from '@/lib/api/admin-controls';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -66,17 +67,41 @@ const getTransactionTypeColor = (type: CreditTransactionType) => {
 
 export function AuthorTransactionsPage() {
   const navigate = useNavigate();
+  const params = useParams();
   const authorId = params.id as string;
   const { t, i18n } = useTranslation('adminAuthorTransactions');
-
-  const { useAuthorTransactionHistory } = useAdminControls();
 
   const [page, setPage] = useState(0);
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [isBackLoading, setIsBackLoading] = useState(false);
   const limit = 20;
 
-  const { data, isLoading, isError } = useAuthorTransactionHistory(authorId, limit, page * limit);
+  const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  // Fetch transaction history
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!authorId) {
+        setIsLoading(false);
+        return;
+      }
+      try {
+        setIsLoading(true);
+        const result = await adminControlsApi.getAuthorTransactionHistory(authorId, limit, page * limit);
+        setData(result);
+        setIsError(false);
+      } catch (error: any) {
+        console.error('Transaction history error:', error);
+        setIsError(true);
+        toast.error('Failed to load transaction history');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [authorId, page, limit]);
 
   const filteredTransactions = data?.transactions.filter((tx) => {
     if (typeFilter === 'all') return true;

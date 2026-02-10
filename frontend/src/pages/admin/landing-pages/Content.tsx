@@ -16,7 +16,7 @@ import {
   SelectValue } from '@/components/ui/select';
 import { Plus, Trash2, Save, Upload, Eye, ArrowUp, ArrowDown } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLandingPage, useUpdateLandingPage } from '@/hooks/useLandingPages';
+import { getLandingPage, updateLandingPage } from '@/lib/api/landing-pages';
 import type { Language } from '@/lib/api/landing-pages';
 
 interface HeroContent {
@@ -62,8 +62,26 @@ export function LandingPageContentEditor() {
   const { t, i18n } = useTranslation('admin-landing-pages');
 
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('EN');
-  const { data: landingPage, isLoading } = useLandingPage(selectedLanguage);
-  const updateMutation = useUpdateLandingPage();
+  const [landingPage, setLandingPage] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  // Fetch landing page when language changes
+  useEffect(() => {
+    const fetchLandingPage = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getLandingPage(selectedLanguage);
+        setLandingPage(data);
+      } catch (error: any) {
+        console.error('Landing page error:', error);
+        toast.error('Failed to load landing page');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchLandingPage();
+  }, [selectedLanguage]);
 
   // Parse content from JSON
   const content: LandingPageContent = landingPage?.content
@@ -107,13 +125,22 @@ export function LandingPageContentEditor() {
       faqs };
 
     try {
-      await updateMutation.mutateAsync({
+      setIsUpdating(true);
+      await updateLandingPage({
         language: selectedLanguage,
         content: JSON.stringify(updatedContent) });
 
-      toast.success('Landing page content updated successfully');
-    } catch (error) {
-      toast.error('Failed to update landing page content');
+      toast.success(`Landing page (${selectedLanguage}) updated successfully`);
+
+      // Refetch the landing page
+      const data = await getLandingPage(selectedLanguage);
+      setLandingPage(data);
+    } catch (error: any) {
+      console.error('Update error:', error);
+      const message = error.response?.data?.message || 'Failed to update landing page';
+      toast.error(message);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -230,7 +257,7 @@ export function LandingPageContentEditor() {
               <SelectItem value="ES">Español</SelectItem>
             </SelectContent>
           </Select>
-          <Button type="button" onClick={handleSave} disabled={updateMutation.isPending}>
+          <Button type="button" onClick={handleSave} disabled={isUpdating}>
             <Save className="mr-2 h-4 w-4" />
             Save Changes
           </Button>
