@@ -72,5 +72,29 @@
     "currentRate": "Current rate",
     "submitting": "Updating...",
     "confirm": "Update Rate"
+  },
+  "referredAuthors": {
+    "title": "Referred Authors",
+    "description": "Authors who signed up through this affiliate's referral link",
+    "empty": "No referred authors yet",
+    "table": {
+      "author": "Author",
+      "signUpDate": "Sign-Up Date",
+      "purchases": "Purchases",
+      "commission": "Total Commission",
+      "lastPurchase": "Last Purchase"
+    }
+  },
+  "payouts": {
+    "title": "Payout History",
+    "description": "All payout requests and their status",
+    "empty": "No payout requests yet",
+    "table": {
+      "amount": "Amount",
+      "method": "Payment Method",
+      "status": "Status",
+      "requested": "Requested",
+      "processed": "Processed"
+    }
   }
 }

@@ -366,6 +366,40 @@ export class AffiliatesController {
   }
 
   /**
+   * Get referred authors for affiliate (Admin)
+   */
+  @Get('admin/:id/referred-authors')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get referred authors for affiliate (Admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of referred authors',
+    type: [ReferredAuthorDto],
+  })
+  async getReferredAuthorsForAdmin(@Param('id') affiliateProfileId: string): Promise<ReferredAuthorDto[]> {
+    return this.affiliatesService.getReferredAuthors(affiliateProfileId);
+  }
+
+  /**
+   * Get payouts for affiliate (Admin)
+   */
+  @Get('admin/:id/payouts')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get payouts for affiliate (Admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of payouts',
+    type: [PayoutResponseDto],
+  })
+  async getPayoutsForAdmin(@Param('id') affiliateProfileId: string): Promise<PayoutResponseDto[]> {
+    return this.payoutService.getPayoutsForAffiliate(affiliateProfileId);
+  }
+
+  /**
    * Get all payout requests (Admin)
    */
   @Get('admin/payouts/all')
