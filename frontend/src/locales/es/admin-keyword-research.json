@@ -1,0 +1,56 @@
+{
+  "title": "Órdenes de Investigación de Palabras Clave",
+  "description": "Monitorear y gestionar todas las órdenes de investigación de palabras clave",
+  "stats": {
+    "totalOrders": "Órdenes Totales",
+    "processing": "En Proceso",
+    "completed": "Completadas",
+    "failed": "Fallidas",
+    "totalRevenue": "Ingresos Totales"
+  },
+  "filters": {
+    "title": "Filtros",
+    "status": "Estado",
+    "all": "Todos los Estados",
+    "pending": "Pendiente",
+    "processing": "En Proceso",
+    "completed": "Completado",
+    "failed": "Fallido"
+  },
+  "table": {
+    "title": "Órdenes de Investigación de Palabras Clave",
+    "ordersCount": "{{count}} órdenes",
+    "filteredBy": "(filtrado por {{filter}})",
+    "noOrders": "No se encontraron órdenes",
+    "bookTitle": "Título del Libro",
+    "status": "Estado",
+    "price": "Precio",
+    "paid": "Pagado",
+    "createdAt": "Creado",
+    "completedAt": "Completado",
+    "actions": "Acciones"
+  },
+  "paid": {
+    "yes": "Sí",
+    "no": "No"
+  },
+  "actions": {
+    "view": "Ver Detalles",
+    "downloadPdf": "Descargar PDF",
+    "regenerate": "Regenerar"
+  },
+  "regenerateDialog": {
+    "title": "Regenerar Investigación de Palabras Clave",
+    "description": "¿Está seguro de que desea regenerar esta investigación de palabras clave? Esto creará nuevas palabras clave generadas por IA y un nuevo informe en PDF.",
+    "cancel": "Cancelar",
+    "confirm": "Regenerar",
+    "regenerating": "Regenerando..."
+  },
+  "messages": {
+    "loadError": "Error al cargar investigaciones de palabras clave",
+    "regenerateSuccess": "Regeneración de investigación de palabras clave iniciada",
+    "regenerateError": "Error al regenerar investigación de palabras clave",
+    "downloadSuccess": "Descarga de PDF iniciada",
+    "downloadError": "Error al descargar PDF"
+  }
+}

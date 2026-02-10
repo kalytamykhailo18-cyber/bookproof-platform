@@ -84,6 +84,14 @@ import adminExceptionsEN from '../locales/en/admin-exceptions.json';
 import adminExceptionsES from '../locales/es/admin-exceptions.json';
 import adminExceptionsPT from '../locales/pt/admin-exceptions.json';
 
+import adminKeywordResearchEN from '../locales/en/admin-keyword-research.json';
+import adminKeywordResearchES from '../locales/es/admin-keyword-research.json';
+import adminKeywordResearchPT from '../locales/pt/admin-keyword-research.json';
+
+import keywordResearchEN from '../locales/en/keyword-research.json';
+import keywordResearchES from '../locales/es/keyword-research.json';
+import keywordResearchPT from '../locales/pt/keyword-research.json';
+
 import adminEN from '../locales/en/admin.json';
 import adminES from '../locales/es/admin.json';
 import adminPT from '../locales/pt/admin.json';
@@ -120,6 +128,8 @@ const resources = {
     adminTeam: adminTeamEN,
     adminLandingPages: adminLandingPagesEN,
     adminExceptions: adminExceptionsEN,
+    adminKeywordResearch: adminKeywordResearchEN,
+    keywordResearch: keywordResearchEN,
     ...flattenLanding(landingEN),
   },
   es: {
@@ -143,6 +153,8 @@ const resources = {
     adminTeam: adminTeamES,
     adminLandingPages: adminLandingPagesES,
     adminExceptions: adminExceptionsES,
+    adminKeywordResearch: adminKeywordResearchES,
+    keywordResearch: keywordResearchES,
     ...flattenLanding(landingES),
   },
   pt: {
@@ -166,6 +178,8 @@ const resources = {
     adminTeam: adminTeamPT,
     adminLandingPages: adminLandingPagesPT,
     adminExceptions: adminExceptionsPT,
+    adminKeywordResearch: adminKeywordResearchPT,
+    keywordResearch: keywordResearchPT,
     ...flattenLanding(landingPT),
   },
 };
