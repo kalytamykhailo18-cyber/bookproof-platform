@@ -13,6 +13,15 @@
     "totalRefundedDesc": "All time"
   },
 
+  "status": {
+    "PENDING": "Pending",
+    "APPROVED": "Approved",
+    "PARTIALLY_APPROVED": "Partial",
+    "REJECTED": "Rejected",
+    "PROCESSING": "Processing",
+    "COMPLETED": "Completed"
+  },
+
   "table": {
     "title": "Refund Requests",
     "totalRequests": "total requests",
@@ -27,6 +36,7 @@
   },
 
   "filters": {
+    "placeholder": "Filter by status",
     "all": "All Statuses",
     "pending": "Pending",
     "approved": "Approved",
@@ -36,12 +46,47 @@
     "completed": "Completed"
   },
 
+  "credits": {
+    "label": "credits",
+    "used": "used",
+    "remaining": "remaining"
+  },
+
+  "eligibility": {
+    "eligible": "Eligible",
+    "notEligible": "Not Eligible",
+    "eligibleForRefund": "Eligible for refund",
+    "notEligibleDefault": "Not eligible"
+  },
+
+  "actions": {
+    "review": "Review",
+    "processed": "Processed"
+  },
+
+  "pagination": {
+    "showing": "Showing",
+    "of": "of",
+    "previous": "Previous",
+    "next": "Next"
+  },
+
   "dialog": {
     "title": "Process Refund Request",
     "description": "Review and make a decision on this refund request.",
     "decision": "Decision",
     "partialAmount": "Refund Amount",
-    "notes": "Admin Notes"
+    "notes": "Admin Notes",
+    "notesPlaceholder": "Optional notes about your decision...",
+    "reasonLabel": "Reason:",
+    "explanationLabel": "Explanation:",
+    "daysSincePurchase": "Days since purchase:",
+    "maximumAmount": "Maximum:",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+    "approveButton": "Approve Refund",
+    "approvePartialButton": "Approve {amount} Refund",
+    "rejectButton": "Reject Request"
   },
 
   "decisions": {
@@ -63,5 +108,11 @@
     "description": "There are no refund requests to review."
   },
 
-  "loading": "Loading refund requests..."
+  "loading": "Loading refund requests...",
+
+  "messages": {
+    "loadError": "Failed to load refund requests",
+    "processSuccess": "Refund processed successfully",
+    "processError": "Failed to process refund"
+  }
 }

@@ -13,6 +13,15 @@
     "totalRefundedDesc": "Todo el tiempo"
   },
 
+  "status": {
+    "PENDING": "Pendiente",
+    "APPROVED": "Aprobado",
+    "PARTIALLY_APPROVED": "Parcial",
+    "REJECTED": "Rechazado",
+    "PROCESSING": "Procesando",
+    "COMPLETED": "Completado"
+  },
+
   "table": {
     "title": "Solicitudes de Reembolso",
     "totalRequests": "solicitudes totales",
@@ -27,6 +36,7 @@
   },
 
   "filters": {
+    "placeholder": "Filtrar por estado",
     "all": "Todos los Estados",
     "pending": "Pendiente",
     "approved": "Aprobado",
@@ -36,12 +46,47 @@
     "completed": "Completado"
   },
 
+  "credits": {
+    "label": "créditos",
+    "used": "usados",
+    "remaining": "restantes"
+  },
+
+  "eligibility": {
+    "eligible": "Elegible",
+    "notEligible": "No Elegible",
+    "eligibleForRefund": "Elegible para reembolso",
+    "notEligibleDefault": "No elegible"
+  },
+
+  "actions": {
+    "review": "Revisar",
+    "processed": "Procesado"
+  },
+
+  "pagination": {
+    "showing": "Mostrando",
+    "of": "de",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
+
   "dialog": {
     "title": "Procesar Solicitud de Reembolso",
     "description": "Revisar y tomar una decisión sobre esta solicitud de reembolso.",
     "decision": "Decisión",
     "partialAmount": "Monto del Reembolso",
-    "notes": "Notas del Administrador"
+    "notes": "Notas del Administrador",
+    "notesPlaceholder": "Notas opcionales sobre su decisión...",
+    "reasonLabel": "Razón:",
+    "explanationLabel": "Explicación:",
+    "daysSincePurchase": "Días desde la compra:",
+    "maximumAmount": "Máximo:",
+    "cancel": "Cancelar",
+    "processing": "Procesando...",
+    "approveButton": "Aprobar Reembolso",
+    "approvePartialButton": "Aprobar Reembolso de {amount}",
+    "rejectButton": "Rechazar Solicitud"
   },
 
   "decisions": {
@@ -63,5 +108,11 @@
     "description": "No hay solicitudes de reembolso para revisar."
   },
 
-  "loading": "Cargando solicitudes de reembolso..."
+  "loading": "Cargando solicitudes de reembolso...",
+
+  "messages": {
+    "loadError": "Error al cargar solicitudes de reembolso",
+    "processSuccess": "Reembolso procesado exitosamente",
+    "processError": "Error al procesar el reembolso"
+  }
 }
