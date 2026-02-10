@@ -142,7 +142,7 @@ function AnalyticsTabContent() {
       setAnalytics(data);
     } catch (error: any) {
       console.error('Analytics error:', error);
-      toast.error('Failed to load analytics');
+      toast.error(t('messages.loadAnalyticsError'));
     } finally {
       setIsLoading(false);
     }
@@ -274,7 +274,7 @@ function LeadsTabContent() {
       setLeadsData(data);
     } catch (error: any) {
       console.error('Leads error:', error);
-      toast.error('Failed to load leads');
+      toast.error(t('messages.loadLeadsError'));
     } finally {
       setIsLoading(false);
     }
@@ -300,10 +300,10 @@ function LeadsTabContent() {
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-      toast.success('Leads exported successfully');
+      toast.success(t('messages.exportSuccess'));
     } catch (error: any) {
       console.error('Export error:', error);
-      toast.error('Failed to export leads');
+      toast.error(t('messages.exportError'));
     } finally {
       setIsExporting(false);
     }
@@ -313,12 +313,12 @@ function LeadsTabContent() {
     try {
       setIsResending(true);
       await resendWelcomeEmail(leadId);
-      toast.success('Welcome email resent successfully');
+      toast.success(t('messages.resendSuccess'));
       // Refetch leads
       await fetchLeads();
     } catch (error: any) {
       console.error('Resend error:', error);
-      const message = error.response?.data?.message || 'Failed to resend email';
+      const message = error.response?.data?.message || t('messages.resendError');
       toast.error(message);
     } finally {
       setIsResending(false);
@@ -329,12 +329,12 @@ function LeadsTabContent() {
     try {
       setIsDeleting(true);
       await deleteLead(leadId);
-      toast.success('Lead deleted successfully');
+      toast.success(t('messages.deleteSuccess'));
       // Refetch leads
       await fetchLeads();
     } catch (error: any) {
       console.error('Delete error:', error);
-      const message = error.response?.data?.message || 'Failed to delete lead';
+      const message = error.response?.data?.message || t('messages.deleteError');
       toast.error(message);
     } finally {
       setIsDeleting(false);
@@ -562,7 +562,7 @@ function CtaSettingsTabContent() {
       setPages(data);
     } catch (error: any) {
       console.error('Pages error:', error);
-      toast.error('Failed to load landing pages');
+      toast.error(t('messages.loadPagesError'));
     } finally {
       setIsLoading(false);
     }
@@ -607,11 +607,11 @@ function CtaSettingsTabContent() {
           ctaLink: data.ctaLink,
           ctaMode: data.ctaMode },
         isPublished: data.isPublished });
-      toast.success(`Landing page (${selectedLanguage}) updated successfully`);
+      toast.success(t('messages.updateSuccess', { language: selectedLanguage }));
       await fetchPages();
     } catch (error: any) {
       console.error('Update error:', error);
-      const message = error.response?.data?.message || 'Failed to update landing page';
+      const message = error.response?.data?.message || t('messages.updateError');
       toast.error(message);
     } finally {
       setIsUpdating(false);
@@ -802,7 +802,7 @@ function CtaSettingsTabContent() {
 
 // Main Page Component
 export function AdminLandingPagesPage() {
-  const { t, i18n } = useTranslation('admin-landing-pages');
+  const { t, i18n } = useTranslation('adminLandingPages');
   const navigate = useNavigate();
   const [isContentEditorLoading, setIsContentEditorLoading] = useState(false);
 

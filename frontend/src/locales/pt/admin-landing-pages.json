@@ -62,5 +62,18 @@
     },
     "save": "Salvar Alterações",
     "saving": "Salvando..."
+  },
+  "messages": {
+    "loadAnalyticsError": "Erro ao carregar analytics",
+    "loadLeadsError": "Erro ao carregar leads",
+    "exportSuccess": "Leads exportados com sucesso",
+    "exportError": "Erro ao exportar leads",
+    "resendSuccess": "Email de boas-vindas reenviado com sucesso",
+    "resendError": "Erro ao reenviar email",
+    "deleteSuccess": "Lead excluído com sucesso",
+    "deleteError": "Erro ao excluir lead",
+    "loadPagesError": "Erro ao carregar landing pages",
+    "updateSuccess": "Landing page ({{language}}) atualizada com sucesso",
+    "updateError": "Erro ao atualizar landing page"
   }
 }
