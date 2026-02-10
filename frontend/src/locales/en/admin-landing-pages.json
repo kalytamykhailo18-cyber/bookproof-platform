@@ -62,5 +62,18 @@
     },
     "save": "Save Changes",
     "saving": "Saving..."
+  },
+  "messages": {
+    "loadAnalyticsError": "Failed to load analytics",
+    "loadLeadsError": "Failed to load leads",
+    "exportSuccess": "Leads exported successfully",
+    "exportError": "Failed to export leads",
+    "resendSuccess": "Welcome email resent successfully",
+    "resendError": "Failed to resend email",
+    "deleteSuccess": "Lead deleted successfully",
+    "deleteError": "Failed to delete lead",
+    "loadPagesError": "Failed to load landing pages",
+    "updateSuccess": "Landing page ({{language}}) updated successfully",
+    "updateError": "Failed to update landing page"
   }
 }
