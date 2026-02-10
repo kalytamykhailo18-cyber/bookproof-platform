@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { dashboardsApi, AdminDashboardDto, AdminRevenueAnalyticsDto } from '@/lib/api/dashboards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -41,7 +41,7 @@ import { useAuthStore } from '@/stores/authStore';
 export function AdminDashboardPage() {
   const { t, i18n } = useTranslation('adminDashboard');
   const navigate = useNavigate();
-  const { isSuperAdmin, user } = useAuthStore();
+  const user = useAuthStore((state) => state.user);
 
   // State for dashboard data
   const [dashboard, setDashboard] = useState<AdminDashboardDto | null>(null);
@@ -49,39 +49,60 @@ export function AdminDashboardPage() {
   const [dashboardLoading, setDashboardLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Memoize to prevent re-renders
-  const canViewFinancials = useMemo(() => isSuperAdmin(), [isSuperAdmin]);
+  // Calculate based on primitive values to prevent re-render loops
+  const canViewFinancials = user?.role === 'ADMIN' && user?.adminRole === 'SUPER_ADMIN';
 
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
 
-  // Fetch dashboard data - Only runs once when user ID changes (not on every user object change)
+  // Safety mechanism: prevent duplicate fetches
+  const hasFetchedRef = useRef(false);
+  const currentUserIdRef = useRef<string | null>(null);
+
+  // Fetch dashboard data - Only runs once when user ID changes
   useEffect(() => {
+    // If we've already fetched for this user, skip
+    if (hasFetchedRef.current && currentUserIdRef.current === user?.id) {
+      console.log('[Dashboard] Skipping fetch - already fetched for user:', user?.id);
+      return;
+    }
+
+    if (!user?.id) {
+      return;
+    }
+
+    // Mark as fetching IMMEDIATELY (synchronously) to prevent race condition
+    hasFetchedRef.current = true;
+    currentUserIdRef.current = user?.id;
+
     const fetchDashboardData = async () => {
       try {
         setDashboardLoading(true);
         setError(null);
 
+        console.log('[Dashboard] Fetching dashboard data for user:', user?.id);
+
         // Fetch dashboard data
         const dashboardData = await dashboardsApi.getAdminDashboard();
         setDashboard(dashboardData);
 
-        // Fetch revenue data if super admin
-        if (canViewFinancials) {
+        // Fetch revenue data if super admin (check inline to avoid dependency)
+        if (user?.role === 'ADMIN' && user?.adminRole === 'SUPER_ADMIN') {
           const revenueData = await dashboardsApi.getAdminRevenueAnalytics();
           setRevenue(revenueData);
         }
       } catch (err: any) {
         setError(err.message || 'Failed to load dashboard');
         console.error('Dashboard error:', err);
+        // Reset on error so user can retry
+        hasFetchedRef.current = false;
+        currentUserIdRef.current = null;
       } finally {
         setDashboardLoading(false);
       }
     };
 
-    if (user?.id) {
-      fetchDashboardData();
-    }
-  }, [user?.id, canViewFinancials]);
+    fetchDashboardData();
+  }, [user?.id]);
 
   const navigateTo = (path: string) => {
     setLoadingPath(path);

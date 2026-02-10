@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { adminControlsApi } from '@/lib/api/admin-controls';
@@ -81,10 +81,14 @@ export function AdminAuthorsPage() {
   const [suspendNotes, setSuspendNotes] = useState('');
   const [adminNotes, setAdminNotes] = useState('');
 
+  // Safety mechanism: prevent duplicate fetches
+  const hasFetchedRef = useRef(false);
+
   // Fetch all authors
   const fetchAuthors = async () => {
     try {
       setIsLoading(true);
+      console.log('[Authors] Fetching authors...');
       const data = await adminControlsApi.getAllAuthors();
       setAuthors(data);
     } catch (error: any) {
@@ -96,7 +100,11 @@ export function AdminAuthorsPage() {
   };
 
   useEffect(() => {
-    fetchAuthors();
+    // Only fetch once on mount
+    if (!hasFetchedRef.current) {
+      hasFetchedRef.current = true;
+      fetchAuthors();
+    }
   }, []);
 
   const filteredAuthors = useMemo(() => {
