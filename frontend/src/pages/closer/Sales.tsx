@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCloserSalesHistory, useCloserDashboardStats } from '@/hooks/useCloser';
+import { closerApi } from '@/lib/api/closer';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -27,8 +28,44 @@ export function SalesHistoryPage() {
   const [page, setPage] = useState(0);
   const limit = 20;
 
-  const { data: stats, isLoading: statsLoading } = useCloserDashboardStats();
-  const { data: sales, isLoading } = useCloserSalesHistory(limit, page * limit);
+  const [stats, setStats] = useState<any>(null);
+  const [sales, setSales] = useState<any[]>([]);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch stats (only once)
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setStatsLoading(true);
+        const data = await closerApi.getDashboardStats();
+        setStats(data);
+      } catch (error: any) {
+        console.error('Stats error:', error);
+        toast.error('Failed to load stats');
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  // Fetch sales (depends on page)
+  useEffect(() => {
+    const fetchSales = async () => {
+      try {
+        setIsLoading(true);
+        const data = await closerApi.getSalesHistory(limit, page * limit);
+        setSales(data);
+      } catch (error: any) {
+        console.error('Sales error:', error);
+        toast.error('Failed to load sales history');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchSales();
+  }, [page, limit]);
 
   const formatCurrency = (amount: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {

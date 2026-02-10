@@ -1,10 +1,13 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useCampaigns, useUploadProgress } from '@/hooks/useCampaigns';
-import { useCredits } from '@/hooks/useCredits';
+import { useUploadProgress } from '@/hooks/useCampaigns';
+import { campaignsApi } from '@/lib/api/campaigns';
+import { useLoading } from '@/components/providers/LoadingProvider';
+import { creditsApi, CreditBalance } from '@/lib/api/credits';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -123,9 +126,26 @@ type Step = (typeof STEPS)[number];
 export function NewCampaignPage() {
   const { t, i18n } = useTranslation('author.campaigns.new');
   const navigate = useNavigate();
-  const { createCampaign, isCreating } = useCampaigns();
-  const { creditBalance } = useCredits();
+  const { startLoading, stopLoading } = useLoading();
+  const [isCreating, setIsCreating] = useState(false);
   const { uploadProgress } = useUploadProgress();
+
+  // Credit balance state
+  const [creditBalance, setCreditBalance] = useState<CreditBalance | null>(null);
+
+  // Fetch credit balance
+  useEffect(() => {
+    const fetchCreditBalance = async () => {
+      try {
+        const data = await creditsApi.getCreditBalance();
+        setCreditBalance(data);
+      } catch (err) {
+        console.error('Credit balance error:', err);
+      }
+    };
+    fetchCreditBalance();
+  }, []);
+
   const [currentStep, setCurrentStep] = useState<Step>('bookInfo');
 
   // File state
@@ -282,34 +302,48 @@ export function NewCampaignPage() {
     const data = getValues();
 
     // Create campaign with credits allocation and landing page data
-    createCampaign({
-      title: data.title,
-      authorName: data.authorName,
-      asin: data.asin,
-      amazonLink: data.amazonLink,
-      synopsis: data.synopsis,
-      language: data.language,
-      genre: data.genre,
-      secondaryGenre: data.secondaryGenre || undefined, // Optional per Section 2.3
-      category: data.category,
-      availableFormats: data.availableFormats,
-      targetReviews: data.creditsToAllocate,
-      amazonCouponCode: data.amazonCouponCode,
-      pageCount: data.pageCount,
-      wordCount: data.wordCount,
-      seriesName: data.seriesName,
-      seriesNumber: data.seriesNumber,
-      readingInstructions: data.readingInstructions || undefined,
-      // Landing page fields - Milestone 2.2
-      landingPageEnabled: data.landingPageEnabled,
-      landingPageLanguages: data.landingPageLanguages,
-      slug: data.slug || undefined,
-      titleEN: data.titleEN || undefined,
-      titlePT: data.titlePT || undefined,
-      titleES: data.titleES || undefined,
-      synopsisEN: data.synopsisEN || undefined,
-      synopsisPT: data.synopsisPT || undefined,
-      synopsisES: data.synopsisES || undefined });
+    try {
+      setIsCreating(true);
+      startLoading('Creating campaign...');
+      const newCampaign = await campaignsApi.createCampaign({
+        title: data.title,
+        authorName: data.authorName,
+        asin: data.asin,
+        amazonLink: data.amazonLink,
+        synopsis: data.synopsis,
+        language: data.language,
+        genre: data.genre,
+        secondaryGenre: data.secondaryGenre || undefined, // Optional per Section 2.3
+        category: data.category,
+        availableFormats: data.availableFormats,
+        targetReviews: data.creditsToAllocate,
+        amazonCouponCode: data.amazonCouponCode,
+        pageCount: data.pageCount,
+        wordCount: data.wordCount,
+        seriesName: data.seriesName,
+        seriesNumber: data.seriesNumber,
+        readingInstructions: data.readingInstructions || undefined,
+        // Landing page fields - Milestone 2.2
+        landingPageEnabled: data.landingPageEnabled,
+        landingPageLanguages: data.landingPageLanguages,
+        slug: data.slug || undefined,
+        titleEN: data.titleEN || undefined,
+        titlePT: data.titlePT || undefined,
+        titleES: data.titleES || undefined,
+        synopsisEN: data.synopsisEN || undefined,
+        synopsisPT: data.synopsisPT || undefined,
+        synopsisES: data.synopsisES || undefined
+      });
+      stopLoading();
+      toast.success('Campaign created successfully!');
+      navigate(`/author/campaigns/${newCampaign.id}`);
+    } catch (error: any) {
+      stopLoading();
+      const message = error.response?.data?.message || 'Failed to create campaign';
+      toast.error(message);
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const handleCreditChange = (value: number) => {

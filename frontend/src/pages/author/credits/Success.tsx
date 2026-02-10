@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCredits } from '@/hooks/useCredits';
+import { creditsApi } from '@/lib/api/credits';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -11,7 +11,6 @@ export function CreditPurchaseSuccessPage() {
   const { t, i18n } = useTranslation('author.credits.success');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { refetchBalance } = useCredits();
 
   // Check if keyword research was included in purchase (Section 9.1)
   const includeKeywordResearch = searchParams.get('includeKeywordResearch') === 'true';
@@ -21,8 +20,15 @@ export function CreditPurchaseSuccessPage() {
 
   useEffect(() => {
     // Refetch credit balance after successful purchase
+    const refetchBalance = async () => {
+      try {
+        await creditsApi.getCreditBalance();
+      } catch (err) {
+        console.error('Refetch balance error:', err);
+      }
+    };
     refetchBalance();
-  }, [refetchBalance]);
+  }, []);
 
   return (
     <div className="container mx-auto max-w-2xl px-4 py-12">

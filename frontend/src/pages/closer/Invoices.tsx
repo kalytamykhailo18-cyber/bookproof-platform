@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCloserInvoices, useCloserInvoiceStats, useCreateInvoice } from '@/hooks/useCloser';
+import { closerApi } from '@/lib/api/closer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -46,11 +46,11 @@ export function InvoicesPage() {
   const [statusFilter, setStatusFilter] = useState<PaymentStatus | 'ALL'>('ALL');
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
-  const { data: invoices, isLoading } = useCloserInvoices(
-    statusFilter === 'ALL' ? undefined : { status: statusFilter },
-  );
-  const { data: stats, isLoading: statsLoading } = useCloserInvoiceStats();
-  const createInvoice = useCreateInvoice();
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [stats, setStats] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [isCreating, setIsCreating] = useState(false);
 
   const [formData, setFormData] = useState({
     amount: 0,
@@ -60,27 +60,74 @@ export function InvoicesPage() {
     clientName: '',
     clientEmail: '' });
 
-  const handleCreateInvoice = () => {
-    createInvoice.mutate(
-      {
+  // Fetch stats (only once)
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setStatsLoading(true);
+        const data = await closerApi.getInvoiceStats();
+        setStats(data);
+      } catch (error: any) {
+        console.error('Invoice stats error:', error);
+        toast.error('Failed to load invoice stats');
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  // Fetch invoices (depends on statusFilter)
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        setIsLoading(true);
+        const query = statusFilter === 'ALL' ? undefined : { status: statusFilter };
+        const data = await closerApi.getInvoices(query);
+        setInvoices(data);
+      } catch (error: any) {
+        console.error('Invoices error:', error);
+        toast.error('Failed to load invoices');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchInvoices();
+  }, [statusFilter]);
+
+  const handleCreateInvoice = async () => {
+    try {
+      setIsCreating(true);
+      await closerApi.createInvoice({
         amount: formData.amount,
         currency: formData.currency,
         description: formData.description || undefined,
         dueDate: formData.dueDate || undefined,
         clientName: formData.clientName,
-        clientEmail: formData.clientEmail },
-      {
-        onSuccess: () => {
-          setCreateDialogOpen(false);
-          setFormData({
-            amount: 0,
-            currency: 'USD',
-            description: '',
-            dueDate: '',
-            clientName: '',
-            clientEmail: '' });
-        } },
-    );
+        clientEmail: formData.clientEmail
+      });
+      toast.success('Invoice created successfully');
+      setCreateDialogOpen(false);
+      setFormData({
+        amount: 0,
+        currency: 'USD',
+        description: '',
+        dueDate: '',
+        clientName: '',
+        clientEmail: ''
+      });
+      // Refetch data
+      const [invoicesData, statsData] = await Promise.all([
+        closerApi.getInvoices(statusFilter === 'ALL' ? undefined : { status: statusFilter }),
+        closerApi.getInvoiceStats()
+      ]);
+      setInvoices(invoicesData);
+      setStats(statsData);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to create invoice');
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const copyPaymentLink = (link: string) => {
@@ -255,13 +302,13 @@ export function InvoicesPage() {
                 type="button"
                 onClick={handleCreateInvoice}
                 disabled={
-                  createInvoice.isPending ||
+                  isCreating ||
                   !formData.clientName ||
                   !formData.clientEmail ||
                   formData.amount <= 0
                 }
               >
-                {createInvoice.isPending
+                {isCreating
                   ? t('invoices.createInvoiceDialog.creating')
                   : t('invoices.createInvoiceDialog.create')}
               </Button>

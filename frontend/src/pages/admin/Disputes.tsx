@@ -1,12 +1,6 @@
-import { useState } from 'react';
-import {
-  useOpenDisputes,
-  useDisputeStats,
-  useSlaStats,
-  useResolveDispute,
-  useEscalateDispute,
-  useUpdateDisputeStatus,
-  useResolveAppeal } from '@/hooks/useDisputes';
+import { useState, useEffect } from 'react';
+import { disputesApi } from '@/lib/api/disputes';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -37,13 +31,59 @@ import { CheckCircle, ArrowUpCircle, MessageSquare, Scale, Clock, AlertTriangle 
 import { DisputeStatus, DisputeType, DisputePriority, AppealStatus } from '@/lib/api/disputes';
 
 export function DisputesPage() {
-  const { data: disputes, isLoading } = useOpenDisputes();
-  const { data: stats } = useDisputeStats();
-  const { data: slaStats } = useSlaStats();
-  const resolveDispute = useResolveDispute();
-  const escalateDispute = useEscalateDispute();
-  const updateStatus = useUpdateDisputeStatus();
-  const resolveAppeal = useResolveAppeal();
+  // Data state
+  const [disputes, setDisputes] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState<any>(null);
+  const [slaStats, setSlaStats] = useState<any>(null);
+
+  // Mutation loading states
+  const [isResolvingDispute, setIsResolvingDispute] = useState(false);
+  const [isEscalatingDispute, setIsEscalatingDispute] = useState(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const [isResolvingAppeal, setIsResolvingAppeal] = useState(false);
+
+  // Fetch data
+  const fetchDisputes = async () => {
+    try {
+      setIsLoading(true);
+      const data = await disputesApi.getOpenDisputes();
+      setDisputes(data);
+    } catch (err) {
+      console.error('Disputes error:', err);
+      toast.error('Failed to load disputes');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDisputes();
+  }, []);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await disputesApi.getDisputeStats();
+        setStats(data);
+      } catch (err) {
+        console.error('Dispute stats error:', err);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  useEffect(() => {
+    const fetchSlaStats = async () => {
+      try {
+        const data = await disputesApi.getSlaStats();
+        setSlaStats(data);
+      } catch (err) {
+        console.error('SLA stats error:', err);
+      }
+    };
+    fetchSlaStats();
+  }, []);
 
   // Dialog states
   const [selectedDisputeId, setSelectedDisputeId] = useState<string>('');
@@ -69,66 +109,90 @@ export function DisputesPage() {
   const [appealApproved, setAppealApproved] = useState(true);
   const [appealResolution, setAppealResolution] = useState('');
 
-  const handleResolve = () => {
-    resolveDispute.mutate(
-      {
-        disputeId: selectedDisputeId,
-        data: {
-          resolution,
-          status: resolveStatus } },
-      {
-        onSuccess: () => {
-          setResolveDialogOpen(false);
-          setResolution('');
-          setResolveStatus(DisputeStatus.RESOLVED as DisputeStatus.RESOLVED);
-        } },
-    );
+  const handleResolve = async () => {
+    try {
+      setIsResolvingDispute(true);
+      await disputesApi.resolveDispute(selectedDisputeId, {
+        resolution,
+        status: resolveStatus
+      });
+      toast.success('Dispute resolved successfully');
+      setResolveDialogOpen(false);
+      setResolution('');
+      setResolveStatus(DisputeStatus.RESOLVED as DisputeStatus.RESOLVED);
+      // Refetch data
+      await fetchDisputes();
+      const statsData = await disputesApi.getDisputeStats();
+      setStats(statsData);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to resolve dispute');
+    } finally {
+      setIsResolvingDispute(false);
+    }
   };
 
-  const handleEscalate = () => {
-    escalateDispute.mutate(
-      {
-        disputeId: selectedDisputeId,
-        data: {
-          reason: escalationReason } },
-      {
-        onSuccess: () => {
-          setEscalateDialogOpen(false);
-          setEscalationReason('');
-        } },
-    );
+  const handleEscalate = async () => {
+    try {
+      setIsEscalatingDispute(true);
+      await disputesApi.escalateDispute(selectedDisputeId, {
+        reason: escalationReason
+      });
+      toast.success('Dispute escalated successfully');
+      setEscalateDialogOpen(false);
+      setEscalationReason('');
+      // Refetch data
+      await fetchDisputes();
+      const statsData = await disputesApi.getDisputeStats();
+      setStats(statsData);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to escalate dispute');
+    } finally {
+      setIsEscalatingDispute(false);
+    }
   };
 
-  const handleUpdateStatus = () => {
-    updateStatus.mutate(
-      {
-        disputeId: selectedDisputeId,
-        data: {
-          status: newStatus,
-          adminNotes: adminNotes || undefined } },
-      {
-        onSuccess: () => {
-          setStatusDialogOpen(false);
-          setNewStatus(DisputeStatus.IN_PROGRESS);
-          setAdminNotes('');
-        } },
-    );
+  const handleUpdateStatus = async () => {
+    try {
+      setIsUpdatingStatus(true);
+      await disputesApi.updateDisputeStatus(selectedDisputeId, {
+        status: newStatus,
+        adminNotes: adminNotes || undefined
+      });
+      toast.success('Dispute status updated');
+      setStatusDialogOpen(false);
+      setNewStatus(DisputeStatus.IN_PROGRESS);
+      setAdminNotes('');
+      // Refetch data
+      await fetchDisputes();
+      const statsData = await disputesApi.getDisputeStats();
+      setStats(statsData);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to update dispute status');
+    } finally {
+      setIsUpdatingStatus(false);
+    }
   };
 
-  const handleResolveAppeal = () => {
-    resolveAppeal.mutate(
-      {
-        disputeId: selectedDisputeId,
-        data: {
-          approved: appealApproved,
-          resolution: appealResolution } },
-      {
-        onSuccess: () => {
-          setAppealDialogOpen(false);
-          setAppealApproved(true);
-          setAppealResolution('');
-        } },
-    );
+  const handleResolveAppeal = async () => {
+    try {
+      setIsResolvingAppeal(true);
+      await disputesApi.resolveAppeal(selectedDisputeId, {
+        approved: appealApproved,
+        resolution: appealResolution
+      });
+      toast.success('Appeal resolved');
+      setAppealDialogOpen(false);
+      setAppealApproved(true);
+      setAppealResolution('');
+      // Refetch data
+      await fetchDisputes();
+      const statsData = await disputesApi.getDisputeStats();
+      setStats(statsData);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to resolve appeal');
+    } finally {
+      setIsResolvingAppeal(false);
+    }
   };
 
   const getPriorityColor = (priority: DisputePriority) => {
@@ -404,9 +468,9 @@ export function DisputesPage() {
                               <Button
                                 type="button"
                                 onClick={handleUpdateStatus}
-                                disabled={updateStatus.isPending}
+                                disabled={isUpdatingStatus}
                               >
-                                {updateStatus.isPending ? 'Updating...' : 'Update Status'}
+                                {isUpdatingStatus ? 'Updating...' : 'Update Status'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -459,9 +523,9 @@ export function DisputesPage() {
                               <Button
                                 variant="destructive"
                                 onClick={handleEscalate}
-                                disabled={!escalationReason || escalateDispute.isPending}
+                                disabled={!escalationReason || isEscalatingDispute}
                               >
-                                {escalateDispute.isPending ? 'Escalating...' : 'Escalate'}
+                                {isEscalatingDispute ? 'Escalating...' : 'Escalate'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -523,9 +587,9 @@ export function DisputesPage() {
                               <Button
                                 type="button"
                                 onClick={handleResolve}
-                                disabled={!resolution || resolveDispute.isPending}
+                                disabled={!resolution || isResolvingDispute}
                               >
-                                {resolveDispute.isPending ? 'Resolving...' : 'Resolve Dispute'}
+                                {isResolvingDispute ? 'Resolving...' : 'Resolve Dispute'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -592,9 +656,9 @@ export function DisputesPage() {
                                 <Button
                                   type="button"
                                   onClick={handleResolveAppeal}
-                                  disabled={!appealResolution || appealResolution.length < 10 || resolveAppeal.isPending}
+                                  disabled={!appealResolution || appealResolution.length < 10 || isResolvingAppeal}
                                 >
-                                  {resolveAppeal.isPending ? 'Resolving...' : appealApproved ? 'Approve & Reopen' : 'Reject Appeal'}
+                                  {isResolvingAppeal ? 'Resolving...' : appealApproved ? 'Approve & Reopen' : 'Reject Appeal'}
                                 </Button>
                               </DialogFooter>
                             </DialogContent>

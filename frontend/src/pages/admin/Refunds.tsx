@@ -1,9 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  useAdminRefundRequests,
-  useProcessRefundRequest } from '@/hooks/useRefunds';
-import { RefundRequestStatus, RefundReason } from '@/lib/api/refunds';
+import { refundsApi, RefundRequestStatus, RefundReason, RefundRequest } from '@/lib/api/refunds';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -87,12 +85,32 @@ export function AdminRefundsPage() {
   const [page, setPage] = useState(0);
   const limit = 20;
 
-  const { data, isLoading, refetch } = useAdminRefundRequests({
-    status: statusFilter === 'all' ? undefined : statusFilter,
-    limit,
-    offset: page * limit });
+  // Data state
+  const [data, setData] = useState<{ requests: RefundRequest[]; total: number } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const processRefund = useProcessRefundRequest();
+  // Fetch refund requests
+  const fetchRefunds = async () => {
+    try {
+      setIsLoading(true);
+      const result = await refundsApi.getAllRequests({
+        status: statusFilter === 'all' ? undefined : statusFilter,
+        limit,
+        offset: page * limit
+      });
+      setData(result);
+    } catch (err) {
+      console.error('Refund requests error:', err);
+      toast.error('Failed to load refund requests');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRefunds();
+  }, [statusFilter, page]);
 
   // Dialog state
   const [selectedRequest, setSelectedRequest] = useState<string | null>(null);
@@ -114,24 +132,27 @@ export function AdminRefundsPage() {
     setAdminNotes('');
   };
 
-  const handleProcessRefund = () => {
+  const handleProcessRefund = async () => {
     if (!selectedRequest) return;
 
-    processRefund.mutate(
-      {
-        requestId: selectedRequest,
-        decision: {
-          decision,
-          adminNotes: adminNotes || undefined,
-          refundAmount: decision === 'approve_partial' ? partialAmount : undefined } },
-      {
-        onSuccess: () => {
-          setDialogOpen(false);
-          setSelectedRequest(null);
-          setAdminNotes('');
-          refetch();
-        } },
-    );
+    try {
+      setIsProcessing(true);
+      await refundsApi.processRequest(selectedRequest, {
+        decision,
+        adminNotes: adminNotes || undefined,
+        refundAmount: decision === 'approve_partial' ? partialAmount : undefined
+      });
+      toast.success('Refund processed successfully');
+      setDialogOpen(false);
+      setSelectedRequest(null);
+      setAdminNotes('');
+      await fetchRefunds();
+    } catch (error: any) {
+      console.error('Process refund error:', error);
+      toast.error(error.response?.data?.message || 'Failed to process refund');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   // Calculate stats
@@ -519,10 +540,10 @@ export function AdminRefundsPage() {
             <Button
               type="button"
               onClick={handleProcessRefund}
-              disabled={processRefund.isPending || (decision === 'approve_partial' && partialAmount <= 0)}
+              disabled={isProcessing || (decision === 'approve_partial' && partialAmount <= 0)}
               variant={decision === 'reject' ? 'destructive' : 'default'}
             >
-              {processRefund.isPending ? (
+              {isProcessing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Processing...

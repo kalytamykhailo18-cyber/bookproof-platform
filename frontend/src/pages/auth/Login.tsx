@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate,  useSearchParams, useParams } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
+import { tokenManager } from '@/lib/api/client';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,9 +33,11 @@ export function LoginPage() {
   const { t, i18n } = useTranslation('auth');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { loginAsync, isLoggingIn } = useAuth();
+  const { setUser } = useAuthStore();
+  const { startLoading, stopLoading } = useLoading();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isForgotLoading, setIsForgotLoading] = useState(false);
   const [isSignupLoading, setIsSignupLoading] = useState(false);
   const [showVerificationNeeded, setShowVerificationNeeded] = useState(false);
@@ -61,14 +65,41 @@ export function LoginPage() {
         captchaToken = await executeRecaptcha('login');
       }
 
-      await loginAsync({ ...data, captchaToken, rememberMe });
+      setIsLoggingIn(true);
+      startLoading('Signing you in...');
+      const response = await authApi.login({ ...data, captchaToken, rememberMe });
+
+      // Set token and user
+      tokenManager.setToken(response.accessToken);
+      setUser(response.user);
+
       toast.success(t('login.success'));
 
       // Section 16.1: Redirect to intended destination after successful login
       if (returnUrl) {
         navigate(decodeURIComponent(returnUrl));
+      } else {
+        // Redirect based on role
+        switch (response.user.role) {
+          case 'AUTHOR':
+            navigate('/author');
+            break;
+          case 'READER':
+            navigate('/reader');
+            break;
+          case 'ADMIN':
+            navigate('/admin/dashboard');
+            break;
+          case 'CLOSER':
+            navigate('/closer');
+            break;
+          case 'AFFILIATE':
+            navigate('/affiliate/dashboard');
+            break;
+          default:
+            navigate('/');
+        }
       }
-      // Otherwise, useAuth hook will handle default redirect based on role
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } }; message?: string };
       const errorMessage = err?.response?.data?.message || err?.message || t('login.error');
@@ -80,6 +111,9 @@ export function LoginPage() {
       } else {
         toast.error(errorMessage);
       }
+    } finally {
+      setIsLoggingIn(false);
+      stopLoading();
     }
   };
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useReaderProfile } from '@/hooks/useReaders';
+import { readersApi, ReaderProfile, ContentPreference as ContentPref } from '@/lib/api/readers';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -51,18 +52,13 @@ const GENRE_OPTIONS = [
 export function ReaderProfilePage() {
   const { t, i18n } = useTranslation('reader.profile');
   const navigate = useNavigate();
-  const {
-    profile,
-    isLoadingProfile,
-    hasProfile,
-    createProfile,
-    isCreating,
-    updateProfile,
-    isUpdating,
-    addAmazonProfile,
-    isAddingAmazonProfile,
-    removeAmazonProfile,
-    isRemovingAmazonProfile } = useReaderProfile();
+
+  const [profile, setProfile] = useState<ReaderProfile | null>(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [isCreating, setIsCreating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isAddingAmazonProfile, setIsAddingAmazonProfile] = useState(false);
+  const [isRemovingAmazonProfile, setIsRemovingAmazonProfile] = useState(false);
 
   const [contentPreference, setContentPreference] = useState<ContentPreference>(
     ContentPreference.BOTH,
@@ -71,31 +67,63 @@ export function ReaderProfilePage() {
   const [newAmazonProfile, setNewAmazonProfile] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
+  // Fetch profile
   useEffect(() => {
-    if (profile) {
-      setContentPreference(profile.contentPreference as ContentPreference);
-      setSelectedGenres(profile.preferredGenres);
-      setIsEditing(false);
-    } else if (!isLoadingProfile && !hasProfile) {
-      setIsEditing(true);
-    }
-  }, [profile, isLoadingProfile, hasProfile]);
+    const fetchProfile = async () => {
+      try {
+        setIsLoadingProfile(true);
+        const data = await readersApi.getProfile();
+        setProfile(data);
+        setContentPreference(data.contentPreference as ContentPreference);
+        setSelectedGenres(data.preferredGenres);
+        setIsEditing(false);
+      } catch (err) {
+        console.error('Profile error:', err);
+        setIsEditing(true);
+      } finally {
+        setIsLoadingProfile(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
-  const handleSave = () => {
-    if (!hasProfile) {
-      // Create new profile
-      createProfile({
-        contentPreference,
-        preferredGenres: selectedGenres });
-    } else {
-      // Update existing profile
-      updateProfile({
-        contentPreference,
-        preferredGenres: selectedGenres });
+  const handleSave = async () => {
+    try {
+      if (!profile) {
+        // Create new profile
+        setIsCreating(true);
+        await readersApi.createProfile({
+          contentPreference: contentPreference as ContentPref,
+          preferredGenres: selectedGenres
+        });
+        toast.success('Profile created successfully!');
+        // Refetch profile
+        const data = await readersApi.getProfile();
+        setProfile(data);
+        setIsEditing(false);
+      } else {
+        // Update existing profile
+        setIsUpdating(true);
+        await readersApi.updateProfile({
+          contentPreference: contentPreference as ContentPref,
+          preferredGenres: selectedGenres
+        });
+        toast.success('Profile updated successfully!');
+        // Refetch profile
+        const data = await readersApi.getProfile();
+        setProfile(data);
+        setIsEditing(false);
+      }
+    } catch (error: any) {
+      const message = error.response?.data?.message || `Failed to ${profile ? 'update' : 'create'} profile`;
+      toast.error(message);
+    } finally {
+      setIsCreating(false);
+      setIsUpdating(false);
     }
   };
 
-  const handleAddAmazonProfile = () => {
+  const handleAddAmazonProfile = async () => {
     if (!newAmazonProfile.trim()) return;
 
     // Validate URL format
@@ -104,13 +132,37 @@ export function ReaderProfilePage() {
       return;
     }
 
-    addAmazonProfile({ profileUrl: newAmazonProfile });
-    setNewAmazonProfile('');
+    try {
+      setIsAddingAmazonProfile(true);
+      await readersApi.addAmazonProfile({ profileUrl: newAmazonProfile });
+      toast.success('Amazon profile added successfully!');
+      // Refetch profile
+      const data = await readersApi.getProfile();
+      setProfile(data);
+      setNewAmazonProfile('');
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Failed to add Amazon profile';
+      toast.error(message);
+    } finally {
+      setIsAddingAmazonProfile(false);
+    }
   };
 
-  const handleRemoveAmazonProfile = (profileId: string) => {
-    if (confirm('Are you sure you want to remove this Amazon profile?')) {
-      removeAmazonProfile(profileId);
+  const handleRemoveAmazonProfile = async (profileId: string) => {
+    if (!confirm('Are you sure you want to remove this Amazon profile?')) return;
+
+    try {
+      setIsRemovingAmazonProfile(true);
+      await readersApi.removeAmazonProfile(profileId);
+      toast.success('Amazon profile removed successfully!');
+      // Refetch profile
+      const data = await readersApi.getProfile();
+      setProfile(data);
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Failed to remove Amazon profile';
+      toast.error(message);
+    } finally {
+      setIsRemovingAmazonProfile(false);
     }
   };
 
@@ -120,6 +172,7 @@ export function ReaderProfilePage() {
     );
   };
 
+  const hasProfile = !!profile;
   const canAddAmazonProfile = profile && profile.amazonProfiles.length < 3;
   const isSaving = isCreating || isUpdating;
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PayoutResponse } from '@/lib/api/payouts';
-import { useRejectPayout } from '@/hooks/usePayouts';
+import { PayoutResponse, rejectPayout as rejectPayoutApi } from '@/lib/api/payouts';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -18,32 +18,39 @@ interface RejectPayoutDialogProps {
   payout: PayoutResponse;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onRefetch: () => void;
 }
 
 export default function RejectPayoutDialog({
   payout,
   open,
-  onOpenChange }: RejectPayoutDialogProps) {
+  onOpenChange,
+  onRefetch }: RejectPayoutDialogProps) {
   const { t, i18n } = useTranslation('admin-payouts');
-  const { mutate: rejectPayout, isPending } = useRejectPayout();
   const [reason, setReason] = useState('');
   const [error, setError] = useState('');
+  const [isPending, setIsPending] = useState(false);
 
-  const handleReject = () => {
+  const handleReject = async () => {
     if (reason.trim().length < 10) {
       setError(t('reject.validation.reasonMinLength'));
       return;
     }
 
-    rejectPayout(
-      { id: payout.id, data: { reason } },
-      {
-        onSuccess: () => {
-          setReason('');
-          setError('');
-          onOpenChange(false);
-        } },
-    );
+    try {
+      setIsPending(true);
+      await rejectPayoutApi(payout.id, { reason });
+      toast.success('Payout rejected');
+      setReason('');
+      setError('');
+      onOpenChange(false);
+      onRefetch();
+    } catch (error: any) {
+      console.error('Reject payout error:', error);
+      toast.error(error.response?.data?.message || 'Failed to reject payout');
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (

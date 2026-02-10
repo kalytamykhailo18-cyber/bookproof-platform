@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Mail, Loader2, LogOut } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
+import { tokenManager } from '@/lib/api/client';
 import { toast } from 'sonner';
 import { authApi } from '@/lib/api/auth';
 
@@ -14,10 +15,12 @@ import { authApi } from '@/lib/api/auth';
  */
 export function VerifyEmailRequiredPage() {
   const { t, i18n } = useTranslation('auth.verifyEmail');
+  const params = useParams();
+  const navigate = useNavigate();
   // locale available if needed for future use
   const _locale = (params.locale as string) || 'en';
   void _locale; // silence unused variable warning
-  const { user, logout } = useAuth();
+  const { user, clearUser } = useAuthStore();
   const [isResending, setIsResending] = useState(false);
   const [isLogoutLoading, setIsLogoutLoading] = useState(false);
 
@@ -37,7 +40,10 @@ export function VerifyEmailRequiredPage() {
 
   const handleLogout = () => {
     setIsLogoutLoading(true);
-    logout();
+    tokenManager.clearToken();
+    clearUser();
+    navigate('/login');
+    toast.success('Logged out successfully');
   };
 
   return (

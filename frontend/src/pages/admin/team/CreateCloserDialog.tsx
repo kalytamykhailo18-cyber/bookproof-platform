@@ -4,8 +4,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2, UserPlus } from 'lucide-react';
+import { toast } from 'sonner';
 
-import { useCreateCloser } from '@/hooks/useAdminTeam';
+import { authApi, CreateCloserRequest } from '@/lib/api/auth';
 import {
   Dialog,
   DialogContent,
@@ -13,10 +14,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger } from '@/components/ui/dialog';
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import {
   Form,
@@ -25,7 +26,8 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage } from '@/components/ui/form';
+  FormMessage,
+} from '@/components/ui/form';
 
 /**
  * Zod schema matching backend CreateCloserDto exactly
@@ -46,16 +48,20 @@ const createCloserSchema = z.object({
     .number()
     .min(0, 'Commission rate cannot be negative')
     .max(100, 'Commission rate cannot exceed 100%')
-    .optional()
     .default(0),
-  isActive: z.boolean().optional().default(true) });
+  isActive: z.boolean().default(true),
+});
 
 type CreateCloserFormData = z.infer<typeof createCloserSchema>;
 
-export function CreateCloserDialog() {
-  const { t, i18n } = useTranslation('adminTeam');
+interface CreateCloserDialogProps {
+  onSuccess?: () => void;
+}
+
+export function CreateCloserDialog({ onSuccess }: CreateCloserDialogProps) {
+  const { t } = useTranslation('adminTeam');
   const [open, setOpen] = useState(false);
-  const createCloserMutation = useCreateCloser();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<CreateCloserFormData>({
     resolver: zodResolver(createCloserSchema),
@@ -64,25 +70,61 @@ export function CreateCloserDialog() {
       name: '',
       password: '',
       commissionRate: 0,
-      isActive: true } });
+      isActive: true,
+    },
+  });
 
   const onSubmit = async (data: CreateCloserFormData) => {
     try {
-      await createCloserMutation.mutateAsync({
+      setIsSubmitting(true);
+
+      const payload: CreateCloserRequest = {
         email: data.email,
         name: data.name,
-        password: data.password || undefined, // Convert empty string to undefined
+        password: data.password || undefined,
         commissionRate: data.commissionRate,
-        isActive: data.isActive });
+        isActive: data.isActive,
+      };
+
+      const response = await authApi.createCloser(payload);
+
+      toast.success(`Closer account created for ${response.email}`, {
+        description: response.temporaryPasswordSent
+          ? 'Temporary password sent via email'
+          : 'Account created successfully',
+      });
+
       setOpen(false);
       form.reset();
-    } catch {
-      // Error is handled by the mutation
+
+      // Call parent callback to refresh data
+      onSuccess?.();
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : typeof error === 'object' && error !== null && 'response' in error
+            ? (error as { response?: { data?: { message?: string } } }).response?.data
+                ?.message || 'Failed to create closer account'
+            : 'Failed to create closer account';
+
+      toast.error('Error', { description: message });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!isSubmitting) {
+      setOpen(newOpen);
+      if (!newOpen) {
+        form.reset();
+      }
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button>
           <UserPlus className="mr-2 h-4 w-4" />
@@ -99,7 +141,6 @@ export function CreateCloserDialog() {
           <div className="space-y-4">
             {/* Email Field */}
             <FormField
-              control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
@@ -119,7 +160,6 @@ export function CreateCloserDialog() {
 
             {/* Name Field */}
             <FormField
-              control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
@@ -135,7 +175,6 @@ export function CreateCloserDialog() {
 
             {/* Password Field (Optional) */}
             <FormField
-              control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
@@ -155,7 +194,6 @@ export function CreateCloserDialog() {
 
             {/* Commission Rate Field */}
             <FormField
-              control={form.control}
               name="commissionRate"
               render={({ field }) => (
                 <FormItem>
@@ -186,7 +224,6 @@ export function CreateCloserDialog() {
 
             {/* Active Status Field */}
             <FormField
-              control={form.control}
               name="isActive"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
@@ -207,13 +244,17 @@ export function CreateCloserDialog() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setOpen(false)}
-                disabled={createCloserMutation.isPending}
+                onClick={() => handleOpenChange(false)}
+                disabled={isSubmitting}
               >
                 {t('createCloser.cancel')}
               </Button>
-              <Button type="button" disabled={createCloserMutation.isPending} onClick={form.handleSubmit(onSubmit)}>
-                {createCloserMutation.isPending ? (
+              <Button
+                type="button"
+                disabled={isSubmitting}
+                onClick={form.handleSubmit(onSubmit)}
+              >
+                {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {t('createCloser.creating')}

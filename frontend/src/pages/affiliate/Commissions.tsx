@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCommissions } from '@/hooks/useAffiliates';
+import { affiliatesApi, CommissionStatus } from '@/lib/api/affiliates';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -19,13 +20,30 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DollarSign } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
-import { CommissionStatus } from '@/lib/api/affiliates';
 
 export function AffiliateCommissionsPage() {
   const { t, i18n } = useTranslation('affiliates.commissions');
   const [statusFilter, setStatusFilter] = useState<CommissionStatus | undefined>(undefined);
 
-  const { data: commissions, isLoading } = useCommissions(statusFilter);
+  const [commissions, setCommissions] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch commissions
+  useEffect(() => {
+    const fetchCommissions = async () => {
+      try {
+        setIsLoading(true);
+        const data = await affiliatesApi.getCommissions(statusFilter);
+        setCommissions(data);
+      } catch (error: any) {
+        console.error('Commissions error:', error);
+        toast.error('Failed to load commissions');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchCommissions();
+  }, [statusFilter]);
 
   const getCommissionStatusBadge = (status: CommissionStatus) => {
     const variants: Record<

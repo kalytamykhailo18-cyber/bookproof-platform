@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PayoutResponse } from '@/lib/api/payouts';
-import { useApprovePayout } from '@/hooks/usePayouts';
+import { PayoutResponse, approvePayout as approvePayoutApi } from '@/lib/api/payouts';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -18,25 +18,32 @@ interface ApprovePayoutDialogProps {
   payout: PayoutResponse;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onRefetch: () => void;
 }
 
 export default function ApprovePayoutDialog({
   payout,
   open,
-  onOpenChange }: ApprovePayoutDialogProps) {
+  onOpenChange,
+  onRefetch }: ApprovePayoutDialogProps) {
   const { t, i18n } = useTranslation('admin-payouts');
-  const { mutate: approvePayout, isPending } = useApprovePayout();
   const [notes, setNotes] = useState('');
+  const [isPending, setIsPending] = useState(false);
 
-  const handleApprove = () => {
-    approvePayout(
-      { id: payout.id, data: { notes: notes || undefined } },
-      {
-        onSuccess: () => {
-          setNotes('');
-          onOpenChange(false);
-        } },
-    );
+  const handleApprove = async () => {
+    try {
+      setIsPending(true);
+      await approvePayoutApi(payout.id, { notes: notes || undefined });
+      toast.success('Payout approved successfully');
+      setNotes('');
+      onOpenChange(false);
+      onRefetch();
+    } catch (error: any) {
+      console.error('Approve payout error:', error);
+      toast.error(error.response?.data?.message || 'Failed to approve payout');
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (

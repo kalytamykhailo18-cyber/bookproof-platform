@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useFinancialReport, useExportFinancialCsv, useExportFinancialPdf } from '@/hooks/useAdminReports';
+import { adminReportsApi, FinancialReportDto } from '@/lib/api/admin-reports';
+import { toast } from 'sonner';
 import { Download, FileText, DollarSign, TrendingUp, TrendingDown, FileDown } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency } from '@/lib/utils';
@@ -13,24 +14,71 @@ export function AdminFinancialReportsPage() {
     startDate: format(startOfMonth(new Date()), 'yyyy-MM-dd'),
     endDate: format(endOfMonth(new Date()), 'yyyy-MM-dd') });
 
-  const { data: report, isLoading } = useFinancialReport(
-    dateRange.startDate,
-    dateRange.endDate,
-  );
+  // Data state
+  const [report, setReport] = useState<FinancialReportDto | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const exportCsvMutation = useExportFinancialCsv();
-  const exportPdfMutation = useExportFinancialPdf();
+  // Export loading states
+  const [isExportingCsv, setIsExportingCsv] = useState(false);
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
 
-  const handleExportCsv = () => {
-    exportCsvMutation.mutate({
-      startDate: dateRange.startDate,
-      endDate: dateRange.endDate });
+  // Fetch report when date range changes
+  useEffect(() => {
+    const fetchReport = async () => {
+      if (!dateRange.startDate || !dateRange.endDate) return;
+
+      try {
+        setIsLoading(true);
+        const data = await adminReportsApi.getFinancialReport(
+          dateRange.startDate,
+          dateRange.endDate
+        );
+        setReport(data);
+      } catch (err) {
+        console.error('Financial report error:', err);
+        toast.error('Failed to load financial report');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReport();
+  }, [dateRange.startDate, dateRange.endDate]);
+
+  const handleExportCsv = async () => {
+    try {
+      setIsExportingCsv(true);
+      const blob = await adminReportsApi.downloadFinancialReportCsv(
+        dateRange.startDate,
+        dateRange.endDate
+      );
+      const filename = `financial-report-${dateRange.startDate}-to-${dateRange.endDate}.csv`;
+      adminReportsApi.triggerFileDownload(blob, filename);
+      toast.success('Financial report exported successfully');
+    } catch (error: any) {
+      console.error('Export CSV error:', error);
+      toast.error(error.response?.data?.message || 'Failed to export CSV');
+    } finally {
+      setIsExportingCsv(false);
+    }
   };
 
-  const handleExportPdf = () => {
-    exportPdfMutation.mutate({
-      startDate: dateRange.startDate,
-      endDate: dateRange.endDate });
+  const handleExportPdf = async () => {
+    try {
+      setIsExportingPdf(true);
+      const blob = await adminReportsApi.downloadFinancialReportPdf(
+        dateRange.startDate,
+        dateRange.endDate
+      );
+      const filename = `financial-report-${dateRange.startDate}-to-${dateRange.endDate}.pdf`;
+      adminReportsApi.triggerFileDownload(blob, filename);
+      toast.success('Financial report exported successfully');
+    } catch (error: any) {
+      console.error('Export PDF error:', error);
+      toast.error(error.response?.data?.message || 'Failed to export PDF');
+    } finally {
+      setIsExportingPdf(false);
+    }
   };
 
   const handleDateRangeChange = (start: string, end: string) => {
@@ -52,19 +100,19 @@ export function AdminFinancialReportsPage() {
             type="button"
             variant="outline"
             onClick={handleExportCsv}
-            disabled={exportCsvMutation.isPending}
+            disabled={isExportingCsv}
           >
             <Download className="mr-2 h-4 w-4" />
-            {exportCsvMutation.isPending ? 'Exporting...' : 'Export CSV'}
+            {isExportingCsv ? 'Exporting...' : 'Export CSV'}
           </Button>
           <Button
             type="button"
             variant="outline"
             onClick={handleExportPdf}
-            disabled={exportPdfMutation.isPending}
+            disabled={isExportingPdf}
           >
             <FileDown className="mr-2 h-4 w-4" />
-            {exportPdfMutation.isPending ? 'Exporting...' : 'Export PDF'}
+            {isExportingPdf ? 'Exporting...' : 'Export PDF'}
           </Button>
         </div>
       </div>

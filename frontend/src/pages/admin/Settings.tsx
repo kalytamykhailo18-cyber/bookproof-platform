@@ -18,17 +18,8 @@ import {
   FileText,
   Wallet } from 'lucide-react';
 
-import {
-  usePricingSettings,
-  useUpdateKeywordResearchPricing,
-  useKeywordResearchFeatureStatus,
-  useUpdateKeywordResearchFeature,
-  useReviewPaymentRates,
-  useUpdateReviewPaymentRates,
-  useAllSettings,
-  useUpdateSetting,
-  useSystemConfiguration,
-  useUpdateSystemConfiguration } from '@/hooks/useSettings';
+import { settingsApi } from '@/lib/api/settings';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
@@ -92,22 +83,25 @@ const DAYS_OF_WEEK = [
 
 export function AdminSettingsPage() {
   const { t, i18n } = useTranslation('adminSettings');
-  const { data: pricingSettings, isLoading, refetch } = usePricingSettings();
-  const updatePricingMutation = useUpdateKeywordResearchPricing();
-  const {
-    data: featureStatus,
-    isLoading: featureLoading,
-    refetch: refetchFeature } = useKeywordResearchFeatureStatus();
-  const updateFeatureMutation = useUpdateKeywordResearchFeature();
-  const { data: reviewRates, isLoading: reviewRatesLoading, refetch: refetchReviewRates } = useReviewPaymentRates();
-  const updateReviewRatesMutation = useUpdateReviewPaymentRates();
-  const { data: allSettings, isLoading: allSettingsLoading } = useAllSettings();
-  const updateSettingMutation = useUpdateSetting();
-  const {
-    data: systemConfig,
-    isLoading: systemConfigLoading,
-    refetch: refetchSystemConfig } = useSystemConfiguration();
-  const updateSystemConfigMutation = useUpdateSystemConfiguration();
+
+  // State for queries
+  const [pricingSettings, setPricingSettings] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [featureStatus, setFeatureStatus] = useState<any>(null);
+  const [featureLoading, setFeatureLoading] = useState(true);
+  const [reviewRates, setReviewRates] = useState<any>(null);
+  const [reviewRatesLoading, setReviewRatesLoading] = useState(true);
+  const [allSettings, setAllSettings] = useState<any[]>([]);
+  const [allSettingsLoading, setAllSettingsLoading] = useState(true);
+  const [systemConfig, setSystemConfig] = useState<any>(null);
+  const [systemConfigLoading, setSystemConfigLoading] = useState(true);
+
+  // State for mutations
+  const [isUpdatingPricing, setIsUpdatingPricing] = useState(false);
+  const [isUpdatingFeature, setIsUpdatingFeature] = useState(false);
+  const [isUpdatingReviewRates, setIsUpdatingReviewRates] = useState(false);
+  const [isUpdatingSetting, setIsUpdatingSetting] = useState(false);
+  const [isUpdatingSystemConfig, setIsUpdatingSystemConfig] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingSystemConfig, setIsEditingSystemConfig] = useState(false);
@@ -115,6 +109,77 @@ export function AdminSettingsPage() {
   const [featureToggleReason, setFeatureToggleReason] = useState('');
   const [editingSettingKey, setEditingSettingKey] = useState<string | null>(null);
   const [settingValues, setSettingValues] = useState<Record<string, string>>({});
+
+  // Fetch functions
+  const refetch = async () => {
+    try {
+      setIsLoading(true);
+      const data = await settingsApi.getPricingSettings();
+      setPricingSettings(data);
+    } catch (error: any) {
+      console.error('Pricing settings error:', error);
+      toast.error('Failed to load pricing settings');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const refetchFeature = async () => {
+    try {
+      setFeatureLoading(true);
+      const data = await settingsApi.getKeywordResearchFeatureStatus();
+      setFeatureStatus(data);
+    } catch (error: any) {
+      console.error('Feature status error:', error);
+    } finally {
+      setFeatureLoading(false);
+    }
+  };
+
+  const refetchReviewRates = async () => {
+    try {
+      setReviewRatesLoading(true);
+      const data = await settingsApi.getReviewPaymentRates();
+      setReviewRates(data);
+    } catch (error: any) {
+      console.error('Review rates error:', error);
+    } finally {
+      setReviewRatesLoading(false);
+    }
+  };
+
+  const refetchSystemConfig = async () => {
+    try {
+      setSystemConfigLoading(true);
+      const data = await settingsApi.getSystemConfiguration();
+      setSystemConfig(data);
+    } catch (error: any) {
+      console.error('System config error:', error);
+    } finally {
+      setSystemConfigLoading(false);
+    }
+  };
+
+  const fetchAllSettings = async () => {
+    try {
+      setAllSettingsLoading(true);
+      const data = await settingsApi.getAllSettings();
+      setAllSettings(data);
+    } catch (error: any) {
+      console.error('All settings error:', error);
+    } finally {
+      setAllSettingsLoading(false);
+    }
+  };
+
+  // Initial data fetches
+  useEffect(() => {
+    refetch();
+    refetchFeature();
+    refetchReviewRates();
+    refetchSystemConfig();
+    fetchAllSettings();
+  }, []);
 
   const form = useForm<KeywordPricingFormData>({
     resolver: zodResolver(keywordPricingSchema),
@@ -185,11 +250,21 @@ export function AdminSettingsPage() {
     if (!isValid) return;
 
     const data = form.getValues();
-    await updatePricingMutation.mutateAsync({
-      price: data.price,
-      reason: data.reason || undefined });
-    setIsEditing(false);
-    form.setValue('reason', '');
+    try {
+      setIsUpdatingPricing(true);
+      await settingsApi.updateKeywordResearchPricing({
+        price: data.price,
+        reason: data.reason || undefined
+      });
+      toast.success('Keyword research pricing updated successfully');
+      await refetch();
+      setIsEditing(false);
+      form.setValue('reason', '');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to update pricing');
+    } finally {
+      setIsUpdatingPricing(false);
+    }
   };
 
   const handleCancel = () => {
@@ -201,10 +276,24 @@ export function AdminSettingsPage() {
   };
 
   const handleFeatureToggle = async (enabled: boolean) => {
-    await updateFeatureMutation.mutateAsync({
-      enabled,
-      reason: featureToggleReason || undefined });
-    setFeatureToggleReason('');
+    try {
+      setIsUpdatingFeature(true);
+      const result = await settingsApi.updateKeywordResearchFeature({
+        enabled,
+        reason: featureToggleReason || undefined
+      });
+      toast.success(
+        result.enabled
+          ? 'Keyword research feature enabled'
+          : 'Keyword research feature disabled'
+      );
+      await refetchFeature();
+      setFeatureToggleReason('');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to update feature status');
+    } finally {
+      setIsUpdatingFeature(false);
+    }
   };
 
   const handleReviewRatesSubmit = async () => {
@@ -212,12 +301,22 @@ export function AdminSettingsPage() {
     if (!isValid) return;
 
     const data = reviewRatesForm.getValues();
-    await updateReviewRatesMutation.mutateAsync({
-      ebookRate: data.ebookRate,
-      audiobookRate: data.audiobookRate,
-      reason: data.reason || undefined });
-    setIsEditingReviewRates(false);
-    reviewRatesForm.setValue('reason', '');
+    try {
+      setIsUpdatingReviewRates(true);
+      await settingsApi.updateReviewPaymentRates({
+        ebookRate: data.ebookRate,
+        audiobookRate: data.audiobookRate,
+        reason: data.reason || undefined
+      });
+      toast.success('Review payment rates updated successfully');
+      await refetchReviewRates();
+      setIsEditingReviewRates(false);
+      reviewRatesForm.setValue('reason', '');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to update payment rates');
+    } finally {
+      setIsUpdatingReviewRates(false);
+    }
   };
 
   const handleReviewRatesCancel = () => {
@@ -234,16 +333,26 @@ export function AdminSettingsPage() {
     if (!isValid) return;
 
     const data = systemConfigForm.getValues();
-    await updateSystemConfigMutation.mutateAsync({
-      distributionDay: data.distributionDay,
-      distributionHour: data.distributionHour,
-      overbookingPercentage: data.overbookingPercentage,
-      reviewDeadlineHours: data.reviewDeadlineHours,
-      minReviewWordCount: data.minReviewWordCount,
-      minPayoutThreshold: data.minPayoutThreshold,
-      reason: data.reason || undefined });
-    setIsEditingSystemConfig(false);
-    systemConfigForm.setValue('reason', '');
+    try {
+      setIsUpdatingSystemConfig(true);
+      await settingsApi.updateSystemConfiguration({
+        distributionDay: data.distributionDay,
+        distributionHour: data.distributionHour,
+        overbookingPercentage: data.overbookingPercentage,
+        reviewDeadlineHours: data.reviewDeadlineHours,
+        minReviewWordCount: data.minReviewWordCount,
+        minPayoutThreshold: data.minPayoutThreshold,
+        reason: data.reason || undefined
+      });
+      toast.success('System configuration updated successfully');
+      await refetchSystemConfig();
+      setIsEditingSystemConfig(false);
+      systemConfigForm.setValue('reason', '');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to update system configuration');
+    } finally {
+      setIsUpdatingSystemConfig(false);
+    }
   };
 
   const handleSystemConfigCancel = () => {
@@ -333,7 +442,7 @@ export function AdminSettingsPage() {
                   <Switch
                     checked={featureStatus?.enabled || false}
                     onCheckedChange={handleFeatureToggle}
-                    disabled={updateFeatureMutation.isPending}
+                    disabled={isUpdatingFeature}
                   />
                 </div>
               </div>
@@ -443,9 +552,9 @@ export function AdminSettingsPage() {
                       <Button
                         type="button"
                         onClick={handleSubmit}
-                        disabled={updatePricingMutation.isPending}
+                        disabled={isUpdatingPricing}
                       >
-                        {updatePricingMutation.isPending ? (
+                        {isUpdatingPricing ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             {t('actions.saving')}
@@ -461,7 +570,7 @@ export function AdminSettingsPage() {
                         type="button"
                         variant="outline"
                         onClick={handleCancel}
-                        disabled={updatePricingMutation.isPending}
+                        disabled={isUpdatingPricing}
                       >
                         {t('actions.cancel')}
                       </Button>
@@ -599,9 +708,9 @@ export function AdminSettingsPage() {
                         <Button
                           type="button"
                           onClick={handleReviewRatesSubmit}
-                          disabled={updateReviewRatesMutation.isPending}
+                          disabled={isUpdatingReviewRates}
                         >
-                          {updateReviewRatesMutation.isPending ? (
+                          {isUpdatingReviewRates ? (
                             <>
                               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                               Saving...
@@ -617,7 +726,7 @@ export function AdminSettingsPage() {
                           type="button"
                           variant="outline"
                           onClick={handleReviewRatesCancel}
-                          disabled={updateReviewRatesMutation.isPending}
+                          disabled={isUpdatingReviewRates}
                         >
                           Cancel
                         </Button>
@@ -910,9 +1019,9 @@ export function AdminSettingsPage() {
                       <Button
                         type="button"
                         onClick={handleSystemConfigSubmit}
-                        disabled={updateSystemConfigMutation.isPending}
+                        disabled={isUpdatingSystemConfig}
                       >
-                        {updateSystemConfigMutation.isPending ? (
+                        {isUpdatingSystemConfig ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             Saving...
@@ -928,7 +1037,7 @@ export function AdminSettingsPage() {
                         type="button"
                         variant="outline"
                         onClick={handleSystemConfigCancel}
-                        disabled={updateSystemConfigMutation.isPending}
+                        disabled={isUpdatingSystemConfig}
                       >
                         Cancel
                       </Button>
@@ -1093,13 +1202,21 @@ export function AdminSettingsPage() {
                                 <Button
                                   size="sm"
                                   onClick={async () => {
-                                    await updateSettingMutation.mutateAsync({
-                                      key: setting.key,
-                                      data: {
-                                        value: settingValues[setting.key] ?? setting.value } });
-                                    setEditingSettingKey(null);
+                                    try {
+                                      setIsUpdatingSetting(true);
+                                      await settingsApi.updateSetting(setting.key, {
+                                        value: settingValues[setting.key] ?? setting.value
+                                      });
+                                      toast.success('Setting updated successfully');
+                                      await fetchAllSettings();
+                                      setEditingSettingKey(null);
+                                    } catch (error: any) {
+                                      toast.error(error.response?.data?.message || 'Failed to update setting');
+                                    } finally {
+                                      setIsUpdatingSetting(false);
+                                    }
                                   }}
-                                  disabled={updateSettingMutation.isPending}
+                                  disabled={isUpdatingSetting}
                                 >
                                   <Save className="h-4 w-4" />
                                 </Button>

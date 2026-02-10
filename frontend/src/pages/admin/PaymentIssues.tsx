@@ -1,11 +1,6 @@
-import { useState } from 'react';
-import {
-  useOpenPaymentIssues,
-  usePaymentIssueStats,
-  useResolvePaymentIssue,
-  useProcessRefund,
-  useReconcilePayment,
-  useUpdatePaymentIssueStatus } from '@/hooks/usePaymentIssues';
+import { useState, useEffect } from 'react';
+import { paymentIssuesApi } from '@/lib/api/payment-issues';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,12 +36,13 @@ import {
   PaymentIssueAction } from '@/lib/api/payment-issues';
 
 export function PaymentIssuesPage() {
-  const { data: issues, isLoading } = useOpenPaymentIssues();
-  const { data: stats } = usePaymentIssueStats();
-  const resolveIssue = useResolvePaymentIssue();
-  const processRefund = useProcessRefund();
-  const reconcilePayment = useReconcilePayment();
-  const updateStatus = useUpdatePaymentIssueStatus();
+  const [issues, setIssues] = useState<any>(null);
+  const [stats, setStats] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isResolving, setIsResolving] = useState(false);
+  const [isRefunding, setIsRefunding] = useState(false);
+  const [isReconciling, setIsReconciling] = useState(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   // Dialog states
   const [selectedIssueId, setSelectedIssueId] = useState<string>('');
@@ -73,67 +69,104 @@ export function PaymentIssuesPage() {
   const [newStatus, setNewStatus] = useState<PaymentIssueStatus>(PaymentIssueStatus.IN_PROGRESS);
   const [adminNotes, setAdminNotes] = useState('');
 
-  const handleResolve = () => {
-    resolveIssue.mutate(
-      {
-        issueId: selectedIssueId,
-        data: {
-          resolution,
-          action: resolveAction,
-          stripeRefundId: stripeRefundId || undefined } },
-      {
-        onSuccess: () => {
-          setResolveDialogOpen(false);
-          setResolution('');
-          setResolveAction(PaymentIssueAction.CORRECTED);
-          setStripeRefundId('');
-        } },
-    );
+  // Fetch data
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const [issuesData, statsData] = await Promise.all([
+        paymentIssuesApi.getOpenPaymentIssues(),
+        paymentIssuesApi.getPaymentIssueStats()
+      ]);
+      setIssues(issuesData);
+      setStats(statsData);
+    } catch (error: any) {
+      console.error('Payment issues error:', error);
+      toast.error('Failed to load payment issues');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleProcessRefund = () => {
-    processRefund.mutate(
-      {
-        issueId: selectedIssueId,
-        data: {
-          amount: refundAmount,
-          reason: refundReason } },
-      {
-        onSuccess: () => {
-          setRefundDialogOpen(false);
-          setRefundAmount(0);
-          setRefundReason('');
-        } },
-    );
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleResolve = async () => {
+    try {
+      setIsResolving(true);
+      await paymentIssuesApi.resolvePaymentIssue(selectedIssueId, {
+        resolution,
+        action: resolveAction,
+        stripeRefundId: stripeRefundId || undefined
+      });
+      toast.success('Payment issue resolved successfully');
+      setResolveDialogOpen(false);
+      setResolution('');
+      setResolveAction(PaymentIssueAction.CORRECTED);
+      setStripeRefundId('');
+      await fetchData();
+    } catch (error: any) {
+      console.error('Resolve error:', error);
+      toast.error(error.response?.data?.message || 'Failed to resolve payment issue');
+    } finally {
+      setIsResolving(false);
+    }
   };
 
-  const handleReconcile = () => {
-    reconcilePayment.mutate(
-      {
-        issueId: selectedIssueId,
-        notes: reconcileNotes },
-      {
-        onSuccess: () => {
-          setReconcileDialogOpen(false);
-          setReconcileNotes('');
-        } },
-    );
+  const handleProcessRefund = async () => {
+    try {
+      setIsRefunding(true);
+      await paymentIssuesApi.processRefund(selectedIssueId, {
+        amount: refundAmount,
+        reason: refundReason
+      });
+      toast.success('Refund processed successfully');
+      setRefundDialogOpen(false);
+      setRefundAmount(0);
+      setRefundReason('');
+      await fetchData();
+    } catch (error: any) {
+      console.error('Refund error:', error);
+      toast.error(error.response?.data?.message || 'Failed to process refund');
+    } finally {
+      setIsRefunding(false);
+    }
   };
 
-  const handleUpdateStatus = () => {
-    updateStatus.mutate(
-      {
-        issueId: selectedIssueId,
-        data: {
-          status: newStatus,
-          adminNotes: adminNotes || undefined } },
-      {
-        onSuccess: () => {
-          setStatusDialogOpen(false);
-          setNewStatus(PaymentIssueStatus.IN_PROGRESS);
-          setAdminNotes('');
-        } },
-    );
+  const handleReconcile = async () => {
+    try {
+      setIsReconciling(true);
+      await paymentIssuesApi.reconcilePayment(selectedIssueId, reconcileNotes);
+      toast.success('Payment reconciled successfully');
+      setReconcileDialogOpen(false);
+      setReconcileNotes('');
+      await fetchData();
+    } catch (error: any) {
+      console.error('Reconcile error:', error);
+      toast.error(error.response?.data?.message || 'Failed to reconcile payment');
+    } finally {
+      setIsReconciling(false);
+    }
+  };
+
+  const handleUpdateStatus = async () => {
+    try {
+      setIsUpdatingStatus(true);
+      await paymentIssuesApi.updatePaymentIssueStatus(selectedIssueId, {
+        status: newStatus,
+        adminNotes: adminNotes || undefined
+      });
+      toast.success('Payment issue status updated');
+      setStatusDialogOpen(false);
+      setNewStatus(PaymentIssueStatus.IN_PROGRESS);
+      setAdminNotes('');
+      await fetchData();
+    } catch (error: any) {
+      console.error('Update status error:', error);
+      toast.error(error.response?.data?.message || 'Failed to update payment issue status');
+    } finally {
+      setIsUpdatingStatus(false);
+    }
   };
 
   const getPriorityColor = (priority: PaymentIssuePriority) => {
@@ -352,9 +385,9 @@ export function PaymentIssuesPage() {
                               <Button
                                 type="button"
                                 onClick={handleUpdateStatus}
-                                disabled={updateStatus.isPending}
+                                disabled={isUpdatingStatus}
                               >
-                                {updateStatus.isPending ? 'Updating...' : 'Update Status'}
+                                {isUpdatingStatus ? 'Updating...' : 'Update Status'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -416,10 +449,10 @@ export function PaymentIssuesPage() {
                                 variant="destructive"
                                 onClick={handleProcessRefund}
                                 disabled={
-                                  !refundReason || refundAmount <= 0 || processRefund.isPending
+                                  !refundReason || refundAmount <= 0 || isRefunding
                                 }
                               >
-                                {processRefund.isPending ? 'Processing...' : 'Process Refund'}
+                                {isRefunding ? 'Processing...' : 'Process Refund'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -464,9 +497,9 @@ export function PaymentIssuesPage() {
                               </Button>
                               <Button
                                 onClick={handleReconcile}
-                                disabled={!reconcileNotes || reconcilePayment.isPending}
+                                disabled={!reconcileNotes || isReconciling}
                               >
-                                {reconcilePayment.isPending ? 'Reconciling...' : 'Reconcile'}
+                                {isReconciling ? 'Reconciling...' : 'Reconcile'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -550,9 +583,9 @@ export function PaymentIssuesPage() {
                               <Button
                                 type="button"
                                 onClick={handleResolve}
-                                disabled={!resolution || resolveIssue.isPending}
+                                disabled={!resolution || isResolving}
                               >
-                                {resolveIssue.isPending ? 'Resolving...' : 'Resolve Issue'}
+                                {isResolving ? 'Resolving...' : 'Resolve Issue'}
                               </Button>
                             </DialogFooter>
                           </DialogContent>

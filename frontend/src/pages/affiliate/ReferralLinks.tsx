@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useReferralLink, useAffiliateStats } from '@/hooks/useAffiliates';
+import { affiliatesApi } from '@/lib/api/affiliates';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,9 +10,32 @@ import { Copy, CheckCircle, MousePointerClick, Users, TrendingUp, Share2, QrCode
 
 export function AffiliateReferralLinksPage() {
   const { t, i18n } = useTranslation('affiliates.referralLinks');
-  const { data: referralLinkData, isLoading } = useReferralLink();
-  const { data: stats } = useAffiliateStats();
+
+  const [referralLinkData, setReferralLinkData] = useState<any>(null);
+  const [stats, setStats] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+
+  // Fetch referral link and stats
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const [linkData, statsData] = await Promise.all([
+          affiliatesApi.getReferralLink(),
+          affiliatesApi.getStats()
+        ]);
+        setReferralLinkData(linkData);
+        setStats(statsData);
+      } catch (error: any) {
+        console.error('Referral data error:', error);
+        toast.error('Failed to load referral data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleCopy = async () => {
     if (referralLinkData?.referralLink) {

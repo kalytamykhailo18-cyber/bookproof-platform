@@ -1,4 +1,6 @@
-import { useAssignment, useMyAssignments } from '@/hooks/useQueue';
+import { useState, useEffect } from 'react';
+import { queueApi, Assignment, AssignmentStatus, BookFormat } from '@/lib/api/queue';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,7 +16,6 @@ import {
   Send,
   ArrowLeft,
   Loader2 } from 'lucide-react';
-import { AssignmentStatus, BookFormat } from '@/lib/api/queue';
 import { formatDistanceToNow } from 'date-fns';
 import { AudiobookPlayer } from '@/components/reader/AudiobookPlayer';
 import { useNavigate,  useParams } from 'react-router-dom';
@@ -34,9 +35,69 @@ export function AssignmentDetailPage({ params }: { params: { id: string } }) {
   const { t, i18n } = useTranslation('reader.assignment');
   const navigate = useNavigate();
   const routeParams = useParams();
-  const { assignment, isLoading } = useAssignment(params.id);
-  const { withdrawFromAssignment, isWithdrawing, trackEbookDownload, trackAudiobookAccess } =
-    useMyAssignments();
+
+  const [assignment, setAssignment] = useState<Assignment | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
+
+  // Fetch assignment
+  useEffect(() => {
+    if (!params.id) {
+      setIsLoading(false);
+      return;
+    }
+    const fetchAssignment = async () => {
+      try {
+        setIsLoading(true);
+        const data = await queueApi.getAssignment(params.id);
+        setAssignment(data);
+      } catch (err) {
+        console.error('Assignment error:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAssignment();
+  }, [params.id]);
+
+  // Withdraw from assignment
+  const withdrawFromAssignment = async (assignmentId: string) => {
+    try {
+      setIsWithdrawing(true);
+      await queueApi.withdrawFromAssignment(assignmentId);
+      toast.success('Successfully withdrawn from assignment');
+      navigate('/reader');
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Failed to withdraw from assignment';
+      toast.error(message);
+    } finally {
+      setIsWithdrawing(false);
+    }
+  };
+
+  // Track ebook download
+  const trackEbookDownload = async (assignmentId: string) => {
+    try {
+      await queueApi.trackEbookDownload(assignmentId);
+      // Refetch assignment to update status
+      const data = await queueApi.getAssignment(assignmentId);
+      setAssignment(data);
+    } catch (error: any) {
+      console.error('Failed to track ebook download:', error);
+    }
+  };
+
+  // Track audiobook access
+  const trackAudiobookAccess = async (assignmentId: string) => {
+    try {
+      await queueApi.trackAudiobookAccess(assignmentId);
+      // Refetch assignment to update status
+      const data = await queueApi.getAssignment(assignmentId);
+      setAssignment(data);
+    } catch (error: any) {
+      console.error('Failed to track audiobook access:', error);
+    }
+  };
 
   if (isLoading) {
     return (

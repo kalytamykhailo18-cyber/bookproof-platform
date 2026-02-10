@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useKeywordResearch, useUpdateKeywordResearch } from '@/hooks/useKeywordResearch';
+import { keywordsApi } from '@/lib/api/keywords';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -57,13 +58,34 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function EditKeywordResearchPage() {
   const { t, i18n } = useTranslation('keyword-research');
-  const tNew = useTranslations('keyword-research.new');
-  const tEdit = useTranslations('keyword-research.edit');
+  const tNew = useTranslation('keyword-research.new').t;
+  const tEdit = useTranslation('keyword-research.edit').t;
   const navigate = useNavigate();
+  const params = useParams();
   const id = params.id as string;
 
-  const { data: research, isLoading } = useKeywordResearch(id);
-  const updateMutation = useUpdateKeywordResearch();
+  const [research, setResearch] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  // Fetch keyword research
+  useEffect(() => {
+    const fetchResearch = async () => {
+      try {
+        setIsLoading(true);
+        const data = await keywordsApi.getById(id);
+        setResearch(data);
+      } catch (error: any) {
+        console.error('Research error:', error);
+        toast.error('Failed to load keyword research');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (id) {
+      fetchResearch();
+    }
+  }, [id]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -104,10 +126,16 @@ export function EditKeywordResearchPage() {
 
     const data = form.getValues();
     try {
-      await updateMutation.mutateAsync({ id, data });
+      setIsUpdating(true);
+      await keywordsApi.update(id, data);
+      toast.success('Keyword research updated successfully');
       navigate(`/author/keyword-research/${id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to update keyword research:', error);
+      const message = error.response?.data?.message || 'Failed to update keyword research';
+      toast.error(message);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -435,8 +463,8 @@ export function EditKeywordResearchPage() {
             >
               Cancel
             </Button>
-            <Button type="button" onClick={handleSubmit} disabled={updateMutation.isPending}>
-              {updateMutation.isPending ? (
+            <Button type="button" onClick={handleSubmit} disabled={isUpdating}>
+              {isUpdating ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   {tEdit('submitting')}

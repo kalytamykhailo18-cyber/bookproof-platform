@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { ArrowLeft, Loader2 } from 'lucide-react';
-import { useCoupon, useUpdateCoupon } from '@/hooks/useCoupons';
-import { UpdateCouponDto, CouponType, CouponAppliesTo } from '@/lib/api/coupons';
+import { couponsApi, UpdateCouponDto, CouponType, CouponAppliesTo } from '@/lib/api/coupons';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -71,11 +71,35 @@ type FormValues = z.infer<typeof formSchema>;
 export function EditCouponPage() {
   const { t, i18n } = useTranslation('adminCoupons');
   const navigate = useNavigate();
+  const params = useParams();
   const id = params.id as string;
 
-  const { data: coupon, isLoading } = useCoupon(id);
-  const updateMutation = useUpdateCoupon();
+  // Data state
+  const [coupon, setCoupon] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [isBackLoading, setIsBackLoading] = useState(false);
+
+  // Fetch coupon
+  useEffect(() => {
+    if (!id) {
+      setIsLoading(false);
+      return;
+    }
+    const fetchCoupon = async () => {
+      try {
+        setIsLoading(true);
+        const data = await couponsApi.getById(id);
+        setCoupon(data);
+      } catch (err) {
+        console.error('Coupon error:', err);
+        toast.error('Failed to load coupon');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchCoupon();
+  }, [id]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -115,8 +139,18 @@ export function EditCouponPage() {
 
     const values = form.getValues();
     const data: UpdateCouponDto = values;
-    await updateMutation.mutateAsync({ id, data });
-    navigate(`/admin/coupons/${id}`);
+
+    try {
+      setIsUpdating(true);
+      await couponsApi.update(id, data);
+      toast.success('Coupon updated successfully');
+      navigate(`/admin/coupons/${id}`);
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Failed to update coupon';
+      toast.error(message);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   if (isLoading) {
@@ -504,8 +538,8 @@ export function EditCouponPage() {
               {isBackLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t('new.actions.cancel')}
             </Button>
-            <Button type="button" onClick={handleSubmit} disabled={updateMutation.isPending}>
-              {updateMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            <Button type="button" onClick={handleSubmit} disabled={isUpdating}>
+              {isUpdating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Save Changes
             </Button>
           </div>

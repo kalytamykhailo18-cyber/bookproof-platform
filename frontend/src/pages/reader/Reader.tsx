@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useReaderProfile, useReaderStats } from '@/hooks/useReaders';
-import { useMyAssignments } from '@/hooks/useQueue';
+import { useState, useEffect } from 'react';
+import { readersApi, ReaderProfile, ReaderStats } from '@/lib/api/readers';
+import { queueApi, Assignment, AssignmentStatus } from '@/lib/api/queue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,6 @@ import {
   Banknote,
   Loader2 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
-import { AssignmentStatus, Assignment } from '@/lib/api/queue';
 import { formatDistanceToNow } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
@@ -198,17 +197,78 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
 
 export function ReaderDashboard() {
   const { t, i18n } = useTranslation('reader.dashboard');
-  const { isLoadingProfile, hasProfile } = useReaderProfile();
-  const { stats, isLoadingStats } = useReaderStats();
-  const { assignments, groupedAssignments, isLoadingAssignments } = useMyAssignments();
   const navigate = useNavigate();
 
+  const [profile, setProfile] = useState<ReaderProfile | null>(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [stats, setStats] = useState<ReaderStats | null>(null);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
+  const [assignments, setAssignments] = useState<Assignment[] | null>(null);
+  const [isLoadingAssignments, setIsLoadingAssignments] = useState(true);
   const [isCampaignsLoading, setIsCampaignsLoading] = useState(false);
   const [isPayoutLoading, setIsPayoutLoading] = useState(false);
-  const [isStatsLoading, setIsStatsLoading] = useState(false);
+  const [isStatsLoadingNav, setIsStatsLoadingNav] = useState(false);
+
+  // Fetch profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setIsLoadingProfile(true);
+        const data = await readersApi.getProfile();
+        setProfile(data);
+      } catch (err) {
+        console.error('Profile error:', err);
+      } finally {
+        setIsLoadingProfile(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  // Fetch stats
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setIsLoadingStats(true);
+        const data = await readersApi.getStats();
+        setStats(data);
+      } catch (err) {
+        console.error('Stats error:', err);
+      } finally {
+        setIsLoadingStats(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  // Fetch assignments
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      try {
+        setIsLoadingAssignments(true);
+        const data = await queueApi.getMyAssignments();
+        setAssignments(data);
+      } catch (err) {
+        console.error('Assignments error:', err);
+      } finally {
+        setIsLoadingAssignments(false);
+      }
+    };
+    fetchAssignments();
+  }, []);
+
+  // Group assignments by status
+  const groupedAssignments = assignments?.reduce((acc, assignment) => {
+    const status = assignment.status;
+    if (!acc[status]) {
+      acc[status] = [];
+    }
+    acc[status].push(assignment);
+    return acc;
+  }, {} as Record<string, Assignment[]>);
 
   // Redirect to profile creation if no profile exists
-  if (!isLoadingProfile && !hasProfile) {
+  if (!isLoadingProfile && !profile) {
     navigate(`/reader/profile`);
     return null;
   }
@@ -286,12 +346,12 @@ export function ReaderDashboard() {
             variant="ghost"
             className="animate-fade-left-light-slow"
             onClick={() => {
-              setIsStatsLoading(true);
+              setIsStatsLoadingNav(true);
               navigate(`/reader/stats`);
             }}
-            disabled={isStatsLoading}
+            disabled={isStatsLoadingNav}
           >
-            {isStatsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Eye className="mr-2 h-4 w-4" />}
+            {isStatsLoadingNav ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Eye className="mr-2 h-4 w-4" />}
             {t('viewMyReviews')}
           </Button>
         </div>

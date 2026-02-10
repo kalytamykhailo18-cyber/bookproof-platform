@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCredits } from '@/hooks/useCredits';
+import { creditsApi, PackageTier as PackageTierType, CreditBalance } from '@/lib/api/credits';
+import { toast } from 'sonner';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -14,26 +16,79 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2, Check, CreditCard, Star, FileSearch } from 'lucide-react';
-import { PackageTier } from '@/lib/api/credits';
 
 export function CreditPurchasePage() {
   const { t, i18n } = useTranslation('author.credits');
-  const { packageTiers, isLoadingPackages, purchaseCredits, isPurchasing, creditBalance } =
-    useCredits();
+  const { startLoading, stopLoading } = useLoading();
+
+  // Data state
+  const [packageTiers, setPackageTiers] = useState<PackageTierType[]>([]);
+  const [isLoadingPackages, setIsLoadingPackages] = useState(true);
+  const [creditBalance, setCreditBalance] = useState<CreditBalance | null>(null);
+
+  // Purchase state
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [couponCode, setCouponCode] = useState('');
   const [includeKeywordResearch, setIncludeKeywordResearch] = useState(false);
+  const [isPurchasing, setIsPurchasing] = useState(false);
 
   // Keyword research price (should come from backend/config)
   const keywordResearchPrice = 49.99;
 
-  const handlePurchase = () => {
-    if (selectedPackage) {
-      purchaseCredits(
-        selectedPackage,
-        couponCode || undefined,
-        includeKeywordResearch || undefined,
-      );
+  // Fetch data on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoadingPackages(true);
+        const [tiersData, balanceData] = await Promise.all([
+          creditsApi.getPackageTiers(),
+          creditsApi.getCreditBalance()
+        ]);
+        setPackageTiers(tiersData);
+        setCreditBalance(balanceData);
+      } catch (err) {
+        console.error('Fetch credits data error:', err);
+        toast.error('Failed to load credit packages');
+      } finally {
+        setIsLoadingPackages(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handlePurchase = async () => {
+    if (!selectedPackage) return;
+
+    try {
+      setIsPurchasing(true);
+      startLoading('Creating checkout session...');
+
+      const successUrl = includeKeywordResearch
+        ? `${window.location.origin}/author/credits/success?includeKeywordResearch=true`
+        : `${window.location.origin}/author/credits/success`;
+      const cancelUrl = `${window.location.origin}/author/credits/cancel`;
+
+      const response = await creditsApi.createCheckoutSession({
+        packageTierId: selectedPackage,
+        couponCode: couponCode || undefined,
+        includeKeywordResearch: includeKeywordResearch || undefined,
+        successUrl,
+        cancelUrl
+      });
+
+      stopLoading();
+
+      // Redirect to Stripe checkout
+      if (typeof window !== 'undefined' && response.url) {
+        window.location.href = response.url;
+      }
+    } catch (error: any) {
+      console.error('Purchase error:', error);
+      stopLoading();
+      const message = error.response?.data?.message || 'Failed to create checkout session';
+      toast.error(message);
+    } finally {
+      setIsPurchasing(false);
     }
   };
 
@@ -90,7 +145,7 @@ export function CreditPurchasePage() {
           </div>
         ) : Array.isArray(packageTiers) && packageTiers.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {packageTiers.map((pkg: PackageTier, index) => {
+            {packageTiers.map((pkg: PackageTierType, index) => {
               const isSelected = selectedPackage === pkg.id;
               const animationClass =
                 index % 3 === 0

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDashboards } from '@/hooks/useDashboards';
+import { dashboardsApi, AdminDashboardDto, AdminRevenueAnalyticsDto } from '@/lib/api/dashboards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -41,17 +41,47 @@ import { useAuthStore } from '@/stores/authStore';
 export function AdminDashboardPage() {
   const { t, i18n } = useTranslation('adminDashboard');
   const navigate = useNavigate();
-  const { useAdminDashboard, useAdminRevenueAnalytics } = useDashboards();
-  const { isSuperAdmin } = useAuthStore();
+  const { isSuperAdmin, user } = useAuthStore();
 
-  const { data: dashboard, isLoading: dashboardLoading } = useAdminDashboard();
-  // Only fetch revenue data for Super Admins (Section 5.5)
-  const { data: revenue } = useAdminRevenueAnalytics();
+  // State for dashboard data
+  const [dashboard, setDashboard] = useState<AdminDashboardDto | null>(null);
+  const [revenue, setRevenue] = useState<AdminRevenueAnalyticsDto | null>(null);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Check if current admin has access to financial data
   const canViewFinancials = isSuperAdmin();
 
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
+
+  // Fetch dashboard data
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setDashboardLoading(true);
+        setError(null);
+
+        // Fetch dashboard data
+        const dashboardData = await dashboardsApi.getAdminDashboard();
+        setDashboard(dashboardData);
+
+        // Fetch revenue data if super admin
+        if (canViewFinancials) {
+          const revenueData = await dashboardsApi.getAdminRevenueAnalytics();
+          setRevenue(revenueData);
+        }
+      } catch (err: any) {
+        setError(err.message || 'Failed to load dashboard');
+        console.error('Dashboard error:', err);
+      } finally {
+        setDashboardLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchDashboardData();
+    }
+  }, [user, canViewFinancials]);
 
   const navigateTo = (path: string) => {
     setLoadingPath(path);

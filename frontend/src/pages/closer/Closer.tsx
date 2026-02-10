@@ -1,9 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  useCloserDashboardStats,
-  useCloserPackageStats,
-  useCloserSalesHistory } from '@/hooks/useCloser';
+import { closerApi } from '@/lib/api/closer';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -30,12 +28,45 @@ import { useNavigate,  useParams } from 'react-router-dom';
 export function CloserDashboardPage() {
   const { t, i18n } = useTranslation('closer');
   const navigate = useNavigate();
-  const { data: stats, isLoading: statsLoading } = useCloserDashboardStats();
-  const { data: packageStats, isLoading: packageStatsLoading } = useCloserPackageStats();
-  const { data: salesHistory, isLoading: salesLoading } = useCloserSalesHistory(5);
+
+  const [stats, setStats] = useState<any>(null);
+  const [packageStats, setPackageStats] = useState<any>(null);
+  const [salesHistory, setSalesHistory] = useState<any[]>([]);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [packageStatsLoading, setPackageStatsLoading] = useState(true);
+  const [salesLoading, setSalesLoading] = useState(true);
 
   const [isCreateLoading, setIsCreateLoading] = useState(false);
   const [isViewAllLoading, setIsViewAllLoading] = useState(false);
+
+  // Fetch all data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setStatsLoading(true);
+        setPackageStatsLoading(true);
+        setSalesLoading(true);
+
+        const [statsData, packageStatsData, salesData] = await Promise.all([
+          closerApi.getDashboardStats(),
+          closerApi.getPackageStats(),
+          closerApi.getSalesHistory(5)
+        ]);
+
+        setStats(statsData);
+        setPackageStats(packageStatsData);
+        setSalesHistory(salesData);
+      } catch (error: any) {
+        console.error('Dashboard data error:', error);
+        toast.error('Failed to load dashboard data');
+      } finally {
+        setStatsLoading(false);
+        setPackageStatsLoading(false);
+        setSalesLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   if (statsLoading || packageStatsLoading) {
     return (

@@ -1,10 +1,6 @@
-import { useState } from 'react';
-import {
-  useSuspiciousReaders,
-  useBehaviorStats,
-  useBehaviorFlags,
-  useInvestigateBehaviorFlag,
-  useTakeActionOnFlag } from '@/hooks/useReaderBehavior';
+import { useState, useEffect } from 'react';
+import { readerBehaviorApi } from '@/lib/api/reader-behavior';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -40,12 +36,13 @@ import {
   IssueSeverity } from '@/lib/api/reader-behavior';
 
 export function ReaderBehaviorPage() {
-  const { data: suspiciousReaders, isLoading: loadingReaders } = useSuspiciousReaders();
-  const { data: stats } = useBehaviorStats();
-  const { data: activeFlags, isLoading: loadingFlags } = useBehaviorFlags({
-    status: BehaviorFlagStatus.ACTIVE });
-  const investigateFlag = useInvestigateBehaviorFlag();
-  const takeAction = useTakeActionOnFlag();
+  const [suspiciousReaders, setSuspiciousReaders] = useState<any>(null);
+  const [stats, setStats] = useState<any>(null);
+  const [activeFlags, setActiveFlags] = useState<any>(null);
+  const [loadingReaders, setLoadingReaders] = useState(true);
+  const [loadingFlags, setLoadingFlags] = useState(true);
+  const [isInvestigating, setIsInvestigating] = useState(false);
+  const [isTakingAction, setIsTakingAction] = useState(false);
 
   // Dialog states
   const [selectedFlagId, setSelectedFlagId] = useState<string>('');
@@ -62,36 +59,70 @@ export function ReaderBehaviorPage() {
   const [actionType, setActionType] = useState<BehaviorAction>(BehaviorAction.WARNED);
   const [actionNotes, setActionNotes] = useState('');
 
-  const handleInvestigate = () => {
-    investigateFlag.mutate(
-      {
-        flagId: selectedFlagId,
-        data: {
-          investigationNotes,
-          status: investigationStatus } },
-      {
-        onSuccess: () => {
-          setInvestigateDialogOpen(false);
-          setInvestigationNotes('');
-          setInvestigationStatus(BehaviorFlagStatus.INVESTIGATED);
-        } },
-    );
+  // Fetch data
+  const fetchData = async () => {
+    try {
+      setLoadingReaders(true);
+      setLoadingFlags(true);
+      const [readersData, statsData, flagsData] = await Promise.all([
+        readerBehaviorApi.getSuspiciousReaders(),
+        readerBehaviorApi.getBehaviorStats(),
+        readerBehaviorApi.getBehaviorFlags({ status: BehaviorFlagStatus.ACTIVE })
+      ]);
+      setSuspiciousReaders(readersData);
+      setStats(statsData);
+      setActiveFlags(flagsData);
+    } catch (error: any) {
+      console.error('Reader behavior error:', error);
+      toast.error('Failed to load reader behavior data');
+    } finally {
+      setLoadingReaders(false);
+      setLoadingFlags(false);
+    }
   };
 
-  const handleTakeAction = () => {
-    takeAction.mutate(
-      {
-        flagId: selectedFlagId,
-        data: {
-          action: actionType,
-          notes: actionNotes || undefined } },
-      {
-        onSuccess: () => {
-          setActionDialogOpen(false);
-          setActionType(BehaviorAction.WARNED);
-          setActionNotes('');
-        } },
-    );
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleInvestigate = async () => {
+    try {
+      setIsInvestigating(true);
+      await readerBehaviorApi.investigateBehaviorFlag(selectedFlagId, {
+        investigationNotes,
+        status: investigationStatus
+      });
+      toast.success('Investigation notes updated');
+      setInvestigateDialogOpen(false);
+      setInvestigationNotes('');
+      setInvestigationStatus(BehaviorFlagStatus.INVESTIGATED);
+      await fetchData();
+    } catch (error: any) {
+      console.error('Investigate error:', error);
+      toast.error(error.response?.data?.message || 'Failed to update investigation');
+    } finally {
+      setIsInvestigating(false);
+    }
+  };
+
+  const handleTakeAction = async () => {
+    try {
+      setIsTakingAction(true);
+      await readerBehaviorApi.takeAction(selectedFlagId, {
+        action: actionType,
+        notes: actionNotes || undefined
+      });
+      toast.success(`Action taken: ${actionType}`);
+      setActionDialogOpen(false);
+      setActionType(BehaviorAction.WARNED);
+      setActionNotes('');
+      await fetchData();
+    } catch (error: any) {
+      console.error('Take action error:', error);
+      toast.error(error.response?.data?.message || 'Failed to take action');
+    } finally {
+      setIsTakingAction(false);
+    }
   };
 
   const getSeverityColor = (severity: IssueSeverity) => {
@@ -406,9 +437,9 @@ export function ReaderBehaviorPage() {
                                   </Button>
                                   <Button
                                     onClick={handleInvestigate}
-                                    disabled={!investigationNotes || investigateFlag.isPending}
+                                    disabled={!investigationNotes || isInvestigating}
                                   >
-                                    {investigateFlag.isPending ? 'Saving...' : 'Save Investigation'}
+                                    {isInvestigating ? 'Saving...' : 'Save Investigation'}
                                   </Button>
                                 </DialogFooter>
                               </DialogContent>
@@ -488,9 +519,9 @@ export function ReaderBehaviorPage() {
                                         : 'default'
                                     }
                                     onClick={handleTakeAction}
-                                    disabled={takeAction.isPending}
+                                    disabled={isTakingAction}
                                   >
-                                    {takeAction.isPending ? 'Processing...' : 'Take Action'}
+                                    {isTakingAction ? 'Processing...' : 'Take Action'}
                                   </Button>
                                 </DialogFooter>
                               </DialogContent>

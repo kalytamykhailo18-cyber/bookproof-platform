@@ -1,4 +1,4 @@
-import { useState, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -23,14 +23,15 @@ import {
   ExternalLink } from 'lucide-react';
 
 import {
-  useAllLandingPages,
-  useUpdateLandingPage,
-  useLeads,
-  useDeleteLead,
-  useResendWelcomeEmail,
-  useExportLeads,
-  useGlobalAnalytics } from '@/hooks/useLandingPages';
-import { Language } from '@/lib/api/landing-pages';
+  getAllLandingPages,
+  updateLandingPage,
+  getLeads,
+  deleteLead,
+  resendWelcomeEmail,
+  exportLeads,
+  getGlobalAnalytics,
+  Language } from '@/lib/api/landing-pages';
+import { toast } from 'sonner';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -131,7 +132,25 @@ function StatsCard({
 // Analytics Tab Content
 function AnalyticsTabContent() {
   const t = useT();
-  const { data: analytics, isLoading, refetch } = useGlobalAnalytics();
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchAnalytics = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getGlobalAnalytics();
+      setAnalytics(data);
+    } catch (error: any) {
+      console.error('Analytics error:', error);
+      toast.error('Failed to load analytics');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, []);
 
   if (isLoading) {
     return (
@@ -145,7 +164,7 @@ function AnalyticsTabContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{t('analytics.title')}</h3>
-        <Button type="button" variant="outline" size="sm" onClick={() => refetch()}>
+        <Button type="button" variant="outline" size="sm" onClick={fetchAnalytics}>
           <RefreshCw className="mr-2 h-4 w-4" />
           {t('analytics.refresh')}
         </Button>
@@ -236,21 +255,90 @@ function LeadsTabContent() {
   const [languageFilter, setLanguageFilter] = useState<Language | 'ALL'>('ALL');
   const [userTypeFilter, setUserTypeFilter] = useState<string>('ALL');
 
+  const [leadsData, setLeadsData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
   const params = {
     page,
     limit: 20,
     language: languageFilter === 'ALL' ? undefined : languageFilter,
     userType: userTypeFilter === 'ALL' ? undefined : userTypeFilter };
 
-  const { data: leadsData, isLoading, refetch } = useLeads(params);
-  const deleteMutation = useDeleteLead();
-  const resendMutation = useResendWelcomeEmail();
-  const exportMutation = useExportLeads();
+  const fetchLeads = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getLeads(params);
+      setLeadsData(data);
+    } catch (error: any) {
+      console.error('Leads error:', error);
+      toast.error('Failed to load leads');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const handleExport = (format: 'csv' | 'json') => {
-    exportMutation.mutate({
-      language: languageFilter === 'ALL' ? undefined : languageFilter,
-      format });
+  useEffect(() => {
+    fetchLeads();
+  }, [page, languageFilter, userTypeFilter]);
+
+  const handleExport = async (format: 'csv' | 'json') => {
+    try {
+      setIsExporting(true);
+      const blob = await exportLeads(
+        languageFilter === 'ALL' ? undefined : languageFilter,
+        format
+      );
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `leads.${format}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      toast.success('Leads exported successfully');
+    } catch (error: any) {
+      console.error('Export error:', error);
+      toast.error('Failed to export leads');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleResendEmail = async (leadId: string) => {
+    try {
+      setIsResending(true);
+      await resendWelcomeEmail(leadId);
+      toast.success('Welcome email resent successfully');
+      // Refetch leads
+      await fetchLeads();
+    } catch (error: any) {
+      console.error('Resend error:', error);
+      const message = error.response?.data?.message || 'Failed to resend email';
+      toast.error(message);
+    } finally {
+      setIsResending(false);
+    }
+  };
+
+  const handleDeleteLead = async (leadId: string) => {
+    try {
+      setIsDeleting(true);
+      await deleteLead(leadId);
+      toast.success('Lead deleted successfully');
+      // Refetch leads
+      await fetchLeads();
+    } catch (error: any) {
+      console.error('Delete error:', error);
+      const message = error.response?.data?.message || 'Failed to delete lead';
+      toast.error(message);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   if (isLoading) {
@@ -308,7 +396,7 @@ function LeadsTabContent() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button type="button" variant="outline" size="sm" onClick={() => refetch()}>
+          <Button type="button" variant="outline" size="sm" onClick={fetchLeads}>
             <RefreshCw className="mr-2 h-4 w-4" />
             {t('analytics.refresh')}
           </Button>
@@ -317,7 +405,7 @@ function LeadsTabContent() {
             variant="outline"
             size="sm"
             onClick={() => handleExport('csv')}
-            disabled={exportMutation.isPending}
+            disabled={isExporting}
           >
             <Download className="mr-2 h-4 w-4" />
             {t('leads.export')}
@@ -375,8 +463,8 @@ function LeadsTabContent() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => resendMutation.mutate(lead.id)}
-                          disabled={resendMutation.isPending}
+                          onClick={() => handleResendEmail(lead.id)}
+                          disabled={isResending}
                           title={t('leads.table.welcomeEmail')}
                         >
                           <Mail className="h-4 w-4" />
@@ -399,7 +487,7 @@ function LeadsTabContent() {
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() => deleteMutation.mutate(lead.id)}
+                              onClick={() => handleDeleteLead(lead.id)}
                               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                             >
                               Delete
@@ -460,11 +548,29 @@ function LeadsTabContent() {
 // CTA Settings Tab Content
 function CtaSettingsTabContent() {
   const t = useT();
-  const { data: pages, isLoading, refetch } = useAllLandingPages();
-  const updateMutation = useUpdateLandingPage();
+  const [pages, setPages] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('EN');
 
   const selectedPage = pages?.find((p) => p.language === selectedLanguage);
+
+  const fetchPages = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getAllLandingPages();
+      setPages(data);
+    } catch (error: any) {
+      console.error('Pages error:', error);
+      toast.error('Failed to load landing pages');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPages();
+  }, []);
 
   const form = useForm<CtaSettingsFormData>({
     resolver: zodResolver(ctaSettingsSchema),
@@ -492,14 +598,24 @@ function CtaSettingsTabContent() {
     if (!isValid) return;
 
     const data = form.getValues();
-    await updateMutation.mutateAsync({
-      language: selectedLanguage,
-      cta: {
-        ctaText: data.ctaText,
-        ctaLink: data.ctaLink,
-        ctaMode: data.ctaMode },
-      isPublished: data.isPublished });
-    refetch();
+    try {
+      setIsUpdating(true);
+      await updateLandingPage({
+        language: selectedLanguage,
+        cta: {
+          ctaText: data.ctaText,
+          ctaLink: data.ctaLink,
+          ctaMode: data.ctaMode },
+        isPublished: data.isPublished });
+      toast.success(`Landing page (${selectedLanguage}) updated successfully`);
+      await fetchPages();
+    } catch (error: any) {
+      console.error('Update error:', error);
+      const message = error.response?.data?.message || 'Failed to update landing page';
+      toast.error(message);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   if (isLoading) {
@@ -514,7 +630,7 @@ function CtaSettingsTabContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{t('settings.title')}</h3>
-        <Button type="button" variant="outline" size="sm" onClick={() => refetch()}>
+        <Button type="button" variant="outline" size="sm" onClick={fetchPages}>
           <RefreshCw className="mr-2 h-4 w-4" />
           {t('analytics.refresh')}
         </Button>
@@ -618,8 +734,8 @@ function CtaSettingsTabContent() {
                 )}
               />
 
-              <Button type="button" onClick={handleSubmit} disabled={updateMutation.isPending}>
-                {updateMutation.isPending ? (
+              <Button type="button" onClick={handleSubmit} disabled={isUpdating}>
+                {isUpdating ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {t('settings.saving')}

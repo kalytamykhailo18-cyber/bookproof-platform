@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import { useAdminValidation } from '@/hooks/useReviews';
+import { useState, useEffect } from 'react';
+import { reviewsApi } from '@/lib/api/reviews';
+import { toast } from 'sonner';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -34,16 +36,51 @@ import { useTranslation } from 'react-i18next';
 
 export function AdminValidationPage() {
   const { t, i18n } = useTranslation('adminValidation');
-  const {
-    pendingReviews,
-    isLoadingPending,
-    isFetchingPending,
-    stats,
-    isLoadingStats,
-    validateReview,
-    isValidating,
-    bulkValidate,
-    isBulkValidating } = useAdminValidation();
+  const { startLoading, stopLoading } = useLoading();
+
+  // Data state
+  const [pendingReviews, setPendingReviews] = useState<any[]>([]);
+  const [isLoadingPending, setIsLoadingPending] = useState(true);
+  const [isFetchingPending, setIsFetchingPending] = useState(false);
+  const [stats, setStats] = useState<any>(null);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
+  const [isValidating, setIsValidating] = useState(false);
+  const [isBulkValidating, setIsBulkValidating] = useState(false);
+
+  // Fetch pending reviews
+  const fetchPendingReviews = async () => {
+    try {
+      setIsFetchingPending(true);
+      const data = await reviewsApi.getPendingReviews();
+      setPendingReviews(data);
+    } catch (err) {
+      console.error('Pending reviews error:', err);
+      toast.error('Failed to load pending reviews');
+    } finally {
+      setIsLoadingPending(false);
+      setIsFetchingPending(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPendingReviews();
+  }, []);
+
+  // Fetch stats
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setIsLoadingStats(true);
+        const data = await reviewsApi.getPendingReviewsStats();
+        setStats(data);
+      } catch (err) {
+        console.error('Stats error:', err);
+      } finally {
+        setIsLoadingStats(false);
+      }
+    };
+    fetchStats();
+  }, []);
 
   const [selectedReviews, setSelectedReviews] = useState<string[]>([]);
   const [validationDialogOpen, setValidationDialogOpen] = useState(false);
@@ -76,7 +113,7 @@ export function AdminValidationPage() {
     setValidationDialogOpen(true);
   };
 
-  const handleValidate = () => {
+  const handleValidate = async () => {
     if (!currentReview) return;
 
     const data: {
@@ -96,17 +133,74 @@ export function AdminValidationPage() {
       data.notes = notes;
     }
 
-    validateReview({ reviewId: currentReview.id, data });
-    setValidationDialogOpen(false);
-    setCurrentReview(null);
+    try {
+      setIsValidating(true);
+      startLoading('Validating review...');
+
+      // Optimistically remove from list
+      setPendingReviews((prev) => prev.filter((review) => review.id !== currentReview.id));
+
+      await reviewsApi.validateReview(currentReview.id, data);
+      stopLoading();
+
+      const actionMessages = {
+        APPROVE: 'Review approved and compensation issued!',
+        REJECT: 'Review rejected and reassignment triggered.',
+        FLAG: 'Review flagged for issues.',
+        REQUEST_RESUBMISSION: 'Resubmission requested from reader.',
+      };
+      toast.success(actionMessages[data.action] || 'Review validated successfully');
+
+      setValidationDialogOpen(false);
+      setCurrentReview(null);
+
+      // Refetch to sync
+      await fetchPendingReviews();
+      const statsData = await reviewsApi.getPendingReviewsStats();
+      setStats(statsData);
+    } catch (error: any) {
+      stopLoading();
+      // Rollback - refetch to restore
+      await fetchPendingReviews();
+      const message = error.response?.data?.message || 'Failed to validate review';
+      toast.error(message);
+    } finally {
+      setIsValidating(false);
+    }
   };
 
-  const handleBulkApprove = () => {
+  const handleBulkApprove = async () => {
     if (selectedReviews.length === 0) return;
-    bulkValidate({
-      reviewIds: selectedReviews,
-      action: ValidationAction.APPROVE });
-    setSelectedReviews([]);
+
+    try {
+      setIsBulkValidating(true);
+      startLoading(`Validating ${selectedReviews.length} reviews...`);
+
+      // Optimistically remove from list
+      setPendingReviews((prev) => prev.filter((review) => !selectedReviews.includes(review.id)));
+
+      const results = await reviewsApi.bulkValidateReviews({
+        reviewIds: selectedReviews,
+        action: ValidationAction.APPROVE
+      });
+      stopLoading();
+      toast.success(`Successfully validated ${results.length} reviews`);
+
+      setSelectedReviews([]);
+
+      // Refetch to sync
+      await fetchPendingReviews();
+      const statsData = await reviewsApi.getPendingReviewsStats();
+      setStats(statsData);
+    } catch (error: any) {
+      stopLoading();
+      // Rollback - refetch to restore
+      await fetchPendingReviews();
+      const message = error.response?.data?.message || 'Failed to bulk validate reviews';
+      toast.error(message);
+    } finally {
+      setIsBulkValidating(false);
+    }
   };
 
   const getActionColor = (action: ValidationAction) => {

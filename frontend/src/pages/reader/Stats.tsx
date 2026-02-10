@@ -1,5 +1,6 @@
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDashboards } from '@/hooks/useDashboards';
+import { dashboardsApi, ReaderStatsDto } from '@/lib/api/dashboards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -21,10 +22,29 @@ import {
   AlertCircle } from 'lucide-react';
 
 export function ReaderStatsPage() {
-  const _t = useTranslations('readerStats');
+  const _t = useTranslation('readerStats');
   void _t; // Will use later for translations
-  const { useReaderStats } = useDashboards();
-  const { data: stats, isLoading } = useReaderStats();
+
+  // Stats state
+  const [stats, setStats] = useState<ReaderStatsDto | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch reader stats
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setIsLoading(true);
+        const data = await dashboardsApi.getReaderStats();
+        setStats(data);
+      } catch (err) {
+        console.error('Reader stats error:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   if (isLoading) {
     return (

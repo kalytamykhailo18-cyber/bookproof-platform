@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Edit, TrendingUp, Trash2, Loader2 } from 'lucide-react';
-import { useCoupon, useDeleteCoupon } from '@/hooks/useCoupons';
-import { CouponType, CouponAppliesTo } from '@/lib/api/coupons';
+import { couponsApi, CouponType, CouponAppliesTo } from '@/lib/api/coupons';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -26,16 +26,48 @@ export function CouponDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const { data: coupon, isLoading } = useCoupon(id);
-  const deleteMutation = useDeleteCoupon();
+  // Data state
+  const [coupon, setCoupon] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [isBackLoading, setIsBackLoading] = useState(false);
   const [isUsageLoading, setIsUsageLoading] = useState(false);
   const [isEditLoading, setIsEditLoading] = useState(false);
 
+  // Fetch coupon
+  useEffect(() => {
+    if (!id) {
+      setIsLoading(false);
+      return;
+    }
+    const fetchCoupon = async () => {
+      try {
+        setIsLoading(true);
+        const data = await couponsApi.getById(id);
+        setCoupon(data);
+      } catch (err) {
+        console.error('Coupon error:', err);
+        toast.error('Failed to load coupon');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchCoupon();
+  }, [id]);
+
   const handleDelete = async () => {
-    await deleteMutation.mutateAsync(id);
-    navigate(`/admin/coupons`);
+    try {
+      setIsDeleting(true);
+      await couponsApi.delete(id);
+      toast.success('Coupon deleted successfully');
+      navigate(`/admin/coupons`);
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Failed to delete coupon';
+      toast.error(message);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const getCouponTypeBadge = (type: CouponType) => {

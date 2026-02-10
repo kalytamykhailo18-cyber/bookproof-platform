@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate,  useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/hooks/useAuth';
+import { authApi } from '@/lib/api/auth';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, XCircle, Loader2 } from 'lucide-react';
@@ -10,7 +11,7 @@ export function VerifyEmailPage() {
   const { t, i18n } = useTranslation('auth.verifyEmail');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { verifyEmail } = useAuth();
+  const { startLoading, stopLoading } = useLoading();
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
   const [errorMessage, setErrorMessage] = useState('');
   const [isNavLoading, setIsNavLoading] = useState(false);
@@ -26,7 +27,8 @@ export function VerifyEmailPage() {
 
     const verify = async () => {
       try {
-        await verifyEmail(token);
+        startLoading('Verifying your email...');
+        await authApi.verifyEmail(token);
         setStatus('success');
       } catch (error: unknown) {
         setStatus('error');
@@ -40,11 +42,13 @@ export function VerifyEmailPage() {
         } else {
           setErrorMessage(t('errorInvalidToken'));
         }
+      } finally {
+        stopLoading();
       }
     };
 
     verify();
-  }, [searchParams, verifyEmail, t]);
+  }, [searchParams, startLoading, stopLoading, t]);
 
   return (
     <Card className="animate-fade-up">

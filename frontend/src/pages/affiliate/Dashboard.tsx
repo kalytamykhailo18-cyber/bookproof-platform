@@ -1,11 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  useAffiliateProfile,
-  useAffiliateStats,
-  useAffiliateChartData,
-  useCommissions,
-  usePayouts } from '@/hooks/useAffiliates';
+import { affiliatesApi } from '@/lib/api/affiliates';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -44,11 +40,18 @@ import { CommissionStatus, PayoutRequestStatus } from '@/lib/api/affiliates';
 export function AffiliateDashboardPage() {
   const { t, i18n } = useTranslation('affiliates.dashboard');
   const navigate = useNavigate();
-  const { data: profile, isLoading: profileLoading } = useAffiliateProfile();
-  const { data: stats, isLoading: statsLoading } = useAffiliateStats();
-  const { data: chartData, isLoading: chartLoading } = useAffiliateChartData();
-  const { data: commissions, isLoading: commissionsLoading } = useCommissions();
-  const { data: payouts, isLoading: payoutsLoading } = usePayouts();
+
+  const [profile, setProfile] = useState<any>(null);
+  const [stats, setStats] = useState<any>(null);
+  const [chartData, setChartData] = useState<any>(null);
+  const [commissions, setCommissions] = useState<any[]>([]);
+  const [payouts, setPayouts] = useState<any[]>([]);
+
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [chartLoading, setChartLoading] = useState(true);
+  const [commissionsLoading, setCommissionsLoading] = useState(true);
+  const [payoutsLoading, setPayoutsLoading] = useState(true);
 
   const [isRegisterLoading, setIsRegisterLoading] = useState(false);
   const [isReferralLinksLoading, setIsReferralLinksLoading] = useState(false);
@@ -60,6 +63,78 @@ export function AffiliateDashboardPage() {
   // Only wait for profile - it's the critical data to determine UI state
   // Stats, charts, commissions, payouts load progressively with skeletons
   const isLoading = profileLoading;
+
+  // Fetch all data
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setProfileLoading(true);
+        const data = await affiliatesApi.getMe();
+        setProfile(data);
+      } catch (error: any) {
+        console.error('Profile error:', error);
+        if (error.response?.status !== 404) {
+          toast.error('Failed to load affiliate profile');
+        }
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+
+    const fetchStats = async () => {
+      try {
+        setStatsLoading(true);
+        const data = await affiliatesApi.getStats();
+        setStats(data);
+      } catch (error: any) {
+        console.error('Stats error:', error);
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+
+    const fetchChartData = async () => {
+      try {
+        setChartLoading(true);
+        const data = await affiliatesApi.getChartData();
+        setChartData(data);
+      } catch (error: any) {
+        console.error('Chart data error:', error);
+      } finally {
+        setChartLoading(false);
+      }
+    };
+
+    const fetchCommissions = async () => {
+      try {
+        setCommissionsLoading(true);
+        const data = await affiliatesApi.getCommissions();
+        setCommissions(data);
+      } catch (error: any) {
+        console.error('Commissions error:', error);
+      } finally {
+        setCommissionsLoading(false);
+      }
+    };
+
+    const fetchPayouts = async () => {
+      try {
+        setPayoutsLoading(true);
+        const data = await affiliatesApi.getPayouts();
+        setPayouts(data);
+      } catch (error: any) {
+        console.error('Payouts error:', error);
+      } finally {
+        setPayoutsLoading(false);
+      }
+    };
+
+    fetchProfile();
+    fetchStats();
+    fetchChartData();
+    fetchCommissions();
+    fetchPayouts();
+  }, []);
 
   // Prepare chart data for recharts
   const preparedChartData =

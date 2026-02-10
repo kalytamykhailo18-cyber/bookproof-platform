@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { ArrowLeft, DollarSign, Users, Hash, BarChart3, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useCoupon, useCouponUsageStats } from '@/hooks/useCoupons';
+import { couponsApi } from '@/lib/api/coupons';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,14 +21,58 @@ import { formatDate } from '@/lib/utils';
 export function CouponUsagePage() {
   const { t, i18n } = useTranslation('adminCoupons');
   const navigate = useNavigate();
+  const params = useParams();
   const id = params.id as string;
 
-  const { data: coupon, isLoading: couponLoading } = useCoupon(id);
-  const { data: stats, isLoading: statsLoading } = useCouponUsageStats(id);
-
+  // Data state
+  const [coupon, setCoupon] = useState<any>(null);
+  const [stats, setStats] = useState<any>(null);
+  const [couponLoading, setCouponLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
   const [isBackLoading, setIsBackLoading] = useState(false);
 
   const isLoading = couponLoading || statsLoading;
+
+  // Fetch coupon
+  useEffect(() => {
+    if (!id) {
+      setCouponLoading(false);
+      return;
+    }
+    const fetchCoupon = async () => {
+      try {
+        setCouponLoading(true);
+        const data = await couponsApi.getById(id);
+        setCoupon(data);
+      } catch (err) {
+        console.error('Coupon error:', err);
+        toast.error('Failed to load coupon');
+      } finally {
+        setCouponLoading(false);
+      }
+    };
+    fetchCoupon();
+  }, [id]);
+
+  // Fetch usage stats
+  useEffect(() => {
+    if (!id) {
+      setStatsLoading(false);
+      return;
+    }
+    const fetchStats = async () => {
+      try {
+        setStatsLoading(true);
+        const data = await couponsApi.getUsageStats(id);
+        setStats(data);
+      } catch (err) {
+        console.error('Usage stats error:', err);
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+    fetchStats();
+  }, [id]);
 
   if (isLoading) {
     return (

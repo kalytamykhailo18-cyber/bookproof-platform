@@ -1,10 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate,  useSearchParams } from 'react-router-dom';
-import { useEffect } from 'react';
-import {
-  useKeywordResearch,
-  useDownloadKeywordResearchPdf,
-  useKeywordResearchCheckout } from '@/hooks/useKeywordResearch';
+import { useState, useEffect } from 'react';
+import { keywordsApi } from '@/lib/api/keywords';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -27,12 +24,34 @@ import { toast } from 'sonner';
 export function KeywordResearchDetailsPage() {
   const { t, i18n } = useTranslation('keyword-research.details');
   const navigate = useNavigate();
+  const params = useParams();
   const [searchParams] = useSearchParams();
   const id = params.id as string;
 
-  const { data: research, isLoading, refetch } = useKeywordResearch(id);
-  const downloadMutation = useDownloadKeywordResearchPdf();
-  const checkoutMutation = useKeywordResearchCheckout();
+  const [research, setResearch] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  // Fetch keyword research
+  const fetchResearch = async () => {
+    try {
+      setIsLoading(true);
+      const data = await keywordsApi.getById(id);
+      setResearch(data);
+    } catch (error: any) {
+      console.error('Research error:', error);
+      toast.error('Failed to load keyword research');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchResearch();
+    }
+  }, [id]);
 
   // Handle payment success/cancel query params
   useEffect(() => {
@@ -42,30 +61,51 @@ export function KeywordResearchDetailsPage() {
     if (success === 'true') {
       toast.success('Payment successful! Your keyword research is being processed.');
       // Refetch to get updated status
-      refetch();
+      fetchResearch();
       // Clean up URL
       navigate(`/author/keyword-research/${id}`);
     } else if (cancelled === 'true') {
       toast.error('Payment was cancelled. Please try again.');
       navigate(`/author/keyword-research/${id}`);
     }
-  }, [searchParams, id, router, refetch]);
+  }, [searchParams, id, navigate]);
 
-  const handleDownload = () => {
-    downloadMutation.mutate(id);
+  const handleDownload = async () => {
+    try {
+      setIsDownloading(true);
+      const data = await keywordsApi.downloadPdf(id);
+      // Open PDF in new tab
+      window.open(data.url, '_blank');
+      toast.success('PDF download started');
+    } catch (error: any) {
+      console.error('Download error:', error);
+      const message = error.response?.data?.message || 'Failed to download PDF';
+      toast.error(message);
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const handleEdit = () => {
     navigate(`/author/keyword-research/${id}/edit`);
   };
 
-  const handlePayNow = () => {
-    const baseUrl = window.location.origin;
-    checkoutMutation.mutate({
-      id,
-      data: {
+  const handlePayNow = async () => {
+    try {
+      setIsCheckingOut(true);
+      const baseUrl = window.location.origin;
+      const data = await keywordsApi.createCheckout(id, {
         successUrl: `${baseUrl}/author/keyword-research/${id}?success=true`,
-        cancelUrl: `${baseUrl}/author/keyword-research/${id}?cancelled=true` } });
+        cancelUrl: `${baseUrl}/author/keyword-research/${id}?cancelled=true`,
+      });
+      // Redirect to Stripe checkout
+      window.location.href = data.checkoutUrl;
+    } catch (error: any) {
+      console.error('Checkout error:', error);
+      const message = error.response?.data?.message || 'Failed to create checkout session';
+      toast.error(message);
+      setIsCheckingOut(false);
+    }
   };
 
   const getStatusColor = (status: KeywordResearchStatus) => {
@@ -201,8 +241,8 @@ export function KeywordResearchDetailsPage() {
           {research.status === KeywordResearchStatus.PENDING &&
             !research.paid &&
             research.price > 0 && (
-              <Button type="button" onClick={handlePayNow} disabled={checkoutMutation.isPending}>
-                {checkoutMutation.isPending ? (
+              <Button type="button" onClick={handlePayNow} disabled={isCheckingOut}>
+                {isCheckingOut ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   <CreditCard className="mr-2 h-4 w-4" />
@@ -212,8 +252,8 @@ export function KeywordResearchDetailsPage() {
             )}
           {/* Download button - only for COMPLETED status */}
           {research.status === KeywordResearchStatus.COMPLETED && research.pdfUrl && (
-            <Button type="button" onClick={handleDownload} disabled={downloadMutation.isPending}>
-              {downloadMutation.isPending ? (
+            <Button type="button" onClick={handleDownload} disabled={isDownloading}>
+              {isDownloading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <Download className="mr-2 h-4 w-4" />

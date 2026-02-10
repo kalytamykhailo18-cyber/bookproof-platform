@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { useAvailableCampaigns, useMyAssignments } from '@/hooks/useQueue';
-import { useReaderProfile } from '@/hooks/useReaders';
+import { useState, useEffect } from 'react';
+import { queueApi, AvailableCampaign, Assignment } from '@/lib/api/queue';
+import { readersApi, ReaderProfile } from '@/lib/api/readers';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -23,7 +24,6 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { BookFormat } from '@/lib/api/campaigns';
-import { AvailableCampaign } from '@/lib/api/queue';
 import { useTranslation } from 'react-i18next';
 import { useNavigate,  useParams } from 'react-router-dom';
 
@@ -56,24 +56,25 @@ function FormatIcons({ formats }: { formats: BookFormat }) {
 function CampaignCard({
   campaign,
   className,
-  onOpenDetail }: {
+  onOpenDetail,
+  applyToCampaign,
+  isApplying,
+  profile }: {
   campaign: AvailableCampaign;
   className?: string;
   onOpenDetail: (campaign: AvailableCampaign) => void;
+  applyToCampaign: (bookId: string, format: BookFormat) => void;
+  isApplying: boolean;
+  profile: ReaderProfile | null;
 }) {
   const { t, i18n } = useTranslation('reader.campaigns');
-  const { applyToCampaign, isApplying } = useMyAssignments();
-  const { profile } = useReaderProfile();
   const [selectedFormat, setSelectedFormat] = useState<BookFormat>(BookFormat.EBOOK);
 
   const canApply = !campaign.hasApplied;
 
   const handleApply = () => {
     if (!canApply) return;
-
-    applyToCampaign({
-      bookId: campaign.id,
-      formatPreference: selectedFormat });
+    applyToCampaign(campaign.id, selectedFormat);
   };
 
   // Determine available formats based on reader preference and campaign availability
@@ -206,14 +207,20 @@ type ApplicationStep = 'details' | 'format' | 'confirm' | 'success';
 function BookDetailModal({
   campaign,
   isOpen,
-  onClose }: {
+  onClose,
+  applyToCampaign,
+  isApplying,
+  lastAppliedAssignment,
+  profile }: {
   campaign: AvailableCampaign | null;
   isOpen: boolean;
   onClose: () => void;
+  applyToCampaign: (bookId: string, format: BookFormat, onSuccess?: () => void) => void;
+  isApplying: boolean;
+  lastAppliedAssignment: Assignment | null;
+  profile: ReaderProfile | null;
 }) {
   const { t, i18n } = useTranslation('reader.campaigns');
-  const { applyToCampaign, isApplying, lastAppliedAssignment } = useMyAssignments();
-  const { profile } = useReaderProfile();
 
   // Multi-step state
   const [step, setStep] = useState<ApplicationStep>('details');
@@ -288,15 +295,9 @@ function BookDetailModal({
   const handleSubmitApplication = () => {
     if (!allConfirmationsChecked) return;
 
-    applyToCampaign(
-      {
-        bookId: campaign.id,
-        formatPreference: selectedFormat },
-      {
-        onSuccess: () => {
-          setStep('success');
-        } }
-    );
+    applyToCampaign(campaign.id, selectedFormat, () => {
+      setStep('success');
+    });
   };
 
   // Step: Book Details View
@@ -587,9 +588,11 @@ function BookDetailModal({
 export function CampaignsPage() {
   const { t, i18n } = useTranslation('reader.campaigns');
   const navigate = useNavigate();
-  const { campaigns, isLoadingCampaigns } = useAvailableCampaigns();
-  const { profile, isLoadingProfile } = useReaderProfile();
 
+  const [profile, setProfile] = useState<ReaderProfile | null>(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [campaigns, setCampaigns] = useState<AvailableCampaign[] | null>(null);
+  const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
   const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
@@ -598,6 +601,64 @@ export function CampaignsPage() {
   // Modal state for book detail
   const [selectedCampaign, setSelectedCampaign] = useState<AvailableCampaign | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Apply state
+  const [isApplying, setIsApplying] = useState(false);
+  const [lastAppliedAssignment, setLastAppliedAssignment] = useState<Assignment | null>(null);
+
+  // Fetch profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setIsLoadingProfile(true);
+        const data = await readersApi.getProfile();
+        setProfile(data);
+      } catch (err) {
+        console.error('Profile error:', err);
+      } finally {
+        setIsLoadingProfile(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  // Fetch campaigns
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        setIsLoadingCampaigns(true);
+        const data = await queueApi.getAvailableCampaigns();
+        setCampaigns(data);
+      } catch (err) {
+        console.error('Campaigns error:', err);
+      } finally {
+        setIsLoadingCampaigns(false);
+      }
+    };
+    fetchCampaigns();
+  }, []);
+
+  // Apply to campaign
+  const applyToCampaign = async (bookId: string, format: BookFormat, onSuccess?: () => void) => {
+    try {
+      setIsApplying(true);
+      const newAssignment = await queueApi.applyToCampaign({
+        bookId,
+        formatPreference: format
+      });
+      setLastAppliedAssignment(newAssignment);
+      toast.success('Successfully applied to campaign!');
+      // Refetch campaigns to update hasApplied status
+      const data = await queueApi.getAvailableCampaigns();
+      setCampaigns(data);
+      onSuccess?.();
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Failed to apply to campaign';
+      toast.error(message);
+    } finally {
+      setIsApplying(false);
+    }
+  };
 
   const handleOpenDetail = (campaign: AvailableCampaign) => {
     setSelectedCampaign(campaign);
@@ -764,6 +825,9 @@ export function CampaignsPage() {
               key={campaign.id}
               campaign={campaign}
               onOpenDetail={handleOpenDetail}
+              applyToCampaign={applyToCampaign}
+              isApplying={isApplying}
+              profile={profile}
               className={`animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow', 'slow', 'extra-slow'][index % 6]}`}
             />
           ))}
@@ -783,6 +847,10 @@ export function CampaignsPage() {
         campaign={selectedCampaign}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        applyToCampaign={applyToCampaign}
+        isApplying={isApplying}
+        lastAppliedAssignment={lastAppliedAssignment}
+        profile={profile}
       />
     </div>
   );

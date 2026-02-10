@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import {
   Download,
   Trash2,
@@ -9,8 +10,17 @@ import {
   AlertTriangle,
   Loader2,
   Globe } from 'lucide-react';
-import { useUserData } from '@/hooks/useUserData';
-import { ConsentType, Language } from '@/lib/api/users';
+import {
+  ConsentType,
+  Language,
+  exportUserData,
+  deleteAccount as deleteAccountApi,
+  updateConsent as updateConsentApi,
+  getUserConsents,
+  getLanguage,
+  updateLanguage as updateLanguageApi,
+  type ConsentResponse,
+} from '@/lib/api/users';
 import { useNavigate,  useParams } from 'react-router-dom';
 import {
   Select,
@@ -46,56 +56,180 @@ import {
 export function SettingsPage() {
   const { t, i18n } = useTranslation('settings');
   const navigate = useNavigate();
-  const {
-    exportData,
-    isExporting,
-    deleteAccount,
-    isDeletingAccount,
-    updateConsent,
-    isUpdatingConsent,
-    consents,
-    isLoadingConsents,
-    updateLanguage,
-    isUpdatingLanguage,
-    languagePreference,
-    isLoadingLanguage } = useUserData();
+
+  // Query states
+  const [consents, setConsents] = useState<ConsentResponse[]>([]);
+  const [isLoadingConsents, setIsLoadingConsents] = useState(true);
+  const [languagePreference, setLanguagePreference] = useState<string | undefined>(undefined);
+  const [isLoadingLanguage, setIsLoadingLanguage] = useState(true);
+
+  // Mutation states
+  const [isExporting, setIsExporting] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [isUpdatingConsent, setIsUpdatingConsent] = useState(false);
+  const [isUpdatingLanguage, setIsUpdatingLanguage] = useState(false);
 
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const [deleteReason, setDeleteReason] = useState('');
 
-  const handleExportData = () => {
-    exportData();
+  // Fetch consents
+  useEffect(() => {
+    const fetchConsents = async () => {
+      try {
+        setIsLoadingConsents(true);
+        const data = await getUserConsents();
+        setConsents(data);
+      } catch (err) {
+        console.error('Consents error:', err);
+      } finally {
+        setIsLoadingConsents(false);
+      }
+    };
+
+    fetchConsents();
+  }, []);
+
+  // Fetch language preference
+  useEffect(() => {
+    const fetchLanguage = async () => {
+      try {
+        setIsLoadingLanguage(true);
+        const data = await getLanguage();
+        setLanguagePreference(data.preferredLanguage);
+      } catch (err) {
+        console.error('Language error:', err);
+      } finally {
+        setIsLoadingLanguage(false);
+      }
+    };
+
+    fetchLanguage();
+  }, []);
+
+  const refetchConsents = async () => {
+    try {
+      const data = await getUserConsents();
+      setConsents(data);
+    } catch (err) {
+      console.error('Consents refetch error:', err);
+    }
   };
 
-  const handleDeleteAccount = () => {
+  const refetchLanguage = async () => {
+    try {
+      const data = await getLanguage();
+      setLanguagePreference(data.preferredLanguage);
+    } catch (err) {
+      console.error('Language refetch error:', err);
+    }
+  };
+
+  const handleExportData = async () => {
+    try {
+      setIsExporting(true);
+      const data = await exportUserData();
+
+      // Create downloadable JSON file
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: 'application/json',
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `bookproof-data-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success('Data exported successfully', {
+        description: 'Your data has been downloaded as a JSON file',
+      });
+    } catch (error: any) {
+      toast.error('Failed to export data', {
+        description: error.message || 'Please try again later',
+      });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
     if (deleteConfirmation !== 'DELETE MY ACCOUNT') {
       return;
     }
 
-    deleteAccount({
-      confirmationPhrase: deleteConfirmation,
-      reason: deleteReason || undefined });
+    try {
+      setIsDeletingAccount(true);
+      const data = await deleteAccountApi({
+        confirmationPhrase: deleteConfirmation,
+        reason: deleteReason || undefined,
+      });
 
-    // Reset form
-    setDeleteConfirmation('');
-    setDeleteReason('');
+      toast.success('Account deletion scheduled', {
+        description: `Your account will be deleted on ${new Date(data.scheduledDeletionDate).toLocaleDateString()}. You can cancel within ${data.gracePeriodDays} days.`,
+        duration: 10000,
+      });
+
+      // Reset form
+      setDeleteConfirmation('');
+      setDeleteReason('');
+    } catch (error: any) {
+      toast.error('Failed to delete account', {
+        description: error.message || 'Please try again later',
+      });
+    } finally {
+      setIsDeletingAccount(false);
+    }
   };
 
-  const handleConsentToggle = (consentType: ConsentType, granted: boolean) => {
-    updateConsent({
-      consentType,
-      granted });
+  const handleConsentToggle = async (consentType: ConsentType, granted: boolean) => {
+    try {
+      setIsUpdatingConsent(true);
+      const data = await updateConsentApi({
+        consentType,
+        granted,
+      });
+
+      toast.success('Consent updated', {
+        description: `${data.consentType} consent ${data.granted ? 'granted' : 'withdrawn'}`,
+      });
+
+      await refetchConsents();
+    } catch (error: any) {
+      toast.error('Failed to update consent', {
+        description: error.message || 'Please try again later',
+      });
+    } finally {
+      setIsUpdatingConsent(false);
+    }
   };
 
   const getConsentStatus = (consentType: ConsentType) => {
     return consents?.find((c) => c.consentType === consentType)?.granted ?? false;
   };
 
-  const handleLanguageChange = (newLanguage: Language) => {
-    updateLanguage({ preferredLanguage: newLanguage });
-    // Also update the URL locale to match the new language
-    const newLocale = newLanguage.toLowerCase();
-    navigate(`/${newLocale}/author/settings`);
+  const handleLanguageChange = async (newLanguage: Language) => {
+    try {
+      setIsUpdatingLanguage(true);
+      const data = await updateLanguageApi({ preferredLanguage: newLanguage });
+
+      toast.success('Language updated', {
+        description: `Your preferred language has been changed to ${data.preferredLanguage}`,
+      });
+
+      await refetchLanguage();
+
+      // Also update the URL locale to match the new language
+      const newLocale = newLanguage.toLowerCase();
+      navigate(`/${newLocale}/author/settings`);
+    } catch (error: any) {
+      toast.error('Failed to update language', {
+        description: error.message || 'Please try again later',
+      });
+    } finally {
+      setIsUpdatingLanguage(false);
+    }
   };
 
   return (

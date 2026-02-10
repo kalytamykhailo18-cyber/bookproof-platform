@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
-import {
-  useNotificationSettings,
-  useUpdateNotificationSettings } from '@/hooks/useNotifications';
+import { getNotificationSettings, updateNotificationSettings } from '@/lib/api/notifications';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -42,8 +41,9 @@ const notificationTypes = [
 export function NotificationSettingsPage() {
   const { t, i18n } = useTranslation('notifications.settings');
   const navigate = useNavigate();
-  const { data: settings, isLoading } = useNotificationSettings();
-  const { mutate: updateSettings, isPending } = useUpdateNotificationSettings();
+  const [settings, setSettings] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isPending, setIsPending] = useState(false);
   const [isBackLoading, setIsBackLoading] = useState(false);
 
   const { register, handleSubmit, setValue, watch } = useForm<SettingsFormData>({
@@ -51,6 +51,24 @@ export function NotificationSettingsPage() {
       emailEnabled: true,
       emailFrequency: 'IMMEDIATE',
       disabledTypes: [] } });
+
+  // Fetch notification settings
+  const fetchSettings = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getNotificationSettings();
+      setSettings(data);
+    } catch (error: any) {
+      console.error('Settings error:', error);
+      toast.error('Failed to load notification settings');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
 
   // Update form when settings load
   useEffect(() => {
@@ -61,8 +79,18 @@ export function NotificationSettingsPage() {
     }
   }, [settings, setValue]);
 
-  const onSubmit = (data: SettingsFormData) => {
-    updateSettings(data);
+  const onSubmit = async (data: SettingsFormData) => {
+    try {
+      setIsPending(true);
+      await updateNotificationSettings(data);
+      toast.success('Notification settings updated successfully');
+      await fetchSettings();
+    } catch (error: any) {
+      console.error('Update settings error:', error);
+      toast.error('Failed to update notification settings');
+    } finally {
+      setIsPending(false);
+    }
   };
 
   const emailEnabled = watch('emailEnabled');

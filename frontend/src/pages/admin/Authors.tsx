@@ -1,7 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAdminControls } from '@/hooks/useAdminControls';
+import { adminControlsApi } from '@/lib/api/admin-controls';
+import { adminAuthorsApi } from '@/lib/api/admin-authors';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -53,14 +55,20 @@ import type { AuthorListItemDto } from '@/lib/api/admin-controls';
 export function AdminAuthorsPage() {
   const { t, i18n } = useTranslation('adminAuthors');
   const navigate = useNavigate();
-  const { useAllAuthors, addCredits, removeCredits, suspendAuthor, unsuspendAuthor, updateAuthorNotes } = useAdminControls();
 
-  const { data: authors, isLoading } = useAllAuthors();
+  const [authors, setAuthors] = useState<AuthorListItemDto[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedAuthor, setSelectedAuthor] = useState<AuthorListItemDto | null>(null);
   const [loadingAuthorId, setLoadingAuthorId] = useState<string | null>(null);
+
+  const [isAddingCredits, setIsAddingCredits] = useState(false);
+  const [isRemovingCredits, setIsRemovingCredits] = useState(false);
+  const [isSuspending, setIsSuspending] = useState(false);
+  const [isUnsuspending, setIsUnsuspending] = useState(false);
+  const [isUpdatingNotes, setIsUpdatingNotes] = useState(false);
   const [addCreditsDialogOpen, setAddCreditsDialogOpen] = useState(false);
   const [removeCreditsDialogOpen, setRemoveCreditsDialogOpen] = useState(false);
   const [creditsAmount, setCreditsAmount] = useState('');
@@ -72,6 +80,24 @@ export function AdminAuthorsPage() {
   const [suspendReason, setSuspendReason] = useState('');
   const [suspendNotes, setSuspendNotes] = useState('');
   const [adminNotes, setAdminNotes] = useState('');
+
+  // Fetch all authors
+  const fetchAuthors = async () => {
+    try {
+      setIsLoading(true);
+      const data = await adminControlsApi.getAllAuthors();
+      setAuthors(data);
+    } catch (error: any) {
+      console.error('Authors error:', error);
+      toast.error('Failed to load authors');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAuthors();
+  }, []);
 
   const filteredAuthors = useMemo(() => {
     if (!authors) return [];
@@ -104,39 +130,45 @@ export function AdminAuthorsPage() {
       activeCampaigns: authors.reduce((sum, a) => sum + a.activeCampaigns, 0) };
   }, [authors]);
 
-  const handleAddCredits = () => {
+  const handleAddCredits = async () => {
     if (selectedAuthor && creditsAmount && creditReason) {
-      addCredits.mutate(
-        {
-          authorProfileId: selectedAuthor.id,
-          data: {
-            creditsToAdd: parseInt(creditsAmount),
-            reason: creditReason,
-            notes: creditNotes || undefined } },
-        {
-          onSuccess: () => {
-            setAddCreditsDialogOpen(false);
-            resetForm();
-          } },
-      );
+      try {
+        setIsAddingCredits(true);
+        await adminControlsApi.addCreditsToAuthor(selectedAuthor.id, {
+          creditsToAdd: parseInt(creditsAmount),
+          reason: creditReason,
+          notes: creditNotes || undefined
+        });
+        toast.success('Credits added successfully');
+        setAddCreditsDialogOpen(false);
+        resetForm();
+        await fetchAuthors();
+      } catch (error: any) {
+        toast.error(error.response?.data?.message || 'Failed to add credits');
+      } finally {
+        setIsAddingCredits(false);
+      }
     }
   };
 
-  const handleRemoveCredits = () => {
+  const handleRemoveCredits = async () => {
     if (selectedAuthor && creditsAmount && creditReason) {
-      removeCredits.mutate(
-        {
-          authorProfileId: selectedAuthor.id,
-          data: {
-            creditsToRemove: parseInt(creditsAmount),
-            reason: creditReason,
-            notes: creditNotes || undefined } },
-        {
-          onSuccess: () => {
-            setRemoveCreditsDialogOpen(false);
-            resetForm();
-          } },
-      );
+      try {
+        setIsRemovingCredits(true);
+        await adminControlsApi.removeCreditsFromAuthor(selectedAuthor.id, {
+          creditsToRemove: parseInt(creditsAmount),
+          reason: creditReason,
+          notes: creditNotes || undefined
+        });
+        toast.success('Credits removed successfully');
+        setRemoveCreditsDialogOpen(false);
+        resetForm();
+        await fetchAuthors();
+      } catch (error: any) {
+        toast.error(error.response?.data?.message || 'Failed to remove credits');
+      } finally {
+        setIsRemovingCredits(false);
+      }
     }
   };
 
@@ -157,58 +189,67 @@ export function AdminAuthorsPage() {
     setRemoveCreditsDialogOpen(true);
   };
 
-  const handleSuspendAuthor = () => {
+  const handleSuspendAuthor = async () => {
     if (selectedAuthor && suspendReason) {
-      suspendAuthor.mutate(
-        {
-          authorProfileId: selectedAuthor.id,
-          data: {
-            reason: suspendReason,
-            notes: suspendNotes || undefined } },
-        {
-          onSuccess: () => {
-            setSuspendDialogOpen(false);
-            setSuspendReason('');
-            setSuspendNotes('');
-            setSelectedAuthor(null);
-          } },
-      );
+      try {
+        setIsSuspending(true);
+        await adminAuthorsApi.suspendAuthor(selectedAuthor.id, {
+          reason: suspendReason,
+          notes: suspendNotes || undefined
+        });
+        toast.success('Author suspended successfully');
+        setSuspendDialogOpen(false);
+        setSuspendReason('');
+        setSuspendNotes('');
+        setSelectedAuthor(null);
+        await fetchAuthors();
+      } catch (error: any) {
+        toast.error(error.response?.data?.message || 'Failed to suspend author');
+      } finally {
+        setIsSuspending(false);
+      }
     }
   };
 
-  const handleUnsuspendAuthor = () => {
+  const handleUnsuspendAuthor = async () => {
     if (selectedAuthor && suspendReason) {
-      unsuspendAuthor.mutate(
-        {
-          authorProfileId: selectedAuthor.id,
-          data: {
-            reason: suspendReason,
-            notes: suspendNotes || undefined } },
-        {
-          onSuccess: () => {
-            setUnsuspendDialogOpen(false);
-            setSuspendReason('');
-            setSuspendNotes('');
-            setSelectedAuthor(null);
-          } },
-      );
+      try {
+        setIsUnsuspending(true);
+        await adminAuthorsApi.unsuspendAuthor(selectedAuthor.id, {
+          reason: suspendReason,
+          notes: suspendNotes || undefined
+        });
+        toast.success('Author unsuspended successfully');
+        setUnsuspendDialogOpen(false);
+        setSuspendReason('');
+        setSuspendNotes('');
+        setSelectedAuthor(null);
+        await fetchAuthors();
+      } catch (error: any) {
+        toast.error(error.response?.data?.message || 'Failed to unsuspend author');
+      } finally {
+        setIsUnsuspending(false);
+      }
     }
   };
 
-  const handleUpdateNotes = () => {
+  const handleUpdateNotes = async () => {
     if (selectedAuthor) {
-      updateAuthorNotes.mutate(
-        {
-          authorProfileId: selectedAuthor.id,
-          data: {
-            adminNotes: adminNotes } },
-        {
-          onSuccess: () => {
-            setNotesDialogOpen(false);
-            setAdminNotes('');
-            setSelectedAuthor(null);
-          } },
-      );
+      try {
+        setIsUpdatingNotes(true);
+        await adminAuthorsApi.updateAdminNotes(selectedAuthor.id, {
+          adminNotes: adminNotes
+        });
+        toast.success('Admin notes updated successfully');
+        setNotesDialogOpen(false);
+        setAdminNotes('');
+        setSelectedAuthor(null);
+        await fetchAuthors();
+      } catch (error: any) {
+        toast.error(error.response?.data?.message || 'Failed to update admin notes');
+      } finally {
+        setIsUpdatingNotes(false);
+      }
     }
   };
 
@@ -544,9 +585,9 @@ export function AdminAuthorsPage() {
             <Button
               type="button"
               onClick={handleAddCredits}
-              disabled={!creditsAmount || !creditReason || addCredits.isPending}
+              disabled={!creditsAmount || !creditReason || isAddingCredits}
             >
-              {addCredits.isPending ? t('dialogs.processing') : t('dialogs.addCredits.confirm')}
+              {isAddingCredits ? t('dialogs.processing') : t('dialogs.addCredits.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -616,9 +657,9 @@ export function AdminAuthorsPage() {
               type="button"
               variant="destructive"
               onClick={handleRemoveCredits}
-              disabled={!creditsAmount || !creditReason || removeCredits.isPending}
+              disabled={!creditsAmount || !creditReason || isRemovingCredits}
             >
-              {removeCredits.isPending
+              {isRemovingCredits
                 ? t('dialogs.processing')
                 : t('dialogs.removeCredits.confirm')}
             </Button>
@@ -669,9 +710,9 @@ export function AdminAuthorsPage() {
               type="button"
               variant="destructive"
               onClick={handleSuspendAuthor}
-              disabled={!suspendReason || suspendAuthor.isPending}
+              disabled={!suspendReason || isSuspending}
             >
-              {suspendAuthor.isPending ? 'Suspending...' : 'Suspend Author'}
+              {isSuspending ? 'Suspending...' : 'Suspend Author'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -718,9 +759,9 @@ export function AdminAuthorsPage() {
             <Button
               type="button"
               onClick={handleUnsuspendAuthor}
-              disabled={!suspendReason || unsuspendAuthor.isPending}
+              disabled={!suspendReason || isUnsuspending}
             >
-              {unsuspendAuthor.isPending ? 'Unsuspending...' : 'Unsuspend Author'}
+              {isUnsuspending ? 'Unsuspending...' : 'Unsuspend Author'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -760,9 +801,9 @@ export function AdminAuthorsPage() {
             <Button
               type="button"
               onClick={handleUpdateNotes}
-              disabled={!adminNotes.trim() || updateAuthorNotes.isPending}
+              disabled={!adminNotes.trim() || isUpdatingNotes}
             >
-              {updateAuthorNotes.isPending ? 'Updating...' : 'Update Notes'}
+              {isUpdatingNotes ? 'Updating...' : 'Update Notes'}
             </Button>
           </DialogFooter>
         </DialogContent>

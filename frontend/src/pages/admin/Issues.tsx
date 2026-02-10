@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import { useIssueManagement, useAmazonMonitoring } from '@/hooks/useReviews';
+import { useState, useEffect } from 'react';
+import { reviewsApi } from '@/lib/api/reviews';
+import { toast } from 'sonner';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -26,15 +28,68 @@ import { ReviewIssue, IssueResolutionStatus } from '@/lib/api/reviews';
 import { formatDistanceToNow } from 'date-fns';
 
 export function AdminIssuesPage() {
-  const { openIssues, isLoadingIssues, resolveIssue, isResolvingIssue } = useIssueManagement();
+  const { startLoading, stopLoading } = useLoading();
 
-  const {
-    activeMonitors,
-    isLoadingMonitors,
-    stats: monitoringStats,
-    isLoadingStats,
-    markAsRemoved,
-    isMarkingAsRemoved } = useAmazonMonitoring();
+  // Issue management state
+  const [openIssues, setOpenIssues] = useState<any[]>([]);
+  const [isLoadingIssues, setIsLoadingIssues] = useState(true);
+  const [isResolvingIssue, setIsResolvingIssue] = useState(false);
+
+  // Amazon monitoring state
+  const [activeMonitors, setActiveMonitors] = useState<any[]>([]);
+  const [isLoadingMonitors, setIsLoadingMonitors] = useState(true);
+  const [monitoringStats, setMonitoringStats] = useState<any>(null);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
+  const [isMarkingAsRemoved, setIsMarkingAsRemoved] = useState(false);
+
+  // Fetch open issues
+  useEffect(() => {
+    const fetchOpenIssues = async () => {
+      try {
+        setIsLoadingIssues(true);
+        const data = await reviewsApi.getOpenIssues();
+        setOpenIssues(data);
+      } catch (err) {
+        console.error('Open issues error:', err);
+        toast.error('Failed to load open issues');
+      } finally {
+        setIsLoadingIssues(false);
+      }
+    };
+    fetchOpenIssues();
+  }, []);
+
+  // Fetch active monitors
+  useEffect(() => {
+    const fetchActiveMonitors = async () => {
+      try {
+        setIsLoadingMonitors(true);
+        const data = await reviewsApi.getActiveMonitors();
+        setActiveMonitors(data);
+      } catch (err) {
+        console.error('Active monitors error:', err);
+      } finally {
+        setIsLoadingMonitors(false);
+      }
+    };
+    fetchActiveMonitors();
+  }, []);
+
+  // Fetch monitoring stats
+  useEffect(() => {
+    const fetchMonitoringStats = async () => {
+      try {
+        setIsLoadingStats(true);
+        const data = await reviewsApi.getMonitoringStats();
+        setMonitoringStats(data);
+      } catch (err) {
+        console.error('Monitoring stats error:', err);
+      } finally {
+        setIsLoadingStats(false);
+      }
+    };
+    fetchMonitoringStats();
+  }, []);
 
   const [resolveDialogOpen, setResolveDialogOpen] = useState(false);
   const [currentIssue, setCurrentIssue] = useState<ReviewIssue | null>(null);
@@ -56,20 +111,34 @@ export function AdminIssuesPage() {
     setResolveDialogOpen(true);
   };
 
-  const handleResolve = () => {
+  const handleResolve = async () => {
     if (!currentIssue) return;
 
-    resolveIssue({
-      issueId: currentIssue.id,
-      data: {
+    try {
+      setIsResolvingIssue(true);
+      startLoading('Resolving issue...');
+      await reviewsApi.resolveIssue(currentIssue.id, {
         status: resolutionStatus,
         resolution: resolutionText,
         notifyReader,
         requestResubmission,
-        triggerReassignment } });
+        triggerReassignment
+      });
+      stopLoading();
+      toast.success('Issue resolved successfully');
+      setResolveDialogOpen(false);
+      setCurrentIssue(null);
 
-    setResolveDialogOpen(false);
-    setCurrentIssue(null);
+      // Refetch open issues
+      const data = await reviewsApi.getOpenIssues();
+      setOpenIssues(data);
+    } catch (error: any) {
+      stopLoading();
+      const message = error.response?.data?.message || 'Failed to resolve issue';
+      toast.error(message);
+    } finally {
+      setIsResolvingIssue(false);
+    }
   };
 
   const getSeverityColor = (severity: string) => {
@@ -381,17 +450,40 @@ export function AdminIssuesPage() {
                                 size="sm"
                                 variant="destructive"
                                 disabled={isMarkingAsRemoved}
-                                onClick={() => {
+                                onClick={async () => {
                                   if (
-                                    confirm(
+                                    !confirm(
                                       'Are you sure you want to mark this review as removed by Amazon?',
                                     )
-                                  ) {
-                                    markAsRemoved({
-                                      reviewId: monitor.reviewId,
-                                      data: {
-                                        removalDate: new Date().toISOString(),
-                                        notes: 'Manually marked as removed by admin' } });
+                                  ) return;
+
+                                  try {
+                                    setIsMarkingAsRemoved(true);
+                                    startLoading('Marking review as removed...');
+                                    const result = await reviewsApi.markAsRemovedByAmazon(monitor.reviewId, {
+                                      removalDate: new Date().toISOString(),
+                                      notes: 'Manually marked as removed by admin'
+                                    });
+                                    stopLoading();
+
+                                    // Use the message from backend which includes replacement status details
+                                    if (result.replacementEligible) {
+                                      toast.success(result.message);
+                                    } else {
+                                      toast.info(result.message);
+                                    }
+
+                                    // Refetch monitors and stats
+                                    const monitorsData = await reviewsApi.getActiveMonitors();
+                                    setActiveMonitors(monitorsData);
+                                    const statsData = await reviewsApi.getMonitoringStats();
+                                    setMonitoringStats(statsData);
+                                  } catch (error: any) {
+                                    stopLoading();
+                                    const message = error.response?.data?.message || 'Failed to mark review as removed';
+                                    toast.error(message);
+                                  } finally {
+                                    setIsMarkingAsRemoved(false);
                                   }
                                 }}
                               >

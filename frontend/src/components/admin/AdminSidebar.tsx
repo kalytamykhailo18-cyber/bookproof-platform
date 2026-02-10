@@ -45,7 +45,6 @@ interface NavSection {
 export function AdminSidebar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { i18n } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
 
@@ -206,7 +205,6 @@ export function AdminSidebar() {
                         active && 'cursor-default'
                       )}
                       onClick={() => handleNavigation(item.href)}
-                      // disabled={loading || active}
                     >
                       {loading ? (
                         <Loader2 className={cn('h-4 w-4 animate-spin', !collapsed && 'mr-2')} />

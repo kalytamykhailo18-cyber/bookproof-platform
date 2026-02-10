@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/hooks/useAuth';
+import { authApi } from '@/lib/api/auth';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,9 +28,10 @@ type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export function ForgotPasswordPage() {
   const { t, i18n } = useTranslation('auth.forgotPassword');
   const navigate = useNavigate();
-  const { requestPasswordResetAsync, isRequestingReset } = useAuth();
+  const { startLoading, stopLoading } = useLoading();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
   const [emailSent, setEmailSent] = useState(false);
+  const [isRequestingReset, setIsRequestingReset] = useState(false);
   const [isBackLoading, setIsBackLoading] = useState(false);
 
   const {
@@ -51,7 +53,9 @@ export function ForgotPasswordPage() {
         captchaToken = await executeRecaptcha('password_reset');
       }
 
-      await requestPasswordResetAsync({ ...data, captchaToken });
+      setIsRequestingReset(true);
+      startLoading('Sending reset link...');
+      await authApi.requestPasswordReset({ ...data, captchaToken });
       setEmailSent(true);
       toast.success(t('success'));
     } catch (error: unknown) {
@@ -62,6 +66,9 @@ export function ForgotPasswordPage() {
       } else {
         toast.error(errorMessage);
       }
+    } finally {
+      setIsRequestingReset(false);
+      stopLoading();
     }
   };
 

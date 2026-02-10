@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useReferredAuthors, useReferredAuthorDetail } from '@/hooks/useAffiliates';
+import { affiliatesApi } from '@/lib/api/affiliates';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,10 +26,49 @@ export function ReferredAuthorsPage() {
   const [selectedReferralId, setSelectedReferralId] = useState<string | null>(null);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
 
-  const { data: referredAuthors, isLoading } = useReferredAuthors();
-  const { data: authorDetail, isLoading: detailLoading } = useReferredAuthorDetail(
-    selectedReferralId || '',
-  );
+  const [referredAuthors, setReferredAuthors] = useState<any[]>([]);
+  const [authorDetail, setAuthorDetail] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [detailLoading, setDetailLoading] = useState(false);
+
+  // Fetch referred authors
+  useEffect(() => {
+    const fetchReferredAuthors = async () => {
+      try {
+        setIsLoading(true);
+        const data = await affiliatesApi.getReferredAuthors();
+        setReferredAuthors(data);
+      } catch (error: any) {
+        console.error('Referred authors error:', error);
+        toast.error('Failed to load referred authors');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchReferredAuthors();
+  }, []);
+
+  // Fetch author detail when selectedReferralId changes
+  useEffect(() => {
+    if (!selectedReferralId) {
+      setAuthorDetail(null);
+      return;
+    }
+
+    const fetchAuthorDetail = async () => {
+      try {
+        setDetailLoading(true);
+        const data = await affiliatesApi.getReferredAuthorDetail(selectedReferralId);
+        setAuthorDetail(data);
+      } catch (error: any) {
+        console.error('Author detail error:', error);
+        toast.error('Failed to load author details');
+      } finally {
+        setDetailLoading(false);
+      }
+    };
+    fetchAuthorDetail();
+  }, [selectedReferralId]);
 
   const handleViewDetail = (referralId: string) => {
     setSelectedReferralId(referralId);

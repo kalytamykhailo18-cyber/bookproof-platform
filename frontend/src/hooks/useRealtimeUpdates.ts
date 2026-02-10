@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
 import { tokenManager } from '@/lib/api/client';
 import { toast } from 'sonner';
 
@@ -74,7 +74,7 @@ interface UseRealtimeUpdatesOptions {
  */
 export function useRealtimeUpdates(options: UseRealtimeUpdatesOptions = {}) {
   const { showNotifications = true, onEvent, onConnectionChange, enabled = true } = options;
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const token = tokenManager.getToken();
   const [isConnected, setIsConnected] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
@@ -284,50 +284,3 @@ export function useRealtimeUpdates(options: UseRealtimeUpdatesOptions = {}) {
   };
 }
 
-/**
- * Hook for using real-time updates with automatic query invalidation
- *
- * This is a convenience hook that combines useRealtimeUpdates with
- * TanStack Query invalidation for common use cases.
- */
-export function useRealtimeQueryInvalidation() {
-  const { useQueryClient } = require('@tanstack/react-query');
-  const queryClient = useQueryClient();
-
-  return useRealtimeUpdates({
-    showNotifications: true,
-    onEvent: {
-      [RealtimeEventType.DASHBOARD_UPDATED]: () => {
-        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-        queryClient.invalidateQueries({ queryKey: ['admin-dashboard'] });
-      },
-      [RealtimeEventType.CAMPAIGN_UPDATED]: (event) => {
-        queryClient.invalidateQueries({ queryKey: ['campaigns'] });
-        if (event.payload.campaignId) {
-          queryClient.invalidateQueries({ queryKey: ['campaign', event.payload.campaignId] });
-        }
-      },
-      [RealtimeEventType.CAMPAIGN_PROGRESS]: (event) => {
-        if (event.payload.campaignId) {
-          queryClient.invalidateQueries({ queryKey: ['campaign', event.payload.campaignId] });
-        }
-      },
-      [RealtimeEventType.QUEUE_UPDATED]: (event) => {
-        queryClient.invalidateQueries({ queryKey: ['queue'] });
-        queryClient.invalidateQueries({ queryKey: ['assignments'] });
-      },
-      [RealtimeEventType.ASSIGNMENT_STATUS_CHANGED]: () => {
-        queryClient.invalidateQueries({ queryKey: ['assignments'] });
-        queryClient.invalidateQueries({ queryKey: ['reader-dashboard'] });
-      },
-      [RealtimeEventType.REVIEW_SUBMITTED]: () => {
-        queryClient.invalidateQueries({ queryKey: ['reviews'] });
-        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      },
-      [RealtimeEventType.REVIEW_VALIDATED]: () => {
-        queryClient.invalidateQueries({ queryKey: ['reviews'] });
-        queryClient.invalidateQueries({ queryKey: ['campaigns'] });
-      },
-    },
-  });
-}

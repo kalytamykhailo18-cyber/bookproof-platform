@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAdminControls } from '@/hooks/useAdminControls';
+import { adminControlsApi } from '@/lib/api/admin-controls';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,28 +38,28 @@ import {
 
 export function CampaignControlsPage() {
   const navigate = useNavigate();
+  const params = useParams();
   const bookId = params.id as string;
   const { t, i18n } = useTranslation('adminControls');
 
-  const {
-    useCampaignHealth,
-    useCampaignAnalytics,
-    useCampaignReportData,
-    pauseCampaign,
-    resumeCampaign,
-    adjustDistribution,
-    allocateCredits,
-    adjustOverbooking,
-    forceCompleteCampaign,
-    manualGrantAccess,
-    removeReaderFromCampaign } = useAdminControls();
-
-  const { data: health, isLoading: healthLoading } = useCampaignHealth(bookId);
-  const { data: analytics, isLoading: analyticsLoading } = useCampaignAnalytics(bookId);
+  const [health, setHealth] = useState<any>(null);
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [healthLoading, setHealthLoading] = useState(true);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
 
   // Report data state
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
-  const { data: reportData, isLoading: reportLoading } = useCampaignReportData(bookId, reportDialogOpen);
+  const [reportData, setReportData] = useState<any>(null);
+  const [reportLoading, setReportLoading] = useState(false);
+
+  const [isPausing, setIsPausing] = useState(false);
+  const [isResuming, setIsResuming] = useState(false);
+  const [isAdjusting, setIsAdjusting] = useState(false);
+  const [isAllocating, setIsAllocating] = useState(false);
+  const [isAdjustingOverbooking, setIsAdjustingOverbooking] = useState(false);
+  const [isForceCompleting, setIsForceCompleting] = useState(false);
+  const [isGrantingAccess, setIsGrantingAccess] = useState(false);
+  const [isRemovingReader, setIsRemovingReader] = useState(false);
 
   const [pauseReason, setPauseReason] = useState('');
   const [pauseNotes, setPauseNotes] = useState('');
@@ -98,146 +99,229 @@ export function CampaignControlsPage() {
   const [removeReaderNotes, setRemoveReaderNotes] = useState('');
   const [isBackLoading, setIsBackLoading] = useState(false);
 
-  const handlePause = () => {
-    pauseCampaign.mutate(
-      {
-        bookId,
-        data: {
-          reason: pauseReason,
-          notes: pauseNotes || undefined } },
-      {
-        onSuccess: () => {
-          setPauseDialogOpen(false);
-          setPauseReason('');
-          setPauseNotes('');
-        } },
-    );
+  // Fetch campaign health
+  const fetchHealth = async () => {
+    if (!bookId) {
+      setHealthLoading(false);
+      return;
+    }
+    try {
+      setHealthLoading(true);
+      const data = await adminControlsApi.getCampaignHealth(bookId);
+      setHealth(data);
+    } catch (error: any) {
+      console.error('Campaign health error:', error);
+      toast.error('Failed to load campaign health');
+    } finally {
+      setHealthLoading(false);
+    }
   };
 
-  const handleResume = () => {
-    resumeCampaign.mutate(
-      {
-        bookId,
-        data: {
-          reason: resumeReason,
-          notes: resumeNotes || undefined } },
-      {
-        onSuccess: () => {
-          setResumeDialogOpen(false);
-          setResumeReason('');
-          setResumeNotes('');
-        } },
-    );
+  // Fetch campaign analytics
+  const fetchAnalytics = async () => {
+    if (!bookId) {
+      setAnalyticsLoading(false);
+      return;
+    }
+    try {
+      setAnalyticsLoading(true);
+      const data = await adminControlsApi.getCampaignAnalytics(bookId);
+      setAnalytics(data);
+    } catch (error: any) {
+      console.error('Campaign analytics error:', error);
+      toast.error('Failed to load campaign analytics');
+    } finally {
+      setAnalyticsLoading(false);
+    }
   };
 
-  const handleAdjustDistribution = () => {
-    adjustDistribution.mutate(
-      {
-        bookId,
-        data: {
-          reviewsPerWeek: parseInt(newDistribution),
-          reason: distributionReason } },
-      {
-        onSuccess: () => {
-          setDistributionDialogOpen(false);
-          setNewDistribution('');
-          setDistributionReason('');
-        } },
-    );
+  // Fetch report data when dialog opens
+  useEffect(() => {
+    const fetchReportData = async () => {
+      if (!reportDialogOpen || !bookId) return;
+      try {
+        setReportLoading(true);
+        const data = await adminControlsApi.generateCampaignReport(bookId);
+        setReportData(data);
+      } catch (error: any) {
+        console.error('Report data error:', error);
+        toast.error('Failed to load report data');
+      } finally {
+        setReportLoading(false);
+      }
+    };
+    fetchReportData();
+  }, [reportDialogOpen, bookId]);
+
+  useEffect(() => {
+    fetchHealth();
+    fetchAnalytics();
+  }, [bookId]);
+
+  const handlePause = async () => {
+    try {
+      setIsPausing(true);
+      await adminControlsApi.pauseCampaign(bookId, {
+        reason: pauseReason,
+        notes: pauseNotes || undefined
+      });
+      toast.success('Campaign paused successfully');
+      setPauseDialogOpen(false);
+      setPauseReason('');
+      setPauseNotes('');
+      await Promise.all([fetchHealth(), fetchAnalytics()]);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to pause campaign');
+    } finally {
+      setIsPausing(false);
+    }
   };
 
-  const handleAllocateCredits = () => {
-    allocateCredits.mutate(
-      {
-        bookId,
-        data: {
-          creditsToAllocate: parseInt(creditsToAllocate),
-          reason: creditReason } },
-      {
-        onSuccess: () => {
-          setCreditDialogOpen(false);
-          setCreditsToAllocate('');
-          setCreditReason('');
-        } },
-    );
+  const handleResume = async () => {
+    try {
+      setIsResuming(true);
+      await adminControlsApi.resumeCampaign(bookId, {
+        reason: resumeReason,
+        notes: resumeNotes || undefined
+      });
+      toast.success('Campaign resumed successfully');
+      setResumeDialogOpen(false);
+      setResumeReason('');
+      setResumeNotes('');
+      await Promise.all([fetchHealth(), fetchAnalytics()]);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to resume campaign');
+    } finally {
+      setIsResuming(false);
+    }
   };
 
-  const handleAdjustOverbooking = () => {
-    adjustOverbooking.mutate(
-      {
-        bookId,
-        data: {
-          overBookingEnabled: overbookingEnabled,
-          overBookingPercent: parseInt(overbookingPercent),
-          reason: overbookingReason } },
-      {
-        onSuccess: () => {
-          setOverbookingDialogOpen(false);
-          setOverbookingPercent('');
-          setOverbookingReason('');
-        } },
-    );
+  const handleAdjustDistribution = async () => {
+    try {
+      setIsAdjusting(true);
+      await adminControlsApi.adjustWeeklyDistribution(bookId, {
+        reviewsPerWeek: parseInt(newDistribution),
+        reason: distributionReason
+      });
+      toast.success('Weekly distribution adjusted successfully');
+      setDistributionDialogOpen(false);
+      setNewDistribution('');
+      setDistributionReason('');
+      await Promise.all([fetchHealth(), fetchAnalytics()]);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to adjust distribution');
+    } finally {
+      setIsAdjusting(false);
+    }
+  };
+
+  const handleAllocateCredits = async () => {
+    try {
+      setIsAllocating(true);
+      await adminControlsApi.allocateCreditsToCampaign(bookId, {
+        creditsToAllocate: parseInt(creditsToAllocate),
+        reason: creditReason
+      });
+      toast.success('Credits allocated successfully');
+      setCreditDialogOpen(false);
+      setCreditsToAllocate('');
+      setCreditReason('');
+      await fetchAnalytics();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to allocate credits');
+    } finally {
+      setIsAllocating(false);
+    }
+  };
+
+  const handleAdjustOverbooking = async () => {
+    try {
+      setIsAdjustingOverbooking(true);
+      await adminControlsApi.adjustOverbooking(bookId, {
+        overBookingEnabled: overbookingEnabled,
+        overBookingPercent: parseInt(overbookingPercent),
+        reason: overbookingReason
+      });
+      toast.success('Overbooking adjusted successfully');
+      setOverbookingDialogOpen(false);
+      setOverbookingPercent('');
+      setOverbookingReason('');
+      await fetchAnalytics();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to adjust overbooking');
+    } finally {
+      setIsAdjustingOverbooking(false);
+    }
   };
 
   // Section 5.3 - New campaign control handlers
-  const handleForceComplete = () => {
-    forceCompleteCampaign.mutate(
-      {
-        bookId,
-        data: {
-          reason: forceCompleteReason,
-          refundUnusedCredits: forceCompleteRefund,
-          notes: forceCompleteNotes || undefined } },
-      {
-        onSuccess: () => {
-          setForceCompleteDialogOpen(false);
-          setForceCompleteReason('');
-          setForceCompleteRefund(true);
-          setForceCompleteNotes('');
-        } },
-    );
+  const handleForceComplete = async () => {
+    try {
+      setIsForceCompleting(true);
+      await adminControlsApi.forceCompleteCampaign(bookId, {
+        reason: forceCompleteReason,
+        refundUnusedCredits: forceCompleteRefund,
+        notes: forceCompleteNotes || undefined
+      });
+      toast.success('Campaign force completed successfully');
+      setForceCompleteDialogOpen(false);
+      setForceCompleteReason('');
+      setForceCompleteRefund(true);
+      setForceCompleteNotes('');
+      await Promise.all([fetchHealth(), fetchAnalytics()]);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to force complete campaign');
+    } finally {
+      setIsForceCompleting(false);
+    }
   };
 
-  const handleGrantAccess = () => {
-    manualGrantAccess.mutate(
-      {
-        bookId,
-        data: {
-          readerProfileId: grantAccessReaderId,
-          reason: grantAccessReason,
-          preferredFormat: grantAccessFormat,
-          notes: grantAccessNotes || undefined } },
-      {
-        onSuccess: () => {
-          setGrantAccessDialogOpen(false);
-          setGrantAccessReaderId('');
-          setGrantAccessReason('');
-          setGrantAccessFormat('ebook');
-          setGrantAccessNotes('');
-        } },
-    );
+  const handleGrantAccess = async () => {
+    try {
+      setIsGrantingAccess(true);
+      await adminControlsApi.manualGrantAccess(bookId, {
+        readerProfileId: grantAccessReaderId,
+        reason: grantAccessReason,
+        preferredFormat: grantAccessFormat,
+        notes: grantAccessNotes || undefined
+      });
+      toast.success('Access granted to reader successfully');
+      setGrantAccessDialogOpen(false);
+      setGrantAccessReaderId('');
+      setGrantAccessReason('');
+      setGrantAccessFormat('ebook');
+      setGrantAccessNotes('');
+      await fetchAnalytics();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to grant access');
+    } finally {
+      setIsGrantingAccess(false);
+    }
   };
 
-  const handleRemoveReader = () => {
-    removeReaderFromCampaign.mutate(
-      {
-        bookId,
-        data: {
-          assignmentId: removeAssignmentId,
-          reason: removeReaderReason,
-          notifyReader: removeReaderNotify,
-          refundCredit: removeReaderRefund,
-          notes: removeReaderNotes || undefined } },
-      {
-        onSuccess: () => {
-          setRemoveReaderDialogOpen(false);
-          setRemoveAssignmentId('');
-          setRemoveReaderReason('');
-          setRemoveReaderNotify(true);
-          setRemoveReaderRefund(true);
-          setRemoveReaderNotes('');
-        } },
-    );
+  const handleRemoveReader = async () => {
+    try {
+      setIsRemovingReader(true);
+      await adminControlsApi.removeReaderFromCampaign(bookId, {
+        assignmentId: removeAssignmentId,
+        reason: removeReaderReason,
+        notifyReader: removeReaderNotify,
+        refundCredit: removeReaderRefund,
+        notes: removeReaderNotes || undefined
+      });
+      toast.success('Reader removed from campaign successfully');
+      setRemoveReaderDialogOpen(false);
+      setRemoveAssignmentId('');
+      setRemoveReaderReason('');
+      setRemoveReaderNotify(true);
+      setRemoveReaderRefund(true);
+      setRemoveReaderNotes('');
+      await fetchAnalytics();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to remove reader');
+    } finally {
+      setIsRemovingReader(false);
+    }
   };
 
   const handleDownloadReport = () => {
@@ -507,10 +591,10 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                     <Button
                       type="button"
                       onClick={handlePause}
-                      disabled={!pauseReason || pauseCampaign.isPending}
+                      disabled={!pauseReason || isPausing}
                       className="w-full"
                     >
-                      {pauseCampaign.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : t('actions.confirmPause')}
+                      {isPausing ? <Loader2 className="h-4 w-4 animate-spin" /> : t('actions.confirmPause')}
                     </Button>
                   </div>
                 </DialogContent>
@@ -549,10 +633,10 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                     <Button
                       type="button"
                       onClick={handleResume}
-                      disabled={!resumeReason || resumeCampaign.isPending}
+                      disabled={!resumeReason || isResuming}
                       className="w-full"
                     >
-                      {resumeCampaign.isPending
+                      {isResuming
                         ? <Loader2 className="h-4 w-4 animate-spin" />
                         : t('actions.confirmResume')}
                     </Button>
@@ -598,11 +682,11 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                     type="button"
                     onClick={handleAdjustDistribution}
                     disabled={
-                      !newDistribution || !distributionReason || adjustDistribution.isPending
+                      !newDistribution || !distributionReason || isAdjusting
                     }
                     className="w-full"
                   >
-                    {adjustDistribution.isPending ? t('actions.adjusting') : t('actions.confirm')}
+                    {isAdjusting ? t('actions.adjusting') : t('actions.confirm')}
                   </Button>
                 </div>
               </DialogContent>
@@ -642,10 +726,10 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                   <Button
                     type="button"
                     onClick={handleAllocateCredits}
-                    disabled={!creditsToAllocate || !creditReason || allocateCredits.isPending}
+                    disabled={!creditsToAllocate || !creditReason || isAllocating}
                     className="w-full"
                   >
-                    {allocateCredits.isPending ? t('actions.allocating') : t('actions.confirm')}
+                    {isAllocating ? t('actions.allocating') : t('actions.confirm')}
                   </Button>
                 </div>
               </DialogContent>
@@ -697,11 +781,11 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                     type="button"
                     onClick={handleAdjustOverbooking}
                     disabled={
-                      !overbookingPercent || !overbookingReason || adjustOverbooking.isPending
+                      !overbookingPercent || !overbookingReason || isAdjustingOverbooking
                     }
                     className="w-full"
                   >
-                    {adjustOverbooking.isPending ? t('actions.adjusting') : t('actions.confirm')}
+                    {isAdjustingOverbooking ? t('actions.adjusting') : t('actions.confirm')}
                   </Button>
                 </div>
               </DialogContent>
@@ -773,11 +857,11 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                   <Button
                     type="button"
                     onClick={handleForceComplete}
-                    disabled={!forceCompleteReason || forceCompleteCampaign.isPending}
+                    disabled={!forceCompleteReason || isForceCompleting}
                     variant="destructive"
                     className="w-full"
                   >
-                    {forceCompleteCampaign.isPending ? 'Processing...' : 'Force Complete Campaign'}
+                    {isForceCompleting ? 'Processing...' : 'Force Complete Campaign'}
                   </Button>
                 </div>
               </DialogContent>
@@ -847,11 +931,11 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                     type="button"
                     onClick={handleGrantAccess}
                     disabled={
-                      !grantAccessReaderId || !grantAccessReason || manualGrantAccess.isPending
+                      !grantAccessReaderId || !grantAccessReason || isGrantingAccess
                     }
                     className="w-full"
                   >
-                    {manualGrantAccess.isPending ? 'Granting Access...' : 'Grant Access'}
+                    {isGrantingAccess ? 'Granting Access...' : 'Grant Access'}
                   </Button>
                 </div>
               </DialogContent>
@@ -923,12 +1007,12 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                     disabled={
                       !removeAssignmentId ||
                       !removeReaderReason ||
-                      removeReaderFromCampaign.isPending
+                      isRemovingReader
                     }
                     variant="destructive"
                     className="w-full"
                   >
-                    {removeReaderFromCampaign.isPending ? 'Removing...' : 'Remove Reader'}
+                    {isRemovingReader ? 'Removing...' : 'Remove Reader'}
                   </Button>
                 </div>
               </DialogContent>

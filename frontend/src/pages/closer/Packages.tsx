@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate,  useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useCloserPackage, useUpdatePackage, useSendPackage } from '@/hooks/useCloser';
+import { closerApi } from '@/lib/api/closer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,11 +29,13 @@ import { toast } from 'sonner';
 export function PackageDetailPage() {
   const { t, i18n } = useTranslation('closer');
   const navigate = useNavigate();
+  const params = useParams();
   const packageId = params.id as string;
 
-  const { data: pkg, isLoading } = useCloserPackage(packageId);
-  const updatePackage = useUpdatePackage();
-  const sendPackage = useSendPackage();
+  const [pkg, setPkg] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
@@ -68,42 +70,71 @@ export function PackageDetailPage() {
       clientCompany: pkg.clientCompany || '' });
   }
 
-  const handleSave = () => {
-    updatePackage.mutate(
-      {
-        packageId,
-        data: {
-          packageName: formData.packageName,
-          description: formData.description || undefined,
-          credits: formData.credits,
-          price: formData.price,
-          currency: formData.currency,
-          validityDays: formData.validityDays,
-          specialTerms: formData.specialTerms || undefined,
-          clientName: formData.clientName,
-          clientEmail: formData.clientEmail,
-          clientCompany: formData.clientCompany || undefined } },
-      {
-        onSuccess: () => {
-          setIsEditing(false);
-        } },
-    );
+  // Fetch package data
+  useEffect(() => {
+    const fetchPackage = async () => {
+      try {
+        setIsLoading(true);
+        const data = await closerApi.getPackage(packageId);
+        setPkg(data);
+      } catch (error: any) {
+        console.error('Package error:', error);
+        toast.error('Failed to load package');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPackage();
+  }, [packageId]);
+
+  const handleSave = async () => {
+    try {
+      setIsUpdating(true);
+      await closerApi.updatePackage(packageId, {
+        packageName: formData.packageName,
+        description: formData.description || undefined,
+        credits: formData.credits,
+        price: formData.price,
+        currency: formData.currency,
+        validityDays: formData.validityDays,
+        specialTerms: formData.specialTerms || undefined,
+        clientName: formData.clientName,
+        clientEmail: formData.clientEmail,
+        clientCompany: formData.clientCompany || undefined,
+      });
+      toast.success('Package updated successfully');
+      setIsEditing(false);
+      // Refetch package data
+      const data = await closerApi.getPackage(packageId);
+      setPkg(data);
+    } catch (error: any) {
+      console.error('Update error:', error);
+      toast.error(error.response?.data?.message || 'Failed to update package');
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
-  const handleSend = () => {
-    sendPackage.mutate(
-      {
-        packageId,
-        data: {
-          expirationDays,
-          customMessage: customMessage || undefined } },
-      {
-        onSuccess: () => {
-          setSendDialogOpen(false);
-          setExpirationDays(30); // Default 30 days per Section 5.3
-          setCustomMessage('');
-        } },
-    );
+  const handleSend = async () => {
+    try {
+      setIsSending(true);
+      await closerApi.sendPackage(packageId, {
+        expirationDays,
+        customMessage: customMessage || undefined,
+      });
+      toast.success('Package sent successfully');
+      setSendDialogOpen(false);
+      setExpirationDays(30); // Default 30 days per Section 5.3
+      setCustomMessage('');
+      // Refetch package data
+      const data = await closerApi.getPackage(packageId);
+      setPkg(data);
+    } catch (error: any) {
+      console.error('Send error:', error);
+      toast.error(error.response?.data?.message || 'Failed to send package');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const copyPaymentLink = (link: string) => {
@@ -490,9 +521,9 @@ export function PackageDetailPage() {
                 <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
                   {t('common.cancel')}
                 </Button>
-                <Button type="button" onClick={handleSave} disabled={updatePackage.isPending}>
+                <Button type="button" onClick={handleSave} disabled={isUpdating}>
                   <Save className="mr-2 h-4 w-4" />
-                  {updatePackage.isPending
+                  {isUpdating
                     ? t('packageDetail.saving')
                     : t('packageDetail.saveChanges')}
                 </Button>
@@ -630,8 +661,8 @@ export function PackageDetailPage() {
             <Button type="button" variant="outline" onClick={() => setSendDialogOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button type="button" onClick={handleSend} disabled={sendPackage.isPending}>
-              {sendPackage.isPending
+            <Button type="button" onClick={handleSend} disabled={isSending}>
+              {isSending
                 ? t('packages.sendPackage.sending')
                 : t('packages.sendPackage.send')}
             </Button>

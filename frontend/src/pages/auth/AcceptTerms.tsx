@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate,  useParams } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { authApi } from '@/lib/api/auth';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
+import { tokenManager } from '@/lib/api/client';
 import { useLoading } from '@/components/providers/LoadingProvider';
 import {
   Card,
@@ -21,37 +21,38 @@ import { FileText, Shield, CheckCircle, Loader2 } from 'lucide-react';
 export function AcceptTermsPage() {
   const { t, i18n } = useTranslation('auth.acceptTerms');
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { user, logout } = useAuth();
+  const { user, setUser, clearUser } = useAuthStore();
   const { startLoading, stopLoading } = useLoading();
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [isAccepting, setIsAccepting] = useState(false);
 
-  const acceptTermsMutation = useMutation({
-    mutationFn: () => {
-      startLoading('Accepting terms...');
-      return authApi.acceptTerms();
-    },
-    onSuccess: () => {
-      stopLoading();
-      toast.success(t('success') || 'Terms accepted successfully!');
-      // Invalidate user query to refresh profile data
-      queryClient.invalidateQueries({ queryKey: ['user'] });
-      // Redirect to author dashboard
-      navigate(`/author`);
-    },
-    onError: (error: unknown) => {
-      stopLoading();
-      const err = error as { response?: { data?: { message?: string } }; message?: string };
-      const errorMessage = err?.response?.data?.message || err?.message || 'Failed to accept terms';
-      toast.error(errorMessage);
-    } });
-
-  const handleAcceptTerms = () => {
+  const handleAcceptTerms = async () => {
     if (!termsAccepted) {
       toast.error(t('checkboxRequired') || 'You must accept the terms to continue');
       return;
     }
-    acceptTermsMutation.mutate();
+
+    try {
+      setIsAccepting(true);
+      startLoading('Accepting terms...');
+      await authApi.acceptTerms();
+
+      // Update user state with termsAccepted
+      if (user) {
+        setUser({ ...user, termsAccepted: true });
+      }
+
+      toast.success(t('success') || 'Terms accepted successfully!');
+      // Redirect to author dashboard
+      navigate(`/author`);
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } }; message?: string };
+      const errorMessage = err?.response?.data?.message || err?.message || 'Failed to accept terms';
+      toast.error(errorMessage);
+    } finally {
+      setIsAccepting(false);
+      stopLoading();
+    }
   };
 
   // If user already accepted terms, redirect to dashboard
@@ -138,7 +139,7 @@ export function AcceptTermsPage() {
             id="terms"
             checked={termsAccepted}
             onCheckedChange={(checked) => setTermsAccepted(checked as boolean)}
-            disabled={acceptTermsMutation.isPending}
+            disabled={isAccepting}
           />
           <Label htmlFor="terms" className="cursor-pointer text-sm font-normal leading-relaxed">
             {t('checkboxLabel') ||
@@ -162,9 +163,9 @@ export function AcceptTermsPage() {
           type="button"
           onClick={handleAcceptTerms}
           className="w-full"
-          disabled={!termsAccepted || acceptTermsMutation.isPending}
+          disabled={!termsAccepted || isAccepting}
         >
-          {acceptTermsMutation.isPending
+          {isAccepting
             ? <Loader2 className="h-4 w-4 animate-spin" />
             : t('acceptButton') || 'Accept and Continue'}
         </Button>
@@ -174,7 +175,7 @@ export function AcceptTermsPage() {
           variant="ghost"
           onClick={logout}
           className="w-full text-muted-foreground"
-          disabled={acceptTermsMutation.isPending}
+          disabled={isAccepting}
         >
           {t('logout') || 'Decline and Logout'}
         </Button>
