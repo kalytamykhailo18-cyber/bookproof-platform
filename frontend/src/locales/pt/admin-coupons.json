@@ -173,5 +173,26 @@
       "date": "Data",
       "order": "Pedido"
     }
+  },
+
+  "messages": {
+    "loadError": "Erro ao carregar cupom",
+    "loadStatsError": "Erro ao carregar estatísticas de uso",
+    "createSuccess": "Cupom criado com sucesso",
+    "createError": "Erro ao criar cupom",
+    "updateSuccess": "Cupom atualizado com sucesso",
+    "updateError": "Erro ao atualizar cupom",
+    "deleteSuccess": "Cupom excluído com sucesso",
+    "deleteError": "Erro ao excluir cupom",
+    "noExpiration": "Sem expiração",
+    "noUsesYet": "Ainda sem usos",
+    "notFound": "Cupom não encontrado",
+    "created": "Criado"
+  },
+
+  "validation": {
+    "codeMinLength": "O código deve ter pelo menos 2 caracteres",
+    "discountPercentRequired": "A porcentagem de desconto é necessária para cupons de tipo porcentagem",
+    "discountAmountRequired": "O valor do desconto é necessário para cupons de tipo valor fixo"
   }
 }

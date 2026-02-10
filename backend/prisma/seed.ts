@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole, Language, BookFormat, CampaignStatus, AssignmentStatus, ReviewStatus, PaymentStatus, CreditTransactionType, WalletTransactionType, KeywordResearchStatus, TargetMarket, ContentPreference, AdminRole, CouponType, CouponAppliesTo, CommissionStatus, CustomPackageStatus, PackageApprovalStatus, NotificationType, NotificationPriority } from '@prisma/client';
+import { PrismaClient, UserRole, Language, BookFormat, CampaignStatus, AssignmentStatus, ReviewStatus, PaymentStatus, CreditTransactionType, WalletTransactionType, KeywordResearchStatus, TargetMarket, ContentPreference, AdminRole, CouponType, CouponAppliesTo, CommissionStatus, CustomPackageStatus, PackageApprovalStatus, NotificationType, NotificationPriority, PaymentIssueType, PaymentIssueStatus, PaymentIssueAction, DisputePriority } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -876,7 +876,232 @@ async function main() {
   console.log(`✓ Created ${walletTxCount} wallet transactions`);
 
   // ============================================
-  // 15. KEYWORD RESEARCH ORDERS
+  // 15. REFUND REQUESTS
+  // ============================================
+  console.log('\n💸 Creating refund requests...');
+
+  // Get some credit purchases to create refund requests for
+  const creditPurchases = await prisma.creditPurchase.findMany({
+    take: 10,
+    include: {
+      authorProfile: true,
+    },
+  });
+
+  const refundData = [
+    {
+      reason: 'DIDNT_NEED_CREDITS',
+      status: 'PENDING',
+      explanation: 'I accidentally purchased the wrong package and would like a refund.',
+    },
+    {
+      reason: 'WRONG_PACKAGE',
+      status: 'APPROVED',
+      explanation: 'I meant to buy the 100-credit package but purchased the 50-credit one instead.',
+      adminNotes: 'Valid request - customer purchased wrong tier. Full refund approved.',
+      reviewedBy: createdAdmins['superadmin@bookproof.app'].id,
+    },
+    {
+      reason: 'ACCIDENTAL_PURCHASE',
+      status: 'PARTIALLY_APPROVED',
+      explanation: 'I clicked the buy button twice by mistake.',
+      adminNotes: 'Duplicate purchase confirmed. Refunding 50% due to partial credit usage.',
+      reviewedBy: createdAdmins['superadmin@bookproof.app'].id,
+    },
+    {
+      reason: 'SERVICE_NOT_AS_EXPECTED',
+      status: 'REJECTED',
+      explanation: 'The service did not meet my expectations.',
+      adminNotes: 'Customer used 80% of credits. Refund rejected per terms of service.',
+      reviewedBy: createdAdmins['superadmin@bookproof.app'].id,
+    },
+    {
+      reason: 'OTHER',
+      status: 'PROCESSING',
+      explanation: 'I need to cancel my subscription and get a refund for unused credits.',
+      adminNotes: 'Refund being processed via Stripe. Expected completion in 5-7 business days.',
+      reviewedBy: createdAdmins['superadmin@bookproof.app'].id,
+    },
+    {
+      reason: 'ACCIDENTAL_PURCHASE',
+      status: 'COMPLETED',
+      explanation: 'Double charged by payment processor.',
+      adminNotes: 'Duplicate charge confirmed with Stripe. Full refund issued.',
+      reviewedBy: createdAdmins['superadmin@bookproof.app'].id,
+    },
+  ];
+
+  let refundCount = 0;
+  for (let i = 0; i < Math.min(refundData.length, creditPurchases.length); i++) {
+    const purchase = creditPurchases[i];
+    const data = refundData[i];
+    const createdAt = randomPastDate(30);
+
+    const refundRequest: any = {
+      creditPurchaseId: purchase.id,
+      authorProfileId: purchase.authorProfileId,
+      reason: data.reason as any,
+      explanation: data.explanation,
+      status: data.status as any,
+      createdAt,
+    };
+
+    // Add review details for non-pending requests
+    if (data.status !== 'PENDING') {
+      refundRequest.adminNotes = data.adminNotes;
+      refundRequest.reviewedBy = data.reviewedBy;
+      refundRequest.reviewedAt = new Date(createdAt.getTime() + 24 * 60 * 60 * 1000); // 1 day later
+    }
+
+    // Add refund amount for approved/partially approved requests
+    if (data.status === 'APPROVED' || data.status === 'PARTIALLY_APPROVED') {
+      const fullAmount = Number(purchase.amountPaid);
+      refundRequest.refundAmount = data.status === 'APPROVED' ? fullAmount : fullAmount * 0.5;
+    }
+
+    // Add processing details for processing/completed requests
+    if (data.status === 'PROCESSING' || data.status === 'COMPLETED') {
+      refundRequest.refundAmount = Number(purchase.amountPaid);
+      refundRequest.stripeRefundId = `re_${randomString(24)}`;
+    }
+
+    // Add completion timestamp for completed requests
+    if (data.status === 'COMPLETED') {
+      refundRequest.processedAt = new Date(createdAt.getTime() + 3 * 24 * 60 * 60 * 1000); // 3 days later
+    }
+
+    await prisma.refundRequest.create({
+      data: refundRequest,
+    });
+    refundCount++;
+  }
+  console.log(`✓ Created ${refundCount} refund requests`);
+
+  // ============================================
+  // 16. PAYMENT ISSUES
+  // ============================================
+  console.log('\n⚠️  Creating payment issues...');
+
+  const paymentIssuesData = [
+    {
+      type: PaymentIssueType.PAYMENT_FAILED,
+      status: PaymentIssueStatus.OPEN,
+      priority: DisputePriority.HIGH,
+      amount: 99.99,
+      description: 'Payment failed due to insufficient funds. Customer attempted to purchase 100 credits package.',
+      stripePaymentId: `pi_${randomString(24)}`,
+      userRole: UserRole.AUTHOR,
+    },
+    {
+      type: PaymentIssueType.DUPLICATE_PAYMENT,
+      status: PaymentIssueStatus.RESOLVED,
+      priority: DisputePriority.CRITICAL,
+      amount: 49.99,
+      description: 'Customer was charged twice for the same credit package purchase within 2 minutes.',
+      stripePaymentId: `pi_${randomString(24)}`,
+      stripeRefundId: `re_${randomString(24)}`,
+      resolution: 'Duplicate payment confirmed. Full refund of $49.99 issued to customer.',
+      actionTaken: PaymentIssueAction.REFUNDED,
+      resolvedBy: createdAdmins['superadmin@bookproof.app'].id,
+      userRole: UserRole.AUTHOR,
+    },
+    {
+      type: PaymentIssueType.CREDIT_MISMATCH,
+      status: PaymentIssueStatus.IN_PROGRESS,
+      priority: DisputePriority.HIGH,
+      amount: 0,
+      description: 'Customer reports credit balance showing 50 credits but should have 100 credits after recent purchase.',
+      adminNotes: 'Investigating transaction history. Purchase record shows 100 credits but user profile shows 50.',
+      userRole: UserRole.AUTHOR,
+    },
+    {
+      type: PaymentIssueType.PAYOUT_ISSUE,
+      status: PaymentIssueStatus.RESOLVED,
+      priority: DisputePriority.HIGH,
+      amount: 25.50,
+      description: 'Reader reports payout request was approved but funds not received after 10 business days.',
+      resolution: 'Confirmed payout was stuck in Stripe processing. Manually re-initiated payout successfully.',
+      actionTaken: PaymentIssueAction.CORRECTED,
+      resolvedBy: createdAdmins['admin@bookproof.app'].id,
+      userRole: UserRole.READER,
+    },
+    {
+      type: PaymentIssueType.PAYMENT_DISPUTE,
+      status: PaymentIssueStatus.ESCALATED,
+      priority: DisputePriority.CRITICAL,
+      amount: 299.99,
+      description: 'Stripe payment dispute filed by customer claiming unauthorized charge for 500 credits package.',
+      stripePaymentId: `pi_${randomString(24)}`,
+      adminNotes: 'Escalated to Stripe. Awaiting their investigation. Customer has login history confirming purchase timing.',
+      actionTaken: PaymentIssueAction.ESCALATED,
+      userRole: UserRole.AUTHOR,
+    },
+    {
+      type: PaymentIssueType.REFUND_REQUEST,
+      status: PaymentIssueStatus.REJECTED,
+      priority: DisputePriority.MEDIUM,
+      amount: 79.99,
+      description: 'Customer requesting refund after using 90% of purchased credits, citing dissatisfaction with service.',
+      resolution: 'Refund denied per terms of service - credits were used. Offered 10% discount on next purchase instead.',
+      actionTaken: PaymentIssueAction.REJECTED,
+      resolvedBy: createdAdmins['support@bookproof.app'].id,
+      userRole: UserRole.AUTHOR,
+    },
+    {
+      type: PaymentIssueType.OTHER,
+      status: PaymentIssueStatus.OPEN,
+      priority: DisputePriority.LOW,
+      amount: 15.00,
+      description: 'Customer reports receiving two separate email receipts but only made one purchase.',
+      adminNotes: 'Checking email system logs. Likely a duplicate email send issue, not a payment issue.',
+      userRole: UserRole.AUTHOR,
+    },
+  ];
+
+  let paymentIssueCount = 0;
+  const authorUsers = Object.values(createdAuthors);
+  const readerUsers = Object.values(createdReaders);
+
+  for (let i = 0; i < paymentIssuesData.length; i++) {
+    const issueData = paymentIssuesData[i];
+    const createdAt = randomPastDate(60);
+
+    // Get a user based on role
+    const user: any = issueData.userRole === UserRole.AUTHOR
+      ? authorUsers[i % authorUsers.length]
+      : readerUsers[i % readerUsers.length];
+
+    const paymentIssue: any = {
+      userId: user.id,
+      userRole: issueData.userRole,
+      type: issueData.type,
+      amount: issueData.amount,
+      description: issueData.description,
+      status: issueData.status,
+      priority: issueData.priority,
+      createdAt,
+    };
+
+    // Add optional fields
+    if (issueData.stripePaymentId) paymentIssue.stripePaymentId = issueData.stripePaymentId;
+    if (issueData.stripeRefundId) paymentIssue.stripeRefundId = issueData.stripeRefundId;
+    if (issueData.adminNotes) paymentIssue.adminNotes = issueData.adminNotes;
+    if (issueData.resolution) paymentIssue.resolution = issueData.resolution;
+    if (issueData.actionTaken) paymentIssue.actionTaken = issueData.actionTaken;
+    if (issueData.resolvedBy) {
+      paymentIssue.resolvedBy = issueData.resolvedBy;
+      paymentIssue.resolvedAt = new Date(createdAt.getTime() + 2 * 24 * 60 * 60 * 1000); // 2 days later
+    }
+
+    await prisma.paymentIssue.create({
+      data: paymentIssue,
+    });
+    paymentIssueCount++;
+  }
+  console.log(`✓ Created ${paymentIssueCount} payment issues`);
+
+  // ============================================
+  // 17. KEYWORD RESEARCH ORDERS
   // ============================================
   console.log('\n🔍 Creating keyword research orders...');
 
@@ -924,7 +1149,7 @@ async function main() {
   }
 
   // ============================================
-  // 16. CUSTOM PACKAGES & INVOICES
+  // 18. CUSTOM PACKAGES & INVOICES
   // ============================================
   console.log('\n📄 Creating custom packages and invoices...');
 
@@ -977,7 +1202,7 @@ async function main() {
   }
 
   // ============================================
-  // 17. AFFILIATE REFERRALS & COMMISSIONS
+  // 19. AFFILIATE REFERRALS & COMMISSIONS
   // ============================================
   console.log('\n📊 Creating affiliate referrals and commissions...');
 
@@ -1043,7 +1268,7 @@ async function main() {
   }
 
   // ============================================
-  // 18. NOTIFICATIONS
+  // 20. NOTIFICATIONS
   // ============================================
   console.log('\n🔔 Creating notifications...');
 
@@ -1075,7 +1300,7 @@ async function main() {
   console.log(`✓ Created ${notifCount} notifications`);
 
   // ============================================
-  // 19. LANDING PAGE LEADS
+  // 21. LANDING PAGE LEADS
   // ============================================
   console.log('\n📧 Creating landing page leads...');
 
@@ -1108,7 +1333,7 @@ async function main() {
   console.log(`✓ Created ${leads.length} landing page leads`);
 
   // ============================================
-  // 20. PAYOUT REQUESTS
+  // 22. PAYOUT REQUESTS
   // ============================================
   console.log('\n💸 Creating payout requests...');
 
@@ -1149,6 +1374,8 @@ async function main() {
   console.log(`   - Credit Purchases: ${purchaseCount}`);
   console.log(`   - Credit Transactions: ${txCount}`);
   console.log(`   - Wallet Transactions: ${walletTxCount}`);
+  console.log(`   - Refund Requests: ${refundCount}`);
+  console.log(`   - Payment Issues: ${paymentIssueCount}`);
   console.log(`   - Keyword Research Orders: ${keywordOrders.length}`);
   console.log(`   - Custom Packages: ${customPackages.length}`);
   console.log(`   - Notifications: ${notifCount}`);

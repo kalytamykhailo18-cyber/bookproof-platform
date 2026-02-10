@@ -173,5 +173,26 @@
       "date": "Fecha",
       "order": "Pedido"
     }
+  },
+
+  "messages": {
+    "loadError": "Error al cargar cupón",
+    "loadStatsError": "Error al cargar estadísticas de uso",
+    "createSuccess": "Cupón creado exitosamente",
+    "createError": "Error al crear cupón",
+    "updateSuccess": "Cupón actualizado exitosamente",
+    "updateError": "Error al actualizar cupón",
+    "deleteSuccess": "Cupón eliminado exitosamente",
+    "deleteError": "Error al eliminar cupón",
+    "noExpiration": "Sin expiración",
+    "noUsesYet": "Aún sin usos",
+    "notFound": "Cupón no encontrado",
+    "created": "Creado"
+  },
+
+  "validation": {
+    "codeMinLength": "El código debe tener al menos 2 caracteres",
+    "discountPercentRequired": "El porcentaje de descuento es requerido para cupones de tipo porcentaje",
+    "discountAmountRequired": "El monto de descuento es requerido para cupones de tipo monto fijo"
   }
 }

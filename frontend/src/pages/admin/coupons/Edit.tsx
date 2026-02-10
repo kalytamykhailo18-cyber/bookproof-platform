@@ -51,7 +51,7 @@ const formSchema = z
       return true;
     },
     {
-      message: 'Discount percentage is required for percentage type coupons',
+      message: 'validation.discountPercentRequired',
       path: ['discountPercent'] },
   )
   .refine(
@@ -62,7 +62,7 @@ const formSchema = z
       return true;
     },
     {
-      message: 'Discount amount is required for fixed amount type coupons',
+      message: 'validation.discountAmountRequired',
       path: ['discountAmount'] },
   );
 
@@ -93,7 +93,7 @@ export function EditCouponPage() {
         setCoupon(data);
       } catch (err) {
         console.error('Coupon error:', err);
-        toast.error('Failed to load coupon');
+        toast.error(t('messages.loadError'));
       } finally {
         setIsLoading(false);
       }
@@ -143,10 +143,10 @@ export function EditCouponPage() {
     try {
       setIsUpdating(true);
       await couponsApi.update(id, data);
-      toast.success('Coupon updated successfully');
+      toast.success(t('messages.updateSuccess'));
       navigate(`/admin/coupons/${id}`);
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Failed to update coupon';
+      const message = error.response?.data?.message || t('messages.updateError');
       toast.error(message);
     } finally {
       setIsUpdating(false);

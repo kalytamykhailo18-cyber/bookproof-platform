@@ -28,6 +28,13 @@
     "rejectionReason": "Motivo da Rejeição",
     "rejectionReasonPlaceholder": "Ex: Desconto muito alto para este segmento de clientes...",
     "rejecting": "Rejeitando...",
-    "confirmReject": "Rejeitar Pacote"
+    "confirmReject": "Rejeitar Pacote",
+    "messages": {
+      "loadError": "Erro ao carregar pacotes pendentes",
+      "approveSuccess": "Pacote aprovado com sucesso",
+      "approveError": "Erro ao aprovar pacote",
+      "rejectSuccess": "Pacote rejeitado com sucesso",
+      "rejectError": "Erro ao rejeitar pacote"
+    }
   }
 }

@@ -28,6 +28,13 @@
     "rejectionReason": "Razón del Rechazo",
     "rejectionReasonPlaceholder": "Ej: Descuento demasiado alto para este segmento de clientes...",
     "rejecting": "Rechazando...",
-    "confirmReject": "Rechazar Paquete"
+    "confirmReject": "Rechazar Paquete",
+    "messages": {
+      "loadError": "Error al cargar paquetes pendientes",
+      "approveSuccess": "Paquete aprobado exitosamente",
+      "approveError": "Error al aprobar paquete",
+      "rejectSuccess": "Paquete rechazado exitosamente",
+      "rejectError": "Error al rechazar paquete"
+    }
   }
 }

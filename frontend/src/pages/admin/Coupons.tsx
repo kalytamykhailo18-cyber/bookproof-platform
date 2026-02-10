@@ -48,7 +48,7 @@ export function CouponDetailPage() {
         setCoupon(data);
       } catch (err) {
         console.error('Coupon error:', err);
-        toast.error('Failed to load coupon');
+        toast.error(t('messages.loadError'));
       } finally {
         setIsLoading(false);
       }
@@ -60,10 +60,10 @@ export function CouponDetailPage() {
     try {
       setIsDeleting(true);
       await couponsApi.delete(id);
-      toast.success('Coupon deleted successfully');
+      toast.success(t('messages.deleteSuccess'));
       navigate(`/admin/coupons`);
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Failed to delete coupon';
+      const message = error.response?.data?.message || t('messages.deleteError');
       toast.error(message);
     } finally {
       setIsDeleting(false);
@@ -135,7 +135,7 @@ export function CouponDetailPage() {
   if (!coupon) {
     return (
       <div className="container mx-auto max-w-4xl py-6">
-        <p className="text-center text-muted-foreground">Coupon not found</p>
+        <p className="text-center text-muted-foreground">{t('messages.notFound')}</p>
       </div>
     );
   }
@@ -338,11 +338,11 @@ export function CouponDetailPage() {
                 {t('new.fields.validUntil.label')}
               </dt>
               <dd className="mt-1">
-                {coupon.validUntil ? formatDate(coupon.validUntil) : 'No expiration'}
+                {coupon.validUntil ? formatDate(coupon.validUntil) : t('messages.noExpiration')}
               </dd>
             </div>
             <div>
-              <dt className="text-sm font-medium text-muted-foreground">Created</dt>
+              <dt className="text-sm font-medium text-muted-foreground">{t('messages.created')}</dt>
               <dd className="mt-1">{formatDate(coupon.createdAt)}</dd>
             </div>
           </CardContent>
