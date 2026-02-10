@@ -20,7 +20,7 @@ export default function PayoutDetailsDialog({
   payout,
   open,
   onOpenChange }: PayoutDetailsDialogProps) {
-  const { t, i18n } = useTranslation('admin-payouts');
+  const { t, i18n } = useTranslation('adminPayouts');
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

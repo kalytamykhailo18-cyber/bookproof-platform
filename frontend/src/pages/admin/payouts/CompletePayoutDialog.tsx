@@ -27,7 +27,7 @@ export default function CompletePayoutDialog({
   open,
   onOpenChange,
   onRefetch }: CompletePayoutDialogProps) {
-  const { t, i18n } = useTranslation('admin-payouts');
+  const { t, i18n } = useTranslation('adminPayouts');
   const [transactionId, setTransactionId] = useState('');
   const [notes, setNotes] = useState('');
   const [error, setError] = useState('');

@@ -41,7 +41,9 @@
       "notesPlaceholder": "Optional notes for audit trail",
       "cancel": "Cancel",
       "confirm": "Extend Deadline",
-      "confirming": "Extending..."
+      "confirming": "Extending...",
+      "success": "Deadline extended successfully",
+      "error": "Failed to extend deadline"
     },
     "reassignReader": {
       "title": "Reassign Reader",
@@ -54,7 +56,9 @@
       "notesPlaceholder": "Optional notes for audit trail",
       "cancel": "Cancel",
       "confirm": "Reassign Reader",
-      "confirming": "Reassigning..."
+      "confirming": "Reassigning...",
+      "success": "Reader reassigned successfully",
+      "error": "Failed to reassign reader"
     },
     "bulkReassign": {
       "title": "Bulk Reassign Assignments",
@@ -65,7 +69,9 @@
       "reasonPlaceholder": "Explain why these assignments are being reassigned",
       "cancel": "Cancel",
       "confirm": "Bulk Reassign",
-      "confirming": "Reassigning..."
+      "confirming": "Reassigning...",
+      "success": "Bulk reassignment completed successfully",
+      "error": "Failed to bulk reassign"
     },
     "cancelAssignment": {
       "title": "Cancel Assignment",
@@ -75,7 +81,9 @@
       "refundLabel": "Refund credits to author",
       "cancel": "Cancel",
       "confirm": "Cancel Assignment",
-      "confirming": "Cancelling..."
+      "confirming": "Cancelling...",
+      "success": "Assignment cancelled successfully",
+      "error": "Failed to cancel assignment"
     },
     "correctError": {
       "title": "Correct Assignment Error",
@@ -88,8 +96,14 @@
       "notesPlaceholder": "Optional notes for audit trail",
       "cancel": "Cancel",
       "confirm": "Correct Error",
-      "confirming": "Correcting..."
+      "confirming": "Correcting...",
+      "success": "Error corrected successfully",
+      "error": "Failed to correct error"
     }
+  },
+
+  "errors": {
+    "loadFailed": "Failed to load exceptions"
   },
 
   "errorTypes": {
