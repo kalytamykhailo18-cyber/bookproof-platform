@@ -13,7 +13,7 @@ export class AuditService {
    * Log an admin action with full context
    */
   async logAdminAction(params: {
-    userId: string;
+    userId: string | null;
     userEmail: string;
     userRole: UserRole;
     action: string;

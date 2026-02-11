@@ -251,7 +251,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // Log to database for admin visibility
     try {
       await this.auditService.logAdminAction({
-        userId: userContext.userId || 'system',
+        userId: null, // Don't use userId for error logs to avoid FK constraint issues
         userEmail: userContext.userEmail || 'system',
         userRole: userContext.userRole || UserRole.AUTHOR,
         action: `HTTP_ERROR_${statusCode}`,
