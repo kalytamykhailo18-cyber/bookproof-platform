@@ -1,0 +1,101 @@
+{
+  "title": "Reader Behavior Monitoring",
+  "subtitle": "Track and investigate unusual reader behavior patterns",
+  "loading": "Loading reader behavior data...",
+  "stats": {
+    "totalFlags": "Total Flags",
+    "activeFlags": "Active Flags",
+    "suspiciousReaders": "Suspicious Readers",
+    "actionsTaken": "Actions Taken"
+  },
+  "tabs": {
+    "suspiciousReaders": "Suspicious Readers",
+    "activeFlags": "Active Flags"
+  },
+  "readers": {
+    "title": "Suspicious Readers",
+    "subtitle": "Readers with active behavior flags requiring attention",
+    "table": {
+      "reader": "Reader",
+      "email": "Email",
+      "reliabilityScore": "Reliability Score",
+      "activeFlags": "Active Flags",
+      "highestSeverity": "Highest Severity",
+      "flagTypes": "Flag Types",
+      "lastFlag": "Last Flag",
+      "status": "Status"
+    },
+    "badges": {
+      "flagged": "Flagged",
+      "inactive": "Inactive"
+    },
+    "empty": "No suspicious readers found"
+  },
+  "flags": {
+    "title": "Active Behavior Flags",
+    "subtitle": "Flags requiring investigation",
+    "table": {
+      "id": "ID",
+      "flagType": "Flag Type",
+      "severity": "Severity",
+      "status": "Status",
+      "description": "Description",
+      "scoreImpact": "Score Impact",
+      "created": "Created",
+      "actions": "Actions"
+    },
+    "empty": "No active flags found"
+  },
+  "flagTypes": {
+    "FAST_REVIEW": "Fast Review",
+    "SIMILAR_TEXT": "Similar Text",
+    "MULTIPLE_IP": "Multiple IP",
+    "DEVICE_FINGERPRINT": "Device Fingerprint",
+    "HIGH_REJECTION_RATE": "High Rejection",
+    "NEW_ACCOUNT_ABUSE": "New Account Abuse"
+  },
+  "dialogs": {
+    "investigate": {
+      "title": "Investigate Flag",
+      "description": "Record investigation findings for this behavior flag",
+      "resultLabel": "Investigation Result *",
+      "resultPlaceholder": "Select status",
+      "notesLabel": "Investigation Notes *",
+      "notesPlaceholder": "Document your investigation findings",
+      "statuses": {
+        "INVESTIGATED": "Investigated",
+        "CONFIRMED": "Confirmed",
+        "DISMISSED": "Dismissed"
+      },
+      "cancel": "Cancel",
+      "submit": "Save Investigation",
+      "submitting": "Saving...",
+      "buttonTitle": "Investigate"
+    },
+    "action": {
+      "title": "Take Action",
+      "description": "Take action against this flagged behavior",
+      "actionLabel": "Action *",
+      "actionPlaceholder": "Select action",
+      "notesLabel": "Notes",
+      "notesPlaceholder": "Additional notes about the action",
+      "actions": {
+        "WARNED": "Issue Warning",
+        "SUSPENDED": "Suspend Account",
+        "BANNED": "Ban Account",
+        "DISMISSED": "Dismiss Flag"
+      },
+      "cancel": "Cancel",
+      "submit": "Take Action",
+      "submitting": "Processing...",
+      "buttonTitle": "Take Action"
+    }
+  },
+  "messages": {
+    "loadError": "Failed to load reader behavior data",
+    "investigateSuccess": "Investigation notes updated",
+    "investigateError": "Failed to update investigation",
+    "actionSuccess": "Action taken: {{action}}",
+    "actionError": "Failed to take action"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "title": "Disputas de Clientes",
+  "subtitle": "Gestiona quejas y disputas de clientes de autores y lectores",
+  "loading": "Cargando disputas...",
+  "stats": {
+    "total": "Total de Disputas",
+    "open": "Abiertas",
+    "inProgress": "En Progreso",
+    "escalated": "Escaladas",
+    "resolved": "Resueltas"
+  },
+  "sla": {
+    "title": "Rendimiento SLA",
+    "subtitle": "Métricas de cumplimiento del tiempo de respuesta",
+    "complianceRate": "Tasa de Cumplimiento",
+    "totalWithSla": "Total con SLA",
+    "slaBreached": "SLA Incumplido",
+    "avgResponseTime": "Tiempo Promedio de Respuesta",
+    "byPriority": "Por Prioridad"
+  },
+  "table": {
+    "title": "Disputas Abiertas",
+    "subtitle": "Disputas que requieren atención",
+    "headers": {
+      "id": "ID",
+      "type": "Tipo",
+      "priority": "Prioridad",
+      "status": "Estado",
+      "appeal": "Apelación",
+      "description": "Descripción",
+      "created": "Creada",
+      "actions": "Acciones"
+    },
+    "empty": "No se encontraron disputas abiertas"
+  },
+  "types": {
+    "AUTHOR_DISPUTE": "Disputa de Autor",
+    "AUTHOR_COMPLAINT": "Queja de Autor",
+    "READER_COMPLAINT": "Queja de Lector",
+    "REVIEW_QUALITY": "Calidad de Reseña",
+    "PAYMENT_ISSUE": "Problema de Pago",
+    "SERVICE_ISSUE": "Problema de Servicio",
+    "POLICY_VIOLATION": "Violación de Política",
+    "OTHER": "Otro"
+  },
+  "dialogs": {
+    "updateStatus": {
+      "title": "Actualizar Estado de Disputa",
+      "description": "Actualiza el estado y añade notas a esta disputa",
+      "statusLabel": "Estado *",
+      "statusPlaceholder": "Seleccionar estado",
+      "notesLabel": "Notas del Admin",
+      "notesPlaceholder": "Añadir notas para el registro de auditoría",
+      "cancel": "Cancelar",
+      "submit": "Actualizar Estado",
+      "submitting": "Actualizando...",
+      "buttonTitle": "Actualizar Estado"
+    },
+    "escalate": {
+      "title": "Escalar Disputa",
+      "description": "Escalar esta disputa a mayor prioridad",
+      "reasonLabel": "Razón de Escalación *",
+      "reasonPlaceholder": "Explicar por qué esta disputa necesita escalación",
+      "cancel": "Cancelar",
+      "submit": "Escalar",
+      "submitting": "Escalando...",
+      "buttonTitle": "Escalar"
+    },
+    "resolve": {
+      "title": "Resolver Disputa",
+      "description": "Proporciona una resolución para esta disputa",
+      "statusLabel": "Estado de Resolución *",
+      "statusPlaceholder": "Seleccionar estado",
+      "resolutionLabel": "Resolución *",
+      "resolutionPlaceholder": "Describir cómo se resolvió la disputa",
+      "cancel": "Cancelar",
+      "submit": "Resolver Disputa",
+      "submitting": "Resolviendo...",
+      "buttonTitle": "Resolver"
+    },
+    "appeal": {
+      "title": "Resolver Apelación",
+      "description": "Revisar y resolver la apelación de este usuario",
+      "appealReasonLabel": "Razón de Apelación:",
+      "decisionLabel": "Decisión *",
+      "decisionPlaceholder": "Seleccionar decisión",
+      "approve": "Aprobar (Reabrir Disputa)",
+      "reject": "Rechazar Apelación",
+      "resolutionLabel": "Explicación de Resolución *",
+      "resolutionPlaceholder": "Explicar la decisión al usuario",
+      "cancel": "Cancelar",
+      "submitApprove": "Aprobar y Reabrir",
+      "submitReject": "Rechazar Apelación",
+      "submitting": "Resolviendo...",
+      "buttonTitle": "Resolver Apelación"
+    }
+  },
+  "statuses": {
+    "OPEN": "Abierta",
+    "IN_PROGRESS": "En Progreso",
+    "ESCALATED": "Escalada",
+    "RESOLVED": "Resuelta",
+    "REJECTED": "Rechazada"
+  },
+  "messages": {
+    "loadError": "Error al cargar disputas",
+    "resolveSuccess": "Disputa resuelta exitosamente",
+    "resolveError": "Error al resolver disputa",
+    "escalateSuccess": "Disputa escalada exitosamente",
+    "escalateError": "Error al escalar disputa",
+    "updateSuccess": "Estado de disputa actualizado",
+    "updateError": "Error al actualizar estado de disputa",
+    "appealSuccess": "Apelación resuelta",
+    "appealError": "Error al resolver apelación"
+  }
+}

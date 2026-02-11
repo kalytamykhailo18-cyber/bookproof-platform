@@ -1,0 +1,116 @@
+{
+  "title": "Disputas de Clientes",
+  "subtitle": "Gerencie reclamações e disputas de clientes de autores e leitores",
+  "loading": "Carregando disputas...",
+  "stats": {
+    "total": "Total de Disputas",
+    "open": "Abertas",
+    "inProgress": "Em Andamento",
+    "escalated": "Escaladas",
+    "resolved": "Resolvidas"
+  },
+  "sla": {
+    "title": "Desempenho SLA",
+    "subtitle": "Métricas de conformidade do tempo de resposta",
+    "complianceRate": "Taxa de Conformidade",
+    "totalWithSla": "Total com SLA",
+    "slaBreached": "SLA Violado",
+    "avgResponseTime": "Tempo Médio de Resposta",
+    "byPriority": "Por Prioridade"
+  },
+  "table": {
+    "title": "Disputas Abertas",
+    "subtitle": "Disputas que requerem atenção",
+    "headers": {
+      "id": "ID",
+      "type": "Tipo",
+      "priority": "Prioridade",
+      "status": "Status",
+      "appeal": "Apelação",
+      "description": "Descrição",
+      "created": "Criada",
+      "actions": "Ações"
+    },
+    "empty": "Nenhuma disputa aberta encontrada"
+  },
+  "types": {
+    "AUTHOR_DISPUTE": "Disputa de Autor",
+    "AUTHOR_COMPLAINT": "Reclamação de Autor",
+    "READER_COMPLAINT": "Reclamação de Leitor",
+    "REVIEW_QUALITY": "Qualidade da Avaliação",
+    "PAYMENT_ISSUE": "Problema de Pagamento",
+    "SERVICE_ISSUE": "Problema de Serviço",
+    "POLICY_VIOLATION": "Violação de Política",
+    "OTHER": "Outro"
+  },
+  "dialogs": {
+    "updateStatus": {
+      "title": "Atualizar Status da Disputa",
+      "description": "Atualize o status e adicione notas a esta disputa",
+      "statusLabel": "Status *",
+      "statusPlaceholder": "Selecionar status",
+      "notesLabel": "Notas do Admin",
+      "notesPlaceholder": "Adicionar notas para registro de auditoria",
+      "cancel": "Cancelar",
+      "submit": "Atualizar Status",
+      "submitting": "Atualizando...",
+      "buttonTitle": "Atualizar Status"
+    },
+    "escalate": {
+      "title": "Escalar Disputa",
+      "description": "Escalar esta disputa para maior prioridade",
+      "reasonLabel": "Motivo da Escalação *",
+      "reasonPlaceholder": "Explicar por que esta disputa precisa de escalação",
+      "cancel": "Cancelar",
+      "submit": "Escalar",
+      "submitting": "Escalando...",
+      "buttonTitle": "Escalar"
+    },
+    "resolve": {
+      "title": "Resolver Disputa",
+      "description": "Forneça uma resolução para esta disputa",
+      "statusLabel": "Status de Resolução *",
+      "statusPlaceholder": "Selecionar status",
+      "resolutionLabel": "Resolução *",
+      "resolutionPlaceholder": "Descrever como a disputa foi resolvida",
+      "cancel": "Cancelar",
+      "submit": "Resolver Disputa",
+      "submitting": "Resolvendo...",
+      "buttonTitle": "Resolver"
+    },
+    "appeal": {
+      "title": "Resolver Apelação",
+      "description": "Revisar e resolver a apelação deste usuário",
+      "appealReasonLabel": "Motivo da Apelação:",
+      "decisionLabel": "Decisão *",
+      "decisionPlaceholder": "Selecionar decisão",
+      "approve": "Aprovar (Reabrir Disputa)",
+      "reject": "Rejeitar Apelação",
+      "resolutionLabel": "Explicação da Resolução *",
+      "resolutionPlaceholder": "Explicar a decisão ao usuário",
+      "cancel": "Cancelar",
+      "submitApprove": "Aprovar e Reabrir",
+      "submitReject": "Rejeitar Apelação",
+      "submitting": "Resolvendo...",
+      "buttonTitle": "Resolver Apelação"
+    }
+  },
+  "statuses": {
+    "OPEN": "Aberta",
+    "IN_PROGRESS": "Em Andamento",
+    "ESCALATED": "Escalada",
+    "RESOLVED": "Resolvida",
+    "REJECTED": "Rejeitada"
+  },
+  "messages": {
+    "loadError": "Erro ao carregar disputas",
+    "resolveSuccess": "Disputa resolvida com sucesso",
+    "resolveError": "Erro ao resolver disputa",
+    "escalateSuccess": "Disputa escalada com sucesso",
+    "escalateError": "Erro ao escalar disputa",
+    "updateSuccess": "Status da disputa atualizado",
+    "updateError": "Erro ao atualizar status da disputa",
+    "appealSuccess": "Apelação resolvida",
+    "appealError": "Erro ao resolver apelação"
+  }
+}

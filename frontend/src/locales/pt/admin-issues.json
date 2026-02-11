@@ -1,0 +1,82 @@
+{
+  "title": "Gestão de Problemas",
+  "subtitle": "Gerencie problemas de avaliações e monitoramento de remoções na Amazon",
+  "stats": {
+    "openIssues": "Problemas Abertos",
+    "activeMonitors": "Monitores Ativos",
+    "removalRate": "Taxa de Remoção"
+  },
+  "tabs": {
+    "issues": "Problemas Abertos ({{count}})",
+    "monitoring": "Monitoramento Amazon ({{count}})"
+  },
+  "openIssues": {
+    "title": "Problemas Abertos",
+    "subtitle": "Problemas de avaliações que requerem atenção",
+    "empty": {
+      "title": "Nenhum problema aberto",
+      "subtitle": "Todos os problemas foram resolvidos."
+    },
+    "description": "Descrição:",
+    "created": "Criado",
+    "resolution": "Resolução:",
+    "resolved": "Resolvido",
+    "badges": {
+      "readerNotified": "Leitor Notificado",
+      "resubmissionRequested": "Reenvio Solicitado",
+      "reassignmentTriggered": "Reatribuição Ativada"
+    },
+    "resolveButton": "Resolver Problema"
+  },
+  "monitoring": {
+    "title": "Monitoramento de Avaliações Amazon (Garantia 14 Dias)",
+    "subtitle": "As avaliações são monitoradas por 14 dias após a validação para detectar remoções da Amazon",
+    "stats": {
+      "activeMonitors": "Monitores Ativos",
+      "removedWithin14": "Removidas (14 dias)",
+      "removedAfter14": "Removidas (após 14d)",
+      "completed": "Concluídas"
+    },
+    "empty": {
+      "title": "Nenhum monitor ativo",
+      "subtitle": "As avaliações aparecerão aqui quando forem validadas e o monitoramento começar."
+    },
+    "card": {
+      "reader": "Leitor:",
+      "daysRemaining": "{{count}} dias restantes",
+      "started": "Iniciado:",
+      "lastChecked": "Última Verificação:",
+      "notYetChecked": "Ainda não verificado",
+      "status": "Status:",
+      "active": "Ativo",
+      "removed": "Removida",
+      "checkAmazon": "Verificar na Amazon →",
+      "markRemoved": "Marcar como Removida",
+      "confirmRemoval": "Tem certeza de que deseja marcar esta avaliação como removida pela Amazon?"
+    }
+  },
+  "resolveDialog": {
+    "title": "Resolver Problema",
+    "description": "Forneça detalhes da resolução e escolha as ações a serem tomadas",
+    "statusLabel": "Status da Resolução",
+    "detailsLabel": "Detalhes da Resolução",
+    "detailsPlaceholder": "Descrever como o problema foi resolvido...",
+    "checkboxes": {
+      "notifyReader": "Notificar leitor da resolução",
+      "requestResubmission": "Solicitar reenvio do leitor",
+      "triggerReassignment": "Ativar reatribuição a outro leitor"
+    },
+    "cancel": "Cancelar",
+    "submit": "Resolver Problema",
+    "submitting": "Resolvendo..."
+  },
+  "messages": {
+    "loadError": "Erro ao carregar problemas abertos",
+    "resolveSuccess": "Problema resolvido com sucesso",
+    "resolveError": "Erro ao resolver problema",
+    "resolvingIssue": "Resolvendo problema...",
+    "markingRemoved": "Marcando avaliação como removida...",
+    "markedRemovedManually": "Marcada manualmente como removida pelo admin",
+    "markRemovedError": "Erro ao marcar avaliação como removida"
+  }
+}

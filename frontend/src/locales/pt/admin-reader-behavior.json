@@ -1,0 +1,101 @@
+{
+  "title": "Monitoramento de Comportamento de Leitores",
+  "subtitle": "Rastreie e investigue padrões incomuns de comportamento de leitores",
+  "loading": "Carregando dados de comportamento de leitores...",
+  "stats": {
+    "totalFlags": "Total de Sinalizadores",
+    "activeFlags": "Sinalizadores Ativos",
+    "suspiciousReaders": "Leitores Suspeitos",
+    "actionsTaken": "Ações Tomadas"
+  },
+  "tabs": {
+    "suspiciousReaders": "Leitores Suspeitos",
+    "activeFlags": "Sinalizadores Ativos"
+  },
+  "readers": {
+    "title": "Leitores Suspeitos",
+    "subtitle": "Leitores com sinalizadores de comportamento ativos que requerem atenção",
+    "table": {
+      "reader": "Leitor",
+      "email": "Email",
+      "reliabilityScore": "Pontuação de Confiabilidade",
+      "activeFlags": "Sinalizadores Ativos",
+      "highestSeverity": "Maior Gravidade",
+      "flagTypes": "Tipos de Sinalizador",
+      "lastFlag": "Último Sinalizador",
+      "status": "Status"
+    },
+    "badges": {
+      "flagged": "Sinalizado",
+      "inactive": "Inativo"
+    },
+    "empty": "Nenhum leitor suspeito encontrado"
+  },
+  "flags": {
+    "title": "Sinalizadores de Comportamento Ativos",
+    "subtitle": "Sinalizadores que requerem investigação",
+    "table": {
+      "id": "ID",
+      "flagType": "Tipo de Sinalizador",
+      "severity": "Gravidade",
+      "status": "Status",
+      "description": "Descrição",
+      "scoreImpact": "Impacto na Pontuação",
+      "created": "Criado",
+      "actions": "Ações"
+    },
+    "empty": "Nenhum sinalizador ativo encontrado"
+  },
+  "flagTypes": {
+    "FAST_REVIEW": "Avaliação Rápida",
+    "SIMILAR_TEXT": "Texto Similar",
+    "MULTIPLE_IP": "Múltiplos IP",
+    "DEVICE_FINGERPRINT": "Impressão Digital do Dispositivo",
+    "HIGH_REJECTION_RATE": "Alta Taxa de Rejeição",
+    "NEW_ACCOUNT_ABUSE": "Abuso de Conta Nova"
+  },
+  "dialogs": {
+    "investigate": {
+      "title": "Investigar Sinalizador",
+      "description": "Registre descobertas de investigação para este sinalizador de comportamento",
+      "resultLabel": "Resultado da Investigação *",
+      "resultPlaceholder": "Selecionar status",
+      "notesLabel": "Notas de Investigação *",
+      "notesPlaceholder": "Documentar descobertas de investigação",
+      "statuses": {
+        "INVESTIGATED": "Investigado",
+        "CONFIRMED": "Confirmado",
+        "DISMISSED": "Descartado"
+      },
+      "cancel": "Cancelar",
+      "submit": "Salvar Investigação",
+      "submitting": "Salvando...",
+      "buttonTitle": "Investigar"
+    },
+    "action": {
+      "title": "Tomar Ação",
+      "description": "Tomar ação contra este comportamento sinalizado",
+      "actionLabel": "Ação *",
+      "actionPlaceholder": "Selecionar ação",
+      "notesLabel": "Notas",
+      "notesPlaceholder": "Notas adicionais sobre a ação",
+      "actions": {
+        "WARNED": "Emitir Advertência",
+        "SUSPENDED": "Suspender Conta",
+        "BANNED": "Banir Conta",
+        "DISMISSED": "Descartar Sinalizador"
+      },
+      "cancel": "Cancelar",
+      "submit": "Tomar Ação",
+      "submitting": "Processando...",
+      "buttonTitle": "Tomar Ação"
+    }
+  },
+  "messages": {
+    "loadError": "Erro ao carregar dados de comportamento de leitores",
+    "investigateSuccess": "Notas de investigação atualizadas",
+    "investigateError": "Erro ao atualizar investigação",
+    "actionSuccess": "Ação tomada: {{action}}",
+    "actionError": "Erro ao tomar ação"
+  }
+}

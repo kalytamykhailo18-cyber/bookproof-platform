@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { NotificationList } from './NotificationList';
 import { useRealtimeUpdates, RealtimeEventType } from '@/hooks/useRealtimeUpdates';
 import { useAuthStore } from '@/stores/authStore';
+import { useNotificationStore } from '@/stores/notificationStore';
 
 /**
  * Notification Bell Component
@@ -27,8 +28,8 @@ export function NotificationBell() {
   const params = useParams();
   const locale = (params?.locale as string) || 'en';
   const { user } = useAuthStore();
+  const { unreadCount, setUnreadCount } = useNotificationStore();
 
-  const [unreadCount, setUnreadCount] = useState(0);
   const [notificationData, setNotificationData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -69,6 +70,9 @@ export function NotificationBell() {
 
   // Handle notification click
   const handleNotificationClick = async (notificationId: string, actionUrl?: string) => {
+    // Close dropdown immediately for better UX
+    setIsOpen(false);
+
     try {
       // Mark as read
       await markNotificationsAsRead([notificationId]);
@@ -87,6 +91,9 @@ export function NotificationBell() {
 
   // Handle mark all as read
   const handleMarkAllAsRead = async () => {
+    // Close dropdown after marking all read
+    setIsOpen(false);
+
     try {
       const data = await markAllNotificationsAsRead();
       if (data.updated > 0) {

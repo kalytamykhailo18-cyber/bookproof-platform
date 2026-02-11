@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { reviewsApi } from '@/lib/api/reviews';
 import { toast } from 'sonner';
 import { useLoading } from '@/components/providers/LoadingProvider';
@@ -28,6 +29,7 @@ import { ReviewIssue, IssueResolutionStatus } from '@/lib/api/reviews';
 import { formatDistanceToNow } from 'date-fns';
 
 export function AdminIssuesPage() {
+  const { t } = useTranslation('adminIssues');
   const { startLoading, stopLoading } = useLoading();
 
   // Issue management state
@@ -51,7 +53,7 @@ export function AdminIssuesPage() {
         setOpenIssues(data);
       } catch (err) {
         console.error('Open issues error:', err);
-        toast.error('Failed to load open issues');
+        toast.error(t('messages.loadError'));
       } finally {
         setIsLoadingIssues(false);
       }
@@ -116,7 +118,7 @@ export function AdminIssuesPage() {
 
     try {
       setIsResolvingIssue(true);
-      startLoading('Resolving issue...');
+      startLoading(t('messages.resolvingIssue'));
       await reviewsApi.resolveIssue(currentIssue.id, {
         status: resolutionStatus,
         resolution: resolutionText,
@@ -125,7 +127,7 @@ export function AdminIssuesPage() {
         triggerReassignment
       });
       stopLoading();
-      toast.success('Issue resolved successfully');
+      toast.success(t('messages.resolveSuccess'));
       setResolveDialogOpen(false);
       setCurrentIssue(null);
 
@@ -134,7 +136,7 @@ export function AdminIssuesPage() {
       setOpenIssues(data);
     } catch (error: any) {
       stopLoading();
-      const message = error.response?.data?.message || 'Failed to resolve issue';
+      const message = error.response?.data?.message || t('messages.resolveError');
       toast.error(message);
     } finally {
       setIsResolvingIssue(false);
@@ -174,15 +176,15 @@ export function AdminIssuesPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">Issue Management</h1>
-        <p className="text-muted-foreground">Manage review issues and Amazon removal monitoring</p>
+        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <p className="text-muted-foreground">{t('subtitle')}</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Open Issues</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.openIssues')}</CardTitle>
             <AlertTriangle className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
@@ -192,7 +194,7 @@ export function AdminIssuesPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Monitors</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.activeMonitors')}</CardTitle>
             <Shield className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -202,7 +204,7 @@ export function AdminIssuesPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Removal Rate</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.removalRate')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
@@ -216,9 +218,9 @@ export function AdminIssuesPage() {
       {/* Tabs */}
       <Tabs defaultValue="issues" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="issues">Open Issues ({openIssues?.length || 0})</TabsTrigger>
+          <TabsTrigger value="issues">{t('tabs.issues', { count: openIssues?.length || 0 })}</TabsTrigger>
           <TabsTrigger value="monitoring">
-            Amazon Monitoring ({activeMonitors?.length || 0})
+            {t('tabs.monitoring', { count: activeMonitors?.length || 0 })}
           </TabsTrigger>
         </TabsList>
 
@@ -226,15 +228,15 @@ export function AdminIssuesPage() {
         <TabsContent value="issues" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Open Issues</CardTitle>
-              <CardDescription>Review issues that require attention</CardDescription>
+              <CardTitle>{t('openIssues.title')}</CardTitle>
+              <CardDescription>{t('openIssues.subtitle')}</CardDescription>
             </CardHeader>
             <CardContent>
               {!openIssues || openIssues.length === 0 ? (
                 <div className="py-16 text-center">
                   <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
-                  <h3 className="mb-2 text-lg font-semibold">No open issues</h3>
-                  <p className="text-muted-foreground">All issues have been resolved.</p>
+                  <h3 className="mb-2 text-lg font-semibold">{t('openIssues.empty.title')}</h3>
+                  <p className="text-muted-foreground">{t('openIssues.empty.subtitle')}</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -255,30 +257,30 @@ export function AdminIssuesPage() {
 
                           {/* Description */}
                           <div>
-                            <p className="mb-1 text-sm font-medium">Description:</p>
+                            <p className="mb-1 text-sm font-medium">{t('openIssues.description')}</p>
                             <p className="text-sm text-muted-foreground">{issue.description}</p>
                           </div>
 
                           {/* Metadata */}
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span>
-                              Created{' '}
+                              {t('openIssues.created')}{' '}
                               {formatDistanceToNow(new Date(issue.createdAt), {
                                 addSuffix: true })}
                             </span>
                             {issue.readerNotified && (
                               <Badge variant="secondary" className="text-xs">
-                                Reader Notified
+                                {t('openIssues.badges.readerNotified')}
                               </Badge>
                             )}
                             {issue.resubmissionRequested && (
                               <Badge variant="secondary" className="text-xs">
-                                Resubmission Requested
+                                {t('openIssues.badges.resubmissionRequested')}
                               </Badge>
                             )}
                             {issue.reassignmentTriggered && (
                               <Badge variant="secondary" className="text-xs">
-                                Reassignment Triggered
+                                {t('openIssues.badges.reassignmentTriggered')}
                               </Badge>
                             )}
                           </div>
@@ -286,11 +288,11 @@ export function AdminIssuesPage() {
                           {/* Resolution */}
                           {issue.resolution && (
                             <div className="rounded bg-muted p-3">
-                              <p className="mb-1 text-sm font-medium">Resolution:</p>
+                              <p className="mb-1 text-sm font-medium">{t('openIssues.resolution')}</p>
                               <p className="text-sm">{issue.resolution}</p>
                               {issue.resolvedAt && (
                                 <p className="mt-1 text-xs text-muted-foreground">
-                                  Resolved{' '}
+                                  {t('openIssues.resolved')}{' '}
                                   {formatDistanceToNow(new Date(issue.resolvedAt), {
                                     addSuffix: true })}
                                 </p>
@@ -307,7 +309,7 @@ export function AdminIssuesPage() {
                                   onClick={() => openResolveDialog(issue)}
                                   disabled={isResolvingIssue}
                                 >
-                                  Resolve Issue
+                                  {t('openIssues.resolveButton')}
                                 </Button>
                               </div>
                             )}
@@ -325,36 +327,36 @@ export function AdminIssuesPage() {
         <TabsContent value="monitoring" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Amazon Review Monitoring (14-Day Guarantee)</CardTitle>
+              <CardTitle>{t('monitoring.title')}</CardTitle>
               <CardDescription>
-                Reviews are monitored for 14 days after validation to detect Amazon removals
+                {t('monitoring.subtitle')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               {/* Monitoring Stats Summary */}
               <div className="mb-6 grid gap-4 md:grid-cols-4">
                 <div className="rounded border border-blue-200 bg-blue-50 p-4 dark:bg-blue-950">
-                  <p className="mb-1 text-sm text-blue-600 dark:text-blue-400">Active Monitors</p>
+                  <p className="mb-1 text-sm text-blue-600 dark:text-blue-400">{t('monitoring.stats.activeMonitors')}</p>
                   <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">
                     {monitoringStats?.totalActive || 0}
                   </p>
                 </div>
                 <div className="rounded border border-red-200 bg-red-50 p-4 dark:bg-red-950">
-                  <p className="mb-1 text-sm text-red-600 dark:text-red-400">Removed (14-day)</p>
+                  <p className="mb-1 text-sm text-red-600 dark:text-red-400">{t('monitoring.stats.removedWithin14')}</p>
                   <p className="text-2xl font-bold text-red-900 dark:text-red-100">
                     {monitoringStats?.removedWithin14Days || 0}
                   </p>
                 </div>
                 <div className="rounded border border-gray-200 bg-gray-50 p-4 dark:bg-gray-900">
                   <p className="mb-1 text-sm text-gray-600 dark:text-gray-400">
-                    Removed (after 14d)
+                    {t('monitoring.stats.removedAfter14')}
                   </p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                     {monitoringStats?.removedAfter14Days || 0}
                   </p>
                 </div>
                 <div className="rounded border border-green-200 bg-green-50 p-4 dark:bg-green-950">
-                  <p className="mb-1 text-sm text-green-600 dark:text-green-400">Completed</p>
+                  <p className="mb-1 text-sm text-green-600 dark:text-green-400">{t('monitoring.stats.completed')}</p>
                   <p className="text-2xl font-bold text-green-900 dark:text-green-100">
                     {monitoringStats?.totalCompleted || 0}
                   </p>
@@ -365,9 +367,9 @@ export function AdminIssuesPage() {
               {!activeMonitors || activeMonitors.length === 0 ? (
                 <div className="py-16 text-center">
                   <Shield className="mx-auto mb-4 h-16 w-16 text-blue-500" />
-                  <h3 className="mb-2 text-lg font-semibold">No active monitors</h3>
+                  <h3 className="mb-2 text-lg font-semibold">{t('monitoring.empty.title')}</h3>
                   <p className="text-muted-foreground">
-                    Reviews will appear here when validated and monitoring begins.
+                    {t('monitoring.empty.subtitle')}
                   </p>
                 </div>
               ) : (
@@ -387,7 +389,7 @@ export function AdminIssuesPage() {
                               <div>
                                 <h4 className="font-semibold">{monitor.bookTitle}</h4>
                                 <p className="text-sm text-muted-foreground">
-                                  Reader: {monitor.readerName}
+                                  {t('monitoring.card.reader')} {monitor.readerName}
                                 </p>
                               </div>
                               <Badge
@@ -398,38 +400,38 @@ export function AdminIssuesPage() {
                                     : 'border-blue-500 text-blue-500'
                                 }
                               >
-                                {daysRemaining} days remaining
+                                {t('monitoring.card.daysRemaining', { count: daysRemaining })}
                               </Badge>
                             </div>
 
                             {/* Monitoring Info */}
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               <div>
-                                <p className="text-muted-foreground">Started:</p>
+                                <p className="text-muted-foreground">{t('monitoring.card.started')}</p>
                                 <p>
                                   {formatDistanceToNow(new Date(monitor.monitoringStartDate), {
                                     addSuffix: true })}
                                 </p>
                               </div>
                               <div>
-                                <p className="text-muted-foreground">Last Checked:</p>
+                                <p className="text-muted-foreground">{t('monitoring.card.lastChecked')}</p>
                                 <p>
                                   {monitor.lastChecked
                                     ? formatDistanceToNow(new Date(monitor.lastChecked), {
                                         addSuffix: true })
-                                    : 'Not yet checked'}
+                                    : t('monitoring.card.notYetChecked')}
                                 </p>
                               </div>
                               <div>
-                                <p className="text-muted-foreground">Status:</p>
+                                <p className="text-muted-foreground">{t('monitoring.card.status')}</p>
                                 <p>{monitor.status}</p>
                               </div>
                               <div>
-                                <p className="text-muted-foreground">Status:</p>
+                                <p className="text-muted-foreground">{t('monitoring.card.status')}</p>
                                 <Badge
                                   variant={monitor.stillExistsOnAmazon ? 'default' : 'destructive'}
                                 >
-                                  {monitor.stillExistsOnAmazon ? 'Active' : 'Removed'}
+                                  {monitor.stillExistsOnAmazon ? t('monitoring.card.active') : t('monitoring.card.removed')}
                                 </Badge>
                               </div>
                             </div>
@@ -440,7 +442,7 @@ export function AdminIssuesPage() {
                                 className="cursor-pointer text-sm text-blue-600 hover:underline"
                                 onClick={() => window.open(monitor.amazonReviewLink, '_blank', 'noopener,noreferrer')}
                               >
-                                Check on Amazon →
+                                {t('monitoring.card.checkAmazon')}
                               </span>
                             </div>
 
@@ -453,16 +455,16 @@ export function AdminIssuesPage() {
                                 onClick={async () => {
                                   if (
                                     !confirm(
-                                      'Are you sure you want to mark this review as removed by Amazon?',
+                                      t('monitoring.card.confirmRemoval'),
                                     )
                                   ) return;
 
                                   try {
                                     setIsMarkingAsRemoved(true);
-                                    startLoading('Marking review as removed...');
+                                    startLoading(t('messages.markingRemoved'));
                                     const result = await reviewsApi.markAsRemovedByAmazon(monitor.reviewId, {
                                       removalDate: new Date().toISOString(),
-                                      notes: 'Manually marked as removed by admin'
+                                      notes: t('messages.markedRemovedManually')
                                     });
                                     stopLoading();
 
@@ -480,14 +482,14 @@ export function AdminIssuesPage() {
                                     setMonitoringStats(statsData);
                                   } catch (error: any) {
                                     stopLoading();
-                                    const message = error.response?.data?.message || 'Failed to mark review as removed';
+                                    const message = error.response?.data?.message || t('messages.markRemovedError');
                                     toast.error(message);
                                   } finally {
                                     setIsMarkingAsRemoved(false);
                                   }
                                 }}
                               >
-                                Mark as Removed
+                                {t('monitoring.card.markRemoved')}
                               </Button>
                             )}
                           </div>
@@ -506,16 +508,16 @@ export function AdminIssuesPage() {
       <Dialog open={resolveDialogOpen} onOpenChange={setResolveDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Resolve Issue</DialogTitle>
+            <DialogTitle>{t('resolveDialog.title')}</DialogTitle>
             <DialogDescription>
-              Provide resolution details and choose actions to take
+              {t('resolveDialog.description')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
             {/* Resolution Status */}
             <div className="space-y-2">
-              <Label>Resolution Status</Label>
+              <Label>{t('resolveDialog.statusLabel')}</Label>
               <Select
                 value={resolutionStatus}
                 onValueChange={(value) => setResolutionStatus(value as IssueResolutionStatus)}
@@ -535,11 +537,11 @@ export function AdminIssuesPage() {
 
             {/* Resolution Text */}
             <div className="space-y-2">
-              <Label>Resolution Details</Label>
+              <Label>{t('resolveDialog.detailsLabel')}</Label>
               <Textarea
                 value={resolutionText}
                 onChange={(e) => setResolutionText(e.target.value)}
-                placeholder="Describe how the issue was resolved..."
+                placeholder={t('resolveDialog.detailsPlaceholder')}
                 rows={4}
               />
             </div>
@@ -553,7 +555,7 @@ export function AdminIssuesPage() {
                   onCheckedChange={(checked) => setNotifyReader(checked as boolean)}
                 />
                 <Label htmlFor="notifyReader" className="cursor-pointer">
-                  Notify reader of resolution
+                  {t('resolveDialog.checkboxes.notifyReader')}
                 </Label>
               </div>
 
@@ -564,7 +566,7 @@ export function AdminIssuesPage() {
                   onCheckedChange={(checked) => setRequestResubmission(checked as boolean)}
                 />
                 <Label htmlFor="requestResubmission" className="cursor-pointer">
-                  Request resubmission from reader
+                  {t('resolveDialog.checkboxes.requestResubmission')}
                 </Label>
               </div>
 
@@ -575,7 +577,7 @@ export function AdminIssuesPage() {
                   onCheckedChange={(checked) => setTriggerReassignment(checked as boolean)}
                 />
                 <Label htmlFor="triggerReassignment" className="cursor-pointer">
-                  Trigger reassignment to another reader
+                  {t('resolveDialog.checkboxes.triggerReassignment')}
                 </Label>
               </div>
             </div>
@@ -583,10 +585,10 @@ export function AdminIssuesPage() {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setResolveDialogOpen(false)}>
-              Cancel
+              {t('resolveDialog.cancel')}
             </Button>
             <Button type="button" onClick={handleResolve} disabled={isResolvingIssue || !resolutionText.trim()}>
-              {isResolvingIssue ? 'Resolving...' : 'Resolve Issue'}
+              {isResolvingIssue ? t('resolveDialog.submitting') : t('resolveDialog.submit')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,0 +1,26 @@
+{
+  "title": "Notifications",
+  "subtitle": "Stay updated with your campaign activity and system messages",
+  "buttons": {
+    "settings": "Settings",
+    "markAllRead": "Mark All Read ({{count}})"
+  },
+  "filters": {
+    "all": "All",
+    "unread": "Unread",
+    "allTypes": "All Types",
+    "campaigns": "Campaigns",
+    "reviews": "Reviews",
+    "payments": "Payments"
+  },
+  "pagination": {
+    "showing": "Showing {{current}} of {{total}} notifications"
+  },
+  "messages": {
+    "loadError": "Failed to load notifications",
+    "markAsReadError": "Failed to mark notifications as read",
+    "markAllAsReadError": "Failed to mark all notifications as read",
+    "markAllAsReadSuccess": "All notifications marked as read",
+    "markAllAsReadDescription": "{{count}} notification{{plural}} updated"
+  }
+}

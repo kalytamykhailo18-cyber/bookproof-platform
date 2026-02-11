@@ -1,0 +1,26 @@
+{
+  "title": "Notificações",
+  "subtitle": "Mantenha-se atualizado com a atividade da sua campanha e mensagens do sistema",
+  "buttons": {
+    "settings": "Configurações",
+    "markAllRead": "Marcar Tudo Como Lido ({{count}})"
+  },
+  "filters": {
+    "all": "Todas",
+    "unread": "Não Lidas",
+    "allTypes": "Todos os Tipos",
+    "campaigns": "Campanhas",
+    "reviews": "Avaliações",
+    "payments": "Pagamentos"
+  },
+  "pagination": {
+    "showing": "Mostrando {{current}} de {{total}} notificações"
+  },
+  "messages": {
+    "loadError": "Erro ao carregar notificações",
+    "markAsReadError": "Erro ao marcar notificações como lidas",
+    "markAllAsReadError": "Erro ao marcar todas as notificações como lidas",
+    "markAllAsReadSuccess": "Todas as notificações marcadas como lidas",
+    "markAllAsReadDescription": "{{count}} notificação{{plural}} atualizada{{plural}}"
+  }
+}

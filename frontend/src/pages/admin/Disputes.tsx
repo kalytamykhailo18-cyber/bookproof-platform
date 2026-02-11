@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { disputesApi } from '@/lib/api/disputes';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -31,6 +32,8 @@ import { CheckCircle, ArrowUpCircle, MessageSquare, Scale, Clock, AlertTriangle 
 import { DisputeStatus, DisputeType, DisputePriority, AppealStatus } from '@/lib/api/disputes';
 
 export function DisputesPage() {
+  const { t } = useTranslation('adminDisputes');
+
   // Data state
   const [disputes, setDisputes] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,7 +54,7 @@ export function DisputesPage() {
       setDisputes(data);
     } catch (err) {
       console.error('Disputes error:', err);
-      toast.error('Failed to load disputes');
+      toast.error(t('messages.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -116,7 +119,7 @@ export function DisputesPage() {
         resolution,
         status: resolveStatus
       });
-      toast.success('Dispute resolved successfully');
+      toast.success(t('messages.resolveSuccess'));
       setResolveDialogOpen(false);
       setResolution('');
       setResolveStatus(DisputeStatus.RESOLVED as DisputeStatus.RESOLVED);
@@ -125,7 +128,7 @@ export function DisputesPage() {
       const statsData = await disputesApi.getDisputeStats();
       setStats(statsData);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to resolve dispute');
+      toast.error(error.response?.data?.message || t('messages.resolveError'));
     } finally {
       setIsResolvingDispute(false);
     }
@@ -137,7 +140,7 @@ export function DisputesPage() {
       await disputesApi.escalateDispute(selectedDisputeId, {
         reason: escalationReason
       });
-      toast.success('Dispute escalated successfully');
+      toast.success(t('messages.escalateSuccess'));
       setEscalateDialogOpen(false);
       setEscalationReason('');
       // Refetch data
@@ -145,7 +148,7 @@ export function DisputesPage() {
       const statsData = await disputesApi.getDisputeStats();
       setStats(statsData);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to escalate dispute');
+      toast.error(error.response?.data?.message || t('messages.escalateError'));
     } finally {
       setIsEscalatingDispute(false);
     }
@@ -158,7 +161,7 @@ export function DisputesPage() {
         status: newStatus,
         adminNotes: adminNotes || undefined
       });
-      toast.success('Dispute status updated');
+      toast.success(t('messages.updateSuccess'));
       setStatusDialogOpen(false);
       setNewStatus(DisputeStatus.IN_PROGRESS);
       setAdminNotes('');
@@ -167,7 +170,7 @@ export function DisputesPage() {
       const statsData = await disputesApi.getDisputeStats();
       setStats(statsData);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to update dispute status');
+      toast.error(error.response?.data?.message || t('messages.updateError'));
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -180,7 +183,7 @@ export function DisputesPage() {
         approved: appealApproved,
         resolution: appealResolution
       });
-      toast.success('Appeal resolved');
+      toast.success(t('messages.appealSuccess'));
       setAppealDialogOpen(false);
       setAppealApproved(true);
       setAppealResolution('');
@@ -189,7 +192,7 @@ export function DisputesPage() {
       const statsData = await disputesApi.getDisputeStats();
       setStats(statsData);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to resolve appeal');
+      toast.error(error.response?.data?.message || t('messages.appealError'));
     } finally {
       setIsResolvingAppeal(false);
     }
@@ -228,33 +231,14 @@ export function DisputesPage() {
   };
 
   const getTypeLabel = (type: DisputeType) => {
-    switch (type) {
-      case DisputeType.AUTHOR_DISPUTE:
-        return 'Author Dispute';
-      case DisputeType.AUTHOR_COMPLAINT:
-        return 'Author Complaint';
-      case DisputeType.READER_COMPLAINT:
-        return 'Reader Complaint';
-      case DisputeType.REVIEW_QUALITY:
-        return 'Review Quality';
-      case DisputeType.PAYMENT_ISSUE:
-        return 'Payment Issue';
-      case DisputeType.SERVICE_ISSUE:
-        return 'Service Issue';
-      case DisputeType.POLICY_VIOLATION:
-        return 'Policy Violation';
-      case DisputeType.OTHER:
-        return 'Other';
-      default:
-        return type;
-    }
+    return t(`types.${type}`, { defaultValue: type });
   };
 
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 items-center justify-center">
-          <p className="text-muted-foreground">Loading disputes...</p>
+          <p className="text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
@@ -264,9 +248,9 @@ export function DisputesPage() {
     <div className="container mx-auto space-y-6 px-4 py-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Customer Disputes</h1>
+          <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">
-            Manage customer complaints and disputes from authors and readers
+            {t('subtitle')}
           </p>
         </div>
       </div>
@@ -275,31 +259,31 @@ export function DisputesPage() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total Disputes</CardDescription>
+            <CardDescription>{t('stats.total')}</CardDescription>
             <CardTitle className="text-2xl">{stats?.total || 0}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Open</CardDescription>
+            <CardDescription>{t('stats.open')}</CardDescription>
             <CardTitle className="text-2xl text-yellow-600">{stats?.open || 0}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>In Progress</CardDescription>
+            <CardDescription>{t('stats.inProgress')}</CardDescription>
             <CardTitle className="text-2xl text-blue-600">{stats?.inProgress || 0}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Escalated</CardDescription>
+            <CardDescription>{t('stats.escalated')}</CardDescription>
             <CardTitle className="text-2xl text-red-600">{stats?.escalated || 0}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Resolved</CardDescription>
+            <CardDescription>{t('stats.resolved')}</CardDescription>
             <CardTitle className="text-2xl text-green-600">{stats?.resolved || 0}</CardTitle>
           </CardHeader>
         </Card>
@@ -311,34 +295,34 @@ export function DisputesPage() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Clock className="h-5 w-5 text-muted-foreground" />
-              <CardTitle>SLA Performance</CardTitle>
+              <CardTitle>{t('sla.title')}</CardTitle>
             </div>
-            <CardDescription>Response time compliance metrics</CardDescription>
+            <CardDescription>{t('sla.subtitle')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
               <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">Compliance Rate</p>
+                <p className="text-sm text-muted-foreground">{t('sla.complianceRate')}</p>
                 <p className={`text-2xl font-bold ${slaStats.complianceRate >= 90 ? 'text-green-600' : slaStats.complianceRate >= 70 ? 'text-yellow-600' : 'text-red-600'}`}>
                   {slaStats.complianceRate.toFixed(1)}%
                 </p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">Total with SLA</p>
+                <p className="text-sm text-muted-foreground">{t('sla.totalWithSla')}</p>
                 <p className="text-2xl font-bold">{slaStats.totalWithSla}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">SLA Breached</p>
+                <p className="text-sm text-muted-foreground">{t('sla.slaBreached')}</p>
                 <p className="text-2xl font-bold text-red-600">{slaStats.breached}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">Avg Response Time</p>
+                <p className="text-sm text-muted-foreground">{t('sla.avgResponseTime')}</p>
                 <p className="text-2xl font-bold">{slaStats.averageResponseTimeHours.toFixed(1)}h</p>
               </div>
             </div>
             {slaStats.byPriority && slaStats.byPriority.length > 0 && (
               <div className="mt-4 pt-4 border-t">
-                <p className="text-sm font-medium mb-2">By Priority</p>
+                <p className="text-sm font-medium mb-2">{t('sla.byPriority')}</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {slaStats.byPriority.map((p) => (
                     <div key={p.priority} className="text-sm">
@@ -358,21 +342,21 @@ export function DisputesPage() {
       {/* Disputes Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Open Disputes</CardTitle>
-          <CardDescription>Disputes requiring attention</CardDescription>
+          <CardTitle>{t('table.title')}</CardTitle>
+          <CardDescription>{t('table.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Priority</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Appeal</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{t('table.headers.id')}</TableHead>
+                <TableHead>{t('table.headers.type')}</TableHead>
+                <TableHead>{t('table.headers.priority')}</TableHead>
+                <TableHead>{t('table.headers.status')}</TableHead>
+                <TableHead>{t('table.headers.appeal')}</TableHead>
+                <TableHead>{t('table.headers.description')}</TableHead>
+                <TableHead>{t('table.headers.created')}</TableHead>
+                <TableHead>{t('table.headers.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -416,61 +400,61 @@ export function DisputesPage() {
                           }}
                         >
                           <DialogTrigger asChild>
-                            <Button variant="outline" size="sm" title="Update Status">
+                            <Button variant="outline" size="sm" title={t('dialogs.updateStatus.buttonTitle')}>
                               <MessageSquare className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Update Dispute Status</DialogTitle>
+                              <DialogTitle>{t('dialogs.updateStatus.title')}</DialogTitle>
                               <DialogDescription>
-                                Update the status and add notes to this dispute
+                                {t('dialogs.updateStatus.description')}
                               </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="newStatus">Status *</Label>
+                                <Label htmlFor="newStatus">{t('dialogs.updateStatus.statusLabel')}</Label>
                                 <Select
                                   value={newStatus}
                                   onValueChange={(value: DisputeStatus) => setNewStatus(value)}
                                 >
                                   <SelectTrigger>
-                                    <SelectValue placeholder="Select status" />
+                                    <SelectValue placeholder={t('dialogs.updateStatus.statusPlaceholder')} />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value={DisputeStatus.OPEN}>Open</SelectItem>
+                                    <SelectItem value={DisputeStatus.OPEN}>{t('statuses.OPEN')}</SelectItem>
                                     <SelectItem value={DisputeStatus.IN_PROGRESS}>
-                                      In Progress
+                                      {t('statuses.IN_PROGRESS')}
                                     </SelectItem>
                                     <SelectItem value={DisputeStatus.ESCALATED}>
-                                      Escalated
+                                      {t('statuses.ESCALATED')}
                                     </SelectItem>
-                                    <SelectItem value={DisputeStatus.RESOLVED}>Resolved</SelectItem>
-                                    <SelectItem value={DisputeStatus.REJECTED}>Rejected</SelectItem>
+                                    <SelectItem value={DisputeStatus.RESOLVED}>{t('statuses.RESOLVED')}</SelectItem>
+                                    <SelectItem value={DisputeStatus.REJECTED}>{t('statuses.REJECTED')}</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </div>
                               <div>
-                                <Label htmlFor="adminNotes">Admin Notes</Label>
+                                <Label htmlFor="adminNotes">{t('dialogs.updateStatus.notesLabel')}</Label>
                                 <Textarea
                                   id="adminNotes"
                                   value={adminNotes}
                                   onChange={(e) => setAdminNotes(e.target.value)}
-                                  placeholder="Add notes for audit trail"
+                                  placeholder={t('dialogs.updateStatus.notesPlaceholder')}
                                   rows={3}
                                 />
                               </div>
                             </div>
                             <DialogFooter>
                               <Button type="button" variant="outline" onClick={() => setStatusDialogOpen(false)}>
-                                Cancel
+                                {t('dialogs.updateStatus.cancel')}
                               </Button>
                               <Button
                                 type="button"
                                 onClick={handleUpdateStatus}
                                 disabled={isUpdatingStatus}
                               >
-                                {isUpdatingStatus ? 'Updating...' : 'Update Status'}
+                                {isUpdatingStatus ? t('dialogs.updateStatus.submitting') : t('dialogs.updateStatus.submit')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -488,7 +472,7 @@ export function DisputesPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              title="Escalate"
+                              title={t('dialogs.escalate.buttonTitle')}
                               disabled={dispute.status === DisputeStatus.ESCALATED}
                             >
                               <ArrowUpCircle className="h-4 w-4" />
@@ -496,19 +480,19 @@ export function DisputesPage() {
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Escalate Dispute</DialogTitle>
+                              <DialogTitle>{t('dialogs.escalate.title')}</DialogTitle>
                               <DialogDescription>
-                                Escalate this dispute to higher priority
+                                {t('dialogs.escalate.description')}
                               </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="escalationReason">Reason for Escalation *</Label>
+                                <Label htmlFor="escalationReason">{t('dialogs.escalate.reasonLabel')}</Label>
                                 <Textarea
                                   id="escalationReason"
                                   value={escalationReason}
                                   onChange={(e) => setEscalationReason(e.target.value)}
-                                  placeholder="Explain why this dispute needs escalation"
+                                  placeholder={t('dialogs.escalate.reasonPlaceholder')}
                                   rows={3}
                                 />
                               </div>
@@ -518,14 +502,14 @@ export function DisputesPage() {
                                 variant="outline"
                                 onClick={() => setEscalateDialogOpen(false)}
                               >
-                                Cancel
+                                {t('dialogs.escalate.cancel')}
                               </Button>
                               <Button
                                 variant="destructive"
                                 onClick={handleEscalate}
                                 disabled={!escalationReason || isEscalatingDispute}
                               >
-                                {isEscalatingDispute ? 'Escalating...' : 'Escalate'}
+                                {isEscalatingDispute ? t('dialogs.escalate.submitting') : t('dialogs.escalate.submit')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -540,20 +524,20 @@ export function DisputesPage() {
                           }}
                         >
                           <DialogTrigger asChild>
-                            <Button variant="outline" size="sm" title="Resolve">
+                            <Button variant="outline" size="sm" title={t('dialogs.resolve.buttonTitle')}>
                               <CheckCircle className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Resolve Dispute</DialogTitle>
+                              <DialogTitle>{t('dialogs.resolve.title')}</DialogTitle>
                               <DialogDescription>
-                                Provide a resolution for this dispute
+                                {t('dialogs.resolve.description')}
                               </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="resolveStatus">Resolution Status *</Label>
+                                <Label htmlFor="resolveStatus">{t('dialogs.resolve.statusLabel')}</Label>
                                 <Select
                                   value={resolveStatus}
                                   onValueChange={(
@@ -561,35 +545,35 @@ export function DisputesPage() {
                                   ) => setResolveStatus(value)}
                                 >
                                   <SelectTrigger>
-                                    <SelectValue placeholder="Select status" />
+                                    <SelectValue placeholder={t('dialogs.resolve.statusPlaceholder')} />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value={DisputeStatus.RESOLVED}>Resolved</SelectItem>
-                                    <SelectItem value={DisputeStatus.REJECTED}>Rejected</SelectItem>
+                                    <SelectItem value={DisputeStatus.RESOLVED}>{t('statuses.RESOLVED')}</SelectItem>
+                                    <SelectItem value={DisputeStatus.REJECTED}>{t('statuses.REJECTED')}</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </div>
                               <div>
-                                <Label htmlFor="resolution">Resolution *</Label>
+                                <Label htmlFor="resolution">{t('dialogs.resolve.resolutionLabel')}</Label>
                                 <Textarea
                                   id="resolution"
                                   value={resolution}
                                   onChange={(e) => setResolution(e.target.value)}
-                                  placeholder="Describe how the dispute was resolved"
+                                  placeholder={t('dialogs.resolve.resolutionPlaceholder')}
                                   rows={4}
                                 />
                               </div>
                             </div>
                             <DialogFooter>
                               <Button type="button" variant="outline" onClick={() => setResolveDialogOpen(false)}>
-                                Cancel
+                                {t('dialogs.resolve.cancel')}
                               </Button>
                               <Button
                                 type="button"
                                 onClick={handleResolve}
                                 disabled={!resolution || isResolvingDispute}
                               >
-                                {isResolvingDispute ? 'Resolving...' : 'Resolve Dispute'}
+                                {isResolvingDispute ? t('dialogs.resolve.submitting') : t('dialogs.resolve.submit')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -605,60 +589,60 @@ export function DisputesPage() {
                             }}
                           >
                             <DialogTrigger asChild>
-                              <Button variant="outline" size="sm" title="Resolve Appeal" className="border-yellow-500">
+                              <Button variant="outline" size="sm" title={t('dialogs.appeal.buttonTitle')} className="border-yellow-500">
                                 <Scale className="h-4 w-4 text-yellow-600" />
                               </Button>
                             </DialogTrigger>
                             <DialogContent>
                               <DialogHeader>
-                                <DialogTitle>Resolve Appeal</DialogTitle>
+                                <DialogTitle>{t('dialogs.appeal.title')}</DialogTitle>
                                 <DialogDescription>
-                                  Review and resolve this user&apos;s appeal
+                                  {t('dialogs.appeal.description')}
                                 </DialogDescription>
                               </DialogHeader>
                               {dispute.appealReason && (
                                 <div className="rounded-lg border bg-muted/50 p-4">
-                                  <p className="text-sm font-medium mb-1">Appeal Reason:</p>
+                                  <p className="text-sm font-medium mb-1">{t('dialogs.appeal.appealReasonLabel')}</p>
                                   <p className="text-sm text-muted-foreground">{dispute.appealReason}</p>
                                 </div>
                               )}
                               <div className="space-y-4">
                                 <div>
-                                  <Label htmlFor="appealDecision">Decision *</Label>
+                                  <Label htmlFor="appealDecision">{t('dialogs.appeal.decisionLabel')}</Label>
                                   <Select
                                     value={appealApproved ? 'approve' : 'reject'}
                                     onValueChange={(value) => setAppealApproved(value === 'approve')}
                                   >
                                     <SelectTrigger>
-                                      <SelectValue placeholder="Select decision" />
+                                      <SelectValue placeholder={t('dialogs.appeal.decisionPlaceholder')} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                      <SelectItem value="approve">Approve (Reopen Dispute)</SelectItem>
-                                      <SelectItem value="reject">Reject Appeal</SelectItem>
+                                      <SelectItem value="approve">{t('dialogs.appeal.approve')}</SelectItem>
+                                      <SelectItem value="reject">{t('dialogs.appeal.reject')}</SelectItem>
                                     </SelectContent>
                                   </Select>
                                 </div>
                                 <div>
-                                  <Label htmlFor="appealResolution">Resolution Explanation *</Label>
+                                  <Label htmlFor="appealResolution">{t('dialogs.appeal.resolutionLabel')}</Label>
                                   <Textarea
                                     id="appealResolution"
                                     value={appealResolution}
                                     onChange={(e) => setAppealResolution(e.target.value)}
-                                    placeholder="Explain the decision to the user"
+                                    placeholder={t('dialogs.appeal.resolutionPlaceholder')}
                                     rows={4}
                                   />
                                 </div>
                               </div>
                               <DialogFooter>
                                 <Button type="button" variant="outline" onClick={() => setAppealDialogOpen(false)}>
-                                  Cancel
+                                  {t('dialogs.appeal.cancel')}
                                 </Button>
                                 <Button
                                   type="button"
                                   onClick={handleResolveAppeal}
                                   disabled={!appealResolution || appealResolution.length < 10 || isResolvingAppeal}
                                 >
-                                  {isResolvingAppeal ? 'Resolving...' : appealApproved ? 'Approve & Reopen' : 'Reject Appeal'}
+                                  {isResolvingAppeal ? t('dialogs.appeal.submitting') : appealApproved ? t('dialogs.appeal.submitApprove') : t('dialogs.appeal.submitReject')}
                                 </Button>
                               </DialogFooter>
                             </DialogContent>
@@ -671,7 +655,7 @@ export function DisputesPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={8} className="text-center text-muted-foreground">
-                    No open disputes found
+                    {t('table.empty')}
                   </TableCell>
                 </TableRow>
               )}

@@ -1,0 +1,82 @@
+{
+  "title": "Issue Management",
+  "subtitle": "Manage review issues and Amazon removal monitoring",
+  "stats": {
+    "openIssues": "Open Issues",
+    "activeMonitors": "Active Monitors",
+    "removalRate": "Removal Rate"
+  },
+  "tabs": {
+    "issues": "Open Issues ({{count}})",
+    "monitoring": "Amazon Monitoring ({{count}})"
+  },
+  "openIssues": {
+    "title": "Open Issues",
+    "subtitle": "Review issues that require attention",
+    "empty": {
+      "title": "No open issues",
+      "subtitle": "All issues have been resolved."
+    },
+    "description": "Description:",
+    "created": "Created",
+    "resolution": "Resolution:",
+    "resolved": "Resolved",
+    "badges": {
+      "readerNotified": "Reader Notified",
+      "resubmissionRequested": "Resubmission Requested",
+      "reassignmentTriggered": "Reassignment Triggered"
+    },
+    "resolveButton": "Resolve Issue"
+  },
+  "monitoring": {
+    "title": "Amazon Review Monitoring (14-Day Guarantee)",
+    "subtitle": "Reviews are monitored for 14 days after validation to detect Amazon removals",
+    "stats": {
+      "activeMonitors": "Active Monitors",
+      "removedWithin14": "Removed (14-day)",
+      "removedAfter14": "Removed (after 14d)",
+      "completed": "Completed"
+    },
+    "empty": {
+      "title": "No active monitors",
+      "subtitle": "Reviews will appear here when validated and monitoring begins."
+    },
+    "card": {
+      "reader": "Reader:",
+      "daysRemaining": "{{count}} days remaining",
+      "started": "Started:",
+      "lastChecked": "Last Checked:",
+      "notYetChecked": "Not yet checked",
+      "status": "Status:",
+      "active": "Active",
+      "removed": "Removed",
+      "checkAmazon": "Check on Amazon →",
+      "markRemoved": "Mark as Removed",
+      "confirmRemoval": "Are you sure you want to mark this review as removed by Amazon?"
+    }
+  },
+  "resolveDialog": {
+    "title": "Resolve Issue",
+    "description": "Provide resolution details and choose actions to take",
+    "statusLabel": "Resolution Status",
+    "detailsLabel": "Resolution Details",
+    "detailsPlaceholder": "Describe how the issue was resolved...",
+    "checkboxes": {
+      "notifyReader": "Notify reader of resolution",
+      "requestResubmission": "Request resubmission from reader",
+      "triggerReassignment": "Trigger reassignment to another reader"
+    },
+    "cancel": "Cancel",
+    "submit": "Resolve Issue",
+    "submitting": "Resolving..."
+  },
+  "messages": {
+    "loadError": "Failed to load open issues",
+    "resolveSuccess": "Issue resolved successfully",
+    "resolveError": "Failed to resolve issue",
+    "resolvingIssue": "Resolving issue...",
+    "markingRemoved": "Marking review as removed...",
+    "markedRemovedManually": "Manually marked as removed by admin",
+    "markRemovedError": "Failed to mark review as removed"
+  }
+}

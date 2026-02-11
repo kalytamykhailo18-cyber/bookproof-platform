@@ -1,0 +1,101 @@
+{
+  "title": "Monitoreo de Comportamiento de Lectores",
+  "subtitle": "Rastrea e investiga patrones inusuales de comportamiento de lectores",
+  "loading": "Cargando datos de comportamiento de lectores...",
+  "stats": {
+    "totalFlags": "Total de Marcadores",
+    "activeFlags": "Marcadores Activos",
+    "suspiciousReaders": "Lectores Sospechosos",
+    "actionsTaken": "Acciones Tomadas"
+  },
+  "tabs": {
+    "suspiciousReaders": "Lectores Sospechosos",
+    "activeFlags": "Marcadores Activos"
+  },
+  "readers": {
+    "title": "Lectores Sospechosos",
+    "subtitle": "Lectores con marcadores de comportamiento activos que requieren atención",
+    "table": {
+      "reader": "Lector",
+      "email": "Email",
+      "reliabilityScore": "Puntuación de Confiabilidad",
+      "activeFlags": "Marcadores Activos",
+      "highestSeverity": "Mayor Gravedad",
+      "flagTypes": "Tipos de Marcador",
+      "lastFlag": "Último Marcador",
+      "status": "Estado"
+    },
+    "badges": {
+      "flagged": "Marcado",
+      "inactive": "Inactivo"
+    },
+    "empty": "No se encontraron lectores sospechosos"
+  },
+  "flags": {
+    "title": "Marcadores de Comportamiento Activos",
+    "subtitle": "Marcadores que requieren investigación",
+    "table": {
+      "id": "ID",
+      "flagType": "Tipo de Marcador",
+      "severity": "Gravedad",
+      "status": "Estado",
+      "description": "Descripción",
+      "scoreImpact": "Impacto en Puntuación",
+      "created": "Creado",
+      "actions": "Acciones"
+    },
+    "empty": "No se encontraron marcadores activos"
+  },
+  "flagTypes": {
+    "FAST_REVIEW": "Reseña Rápida",
+    "SIMILAR_TEXT": "Texto Similar",
+    "MULTIPLE_IP": "Múltiples IP",
+    "DEVICE_FINGERPRINT": "Huella Digital de Dispositivo",
+    "HIGH_REJECTION_RATE": "Alta Tasa de Rechazo",
+    "NEW_ACCOUNT_ABUSE": "Abuso de Cuenta Nueva"
+  },
+  "dialogs": {
+    "investigate": {
+      "title": "Investigar Marcador",
+      "description": "Registra hallazgos de investigación para este marcador de comportamiento",
+      "resultLabel": "Resultado de Investigación *",
+      "resultPlaceholder": "Seleccionar estado",
+      "notesLabel": "Notas de Investigación *",
+      "notesPlaceholder": "Documentar hallazgos de investigación",
+      "statuses": {
+        "INVESTIGATED": "Investigado",
+        "CONFIRMED": "Confirmado",
+        "DISMISSED": "Desestimado"
+      },
+      "cancel": "Cancelar",
+      "submit": "Guardar Investigación",
+      "submitting": "Guardando...",
+      "buttonTitle": "Investigar"
+    },
+    "action": {
+      "title": "Tomar Acción",
+      "description": "Tomar acción contra este comportamiento marcado",
+      "actionLabel": "Acción *",
+      "actionPlaceholder": "Seleccionar acción",
+      "notesLabel": "Notas",
+      "notesPlaceholder": "Notas adicionales sobre la acción",
+      "actions": {
+        "WARNED": "Emitir Advertencia",
+        "SUSPENDED": "Suspender Cuenta",
+        "BANNED": "Prohibir Cuenta",
+        "DISMISSED": "Desestimar Marcador"
+      },
+      "cancel": "Cancelar",
+      "submit": "Tomar Acción",
+      "submitting": "Procesando...",
+      "buttonTitle": "Tomar Acción"
+    }
+  },
+  "messages": {
+    "loadError": "Error al cargar datos de comportamiento de lectores",
+    "investigateSuccess": "Notas de investigación actualizadas",
+    "investigateError": "Error al actualizar investigación",
+    "actionSuccess": "Acción tomada: {{action}}",
+    "actionError": "Error al tomar acción"
+  }
+}
