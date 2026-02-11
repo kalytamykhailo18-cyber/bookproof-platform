@@ -88,6 +88,22 @@ import adminKeywordResearchEN from '../locales/en/admin-keyword-research.json';
 import adminKeywordResearchES from '../locales/es/admin-keyword-research.json';
 import adminKeywordResearchPT from '../locales/pt/admin-keyword-research.json';
 
+import adminNotificationsEN from '../locales/en/admin-notifications.json';
+import adminNotificationsES from '../locales/es/admin-notifications.json';
+import adminNotificationsPT from '../locales/pt/admin-notifications.json';
+
+import adminDisputesEN from '../locales/en/admin-disputes.json';
+import adminDisputesES from '../locales/es/admin-disputes.json';
+import adminDisputesPT from '../locales/pt/admin-disputes.json';
+
+import adminIssuesEN from '../locales/en/admin-issues.json';
+import adminIssuesES from '../locales/es/admin-issues.json';
+import adminIssuesPT from '../locales/pt/admin-issues.json';
+
+import adminReaderBehaviorEN from '../locales/en/admin-reader-behavior.json';
+import adminReaderBehaviorES from '../locales/es/admin-reader-behavior.json';
+import adminReaderBehaviorPT from '../locales/pt/admin-reader-behavior.json';
+
 import keywordResearchEN from '../locales/en/keyword-research.json';
 import keywordResearchES from '../locales/es/keyword-research.json';
 import keywordResearchPT from '../locales/pt/keyword-research.json';
@@ -129,6 +145,10 @@ const resources = {
     adminLandingPages: adminLandingPagesEN,
     adminExceptions: adminExceptionsEN,
     adminKeywordResearch: adminKeywordResearchEN,
+    adminNotifications: adminNotificationsEN,
+    adminDisputes: adminDisputesEN,
+    adminIssues: adminIssuesEN,
+    adminReaderBehavior: adminReaderBehaviorEN,
     keywordResearch: keywordResearchEN,
     ...flattenLanding(landingEN),
   },
@@ -154,6 +174,10 @@ const resources = {
     adminLandingPages: adminLandingPagesES,
     adminExceptions: adminExceptionsES,
     adminKeywordResearch: adminKeywordResearchES,
+    adminNotifications: adminNotificationsES,
+    adminDisputes: adminDisputesES,
+    adminIssues: adminIssuesES,
+    adminReaderBehavior: adminReaderBehaviorES,
     keywordResearch: keywordResearchES,
     ...flattenLanding(landingES),
   },
@@ -179,6 +203,10 @@ const resources = {
     adminLandingPages: adminLandingPagesPT,
     adminExceptions: adminExceptionsPT,
     adminKeywordResearch: adminKeywordResearchPT,
+    adminNotifications: adminNotificationsPT,
+    adminDisputes: adminDisputesPT,
+    adminIssues: adminIssuesPT,
+    adminReaderBehavior: adminReaderBehaviorPT,
     keywordResearch: keywordResearchPT,
     ...flattenLanding(landingPT),
   },

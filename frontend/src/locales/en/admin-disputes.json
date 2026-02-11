@@ -1,0 +1,116 @@
+{
+  "title": "Customer Disputes",
+  "subtitle": "Manage customer complaints and disputes from authors and readers",
+  "loading": "Loading disputes...",
+  "stats": {
+    "total": "Total Disputes",
+    "open": "Open",
+    "inProgress": "In Progress",
+    "escalated": "Escalated",
+    "resolved": "Resolved"
+  },
+  "sla": {
+    "title": "SLA Performance",
+    "subtitle": "Response time compliance metrics",
+    "complianceRate": "Compliance Rate",
+    "totalWithSla": "Total with SLA",
+    "slaBreached": "SLA Breached",
+    "avgResponseTime": "Avg Response Time",
+    "byPriority": "By Priority"
+  },
+  "table": {
+    "title": "Open Disputes",
+    "subtitle": "Disputes requiring attention",
+    "headers": {
+      "id": "ID",
+      "type": "Type",
+      "priority": "Priority",
+      "status": "Status",
+      "appeal": "Appeal",
+      "description": "Description",
+      "created": "Created",
+      "actions": "Actions"
+    },
+    "empty": "No open disputes found"
+  },
+  "types": {
+    "AUTHOR_DISPUTE": "Author Dispute",
+    "AUTHOR_COMPLAINT": "Author Complaint",
+    "READER_COMPLAINT": "Reader Complaint",
+    "REVIEW_QUALITY": "Review Quality",
+    "PAYMENT_ISSUE": "Payment Issue",
+    "SERVICE_ISSUE": "Service Issue",
+    "POLICY_VIOLATION": "Policy Violation",
+    "OTHER": "Other"
+  },
+  "dialogs": {
+    "updateStatus": {
+      "title": "Update Dispute Status",
+      "description": "Update the status and add notes to this dispute",
+      "statusLabel": "Status *",
+      "statusPlaceholder": "Select status",
+      "notesLabel": "Admin Notes",
+      "notesPlaceholder": "Add notes for audit trail",
+      "cancel": "Cancel",
+      "submit": "Update Status",
+      "submitting": "Updating...",
+      "buttonTitle": "Update Status"
+    },
+    "escalate": {
+      "title": "Escalate Dispute",
+      "description": "Escalate this dispute to higher priority",
+      "reasonLabel": "Reason for Escalation *",
+      "reasonPlaceholder": "Explain why this dispute needs escalation",
+      "cancel": "Cancel",
+      "submit": "Escalate",
+      "submitting": "Escalating...",
+      "buttonTitle": "Escalate"
+    },
+    "resolve": {
+      "title": "Resolve Dispute",
+      "description": "Provide a resolution for this dispute",
+      "statusLabel": "Resolution Status *",
+      "statusPlaceholder": "Select status",
+      "resolutionLabel": "Resolution *",
+      "resolutionPlaceholder": "Describe how the dispute was resolved",
+      "cancel": "Cancel",
+      "submit": "Resolve Dispute",
+      "submitting": "Resolving...",
+      "buttonTitle": "Resolve"
+    },
+    "appeal": {
+      "title": "Resolve Appeal",
+      "description": "Review and resolve this user's appeal",
+      "appealReasonLabel": "Appeal Reason:",
+      "decisionLabel": "Decision *",
+      "decisionPlaceholder": "Select decision",
+      "approve": "Approve (Reopen Dispute)",
+      "reject": "Reject Appeal",
+      "resolutionLabel": "Resolution Explanation *",
+      "resolutionPlaceholder": "Explain the decision to the user",
+      "cancel": "Cancel",
+      "submitApprove": "Approve & Reopen",
+      "submitReject": "Reject Appeal",
+      "submitting": "Resolving...",
+      "buttonTitle": "Resolve Appeal"
+    }
+  },
+  "statuses": {
+    "OPEN": "Open",
+    "IN_PROGRESS": "In Progress",
+    "ESCALATED": "Escalated",
+    "RESOLVED": "Resolved",
+    "REJECTED": "Rejected"
+  },
+  "messages": {
+    "loadError": "Failed to load disputes",
+    "resolveSuccess": "Dispute resolved successfully",
+    "resolveError": "Failed to resolve dispute",
+    "escalateSuccess": "Dispute escalated successfully",
+    "escalateError": "Failed to escalate dispute",
+    "updateSuccess": "Dispute status updated",
+    "updateError": "Failed to update dispute status",
+    "appealSuccess": "Appeal resolved",
+    "appealError": "Failed to resolve appeal"
+  }
+}

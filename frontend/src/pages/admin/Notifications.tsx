@@ -9,10 +9,12 @@ import { NotificationList } from '@/components/shared/NotificationList';
 import { Settings, CheckCheck, Loader2 } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { NotificationType } from '@/lib/api/notifications';
+import { useNotificationStore } from '@/stores/notificationStore';
 
 export function NotificationsPage() {
-  const { t, i18n } = useTranslation('notifications');
+  const { t } = useTranslation('adminNotifications');
   const navigate = useNavigate();
+  const { setUnreadCount } = useNotificationStore();
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const [typeFilter, setTypeFilter] = useState<NotificationType | 'ALL'>('ALL');
   const [isSettingsLoading, setIsSettingsLoading] = useState(false);
@@ -32,9 +34,11 @@ export function NotificationsPage() {
         type: typeFilter !== 'ALL' ? typeFilter : undefined
       });
       setNotificationData(data);
+      // Update shared store so header bell count updates
+      setUnreadCount(data.unreadCount);
     } catch (error: any) {
       console.error('Notifications error:', error);
-      toast.error('Failed to load notifications');
+      toast.error(t('messages.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +54,7 @@ export function NotificationsPage() {
       await fetchNotifications();
     } catch (error: any) {
       console.error('Mark as read error:', error);
-      toast.error('Failed to mark notifications as read');
+      toast.error(t('messages.markAsReadError'));
     }
     if (actionUrl) {
       navigate(actionUrl);
@@ -62,14 +66,17 @@ export function NotificationsPage() {
       setIsMarkingAll(true);
       const data = await markAllNotificationsAsRead();
       if (data.updated > 0) {
-        toast.success('All notifications marked as read', {
-          description: `${data.updated} notification${data.updated > 1 ? 's' : ''} updated`,
+        toast.success(t('messages.markAllAsReadSuccess'), {
+          description: t('messages.markAllAsReadDescription', {
+            count: data.updated,
+            plural: data.updated > 1 ? 's' : '',
+          }),
         });
       }
       await fetchNotifications();
     } catch (error: any) {
       console.error('Mark all as read error:', error);
-      toast.error('Failed to mark all notifications as read');
+      toast.error(t('messages.markAllAsReadError'));
     } finally {
       setIsMarkingAll(false);
     }
@@ -80,9 +87,9 @@ export function NotificationsPage() {
       {/* Header */}
       <div className="mb-8 flex animate-fade-up items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Notifications</h1>
+          <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="mt-2 text-muted-foreground">
-            Stay updated with your campaign activity and system messages
+            {t('subtitle')}
           </p>
         </div>
         <div className="flex gap-3">
@@ -97,7 +104,7 @@ export function NotificationsPage() {
             disabled={isSettingsLoading}
           >
             {isSettingsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Settings className="mr-2 h-4 w-4" />}
-            Settings
+            {t('buttons.settings')}
           </Button>
           {notificationData && notificationData.unreadCount > 0 && (
             <Button
@@ -111,7 +118,7 @@ export function NotificationsPage() {
               ) : (
                 <CheckCheck className="mr-2 h-4 w-4" />
               )}
-              Mark All Read ({notificationData.unreadCount})
+              {t('buttons.markAllRead', { count: notificationData.unreadCount })}
             </Button>
           )}
         </div>
@@ -122,9 +129,9 @@ export function NotificationsPage() {
         <Tabs value={filter} onValueChange={(v) => setFilter(v as 'all' | 'unread')}>
           <div className="flex items-center justify-between">
             <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="all">{t('filters.all')}</TabsTrigger>
               <TabsTrigger value="unread">
-                Unread
+                {t('filters.unread')}
                 {notificationData && notificationData.unreadCount > 0 && (
                   <span className="ml-2 rounded-full bg-blue-600 px-2 py-0.5 text-xs text-white">
                     {notificationData.unreadCount}
@@ -141,7 +148,7 @@ export function NotificationsPage() {
                 size="sm"
                 onClick={() => setTypeFilter('ALL')}
               >
-                All Types
+                {t('filters.allTypes')}
               </Button>
               <Button
                 type="button"
@@ -149,7 +156,7 @@ export function NotificationsPage() {
                 size="sm"
                 onClick={() => setTypeFilter(NotificationType.CAMPAIGN)}
               >
-                Campaigns
+                {t('filters.campaigns')}
               </Button>
               <Button
                 type="button"
@@ -157,7 +164,7 @@ export function NotificationsPage() {
                 size="sm"
                 onClick={() => setTypeFilter(NotificationType.REVIEW)}
               >
-                Reviews
+                {t('filters.reviews')}
               </Button>
               <Button
                 type="button"
@@ -165,7 +172,7 @@ export function NotificationsPage() {
                 size="sm"
                 onClick={() => setTypeFilter(NotificationType.PAYMENT)}
               >
-                Payments
+                {t('filters.payments')}
               </Button>
             </div>
           </div>
@@ -184,7 +191,10 @@ export function NotificationsPage() {
       {/* Pagination Info */}
       {notificationData && notificationData.notifications && notificationData.total > 0 && (
         <div className="mt-4 text-center text-sm text-muted-foreground animate-fade-up-slow">
-          Showing {notificationData.notifications.length} of {notificationData.total} notifications
+          {t('pagination.showing', {
+            current: notificationData.notifications.length,
+            total: notificationData.total,
+          })}
         </div>
       )}
     </div>

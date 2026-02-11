@@ -1,0 +1,82 @@
+{
+  "title": "Gestión de Problemas",
+  "subtitle": "Gestiona problemas de reseñas y monitoreo de eliminaciones en Amazon",
+  "stats": {
+    "openIssues": "Problemas Abiertos",
+    "activeMonitors": "Monitores Activos",
+    "removalRate": "Tasa de Eliminación"
+  },
+  "tabs": {
+    "issues": "Problemas Abiertos ({{count}})",
+    "monitoring": "Monitoreo Amazon ({{count}})"
+  },
+  "openIssues": {
+    "title": "Problemas Abiertos",
+    "subtitle": "Problemas de reseñas que requieren atención",
+    "empty": {
+      "title": "No hay problemas abiertos",
+      "subtitle": "Todos los problemas han sido resueltos."
+    },
+    "description": "Descripción:",
+    "created": "Creado",
+    "resolution": "Resolución:",
+    "resolved": "Resuelto",
+    "badges": {
+      "readerNotified": "Lector Notificado",
+      "resubmissionRequested": "Reenvío Solicitado",
+      "reassignmentTriggered": "Reasignación Activada"
+    },
+    "resolveButton": "Resolver Problema"
+  },
+  "monitoring": {
+    "title": "Monitoreo de Reseñas Amazon (Garantía 14 Días)",
+    "subtitle": "Las reseñas se monitorean durante 14 días después de la validación para detectar eliminaciones de Amazon",
+    "stats": {
+      "activeMonitors": "Monitores Activos",
+      "removedWithin14": "Eliminadas (14 días)",
+      "removedAfter14": "Eliminadas (después 14d)",
+      "completed": "Completadas"
+    },
+    "empty": {
+      "title": "No hay monitores activos",
+      "subtitle": "Las reseñas aparecerán aquí cuando sean validadas y comience el monitoreo."
+    },
+    "card": {
+      "reader": "Lector:",
+      "daysRemaining": "{{count}} días restantes",
+      "started": "Iniciado:",
+      "lastChecked": "Última Revisión:",
+      "notYetChecked": "Aún no revisado",
+      "status": "Estado:",
+      "active": "Activo",
+      "removed": "Eliminada",
+      "checkAmazon": "Verificar en Amazon →",
+      "markRemoved": "Marcar como Eliminada",
+      "confirmRemoval": "¿Estás seguro de que quieres marcar esta reseña como eliminada por Amazon?"
+    }
+  },
+  "resolveDialog": {
+    "title": "Resolver Problema",
+    "description": "Proporciona detalles de la resolución y elige las acciones a tomar",
+    "statusLabel": "Estado de Resolución",
+    "detailsLabel": "Detalles de Resolución",
+    "detailsPlaceholder": "Describir cómo se resolvió el problema...",
+    "checkboxes": {
+      "notifyReader": "Notificar al lector de la resolución",
+      "requestResubmission": "Solicitar reenvío del lector",
+      "triggerReassignment": "Activar reasignación a otro lector"
+    },
+    "cancel": "Cancelar",
+    "submit": "Resolver Problema",
+    "submitting": "Resolviendo..."
+  },
+  "messages": {
+    "loadError": "Error al cargar problemas abiertos",
+    "resolveSuccess": "Problema resuelto exitosamente",
+    "resolveError": "Error al resolver problema",
+    "resolvingIssue": "Resolviendo problema...",
+    "markingRemoved": "Marcando reseña como eliminada...",
+    "markedRemovedManually": "Marcada manualmente como eliminada por admin",
+    "markRemovedError": "Error al marcar reseña como eliminada"
+  }
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { readerBehaviorApi } from '@/lib/api/reader-behavior';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,6 +37,7 @@ import {
   IssueSeverity } from '@/lib/api/reader-behavior';
 
 export function ReaderBehaviorPage() {
+  const { t } = useTranslation('adminReaderBehavior');
   const [suspiciousReaders, setSuspiciousReaders] = useState<any>(null);
   const [stats, setStats] = useState<any>(null);
   const [activeFlags, setActiveFlags] = useState<any>(null);
@@ -74,7 +76,7 @@ export function ReaderBehaviorPage() {
       setActiveFlags(flagsData);
     } catch (error: any) {
       console.error('Reader behavior error:', error);
-      toast.error('Failed to load reader behavior data');
+      toast.error(t('messages.loadError'));
     } finally {
       setLoadingReaders(false);
       setLoadingFlags(false);
@@ -92,14 +94,14 @@ export function ReaderBehaviorPage() {
         investigationNotes,
         status: investigationStatus
       });
-      toast.success('Investigation notes updated');
+      toast.success(t('messages.investigateSuccess'));
       setInvestigateDialogOpen(false);
       setInvestigationNotes('');
       setInvestigationStatus(BehaviorFlagStatus.INVESTIGATED);
       await fetchData();
     } catch (error: any) {
       console.error('Investigate error:', error);
-      toast.error(error.response?.data?.message || 'Failed to update investigation');
+      toast.error(error.response?.data?.message || t('messages.investigateError'));
     } finally {
       setIsInvestigating(false);
     }
@@ -112,14 +114,14 @@ export function ReaderBehaviorPage() {
         action: actionType,
         notes: actionNotes || undefined
       });
-      toast.success(`Action taken: ${actionType}`);
+      toast.success(t('messages.actionSuccess', { action: actionType }));
       setActionDialogOpen(false);
       setActionType(BehaviorAction.WARNED);
       setActionNotes('');
       await fetchData();
     } catch (error: any) {
       console.error('Take action error:', error);
-      toast.error(error.response?.data?.message || 'Failed to take action');
+      toast.error(error.response?.data?.message || t('messages.actionError'));
     } finally {
       setIsTakingAction(false);
     }
@@ -156,22 +158,7 @@ export function ReaderBehaviorPage() {
   };
 
   const getFlagTypeLabel = (type: BehaviorFlagType) => {
-    switch (type) {
-      case BehaviorFlagType.FAST_REVIEW:
-        return 'Fast Review';
-      case BehaviorFlagType.SIMILAR_TEXT:
-        return 'Similar Text';
-      case BehaviorFlagType.MULTIPLE_IP:
-        return 'Multiple IP';
-      case BehaviorFlagType.DEVICE_FINGERPRINT:
-        return 'Device Fingerprint';
-      case BehaviorFlagType.HIGH_REJECTION_RATE:
-        return 'High Rejection';
-      case BehaviorFlagType.NEW_ACCOUNT_ABUSE:
-        return 'New Account Abuse';
-      default:
-        return type;
-    }
+    return t(`flagTypes.${type}`, { defaultValue: type });
   };
 
   const isLoading = loadingReaders || loadingFlags;
@@ -180,7 +167,7 @@ export function ReaderBehaviorPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 items-center justify-center">
-          <p className="text-muted-foreground">Loading reader behavior data...</p>
+          <p className="text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
@@ -190,9 +177,9 @@ export function ReaderBehaviorPage() {
     <div className="container mx-auto space-y-6 px-4 py-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Reader Behavior Monitoring</h1>
+          <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">
-            Track and investigate unusual reader behavior patterns
+            {t('subtitle')}
           </p>
         </div>
       </div>
@@ -201,19 +188,19 @@ export function ReaderBehaviorPage() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total Flags</CardDescription>
+            <CardDescription>{t('stats.totalFlags')}</CardDescription>
             <CardTitle className="text-2xl">{stats?.totalFlags || 0}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Active Flags</CardDescription>
+            <CardDescription>{t('stats.activeFlags')}</CardDescription>
             <CardTitle className="text-2xl text-red-600">{stats?.activeFlags || 0}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Suspicious Readers</CardDescription>
+            <CardDescription>{t('stats.suspiciousReaders')}</CardDescription>
             <CardTitle className="text-2xl text-orange-600">
               {stats?.suspiciousReaders || 0}
             </CardTitle>
@@ -221,7 +208,7 @@ export function ReaderBehaviorPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Actions Taken</CardDescription>
+            <CardDescription>{t('stats.actionsTaken')}</CardDescription>
             <CardTitle className="text-2xl text-blue-600">
               {Object.values(stats?.byAction || {}).reduce((sum, count) => sum + count, 0)}
             </CardTitle>
@@ -234,11 +221,11 @@ export function ReaderBehaviorPage() {
         <TabsList>
           <TabsTrigger value="readers" className="flex items-center gap-2">
             <ShieldAlert className="h-4 w-4" />
-            Suspicious Readers
+            {t('tabs.suspiciousReaders')}
           </TabsTrigger>
           <TabsTrigger value="flags" className="flex items-center gap-2">
             <AlertTriangle className="h-4 w-4" />
-            Active Flags
+            {t('tabs.activeFlags')}
           </TabsTrigger>
         </TabsList>
 
@@ -246,23 +233,23 @@ export function ReaderBehaviorPage() {
         <TabsContent value="readers">
           <Card>
             <CardHeader>
-              <CardTitle>Suspicious Readers</CardTitle>
+              <CardTitle>{t('readers.title')}</CardTitle>
               <CardDescription>
-                Readers with active behavior flags requiring attention
+                {t('readers.subtitle')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Reader</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Reliability Score</TableHead>
-                    <TableHead>Active Flags</TableHead>
-                    <TableHead>Highest Severity</TableHead>
-                    <TableHead>Flag Types</TableHead>
-                    <TableHead>Last Flag</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>{t('readers.table.reader')}</TableHead>
+                    <TableHead>{t('readers.table.email')}</TableHead>
+                    <TableHead>{t('readers.table.reliabilityScore')}</TableHead>
+                    <TableHead>{t('readers.table.activeFlags')}</TableHead>
+                    <TableHead>{t('readers.table.highestSeverity')}</TableHead>
+                    <TableHead>{t('readers.table.flagTypes')}</TableHead>
+                    <TableHead>{t('readers.table.lastFlag')}</TableHead>
+                    <TableHead>{t('readers.table.status')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -303,8 +290,8 @@ export function ReaderBehaviorPage() {
                         <TableCell>{new Date(reader.lastFlagDate).toLocaleDateString()}</TableCell>
                         <TableCell>
                           <div className="flex gap-1">
-                            {reader.isFlagged && <Badge variant="destructive">Flagged</Badge>}
-                            {!reader.isActive && <Badge variant="secondary">Inactive</Badge>}
+                            {reader.isFlagged && <Badge variant="destructive">{t('readers.badges.flagged')}</Badge>}
+                            {!reader.isActive && <Badge variant="secondary">{t('readers.badges.inactive')}</Badge>}
                           </div>
                         </TableCell>
                       </TableRow>
@@ -312,7 +299,7 @@ export function ReaderBehaviorPage() {
                   ) : (
                     <TableRow>
                       <TableCell colSpan={8} className="text-center text-muted-foreground">
-                        No suspicious readers found
+                        {t('readers.empty')}
                       </TableCell>
                     </TableRow>
                   )}
@@ -326,21 +313,21 @@ export function ReaderBehaviorPage() {
         <TabsContent value="flags">
           <Card>
             <CardHeader>
-              <CardTitle>Active Behavior Flags</CardTitle>
-              <CardDescription>Flags requiring investigation</CardDescription>
+              <CardTitle>{t('flags.title')}</CardTitle>
+              <CardDescription>{t('flags.subtitle')}</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Flag Type</TableHead>
-                    <TableHead>Severity</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Score Impact</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>{t('flags.table.id')}</TableHead>
+                    <TableHead>{t('flags.table.flagType')}</TableHead>
+                    <TableHead>{t('flags.table.severity')}</TableHead>
+                    <TableHead>{t('flags.table.status')}</TableHead>
+                    <TableHead>{t('flags.table.description')}</TableHead>
+                    <TableHead>{t('flags.table.scoreImpact')}</TableHead>
+                    <TableHead>{t('flags.table.created')}</TableHead>
+                    <TableHead>{t('flags.table.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -377,21 +364,21 @@ export function ReaderBehaviorPage() {
                               }}
                             >
                               <DialogTrigger asChild>
-                                <Button variant="outline" size="sm" title="Investigate">
+                                <Button variant="outline" size="sm" title={t('dialogs.investigate.buttonTitle')}>
                                   <Search className="h-4 w-4" />
                                 </Button>
                               </DialogTrigger>
                               <DialogContent>
                                 <DialogHeader>
-                                  <DialogTitle>Investigate Flag</DialogTitle>
+                                  <DialogTitle>{t('dialogs.investigate.title')}</DialogTitle>
                                   <DialogDescription>
-                                    Record investigation findings for this behavior flag
+                                    {t('dialogs.investigate.description')}
                                   </DialogDescription>
                                 </DialogHeader>
                                 <div className="space-y-4">
                                   <div>
                                     <Label htmlFor="investigationStatus">
-                                      Investigation Result *
+                                      {t('dialogs.investigate.resultLabel')}
                                     </Label>
                                     <Select
                                       value={investigationStatus}
@@ -400,30 +387,30 @@ export function ReaderBehaviorPage() {
                                       }
                                     >
                                       <SelectTrigger>
-                                        <SelectValue placeholder="Select status" />
+                                        <SelectValue placeholder={t('dialogs.investigate.resultPlaceholder')} />
                                       </SelectTrigger>
                                       <SelectContent>
                                         <SelectItem value={BehaviorFlagStatus.INVESTIGATED}>
-                                          Investigated
+                                          {t('dialogs.investigate.statuses.INVESTIGATED')}
                                         </SelectItem>
                                         <SelectItem value={BehaviorFlagStatus.CONFIRMED}>
-                                          Confirmed
+                                          {t('dialogs.investigate.statuses.CONFIRMED')}
                                         </SelectItem>
                                         <SelectItem value={BehaviorFlagStatus.DISMISSED}>
-                                          Dismissed
+                                          {t('dialogs.investigate.statuses.DISMISSED')}
                                         </SelectItem>
                                       </SelectContent>
                                     </Select>
                                   </div>
                                   <div>
                                     <Label htmlFor="investigationNotes">
-                                      Investigation Notes *
+                                      {t('dialogs.investigate.notesLabel')}
                                     </Label>
                                     <Textarea
                                       id="investigationNotes"
                                       value={investigationNotes}
                                       onChange={(e) => setInvestigationNotes(e.target.value)}
-                                      placeholder="Document your investigation findings"
+                                      placeholder={t('dialogs.investigate.notesPlaceholder')}
                                       rows={4}
                                     />
                                   </div>
@@ -433,13 +420,13 @@ export function ReaderBehaviorPage() {
                                     variant="outline"
                                     onClick={() => setInvestigateDialogOpen(false)}
                                   >
-                                    Cancel
+                                    {t('dialogs.investigate.cancel')}
                                   </Button>
                                   <Button
                                     onClick={handleInvestigate}
                                     disabled={!investigationNotes || isInvestigating}
                                   >
-                                    {isInvestigating ? 'Saving...' : 'Save Investigation'}
+                                    {isInvestigating ? t('dialogs.investigate.submitting') : t('dialogs.investigate.submit')}
                                   </Button>
                                 </DialogFooter>
                               </DialogContent>
@@ -454,20 +441,20 @@ export function ReaderBehaviorPage() {
                               }}
                             >
                               <DialogTrigger asChild>
-                                <Button variant="outline" size="sm" title="Take Action">
+                                <Button variant="outline" size="sm" title={t('dialogs.action.buttonTitle')}>
                                   <UserX className="h-4 w-4" />
                                 </Button>
                               </DialogTrigger>
                               <DialogContent>
                                 <DialogHeader>
-                                  <DialogTitle>Take Action</DialogTitle>
+                                  <DialogTitle>{t('dialogs.action.title')}</DialogTitle>
                                   <DialogDescription>
-                                    Take action against this flagged behavior
+                                    {t('dialogs.action.description')}
                                   </DialogDescription>
                                 </DialogHeader>
                                 <div className="space-y-4">
                                   <div>
-                                    <Label htmlFor="actionType">Action *</Label>
+                                    <Label htmlFor="actionType">{t('dialogs.action.actionLabel')}</Label>
                                     <Select
                                       value={actionType}
                                       onValueChange={(value: BehaviorAction) =>
@@ -475,31 +462,31 @@ export function ReaderBehaviorPage() {
                                       }
                                     >
                                       <SelectTrigger>
-                                        <SelectValue placeholder="Select action" />
+                                        <SelectValue placeholder={t('dialogs.action.actionPlaceholder')} />
                                       </SelectTrigger>
                                       <SelectContent>
                                         <SelectItem value={BehaviorAction.WARNED}>
-                                          Issue Warning
+                                          {t('dialogs.action.actions.WARNED')}
                                         </SelectItem>
                                         <SelectItem value={BehaviorAction.SUSPENDED}>
-                                          Suspend Account
+                                          {t('dialogs.action.actions.SUSPENDED')}
                                         </SelectItem>
                                         <SelectItem value={BehaviorAction.BANNED}>
-                                          Ban Account
+                                          {t('dialogs.action.actions.BANNED')}
                                         </SelectItem>
                                         <SelectItem value={BehaviorAction.DISMISSED}>
-                                          Dismiss Flag
+                                          {t('dialogs.action.actions.DISMISSED')}
                                         </SelectItem>
                                       </SelectContent>
                                     </Select>
                                   </div>
                                   <div>
-                                    <Label htmlFor="actionNotes">Notes</Label>
+                                    <Label htmlFor="actionNotes">{t('dialogs.action.notesLabel')}</Label>
                                     <Textarea
                                       id="actionNotes"
                                       value={actionNotes}
                                       onChange={(e) => setActionNotes(e.target.value)}
-                                      placeholder="Additional notes about the action"
+                                      placeholder={t('dialogs.action.notesPlaceholder')}
                                       rows={3}
                                     />
                                   </div>
@@ -509,7 +496,7 @@ export function ReaderBehaviorPage() {
                                     variant="outline"
                                     onClick={() => setActionDialogOpen(false)}
                                   >
-                                    Cancel
+                                    {t('dialogs.action.cancel')}
                                   </Button>
                                   <Button
                                     variant={
@@ -521,7 +508,7 @@ export function ReaderBehaviorPage() {
                                     onClick={handleTakeAction}
                                     disabled={isTakingAction}
                                   >
-                                    {isTakingAction ? 'Processing...' : 'Take Action'}
+                                    {isTakingAction ? t('dialogs.action.submitting') : t('dialogs.action.submit')}
                                   </Button>
                                 </DialogFooter>
                               </DialogContent>
@@ -533,7 +520,7 @@ export function ReaderBehaviorPage() {
                   ) : (
                     <TableRow>
                       <TableCell colSpan={8} className="text-center text-muted-foreground">
-                        No active flags found
+                        {t('flags.empty')}
                       </TableCell>
                     </TableRow>
                   )}

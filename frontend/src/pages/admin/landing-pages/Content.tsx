@@ -59,7 +59,7 @@ interface LandingPageContent {
 }
 
 export function LandingPageContentEditor() {
-  const { t, i18n } = useTranslation('admin-landing-pages');
+  const { t, i18n } = useTranslation('adminLandingPages');
 
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('EN');
   const [landingPage, setLandingPage] = useState<any>(null);
