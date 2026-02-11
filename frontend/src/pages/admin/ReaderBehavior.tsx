@@ -41,8 +41,8 @@ export function ReaderBehaviorPage() {
   const [suspiciousReaders, setSuspiciousReaders] = useState<any>(null);
   const [stats, setStats] = useState<any>(null);
   const [activeFlags, setActiveFlags] = useState<any>(null);
-  const [loadingReaders, setLoadingReaders] = useState(true);
-  const [loadingFlags, setLoadingFlags] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isRefetching, setIsRefetching] = useState(false);
   const [isInvestigating, setIsInvestigating] = useState(false);
   const [isTakingAction, setIsTakingAction] = useState(false);
 
@@ -62,10 +62,14 @@ export function ReaderBehaviorPage() {
   const [actionNotes, setActionNotes] = useState('');
 
   // Fetch data
-  const fetchData = async () => {
+  const fetchData = async (isRefetch = false) => {
     try {
-      setLoadingReaders(true);
-      setLoadingFlags(true);
+      if (isRefetch) {
+        setIsRefetching(true);
+      } else {
+        setIsInitialLoading(true);
+      }
+
       const [readersData, statsData, flagsData] = await Promise.all([
         readerBehaviorApi.getSuspiciousReaders(),
         readerBehaviorApi.getBehaviorStats(),
@@ -78,8 +82,8 @@ export function ReaderBehaviorPage() {
       console.error('Reader behavior error:', error);
       toast.error(t('messages.loadError'));
     } finally {
-      setLoadingReaders(false);
-      setLoadingFlags(false);
+      setIsInitialLoading(false);
+      setIsRefetching(false);
     }
   };
 
@@ -98,7 +102,7 @@ export function ReaderBehaviorPage() {
       setInvestigateDialogOpen(false);
       setInvestigationNotes('');
       setInvestigationStatus(BehaviorFlagStatus.INVESTIGATED);
-      await fetchData();
+      await fetchData(true); // Pass true for refetch
     } catch (error: any) {
       console.error('Investigate error:', error);
       toast.error(error.response?.data?.message || t('messages.investigateError'));
@@ -118,7 +122,7 @@ export function ReaderBehaviorPage() {
       setActionDialogOpen(false);
       setActionType(BehaviorAction.WARNED);
       setActionNotes('');
-      await fetchData();
+      await fetchData(true); // Pass true for refetch
     } catch (error: any) {
       console.error('Take action error:', error);
       toast.error(error.response?.data?.message || t('messages.actionError'));
@@ -161,9 +165,8 @@ export function ReaderBehaviorPage() {
     return t(`flagTypes.${type}`, { defaultValue: type });
   };
 
-  const isLoading = loadingReaders || loadingFlags;
-
-  if (isLoading) {
+  // Only show full loading on initial load, not on refetch
+  if (isInitialLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 items-center justify-center">
@@ -186,19 +189,19 @@ export function ReaderBehaviorPage() {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <Card>
+        <Card className={isRefetching ? 'opacity-60 transition-opacity' : ''}>
           <CardHeader className="pb-2">
             <CardDescription>{t('stats.totalFlags')}</CardDescription>
             <CardTitle className="text-2xl">{stats?.totalFlags || 0}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className={isRefetching ? 'opacity-60 transition-opacity' : ''}>
           <CardHeader className="pb-2">
             <CardDescription>{t('stats.activeFlags')}</CardDescription>
             <CardTitle className="text-2xl text-red-600">{stats?.activeFlags || 0}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className={isRefetching ? 'opacity-60 transition-opacity' : ''}>
           <CardHeader className="pb-2">
             <CardDescription>{t('stats.suspiciousReaders')}</CardDescription>
             <CardTitle className="text-2xl text-orange-600">
@@ -206,7 +209,7 @@ export function ReaderBehaviorPage() {
             </CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className={isRefetching ? 'opacity-60 transition-opacity' : ''}>
           <CardHeader className="pb-2">
             <CardDescription>{t('stats.actionsTaken')}</CardDescription>
             <CardTitle className="text-2xl text-blue-600">
@@ -412,7 +415,13 @@ export function ReaderBehaviorPage() {
                                       onChange={(e) => setInvestigationNotes(e.target.value)}
                                       placeholder={t('dialogs.investigate.notesPlaceholder')}
                                       rows={4}
+                                      className={investigationNotes.length > 0 && investigationNotes.length < 10 ? 'border-red-500' : ''}
                                     />
+                                    {investigationNotes.length > 0 && investigationNotes.length < 10 && (
+                                      <p className="text-sm text-red-600 mt-1">
+                                        Minimum 10 characters required ({investigationNotes.length}/10)
+                                      </p>
+                                    )}
                                   </div>
                                 </div>
                                 <DialogFooter>
@@ -424,7 +433,7 @@ export function ReaderBehaviorPage() {
                                   </Button>
                                   <Button
                                     onClick={handleInvestigate}
-                                    disabled={!investigationNotes || isInvestigating}
+                                    disabled={investigationNotes.length < 10 || isInvestigating}
                                   >
                                     {isInvestigating ? t('dialogs.investigate.submitting') : t('dialogs.investigate.submit')}
                                   </Button>
