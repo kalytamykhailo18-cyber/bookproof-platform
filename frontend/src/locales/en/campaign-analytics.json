@@ -1,5 +1,13 @@
 {
   "title": "Campaign Analytics & Tracking",
+  "notFound": "Campaign not found",
+  "back": "Go Back",
+  "finalReportSubtitle": "Campaign Final Report",
+  "analyticsSubtitle": "Campaign Analytics & Tracking",
+  "downloadReport": "Download Report",
+  "overallProgress": "Overall Progress",
+  "delivered": "delivered",
+  "target": "target",
   "status": {
     "title": "Campaign Status",
     "active": "In progress",
@@ -33,6 +41,14 @@
       "noData": "No weekly progress data available"
     }
   },
+  "ratingDistribution": {
+    "title": "Rating Distribution",
+    "description": "Breakdown of review ratings"
+  },
+  "distributionHealth": {
+    "title": "Distribution Health",
+    "description": "How your campaign is progressing"
+  },
   "health": {
     "title": "Distribution Health",
     "description": "How your campaign is progressing",
@@ -46,6 +62,14 @@
     "reviewsPerWeek": "reviews/week",
     "basedOnCompletedWeeks": "Based on completed weeks"
   },
+  "amazonRemovals": {
+    "title": "Amazon Removals",
+    "description": "Reviews removed by Amazon"
+  },
+  "delays": {
+    "title": "Campaign Delays",
+    "description": "Issues that have caused delays"
+  },
   "assignments": {
     "title": "Active Assignments",
     "description": "Current beta readers working on your book",
@@ -58,6 +82,5 @@
       "noData": "No active assignments"
     }
   },
-  "loading": "Loading campaign analytics...",
-  "notFound": "Campaign not found"
+  "loading": "Loading campaign analytics..."
 }

@@ -1,5 +1,13 @@
 {
   "title": "Análises e Acompanhamento de Campanha",
+  "notFound": "Campanha não encontrada",
+  "back": "Voltar",
+  "finalReportSubtitle": "Relatório Final da Campanha",
+  "analyticsSubtitle": "Análise e Acompanhamento da Campanha",
+  "downloadReport": "Baixar Relatório",
+  "overallProgress": "Progresso Geral",
+  "delivered": "entregues",
+  "target": "meta",
   "status": {
     "title": "Status da Campanha",
     "active": "Em progresso",
@@ -33,6 +41,14 @@
       "noData": "Nenhum dado de progresso semanal disponível"
     }
   },
+  "ratingDistribution": {
+    "title": "Distribuição de Avaliações",
+    "description": "Detalhamento das avaliações"
+  },
+  "distributionHealth": {
+    "title": "Saúde da Distribuição",
+    "description": "Como sua campanha está progredindo"
+  },
   "health": {
     "title": "Saúde da Distribuição",
     "description": "Como sua campanha está progredindo",
@@ -46,6 +62,14 @@
     "reviewsPerWeek": "avaliações/semana",
     "basedOnCompletedWeeks": "Baseado em semanas concluídas"
   },
+  "amazonRemovals": {
+    "title": "Remoções da Amazon",
+    "description": "Avaliações removidas pela Amazon"
+  },
+  "delays": {
+    "title": "Atrasos da Campanha",
+    "description": "Problemas que causaram atrasos"
+  },
   "assignments": {
     "title": "Atribuições Ativas",
     "description": "Leitores beta atuais trabalhando em seu livro",
@@ -58,6 +82,5 @@
       "noData": "Nenhuma atribuição ativa"
     }
   },
-  "loading": "Carregando análises de campanha...",
-  "notFound": "Campanha não encontrada"
+  "loading": "Carregando análises de campanha..."
 }

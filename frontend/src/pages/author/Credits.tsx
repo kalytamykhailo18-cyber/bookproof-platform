@@ -18,7 +18,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2, Check, CreditCard, Star, FileSearch } from 'lucide-react';
 
 export function CreditPurchasePage() {
-  const { t, i18n } = useTranslation('author.credits');
+  const { t, i18n } = useTranslation('authorCredits');
   const { startLoading, stopLoading } = useLoading();
 
   // Data state

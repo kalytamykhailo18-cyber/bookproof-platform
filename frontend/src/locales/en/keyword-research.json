@@ -37,6 +37,7 @@
   "new": {
     "title": "Order Keyword Research",
     "subtitle": "Get AI-powered keyword recommendations for your book",
+    "optional": "Optional",
     "draft": {
       "restored": "Draft restored from your previous session",
       "lastSaved": "Last saved",
@@ -58,6 +59,11 @@
         "label": "Book Title",
         "placeholder": "The Complete Guide to Self-Publishing",
         "description": "The full title of your book"
+      },
+      "bookSubtitle": {
+        "label": "Book Subtitle",
+        "placeholder": "A Step-by-Step Guide for Authors",
+        "description": "Optional subtitle for your book"
       },
       "genre": {
         "label": "Genre",
@@ -83,6 +89,11 @@
         "label": "Competing Books (Optional)",
         "placeholder": "Book Marketing Made Easy, APE: Author Publisher Entrepreneur",
         "description": "Similar books or ASINs to analyze"
+      },
+      "specificKeywords": {
+        "label": "Specific Keywords to Include",
+        "placeholder": "self-publishing, book marketing, Amazon KDP",
+        "description": "Optional: Specific keywords you want to include in the research"
       },
       "bookLanguage": {
         "label": "Book Language",

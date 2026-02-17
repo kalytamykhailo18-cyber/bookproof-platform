@@ -50,14 +50,11 @@ export function SubscriptionPage() {
       try {
         setIsLoading(true);
         const data = await stripeApi.subscriptions.getMySubscription();
-        setSubscription(data);
+        // Set to null if no active subscription
+        setSubscription(data.subscription ? data : null);
       } catch (error: any) {
-        // Return null for 404 (no subscription)
-        if (error.response?.status === 404) {
-          setSubscription(null);
-        } else {
-          console.error('Subscription error:', error);
-        }
+        console.error('Subscription error:', error);
+        setSubscription(null);
       } finally {
         setIsLoading(false);
       }
@@ -69,13 +66,11 @@ export function SubscriptionPage() {
   const refetchSubscription = async () => {
     try {
       const data = await stripeApi.subscriptions.getMySubscription();
-      setSubscription(data);
+      // Set to null if no active subscription
+      setSubscription(data.subscription ? data : null);
     } catch (error: any) {
-      if (error.response?.status === 404) {
-        setSubscription(null);
-      } else {
-        console.error('Subscription refetch error:', error);
-      }
+      console.error('Subscription refetch error:', error);
+      setSubscription(null);
     }
   };
 

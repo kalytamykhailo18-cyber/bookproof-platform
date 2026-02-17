@@ -377,8 +377,18 @@ export class StripeSubscriptionsService {
       orderBy: { createdAt: 'desc' },
     });
 
+    // Return null response if no active subscription (not an error)
     if (!subscription) {
-      throw new NotFoundException('No active subscription found');
+      return {
+        subscription: null,
+        status: null,
+        billingHistory: [],
+        availableActions: {
+          canCancel: false,
+          canUpdatePaymentMethod: false,
+          canResume: false,
+        },
+      } as any;
     }
 
     const details = await this.getSubscriptionDetails(subscription.id);

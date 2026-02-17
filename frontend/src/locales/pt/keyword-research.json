@@ -37,6 +37,7 @@
   "new": {
     "title": "Solicitar Pesquisa de Palavras-Chave",
     "subtitle": "Obtenha recomendações de palavras-chave alimentadas por IA para seu livro",
+    "optional": "Opcional",
     "draft": {
       "restored": "Rascunho restaurado da sua sessão anterior",
       "lastSaved": "Último salvamento",
@@ -58,6 +59,11 @@
         "label": "Título do Livro",
         "placeholder": "O Guia Completo para Autopublicação",
         "description": "O título completo do seu livro"
+      },
+      "bookSubtitle": {
+        "label": "Subtítulo do Livro",
+        "placeholder": "Um Guia Passo a Passo para Autores",
+        "description": "Subtítulo opcional para seu livro"
       },
       "genre": {
         "label": "Gênero",
@@ -83,6 +89,11 @@
         "label": "Livros Concorrentes (Opcional)",
         "placeholder": "Marketing de Livros Simplificado, APE: Autor Editor Empreendedor",
         "description": "Livros similares ou ASINs para analisar"
+      },
+      "specificKeywords": {
+        "label": "Palavras-Chave Específicas a Incluir",
+        "placeholder": "autopublicação, marketing de livros, Amazon KDP",
+        "description": "Opcional: Palavras-chave específicas que você deseja incluir na pesquisa"
       },
       "bookLanguage": {
         "label": "Idioma do Livro",

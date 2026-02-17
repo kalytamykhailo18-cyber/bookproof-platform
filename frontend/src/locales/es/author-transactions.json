@@ -1,0 +1,41 @@
+{
+  "title": "Historial de Transacciones",
+  "subtitle": "Ver todas sus compras de créditos y uso",
+  "stats": {
+    "totalPurchases": "Total de Compras",
+    "oneTime": "Únicas",
+    "subscriptionPayments": "Pagos de Suscripción",
+    "recurring": "Recurrentes",
+    "creditsUsed": "Créditos Usados",
+    "totalAllocated": "Total Asignado"
+  },
+  "spendingOverview": {
+    "title": "Resumen de Gastos",
+    "description": "Su desglose de gastos en los últimos 12 meses"
+  },
+  "history": {
+    "title": "Historial de Transacciones",
+    "description": "Lista completa de todas las transacciones"
+  },
+  "export": {
+    "csv": "Exportar CSV"
+  },
+  "filter": {
+    "all": "Todas las Transacciones",
+    "purchases": "Compras",
+    "subscriptions": "Suscripciones",
+    "usage": "Uso de Créditos"
+  },
+  "recentPurchases": {
+    "title": "Compras Recientes",
+    "description": "Sus últimas compras de créditos"
+  },
+  "refundRequests": {
+    "title": "Solicitudes de Reembolso",
+    "description": "Ver su historial de solicitudes de reembolso"
+  },
+  "refundDialog": {
+    "title": "Solicitar Reembolso",
+    "description": "Envíe una solicitud de reembolso para esta transacción"
+  }
+}

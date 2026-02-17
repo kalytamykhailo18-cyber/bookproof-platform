@@ -103,7 +103,8 @@ const AdminReportsAffiliatesPage = lazy(() => import('../pages/admin/reports/Aff
 // AUTHOR PAGES
 // ============================================
 const AuthorDashboardPage = lazy(() => import('../pages/author/Author').then(m => ({ default: m.AuthorDashboardPage })));
-const AuthorCampaignsPage = lazy(() => import('../pages/author/Campaigns').then(m => ({ default: m.CampaignDetailPage })));
+const AuthorCampaignsListPage = lazy(() => import('../pages/author/Campaigns').then(m => ({ default: m.CampaignsListPage })));
+const AuthorCampaignDetailPage = lazy(() => import('../pages/author/Campaigns').then(m => ({ default: m.CampaignDetailPage })));
 const AuthorCampaignsNewPage = lazy(() => import('../pages/author/campaigns/New').then(m => ({ default: m.NewCampaignPage })));
 const AuthorCampaignsEditPage = lazy(() => import('../pages/author/campaigns/Edit').then(m => ({ default: m.EditCampaignPage })));
 const AuthorCampaignsAnalyticsPage = lazy(() => import('../pages/author/campaigns/Analytics').then(m => ({ default: m.CampaignAnalyticsPage })));
@@ -118,7 +119,8 @@ const AuthorSupportPage = lazy(() => import('../pages/author/Support').then(m =>
 const AuthorNotificationsPage = lazy(() => import('../pages/author/Notifications').then(m => ({ default: m.NotificationsPage })));
 const AuthorNotificationsSettingsPage = lazy(() => import('../pages/author/notifications/Settings').then(m => ({ default: m.NotificationSettingsPage })));
 const AuthorSubscriptionPage = lazy(() => import('../pages/author/Subscription').then(m => ({ default: m.SubscriptionPage })));
-const AuthorKeywordResearchPage = lazy(() => import('../pages/author/KeywordResearch').then(m => ({ default: m.KeywordResearchDetailsPage })));
+const AuthorKeywordResearchListPage = lazy(() => import('../pages/author/keyword-research/List').then(m => ({ default: m.KeywordResearchListPage })));
+const AuthorKeywordResearchDetailsPage = lazy(() => import('../pages/author/KeywordResearch').then(m => ({ default: m.KeywordResearchDetailsPage })));
 const AuthorKeywordResearchNewPage = lazy(() => import('../pages/author/keyword-research/New').then(m => ({ default: m.NewKeywordResearchPage })));
 const AuthorKeywordResearchEditPage = lazy(() => import('../pages/author/keyword-research/Edit').then(m => ({ default: m.EditKeywordResearchPage })));
 
@@ -268,9 +270,9 @@ export const router = createBrowserRouter([
             ),
             children: [
               { index: true, element: <LazyRoute component={AuthorDashboardPage} /> },
-              { path: 'campaigns', element: <LazyRoute component={AuthorCampaignsPage} /> },
+              { path: 'campaigns', element: <LazyRoute component={AuthorCampaignsListPage} /> },
               { path: 'campaigns/new', element: <LazyRoute component={AuthorCampaignsNewPage} /> },
-              { path: 'campaigns/:id', element: <LazyRoute component={AuthorCampaignsPage} /> },
+              { path: 'campaigns/:id', element: <LazyRoute component={AuthorCampaignDetailPage} /> },
               { path: 'campaigns/:id/edit', element: <LazyRoute component={AuthorCampaignsEditPage} /> },
               { path: 'campaigns/:id/analytics', element: <LazyRoute component={AuthorCampaignsAnalyticsPage} /> },
               { path: 'credits', element: <LazyRoute component={AuthorCreditsPage} /> },
@@ -284,9 +286,9 @@ export const router = createBrowserRouter([
               { path: 'notifications', element: <LazyRoute component={AuthorNotificationsPage} /> },
               { path: 'notifications/settings', element: <LazyRoute component={AuthorNotificationsSettingsPage} /> },
               { path: 'subscription', element: <LazyRoute component={AuthorSubscriptionPage} /> },
-              { path: 'keyword-research', element: <LazyRoute component={AuthorKeywordResearchPage} /> },
+              { path: 'keyword-research', element: <LazyRoute component={AuthorKeywordResearchListPage} /> },
               { path: 'keyword-research/new', element: <LazyRoute component={AuthorKeywordResearchNewPage} /> },
-              { path: 'keyword-research/:id', element: <LazyRoute component={AuthorKeywordResearchPage} /> },
+              { path: 'keyword-research/:id', element: <LazyRoute component={AuthorKeywordResearchDetailsPage} /> },
               { path: 'keyword-research/:id/edit', element: <LazyRoute component={AuthorKeywordResearchEditPage} /> },
             ],
           },

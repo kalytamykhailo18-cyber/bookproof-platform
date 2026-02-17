@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { dashboardsApi, CampaignTrackingDto } from '@/lib/api/dashboards';
+import { dashboardsApi, AuthorCampaignTrackingDto } from '@/lib/api/dashboards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -35,7 +35,7 @@ export function CampaignAnalyticsPage() {
   const { t, i18n } = useTranslation('campaignAnalytics');
 
   // Campaign tracking state
-  const [tracking, setTracking] = useState<CampaignTrackingDto | null>(null);
+  const [tracking, setTracking] = useState<AuthorCampaignTrackingDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch campaign tracking

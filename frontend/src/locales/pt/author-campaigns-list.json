@@ -1,0 +1,12 @@
+{
+  "title": "Minhas Campanhas",
+  "subtitle": "Gerencie suas campanhas de avaliações de livros",
+  "newCampaign": "Nova Campanha",
+  "search": "Pesquisar campanhas...",
+  "filterByStatus": "Filtrar por status",
+  "allStatuses": "Todos os Status",
+  "noCampaigns": "Nenhuma campanha encontrada",
+  "tryAdjusting": "Tente ajustar seus filtros",
+  "createFirst": "Crie sua primeira campanha para começar",
+  "createCampaign": "Criar Campanha"
+}

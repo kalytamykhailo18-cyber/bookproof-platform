@@ -78,7 +78,7 @@ const getRefundStatusBadge = (status: RefundRequestStatus) => {
 };
 
 export function TransactionsPage() {
-  const { t, i18n } = useTranslation('author.transactions');
+  const { t, i18n } = useTranslation('authorTransactions');
 
   // Transaction history state
   const [history, setHistory] = useState<any>(null);

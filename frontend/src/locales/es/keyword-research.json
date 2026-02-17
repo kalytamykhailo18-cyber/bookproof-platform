@@ -37,6 +37,7 @@
   "new": {
     "title": "Ordenar Investigación de Palabras Clave",
     "subtitle": "Obtén recomendaciones de palabras clave impulsadas por IA para tu libro",
+    "optional": "Opcional",
     "draft": {
       "restored": "Borrador restaurado de tu sesión anterior",
       "lastSaved": "Último guardado",
@@ -58,6 +59,11 @@
         "label": "Título del Libro",
         "placeholder": "La Guía Completa para Autopublicar",
         "description": "El título completo de tu libro"
+      },
+      "bookSubtitle": {
+        "label": "Subtítulo del Libro",
+        "placeholder": "Una Guía Paso a Paso para Autores",
+        "description": "Subtítulo opcional para tu libro"
       },
       "genre": {
         "label": "Género",
@@ -83,6 +89,11 @@
         "label": "Libros Competidores (Opcional)",
         "placeholder": "Marketing de Libros Simplificado, APE: Autor Editor Emprendedor",
         "description": "Libros similares o ASINs para analizar"
+      },
+      "specificKeywords": {
+        "label": "Palabras Clave Específicas a Incluir",
+        "placeholder": "autopublicación, marketing de libros, Amazon KDP",
+        "description": "Opcional: Palabras clave específicas que deseas incluir en la investigación"
       },
       "bookLanguage": {
         "label": "Idioma del Libro",

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -31,7 +31,11 @@ import {
   Copy,
   ExternalLink,
   Globe,
-  Eye } from 'lucide-react';
+  Eye,
+  Plus,
+  Search,
+  Filter,
+  BookOpen } from 'lucide-react';
 import { CampaignStatus, BookFormat } from '@/lib/api/campaigns';
 import {
   Dialog,
@@ -40,7 +44,215 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue } from '@/components/ui/select';
 
+// ============================================
+// CAMPAIGNS LIST PAGE
+// ============================================
+export function CampaignsListPage() {
+  const navigate = useNavigate();
+  const { t } = useTranslation('authorCampaignsList');
+
+  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+
+  // Fetch campaigns
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        setIsLoading(true);
+        const data = await campaignsApi.getCampaigns();
+        setCampaigns(data);
+      } catch (err) {
+        console.error('Campaigns error:', err);
+        toast.error('Failed to load campaigns');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchCampaigns();
+  }, []);
+
+  // Filter campaigns
+  const filteredCampaigns = useMemo(() => {
+    return campaigns.filter((campaign) => {
+      const matchesSearch = !searchQuery ||
+        campaign.title?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || campaign.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [campaigns, searchQuery, statusFilter]);
+
+  const getStatusColor = (status: CampaignStatus) => {
+    switch (status) {
+      case CampaignStatus.DRAFT:
+        return 'bg-gray-500';
+      case CampaignStatus.ACTIVE:
+        return 'bg-green-500';
+      case CampaignStatus.PAUSED:
+        return 'bg-yellow-500';
+      case CampaignStatus.COMPLETED:
+        return 'bg-blue-500';
+      case CampaignStatus.CANCELLED:
+        return 'bg-red-500';
+      default:
+        return 'bg-gray-500';
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">My Campaigns</h1>
+          <p className="text-muted-foreground mt-1">Manage your book review campaigns</p>
+        </div>
+        <Button onClick={() => navigate('/author/campaigns/new')}>
+          <Plus className="mr-2 h-4 w-4" />
+          New Campaign
+        </Button>
+      </div>
+
+      {/* Filters */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search campaigns..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value={CampaignStatus.DRAFT}>Draft</SelectItem>
+                <SelectItem value={CampaignStatus.ACTIVE}>Active</SelectItem>
+                <SelectItem value={CampaignStatus.PAUSED}>Paused</SelectItem>
+                <SelectItem value={CampaignStatus.COMPLETED}>Completed</SelectItem>
+                <SelectItem value={CampaignStatus.CANCELLED}>Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Campaigns Grid */}
+      {filteredCampaigns.length > 0 ? (
+        <div className="grid gap-4">
+          {filteredCampaigns.map((campaign) => (
+            <Card
+              key={campaign.id}
+              className="cursor-pointer transition-shadow hover:shadow-md"
+              onClick={() => navigate(`/author/campaigns/${campaign.id}`)}
+            >
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="text-xl">{campaign.title}</CardTitle>
+                    <CardDescription className="mt-1">
+                      {campaign.authorName} • {campaign.language}
+                    </CardDescription>
+                  </div>
+                  <Badge className={getStatusColor(campaign.status)}>
+                    {campaign.status}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Progress Bar */}
+                  <div>
+                    <div className="flex items-center justify-between text-sm mb-2">
+                      <span className="text-muted-foreground">Progress</span>
+                      <span className="font-medium">
+                        {campaign.totalReviewsDelivered} / {campaign.targetReviews} reviews
+                      </span>
+                    </div>
+                    <Progress
+                      value={(campaign.totalReviewsDelivered / campaign.targetReviews) * 100}
+                      className="h-2"
+                    />
+                  </div>
+
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
+                    <div>
+                      <p className="text-muted-foreground">Target</p>
+                      <p className="font-semibold">{campaign.targetReviews}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Delivered</p>
+                      <p className="font-semibold text-green-600">{campaign.totalReviewsDelivered}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Pending</p>
+                      <p className="font-semibold text-yellow-600">{campaign.totalReviewsPending}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Credits</p>
+                      <p className="font-semibold">{campaign.creditsAllocated}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Format</p>
+                      <p className="font-semibold">{campaign.availableFormats}</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
+            <p className="text-lg font-medium mb-2">No campaigns found</p>
+            <p className="text-sm text-muted-foreground mb-4">
+              {searchQuery || statusFilter !== 'all'
+                ? 'Try adjusting your filters'
+                : 'Create your first campaign to get started'}
+            </p>
+            {!searchQuery && statusFilter === 'all' && (
+              <Button onClick={() => navigate('/author/campaigns/new')}>
+                <Plus className="mr-2 h-4 w-4" />
+                Create Campaign
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+// ============================================
+// CAMPAIGN DETAIL PAGE
+// ============================================
 export function CampaignDetailPage() {
   const navigate = useNavigate();
   const params = useParams();
@@ -290,13 +502,13 @@ export function CampaignDetailPage() {
               type="button"
               onClick={() => {
                 setIsBackLoading(true);
-                navigate(`/author`);
+                navigate(`/author/campaigns`);
               }}
               className="mt-4"
               disabled={isBackLoading}
             >
               {isBackLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {t('backToDashboard')}
+              {t('backToCampaigns')}
             </Button>
           </CardContent>
         </Card>
@@ -319,13 +531,13 @@ export function CampaignDetailPage() {
           variant="ghost"
           onClick={() => {
             setIsBackLoading(true);
-            navigate(`/author`);
+            navigate(`/author/campaigns`);
           }}
           className="mb-4"
           disabled={isBackLoading}
         >
           {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
-          {t('backToDashboard')}
+          {t('backToCampaigns')}
         </Button>
         <div className="flex items-start justify-between">
           <div>
@@ -728,12 +940,12 @@ export function CampaignDetailPage() {
                 {/* Public URLs */}
                 <div className="space-y-3">
                   <h4 className="font-medium">Shareable Links</h4>
-                  {Object.entries(campaign.publicUrls).map(([lang, url]) => (
+                  {Object.entries(campaign.publicUrls).map(([lang, url]: [string, string]) => (
                     <div key={lang} className="flex items-center gap-2">
                       <Badge variant="outline" className="shrink-0">
                         {lang}
                       </Badge>
-                      <Input value={url} readOnly className="font-mono text-sm" />
+                      <Input value={url} readOnly className="font-mono text-sm" onChange={() => {}} />
                       <Button
                         type="button"
                         size="sm"

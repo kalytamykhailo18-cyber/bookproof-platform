@@ -1,0 +1,41 @@
+{
+  "title": "Transaction History",
+  "subtitle": "View all your credit purchases and usage",
+  "stats": {
+    "totalPurchases": "Total Purchases",
+    "oneTime": "One-time",
+    "subscriptionPayments": "Subscription Payments",
+    "recurring": "Recurring",
+    "creditsUsed": "Credits Used",
+    "totalAllocated": "Total Allocated"
+  },
+  "spendingOverview": {
+    "title": "Spending Overview",
+    "description": "Your spending breakdown over the last 12 months"
+  },
+  "history": {
+    "title": "Transaction History",
+    "description": "Complete list of all transactions"
+  },
+  "export": {
+    "csv": "Export CSV"
+  },
+  "filter": {
+    "all": "All Transactions",
+    "purchases": "Purchases",
+    "subscriptions": "Subscriptions",
+    "usage": "Credit Usage"
+  },
+  "recentPurchases": {
+    "title": "Recent Purchases",
+    "description": "Your latest credit purchases"
+  },
+  "refundRequests": {
+    "title": "Refund Requests",
+    "description": "View your refund request history"
+  },
+  "refundDialog": {
+    "title": "Request Refund",
+    "description": "Submit a refund request for this transaction"
+  }
+}

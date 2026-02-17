@@ -64,13 +64,13 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export function NewKeywordResearchPage() {
-  const { t, i18n } = useTranslation('keyword-research.new');
+  const { t, i18n } = useTranslation('keywordResearch');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [pricing, setPricing] = useState<any>(null);
 
   // Check if coming from credit purchase (Section 9.1)
-  const fromCreditPurchase = searchParams.get('fromCreditPurchase') === 'true';
+  const fromCreditPurchase = searchParams.get('new.fromCreditPurchase') === 'true';
 
   // Get dynamic price from settings, fallback to $49.99
   // If from credit purchase, it's already paid so price is 0
@@ -209,7 +209,7 @@ export function NewKeywordResearchPage() {
       specificKeywords: '',
       additionalNotes: '',
       couponCode: '' });
-    toast.success(t('draft.cleared'));
+    toast.success(t('new.draft.cleared'));
   }, [form, t]);
 
   // Auto-fill book details when book is selected
@@ -287,8 +287,8 @@ export function NewKeywordResearchPage() {
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
-        <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
+        <h1 className="text-3xl font-bold">{t('new.title')}</h1>
+        <p className="mt-2 text-muted-foreground">{t('new.subtitle')}</p>
       </div>
 
       {/* Pre-paid from Credit Purchase Indicator (Section 9.1) */}
@@ -311,16 +311,16 @@ export function NewKeywordResearchPage() {
           <Save className="h-4 w-4" />
           <AlertDescription className="flex items-center justify-between">
             <span>
-              {t('draft.restored')}
+              {t('new.draft.restored')}
               {lastSaved && (
                 <span className="ml-2 text-xs text-muted-foreground">
-                  ({t('draft.lastSaved')}: {lastSaved.toLocaleTimeString()})
+                  ({t('new.draft.lastSaved')}: {lastSaved.toLocaleTimeString()})
                 </span>
               )}
             </span>
             <Button type="button" variant="ghost" size="sm" onClick={clearDraft} className="ml-4">
               <Trash2 className="mr-1 h-4 w-4" />
-              {t('draft.clear')}
+              {t('new.draft.clear')}
             </Button>
           </AlertDescription>
         </Alert>
@@ -331,7 +331,7 @@ export function NewKeywordResearchPage() {
           {/* Book Selection */}
           <Card>
             <CardHeader>
-              <CardTitle>{t('steps.bookInfo')}</CardTitle>
+              <CardTitle>{t('new.steps.bookInfo')}</CardTitle>
               <CardDescription>Select the book for keyword research</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -340,11 +340,11 @@ export function NewKeywordResearchPage() {
                 name="bookId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('fields.bookId.label')}</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <FormLabel>{t('new.fields.bookId.label')}</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value || ''}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder={t('fields.bookId.placeholder')} />
+                          <SelectValue placeholder={t('new.fields.bookId.placeholder')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -366,7 +366,7 @@ export function NewKeywordResearchPage() {
                         )}
                       </SelectContent>
                     </Select>
-                    <FormDescription>{t('fields.bookId.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.bookId.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -377,16 +377,16 @@ export function NewKeywordResearchPage() {
                 name="bookTitle"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('fields.bookTitle.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.bookTitle.label')}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={t('fields.bookTitle.placeholder')}
+                        placeholder={t('new.fields.bookTitle.placeholder')}
                         maxLength={200}
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      {t('fields.bookTitle.description')} ({field.value?.length || 0}/200)
+                      {t('new.fields.bookTitle.description')} ({field.value?.length || 0}/200)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -399,12 +399,12 @@ export function NewKeywordResearchPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {t('fields.bookSubtitle.label') || 'Book Subtitle'} ({t('optional') || 'Optional'})
+                      {t('new.fields.bookSubtitle.label') || 'Book Subtitle'} ({t('new.optional') || 'Optional'})
                     </FormLabel>
                     <FormControl>
                       <Input
                         placeholder={
-                          t('fields.bookSubtitle.placeholder') ||
+                          t('new.fields.bookSubtitle.placeholder') ||
                           'e.g., A Step-by-Step Guide for Authors'
                         }
                         maxLength={200}
@@ -412,7 +412,7 @@ export function NewKeywordResearchPage() {
                       />
                     </FormControl>
                     <FormDescription>
-                      {t('fields.bookSubtitle.description') ||
+                      {t('new.fields.bookSubtitle.description') ||
                         'Optional subtitle for your book (max 200 characters)'}{' '}
                       ({field.value?.length || 0}/200)
                     </FormDescription>
@@ -426,7 +426,7 @@ export function NewKeywordResearchPage() {
           {/* Book Details */}
           <Card>
             <CardHeader>
-              <CardTitle>{t('steps.details')}</CardTitle>
+              <CardTitle>{t('new.steps.details')}</CardTitle>
               <CardDescription>Provide detailed information about your book</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -436,11 +436,11 @@ export function NewKeywordResearchPage() {
                   name="genre"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('fields.genre.label')}</FormLabel>
+                      <FormLabel>{t('new.fields.genre.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t('fields.genre.placeholder')} {...field} />
+                        <Input placeholder={t('new.fields.genre.placeholder')} {...field} />
                       </FormControl>
-                      <FormDescription>{t('fields.genre.description')}</FormDescription>
+                      <FormDescription>{t('new.fields.genre.description')}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -451,8 +451,8 @@ export function NewKeywordResearchPage() {
                   name="bookLanguage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('fields.bookLanguage.label')}</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <FormLabel>{t('new.fields.bookLanguage.label')}</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value || ''}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue />
@@ -464,7 +464,7 @@ export function NewKeywordResearchPage() {
                           <SelectItem value={Language.PT}>Portuguese</SelectItem>
                         </SelectContent>
                       </Select>
-                      <FormDescription>{t('fields.bookLanguage.description')}</FormDescription>
+                      <FormDescription>{t('new.fields.bookLanguage.description')}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -476,8 +476,8 @@ export function NewKeywordResearchPage() {
                 name="targetMarket"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('fields.targetMarket.label')}</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <FormLabel>{t('new.fields.targetMarket.label')}</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value || ''}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue />
@@ -492,7 +492,7 @@ export function NewKeywordResearchPage() {
                         </SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormDescription>{t('fields.targetMarket.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.targetMarket.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -503,11 +503,11 @@ export function NewKeywordResearchPage() {
                 name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('fields.category.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.category.label')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t('fields.category.placeholder')} {...field} />
+                      <Input placeholder={t('new.fields.category.placeholder')} {...field} />
                     </FormControl>
-                    <FormDescription>{t('fields.category.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.category.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -518,17 +518,17 @@ export function NewKeywordResearchPage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('fields.description.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.description.label')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={t('fields.description.placeholder')}
+                        placeholder={t('new.fields.description.placeholder')}
                         rows={4}
                         maxLength={500}
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      {t('fields.description.description')} ({field.value?.length || 0}/500, min 100)
+                      {t('new.fields.description.description')} ({field.value?.length || 0}/500, min 100)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -540,17 +540,17 @@ export function NewKeywordResearchPage() {
                 name="targetAudience"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('fields.targetAudience.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.targetAudience.label')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={t('fields.targetAudience.placeholder')}
+                        placeholder={t('new.fields.targetAudience.placeholder')}
                         rows={2}
                         maxLength={200}
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      {t('fields.targetAudience.description')} ({field.value?.length || 0}/200, min 50)
+                      {t('new.fields.targetAudience.description')} ({field.value?.length || 0}/200, min 50)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -562,15 +562,15 @@ export function NewKeywordResearchPage() {
                 name="competingBooks"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('fields.competingBooks.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.competingBooks.label')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={t('fields.competingBooks.placeholder')}
+                        placeholder={t('new.fields.competingBooks.placeholder')}
                         rows={3}
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>{t('fields.competingBooks.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.competingBooks.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -582,12 +582,12 @@ export function NewKeywordResearchPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {t('fields.specificKeywords.label') || 'Specific Keywords to Include'}
+                      {t('new.fields.specificKeywords.label') || 'Specific Keywords to Include'}
                     </FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder={
-                          t('fields.specificKeywords.placeholder') ||
+                          t('new.fields.specificKeywords.placeholder') ||
                           'e.g., self-publishing, book marketing, Amazon KDP'
                         }
                         rows={2}
@@ -595,7 +595,7 @@ export function NewKeywordResearchPage() {
                       />
                     </FormControl>
                     <FormDescription>
-                      {t('fields.specificKeywords.description') ||
+                      {t('new.fields.specificKeywords.description') ||
                         'Optional: Specific keywords you want to include in the research'}
                     </FormDescription>
                     <FormMessage />
@@ -608,15 +608,15 @@ export function NewKeywordResearchPage() {
                 name="additionalNotes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('fields.additionalNotes.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.additionalNotes.label')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={t('fields.additionalNotes.placeholder')}
+                        placeholder={t('new.fields.additionalNotes.placeholder')}
                         rows={3}
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>{t('fields.additionalNotes.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.additionalNotes.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -628,7 +628,7 @@ export function NewKeywordResearchPage() {
           <Card>
             <CardHeader>
               <CardTitle>
-                {fromCreditPurchase ? 'Review & Submit' : t('review.title')}
+                {fromCreditPurchase ? 'Review & Submit' : t('new.review.title')}
               </CardTitle>
               <CardDescription>
                 {fromCreditPurchase
@@ -644,10 +644,10 @@ export function NewKeywordResearchPage() {
                   name="couponCode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('fields.couponCode.label')}</FormLabel>
+                      <FormLabel>{t('new.fields.couponCode.label')}</FormLabel>
                       <div className="flex gap-2">
                         <FormControl>
-                          <Input placeholder={t('fields.couponCode.placeholder')} {...field} />
+                          <Input placeholder={t('new.fields.couponCode.placeholder')} {...field} />
                         </FormControl>
                         <Button
                           type="button"
@@ -658,7 +658,7 @@ export function NewKeywordResearchPage() {
                           {isValidating ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                           ) : (
-                            t('fields.couponCode.apply')
+                            t('new.fields.couponCode.apply')
                           )}
                         </Button>
                       </div>
@@ -668,20 +668,20 @@ export function NewKeywordResearchPage() {
                             <>
                               <CheckCircle className="h-4 w-4 text-green-500" />
                               <span className="text-sm text-green-600">
-                                {t('fields.couponCode.applied')}
+                                {t('new.fields.couponCode.applied')}
                               </span>
                             </>
                           ) : (
                             <>
                               <AlertCircle className="h-4 w-4 text-red-500" />
                               <span className="text-sm text-red-600">
-                                {t('fields.couponCode.invalid')}
+                                {t('new.fields.couponCode.invalid')}
                               </span>
                             </>
                           )}
                         </div>
                       )}
-                      <FormDescription>{t('fields.couponCode.description')}</FormDescription>
+                      <FormDescription>{t('new.fields.couponCode.description')}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -702,17 +702,17 @@ export function NewKeywordResearchPage() {
                   // Standard pricing
                   <>
                     <div className="flex justify-between text-sm">
-                      <span>{t('review.subtotal')}</span>
+                      <span>{t('new.review.subtotal')}</span>
                       <span>${basePrice.toFixed(2)}</span>
                     </div>
                     {discount > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
-                        <span>{t('review.discount')}</span>
+                        <span>{t('new.review.discount')}</span>
                         <span>-${discount.toFixed(2)}</span>
                       </div>
                     )}
                     <div className="flex justify-between border-t pt-2 text-lg font-bold">
-                      <span>{t('review.total')}</span>
+                      <span>{t('new.review.total')}</span>
                       <span>${finalPrice.toFixed(2)}</span>
                     </div>
                   </>
@@ -730,12 +730,12 @@ export function NewKeywordResearchPage() {
                 {isCreating ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t('submitting')}
+                    {t('new.submitting')}
                   </>
                 ) : fromCreditPurchase ? (
                   'Generate Keyword Report'
                 ) : (
-                  t('submit')
+                  t('new.submit')
                 )}
               </Button>
             </CardContent>

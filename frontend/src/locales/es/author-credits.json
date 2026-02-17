@@ -1,0 +1,51 @@
+{
+  "title": "Comprar Créditos",
+  "subtitle": "Compra créditos para ejecutar campañas de reseñas para tus libros",
+  "currentBalance": {
+    "title": "Saldo Actual",
+    "description": "Tus créditos disponibles y uso",
+    "available": "Créditos Disponibles",
+    "used": "Créditos Usados",
+    "expiring": "Próximos a Expirar"
+  },
+  "packages": {
+    "title": "Paquetes de Créditos",
+    "description": "Elige un paquete que se ajuste a tus necesidades",
+    "credits": "créditos",
+    "validityDays": "Válido por {{days}} días",
+    "mostPopular": "Más Popular",
+    "select": "Seleccionar Paquete",
+    "selected": "Seleccionado",
+    "noPackages": "No hay paquetes disponibles en este momento"
+  },
+  "coupon": {
+    "title": "¿Tienes un Cupón?",
+    "description": "Ingresa tu código de cupón para obtener un descuento",
+    "label": "Código de Cupón",
+    "placeholder": "Ingresa el código de cupón"
+  },
+  "keywordResearch": {
+    "title": "Servicio de Investigación de Palabras Clave",
+    "description": "Obtén investigación profesional de palabras clave para optimizar la visibilidad de tu libro",
+    "addLabel": "Incluir Servicio de Investigación de Palabras Clave",
+    "benefits": "Análisis profesional de palabras clave para mejor visibilidad del libro en Amazon",
+    "oneTime": "Tarifa única"
+  },
+  "orderSummary": {
+    "title": "Resumen del Pedido",
+    "coupon": "Cupón",
+    "appliedAtCheckout": "Aplicado al finalizar compra",
+    "total": "Total"
+  },
+  "checkout": {
+    "processing": "Procesando...",
+    "button": "Proceder al Pago"
+  },
+  "info": {
+    "title": "Cómo Funcionan los Créditos",
+    "ebook": "1 crédito = 1 reseña de ebook",
+    "audiobook": "2 créditos = 1 reseña de audiolibro",
+    "validity": "Los créditos expiran según el período de validez del paquete",
+    "secure": "Procesamiento de pago seguro vía Stripe"
+  }
+}

@@ -124,7 +124,7 @@ const STEPS = ['bookInfo', 'files', 'landingPage', 'credits', 'review'] as const
 type Step = (typeof STEPS)[number];
 
 export function NewCampaignPage() {
-  const { t, i18n } = useTranslation('author.campaigns.new');
+  const { t, i18n } = useTranslation('authorCampaignsNew');
   const navigate = useNavigate();
   const { startLoading, stopLoading } = useLoading();
   const [isCreating, setIsCreating] = useState(false);
@@ -194,6 +194,16 @@ export function NewCampaignPage() {
   const ebookCredits = watch('ebookCredits') || 0;
   const audiobookCredits = watch('audiobookCredits') || 0;
 
+  // Watch bookInfo fields for validation
+  const title = watch('title');
+  const authorName = watch('authorName');
+  const asin = watch('asin');
+  const amazonLink = watch('amazonLink');
+  const synopsis = watch('synopsis');
+  const language = watch('language');
+  const genre = watch('genre');
+  const category = watch('category');
+
   // Calculate estimated duration
   const estimatedWeeks = useMemo(() => {
     const target = creditsToAllocate;
@@ -211,6 +221,74 @@ export function NewCampaignPage() {
   const currentStepIndex = STEPS.indexOf(currentStep);
   const canGoNext = currentStepIndex < STEPS.length - 1;
   const canGoBack = currentStepIndex > 0;
+
+  // Check if current step has all required fields filled
+  const isCurrentStepValid = useMemo(() => {
+    if (currentStep === 'bookInfo') {
+      return !!(
+        title?.trim() &&
+        authorName?.trim() &&
+        asin?.trim() &&
+        amazonLink?.trim() &&
+        synopsis?.trim() &&
+        language &&
+        genre?.trim() &&
+        category?.trim()
+      );
+    } else if (currentStep === 'files') {
+      // Cover image is always required
+      if (!coverFile) return false;
+
+      // Check format-specific file requirements
+      if (selectedFormat === BookFormat.EBOOK) {
+        return !!ebookFile;
+      } else if (selectedFormat === BookFormat.AUDIOBOOK) {
+        return !!audiobookFile;
+      } else if (selectedFormat === BookFormat.BOTH) {
+        return !!(ebookFile && audiobookFile);
+      }
+      return false;
+    } else if (currentStep === 'landingPage') {
+      // Landing page step is optional, always valid
+      return true;
+    } else if (currentStep === 'credits') {
+      // Check minimum credits
+      if (creditsToAllocate < 10) return false;
+      if (creditsToAllocate > availableCredits) return false;
+
+      // For BOTH format, check split allocation
+      if (selectedFormat === BookFormat.BOTH) {
+        return ebookCredits + audiobookCredits === creditsToAllocate;
+      }
+      return true;
+    } else if (currentStep === 'review') {
+      // Review step requires all confirmations
+      return confirmInfo && confirmCredits && confirmTerms;
+    }
+
+    return true;
+  }, [
+    currentStep,
+    title,
+    authorName,
+    asin,
+    amazonLink,
+    synopsis,
+    language,
+    genre,
+    category,
+    coverFile,
+    ebookFile,
+    audiobookFile,
+    selectedFormat,
+    creditsToAllocate,
+    availableCredits,
+    ebookCredits,
+    audiobookCredits,
+    confirmInfo,
+    confirmCredits,
+    confirmTerms,
+  ]);
 
   const handleNext = async () => {
     // Validate current step before proceeding
@@ -301,9 +379,10 @@ export function NewCampaignPage() {
 
     const data = getValues();
 
-    // Create campaign with credits allocation and landing page data
     try {
       setIsCreating(true);
+
+      // Step 1: Create campaign in DRAFT status (text data only)
       startLoading('Creating campaign...');
       const newCampaign = await campaignsApi.createCampaign({
         title: data.title,
@@ -313,17 +392,17 @@ export function NewCampaignPage() {
         synopsis: data.synopsis,
         language: data.language,
         genre: data.genre,
-        secondaryGenre: data.secondaryGenre || undefined, // Optional per Section 2.3
+        secondaryGenre: data.secondaryGenre || undefined,
         category: data.category,
         availableFormats: data.availableFormats,
-        targetReviews: data.creditsToAllocate,
+        targetReviews: creditsToAllocate,
         amazonCouponCode: data.amazonCouponCode,
         pageCount: data.pageCount,
         wordCount: data.wordCount,
         seriesName: data.seriesName,
         seriesNumber: data.seriesNumber,
         readingInstructions: data.readingInstructions || undefined,
-        // Landing page fields - Milestone 2.2
+        // Landing page fields
         landingPageEnabled: data.landingPageEnabled,
         landingPageLanguages: data.landingPageLanguages,
         slug: data.slug || undefined,
@@ -332,15 +411,55 @@ export function NewCampaignPage() {
         titleES: data.titleES || undefined,
         synopsisEN: data.synopsisEN || undefined,
         synopsisPT: data.synopsisPT || undefined,
-        synopsisES: data.synopsisES || undefined
+        synopsisES: data.synopsisES || undefined,
       });
+
+      const campaignId = newCampaign.id;
+
+      // Step 2: Upload cover image (required)
+      if (coverFile) {
+        startLoading('Uploading cover image...');
+        await campaignsApi.uploadCover(campaignId, coverFile, (progress) => {
+          startLoading(`Uploading cover image... ${progress}%`);
+        });
+      }
+
+      // Step 3: Upload ebook file (if format is EBOOK or BOTH)
+      if (
+        ebookFile &&
+        (selectedFormat === BookFormat.EBOOK || selectedFormat === BookFormat.BOTH)
+      ) {
+        startLoading('Uploading ebook file...');
+        await campaignsApi.uploadEbook(campaignId, ebookFile, (progress) => {
+          startLoading(`Uploading ebook... ${progress}%`);
+        });
+      }
+
+      // Step 4: Upload audiobook file (if format is AUDIOBOOK or BOTH)
+      if (
+        audiobookFile &&
+        (selectedFormat === BookFormat.AUDIOBOOK || selectedFormat === BookFormat.BOTH)
+      ) {
+        startLoading('Uploading audiobook file...');
+        await campaignsApi.uploadAudiobook(campaignId, audiobookFile, (progress) => {
+          startLoading(`Uploading audiobook... ${progress}%`);
+        });
+      }
+
+      // Step 5: Activate campaign with credits
+      startLoading('Activating campaign...');
+      await campaignsApi.activateCampaign(campaignId, {
+        creditsToAllocate: creditsToAllocate,
+      });
+
       stopLoading();
-      toast.success('Campaign created successfully!');
-      navigate(`/author/campaigns/${newCampaign.id}`);
+      toast.success('Campaign created and activated successfully!');
+      navigate(`/author/campaigns/${campaignId}`);
     } catch (error: any) {
       stopLoading();
       const message = error.response?.data?.message || 'Failed to create campaign';
       toast.error(message);
+      console.error('Campaign creation error:', error);
     } finally {
       setIsCreating(false);
     }
@@ -605,21 +724,30 @@ export function NewCampaignPage() {
 
                 {/* Cover Image Upload */}
                 <div className="animate-fade-up-fast">
-                  <Label>{t('files.coverImage') || 'Cover Image'}</Label>
+                  <Label>{t('files.coverImage') || 'Cover Image'} *</Label>
                   <div
                     className="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-6 transition-colors hover:border-primary"
                     onClick={() => coverInputRef.current?.click()}
                   >
                     {coverPreview ? (
-                      <div className="relative">
-                        <img
-                          src={coverPreview}
-                          alt="Cover preview"
-                          className="h-48 w-auto rounded-md object-cover"
-                        />
-                        <Badge className="absolute -right-2 -top-2 bg-green-500">
-                          <Check className="h-3 w-3" />
-                        </Badge>
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="relative">
+                          <img
+                            src={coverPreview}
+                            alt="Cover preview"
+                            className="h-48 w-auto rounded-md object-cover"
+                          />
+                          <Badge className="absolute -right-2 -top-2 bg-green-500">
+                            <Check className="h-3 w-3" />
+                          </Badge>
+                        </div>
+                        <div className="text-center">
+                          <p className="font-medium text-green-600">✓ Uploaded Successfully</p>
+                          <p className="text-sm text-muted-foreground">
+                            {coverFile?.name} ({coverFile && formatBytes(coverFile.size)})
+                          </p>
+                          <p className="mt-1 text-xs text-primary">Click to change file</p>
+                        </div>
                       </div>
                     ) : (
                       <>
@@ -638,11 +766,6 @@ export function NewCampaignPage() {
                     className="hidden"
                     onChange={handleCoverChange}
                   />
-                  {coverFile && (
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      {coverFile.name} ({formatBytes(coverFile.size)})
-                    </p>
-                  )}
                 </div>
 
                 {/* Ebook File Upload */}
@@ -654,17 +777,21 @@ export function NewCampaignPage() {
                       onClick={() => ebookInputRef.current?.click()}
                     >
                       {ebookFile ? (
-                        <div className="flex items-center gap-3">
-                          <FileText className="h-10 w-10 text-primary" />
-                          <div>
-                            <p className="font-medium">{ebookFile.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {formatBytes(ebookFile.size)}
-                            </p>
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="flex items-center gap-3">
+                            <FileText className="h-10 w-10 text-primary" />
+                            <div>
+                              <p className="font-medium text-green-600">✓ Uploaded Successfully</p>
+                              <p className="text-sm font-medium">{ebookFile.name}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {formatBytes(ebookFile.size)}
+                              </p>
+                            </div>
+                            <Badge className="bg-green-500">
+                              <Check className="h-3 w-3" />
+                            </Badge>
                           </div>
-                          <Badge className="bg-green-500">
-                            <Check className="h-3 w-3" />
-                          </Badge>
+                          <p className="text-xs text-primary">Click to change file</p>
                         </div>
                       ) : (
                         <>
@@ -701,17 +828,21 @@ export function NewCampaignPage() {
                       onClick={() => audiobookInputRef.current?.click()}
                     >
                       {audiobookFile ? (
-                        <div className="flex items-center gap-3">
-                          <Music className="h-10 w-10 text-primary" />
-                          <div>
-                            <p className="font-medium">{audiobookFile.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {formatBytes(audiobookFile.size)}
-                            </p>
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="flex items-center gap-3">
+                            <Music className="h-10 w-10 text-primary" />
+                            <div>
+                              <p className="font-medium text-green-600">✓ Uploaded Successfully</p>
+                              <p className="text-sm font-medium">{audiobookFile.name}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {formatBytes(audiobookFile.size)}
+                              </p>
+                            </div>
+                            <Badge className="bg-green-500">
+                              <Check className="h-3 w-3" />
+                            </Badge>
                           </div>
-                          <Badge className="bg-green-500">
-                            <Check className="h-3 w-3" />
-                          </Badge>
+                          <p className="text-xs text-primary">Click to change file</p>
                         </div>
                       ) : (
                         <>
@@ -1324,7 +1455,7 @@ export function NewCampaignPage() {
           </Button>
 
           {canGoNext ? (
-            <Button type="button" onClick={handleNext}>
+            <Button type="button" onClick={handleNext} disabled={!isCurrentStepValid || isCreating}>
               {t('next') || 'Next'}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>

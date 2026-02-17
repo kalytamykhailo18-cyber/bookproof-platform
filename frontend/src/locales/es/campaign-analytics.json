@@ -1,5 +1,13 @@
 {
   "title": "Análisis y Seguimiento de Campaña",
+  "notFound": "Campaña no encontrada",
+  "back": "Volver",
+  "finalReportSubtitle": "Informe Final de Campaña",
+  "analyticsSubtitle": "Análisis y Seguimiento de Campaña",
+  "downloadReport": "Descargar Informe",
+  "overallProgress": "Progreso General",
+  "delivered": "entregadas",
+  "target": "objetivo",
   "status": {
     "title": "Estado de la Campaña",
     "active": "En progreso",
@@ -33,18 +41,34 @@
       "noData": "No hay datos de progreso semanal disponibles"
     }
   },
+  "ratingDistribution": {
+    "title": "Distribución de Calificaciones",
+    "description": "Desglose de calificaciones de reseñas"
+  },
+  "distributionHealth": {
+    "title": "Estado de Distribución",
+    "description": "Cómo está progresando su campaña"
+  },
   "health": {
     "title": "Salud de la Distribución",
     "description": "Cómo está progresando su campaña",
     "overallHealth": "Salud General",
     "complete": "Completo",
-    "cumulativeVariance": "Varianza Acumulativa",
+    "cumulativeVarianza": "Varianza Acumulativa",
     "reviews": "reseñas",
     "aheadOfSchedule": "Adelantado",
     "behindSchedule": "Retrasado",
     "avgReviewsPerWeek": "Promedio de Reseñas Por Semana",
     "reviewsPerWeek": "reseñas/semana",
     "basedOnCompletedWeeks": "Basado en semanas completadas"
+  },
+  "amazonRemovals": {
+    "title": "Eliminaciones de Amazon",
+    "description": "Reseñas eliminadas por Amazon"
+  },
+  "delays": {
+    "title": "Retrasos de Campaña",
+    "description": "Problemas que han causado retrasos"
   },
   "assignments": {
     "title": "Asignaciones Activas",
@@ -58,6 +82,5 @@
       "noData": "No hay asignaciones activas"
     }
   },
-  "loading": "Cargando análisis de campaña...",
-  "notFound": "Campaña no encontrada"
+  "loading": "Cargando análisis de campaña..."
 }

@@ -109,13 +109,37 @@ import authorDashboardEN from '../locales/en/author-dashboard.json';
 import authorDashboardES from '../locales/es/author-dashboard.json';
 import authorDashboardPT from '../locales/pt/author-dashboard.json';
 
+import authorCampaignsListEN from '../locales/en/author-campaigns-list.json';
+import authorCampaignsListES from '../locales/es/author-campaigns-list.json';
+import authorCampaignsListPT from '../locales/pt/author-campaigns-list.json';
+
 import authorCampaignsDetailEN from '../locales/en/author-campaigns-detail.json';
 import authorCampaignsDetailES from '../locales/es/author-campaigns-detail.json';
 import authorCampaignsDetailPT from '../locales/pt/author-campaigns-detail.json';
 
+import campaignAnalyticsEN from '../locales/en/campaign-analytics.json';
+import campaignAnalyticsES from '../locales/es/campaign-analytics.json';
+import campaignAnalyticsPT from '../locales/pt/campaign-analytics.json';
+
+import authorCreditsEN from '../locales/en/author-credits.json';
+import authorCreditsES from '../locales/es/author-credits.json';
+import authorCreditsPT from '../locales/pt/author-credits.json';
+
+import authorCampaignsNewEN from '../locales/en/author-campaigns-new.json';
+import authorCampaignsNewES from '../locales/es/author-campaigns-new.json';
+import authorCampaignsNewPT from '../locales/pt/author-campaigns-new.json';
+
+import authorTransactionsEN from '../locales/en/author-transactions.json';
+import authorTransactionsES from '../locales/es/author-transactions.json';
+import authorTransactionsPT from '../locales/pt/author-transactions.json';
+
 import keywordResearchEN from '../locales/en/keyword-research.json';
 import keywordResearchES from '../locales/es/keyword-research.json';
 import keywordResearchPT from '../locales/pt/keyword-research.json';
+
+import reportsEN from '../locales/en/reports.json';
+import reportsES from '../locales/es/reports.json';
+import reportsPT from '../locales/pt/reports.json';
 
 import adminEN from '../locales/en/admin.json';
 import adminES from '../locales/es/admin.json';
@@ -159,8 +183,14 @@ const resources = {
     adminIssues: adminIssuesEN,
     adminReaderBehavior: adminReaderBehaviorEN,
     authorDashboard: authorDashboardEN,
+    authorCampaignsList: authorCampaignsListEN,
     authorCampaignsDetail: authorCampaignsDetailEN,
+    campaignAnalytics: campaignAnalyticsEN,
+    authorCredits: authorCreditsEN,
+    authorCampaignsNew: authorCampaignsNewEN,
+    authorTransactions: authorTransactionsEN,
     keywordResearch: keywordResearchEN,
+    reports: reportsEN,
     ...flattenLanding(landingEN),
   },
   es: {
@@ -190,8 +220,14 @@ const resources = {
     adminIssues: adminIssuesES,
     adminReaderBehavior: adminReaderBehaviorES,
     authorDashboard: authorDashboardES,
+    authorCampaignsList: authorCampaignsListES,
     authorCampaignsDetail: authorCampaignsDetailES,
+    campaignAnalytics: campaignAnalyticsES,
+    authorCredits: authorCreditsES,
+    authorCampaignsNew: authorCampaignsNewES,
+    authorTransactions: authorTransactionsES,
     keywordResearch: keywordResearchES,
+    reports: reportsES,
     ...flattenLanding(landingES),
   },
   pt: {
@@ -221,8 +257,14 @@ const resources = {
     adminIssues: adminIssuesPT,
     adminReaderBehavior: adminReaderBehaviorPT,
     authorDashboard: authorDashboardPT,
+    authorCampaignsList: authorCampaignsListPT,
     authorCampaignsDetail: authorCampaignsDetailPT,
+    campaignAnalytics: campaignAnalyticsPT,
+    authorCredits: authorCreditsPT,
+    authorCampaignsNew: authorCampaignsNewPT,
+    authorTransactions: authorTransactionsPT,
     keywordResearch: keywordResearchPT,
+    reports: reportsPT,
     ...flattenLanding(landingPT),
   },
 };

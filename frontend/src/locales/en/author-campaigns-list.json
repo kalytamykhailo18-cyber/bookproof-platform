@@ -1,0 +1,12 @@
+{
+  "title": "My Campaigns",
+  "subtitle": "Manage your book review campaigns",
+  "newCampaign": "New Campaign",
+  "search": "Search campaigns...",
+  "filterByStatus": "Filter by status",
+  "allStatuses": "All Statuses",
+  "noCampaigns": "No campaigns found",
+  "tryAdjusting": "Try adjusting your filters",
+  "createFirst": "Create your first campaign to get started",
+  "createCampaign": "Create Campaign"
+}

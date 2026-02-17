@@ -222,9 +222,20 @@ export function ReaderSupportPage() {
                   placeholder="Please describe your issue in detail (minimum 10 characters)"
                   rows={5}
                 />
-                <p className="text-xs text-muted-foreground mt-1">
-                  {disputeDescription.length}/2000 characters
-                </p>
+                <div className="flex items-center justify-between mt-1">
+                  <p className={`text-xs ${
+                    disputeDescription.length < 10
+                      ? 'text-orange-600 dark:text-orange-400 font-medium'
+                      : 'text-green-600 dark:text-green-400'
+                  }`}>
+                    {disputeDescription.length < 10
+                      ? `${10 - disputeDescription.length} more characters needed`
+                      : '✓ Minimum reached'}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {disputeDescription.length}/2000
+                  </p>
+                </div>
               </div>
             </div>
             <DialogFooter>

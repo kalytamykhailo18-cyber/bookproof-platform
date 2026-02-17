@@ -1,0 +1,12 @@
+{
+  "title": "Mis Campañas",
+  "subtitle": "Gestiona tus campañas de reseñas de libros",
+  "newCampaign": "Nueva Campaña",
+  "search": "Buscar campañas...",
+  "filterByStatus": "Filtrar por estado",
+  "allStatuses": "Todos los Estados",
+  "noCampaigns": "No se encontraron campañas",
+  "tryAdjusting": "Intenta ajustar tus filtros",
+  "createFirst": "Crea tu primera campaña para comenzar",
+  "createCampaign": "Crear Campaña"
+}

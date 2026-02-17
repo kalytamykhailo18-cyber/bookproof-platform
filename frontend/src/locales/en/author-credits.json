@@ -1,0 +1,51 @@
+{
+  "title": "Purchase Credits",
+  "subtitle": "Buy credits to run review campaigns for your books",
+  "currentBalance": {
+    "title": "Current Balance",
+    "description": "Your available credits and usage",
+    "available": "Available Credits",
+    "used": "Credits Used",
+    "expiring": "Expiring Soon"
+  },
+  "packages": {
+    "title": "Credit Packages",
+    "description": "Choose a package that fits your needs",
+    "credits": "credits",
+    "validityDays": "Valid for {{days}} days",
+    "mostPopular": "Most Popular",
+    "select": "Select Package",
+    "selected": "Selected",
+    "noPackages": "No packages available at this time"
+  },
+  "coupon": {
+    "title": "Have a Coupon?",
+    "description": "Enter your coupon code for a discount",
+    "label": "Coupon Code",
+    "placeholder": "Enter coupon code"
+  },
+  "keywordResearch": {
+    "title": "Keyword Research Service",
+    "description": "Get professional keyword research to optimize your book's discoverability",
+    "addLabel": "Include Keyword Research Service",
+    "benefits": "Professional keyword analysis for better book visibility on Amazon",
+    "oneTime": "One-time fee"
+  },
+  "orderSummary": {
+    "title": "Order Summary",
+    "coupon": "Coupon",
+    "appliedAtCheckout": "Applied at checkout",
+    "total": "Total"
+  },
+  "checkout": {
+    "processing": "Processing...",
+    "button": "Proceed to Checkout"
+  },
+  "info": {
+    "title": "How Credits Work",
+    "ebook": "1 credit = 1 ebook review",
+    "audiobook": "2 credits = 1 audiobook review",
+    "validity": "Credits expire based on package validity period",
+    "secure": "Secure payment processing via Stripe"
+  }
+}

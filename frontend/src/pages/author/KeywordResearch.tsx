@@ -22,7 +22,7 @@ import { KeywordResearchStatus, TargetMarket } from '@/lib/api/keywords';
 import { toast } from 'sonner';
 
 export function KeywordResearchDetailsPage() {
-  const { t, i18n } = useTranslation('keyword-research.details');
+  const { t, i18n } = useTranslation('keywordResearch');
   const navigate = useNavigate();
   const params = useParams();
   const [searchParams] = useSearchParams();
@@ -226,7 +226,7 @@ export function KeywordResearchDetailsPage() {
       {/* Header */}
       <div className="mb-8 flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
+          <h1 className="text-3xl font-bold">{t('details.title')}</h1>
           <p className="mt-2 text-muted-foreground">{research.bookTitle}</p>
         </div>
         <div className="flex gap-2">
@@ -234,7 +234,7 @@ export function KeywordResearchDetailsPage() {
           {research.status === KeywordResearchStatus.PENDING && (
             <Button type="button" variant="outline" onClick={handleEdit}>
               <Edit className="mr-2 h-4 w-4" />
-              {t('edit')}
+              {t('details.edit')}
             </Button>
           )}
           {/* Pay Now button - for PENDING status with unpaid orders */}
@@ -258,7 +258,7 @@ export function KeywordResearchDetailsPage() {
               ) : (
                 <Download className="mr-2 h-4 w-4" />
               )}
-              {t('downloadPdf')}
+              {t('details.downloadPdf')}
             </Button>
           )}
         </div>
@@ -287,7 +287,7 @@ export function KeywordResearchDetailsPage() {
             </div>
             <div className="flex-1">
               <div className="mb-1 flex items-center gap-2">
-                <h3 className="font-semibold">{t('status')}</h3>
+                <h3 className="font-semibold">{t('details.status')}</h3>
                 <Badge className={getStatusColor(research.status)}>
                   {research.status === KeywordResearchStatus.PENDING && !research.paid
                     ? 'PENDING PAYMENT'
@@ -295,17 +295,17 @@ export function KeywordResearchDetailsPage() {
                 </Badge>
               </div>
               {research.status === KeywordResearchStatus.PROCESSING && (
-                <p className="text-sm text-muted-foreground">{t('processing')}</p>
+                <p className="text-sm text-muted-foreground">{t('details.processing')}</p>
               )}
               {research.status === KeywordResearchStatus.FAILED && (
                 <p className="text-sm text-red-600">
-                  {t('failed')} {research.errorMessage && `- ${research.errorMessage}`}
+                  {t('details.failed')} {research.errorMessage && `- ${research.errorMessage}`}
                 </p>
               )}
               {research.status === KeywordResearchStatus.COMPLETED &&
                 research.downloadCount > 0 && (
                   <p className="text-sm text-muted-foreground">
-                    {t('downloadCount', { count: research.downloadCount })}
+                    {t('details.downloadCount', { count: research.downloadCount })}
                   </p>
                 )}
             </div>
@@ -318,7 +318,7 @@ export function KeywordResearchDetailsPage() {
         <div className="lg:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>{t('bookInfo')}</CardTitle>
+              <CardTitle>{t('details.bookInfo')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -342,11 +342,11 @@ export function KeywordResearchDetailsPage() {
               </div>
               <div className="my-2 border-t" />
               <div>
-                <p className="text-sm text-muted-foreground">{t('targetMarket')}</p>
+                <p className="text-sm text-muted-foreground">{t('details.targetMarket')}</p>
                 <p className="font-medium">
                   {research.targetMarket === TargetMarket.US
-                    ? t('targetMarketUS')
-                    : t('targetMarketBR')}
+                    ? t('details.targetMarketUS')
+                    : t('details.targetMarketBR')}
                 </p>
               </div>
               <div className="my-2 border-t" />
@@ -359,23 +359,23 @@ export function KeywordResearchDetailsPage() {
 
           <Card className="mt-6">
             <CardHeader>
-              <CardTitle>{t('orderInfo')}</CardTitle>
+              <CardTitle>{t('details.orderInfo')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-sm text-muted-foreground">{t('orderId')}</p>
+                <p className="text-sm text-muted-foreground">{t('details.orderId')}</p>
                 <p className="font-mono text-sm">{research.id}</p>
               </div>
               <div className="my-2 border-t" />
               <div>
-                <p className="text-sm text-muted-foreground">{t('createdAt')}</p>
+                <p className="text-sm text-muted-foreground">{t('details.createdAt')}</p>
                 <p className="font-medium">{formatDate(research.createdAt)}</p>
               </div>
               {research.completedAt && (
                 <>
                   <div className="my-2 border-t" />
                   <div>
-                    <p className="text-sm text-muted-foreground">{t('completedAt')}</p>
+                    <p className="text-sm text-muted-foreground">{t('details.completedAt')}</p>
                     <p className="font-medium">{formatDate(research.completedAt)}</p>
                   </div>
                 </>
@@ -392,8 +392,8 @@ export function KeywordResearchDetailsPage() {
               {research.primaryKeywords && research.primaryKeywords.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t('keywords.primary.title')}</CardTitle>
-                    <CardDescription>{t('keywords.primary.description')}</CardDescription>
+                    <CardTitle>{t('details.keywords.primary.title')}</CardTitle>
+                    <CardDescription>{t('details.keywords.primary.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
@@ -411,8 +411,8 @@ export function KeywordResearchDetailsPage() {
               {research.secondaryKeywords && research.secondaryKeywords.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t('keywords.secondary.title')}</CardTitle>
-                    <CardDescription>{t('keywords.secondary.description')}</CardDescription>
+                    <CardTitle>{t('details.keywords.secondary.title')}</CardTitle>
+                    <CardDescription>{t('details.keywords.secondary.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
@@ -430,8 +430,8 @@ export function KeywordResearchDetailsPage() {
               {research.longTailKeywords && research.longTailKeywords.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t('keywords.longTail.title')}</CardTitle>
-                    <CardDescription>{t('keywords.longTail.description')}</CardDescription>
+                    <CardTitle>{t('details.keywords.longTail.title')}</CardTitle>
+                    <CardDescription>{t('details.keywords.longTail.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -452,8 +452,8 @@ export function KeywordResearchDetailsPage() {
               {research.usageGuidelines && research.usageGuidelines.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t('usage.title')}</CardTitle>
-                    <CardDescription>{t('usage.howToUse')}</CardDescription>
+                    <CardTitle>{t('details.usage.title')}</CardTitle>
+                    <CardDescription>{t('details.usage.howToUse')}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {research.usageGuidelines.map((guideline, index) => (
@@ -482,8 +482,8 @@ export function KeywordResearchDetailsPage() {
               {research.kdpSuggestions && research.kdpSuggestions.backendKeywords && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>{t('kdp.title')}</CardTitle>
-                    <CardDescription>{t('kdp.description')}</CardDescription>
+                    <CardTitle>{t('details.kdp.title')}</CardTitle>
+                    <CardDescription>{t('details.kdp.description')}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     {research.kdpSuggestions.backendKeywords.map((keyword, index) => (
@@ -492,7 +492,7 @@ export function KeywordResearchDetailsPage() {
                         className="rounded-md border-2 border-dashed p-3 font-mono text-sm"
                       >
                         <span className="mr-2 text-muted-foreground">
-                          {t('kdp.box', { number: index + 1 })}:
+                          {t('details.kdp.box', { number: index + 1 })}:
                         </span>
                         {keyword}
                       </div>

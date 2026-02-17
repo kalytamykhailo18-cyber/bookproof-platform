@@ -1,6 +1,6 @@
 {
   "notFound": "Campaign not found",
-  "backToDashboard": "Back to Dashboard",
+  "backToCampaigns": "Back to Campaigns",
   "progress": {
     "title": "Campaign Progress",
     "viewAnalytics": "View Analytics",
