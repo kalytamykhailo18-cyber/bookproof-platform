@@ -1,0 +1,40 @@
+{
+  "title": "Panel de Control",
+  "subtitle": "¡Bienvenido de nuevo! Aquí hay una visión general de tus campañas y créditos.",
+  "buttons": {
+    "buyCredits": "Comprar Créditos",
+    "newCampaign": "Nueva Campaña",
+    "noCreditsTooltip": "Compra créditos para crear campañas"
+  },
+  "creditBalance": {
+    "available": "Créditos Disponibles",
+    "used": "Créditos Usados",
+    "expiring": "Expiran Pronto",
+    "totalPurchased": "Total Comprados: {{total}}",
+    "allocated": "Créditos asignados a campañas de por vida",
+    "expiresOn": "Expira el {{date}}",
+    "noExpiration": "Sin créditos por expirar"
+  },
+  "campaignStats": {
+    "active": "Campañas Activas",
+    "activeDescription": "Campañas actualmente en ejecución",
+    "completed": "Campañas Completadas",
+    "completedDescription": "Campañas finalizadas exitosamente"
+  },
+  "activity": {
+    "title": "Actividad Reciente",
+    "description": "Tus últimas actualizaciones y notificaciones",
+    "noActivity": "No hay actividad reciente"
+  },
+  "campaigns": {
+    "title": "Campañas Recientes",
+    "viewAll": "Ver Todas las Campañas",
+    "targetReviews": "Reseñas Objetivo",
+    "delivered": "Entregadas",
+    "pending": "Pendientes",
+    "creditsAllocated": "Créditos Asignados",
+    "format": "Formato",
+    "noCampaigns": "Aún no hay campañas",
+    "createFirst": "Crea tu primera campaña para comenzar a obtener reseñas"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Welcome back! Here's an overview of your campaigns and credits.",
+  "buttons": {
+    "buyCredits": "Buy Credits",
+    "newCampaign": "New Campaign",
+    "noCreditsTooltip": "Purchase credits to create campaigns"
+  },
+  "creditBalance": {
+    "available": "Available Credits",
+    "used": "Credits Used",
+    "expiring": "Expiring Soon",
+    "totalPurchased": "Total Purchased: {{total}}",
+    "allocated": "Lifetime credits allocated to campaigns",
+    "expiresOn": "Expires on {{date}}",
+    "noExpiration": "No expiring credits"
+  },
+  "campaignStats": {
+    "active": "Active Campaigns",
+    "activeDescription": "Currently running campaigns",
+    "completed": "Completed Campaigns",
+    "completedDescription": "Successfully finished campaigns"
+  },
+  "activity": {
+    "title": "Recent Activity",
+    "description": "Your latest updates and notifications",
+    "noActivity": "No recent activity"
+  },
+  "campaigns": {
+    "title": "Recent Campaigns",
+    "viewAll": "View All Campaigns",
+    "targetReviews": "Target Reviews",
+    "delivered": "Delivered",
+    "pending": "Pending",
+    "creditsAllocated": "Credits Allocated",
+    "format": "Format",
+    "noCampaigns": "No campaigns yet",
+    "createFirst": "Create your first campaign to start getting reviews"
+  }
+}

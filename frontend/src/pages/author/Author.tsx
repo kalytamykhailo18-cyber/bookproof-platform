@@ -26,7 +26,7 @@ import { CampaignStatus } from '@/lib/api/campaigns';
 import { AuthorActivityType } from '@/lib/api/dashboards';
 
 export function AuthorDashboardPage() {
-  const { t, i18n } = useTranslation('author.dashboard');
+  const { t, i18n } = useTranslation('authorDashboard');
   const navigate = useNavigate();
   const { pathname } = useLocation();
 

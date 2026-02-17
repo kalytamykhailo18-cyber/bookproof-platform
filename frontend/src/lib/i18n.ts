@@ -104,6 +104,11 @@ import adminReaderBehaviorEN from '../locales/en/admin-reader-behavior.json';
 import adminReaderBehaviorES from '../locales/es/admin-reader-behavior.json';
 import adminReaderBehaviorPT from '../locales/pt/admin-reader-behavior.json';
 
+// Author page translations
+import authorDashboardEN from '../locales/en/author-dashboard.json';
+import authorDashboardES from '../locales/es/author-dashboard.json';
+import authorDashboardPT from '../locales/pt/author-dashboard.json';
+
 import keywordResearchEN from '../locales/en/keyword-research.json';
 import keywordResearchES from '../locales/es/keyword-research.json';
 import keywordResearchPT from '../locales/pt/keyword-research.json';
@@ -149,6 +154,7 @@ const resources = {
     adminDisputes: adminDisputesEN,
     adminIssues: adminIssuesEN,
     adminReaderBehavior: adminReaderBehaviorEN,
+    authorDashboard: authorDashboardEN,
     keywordResearch: keywordResearchEN,
     ...flattenLanding(landingEN),
   },
@@ -178,6 +184,7 @@ const resources = {
     adminDisputes: adminDisputesES,
     adminIssues: adminIssuesES,
     adminReaderBehavior: adminReaderBehaviorES,
+    authorDashboard: authorDashboardES,
     keywordResearch: keywordResearchES,
     ...flattenLanding(landingES),
   },
@@ -207,6 +214,7 @@ const resources = {
     adminDisputes: adminDisputesPT,
     adminIssues: adminIssuesPT,
     adminReaderBehavior: adminReaderBehaviorPT,
+    authorDashboard: authorDashboardPT,
     keywordResearch: keywordResearchPT,
     ...flattenLanding(landingPT),
   },
