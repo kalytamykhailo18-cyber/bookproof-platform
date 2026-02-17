@@ -1,0 +1,73 @@
+{
+  "notFound": "Campanha não encontrada",
+  "backToDashboard": "Voltar ao Painel",
+  "progress": {
+    "title": "Progresso da Campanha",
+    "viewAnalytics": "Ver Análises",
+    "currentWeek": "Semana Atual",
+    "weekProgress": "Semana {{week}} de {{total}}",
+    "delivered": "Entregues",
+    "validated": "Avaliações Validadas",
+    "pending": "Validação Pendente",
+    "rejected": "Avaliações Rejeitadas",
+    "expired": "Expiradas",
+    "perWeek": "Taxa por Semana"
+  },
+  "files": {
+    "title": "Arquivos da Campanha",
+    "description": "Faça upload e gerencie os arquivos do seu livro",
+    "ebook": "Arquivo E-book",
+    "audiobook": "Arquivo Audiolivro",
+    "cover": "Imagem de Capa",
+    "synopsis": "Documento de Sinopse",
+    "uploaded": "Enviado",
+    "notUploaded": "Ainda não enviado",
+    "upload": "Enviar",
+    "replace": "Substituir",
+    "synopsisHint": "Envie um arquivo PDF, DOC ou TXT com a sinopse do seu livro"
+  },
+  "details": {
+    "title": "Detalhes da Campanha",
+    "synopsis": "Sinopse",
+    "genre": "Gênero",
+    "category": "Categoria",
+    "asin": "ASIN",
+    "format": "Formato"
+  },
+  "actions": {
+    "title": "Ações",
+    "activate": "Ativar Campanha",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "pause": "Pausar Campanha",
+    "resume": "Retomar Campanha",
+    "viewAnalytics": "Ver Análises",
+    "downloadReport": "Baixar Relatório",
+    "viewFinalReport": "Ver Relatório Final"
+  },
+  "credits": {
+    "title": "Informações de Crédito",
+    "allocated": "Créditos Alocados",
+    "used": "Créditos Usados",
+    "remaining": "Créditos Restantes",
+    "required": "Créditos Necessários para Ativar",
+    "yourBalance": "Seu Saldo Disponível: {{balance}}"
+  },
+  "activate": {
+    "title": "Ativar Campanha",
+    "description": "Aloque créditos para ativar esta campanha e começar a receber avaliações",
+    "creditsLabel": "Créditos a Alocar",
+    "minimum": "Mínimo de {{min}} créditos necessários",
+    "info": "Depois de ativada, os leitores poderão solicitar vagas para avaliações",
+    "cancel": "Cancelar",
+    "activating": "Ativando...",
+    "confirm": "Ativar"
+  },
+  "delete": {
+    "title": "Excluir Campanha",
+    "description": "Tem certeza de que deseja excluir esta campanha? Esta ação não pode ser desfeita.",
+    "cancel": "Cancelar",
+    "deleting": "Excluindo...",
+    "confirm": "Excluir Campanha"
+  }
+}

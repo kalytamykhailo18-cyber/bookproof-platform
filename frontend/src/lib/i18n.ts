@@ -109,6 +109,10 @@ import authorDashboardEN from '../locales/en/author-dashboard.json';
 import authorDashboardES from '../locales/es/author-dashboard.json';
 import authorDashboardPT from '../locales/pt/author-dashboard.json';
 
+import authorCampaignsDetailEN from '../locales/en/author-campaigns-detail.json';
+import authorCampaignsDetailES from '../locales/es/author-campaigns-detail.json';
+import authorCampaignsDetailPT from '../locales/pt/author-campaigns-detail.json';
+
 import keywordResearchEN from '../locales/en/keyword-research.json';
 import keywordResearchES from '../locales/es/keyword-research.json';
 import keywordResearchPT from '../locales/pt/keyword-research.json';
@@ -155,6 +159,7 @@ const resources = {
     adminIssues: adminIssuesEN,
     adminReaderBehavior: adminReaderBehaviorEN,
     authorDashboard: authorDashboardEN,
+    authorCampaignsDetail: authorCampaignsDetailEN,
     keywordResearch: keywordResearchEN,
     ...flattenLanding(landingEN),
   },
@@ -185,6 +190,7 @@ const resources = {
     adminIssues: adminIssuesES,
     adminReaderBehavior: adminReaderBehaviorES,
     authorDashboard: authorDashboardES,
+    authorCampaignsDetail: authorCampaignsDetailES,
     keywordResearch: keywordResearchES,
     ...flattenLanding(landingES),
   },
@@ -215,6 +221,7 @@ const resources = {
     adminIssues: adminIssuesPT,
     adminReaderBehavior: adminReaderBehaviorPT,
     authorDashboard: authorDashboardPT,
+    authorCampaignsDetail: authorCampaignsDetailPT,
     keywordResearch: keywordResearchPT,
     ...flattenLanding(landingPT),
   },

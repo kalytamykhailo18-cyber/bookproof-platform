@@ -1,0 +1,73 @@
+{
+  "notFound": "Campaign not found",
+  "backToDashboard": "Back to Dashboard",
+  "progress": {
+    "title": "Campaign Progress",
+    "viewAnalytics": "View Analytics",
+    "currentWeek": "Current Week",
+    "weekProgress": "Week {{week}} of {{total}}",
+    "delivered": "Delivered",
+    "validated": "Validated Reviews",
+    "pending": "Pending Validation",
+    "rejected": "Rejected Reviews",
+    "expired": "Expired",
+    "perWeek": "Per Week Rate"
+  },
+  "files": {
+    "title": "Campaign Files",
+    "description": "Upload and manage your book files",
+    "ebook": "E-book File",
+    "audiobook": "Audiobook File",
+    "cover": "Cover Image",
+    "synopsis": "Synopsis Document",
+    "uploaded": "Uploaded",
+    "notUploaded": "Not uploaded yet",
+    "upload": "Upload",
+    "replace": "Replace",
+    "synopsisHint": "Upload a PDF, DOC, or TXT file with your book synopsis"
+  },
+  "details": {
+    "title": "Campaign Details",
+    "synopsis": "Synopsis",
+    "genre": "Genre",
+    "category": "Category",
+    "asin": "ASIN",
+    "format": "Format"
+  },
+  "actions": {
+    "title": "Actions",
+    "activate": "Activate Campaign",
+    "edit": "Edit",
+    "delete": "Delete",
+    "pause": "Pause Campaign",
+    "resume": "Resume Campaign",
+    "viewAnalytics": "View Analytics",
+    "downloadReport": "Download Report",
+    "viewFinalReport": "View Final Report"
+  },
+  "credits": {
+    "title": "Credit Information",
+    "allocated": "Credits Allocated",
+    "used": "Credits Used",
+    "remaining": "Credits Remaining",
+    "required": "Credits Required to Activate",
+    "yourBalance": "Your Available Balance: {{balance}}"
+  },
+  "activate": {
+    "title": "Activate Campaign",
+    "description": "Allocate credits to activate this campaign and start getting reviews",
+    "creditsLabel": "Credits to Allocate",
+    "minimum": "Minimum {{min}} credits required",
+    "info": "Once activated, readers will be able to apply for review slots",
+    "cancel": "Cancel",
+    "activating": "Activating...",
+    "confirm": "Activate"
+  },
+  "delete": {
+    "title": "Delete Campaign",
+    "description": "Are you sure you want to delete this campaign? This action cannot be undone.",
+    "cancel": "Cancel",
+    "deleting": "Deleting...",
+    "confirm": "Delete Campaign"
+  }
+}

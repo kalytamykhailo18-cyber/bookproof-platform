@@ -1,0 +1,73 @@
+{
+  "notFound": "Campaña no encontrada",
+  "backToDashboard": "Volver al Panel",
+  "progress": {
+    "title": "Progreso de la Campaña",
+    "viewAnalytics": "Ver Análisis",
+    "currentWeek": "Semana Actual",
+    "weekProgress": "Semana {{week}} de {{total}}",
+    "delivered": "Entregadas",
+    "validated": "Reseñas Validadas",
+    "pending": "Validación Pendiente",
+    "rejected": "Reseñas Rechazadas",
+    "expired": "Expiradas",
+    "perWeek": "Tasa por Semana"
+  },
+  "files": {
+    "title": "Archivos de la Campaña",
+    "description": "Sube y gestiona los archivos de tu libro",
+    "ebook": "Archivo E-book",
+    "audiobook": "Archivo Audiolibro",
+    "cover": "Imagen de Portada",
+    "synopsis": "Documento de Sinopsis",
+    "uploaded": "Subido",
+    "notUploaded": "Aún no subido",
+    "upload": "Subir",
+    "replace": "Reemplazar",
+    "synopsisHint": "Sube un archivo PDF, DOC o TXT con la sinopsis de tu libro"
+  },
+  "details": {
+    "title": "Detalles de la Campaña",
+    "synopsis": "Sinopsis",
+    "genre": "Género",
+    "category": "Categoría",
+    "asin": "ASIN",
+    "format": "Formato"
+  },
+  "actions": {
+    "title": "Acciones",
+    "activate": "Activar Campaña",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "pause": "Pausar Campaña",
+    "resume": "Reanudar Campaña",
+    "viewAnalytics": "Ver Análisis",
+    "downloadReport": "Descargar Informe",
+    "viewFinalReport": "Ver Informe Final"
+  },
+  "credits": {
+    "title": "Información de Créditos",
+    "allocated": "Créditos Asignados",
+    "used": "Créditos Usados",
+    "remaining": "Créditos Restantes",
+    "required": "Créditos Requeridos para Activar",
+    "yourBalance": "Tu Saldo Disponible: {{balance}}"
+  },
+  "activate": {
+    "title": "Activar Campaña",
+    "description": "Asigna créditos para activar esta campaña y comenzar a recibir reseñas",
+    "creditsLabel": "Créditos a Asignar",
+    "minimum": "Se requieren mínimo {{min}} créditos",
+    "info": "Una vez activada, los lectores podrán solicitar espacios para reseñas",
+    "cancel": "Cancelar",
+    "activating": "Activando...",
+    "confirm": "Activar"
+  },
+  "delete": {
+    "title": "Eliminar Campaña",
+    "description": "¿Estás seguro de que quieres eliminar esta campaña? Esta acción no se puede deshacer.",
+    "cancel": "Cancelar",
+    "deleting": "Eliminando...",
+    "confirm": "Eliminar Campaña"
+  }
+}

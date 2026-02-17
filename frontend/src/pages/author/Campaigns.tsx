@@ -45,7 +45,7 @@ export function CampaignDetailPage() {
   const navigate = useNavigate();
   const params = useParams();
   const campaignId = params.id as string;
-  const { t, i18n } = useTranslation('author.campaigns.detail');
+  const { t, i18n } = useTranslation('authorCampaignsDetail');
   const { startLoading, stopLoading } = useLoading();
 
   const [campaign, setCampaign] = useState<any>(null);
