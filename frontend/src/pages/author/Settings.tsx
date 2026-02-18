@@ -212,6 +212,12 @@ export function SettingsPage() {
   const handleLanguageChange = async (newLanguage: Language) => {
     try {
       setIsUpdatingLanguage(true);
+
+      // Change i18next language immediately for instant UI update
+      const newLocale = newLanguage.toLowerCase();
+      i18n.changeLanguage(newLocale);
+
+      // Then save to backend
       const data = await updateLanguageApi({ preferredLanguage: newLanguage });
 
       toast.success('Language updated', {
@@ -219,11 +225,6 @@ export function SettingsPage() {
       });
 
       await refetchLanguage();
-
-      // Change i18next language - automatically saved to localStorage
-      // Same pattern as landing page LanguageSelector
-      const newLocale = newLanguage.toLowerCase();
-      i18n.changeLanguage(newLocale);
     } catch (error: any) {
       toast.error('Failed to update language', {
         description: error.message || 'Please try again later',
