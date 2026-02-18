@@ -229,8 +229,10 @@ export function RegisterPage() {
   };
 
   return (
-    <Card className="animate-zoom-in">
-      <CardHeader className="space-y-1">
+    <div className="container flex min-h-[calc(100vh-theme(spacing.16)-theme(spacing.32))] items-center justify-center py-12">
+      <div className="w-full max-w-2xl">
+        <Card className="animate-zoom-in">
+          <CardHeader className="space-y-1">
         <CardTitle className="animate-fade-down-fast text-center text-2xl font-bold">
           {t('title')}
         </CardTitle>
@@ -664,6 +666,8 @@ export function RegisterPage() {
           </span>
         </p>
       </CardFooter>
-    </Card>
+        </Card>
+      </div>
+    </div>
   );
 }
