@@ -1,6 +1,55 @@
 {
   "title": "Configurações da Conta",
+  "description": "Gerencie sua privacidade, dados e preferências de conta",
   "subtitle": "Gerencie sua privacidade, dados e preferências de conta",
+  "language": {
+    "title": "Preferência de Idioma",
+    "description": "Escolha seu idioma preferido para a plataforma",
+    "selectLabel": "Selecionar Idioma",
+    "selectPlaceholder": "Escolha um idioma"
+  },
+  "consents": {
+    "title": "Privacidade e Consentimento",
+    "description": "Gerencie como usamos seus dados e suas preferências de consentimento",
+    "termsOfService": "Termos de Serviço",
+    "termsDescription": "Obrigatório - Você deve concordar com nossos termos de serviço para usar a plataforma",
+    "privacyPolicy": "Política de Privacidade",
+    "privacyDescription": "Obrigatório - Você deve concordar com nossa política de privacidade para usar a plataforma",
+    "marketingCommunications": "Comunicações de Marketing",
+    "marketingDescription": "Opcional - Receba e-mails promocionais sobre novos recursos, ofertas e atualizações",
+    "updateSuccess": "Consentimento atualizado com sucesso",
+    "updateError": "Falha ao atualizar consentimento"
+  },
+  "dataExport": {
+    "title": "Exportar Seus Dados",
+    "description": "Baixe uma cópia completa de todos os seus dados pessoais em formato JSON (conformidade GDPR)",
+    "button": "Baixar Meus Dados",
+    "exporting": "Exportando...",
+    "success": "Dados exportados com sucesso",
+    "successDescription": "Seus dados foram baixados",
+    "error": "Falha na exportação",
+    "errorDescription": "Falha ao exportar seus dados. Por favor, tente novamente."
+  },
+  "accountDeletion": {
+    "title": "Excluir Conta",
+    "description": "Excluir permanentemente sua conta e todos os dados associados",
+    "warningTitle": "Esta ação não pode ser desfeita",
+    "warningDescription": "Todos os seus dados serão excluídos permanentemente após um período de carência de 30 dias",
+    "button": "Excluir Minha Conta",
+    "confirmTitle": "Você tem certeza absoluta?",
+    "confirmDescription": "Isto excluirá permanentemente sua conta e todos os dados associados após um período de carência de 30 dias",
+    "reasonLabel": "Motivo (opcional - nos ajuda a melhorar)",
+    "reasonPlaceholder": "Diga-nos por que você está saindo...",
+    "confirmationLabel": "Digite DELETE para confirmar",
+    "confirmationError": "Por favor, digite DELETE para confirmar",
+    "cancel": "Cancelar",
+    "confirmButton": "Excluir Conta",
+    "deleting": "Excluindo...",
+    "success": "Exclusão de conta agendada",
+    "successDescription": "Sua conta será excluída após um período de carência de 30 dias",
+    "error": "Falha ao excluir conta",
+    "errorDescription": "Por favor, tente novamente mais tarde"
+  },
   "password": {
     "title": "Alterar Senha",
     "description": "Atualize sua senha para manter sua conta segura",

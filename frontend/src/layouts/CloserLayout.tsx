@@ -1,14 +1,23 @@
 import { Outlet } from 'react-router-dom';
+import { CloserSidebar } from '@/components/closer/CloserSidebar';
+import { DashboardHeader } from '@/components/shared/DashboardHeader';
 
 export function CloserLayout() {
   return (
-    <div className="flex min-h-screen">
-      <aside className="w-64 border-r bg-card">
-        <div className="p-4">Closer Sidebar</div>
-      </aside>
-      <main className="flex-1 p-6">
-        <Outlet />
-      </main>
+    <div className="min-h-screen bg-background">
+      {/* Sidebar */}
+      <CloserSidebar />
+
+      {/* Main Content Area */}
+      <div className="pl-64 transition-all duration-300">
+        {/* Header */}
+        <DashboardHeader />
+
+        {/* Page Content */}
+        <main className="min-h-[calc(100vh-3.5rem)] p-6">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

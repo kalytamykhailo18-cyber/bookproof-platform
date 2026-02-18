@@ -1,6 +1,55 @@
 {
   "title": "Account Settings",
+  "description": "Manage your privacy, data, and account preferences",
   "subtitle": "Manage your privacy, data, and account preferences",
+  "language": {
+    "title": "Language Preference",
+    "description": "Choose your preferred language for the platform",
+    "selectLabel": "Select Language",
+    "selectPlaceholder": "Choose a language"
+  },
+  "consents": {
+    "title": "Privacy & Consent",
+    "description": "Manage how we use your data and your consent preferences",
+    "termsOfService": "Terms of Service",
+    "termsDescription": "Required - You must agree to our terms of service to use the platform",
+    "privacyPolicy": "Privacy Policy",
+    "privacyDescription": "Required - You must agree to our privacy policy to use the platform",
+    "marketingCommunications": "Marketing Communications",
+    "marketingDescription": "Optional - Receive promotional emails about new features, offers, and platform updates",
+    "updateSuccess": "Consent updated successfully",
+    "updateError": "Failed to update consent"
+  },
+  "dataExport": {
+    "title": "Export Your Data",
+    "description": "Download a complete copy of all your personal data in JSON format (GDPR compliance)",
+    "button": "Download My Data",
+    "exporting": "Exporting...",
+    "success": "Data exported successfully",
+    "successDescription": "Your data has been downloaded",
+    "error": "Export failed",
+    "errorDescription": "Failed to export your data. Please try again."
+  },
+  "accountDeletion": {
+    "title": "Delete Account",
+    "description": "Permanently delete your account and all associated data",
+    "warningTitle": "This action cannot be undone",
+    "warningDescription": "All your data will be permanently deleted after a 30-day grace period",
+    "button": "Delete My Account",
+    "confirmTitle": "Are you absolutely sure?",
+    "confirmDescription": "This will permanently delete your account and all associated data after a 30-day grace period",
+    "reasonLabel": "Reason (optional - helps us improve)",
+    "reasonPlaceholder": "Tell us why you're leaving...",
+    "confirmationLabel": "Type DELETE to confirm",
+    "confirmationError": "Please type DELETE to confirm",
+    "cancel": "Cancel",
+    "confirmButton": "Delete Account",
+    "deleting": "Deleting...",
+    "success": "Account deletion scheduled",
+    "successDescription": "Your account will be deleted after a 30-day grace period",
+    "error": "Failed to delete account",
+    "errorDescription": "Please try again later"
+  },
   "password": {
     "title": "Change Password",
     "description": "Update your password to keep your account secure",

@@ -179,6 +179,10 @@ import settingsEN from '../locales/en/settings.json';
 import settingsES from '../locales/es/settings.json';
 import settingsPT from '../locales/pt/settings.json';
 
+import closerEN from '../locales/en/closer.json';
+import closerES from '../locales/es/closer.json';
+import closerPT from '../locales/pt/closer.json';
+
 // Helper to flatten landing page sections into separate namespaces
 function flattenLanding(landingData: any) {
   const flattened: Record<string, any> = {};
@@ -239,6 +243,7 @@ const resources = {
     keywordResearch: keywordResearchEN,
     reports: reportsEN,
     settings: settingsEN,
+    closer: closerEN,
     ...flattenLanding(landingEN),
   },
   es: {
@@ -290,6 +295,7 @@ const resources = {
     keywordResearch: keywordResearchES,
     reports: reportsES,
     settings: settingsES,
+    closer: closerES,
     ...flattenLanding(landingES),
   },
   pt: {
@@ -341,6 +347,7 @@ const resources = {
     keywordResearch: keywordResearchPT,
     reports: reportsPT,
     settings: settingsPT,
+    closer: closerPT,
     ...flattenLanding(landingPT),
   },
 };

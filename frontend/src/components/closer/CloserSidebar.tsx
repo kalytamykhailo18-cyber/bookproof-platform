@@ -8,6 +8,7 @@ import {
   Package,
   DollarSign,
   FileText,
+  Settings,
   ChevronLeft,
   ChevronRight,
   Loader2,
@@ -50,6 +51,12 @@ export function CloserSidebar() {
         { title: 'Custom Packages', href: '/closer/packages', icon: Package },
         { title: 'Sales History', href: '/closer/sales', icon: DollarSign },
         { title: 'Invoices', href: '/closer/invoices', icon: FileText },
+      ],
+    },
+    {
+      title: 'Account',
+      items: [
+        { title: 'Settings', href: '/closer/settings', icon: Settings },
       ],
     },
   ];

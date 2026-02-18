@@ -72,10 +72,16 @@ export function PackageDetailPage() {
 
   // Fetch package data
   useEffect(() => {
+    // Guard: redirect to dashboard if no packageId
+    if (!packageId) {
+      navigate('/closer');
+      return;
+    }
+
     const fetchPackage = async () => {
       try {
         setIsLoading(true);
-        const data = await closerApi.getPackage(packageId);
+        const data = await closerApi.getPackageById(packageId);
         setPkg(data);
       } catch (error: any) {
         console.error('Package error:', error);
@@ -85,7 +91,7 @@ export function PackageDetailPage() {
       }
     };
     fetchPackage();
-  }, [packageId]);
+  }, [packageId, navigate]);
 
   const handleSave = async () => {
     try {
@@ -105,7 +111,7 @@ export function PackageDetailPage() {
       toast.success('Package updated successfully');
       setIsEditing(false);
       // Refetch package data
-      const data = await closerApi.getPackage(packageId);
+      const data = await closerApi.getPackageById(packageId);
       setPkg(data);
     } catch (error: any) {
       console.error('Update error:', error);
@@ -127,7 +133,7 @@ export function PackageDetailPage() {
       setExpirationDays(30); // Default 30 days per Section 5.3
       setCustomMessage('');
       // Refetch package data
-      const data = await closerApi.getPackage(packageId);
+      const data = await closerApi.getPackageById(packageId);
       setPkg(data);
     } catch (error: any) {
       console.error('Send error:', error);

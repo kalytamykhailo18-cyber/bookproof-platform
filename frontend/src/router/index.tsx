@@ -158,10 +158,12 @@ const AffiliateNotificationsSettingsPage = lazy(() => import('../pages/affiliate
 // CLOSER PAGES
 // ============================================
 const CloserDashboardPage = lazy(() => import('../pages/closer/Closer').then(m => ({ default: m.CloserDashboardPage })));
-const CloserPackagesPage = lazy(() => import('../pages/closer/Packages').then(m => ({ default: m.PackageDetailPage })));
+const CloserPackagesListPage = lazy(() => import('../pages/closer/packages/List').then(m => ({ default: m.PackagesListPage })));
+const CloserPackageDetailPage = lazy(() => import('../pages/closer/Packages').then(m => ({ default: m.PackageDetailPage })));
 const CloserPackagesNewPage = lazy(() => import('../pages/closer/packages/New').then(m => ({ default: m.CreatePackagePage })));
 const CloserInvoicesPage = lazy(() => import('../pages/closer/Invoices').then(m => ({ default: m.InvoicesPage })));
 const CloserSalesPage = lazy(() => import('../pages/closer/Sales').then(m => ({ default: m.SalesHistoryPage })));
+const CloserSettingsPage = lazy(() => import('../pages/closer/Settings').then(m => ({ default: m.CloserSettingsPage })));
 
 // ============================================
 // CHECKOUT PAGES
@@ -349,11 +351,12 @@ export const router = createBrowserRouter([
             ),
             children: [
               { index: true, element: <LazyRoute component={CloserDashboardPage} /> },
-              { path: 'packages', element: <LazyRoute component={CloserPackagesPage} /> },
+              { path: 'packages', element: <LazyRoute component={CloserPackagesListPage} /> },
               { path: 'packages/new', element: <LazyRoute component={CloserPackagesNewPage} /> },
-              { path: 'packages/:id', element: <LazyRoute component={CloserPackagesPage} /> },
+              { path: 'packages/:id', element: <LazyRoute component={CloserPackageDetailPage} /> },
               { path: 'invoices', element: <LazyRoute component={CloserInvoicesPage} /> },
               { path: 'sales', element: <LazyRoute component={CloserSalesPage} /> },
+              { path: 'settings', element: <LazyRoute component={CloserSettingsPage} /> },
             ],
           },
         ],

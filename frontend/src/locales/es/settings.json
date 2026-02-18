@@ -1,6 +1,55 @@
 {
   "title": "Configuración de Cuenta",
+  "description": "Administra tu privacidad, datos y preferencias de cuenta",
   "subtitle": "Administra tu privacidad, datos y preferencias de cuenta",
+  "language": {
+    "title": "Preferencia de Idioma",
+    "description": "Elige tu idioma preferido para la plataforma",
+    "selectLabel": "Seleccionar Idioma",
+    "selectPlaceholder": "Elige un idioma"
+  },
+  "consents": {
+    "title": "Privacidad y Consentimiento",
+    "description": "Administra cómo usamos tus datos y tus preferencias de consentimiento",
+    "termsOfService": "Términos de Servicio",
+    "termsDescription": "Requerido - Debes aceptar nuestros términos de servicio para usar la plataforma",
+    "privacyPolicy": "Política de Privacidad",
+    "privacyDescription": "Requerido - Debes aceptar nuestra política de privacidad para usar la plataforma",
+    "marketingCommunications": "Comunicaciones de Marketing",
+    "marketingDescription": "Opcional - Recibe correos promocionales sobre nuevas funciones, ofertas y actualizaciones",
+    "updateSuccess": "Consentimiento actualizado exitosamente",
+    "updateError": "Error al actualizar consentimiento"
+  },
+  "dataExport": {
+    "title": "Exportar Tus Datos",
+    "description": "Descarga una copia completa de todos tus datos personales en formato JSON (cumplimiento GDPR)",
+    "button": "Descargar Mis Datos",
+    "exporting": "Exportando...",
+    "success": "Datos exportados exitosamente",
+    "successDescription": "Tus datos han sido descargados",
+    "error": "Error al exportar",
+    "errorDescription": "No se pudieron exportar tus datos. Inténtalo de nuevo."
+  },
+  "accountDeletion": {
+    "title": "Eliminar Cuenta",
+    "description": "Eliminar permanentemente tu cuenta y todos los datos asociados",
+    "warningTitle": "Esta acción no se puede deshacer",
+    "warningDescription": "Todos tus datos serán eliminados permanentemente después de un período de gracia de 30 días",
+    "button": "Eliminar Mi Cuenta",
+    "confirmTitle": "¿Estás absolutamente seguro?",
+    "confirmDescription": "Esto eliminará permanentemente tu cuenta y todos los datos asociados después de un período de gracia de 30 días",
+    "reasonLabel": "Razón (opcional - nos ayuda a mejorar)",
+    "reasonPlaceholder": "Dinos por qué te vas...",
+    "confirmationLabel": "Escribe DELETE para confirmar",
+    "confirmationError": "Por favor escribe DELETE para confirmar",
+    "cancel": "Cancelar",
+    "confirmButton": "Eliminar Cuenta",
+    "deleting": "Eliminando...",
+    "success": "Eliminación de cuenta programada",
+    "successDescription": "Tu cuenta será eliminada después de un período de gracia de 30 días",
+    "error": "Error al eliminar cuenta",
+    "errorDescription": "Por favor inténtalo de nuevo más tarde"
+  },
   "password": {
     "title": "Cambiar Contraseña",
     "description": "Actualiza tu contraseña para mantener tu cuenta segura",
