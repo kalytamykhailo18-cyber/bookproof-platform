@@ -23,9 +23,11 @@
   },
   "amazonProfiles": {
     "pending": "Pending Verification",
+    "verified": "Verified",
     "addLabel": "Add Amazon Profile URL",
     "placeholder": "https://www.amazon.com/gp/profile/...",
-    "example": "Example: https://www.amazon.com/gp/profile/YOUR_PROFILE_ID"
+    "example": "Example: https://www.amazon.com/gp/profile/YOUR_PROFILE_ID",
+    "maxReached": "Maximum of 3 Amazon profiles allowed"
   },
   "stats": {
     "title": "Your Statistics",
