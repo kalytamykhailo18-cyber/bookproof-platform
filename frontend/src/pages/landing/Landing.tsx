@@ -92,6 +92,8 @@ function HeroSection() {
                 alt="BookProof Hero"
                 className="h-full w-full object-contain"
               />
+              {/* Gradient fade at bottom */}
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background via-background/90 via-background/40 via-background/10 to-transparent" />
             </div>
           </div>
         </div>
