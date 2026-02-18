@@ -100,6 +100,7 @@
     "inclusionsDescription": "Additional services to include in this package",
     "includeKeywordResearch": "Include Keyword Research",
     "includeKeywordResearchHelp": "Add keyword research credits for the client",
+    "keywordResearchCredits": "Number of Keyword Research Credits",
     "internalNotes": "Internal Notes",
     "internalNotesDescription": "Notes for internal use only - not visible to the client",
     "internalNotesPlaceholder": "E.g., Negotiated by John on 01/15/2024, Referred by Partner XYZ...",

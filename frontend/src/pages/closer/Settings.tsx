@@ -287,9 +287,9 @@ export function CloserSettingsPage() {
                 <SelectValue placeholder={t('language.selectPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ENGLISH">English</SelectItem>
-                <SelectItem value="SPANISH">Español</SelectItem>
-                <SelectItem value="PORTUGUESE">Português</SelectItem>
+                <SelectItem value="EN">English</SelectItem>
+                <SelectItem value="ES">Español</SelectItem>
+                <SelectItem value="PT">Português</SelectItem>
               </SelectContent>
             </Select>
           </div>

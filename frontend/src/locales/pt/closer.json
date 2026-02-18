@@ -100,6 +100,7 @@
     "inclusionsDescription": "Serviços adicionais para incluir neste pacote",
     "includeKeywordResearch": "Incluir Pesquisa de Palavras-chave",
     "includeKeywordResearchHelp": "Adicionar créditos de pesquisa de palavras-chave para o cliente",
+    "keywordResearchCredits": "Número de Créditos de Pesquisa de Palavras-chave",
     "internalNotes": "Notas Internas",
     "internalNotesDescription": "Notas apenas para uso interno - não visíveis para o cliente",
     "internalNotesPlaceholder": "Ex., Negociado por João em 15/01/2024, Indicado pelo Partner XYZ...",
