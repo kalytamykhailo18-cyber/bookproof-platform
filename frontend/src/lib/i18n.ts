@@ -104,6 +104,11 @@ import adminReaderBehaviorEN from '../locales/en/admin-reader-behavior.json';
 import adminReaderBehaviorES from '../locales/es/admin-reader-behavior.json';
 import adminReaderBehaviorPT from '../locales/pt/admin-reader-behavior.json';
 
+// Affiliate page translations
+import affiliatesEN from '../locales/en/affiliates.json';
+import affiliatesES from '../locales/es/affiliates.json';
+import affiliatesPT from '../locales/pt/affiliates.json';
+
 // Reader page translations
 import readerDashboardEN from '../locales/en/reader-dashboard.json';
 import readerDashboardES from '../locales/es/reader-dashboard.json';
@@ -170,6 +175,10 @@ import adminEN from '../locales/en/admin.json';
 import adminES from '../locales/es/admin.json';
 import adminPT from '../locales/pt/admin.json';
 
+import settingsEN from '../locales/en/settings.json';
+import settingsES from '../locales/es/settings.json';
+import settingsPT from '../locales/pt/settings.json';
+
 // Helper to flatten landing page sections into separate namespaces
 function flattenLanding(landingData: any) {
   const flattened: Record<string, any> = {};
@@ -207,6 +216,13 @@ const resources = {
     adminDisputes: adminDisputesEN,
     adminIssues: adminIssuesEN,
     adminReaderBehavior: adminReaderBehaviorEN,
+    affiliates: affiliatesEN,
+    'affiliates.dashboard': affiliatesEN.dashboard,
+    'affiliates.referralLinks': affiliatesEN.referralLinks,
+    'affiliates.commissions': affiliatesEN.commissions,
+    'affiliates.payouts': affiliatesEN.payouts,
+    'affiliates.referredAuthors': affiliatesEN.referredAuthors,
+    'affiliates.register': affiliatesEN.register,
     'reader.dashboard': readerDashboardEN,
     'reader.campaigns': readerCampaignsEN,
     'reader.assignment': readerAssignmentEN,
@@ -222,6 +238,7 @@ const resources = {
     authorTransactions: authorTransactionsEN,
     keywordResearch: keywordResearchEN,
     reports: reportsEN,
+    settings: settingsEN,
     ...flattenLanding(landingEN),
   },
   es: {
@@ -250,6 +267,13 @@ const resources = {
     adminDisputes: adminDisputesES,
     adminIssues: adminIssuesES,
     adminReaderBehavior: adminReaderBehaviorES,
+    affiliates: affiliatesES,
+    'affiliates.dashboard': affiliatesES.dashboard,
+    'affiliates.referralLinks': affiliatesES.referralLinks,
+    'affiliates.commissions': affiliatesES.commissions,
+    'affiliates.payouts': affiliatesES.payouts,
+    'affiliates.referredAuthors': affiliatesES.referredAuthors,
+    'affiliates.register': affiliatesES.register,
     'reader.dashboard': readerDashboardES,
     'reader.campaigns': readerCampaignsES,
     'reader.assignment': readerAssignmentES,
@@ -265,6 +289,7 @@ const resources = {
     authorTransactions: authorTransactionsES,
     keywordResearch: keywordResearchES,
     reports: reportsES,
+    settings: settingsES,
     ...flattenLanding(landingES),
   },
   pt: {
@@ -293,6 +318,13 @@ const resources = {
     adminDisputes: adminDisputesPT,
     adminIssues: adminIssuesPT,
     adminReaderBehavior: adminReaderBehaviorPT,
+    affiliates: affiliatesPT,
+    'affiliates.dashboard': affiliatesPT.dashboard,
+    'affiliates.referralLinks': affiliatesPT.referralLinks,
+    'affiliates.commissions': affiliatesPT.commissions,
+    'affiliates.payouts': affiliatesPT.payouts,
+    'affiliates.referredAuthors': affiliatesPT.referredAuthors,
+    'affiliates.register': affiliatesPT.register,
     'reader.dashboard': readerDashboardPT,
     'reader.campaigns': readerCampaignsPT,
     'reader.assignment': readerAssignmentPT,
@@ -308,6 +340,7 @@ const resources = {
     authorTransactions: authorTransactionsPT,
     keywordResearch: keywordResearchPT,
     reports: reportsPT,
+    settings: settingsPT,
     ...flattenLanding(landingPT),
   },
 };

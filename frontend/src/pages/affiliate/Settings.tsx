@@ -237,9 +237,10 @@ export function SettingsPage() {
 
       await refetchLanguage();
 
-      // Also update the URL locale to match the new language
+      // Change i18next language - automatically saved to localStorage
+      // Same pattern as landing page LanguageSelector
       const newLocale = newLanguage.toLowerCase();
-      navigate(`/${newLocale}/affiliate/settings`);
+      i18n.changeLanguage(newLocale);
     } catch (error: any) {
       toast.error('Failed to update language', {
         description: error.message || 'Please try again later',

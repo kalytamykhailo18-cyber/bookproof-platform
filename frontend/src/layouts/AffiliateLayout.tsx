@@ -1,14 +1,23 @@
 import { Outlet } from 'react-router-dom';
+import { AffiliateSidebar } from '@/components/affiliate/AffiliateSidebar';
+import { DashboardHeader } from '@/components/shared/DashboardHeader';
 
 export function AffiliateLayout() {
   return (
-    <div className="flex min-h-screen">
-      <aside className="w-64 border-r bg-card">
-        <div className="p-4">Affiliate Sidebar</div>
-      </aside>
-      <main className="flex-1 p-6">
-        <Outlet />
-      </main>
+    <div className="min-h-screen bg-background">
+      {/* Sidebar */}
+      <AffiliateSidebar />
+
+      {/* Main Content Area */}
+      <div className="pl-64 transition-all duration-300">
+        {/* Header */}
+        <DashboardHeader />
+
+        {/* Page Content */}
+        <main className="min-h-[calc(100vh-3.5rem)] p-6">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }
