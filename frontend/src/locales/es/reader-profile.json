@@ -1,0 +1,45 @@
+{
+  "backToDashboard": "Volver al Panel",
+  "title": "Perfil del Lector",
+  "subtitle": "Administre sus preferencias de lectura e información de perfil",
+  "editProfile": "Editar Perfil",
+  "sections": {
+    "profileSettings": "Configuración del Perfil",
+    "currentDesc": "Configure sus preferencias de lectura",
+    "editDesc": "Actualice la configuración de su perfil",
+    "amazonProfiles": "Perfiles de Amazon",
+    "amazonProfilesDesc": "Agregue sus URLs de perfil de revisor de Amazon para verificación"
+  },
+  "contentPreference": {
+    "label": "Preferencia de Contenido",
+    "ebook": "Solo Ebook",
+    "audiobook": "Solo Audiolibro",
+    "both": "Ebook y Audiolibro",
+    "help": "Seleccione qué formatos desea reseñar"
+  },
+  "genres": {
+    "label": "Géneros Preferidos",
+    "help": "Seleccione los géneros que le interesa reseñar (opcional)"
+  },
+  "amazonProfiles": {
+    "pending": "Verificación Pendiente",
+    "addLabel": "Agregar URL del Perfil de Amazon",
+    "placeholder": "https://www.amazon.com/gp/profile/...",
+    "example": "Ejemplo: https://www.amazon.com/gp/profile/TU_ID_DE_PERFIL"
+  },
+  "stats": {
+    "title": "Sus Estadísticas",
+    "walletBalance": "Saldo de Billetera",
+    "totalEarned": "Total Ganado",
+    "totalWithdrawn": "Total Retirado",
+    "completed": "Completados",
+    "expired": "Expirados",
+    "rejected": "Rechazados",
+    "reliabilityScore": "Puntuación de Confiabilidad",
+    "completionRate": "Tasa de Finalización"
+  },
+  "actions": {
+    "save": "Guardar Cambios",
+    "cancel": "Cancelar"
+  }
+}

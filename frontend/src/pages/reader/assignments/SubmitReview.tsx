@@ -79,8 +79,8 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
     fetchAssignment();
   }, [assignmentId]);
 
-  // Character count limits for review feedback (per Milestone 4.4)
-  const MIN_FEEDBACK_CHARACTERS = 150;
+  // Character count limits for review feedback (per CLAUDE.md Section 3.6)
+  const MIN_FEEDBACK_CHARACTERS = 20;
   const MAX_FEEDBACK_CHARACTERS = 2000;
 
   // Amazon review URL pattern validation

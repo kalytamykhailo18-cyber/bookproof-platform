@@ -1,0 +1,46 @@
+{
+  "title": "Reader Dashboard",
+  "subtitle": "Manage your book assignments and track your progress",
+  "browseBooks": "Browse Books",
+  "requestPayout": "Request Payout",
+  "viewMyReviews": "View My Reviews",
+  "payoutMinimumRequired": "Minimum {amount} required",
+  "stats": {
+    "walletBalance": "Wallet Balance",
+    "totalEarned": "Total earned: {amount}",
+    "activeAssignments": "Active Assignments",
+    "currentlyWorking": "Currently working on",
+    "completedReviews": "Completed Reviews",
+    "completionRate": "{rate}% completion rate",
+    "pendingPayouts": "Pending Payouts",
+    "awaitingProcessing": "Awaiting processing"
+  },
+  "status": {
+    "waiting": "Waiting",
+    "scheduled": "Scheduled",
+    "approved": "Approved",
+    "inProgress": "In Progress",
+    "submitted": "Submitted",
+    "completed": "Completed",
+    "expired": "Expired"
+  },
+  "sections": {
+    "activeAssignments": "Active Assignments",
+    "activeDescription": "Books you need to review urgently",
+    "upcomingAssignments": "Upcoming Assignments",
+    "upcomingDescription": "Books scheduled for future review",
+    "completedSubmitted": "Completed & Submitted",
+    "completedDescription": "Reviews you've submitted"
+  },
+  "byAuthor": "by {author}",
+  "credit": "credit",
+  "credits": "credits",
+  "queuePosition": "Queue position: {position}",
+  "scheduledFor": "Scheduled for {date}",
+  "deadline": "Deadline",
+  "remaining": "remaining",
+  "empty": {
+    "title": "No Assignments Yet",
+    "description": "Start browsing available books and apply for review assignments"
+  }
+}

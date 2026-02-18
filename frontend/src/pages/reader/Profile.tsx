@@ -29,7 +29,7 @@ import {
   Loader2 } from 'lucide-react';
 import { ContentPreference } from '@/lib/api/readers';
 import { useTranslation } from 'react-i18next';
-import { useNavigate,  useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const GENRE_OPTIONS = [
   'Science Fiction',

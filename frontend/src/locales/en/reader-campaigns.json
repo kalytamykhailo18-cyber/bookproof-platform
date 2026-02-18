@@ -1,0 +1,36 @@
+{
+  "backToDashboard": "Back to Dashboard",
+  "title": "Available Books",
+  "subtitle": "Browse and apply to review books",
+  "filters": {
+    "title": "Filters",
+    "search": "Search",
+    "searchPlaceholder": "Search by book title...",
+    "genre": "Genre",
+    "allGenres": "All Genres",
+    "language": "Language",
+    "allLanguages": "All Languages",
+    "format": "Format",
+    "allFormats": "All Formats"
+  },
+  "resultsCount": "{count} books available",
+  "campaign": {
+    "byAuthor": "by {author}",
+    "genre": "Genre",
+    "language": "Language",
+    "format": "Format",
+    "viewDetails": "View Details",
+    "applyToReview": "Apply to Review",
+    "alreadyApplied": "Already Applied",
+    "loading": "Loading...",
+    "noResults": "No books found",
+    "noResultsDescription": "Try adjusting your filters to find more books"
+  },
+  "modal": {
+    "synopsis": "Synopsis"
+  },
+  "emptyState": {
+    "title": "No Books Available",
+    "description": "There are currently no books available for review. Check back later!"
+  }
+}

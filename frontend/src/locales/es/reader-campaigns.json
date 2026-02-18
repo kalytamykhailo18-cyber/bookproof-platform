@@ -1,0 +1,36 @@
+{
+  "backToDashboard": "Volver al Panel",
+  "title": "Libros Disponibles",
+  "subtitle": "Explore y solicite reseñar libros",
+  "filters": {
+    "title": "Filtros",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar por título del libro...",
+    "genre": "Género",
+    "allGenres": "Todos los Géneros",
+    "language": "Idioma",
+    "allLanguages": "Todos los Idiomas",
+    "format": "Formato",
+    "allFormats": "Todos los Formatos"
+  },
+  "resultsCount": "{count} libros disponibles",
+  "campaign": {
+    "byAuthor": "por {author}",
+    "genre": "Género",
+    "language": "Idioma",
+    "format": "Formato",
+    "viewDetails": "Ver Detalles",
+    "applyToReview": "Solicitar Reseñar",
+    "alreadyApplied": "Ya Solicitado",
+    "loading": "Cargando...",
+    "noResults": "No se encontraron libros",
+    "noResultsDescription": "Intente ajustar sus filtros para encontrar más libros"
+  },
+  "modal": {
+    "synopsis": "Sinopsis"
+  },
+  "emptyState": {
+    "title": "No Hay Libros Disponibles",
+    "description": "Actualmente no hay libros disponibles para reseñar. ¡Vuelva más tarde!"
+  }
+}

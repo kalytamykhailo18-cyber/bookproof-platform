@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { NotificationList } from '@/components/shared/NotificationList';
 import { Settings, CheckCheck, Loader2 } from 'lucide-react';
-import { useNavigate,  useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { NotificationType } from '@/lib/api/notifications';
 
 export function NotificationsPage() {

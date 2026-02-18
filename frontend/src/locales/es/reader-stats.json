@@ -24,6 +24,46 @@
     "feedbackQuality": "Calidad de los comentarios",
     "score": "puntuación"
   },
+  "performanceDetails": {
+    "title": "Detalles de Desempeño",
+    "description": "Sus métricas detalladas de desempeño",
+    "reviewsCompleted": "Reseñas Completadas",
+    "totalAcceptedReviews": "Total de reseñas aceptadas",
+    "reviewsExpired": "Reseñas Expiradas",
+    "missedDeadlines": "Plazos perdidos",
+    "reviewsRejected": "Reseñas Rechazadas",
+    "notPassedValidation": "No pasaron la validación"
+  },
+  "wallet": {
+    "title": "Resumen de Billetera",
+    "description": "Sus ganancias y saldo",
+    "currentBalance": "Saldo Actual",
+    "availableForWithdrawal": "Disponible para retiro",
+    "totalEarned": "Total Ganado",
+    "lifetimeEarnings": "Ganancias de por vida",
+    "totalWithdrawn": "Total Retirado",
+    "successfullyPaidOut": "Pagado exitosamente"
+  },
+  "recentAssignments": {
+    "title": "Asignaciones Recientes",
+    "description": "Sus asignaciones de libros recientes",
+    "table": {
+      "bookTitle": "Título del Libro",
+      "assigned": "Asignado",
+      "completed": "Completado",
+      "rating": "Calificación",
+      "status": "Estado",
+      "noData": "No hay asignaciones recientes"
+    }
+  },
+  "performanceOverTime": {
+    "title": "Desempeño a lo Largo del Tiempo",
+    "description": "Su tendencia de desempeño mensual",
+    "reviewsCompleted": "reseñas completadas",
+    "earnings": "Ganancias",
+    "expired": "Expiradas",
+    "noData": "No hay datos de desempeño disponibles"
+  },
   "achievements": {
     "title": "Logros",
     "description": "Sus hitos e insignias",
@@ -67,5 +107,6 @@
     "avgTime": "Tiempo Promedio",
     "noData": "No hay datos de actividad disponibles"
   },
-  "loading": "Cargando estadísticas..."
+  "loading": "Cargando estadísticas...",
+  "error": "No se pueden cargar las estadísticas"
 }

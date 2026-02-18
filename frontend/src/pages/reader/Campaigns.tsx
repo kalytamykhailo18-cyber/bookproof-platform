@@ -25,7 +25,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { BookFormat } from '@/lib/api/campaigns';
 import { useTranslation } from 'react-i18next';
-import { useNavigate,  useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // Truncate synopsis to 200 characters
 function truncateSynopsis(text: string, maxLength: number = 200): string {

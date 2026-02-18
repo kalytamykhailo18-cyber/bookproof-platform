@@ -1,0 +1,46 @@
+{
+  "title": "Painel do Leitor",
+  "subtitle": "Gerencie suas atribuições de livros e acompanhe seu progresso",
+  "browseBooks": "Explorar Livros",
+  "requestPayout": "Solicitar Pagamento",
+  "viewMyReviews": "Ver Minhas Avaliações",
+  "payoutMinimumRequired": "Mínimo {amount} necessário",
+  "stats": {
+    "walletBalance": "Saldo da Carteira",
+    "totalEarned": "Total ganho: {amount}",
+    "activeAssignments": "Atribuições Ativas",
+    "currentlyWorking": "Trabalhando atualmente em",
+    "completedReviews": "Avaliações Concluídas",
+    "completionRate": "{rate}% taxa de conclusão",
+    "pendingPayouts": "Pagamentos Pendentes",
+    "awaitingProcessing": "Aguardando processamento"
+  },
+  "status": {
+    "waiting": "Aguardando",
+    "scheduled": "Agendado",
+    "approved": "Aprovado",
+    "inProgress": "Em Andamento",
+    "submitted": "Enviado",
+    "completed": "Concluído",
+    "expired": "Expirado"
+  },
+  "sections": {
+    "activeAssignments": "Atribuições Ativas",
+    "activeDescription": "Livros que você precisa avaliar urgentemente",
+    "upcomingAssignments": "Atribuições Próximas",
+    "upcomingDescription": "Livros agendados para avaliação futura",
+    "completedSubmitted": "Concluídos e Enviados",
+    "completedDescription": "Avaliações que você enviou"
+  },
+  "byAuthor": "por {author}",
+  "credit": "crédito",
+  "credits": "créditos",
+  "queuePosition": "Posição na fila: {position}",
+  "scheduledFor": "Agendado para {date}",
+  "deadline": "Prazo",
+  "remaining": "restante",
+  "empty": {
+    "title": "Ainda Não Há Atribuições",
+    "description": "Comece a explorar livros disponíveis e solicite atribuições de avaliação"
+  }
+}

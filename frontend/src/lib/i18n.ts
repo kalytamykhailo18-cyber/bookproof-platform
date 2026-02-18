@@ -104,6 +104,31 @@ import adminReaderBehaviorEN from '../locales/en/admin-reader-behavior.json';
 import adminReaderBehaviorES from '../locales/es/admin-reader-behavior.json';
 import adminReaderBehaviorPT from '../locales/pt/admin-reader-behavior.json';
 
+// Reader page translations
+import readerDashboardEN from '../locales/en/reader-dashboard.json';
+import readerDashboardES from '../locales/es/reader-dashboard.json';
+import readerDashboardPT from '../locales/pt/reader-dashboard.json';
+
+import readerCampaignsEN from '../locales/en/reader-campaigns.json';
+import readerCampaignsES from '../locales/es/reader-campaigns.json';
+import readerCampaignsPT from '../locales/pt/reader-campaigns.json';
+
+import readerAssignmentEN from '../locales/en/reader-assignment.json';
+import readerAssignmentES from '../locales/es/reader-assignment.json';
+import readerAssignmentPT from '../locales/pt/reader-assignment.json';
+
+import payoutsEN from '../locales/en/payouts.json';
+import payoutsES from '../locales/es/payouts.json';
+import payoutsPT from '../locales/pt/payouts.json';
+
+import readerStatsEN from '../locales/en/reader-stats.json';
+import readerStatsES from '../locales/es/reader-stats.json';
+import readerStatsPT from '../locales/pt/reader-stats.json';
+
+import readerProfileEN from '../locales/en/reader-profile.json';
+import readerProfileES from '../locales/es/reader-profile.json';
+import readerProfilePT from '../locales/pt/reader-profile.json';
+
 // Author page translations
 import authorDashboardEN from '../locales/en/author-dashboard.json';
 import authorDashboardES from '../locales/es/author-dashboard.json';
@@ -182,6 +207,12 @@ const resources = {
     adminDisputes: adminDisputesEN,
     adminIssues: adminIssuesEN,
     adminReaderBehavior: adminReaderBehaviorEN,
+    'reader.dashboard': readerDashboardEN,
+    'reader.campaigns': readerCampaignsEN,
+    'reader.assignment': readerAssignmentEN,
+    payouts: payoutsEN,
+    readerStats: readerStatsEN,
+    'reader.profile': readerProfileEN,
     authorDashboard: authorDashboardEN,
     authorCampaignsList: authorCampaignsListEN,
     authorCampaignsDetail: authorCampaignsDetailEN,
@@ -219,6 +250,12 @@ const resources = {
     adminDisputes: adminDisputesES,
     adminIssues: adminIssuesES,
     adminReaderBehavior: adminReaderBehaviorES,
+    'reader.dashboard': readerDashboardES,
+    'reader.campaigns': readerCampaignsES,
+    'reader.assignment': readerAssignmentES,
+    payouts: payoutsES,
+    readerStats: readerStatsES,
+    'reader.profile': readerProfileES,
     authorDashboard: authorDashboardES,
     authorCampaignsList: authorCampaignsListES,
     authorCampaignsDetail: authorCampaignsDetailES,
@@ -256,6 +293,12 @@ const resources = {
     adminDisputes: adminDisputesPT,
     adminIssues: adminIssuesPT,
     adminReaderBehavior: adminReaderBehaviorPT,
+    'reader.dashboard': readerDashboardPT,
+    'reader.campaigns': readerCampaignsPT,
+    'reader.assignment': readerAssignmentPT,
+    payouts: payoutsPT,
+    readerStats: readerStatsPT,
+    'reader.profile': readerProfilePT,
     authorDashboard: authorDashboardPT,
     authorCampaignsList: authorCampaignsListPT,
     authorCampaignsDetail: authorCampaignsDetailPT,

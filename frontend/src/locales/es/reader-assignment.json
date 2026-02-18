@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Volver al Panel",
+  "notFound": {
+    "title": "Asignación No Encontrada",
+    "description": "La asignación que busca no existe o ha sido eliminada."
+  },
+  "deadline": {
+    "critical": "Crítico",
+    "urgent": "Urgente",
+    "warning": "Advertencia",
+    "reminder": "Recordatorio",
+    "due": "Vence {time}",
+    "hoursRemaining": "horas restantes"
+  },
+  "sections": {
+    "synopsis": "Sinopsis",
+    "ebookDownload": "Descarga de Ebook",
+    "ebookDownloadDesc": "Descargue el ebook a su dispositivo",
+    "downloadButton": "Descargar Ebook",
+    "downloaded": "Descargado {count} veces",
+    "audiobookPlayer": "Reproductor de Audiolibro"
+  },
+  "materialsNotAvailable": {
+    "title": "Materiales Aún No Disponibles",
+    "waiting": "Está en la posición {position} de la cola",
+    "scheduled": "Programado para {date}",
+    "expired": "Esta asignación ha expirado"
+  },
+  "details": {
+    "title": "Detalles de la Asignación",
+    "genre": "Género",
+    "format": "Formato",
+    "credits": "Créditos",
+    "queuePosition": "Posición en la Cola",
+    "week": "Semana",
+    "released": "Publicado"
+  },
+  "timeline": {
+    "title": "Cronología",
+    "applied": "Solicitado",
+    "materialsReleased": "Materiales Publicados",
+    "deadline": "Plazo",
+    "at": "a las"
+  },
+  "actions": {
+    "title": "Acciones",
+    "withdraw": "Retirarse de la Asignación",
+    "withdrawDialog": {
+      "title": "¿Retirarse de la Asignación?",
+      "description": "¿Está seguro de que desea retirarse? Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Retirarse"
+    }
+  }
+}

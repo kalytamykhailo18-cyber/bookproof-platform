@@ -24,6 +24,46 @@
     "feedbackQuality": "Qualidade do feedback",
     "score": "pontuação"
   },
+  "performanceDetails": {
+    "title": "Detalhes de Desempenho",
+    "description": "Suas métricas detalhadas de desempenho",
+    "reviewsCompleted": "Avaliações Concluídas",
+    "totalAcceptedReviews": "Total de avaliações aceitas",
+    "reviewsExpired": "Avaliações Expiradas",
+    "missedDeadlines": "Prazos perdidos",
+    "reviewsRejected": "Avaliações Rejeitadas",
+    "notPassedValidation": "Não passaram na validação"
+  },
+  "wallet": {
+    "title": "Resumo da Carteira",
+    "description": "Seus ganhos e saldo",
+    "currentBalance": "Saldo Atual",
+    "availableForWithdrawal": "Disponível para saque",
+    "totalEarned": "Total Ganho",
+    "lifetimeEarnings": "Ganhos vitalícios",
+    "totalWithdrawn": "Total Sacado",
+    "successfullyPaidOut": "Pago com sucesso"
+  },
+  "recentAssignments": {
+    "title": "Atribuições Recentes",
+    "description": "Suas atribuições de livros recentes",
+    "table": {
+      "bookTitle": "Título do Livro",
+      "assigned": "Atribuído",
+      "completed": "Concluído",
+      "rating": "Avaliação",
+      "status": "Status",
+      "noData": "Nenhuma atribuição recente"
+    }
+  },
+  "performanceOverTime": {
+    "title": "Desempenho ao Longo do Tempo",
+    "description": "Sua tendência de desempenho mensal",
+    "reviewsCompleted": "avaliações concluídas",
+    "earnings": "Ganhos",
+    "expired": "Expiradas",
+    "noData": "Nenhum dado de desempenho disponível"
+  },
   "achievements": {
     "title": "Conquistas",
     "description": "Seus marcos e insígnias",
@@ -67,5 +107,6 @@
     "avgTime": "Tempo Médio",
     "noData": "Nenhum dado de atividade disponível"
   },
-  "loading": "Carregando estatísticas..."
+  "loading": "Carregando estatísticas...",
+  "error": "Não foi possível carregar as estatísticas"
 }

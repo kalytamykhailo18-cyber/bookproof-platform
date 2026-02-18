@@ -21,7 +21,7 @@ import {
   updateLanguage as updateLanguageApi,
   type ConsentResponse,
 } from '@/lib/api/users';
-import { useNavigate,  useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Select,
   SelectContent,

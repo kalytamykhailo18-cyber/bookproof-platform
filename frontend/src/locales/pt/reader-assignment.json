@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Voltar ao Painel",
+  "notFound": {
+    "title": "Atribuição Não Encontrada",
+    "description": "A atribuição que você procura não existe ou foi removida."
+  },
+  "deadline": {
+    "critical": "Crítico",
+    "urgent": "Urgente",
+    "warning": "Aviso",
+    "reminder": "Lembrete",
+    "due": "Vence {time}",
+    "hoursRemaining": "horas restantes"
+  },
+  "sections": {
+    "synopsis": "Sinopse",
+    "ebookDownload": "Download do Ebook",
+    "ebookDownloadDesc": "Baixe o ebook para o seu dispositivo",
+    "downloadButton": "Baixar Ebook",
+    "downloaded": "Baixado {count} vezes",
+    "audiobookPlayer": "Player de Audiolivro"
+  },
+  "materialsNotAvailable": {
+    "title": "Materiais Ainda Não Disponíveis",
+    "waiting": "Você está na posição {position} da fila",
+    "scheduled": "Agendado para {date}",
+    "expired": "Esta atribuição expirou"
+  },
+  "details": {
+    "title": "Detalhes da Atribuição",
+    "genre": "Gênero",
+    "format": "Formato",
+    "credits": "Créditos",
+    "queuePosition": "Posição na Fila",
+    "week": "Semana",
+    "released": "Lançado"
+  },
+  "timeline": {
+    "title": "Linha do Tempo",
+    "applied": "Solicitado",
+    "materialsReleased": "Materiais Lançados",
+    "deadline": "Prazo",
+    "at": "às"
+  },
+  "actions": {
+    "title": "Ações",
+    "withdraw": "Retirar-se da Atribuição",
+    "withdrawDialog": {
+      "title": "Retirar-se da Atribuição?",
+      "description": "Tem certeza de que deseja se retirar? Esta ação não pode ser desfeita.",
+      "cancel": "Cancelar",
+      "confirm": "Retirar-se"
+    }
+  }
+}

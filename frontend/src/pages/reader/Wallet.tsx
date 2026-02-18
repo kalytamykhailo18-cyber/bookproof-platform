@@ -15,7 +15,7 @@ import {
   RefreshCw,
   Gift,
   Loader2 } from 'lucide-react';
-import { useNavigate,  useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { readersApi, ReaderProfile, ReaderStats } from '@/lib/api/readers';
 import { getMyPayouts, getWalletTransactions, WalletTransactionType, PayoutResponse, WalletTransaction } from '@/lib/api/payouts';

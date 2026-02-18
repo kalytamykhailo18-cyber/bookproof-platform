@@ -24,6 +24,46 @@
     "feedbackQuality": "Feedback quality",
     "score": "score"
   },
+  "performanceDetails": {
+    "title": "Performance Details",
+    "description": "Your detailed performance metrics",
+    "reviewsCompleted": "Reviews Completed",
+    "totalAcceptedReviews": "Total accepted reviews",
+    "reviewsExpired": "Reviews Expired",
+    "missedDeadlines": "Missed deadlines",
+    "reviewsRejected": "Reviews Rejected",
+    "notPassedValidation": "Did not pass validation"
+  },
+  "wallet": {
+    "title": "Wallet Summary",
+    "description": "Your earnings and balance",
+    "currentBalance": "Current Balance",
+    "availableForWithdrawal": "Available for withdrawal",
+    "totalEarned": "Total Earned",
+    "lifetimeEarnings": "Lifetime earnings",
+    "totalWithdrawn": "Total Withdrawn",
+    "successfullyPaidOut": "Successfully paid out"
+  },
+  "recentAssignments": {
+    "title": "Recent Assignments",
+    "description": "Your recent book assignments",
+    "table": {
+      "bookTitle": "Book Title",
+      "assigned": "Assigned",
+      "completed": "Completed",
+      "rating": "Rating",
+      "status": "Status",
+      "noData": "No recent assignments"
+    }
+  },
+  "performanceOverTime": {
+    "title": "Performance Over Time",
+    "description": "Your monthly performance trend",
+    "reviewsCompleted": "reviews completed",
+    "earnings": "Earnings",
+    "expired": "Expired",
+    "noData": "No performance data available"
+  },
   "achievements": {
     "title": "Achievements",
     "description": "Your milestones and badges",
@@ -67,5 +107,6 @@
     "avgTime": "Avg Time",
     "noData": "No activity data available"
   },
-  "loading": "Loading statistics..."
+  "loading": "Loading statistics...",
+  "error": "Unable to load statistics"
 }

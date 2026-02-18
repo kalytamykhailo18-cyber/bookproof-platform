@@ -1,0 +1,36 @@
+{
+  "backToDashboard": "Voltar ao Painel",
+  "title": "Livros Disponíveis",
+  "subtitle": "Navegue e solicite avaliar livros",
+  "filters": {
+    "title": "Filtros",
+    "search": "Pesquisar",
+    "searchPlaceholder": "Pesquisar por título do livro...",
+    "genre": "Gênero",
+    "allGenres": "Todos os Gêneros",
+    "language": "Idioma",
+    "allLanguages": "Todos os Idiomas",
+    "format": "Formato",
+    "allFormats": "Todos os Formatos"
+  },
+  "resultsCount": "{count} livros disponíveis",
+  "campaign": {
+    "byAuthor": "por {author}",
+    "genre": "Gênero",
+    "language": "Idioma",
+    "format": "Formato",
+    "viewDetails": "Ver Detalhes",
+    "applyToReview": "Solicitar Avaliar",
+    "alreadyApplied": "Já Solicitado",
+    "loading": "Carregando...",
+    "noResults": "Nenhum livro encontrado",
+    "noResultsDescription": "Tente ajustar seus filtros para encontrar mais livros"
+  },
+  "modal": {
+    "synopsis": "Sinopse"
+  },
+  "emptyState": {
+    "title": "Nenhum Livro Disponível",
+    "description": "Atualmente não há livros disponíveis para avaliar. Volte mais tarde!"
+  }
+}

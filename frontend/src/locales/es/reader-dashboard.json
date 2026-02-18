@@ -1,0 +1,46 @@
+{
+  "title": "Panel del Lector",
+  "subtitle": "Administre sus asignaciones de libros y realice un seguimiento de su progreso",
+  "browseBooks": "Explorar Libros",
+  "requestPayout": "Solicitar Pago",
+  "viewMyReviews": "Ver Mis Reseñas",
+  "payoutMinimumRequired": "Mínimo {amount} requerido",
+  "stats": {
+    "walletBalance": "Saldo de Billetera",
+    "totalEarned": "Total ganado: {amount}",
+    "activeAssignments": "Asignaciones Activas",
+    "currentlyWorking": "Trabajando actualmente en",
+    "completedReviews": "Reseñas Completadas",
+    "completionRate": "{rate}% tasa de finalización",
+    "pendingPayouts": "Pagos Pendientes",
+    "awaitingProcessing": "En espera de procesamiento"
+  },
+  "status": {
+    "waiting": "Esperando",
+    "scheduled": "Programado",
+    "approved": "Aprobado",
+    "inProgress": "En Progreso",
+    "submitted": "Enviado",
+    "completed": "Completado",
+    "expired": "Expirado"
+  },
+  "sections": {
+    "activeAssignments": "Asignaciones Activas",
+    "activeDescription": "Libros que necesita reseñar urgentemente",
+    "upcomingAssignments": "Asignaciones Próximas",
+    "upcomingDescription": "Libros programados para revisión futura",
+    "completedSubmitted": "Completados y Enviados",
+    "completedDescription": "Reseñas que ha enviado"
+  },
+  "byAuthor": "por {author}",
+  "credit": "crédito",
+  "credits": "créditos",
+  "queuePosition": "Posición en la cola: {position}",
+  "scheduledFor": "Programado para {date}",
+  "deadline": "Plazo",
+  "remaining": "restante",
+  "empty": {
+    "title": "Aún No Hay Asignaciones",
+    "description": "Comience a explorar libros disponibles y solicite asignaciones de reseñas"
+  }
+}

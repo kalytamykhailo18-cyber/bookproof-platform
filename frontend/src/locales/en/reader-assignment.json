@@ -1,0 +1,55 @@
+{
+  "backToDashboard": "Back to Dashboard",
+  "notFound": {
+    "title": "Assignment Not Found",
+    "description": "The assignment you're looking for doesn't exist or has been removed."
+  },
+  "deadline": {
+    "critical": "Critical",
+    "urgent": "Urgent",
+    "warning": "Warning",
+    "reminder": "Reminder",
+    "due": "Due {time}",
+    "hoursRemaining": "hours remaining"
+  },
+  "sections": {
+    "synopsis": "Synopsis",
+    "ebookDownload": "Ebook Download",
+    "ebookDownloadDesc": "Download the ebook to your device",
+    "downloadButton": "Download Ebook",
+    "downloaded": "Downloaded {count} times",
+    "audiobookPlayer": "Audiobook Player"
+  },
+  "materialsNotAvailable": {
+    "title": "Materials Not Yet Available",
+    "waiting": "You are {position} in the queue",
+    "scheduled": "Scheduled for {date}",
+    "expired": "This assignment has expired"
+  },
+  "details": {
+    "title": "Assignment Details",
+    "genre": "Genre",
+    "format": "Format",
+    "credits": "Credits",
+    "queuePosition": "Queue Position",
+    "week": "Week",
+    "released": "Released"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "applied": "Applied",
+    "materialsReleased": "Materials Released",
+    "deadline": "Deadline",
+    "at": "at"
+  },
+  "actions": {
+    "title": "Actions",
+    "withdraw": "Withdraw from Assignment",
+    "withdrawDialog": {
+      "title": "Withdraw from Assignment?",
+      "description": "Are you sure you want to withdraw? This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Withdraw"
+    }
+  }
+}

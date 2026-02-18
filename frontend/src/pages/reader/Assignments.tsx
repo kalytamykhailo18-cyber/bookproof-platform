@@ -18,7 +18,7 @@ import {
   Loader2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { AudiobookPlayer } from '@/components/reader/AudiobookPlayer';
-import { useNavigate,  useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,10 +31,10 @@ import {
   AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useTranslation } from 'react-i18next';
 
-export function AssignmentDetailPage({ params }: { params: { id: string } }) {
+export function AssignmentDetailPage() {
   const { t, i18n } = useTranslation('reader.assignment');
   const navigate = useNavigate();
-  const routeParams = useParams();
+  const params = useParams<{ id: string }>();
 
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [isLoading, setIsLoading] = useState(true);

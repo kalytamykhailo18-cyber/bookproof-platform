@@ -1,0 +1,45 @@
+{
+  "backToDashboard": "Back to Dashboard",
+  "title": "Reader Profile",
+  "subtitle": "Manage your reading preferences and profile information",
+  "editProfile": "Edit Profile",
+  "sections": {
+    "profileSettings": "Profile Settings",
+    "currentDesc": "Configure your reading preferences",
+    "editDesc": "Update your profile settings",
+    "amazonProfiles": "Amazon Profiles",
+    "amazonProfilesDesc": "Add your Amazon reviewer profile URLs for verification"
+  },
+  "contentPreference": {
+    "label": "Content Preference",
+    "ebook": "Ebook Only",
+    "audiobook": "Audiobook Only",
+    "both": "Both Ebook & Audiobook",
+    "help": "Select which formats you'd like to review"
+  },
+  "genres": {
+    "label": "Preferred Genres",
+    "help": "Select genres you're interested in reviewing (optional)"
+  },
+  "amazonProfiles": {
+    "pending": "Pending Verification",
+    "addLabel": "Add Amazon Profile URL",
+    "placeholder": "https://www.amazon.com/gp/profile/...",
+    "example": "Example: https://www.amazon.com/gp/profile/YOUR_PROFILE_ID"
+  },
+  "stats": {
+    "title": "Your Statistics",
+    "walletBalance": "Wallet Balance",
+    "totalEarned": "Total Earned",
+    "totalWithdrawn": "Total Withdrawn",
+    "completed": "Completed",
+    "expired": "Expired",
+    "rejected": "Rejected",
+    "reliabilityScore": "Reliability Score",
+    "completionRate": "Completion Rate"
+  },
+  "actions": {
+    "save": "Save Changes",
+    "cancel": "Cancel"
+  }
+}
