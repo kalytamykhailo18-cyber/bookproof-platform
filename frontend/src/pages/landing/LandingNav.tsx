@@ -35,7 +35,10 @@ export function LandingNav() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <div className="flex items-center gap-2 animate-fade-right-fast">
+          <div
+            className="flex items-center gap-2 animate-fade-right-fast cursor-pointer"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
             <div className="flex items-center justify-center w-8 h-8 rounded-md"
               style={{ background: 'linear-gradient(135deg, #3b82f6, #6366f1)' }}>
               <BookOpen className="h-4 w-4 text-white" />

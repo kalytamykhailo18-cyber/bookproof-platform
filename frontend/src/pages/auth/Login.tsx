@@ -167,7 +167,7 @@ export function LoginPage() {
             <div className="w-9 h-9 rounded-md bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
               <BookOpen className="h-5 w-5 text-blue-400" />
             </div>
-            <span className="text-white font-bold text-xl tracking-tight">BookProof</span>
+            <span className="text-white font-bold text-xl tracking-tight cursor-pointer" onClick={() => navigate('/')}>BookProof</span>
           </div>
           <p className="text-slate-500 text-xs">The Amazon Review Platform for Authors</p>
         </div>
