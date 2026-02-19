@@ -8,16 +8,9 @@ import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate,  useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Plus, X, Loader2 } from 'lucide-react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle } from '@/components/ui/card';
+import { Plus, X, Loader2, BookOpen, PenLine, Headphones, Link2, ShieldCheck, Star, Clock, CheckCircle2, Users, DollarSign, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -30,14 +23,6 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 
-/**
- * Password validation matching backend requirements:
- * - Minimum 8 characters
- * - At least one uppercase letter
- * - At least one lowercase letter
- * - At least one number
- * - At least one special character
- */
 const passwordSchema = z
   .string()
   .min(8, 'Password must be at least 8 characters')
@@ -68,28 +53,14 @@ const registerSchema = z
       .optional(),
     termsAccepted: z.boolean(),
     marketingConsent: z.boolean().optional(),
-    // Affiliate-specific fields
     websiteUrl: z.string().url('Please enter a valid URL').optional(),
-    socialMediaUrls: z
-      .string()
-      .max(1000, 'Social media URLs must not exceed 1000 characters')
-      .optional(),
-    promotionPlan: z
-      .string()
-      .min(50, 'Promotion plan must be at least 50 characters')
-      .max(1000, 'Promotion plan must not exceed 1000 characters')
-      .optional(),
-    estimatedReach: z
-      .string()
-      .max(500, 'Estimated reach must not exceed 500 characters')
-      .optional(),
+    socialMediaUrls: z.string().max(1000).optional(),
+    promotionPlan: z.string().min(50).max(1000).optional(),
+    estimatedReach: z.string().max(500).optional(),
     preferredSlug: z
       .string()
       .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
-      .min(3, 'Slug must be at least 3 characters')
-      .max(50, 'Slug must not exceed 50 characters')
-      .optional()
-      .or(z.literal('')),
+      .min(3).max(50).optional().or(z.literal('')),
     paypalEmail: z.string().email('Please enter a valid PayPal email').optional().or(z.literal('')) })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
@@ -105,15 +76,13 @@ const registerSchema = z
     path: ['websiteUrl'] })
   .refine(
     (data) => data.role !== 'AFFILIATE' || (data.promotionPlan && data.promotionPlan.length >= 50),
-    {
-      message: 'Promotion plan is required for affiliates (minimum 50 characters)',
-      path: ['promotionPlan'] },
+    { message: 'Promotion plan is required for affiliates (minimum 50 characters)', path: ['promotionPlan'] },
   );
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 export function RegisterPage() {
-  const { t, i18n } = useTranslation('auth.register');
+  const { t } = useTranslation('auth.register');
   const navigate = useNavigate();
   const { setUser } = useAuthStore();
   const { startLoading, stopLoading } = useLoading();
@@ -143,28 +112,20 @@ export function RegisterPage() {
   const selectedRole = watch('role');
 
   const handleAddAmazonLink = () => {
-    if (amazonLinks.length < 3) {
-      setAmazonLinks([...amazonLinks, '']);
-    }
+    if (amazonLinks.length < 3) setAmazonLinks([...amazonLinks, '']);
   };
 
   const handleRemoveAmazonLink = (index: number) => {
     const newLinks = amazonLinks.filter((_, i) => i !== index);
     setAmazonLinks(newLinks.length > 0 ? newLinks : ['']);
-    setValue(
-      'amazonProfileLinks',
-      newLinks.filter((link) => link.trim() !== ''),
-    );
+    setValue('amazonProfileLinks', newLinks.filter((link) => link.trim() !== ''));
   };
 
   const handleAmazonLinkChange = (index: number, value: string) => {
     const newLinks = [...amazonLinks];
     newLinks[index] = value;
     setAmazonLinks(newLinks);
-    setValue(
-      'amazonProfileLinks',
-      newLinks.filter((link) => link.trim() !== ''),
-    );
+    setValue('amazonProfileLinks', newLinks.filter((link) => link.trim() !== ''));
   };
 
   const handleRegister = async () => {
@@ -173,501 +134,513 @@ export function RegisterPage() {
 
     const data = getValues();
     try {
-      // Get reCAPTCHA token if enabled
       let captchaToken: string | undefined;
-      if (isRecaptchaEnabled) {
-        captchaToken = await executeRecaptcha('register');
-      }
+      if (isRecaptchaEnabled) captchaToken = await executeRecaptcha('register');
 
       setIsRegistering(true);
       startLoading('Creating your account...');
 
       const { confirmPassword: _, ...registerData } = data;
-      void _; // Explicitly mark as intentionally unused
+      void _;
 
       const response = await authApi.register({ ...registerData, captchaToken });
-
-      // Set token and user
       tokenManager.setToken(response.accessToken);
       setUser(response.user);
-
       toast.success(t('success'));
 
-      // If email is not verified, redirect to verification required page
       if (!response.user.emailVerified) {
         navigate('/verify-email-required');
       } else {
-        // Email already verified (dev mode), redirect to role-based dashboard
         switch (response.user.role) {
-          case 'AUTHOR':
-            navigate('/author');
-            break;
-          case 'READER':
-            navigate('/reader');
-            break;
-          case 'AFFILIATE':
-            navigate('/affiliate/dashboard');
-            break;
-          default:
-            navigate('/');
+          case 'AUTHOR':    navigate('/author'); break;
+          case 'READER':    navigate('/reader'); break;
+          case 'AFFILIATE': navigate('/affiliate/dashboard'); break;
+          default:          navigate('/');
         }
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } }; message?: string };
       const errorMessage = err?.response?.data?.message || err?.message || t('error');
-      if (errorMessage.includes('already exists')) {
-        toast.error(t('emailExists'));
-      } else if (errorMessage.includes('CAPTCHA')) {
-        toast.error('Security verification failed. Please try again.');
-      } else {
-        toast.error(errorMessage);
-      }
+      if (errorMessage.includes('already exists')) toast.error(t('emailExists'));
+      else if (errorMessage.includes('CAPTCHA')) toast.error('Security verification failed. Please try again.');
+      else toast.error(errorMessage);
     } finally {
       setIsRegistering(false);
       stopLoading();
     }
   };
 
+  const roles = [
+    {
+      key: 'AUTHOR',
+      icon: PenLine,
+      color: '#60a5fa',
+      title: 'Author',
+      desc: 'Launch your book with verified reviews',
+    },
+    {
+      key: 'READER',
+      icon: Headphones,
+      color: '#34d399',
+      title: 'Reader',
+      desc: 'Read books & earn per review',
+    },
+    {
+      key: 'AFFILIATE',
+      icon: Link2,
+      color: '#a78bfa',
+      title: 'Affiliate',
+      desc: 'Refer authors & earn commissions',
+    },
+  ];
+
   return (
-    <div className="container flex min-h-[calc(100vh-theme(spacing.16)-theme(spacing.32))] items-center justify-center py-12">
-      <div className="w-full max-w-2xl">
-        <Card className="animate-zoom-in">
-          <CardHeader className="space-y-1">
-        <CardTitle className="animate-fade-down-fast text-center text-2xl font-bold">
-          {t('title')}
-        </CardTitle>
-        <CardDescription className="animate-fade-up-fast text-center">
-          {t('subtitle')}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="animate-fade-up-very-fast space-y-2">
-          <Label htmlFor="name">{t('name')}</Label>
-          <Input
-            id="name"
-            placeholder={t('namePlaceholder')}
-            {...register('name')}
-            className={errors.name ? 'border-destructive' : ''}
-            disabled={isRegistering}
-          />
-          {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
-        </div>
+    <div className="min-h-screen flex">
 
-        <div className="animate-fade-left-very-fast space-y-2">
-          <Label htmlFor="email">{t('email')}</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder={t('emailPlaceholder')}
-            {...register('email')}
-            className={errors.email ? 'border-destructive' : ''}
-            disabled={isRegistering}
-          />
-          {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
-        </div>
+      {/* ── Left panel — dark branded ── */}
+      <div
+        className="hidden lg:flex lg:w-5/12 xl:w-2/5 flex-col justify-between p-12 relative overflow-hidden sticky top-0 h-screen"
+        style={{ background: 'linear-gradient(160deg, #080d1a 0%, #0d1b2e 100%)' }}
+      >
+        {/* Dot grid */}
+        <div
+          className="absolute inset-0 opacity-[0.04] pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '28px 28px' }}
+        />
+        <div
+          className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none"
+          style={{ background: 'radial-gradient(circle at bottom left, rgba(139,92,246,0.07) 0%, transparent 60%)' }}
+        />
 
-        <div className="animate-fade-right-very-fast space-y-2">
-          <Label htmlFor="password">{t('password')}</Label>
-          <Input
-            id="password"
-            type="password"
-            placeholder={t('passwordPlaceholder')}
-            {...register('password')}
-            className={errors.password ? 'border-destructive' : ''}
-            disabled={isRegistering}
-          />
-          {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
-        </div>
-
-        <div className="animate-fade-up-fast space-y-2">
-          <Label htmlFor="confirmPassword">{t('confirmPassword')}</Label>
-          <Input
-            id="confirmPassword"
-            type="password"
-            placeholder={t('confirmPasswordPlaceholder')}
-            {...register('confirmPassword')}
-            className={errors.confirmPassword ? 'border-destructive' : ''}
-            disabled={isRegistering}
-          />
-          {errors.confirmPassword && (
-            <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
-          )}
-        </div>
-
-        <div className="animate-zoom-in-fast space-y-2">
-          <Label htmlFor="role">{t('role')}</Label>
-          <Select
-            onValueChange={(value) => setValue('role', value as 'AUTHOR' | 'READER' | 'AFFILIATE')}
-            disabled={isRegistering}
-          >
-            <SelectTrigger className={errors.role ? 'border-destructive' : ''}>
-              <SelectValue placeholder={t('roleRequired')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="AUTHOR">{t('roleAuthor')}</SelectItem>
-              <SelectItem value="READER">{t('roleReader')}</SelectItem>
-              <SelectItem value="AFFILIATE">{t('roleAffiliate')}</SelectItem>
-            </SelectContent>
-          </Select>
-          {errors.role && <p className="text-sm text-destructive">{errors.role.message}</p>}
-        </div>
-
-        {selectedRole === 'AUTHOR' && (
-          <div className="animate-fade-up space-y-2">
-            <Label htmlFor="companyName">{t('companyName') || 'Company Name'}</Label>
-            <Input
-              id="companyName"
-              placeholder={t('companyNamePlaceholder') || 'Enter your company name (optional)'}
-              {...register('companyName')}
-              className={errors.companyName ? 'border-destructive' : ''}
-              disabled={isRegistering}
-            />
-            {errors.companyName && (
-              <p className="text-sm text-destructive">{errors.companyName.message}</p>
-            )}
-          </div>
-        )}
-
-        <div className="animate-fade-left-fast space-y-2">
-          <Label htmlFor="country">{t('country') || 'Country'} *</Label>
-          <Select onValueChange={(value) => setValue('country', value)} disabled={isRegistering}>
-            <SelectTrigger className={errors.country ? 'border-destructive' : ''}>
-              <SelectValue placeholder={t('countryPlaceholder') || 'Select your country'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="US">United States</SelectItem>
-              <SelectItem value="GB">United Kingdom</SelectItem>
-              <SelectItem value="CA">Canada</SelectItem>
-              <SelectItem value="AU">Australia</SelectItem>
-              <SelectItem value="BR">Brazil</SelectItem>
-              <SelectItem value="MX">Mexico</SelectItem>
-              <SelectItem value="ES">Spain</SelectItem>
-              <SelectItem value="PT">Portugal</SelectItem>
-              <SelectItem value="DE">Germany</SelectItem>
-              <SelectItem value="FR">France</SelectItem>
-              <SelectItem value="IT">Italy</SelectItem>
-              <SelectItem value="IN">India</SelectItem>
-              <SelectItem value="OTHER">Other</SelectItem>
-            </SelectContent>
-          </Select>
-          {errors.country && <p className="text-sm text-destructive">{errors.country.message}</p>}
-        </div>
-
-        <div className="animate-fade-right-fast space-y-2">
-          <Label htmlFor="phone">{t('phone') || 'Phone Number'}</Label>
-          <Input
-            id="phone"
-            type="tel"
-            placeholder={t('phonePlaceholder') || '+1 (555) 123-4567'}
-            {...register('phone')}
-            className={errors.phone ? 'border-destructive' : ''}
-            disabled={isRegistering}
-          />
-          <p className="text-xs text-muted-foreground">
-            {t('phoneHint') || 'Optional - for account recovery and support'}
-          </p>
-          {errors.phone && <p className="text-sm text-destructive">{errors.phone.message}</p>}
-        </div>
-
-        {selectedRole === 'READER' && (
-          <div className="animate-fade-up space-y-4">
-            <div className="animate-zoom-in-fast space-y-2">
-              <Label htmlFor="contentPreference">
-                {t('contentPreference') || 'Content Format Preference'} *
-              </Label>
-              <Select
-                onValueChange={(value) =>
-                  setValue('contentPreference', value as 'EBOOK' | 'AUDIOBOOK' | 'BOTH')
-                }
-                disabled={isRegistering}
-              >
-                <SelectTrigger className={errors.contentPreference ? 'border-destructive' : ''}>
-                  <SelectValue
-                    placeholder={
-                      t('contentPreferencePlaceholder') || 'Select your preferred format'
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="EBOOK">Ebook Only</SelectItem>
-                  <SelectItem value="AUDIOBOOK">Audiobook Only</SelectItem>
-                  <SelectItem value="BOTH">Both Formats</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                {t('contentPreferenceHint') || 'Choose which book formats you prefer to review'}
-              </p>
-              {errors.contentPreference && (
-                <p className="text-sm text-destructive">{errors.contentPreference.message}</p>
-              )}
+        {/* Logo */}
+        <div className="relative">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-md bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
+              <BookOpen className="h-5 w-5 text-blue-400" />
             </div>
+            <span className="text-white font-bold text-xl tracking-tight">BookProof</span>
+          </div>
+          <p className="text-slate-500 text-xs">The Amazon Review Platform for Authors</p>
+        </div>
 
-            <div className="animate-fade-right space-y-2">
-              <Label>{t('amazonProfileLinks') || 'Amazon Profile Links'}</Label>
-              <p className="text-xs text-muted-foreground">
-                {t('amazonProfileLinksHint') || 'Add up to 3 Amazon profile URLs (optional)'}
-              </p>
-              {amazonLinks.map((link, index) => (
+        {/* Main content */}
+        <div className="relative space-y-10">
+          <div>
+            <h2 className="text-3xl font-bold text-white leading-tight mb-4">
+              Join the platform<br />
+              <span className="text-purple-400">built for books</span>
+            </h2>
+            <p className="text-slate-400 text-base leading-relaxed">
+              Whether you're an author, a reader, or a marketer — there's a place for you on BookProof.
+            </p>
+          </div>
+
+          {/* Role cards */}
+          <div className="space-y-3">
+            {roles.map(({ key, icon: Icon, color, title, desc }) => (
+              <div
+                key={key}
+                className="flex items-center gap-4 rounded-md p-4"
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(71,85,105,0.25)' }}
+              >
                 <div
-                  key={index}
-                  className="flex animate-fade-in gap-2"
-                  style={{ animationDelay: `${index * 50}ms` }}
+                  className="flex-shrink-0 w-9 h-9 rounded-md flex items-center justify-center"
+                  style={{ background: `${color}18`, border: `1px solid ${color}30` }}
                 >
+                  <Icon className="h-4 w-4" style={{ color }} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white">{title}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Stats */}
+          <div className="flex items-center gap-8 pt-2 border-t border-slate-800">
+            {[
+              { icon: Users,       value: '500+', label: 'Authors' },
+              { icon: Star,        value: '94%',  label: 'Retention' },
+              { icon: DollarSign,  value: '20%',  label: 'Affiliate Cut' },
+            ].map(({ icon: Icon, value, label }) => (
+              <div key={label}>
+                <p className="text-2xl font-bold text-white">{value}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom note */}
+        <div className="relative">
+          <div className="flex items-center gap-2 text-xs text-slate-600">
+            <Lock className="h-3 w-3" />
+            Your data is encrypted and never shared with third parties.
+          </div>
+        </div>
+      </div>
+
+      {/* ── Right panel — register form ── */}
+      <div className="w-full lg:w-7/12 xl:w-3/5 flex flex-col items-center justify-start px-6 py-12 bg-gray-50 overflow-y-auto">
+        <div className="w-full max-w-xl animate-fade-up">
+
+          {/* Card */}
+          <div className="bg-white rounded-md border border-gray-200 shadow-sm overflow-hidden">
+            {/* Top stripe */}
+            <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-purple-400 to-teal-400" />
+
+            <div className="px-8 py-8">
+              {/* Header */}
+              <div className="flex flex-col items-center mb-7">
+                <div className="w-12 h-12 bg-blue-50 rounded-md flex items-center justify-center mb-3">
+                  <BookOpen className="h-6 w-6 text-blue-500" />
+                </div>
+                <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+                <p className="text-gray-500 text-sm mt-1 text-center">{t('subtitle')}</p>
+              </div>
+
+              {/* Form */}
+              <div className="flex flex-col gap-5">
+
+                {/* Name */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="name">{t('name')}</Label>
                   <Input
-                    placeholder={
-                      t('amazonProfileLinkPlaceholder') || 'https://www.amazon.com/gp/profile/...'
-                    }
-                    value={link}
-                    onChange={(e) => handleAmazonLinkChange(index, e.target.value)}
-                    className={errors.amazonProfileLinks ? 'border-destructive' : ''}
+                    id="name"
+                    placeholder={t('namePlaceholder')}
+                    {...register('name')}
+                    className={errors.name ? 'border-destructive' : ''}
                     disabled={isRegistering}
                   />
-                  {amazonLinks.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => handleRemoveAmazonLink(index)}
-                      disabled={isRegistering}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  )}
+                  {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
                 </div>
-              ))}
-              {amazonLinks.length < 3 && (
+
+                {/* Email */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="email">{t('email')}</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder={t('emailPlaceholder')}
+                    {...register('email')}
+                    className={errors.email ? 'border-destructive' : ''}
+                    disabled={isRegistering}
+                  />
+                  {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+                </div>
+
+                {/* Password row */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="password">{t('password')}</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      {...register('password')}
+                      className={errors.password ? 'border-destructive' : ''}
+                      disabled={isRegistering}
+                    />
+                    {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="confirmPassword">{t('confirmPassword')}</Label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      placeholder="••••••••"
+                      {...register('confirmPassword')}
+                      className={errors.confirmPassword ? 'border-destructive' : ''}
+                      disabled={isRegistering}
+                    />
+                    {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
+                  </div>
+                </div>
+
+                {/* Role selector */}
+                <div className="space-y-2">
+                  <Label>{t('role')}</Label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {roles.map(({ key, icon: Icon, color, title, desc }) => {
+                      const isSelected = selectedRole === key;
+                      return (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => setValue('role', key as 'AUTHOR' | 'READER' | 'AFFILIATE')}
+                          className="flex flex-col items-center gap-2 p-3 rounded-md border-2 transition-all text-center"
+                          style={isSelected
+                            ? { borderColor: color, background: `${color}0f` }
+                            : { borderColor: '#e5e7eb', background: '#fff' }}
+                        >
+                          <Icon className="h-5 w-5" style={{ color: isSelected ? color : '#9ca3af' }} />
+                          <span className="text-xs font-semibold leading-tight" style={{ color: isSelected ? color : '#6b7280' }}>
+                            {title}
+                          </span>
+                          <span className="text-xs text-gray-400 leading-tight">{desc}</span>
+                          {isSelected && <CheckCircle2 className="h-3.5 w-3.5" style={{ color }} />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {errors.role && <p className="text-sm text-destructive">{errors.role.message}</p>}
+                </div>
+
+                {/* Country + Phone */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label>{t('country') || 'Country'} *</Label>
+                    <Select onValueChange={(value) => setValue('country', value)} disabled={isRegistering}>
+                      <SelectTrigger className={errors.country ? 'border-destructive' : ''}>
+                        <SelectValue placeholder="Select country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="US">United States</SelectItem>
+                        <SelectItem value="GB">United Kingdom</SelectItem>
+                        <SelectItem value="CA">Canada</SelectItem>
+                        <SelectItem value="AU">Australia</SelectItem>
+                        <SelectItem value="BR">Brazil</SelectItem>
+                        <SelectItem value="MX">Mexico</SelectItem>
+                        <SelectItem value="ES">Spain</SelectItem>
+                        <SelectItem value="PT">Portugal</SelectItem>
+                        <SelectItem value="DE">Germany</SelectItem>
+                        <SelectItem value="FR">France</SelectItem>
+                        <SelectItem value="IT">Italy</SelectItem>
+                        <SelectItem value="IN">India</SelectItem>
+                        <SelectItem value="OTHER">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {errors.country && <p className="text-sm text-destructive">{errors.country.message}</p>}
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>{t('phone') || 'Phone'}</Label>
+                    <Input
+                      type="tel"
+                      placeholder="+1 (555) 123-4567"
+                      {...register('phone')}
+                      disabled={isRegistering}
+                    />
+                  </div>
+                </div>
+
+                {/* Language + Currency */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label>{t('language')}</Label>
+                    <Select onValueChange={(v) => setValue('preferredLanguage', v as 'EN' | 'PT' | 'ES')} defaultValue="EN" disabled={isRegistering}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="EN">English</SelectItem>
+                        <SelectItem value="PT">Português</SelectItem>
+                        <SelectItem value="ES">Español</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>{t('currency')}</Label>
+                    <Select onValueChange={(v) => setValue('preferredCurrency', v)} defaultValue="USD" disabled={isRegistering}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="USD">USD ($)</SelectItem>
+                        <SelectItem value="EUR">EUR (€)</SelectItem>
+                        <SelectItem value="BRL">BRL (R$)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* Author-specific */}
+                {selectedRole === 'AUTHOR' && (
+                  <div className="space-y-1.5">
+                    <Label>{t('companyName') || 'Company Name'}</Label>
+                    <Input
+                      placeholder={t('companyNamePlaceholder') || 'Your publishing company (optional)'}
+                      {...register('companyName')}
+                      className={errors.companyName ? 'border-destructive' : ''}
+                      disabled={isRegistering}
+                    />
+                    {errors.companyName && <p className="text-sm text-destructive">{errors.companyName.message}</p>}
+                  </div>
+                )}
+
+                {/* Reader-specific */}
+                {selectedRole === 'READER' && (
+                  <div className="space-y-5">
+                    <div className="space-y-1.5">
+                      <Label>{t('contentPreference') || 'Content Format Preference'} *</Label>
+                      <Select onValueChange={(v) => setValue('contentPreference', v as 'EBOOK' | 'AUDIOBOOK' | 'BOTH')} disabled={isRegistering}>
+                        <SelectTrigger className={errors.contentPreference ? 'border-destructive' : ''}>
+                          <SelectValue placeholder="Select preferred format" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="EBOOK">Ebook Only</SelectItem>
+                          <SelectItem value="AUDIOBOOK">Audiobook Only</SelectItem>
+                          <SelectItem value="BOTH">Both Formats</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {errors.contentPreference && <p className="text-sm text-destructive">{errors.contentPreference.message}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>{t('amazonProfileLinks') || 'Amazon Profile Links'}</Label>
+                      <p className="text-xs text-gray-400">{t('amazonProfileLinksHint') || 'Add up to 3 Amazon profile URLs (optional)'}</p>
+                      {amazonLinks.map((link, index) => (
+                        <div key={index} className="flex gap-2">
+                          <Input
+                            placeholder="https://www.amazon.com/gp/profile/..."
+                            value={link}
+                            onChange={(e) => handleAmazonLinkChange(index, e.target.value)}
+                            className={errors.amazonProfileLinks ? 'border-destructive' : ''}
+                            disabled={isRegistering}
+                          />
+                          {amazonLinks.length > 1 && (
+                            <Button type="button" variant="outline" size="icon" onClick={() => handleRemoveAmazonLink(index)} disabled={isRegistering}>
+                              <X className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                      {amazonLinks.length < 3 && (
+                        <Button type="button" variant="outline" size="sm" onClick={handleAddAmazonLink} disabled={isRegistering}>
+                          <Plus className="mr-2 h-4 w-4" />
+                          {t('addAnotherLink') || 'Add another link'}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Affiliate-specific */}
+                {selectedRole === 'AFFILIATE' && (
+                  <div className="space-y-5">
+                    <div className="space-y-1.5">
+                      <Label>{t('websiteUrl') || 'Website URL'} *</Label>
+                      <Input type="url" placeholder="https://yourblog.com" {...register('websiteUrl')} className={errors.websiteUrl ? 'border-destructive' : ''} disabled={isRegistering} />
+                      {errors.websiteUrl && <p className="text-sm text-destructive">{errors.websiteUrl.message}</p>}
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <Label>{t('socialMediaUrls') || 'Social Media URLs'}</Label>
+                      <Input placeholder="https://twitter.com/you, https://instagram.com/you" {...register('socialMediaUrls')} disabled={isRegistering} />
+                      <p className="text-xs text-gray-400">Comma-separated (optional)</p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <Label>{t('promotionPlan') || 'Promotion Plan'} *</Label>
+                      <Textarea
+                        placeholder="Describe how you plan to promote BookProof (minimum 50 characters)..."
+                        {...register('promotionPlan')}
+                        className={`min-h-[100px] ${errors.promotionPlan ? 'border-destructive' : ''}`}
+                        disabled={isRegistering}
+                      />
+                      {errors.promotionPlan && <p className="text-sm text-destructive">{errors.promotionPlan.message}</p>}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <Label>{t('estimatedReach') || 'Est. Audience Reach'}</Label>
+                        <Input placeholder="e.g. 10,000 monthly visitors" {...register('estimatedReach')} disabled={isRegistering} />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label>{t('preferredSlug') || 'Referral Slug'}</Label>
+                        <Input placeholder="my-book-blog" {...register('preferredSlug')} className={errors.preferredSlug ? 'border-destructive' : ''} disabled={isRegistering} />
+                        {errors.preferredSlug && <p className="text-sm text-destructive">{errors.preferredSlug.message}</p>}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <Label>{t('paypalEmail') || 'PayPal Email'}</Label>
+                      <Input type="email" placeholder="payments@youremail.com" {...register('paypalEmail')} className={errors.paypalEmail ? 'border-destructive' : ''} disabled={isRegistering} />
+                      {errors.paypalEmail && <p className="text-sm text-destructive">{errors.paypalEmail.message}</p>}
+                    </div>
+                  </div>
+                )}
+
+                {/* Terms & marketing */}
+                <div className="space-y-3 pt-1">
+                  <div className="flex items-start space-x-2">
+                    <Checkbox
+                      id="terms"
+                      checked={termsAccepted}
+                      onCheckedChange={(checked) => setValue('termsAccepted', checked as boolean)}
+                      disabled={isRegistering}
+                      className={errors.termsAccepted ? 'border-destructive' : ''}
+                    />
+                    <Label htmlFor="terms" className="cursor-pointer text-sm font-normal leading-relaxed">
+                      {t('terms')}
+                    </Label>
+                  </div>
+                  {errors.termsAccepted && <p className="text-sm text-destructive">{errors.termsAccepted.message}</p>}
+
+                  <div className="flex items-start space-x-2">
+                    <Checkbox
+                      id="marketingConsent"
+                      checked={marketingConsent}
+                      onCheckedChange={(checked) => setValue('marketingConsent', checked as boolean)}
+                      disabled={isRegistering}
+                    />
+                    <Label htmlFor="marketingConsent" className="cursor-pointer text-sm font-normal leading-relaxed text-gray-500">
+                      {t('marketingConsent') || 'I agree to receive marketing emails and updates'}
+                    </Label>
+                  </div>
+                </div>
+
+                {/* Submit */}
                 <Button
                   type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleAddAmazonLink}
+                  className="w-full mt-1"
                   disabled={isRegistering}
-                  className="mt-2"
+                  onClick={handleRegister}
+                  style={{ backgroundColor: '#3b82f6', fontWeight: 600 }}
                 >
-                  <Plus className="mr-2 h-4 w-4" />
-                  {t('addAnotherLink') || 'Add another link'}
+                  {isRegistering ? <Loader2 className="h-4 w-4 animate-spin" /> : t('submitButton')}
                 </Button>
-              )}
-              {errors.amazonProfileLinks && (
-                <p className="text-sm text-destructive">{errors.amazonProfileLinks.message}</p>
-              )}
+
+                {/* Legal note */}
+                <p className="flex items-center justify-center gap-1.5 text-xs text-gray-400">
+                  <Lock className="h-3 w-3 flex-shrink-0" />
+                  By registering, you agree to our Terms of Service and Privacy Policy.
+                </p>
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3 my-6">
+                <div className="flex-1 h-px bg-gray-200" />
+                <span className="text-gray-400 text-xs">or</span>
+                <div className="flex-1 h-px bg-gray-200" />
+              </div>
+
+              {/* Login link */}
+              <p className="text-center text-sm text-gray-500">
+                {t('hasAccount')}{' '}
+                <span
+                  className="cursor-pointer font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+                  onClick={() => { setIsLoginLoading(true); navigate('/login'); }}
+                >
+                  {isLoginLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('signIn')}
+                </span>
+              </p>
             </div>
           </div>
-        )}
 
-        {selectedRole === 'AFFILIATE' && (
-          <div className="animate-fade-up space-y-4">
-            <div className="animate-zoom-in-fast space-y-2">
-              <Label htmlFor="websiteUrl">{t('websiteUrl') || 'Website URL'} *</Label>
-              <Input
-                id="websiteUrl"
-                type="url"
-                placeholder={t('websiteUrlPlaceholder') || 'https://yourblog.com'}
-                {...register('websiteUrl')}
-                className={errors.websiteUrl ? 'border-destructive' : ''}
-                disabled={isRegistering}
-              />
-              {errors.websiteUrl && (
-                <p className="text-sm text-destructive">{errors.websiteUrl.message}</p>
-              )}
-            </div>
-
-            <div className="animate-fade-left space-y-2">
-              <Label htmlFor="socialMediaUrls">{t('socialMediaUrls') || 'Social Media URLs'}</Label>
-              <Input
-                id="socialMediaUrls"
-                placeholder={
-                  t('socialMediaUrlsPlaceholder') ||
-                  'https://twitter.com/you, https://instagram.com/you'
-                }
-                {...register('socialMediaUrls')}
-                className={errors.socialMediaUrls ? 'border-destructive' : ''}
-                disabled={isRegistering}
-              />
-              <p className="text-xs text-muted-foreground">
-                {t('socialMediaUrlsHint') ||
-                  'Enter your social media URLs separated by commas (optional)'}
-              </p>
-              {errors.socialMediaUrls && (
-                <p className="text-sm text-destructive">{errors.socialMediaUrls.message}</p>
-              )}
-            </div>
-
-            <div className="animate-fade-right space-y-2">
-              <Label htmlFor="promotionPlan">{t('promotionPlan') || 'Promotion Plan'} *</Label>
-              <Textarea
-                id="promotionPlan"
-                placeholder={
-                  t('promotionPlanPlaceholder') ||
-                  'Describe how you plan to promote BookProof (minimum 50 characters)...'
-                }
-                {...register('promotionPlan')}
-                className={`min-h-[100px] ${errors.promotionPlan ? 'border-destructive' : ''}`}
-                disabled={isRegistering}
-              />
-              <p className="text-xs text-muted-foreground">
-                {t('promotionPlanHint') ||
-                  'Explain your audience and promotion strategy (50-1000 characters)'}
-              </p>
-              {errors.promotionPlan && (
-                <p className="text-sm text-destructive">{errors.promotionPlan.message}</p>
-              )}
-            </div>
-
-            <div className="animate-zoom-in space-y-2">
-              <Label htmlFor="estimatedReach">
-                {t('estimatedReach') || 'Estimated Audience Reach'}
-              </Label>
-              <Input
-                id="estimatedReach"
-                placeholder={t('estimatedReachPlaceholder') || 'e.g., 10,000 monthly blog visitors'}
-                {...register('estimatedReach')}
-                className={errors.estimatedReach ? 'border-destructive' : ''}
-                disabled={isRegistering}
-              />
-              {errors.estimatedReach && (
-                <p className="text-sm text-destructive">{errors.estimatedReach.message}</p>
-              )}
-            </div>
-
-            <div className="animate-fade-up-fast space-y-2">
-              <Label htmlFor="preferredSlug">
-                {t('preferredSlug') || 'Preferred Referral Slug'}
-              </Label>
-              <Input
-                id="preferredSlug"
-                placeholder={t('preferredSlugPlaceholder') || 'my-book-blog'}
-                {...register('preferredSlug')}
-                className={errors.preferredSlug ? 'border-destructive' : ''}
-                disabled={isRegistering}
-              />
-              <p className="text-xs text-muted-foreground">
-                {t('preferredSlugHint') ||
-                  'Custom URL slug for your referral link (lowercase, numbers, hyphens only)'}
-              </p>
-              {errors.preferredSlug && (
-                <p className="text-sm text-destructive">{errors.preferredSlug.message}</p>
-              )}
-            </div>
-
-            <div className="animate-flip-up-fast space-y-2">
-              <Label htmlFor="paypalEmail">{t('paypalEmail') || 'PayPal Email'}</Label>
-              <Input
-                id="paypalEmail"
-                type="email"
-                placeholder={t('paypalEmailPlaceholder') || 'payments@youremail.com'}
-                {...register('paypalEmail')}
-                className={errors.paypalEmail ? 'border-destructive' : ''}
-                disabled={isRegistering}
-              />
-              <p className="text-xs text-muted-foreground">
-                {t('paypalEmailHint') || 'Your PayPal email for receiving commission payments'}
-              </p>
-              {errors.paypalEmail && (
-                <p className="text-sm text-destructive">{errors.paypalEmail.message}</p>
-              )}
-            </div>
-          </div>
-        )}
-
-        <div className="grid animate-fade-right-fast grid-cols-2 gap-4">
-          <div className="animate-flip-up-fast space-y-2">
-            <Label htmlFor="language">{t('language')}</Label>
-            <Select
-              onValueChange={(value) => setValue('preferredLanguage', value as 'EN' | 'PT' | 'ES')}
-              defaultValue="EN"
-              disabled={isRegistering}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="EN">English</SelectItem>
-                <SelectItem value="PT">Português</SelectItem>
-                <SelectItem value="ES">Español</SelectItem>
-              </SelectContent>
-            </Select>
+          {/* Trust signals */}
+          <div className="mt-5 flex flex-wrap justify-center gap-4">
+            {[
+              { label: 'Secure & Encrypted' },
+              { label: '94% Review Retention' },
+              { label: 'Amazon Policy Compliant' },
+            ].map(({ label }) => (
+              <div key={label} className="flex items-center gap-1.5 text-gray-400 text-xs">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                {label}
+              </div>
+            ))}
           </div>
 
-          <div className="animate-flip-down-fast space-y-2">
-            <Label htmlFor="currency">{t('currency')}</Label>
-            <Select
-              onValueChange={(value) => setValue('preferredCurrency', value)}
-              defaultValue="USD"
-              disabled={isRegistering}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="USD">USD ($)</SelectItem>
-                <SelectItem value="EUR">EUR (€)</SelectItem>
-                <SelectItem value="BRL">BRL (R$)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
         </div>
-
-        <div className="animate-fade-up space-y-3">
-          <div className="flex animate-zoom-in items-start space-x-2">
-            <Checkbox
-              id="terms"
-              checked={termsAccepted}
-              onCheckedChange={(checked) => setValue('termsAccepted', checked as boolean)}
-              disabled={isRegistering}
-              className={errors.termsAccepted ? 'border-destructive' : ''}
-            />
-            <Label htmlFor="terms" className="cursor-pointer text-sm font-normal leading-relaxed">
-              {t('terms')}
-            </Label>
-          </div>
-          {errors.termsAccepted && (
-            <p className="text-sm text-destructive">{errors.termsAccepted.message}</p>
-          )}
-
-          <div className="flex animate-fade-left items-start space-x-2">
-            <Checkbox
-              id="marketingConsent"
-              checked={marketingConsent}
-              onCheckedChange={(checked) => setValue('marketingConsent', checked as boolean)}
-              disabled={isRegistering}
-            />
-            <Label
-              htmlFor="marketingConsent"
-              className="cursor-pointer text-sm font-normal leading-relaxed"
-            >
-              {t('marketingConsent') ||
-                'I agree to receive marketing emails and updates about new features'}
-            </Label>
-          </div>
-        </div>
-      </CardContent>
-
-      <CardFooter className="flex animate-fade-up-light-slow flex-col space-y-4">
-        <Button
-          type="button"
-          className="w-full animate-zoom-in-light-slow"
-          disabled={isRegistering}
-          onClick={handleRegister}
-        >
-          {isRegistering ? <Loader2 className="h-4 w-4 animate-spin" /> : t('submitButton')}
-        </Button>
-
-        <p className="animate-fade-up-slow text-center text-sm text-muted-foreground">
-          {t('hasAccount')}{' '}
-          <span
-            className="cursor-pointer font-medium text-primary hover:underline"
-            onClick={() => {
-              setIsLoginLoading(true);
-              navigate(`/login`);
-            }}
-          >
-            {isLoginLoading ? <Loader2 className="inline h-3 w-3 animate-spin" /> : t('signIn')}
-          </span>
-        </p>
-      </CardFooter>
-        </Card>
       </div>
+
     </div>
   );
 }
