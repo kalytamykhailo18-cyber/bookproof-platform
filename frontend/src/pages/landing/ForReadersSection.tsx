@@ -21,7 +21,7 @@ export function ForReadersSection() {
   return (
     <section
       className="py-24 sm:py-32 relative overflow-hidden"
-      style={{ background: '#f1f5f9' }}
+      style={{ background: '#ffffff' }}
     >
       <div
         className="absolute top-0 left-0 w-[400px] h-[400px] pointer-events-none"
@@ -127,7 +127,7 @@ export function ForReadersSection() {
                       <span
                         key={m}
                         className="px-2.5 py-1 rounded-md text-xs font-medium text-slate-600"
-                        style={{ background: '#f1f5f9', border: '1px solid rgba(203,213,225,0.8)' }}
+                        style={{ background: '#f8fafc', border: '1px solid rgba(203,213,225,0.8)' }}
                       >
                         {m}
                       </span>

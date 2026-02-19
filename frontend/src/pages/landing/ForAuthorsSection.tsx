@@ -21,7 +21,7 @@ export function ForAuthorsSection() {
   return (
     <section
       className="py-24 sm:py-32 relative overflow-hidden"
-      style={{ background: '#ffffff' }}
+      style={{ background: '#f1f5f9' }}
     >
       <div
         className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none"

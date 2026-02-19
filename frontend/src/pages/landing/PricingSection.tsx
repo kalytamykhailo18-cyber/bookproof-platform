@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Check, Zap, Star, Crown, Building2 } from 'lucide-react';
+import { Check, Zap, Star, Crown, Building2, ShieldCheck, BarChart2, Bell, FileText } from 'lucide-react';
 
 type PackageKey = 'starter' | 'growth' | 'professional' | 'enterprise';
 
@@ -147,14 +147,19 @@ export function PricingSection() {
           <h4 className="text-sm font-semibold text-slate-900 text-center mb-7">All Packages Include</h4>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
-              { icon: '🛡️', label: '14-Day Replacement Guarantee', anim: 'animate-fade-up-fast' },
-              { icon: '📊', label: 'Real-Time Campaign Dashboard',  anim: 'animate-fade-up' },
-              { icon: '📧', label: 'Email Notifications & Updates', anim: 'animate-fade-up-light-slow' },
-              { icon: '📄', label: 'PDF Report on Completion',      anim: 'animate-fade-up-slow' },
-            ].map((item) => (
-              <div key={item.label} className={`flex items-center gap-3.5 ${item.anim}`}>
-                <span className="text-xl flex-shrink-0">{item.icon}</span>
-                <span className="text-xs text-slate-600 leading-relaxed">{item.label}</span>
+              { Icon: ShieldCheck, color: '#3b82f6', label: '14-Day Replacement Guarantee', anim: 'animate-fade-up-fast' },
+              { Icon: BarChart2,   color: '#8b5cf6', label: 'Real-Time Campaign Dashboard',  anim: 'animate-fade-up' },
+              { Icon: Bell,        color: '#f59e0b', label: 'Email Notifications & Updates', anim: 'animate-fade-up-light-slow' },
+              { Icon: FileText,    color: '#10b981', label: 'PDF Report on Completion',      anim: 'animate-fade-up-slow' },
+            ].map(({ Icon, color, label, anim }) => (
+              <div key={label} className={`flex items-center gap-3.5 ${anim}`}>
+                <span
+                  className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-md"
+                  style={{ background: `${color}12`, border: `1px solid ${color}25` }}
+                >
+                  <Icon className="h-4 w-4" style={{ color }} />
+                </span>
+                <span className="text-xs text-slate-600 leading-relaxed">{label}</span>
               </div>
             ))}
           </div>
