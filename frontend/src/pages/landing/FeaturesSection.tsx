@@ -47,38 +47,61 @@ export function FeaturesSection() {
           </p>
         </div>
 
-        {/* Features grid — 2 cols on sm, 4 cols on lg */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-          {FEATURE_KEYS.map((key, i) => {
-            const Icon = FEATURE_ICONS[i];
-            const color = FEATURE_COLORS[i];
-            return (
+        {/* Features grid — 2 rows of 4, each with its own connecting line */}
+        <div className="flex flex-col gap-5 sm:gap-6">
+          {[0, 4].map(rowStart => (
+            <div key={rowStart} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 relative">
+              {/* Connecting line at bottom of icons for this row */}
               <div
-                key={key}
-                className={`card-golden-hover landing-card landing-card-hover rounded-md p-7 group flex flex-col ${CARD_ANIMATIONS[i]}`}
-              >
-                <div
-                  className="inline-flex items-center justify-center w-11 h-11 rounded-md mb-5 transition-transform duration-200 group-hover:scale-110"
-                  style={{ background: `${color}18`, border: `1px solid ${color}30` }}
-                >
-                  <Icon className="h-5 w-5" style={{ color }} />
-                </div>
+                className="hidden lg:block absolute left-[12.5%] right-[12.5%] h-px"
+                style={{
+                  top: '52px',
+                  background: `linear-gradient(90deg, ${FEATURE_COLORS.slice(rowStart, rowStart + 4).map(c => `${c}66`).join(', ')})`,
+                }}
+              />
+              {FEATURE_KEYS.slice(rowStart, rowStart + 4).map((key, localI) => {
+                const i = rowStart + localI;
+                const Icon = FEATURE_ICONS[i];
+                const color = FEATURE_COLORS[i];
+                return (
+                  <div key={key} className={`group ${CARD_ANIMATIONS[i]}`}>
+                    {/* Icon above */}
+                    <div className="flex flex-col items-center mb-3">
+                      <div
+                        className="w-[52px] h-[52px] rounded-md flex items-center justify-center relative z-10 mb-3 transition-transform duration-200 group-hover:scale-110"
+                        style={{
+                          color,
+                          background: `${color}18`,
+                          border: `1.5px solid ${color}50`,
+                          boxShadow: `0 0 20px ${color}4d`,
+                        }}
+                      >
+                        <Icon className="h-6 w-6" style={{ color }} />
+                      </div>
+                      {/* Title under icon, outside card */}
+                      <h3 className="text-sm font-semibold text-white text-center">
+                        {t(`items.${key}.title`)}
+                      </h3>
+                    </div>
 
-                <h3 className="text-sm font-semibold text-white mb-3 group-hover:text-blue-300 transition-colors duration-200">
-                  {t(`items.${key}.title`)}
-                </h3>
-
-                <p className="text-sm text-slate-500 leading-relaxed flex-1">
-                  {t(`items.${key}.description`)}
-                </p>
-
-                <div
-                  className="mt-5 h-0.5 w-0 group-hover:w-full transition-all duration-300 rounded-sm"
-                  style={{ background: `linear-gradient(90deg, ${color}, transparent)` }}
-                />
-              </div>
-            );
-          })}
+                    {/* Card — description only */}
+                    <div
+                      className="landing-card rounded-md p-5 border transition-transform duration-300 hover:scale-105"
+                      style={{
+                        borderColor: `${color}25`,
+                        borderTopColor: color,
+                        borderTopWidth: '2px',
+                      }}
+                    >
+                      <p className="text-sm text-slate-500 leading-relaxed text-center">
+                        {t(`items.${key}.description`)}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
         </div>
 
         {/* Trust strip */}

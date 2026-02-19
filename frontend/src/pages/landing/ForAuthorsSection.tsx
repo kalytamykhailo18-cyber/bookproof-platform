@@ -192,32 +192,46 @@ export function ForAuthorsSection() {
 
         {/* Overlapping book covers */}
         <div className="flex flex-col items-center mb-10 animate-fade-up">
-          <div className="flex items-end overflow-visible mb-5">
-            {[0,1,2,3,4,5,6,7,8,9,10].map((n, i, arr) => {
+          {/* xs–sm: 5 books at 56×88 */}
+          {(() => {
+            const configs: [number[], number, number, number][] = [
+              [[0,2,4,6,8],          56,  88,  16],  // < sm
+              [[0,1,3,5,7,8,10],     70, 110,  20],  // sm – lg
+              [[0,1,2,3,4,5,6,7,8,9,10], 100, 160, 22],  // lg+
+            ];
+            return configs.map(([books, w, h, overlap], ci) => {
+              const cls = ci === 0 ? 'flex sm:hidden' : ci === 1 ? 'hidden sm:flex lg:hidden' : 'hidden lg:flex';
+              const arr = books;
               const mid = Math.floor(arr.length / 2);
-              const angle = (i - mid) * 3;
               return (
-                <img
-                  key={n}
-                  src={`/images/${n}.jpg`}
-                  alt={`Book ${n}`}
-                  style={{
-                    width: 58,
-                    height: 84,
-                    objectFit: 'cover',
-                    borderRadius: 4,
-                    marginLeft: i === 0 ? 0 : -22,
-                    zIndex: i <= mid ? i : arr.length - i,
-                    position: 'relative',
-                    boxShadow: '-3px 4px 10px rgba(0,0,0,0.22)',
-                    transform: `rotate(${angle}deg)`,
-                    transformOrigin: 'bottom center',
-                    border: '1px solid rgba(255,255,255,0.6)',
-                  }}
-                />
+                <div key={ci} className={`${cls} items-end overflow-visible mb-5`}>
+                  {arr.map((n, i) => {
+                    const angle = (i - mid) * 3;
+                    return (
+                      <img
+                        key={n}
+                        src={`/images/${n}.jpg`}
+                        alt={`Book ${n}`}
+                        style={{
+                          width: w,
+                          height: h,
+                          objectFit: 'cover',
+                          borderRadius: 4,
+                          marginLeft: i === 0 ? 0 : -overlap,
+                          zIndex: i <= mid ? i : arr.length - i,
+                          position: 'relative',
+                          boxShadow: '-3px 4px 10px rgba(0,0,0,0.22)',
+                          transform: `rotate(${angle}deg)`,
+                          transformOrigin: 'bottom center',
+                          border: '1px solid rgba(255,255,255,0.6)',
+                        }}
+                      />
+                    );
+                  })}
+                </div>
               );
-            })}
-          </div>
+            });
+          })()}
           <p className="text-xs text-slate-400 font-medium tracking-wide uppercase">
             500+ authors already launched their books
           </p>
