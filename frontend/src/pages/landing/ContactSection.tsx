@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { Mail, MessageCircle, Briefcase, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 
 export function ContactSection() {
   const { t } = useTranslation('contact');
 
   const channels = [
     {
-      icon: Mail,
+      image: '/images/cut-1.png',
       key: 'email',
       color: '#3b82f6',
       actionLabel: 'Send Email',
@@ -14,7 +14,7 @@ export function ContactSection() {
       animation: 'animate-fade-right-fast',
     },
     {
-      icon: MessageCircle,
+      image: '/images/cut-5.png',
       key: 'support',
       color: '#10b981',
       actionLabel: 'Start Chat',
@@ -23,7 +23,7 @@ export function ContactSection() {
       hours: true,
     },
     {
-      icon: Briefcase,
+      image: '/images/cut-6.png',
       key: 'sales',
       color: '#8b5cf6',
       actionLabel: 'Contact Sales',
@@ -66,29 +66,36 @@ export function ContactSection() {
 
         {/* Contact channels */}
         <div className="grid sm:grid-cols-3 gap-5 sm:gap-6 mb-14 sm:mb-16">
-          {channels.map(({ icon: Icon, key, color, actionLabel, href, animation, hours }) => (
-            <div key={key} className={`landing-card-light landing-card-light-hover rounded-md p-7 sm:p-8 group ${animation}`}>
-              <div
-                className="inline-flex items-center justify-center w-12 h-12 rounded-md mb-6 transition-transform duration-200 group-hover:scale-110"
-                style={{ background: `${color}12`, border: `1px solid ${color}28` }}
-              >
-                <Icon className="h-6 w-6" style={{ color }} />
+          {channels.map(({ image, key, color, actionLabel, href, animation, hours }) => (
+            <div key={key} className={`rounded-md overflow-hidden group ${animation}`}>
+              <img
+                src={image}
+                alt={key}
+                width={600}
+                height={400}
+                className="w-full h-48 object-contain transition-transform duration-300 group-hover:scale-105"
+                style={{
+                  WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 50%)',
+                  maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 50%)',
+                }}
+              />
+              <div className="px-7 pt-6 pb-7 sm:px-8 sm:pt-8 sm:pb-8">
+                <h3 className="text-base font-semibold text-slate-900 mb-2.5">{t(`${key}.title`)}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed mb-4">{t(`${key}.description`)}</p>
+                {hours && (
+                  <p className="text-xs text-slate-400 mb-4">
+                    {t(`${key}.hours`, 'Monday – Friday, 9AM – 6PM EST')}
+                  </p>
+                )}
+                <a
+                  href={href}
+                  className="inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-200 hover:underline"
+                  style={{ color }}
+                >
+                  {actionLabel}
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
               </div>
-              <h3 className="text-base font-semibold text-slate-900 mb-2.5">{t(`${key}.title`)}</h3>
-              <p className="text-sm text-slate-500 leading-relaxed mb-4">{t(`${key}.description`)}</p>
-              {hours && (
-                <p className="text-xs text-slate-400 mb-4">
-                  {t(`${key}.hours`, 'Monday – Friday, 9AM – 6PM EST')}
-                </p>
-              )}
-              <a
-                href={href}
-                className="inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-200 hover:underline"
-                style={{ color }}
-              >
-                {actionLabel}
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
             </div>
           ))}
         </div>

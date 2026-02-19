@@ -1,7 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import { ShieldCheck, Eye, RefreshCw, ClipboardList } from 'lucide-react';
 
-const ICONS = [ShieldCheck, Eye, RefreshCw, ClipboardList];
+const IMAGES = [
+  '/images/nature-1.jpg',
+  '/images/nature-2.jpg',
+  '/images/nature-3.jpg',
+  '/images/nature-4.jpg',
+];
 const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b'];
 const KEYS = ['protected', 'monitored', 'automatic', 'transparent'] as const;
 
@@ -66,27 +70,26 @@ export function GuaranteeSection() {
         </div>
 
         {/* 4 guarantee cards */}
-        <div className="grid sm:grid-cols-2 gap-5 sm:gap-6 mb-14 sm:mb-16">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mb-14 sm:mb-16">
           {KEYS.map((key, i) => {
-            const Icon = ICONS[i];
             const color = COLORS[i];
             return (
-              <div key={key} className={`landing-card-light landing-card-light-hover rounded-md p-7 sm:p-8 group ${CARD_ANIMATIONS[i]}`}>
-                <div className="flex items-start gap-5">
-                  <div
-                    className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-md transition-transform duration-200 group-hover:scale-110"
-                    style={{ background: `${color}12`, border: `1px solid ${color}28` }}
-                  >
-                    <Icon className="h-6 w-6" style={{ color }} />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-base font-semibold text-slate-900 mb-2.5 group-hover:text-green-700 transition-colors duration-200">
-                      {t(`items.${key}.title`)}
-                    </h3>
-                    <p className="text-sm text-slate-500 leading-relaxed">
-                      {t(`items.${key}.description`)}
-                    </p>
-                  </div>
+              <div key={key} className={`landing-card-light landing-card-light-hover rounded-md overflow-hidden group flex flex-col ${CARD_ANIMATIONS[i]}`}>
+                <div className="overflow-hidden">
+                  <img
+                    src={IMAGES[i]}
+                    alt={key}
+                    className="w-full h-36 sm:h-40 object-cover transition-transform duration-300 group-hover:scale-105"
+                    style={{ borderBottom: `1px solid ${color}20` }}
+                  />
+                </div>
+                <div className="p-5 sm:p-6 flex-1">
+                  <h3 className="text-base font-semibold text-slate-900 mb-2.5 group-hover:text-green-700 transition-colors duration-200">
+                    {t(`items.${key}.title`)}
+                  </h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    {t(`items.${key}.description`)}
+                  </p>
                 </div>
               </div>
             );
