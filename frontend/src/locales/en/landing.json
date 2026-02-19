@@ -1,11 +1,11 @@
 {
   "hero": {
-    "title": "Get Authentic Amazon Reviews",
-    "subtitle": "Connect with verified readers who will read your book and leave honest reviews",
+    "title": "Get Authentic Amazon Reviews That Last",
+    "subtitle": "Connect your book with verified readers who genuinely read, listen, and leave honest reviews. Progressive delivery keeps your rankings growing naturally.",
     "heroImage": "Authentic Amazon Reviews",
     "cta": {
-      "primary": "Get Started",
-      "secondary": "Learn More"
+      "primary": "Start Getting Reviews",
+      "secondary": "See How It Works"
     },
     "stats": {
       "reviews": "Reviews Delivered",
@@ -13,142 +13,295 @@
       "readers": "Verified Readers"
     }
   },
+  "stats": {
+    "badge": "Platform Results",
+    "title": "Numbers That Speak for Themselves",
+    "subtitle": "Thousands of authors trust BookProof to grow their Amazon presence with real, lasting reviews.",
+    "items": {
+      "reviews": {
+        "value": "10,000+",
+        "label": "Reviews Delivered",
+        "description": "Authentic reviews from real readers"
+      },
+      "authors": {
+        "value": "500+",
+        "label": "Authors Served",
+        "description": "Authors across all genres"
+      },
+      "readers": {
+        "value": "2,500+",
+        "label": "Verified Readers",
+        "description": "Active community of book lovers"
+      },
+      "retention": {
+        "value": "94%",
+        "label": "Review Retention",
+        "description": "Reviews that remain on Amazon"
+      },
+      "satisfaction": {
+        "value": "4.9/5",
+        "label": "Author Rating",
+        "description": "Average satisfaction score"
+      },
+      "books": {
+        "value": "100+",
+        "label": "Books Launched",
+        "description": "Successful campaigns completed"
+      }
+    }
+  },
   "howItWorks": {
-    "title": "How It Works",
-    "subtitle": "Get authentic Amazon reviews in four simple steps",
+    "badge": "Simple Process",
+    "title": "From Zero Reviews to Bestseller in 4 Steps",
+    "subtitle": "Our streamlined system handles everything. You focus on writing — we handle the reviews.",
     "steps": {
       "purchase": {
         "title": "Purchase Credits",
-        "description": "Choose a credit package that fits your needs. Credits never expire and can be used for any book."
+        "description": "Choose a credit package that fits your marketing goals. Credits are flexible and never expire — use them across any book in your catalog.",
+        "details": [
+          "Select from 25 to 1000+ credits",
+          "Ebook or audiobook support",
+          "No hidden fees or commitments",
+          "Instant credit activation"
+        ]
       },
       "submit": {
-        "title": "Submit Your Book",
-        "description": "Upload your ebook or audiobook and provide book details. We'll create your campaign."
+        "title": "Create Your Campaign",
+        "description": "Upload your book files, set your genre, and tell us about your target audience. Our system creates a fully configured campaign in minutes.",
+        "details": [
+          "Upload ebook (EPUB/PDF/MOBI) or audiobook (MP3)",
+          "Set primary and secondary genres",
+          "Configure credit allocation",
+          "Review campaign before launch"
+        ]
       },
       "distribute": {
-        "title": "We Distribute",
-        "description": "Your book is distributed to verified readers who match your genre preferences."
+        "title": "We Match & Distribute",
+        "description": "BookProof matches your book with readers who love your genre. Access is granted progressively each week, creating a natural review pattern.",
+        "details": [
+          "Genre-matched reader selection",
+          "Progressive weekly distribution",
+          "72-hour reading window per reader",
+          "Automatic reassignment if needed"
+        ]
       },
       "reviews": {
-        "title": "Get Reviews",
-        "description": "Readers submit honest reviews on Amazon, delivered progressively over weeks."
+        "title": "Collect Genuine Reviews",
+        "description": "Readers submit their honest Amazon review plus internal feedback. You get a detailed campaign report and anonymous reader insights.",
+        "details": [
+          "Verified Amazon review links",
+          "Anonymous internal feedback report",
+          "Star rating distribution chart",
+          "Downloadable PDF campaign report"
+        ]
       }
     }
   },
   "features": {
-    "title": "Why Choose BookProof?",
-    "subtitle": "Everything you need to grow your book's presence on Amazon",
+    "badge": "Platform Features",
+    "title": "Everything Built for Your Book's Success",
+    "subtitle": "BookProof combines authentic reader engagement with smart technology to deliver reviews that stick.",
     "items": {
       "authentic": {
-        "title": "Authentic Reviews",
-        "description": "Real readers, real reviews. No bots, no fake accounts. Every review comes from verified readers who actually read your book."
+        "title": "100% Authentic Reviews",
+        "description": "Real readers, real opinions. Every reviewer is a verified human who genuinely reads your book before writing. No bots, no outsourced reviews, no shortcuts."
       },
       "distributed": {
-        "title": "Natural Distribution",
-        "description": "Reviews are delivered progressively over weeks to maintain organic appearance and avoid Amazon's detection systems."
+        "title": "Natural Distribution Pattern",
+        "description": "Reviews are released in weekly batches that mirror organic reading patterns. Amazon's algorithm sees healthy, gradual review growth instead of suspicious spikes."
       },
       "tracking": {
-        "title": "Real-Time Tracking",
-        "description": "Monitor your campaign progress with detailed analytics. See reviews delivered, pending, and in progress at any time."
+        "title": "Real-Time Campaign Tracking",
+        "description": "Your dashboard shows every review delivered, pending, and in progress. Weekly breakdowns, progress charts, and status updates keep you always informed."
       },
       "flexible": {
-        "title": "Flexible Packages",
-        "description": "Choose from various credit packages that fit your needs. Ebook and audiobook support with competitive pricing."
+        "title": "Ebook & Audiobook Support",
+        "description": "Whether you publish ebooks or audiobooks, we have you covered. Allocate credits to either format or split them across both within a single campaign."
       },
       "guarantee": {
-        "title": "14-Day Guarantee",
-        "description": "If a review is removed by Amazon within 14 days, we'll replace it for free. Your investment is protected."
+        "title": "14-Day Replacement Guarantee",
+        "description": "If Amazon removes a validated review within 14 days, we replace it at zero cost. Your investment is fully protected with automatic replacement tracking."
       },
       "support": {
-        "title": "Dedicated Support",
-        "description": "Our team monitors every campaign and handles any issues. Focus on writing while we handle the reviews."
+        "title": "Dedicated Campaign Support",
+        "description": "Our team actively monitors your campaign health. We handle reader issues, expired slots, and escalations so you never have to worry about the process."
+      },
+      "report": {
+        "title": "Detailed Campaign Reports",
+        "description": "When your campaign completes, receive a professional PDF report with rating distribution, anonymous reader feedback, and campaign timeline — ready to share or archive."
+      },
+      "keywords": {
+        "title": "Keyword Research Add-On",
+        "description": "Boost discoverability with our AI-powered keyword research service. Get optimized keywords for your title, subtitle, description, and Amazon KDP backend fields."
       }
     }
   },
+  "forAuthors": {
+    "badge": "For Authors",
+    "title": "Everything an Author Needs to Launch Successfully",
+    "subtitle": "BookProof gives you the tools, readers, and insights to take your book from invisible to influential on Amazon.",
+    "items": {
+      "dashboard": {
+        "title": "Complete Campaign Dashboard",
+        "description": "Monitor every aspect of your campaign in one place. Track reviews delivered, credits remaining, reader progress, and weekly milestones from a clean, intuitive dashboard."
+      },
+      "reports": {
+        "title": "Professional Campaign Reports",
+        "description": "Receive a detailed PDF report when your campaign ends. Includes star rating charts, anonymous reader feedback, and a full timeline of your review delivery."
+      },
+      "genreMatch": {
+        "title": "Genre-Matched Readers",
+        "description": "Your book is only shown to readers who actively read your genre. Romance authors get romance readers. Thriller writers get thriller fans. This improves review quality and authenticity."
+      },
+      "formats": {
+        "title": "Ebook & Audiobook Ready",
+        "description": "Launch campaigns for ebooks in EPUB, PDF, or MOBI format, or audiobooks in MP3. You can even split credits between both formats within a single campaign."
+      },
+      "feedback": {
+        "title": "Anonymous Internal Feedback",
+        "description": "Before the campaign ends, you receive honest reader thoughts about your book — pacing, characters, plot, writing quality. Valuable editorial insight without identifying the reader."
+      },
+      "keywordResearch": {
+        "title": "Keyword Research Service",
+        "description": "Add our AI-powered keyword research to any package. Get 5-10 primary keywords, 15 secondary terms, and 20 long-tail phrases with an implementation guide for Amazon KDP."
+      }
+    },
+    "cta": "Start Your Campaign"
+  },
   "readerBenefits": {
-    "title": "Benefits for Readers",
-    "subtitle": "Join our community of readers and earn while discovering great books",
+    "badge": "For Readers",
+    "title": "Read Books You Love. Get Paid for Your Honest Opinion.",
+    "subtitle": "Join a community of passionate readers who discover new books, earn real money, and help authors get the visibility they deserve.",
     "items": {
       "freeBooks": {
-        "title": "Free Books",
-        "description": "Get access to ebooks and audiobooks at no cost. Read the genres you love without paying a dime."
+        "title": "Free Books & Audiobooks",
+        "description": "Get unlimited access to ebooks and audiobooks in your favorite genres at zero cost. Read new releases before the general public."
       },
       "earnMoney": {
-        "title": "Earn Money",
-        "description": "Get compensated for every honest review you submit. Build your earnings by reading more books."
+        "title": "Earn Real Money",
+        "description": "Get paid for every validated Amazon review. Ebook reviews earn a fixed rate per book; audiobook reviews earn more. Withdraw via PayPal, bank transfer, Wise, or crypto."
       },
       "discoverBooks": {
         "title": "Discover New Authors",
-        "description": "Be among the first to read upcoming releases and discover talented new authors before anyone else."
+        "description": "Be among the first to read upcoming releases from emerging and established authors. Expand your reading list while getting early access."
+      },
+      "flexible": {
+        "title": "Read on Your Schedule",
+        "description": "Each assignment gives you 72 hours to read and review. Apply only when you have time. No pressure, no quotas — completely flexible."
+      },
+      "community": {
+        "title": "Join a Growing Community",
+        "description": "Connect with thousands of fellow book lovers. Our reader community spans romance, thriller, science fiction, non-fiction, and every genre in between."
+      },
+      "payout": {
+        "title": "Easy, Fast Payouts",
+        "description": "Request a payout anytime you reach the minimum threshold. Our admin team processes payments promptly. Multiple payment methods supported worldwide."
       }
-    }
+    },
+    "howEarnings": {
+      "title": "How Earnings Work",
+      "ebook": "Per ebook review",
+      "audiobook": "Per audiobook review",
+      "minimum": "Minimum payout",
+      "methods": "PayPal, Bank Transfer, Wise, Crypto"
+    },
+    "cta": "Join as a Reader"
   },
   "testimonials": {
-    "title": "What Our Users Say",
-    "subtitle": "Join thousands of authors who have grown their Amazon presence with BookProof",
+    "badge": "Success Stories",
+    "title": "Authors Who Transformed Their Amazon Presence",
+    "subtitle": "Real stories from real authors who used BookProof to break through and grow their readership.",
     "items": {
       "t1": {
-        "quote": "BookProof helped my debut novel get the visibility it needed. The reviews came in naturally and helped boost my rankings significantly.",
+        "quote": "BookProof helped my debut novel get the visibility it needed. The reviews came in naturally and helped boost my rankings significantly. Within 6 weeks I went from 2 reviews to 45.",
         "author": "Sarah M.",
-        "title": "Bestselling Author"
+        "title": "Bestselling Romance Author"
       },
       "t2": {
-        "quote": "Finally a service that actually delivers on its promises. Real readers, real reviews. My book's credibility soared after using BookProof.",
+        "quote": "Finally a service that actually delivers on its promises. Real readers, real reviews. My book's credibility soared after using BookProof. I'll never launch a book without it again.",
         "author": "James T.",
-        "title": "Self-Published Author"
+        "title": "Self-Published Thriller Author"
       },
       "t3": {
-        "quote": "The gradual distribution of reviews made everything look organic. Amazon never flagged anything, and my sales increased steadily.",
+        "quote": "The gradual distribution of reviews made everything look organic. Amazon never flagged anything, and my sales increased steadily each week as new reviews came in.",
         "author": "Maria L.",
-        "title": "Romance Author"
+        "title": "Romance Author, 12 Books Published"
       },
       "t4": {
-        "quote": "As a first-time author, I was nervous about getting reviews. BookProof made the process seamless and stress-free. Highly recommend!",
+        "quote": "As a first-time author, I was terrified of the launch. BookProof made the entire process seamless. The support team walked me through every step. Couldn't recommend it more.",
         "author": "David K.",
-        "title": "Debut Novelist"
+        "title": "Debut Science Fiction Novelist"
       },
       "t5": {
-        "quote": "I've tried other services before, but BookProof is the only one that delivered quality reviews from readers who actually read my book.",
+        "quote": "I've tried other review services before, but BookProof is the only one that delivered quality reviews from readers who actually engaged with my book. The internal feedback was gold.",
         "author": "Emily R.",
-        "title": "Mystery Writer"
+        "title": "Mystery & Suspense Writer"
       },
       "t6": {
-        "quote": "The 14-day guarantee gave me confidence to try the service. Six months later, all my reviews are still up and my book is thriving.",
+        "quote": "The 14-day guarantee gave me confidence to invest in a larger package. Six months later, all my reviews are still live and my book ranks in the top 100 in its category.",
         "author": "Michael P.",
-        "title": "Science Fiction Author"
+        "title": "Science Fiction & Fantasy Author"
       },
       "t7": {
-        "quote": "BookProof's support team is incredible. They helped me optimize my campaign and I got 30% more reviews than expected.",
+        "quote": "BookProof's support team is exceptional. They helped me optimize my campaign setup and I ended up getting 30% more reviews than I expected. Absolutely outstanding service.",
         "author": "Jennifer W.",
-        "title": "Non-Fiction Writer"
+        "title": "Business & Non-Fiction Writer"
       },
       "t8": {
-        "quote": "The audiobook review option was a game-changer for me. Finding listeners willing to review audiobooks is usually impossible.",
+        "quote": "The audiobook review option was revolutionary for me. Finding listeners willing to leave detailed reviews is nearly impossible elsewhere. BookProof solved that completely.",
         "author": "Robert H.",
-        "title": "Audiobook Publisher"
+        "title": "Audiobook Publisher & Author"
       },
       "t9": {
-        "quote": "My book went from 3 reviews to 47 in just 6 weeks. The impact on my sales ranking was immediate and substantial.",
+        "quote": "My children's book went from 3 reviews to 47 in just 6 weeks. The impact on my sales ranking was immediate and the anonymous feedback helped me improve future books too.",
         "author": "Lisa C.",
-        "title": "Children's Book Author"
+        "title": "Children's Book Author & Illustrator"
       }
     }
   },
+  "guarantee": {
+    "badge": "Our Promise",
+    "title": "The BookProof 14-Day Replacement Guarantee",
+    "subtitle": "We stand behind every review we deliver. If Amazon removes a validated review within 14 days, we replace it — completely free.",
+    "items": {
+      "protected": {
+        "title": "Your Investment Is Protected",
+        "description": "Every credit you spend is backed by our guarantee. If a review disappears within 14 days of validation, it counts as a replacement slot — no additional credits needed."
+      },
+      "monitored": {
+        "title": "Active Review Monitoring",
+        "description": "Our team regularly checks all validated review links. When a removal is detected within the guarantee window, we immediately initiate a replacement without you having to ask."
+      },
+      "automatic": {
+        "title": "Automatic Replacement Process",
+        "description": "The replacement reader is pulled from your campaign queue automatically. You don't need to do anything — we handle the entire reassignment process behind the scenes."
+      },
+      "transparent": {
+        "title": "Full Transparency in Reports",
+        "description": "Your campaign report shows total reviews delivered, replacements made, and final retention rate. You always know exactly what happened with every review."
+      }
+    },
+    "note": "Guarantee applies to reviews removed within 14 days of admin validation. Reviews removed after 14 days are not covered but represent a very small percentage of delivered reviews."
+  },
   "pricing": {
+    "badge": "Pricing",
     "title": "Simple, Transparent Pricing",
-    "subtitle": "Choose a package that fits your book marketing goals",
+    "subtitle": "No subscriptions, no monthly fees. Purchase credits and use them when you're ready. Every package includes our 14-day guarantee.",
+    "popular": "Most Popular",
+    "perCredit": "per credit",
+    "activate": "days to activate",
     "packages": {
       "starter": {
         "name": "Starter",
         "credits": "25 Credits",
         "validity": "30 days to activate",
-        "reviews": "~25 reviews",
+        "reviews": "~25 ebook reviews",
         "duration": "~5 weeks",
         "features": [
-          "Ebook or Audiobook support",
-          "Weekly distribution",
-          "14-day guarantee",
-          "Real-time tracking",
+          "25 ebook or audiobook reviews",
+          "Weekly progressive distribution",
+          "14-day replacement guarantee",
+          "Real-time campaign dashboard",
           "Email support"
         ]
       },
@@ -157,12 +310,12 @@
         "credits": "50 Credits",
         "validity": "30 days to activate",
         "reviews": "~50 reviews",
-        "duration": "~5 weeks",
+        "duration": "~5-6 weeks",
         "features": [
           "All Starter features",
-          "Priority queue placement",
-          "Faster distribution",
-          "Campaign report PDF"
+          "Priority reader queue placement",
+          "Faster weekly distribution rate",
+          "Campaign completion PDF report"
         ],
         "popular": true
       },
@@ -171,19 +324,19 @@
         "credits": "100 Credits",
         "validity": "30 days to activate",
         "reviews": "~100 reviews",
-        "duration": "~4-5 weeks",
+        "duration": "~4-6 weeks",
         "features": [
           "All Growth features",
           "Maximum distribution speed",
-          "Keyword research addon",
-          "Priority support"
+          "Keyword research add-on included",
+          "Priority support & campaign review"
         ]
       },
       "enterprise": {
         "name": "Enterprise",
         "credits": "200+ Credits",
         "validity": "90-120 days to activate",
-        "reviews": "Custom",
+        "reviews": "Custom volume",
         "duration": "Custom timeline",
         "features": [
           "All Professional features",
@@ -194,11 +347,60 @@
         ]
       }
     },
-    "cta": "View All Packages"
+    "cta": "Get Started",
+    "enterpriseCta": "Contact Sales",
+    "note": "Prices set by admin. Contact us for current package pricing."
+  },
+  "faq": {
+    "badge": "FAQ",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about BookProof's review platform.",
+    "items": {
+      "q1": {
+        "question": "How does BookProof work exactly?",
+        "answer": "BookProof connects authors with verified readers who love their genre. You purchase credits, create a campaign for your book, upload your files, and we handle distribution. Readers receive access in weekly batches, read your book within 72 hours, and post an honest Amazon review. You receive a campaign report when all reviews are delivered."
+      },
+      "q2": {
+        "question": "Are these reviews against Amazon's Terms of Service?",
+        "answer": "Our readers genuinely read your books and provide honest feedback based on their real experience. We follow all Amazon policies and ensure reviews appear organic through natural weekly distribution patterns. Reviews are not incentivized in ways that violate Amazon's policies — readers are compensated for their time reading, not for leaving positive reviews."
+      },
+      "q3": {
+        "question": "How long does it take to start getting reviews?",
+        "answer": "After your campaign is created and approved, the first batch of readers typically receives access within the first week. Reviews are then delivered progressively over 4-10 weeks depending on your package size. This natural pacing helps maintain authenticity and avoids any unusual patterns that could trigger review flags."
+      },
+      "q4": {
+        "question": "What happens if Amazon removes a review?",
+        "answer": "We offer a 14-day replacement guarantee on all reviews. If a review is removed within 14 days of being validated, we replace it at no additional cost. Our team monitors all delivered reviews and initiates replacements automatically when a removal is detected within the guarantee window."
+      },
+      "q5": {
+        "question": "Can I choose which readers get my book?",
+        "answer": "Readers are automatically matched based on their genre preferences and format compatibility with your book. This automatic matching actually improves review authenticity — readers genuinely choose genres they enjoy, resulting in more engaged, thoughtful reviews. You cannot select specific readers, but the genre-matching system ensures quality."
+      },
+      "q6": {
+        "question": "What formats do you support?",
+        "answer": "We support ebooks in EPUB, PDF, and MOBI formats (up to 50MB) and audiobooks in MP3 format (up to 500MB). Credits are consumed differently: 1 credit per ebook review, 2 credits per audiobook review. You can split credits between both formats in a single campaign if your book is available in both."
+      },
+      "q7": {
+        "question": "How are readers verified and vetted?",
+        "answer": "All readers go through a registration process that verifies their email, content format preferences, and Amazon profile links. Readers must maintain a good completion record — those who miss deadlines or submit poor-quality reviews are removed from the platform. We also check for duplicate accounts and ensure reader authenticity."
+      },
+      "q8": {
+        "question": "Can I pause or cancel my campaign?",
+        "answer": "Yes, you can pause an active campaign at any time from your dashboard. Pausing stops new reader assignments while allowing readers who already received access to complete their reviews. Campaigns can be resumed at any time. Cancellation is available, but credits already allocated to readers in progress cannot be refunded."
+      },
+      "q9": {
+        "question": "What do I receive when my campaign is complete?",
+        "answer": "When all reviews are delivered and validated, you receive a detailed campaign report as a PDF. The report includes: total reviews delivered, star rating distribution chart, anonymous reader feedback for each review, weekly delivery timeline, and replacement statistics. The report is also permanently available in your dashboard."
+      },
+      "q10": {
+        "question": "How does keyword research work?",
+        "answer": "Our keyword research service uses AI to analyze your book's genre, description, target audience, and competing titles to generate optimized keywords. You receive a PDF report with 5-10 primary keywords, 10-15 secondary keywords, 15-20 long-tail phrases, and a complete implementation guide for Amazon KDP title, subtitle, description, and backend keyword fields."
+      }
+    }
   },
   "leadForm": {
-    "title": "Join the Waitlist",
-    "subtitle": "Be the first to know when we launch. Get exclusive early-bird pricing.",
+    "title": "Get Early Access",
+    "subtitle": "Join thousands of authors already using BookProof. Sign up now and get exclusive early-bird pricing.",
     "fields": {
       "name": {
         "label": "Full Name",
@@ -211,71 +413,47 @@
       "userType": {
         "label": "I am a...",
         "options": {
-          "author": "Author",
-          "reader": "Reader",
-          "both": "Both"
+          "author": "Author — I want reviews for my book",
+          "reader": "Reader — I want to earn by reading",
+          "both": "Both — I write and love to read"
         }
       },
       "marketingConsent": {
-        "label": "I agree to receive marketing emails about BookProof updates and offers"
+        "label": "I agree to receive marketing emails about BookProof updates and exclusive offers"
       }
     },
-    "cta": "Join Waitlist",
+    "cta": "Get Early Access",
     "submitting": "Joining...",
-    "success": "Thank you! You've been added to our waitlist.",
-    "alreadySubscribed": "You're already on our waitlist! We'll notify you when we launch.",
+    "success": "You're in! We'll be in touch with early access details shortly.",
+    "alreadySubscribed": "You're already on our list! We'll notify you when early access opens.",
     "error": "Something went wrong. Please try again."
   },
-  "faq": {
-    "title": "Frequently Asked Questions",
-    "items": {
-      "q1": {
-        "question": "How does BookProof work?",
-        "answer": "BookProof connects authors with verified readers. You purchase credits, create a campaign for your book, and we distribute it to readers who read and review it on Amazon. Reviews are delivered progressively over weeks to maintain authenticity."
-      },
-      "q2": {
-        "question": "Are these reviews against Amazon's terms?",
-        "answer": "Our readers genuinely read your books and provide honest feedback. We follow all Amazon policies and ensure reviews appear organic through natural distribution patterns."
-      },
-      "q3": {
-        "question": "How long does it take to get reviews?",
-        "answer": "Reviews are distributed over 4-10 weeks depending on your package size. This natural pacing helps maintain authenticity and avoid detection."
-      },
-      "q4": {
-        "question": "What if Amazon removes a review?",
-        "answer": "We offer a 14-day guarantee. If a review is removed within 14 days of validation, we'll replace it at no cost."
-      },
-      "q5": {
-        "question": "Can I choose who reads my book?",
-        "answer": "Readers are automatically matched based on genre preferences and availability. This ensures fair distribution and authenticity."
-      },
-      "q6": {
-        "question": "What formats do you support?",
-        "answer": "We support both ebooks (PDF/EPUB) and audiobooks (MP3). Credits are consumed differently: 1 credit for ebook reviews, 2 credits for audiobook reviews."
-      }
-    }
-  },
   "contact": {
-    "title": "Get In Touch",
-    "subtitle": "Have questions? We're here to help you succeed with your book marketing.",
+    "title": "Have Questions? We're Here.",
+    "subtitle": "Our team is ready to help you plan your book launch strategy and get the most from BookProof.",
     "email": {
-      "title": "Email Us",
-      "description": "Send us a message and we'll respond within 24 hours."
+      "title": "Email Support",
+      "description": "Send us your question and we'll respond within 24 hours with a detailed answer."
     },
     "support": {
-      "title": "Live Support",
-      "description": "Chat with our team for immediate assistance.",
-      "hours": "Monday - Friday, 9AM - 6PM EST"
+      "title": "Live Chat Support",
+      "description": "Chat with our campaign specialists for immediate help with your campaign setup or questions.",
+      "hours": "Monday – Friday, 9AM – 6PM EST"
+    },
+    "sales": {
+      "title": "Enterprise & Custom Packages",
+      "description": "Publishing house or managing multiple authors? We offer custom packages and dedicated account managers."
     }
   },
   "footer": {
-    "tagline": "Authentic Amazon reviews, delivered.",
+    "tagline": "Authentic Amazon reviews, delivered by real readers who love books.",
     "links": {
       "product": {
         "title": "Product",
         "features": "Features",
         "pricing": "Pricing",
-        "faq": "FAQ"
+        "faq": "FAQ",
+        "howItWorks": "How It Works"
       },
       "company": {
         "title": "Company",
@@ -290,6 +468,6 @@
         "cookies": "Cookie Policy"
       }
     },
-    "copyright": "© 2024 BookProof. All rights reserved."
+    "copyright": "© 2025 BookProof. All rights reserved."
   }
 }

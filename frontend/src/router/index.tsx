@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { RootLayout } from '../layouts/RootLayout';
 import { PublicLayout } from '../layouts/PublicLayout';
+import { LandingLayout } from '../layouts/LandingLayout';
 import { AdminLayout } from '../layouts/AdminLayout';
 import { AuthorLayout } from '../layouts/AuthorLayout';
 import { ReaderLayout } from '../layouts/ReaderLayout';
@@ -176,13 +177,18 @@ export const router = createBrowserRouter([
     path: '/',
     element: <RootLayout />,
     children: [
+      // Landing page - standalone dark layout (own nav/footer)
+      {
+        element: <LandingLayout />,
+        children: [
+          { index: true, element: <LazyRoute component={LandingPage} /> },
+        ],
+      },
+
       // Public pages with Header/Footer layout
       {
         element: <PublicLayout />,
         children: [
-          // Landing page
-          { index: true, element: <LazyRoute component={LandingPage} /> },
-
           // Public auth routes
           { path: 'login', element: <LazyRoute component={LoginPage} /> },
           { path: 'register', element: <LazyRoute component={RegisterPage} /> },

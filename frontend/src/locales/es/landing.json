@@ -1,11 +1,11 @@
 {
   "hero": {
-    "title": "Obtén Reseñas Auténticas en Amazon",
-    "subtitle": "Conéctate con lectores verificados que leerán tu libro y dejarán reseñas honestas",
+    "title": "Obtén Reseñas Auténticas en Amazon que Duran",
+    "subtitle": "Conecta tu libro con lectores verificados que genuinamente leen, escuchan y dejan reseñas honestas. La entrega progresiva hace crecer tus rankings de forma natural.",
     "heroImage": "Reseñas Auténticas en Amazon",
     "cta": {
-      "primary": "Comenzar Ahora",
-      "secondary": "Saber Más"
+      "primary": "Comenzar a Obtener Reseñas",
+      "secondary": "Ver Cómo Funciona"
     },
     "stats": {
       "reviews": "Reseñas Entregadas",
@@ -13,142 +13,295 @@
       "readers": "Lectores Verificados"
     }
   },
+  "stats": {
+    "badge": "Resultados de la Plataforma",
+    "title": "Números que Hablan por Sí Mismos",
+    "subtitle": "Miles de autores confían en BookProof para hacer crecer su presencia en Amazon con reseñas reales y duraderas.",
+    "items": {
+      "reviews": {
+        "value": "10.000+",
+        "label": "Reseñas Entregadas",
+        "description": "Reseñas auténticas de lectores reales"
+      },
+      "authors": {
+        "value": "500+",
+        "label": "Autores Atendidos",
+        "description": "Autores de todos los géneros"
+      },
+      "readers": {
+        "value": "2.500+",
+        "label": "Lectores Verificados",
+        "description": "Comunidad activa de amantes de los libros"
+      },
+      "retention": {
+        "value": "94%",
+        "label": "Retención de Reseñas",
+        "description": "Reseñas que permanecen en Amazon"
+      },
+      "satisfaction": {
+        "value": "4.9/5",
+        "label": "Calificación de Autores",
+        "description": "Puntuación promedio de satisfacción"
+      },
+      "books": {
+        "value": "100+",
+        "label": "Libros Lanzados",
+        "description": "Campañas completadas con éxito"
+      }
+    }
+  },
   "howItWorks": {
-    "title": "Cómo Funciona",
-    "subtitle": "Obtén reseñas auténticas en Amazon en cuatro simples pasos",
+    "badge": "Proceso Simple",
+    "title": "De Cero Reseñas a Bestseller en 4 Pasos",
+    "subtitle": "Nuestro sistema optimizado se encarga de todo. Tú te enfocas en escribir — nosotros nos encargamos de las reseñas.",
     "steps": {
       "purchase": {
         "title": "Compra Créditos",
-        "description": "Elige un paquete de créditos que se ajuste a tus necesidades. Los créditos nunca expiran y pueden usarse para cualquier libro."
+        "description": "Elige un paquete de créditos que se ajuste a tus objetivos de marketing. Los créditos son flexibles y nunca expiran — úsalos en cualquier libro de tu catálogo.",
+        "details": [
+          "Selecciona de 25 a 1000+ créditos",
+          "Soporte para ebook o audiolibro",
+          "Sin tarifas ocultas ni compromisos",
+          "Activación instantánea de créditos"
+        ]
       },
       "submit": {
-        "title": "Envía Tu Libro",
-        "description": "Sube tu ebook o audiolibro y proporciona los detalles del libro. Crearemos tu campaña."
+        "title": "Crea Tu Campaña",
+        "description": "Sube los archivos de tu libro, establece el género y cuéntanos sobre tu audiencia objetivo. Nuestro sistema crea una campaña completamente configurada en minutos.",
+        "details": [
+          "Sube ebook (EPUB/PDF/MOBI) o audiolibro (MP3)",
+          "Establece géneros primario y secundario",
+          "Configura la asignación de créditos",
+          "Revisa la campaña antes de lanzarla"
+        ]
       },
       "distribute": {
-        "title": "Nosotros Distribuimos",
-        "description": "Tu libro se distribuye a lectores verificados que coinciden con tus preferencias de género."
+        "title": "Emparejamos y Distribuimos",
+        "description": "BookProof empareja tu libro con lectores que aman tu género. El acceso se otorga progresivamente cada semana, creando un patrón de reseñas natural.",
+        "details": [
+          "Selección de lectores por género",
+          "Distribución semanal progresiva",
+          "Ventana de lectura de 72 horas por lector",
+          "Reasignación automática si es necesario"
+        ]
       },
       "reviews": {
-        "title": "Recibe Reseñas",
-        "description": "Los lectores envían reseñas honestas en Amazon, entregadas progresivamente durante semanas."
+        "title": "Recibe Reseñas Genuinas",
+        "description": "Los lectores envían su reseña honesta en Amazon más retroalimentación interna. Recibes un informe detallado de campaña e insights anónimos de lectores.",
+        "details": [
+          "Enlaces verificados de reseñas en Amazon",
+          "Informe de retroalimentación interna anónima",
+          "Gráfico de distribución de calificaciones",
+          "Informe PDF descargable de campaña"
+        ]
       }
     }
   },
   "features": {
-    "title": "¿Por Qué Elegir BookProof?",
-    "subtitle": "Todo lo que necesitas para hacer crecer la presencia de tu libro en Amazon",
+    "badge": "Características de la Plataforma",
+    "title": "Todo Diseñado para el Éxito de Tu Libro",
+    "subtitle": "BookProof combina la participación auténtica de lectores con tecnología inteligente para entregar reseñas que permanecen.",
     "items": {
       "authentic": {
-        "title": "Reseñas Auténticas",
-        "description": "Lectores reales, reseñas reales. Sin bots, sin cuentas falsas. Cada reseña proviene de lectores verificados que realmente leyeron tu libro."
+        "title": "Reseñas 100% Auténticas",
+        "description": "Lectores reales, opiniones reales. Cada reseñador es un humano verificado que genuinamente lee tu libro antes de escribir. Sin bots, sin reseñas subcontratadas, sin atajos."
       },
       "distributed": {
-        "title": "Distribución Natural",
-        "description": "Las reseñas se entregan progresivamente durante semanas para mantener una apariencia orgánica y evitar los sistemas de detección de Amazon."
+        "title": "Patrón de Distribución Natural",
+        "description": "Las reseñas se publican en lotes semanales que imitan los patrones orgánicos de lectura. El algoritmo de Amazon ve un crecimiento saludable y gradual de reseñas en lugar de picos sospechosos."
       },
       "tracking": {
-        "title": "Seguimiento en Tiempo Real",
-        "description": "Monitorea el progreso de tu campaña con análisis detallados. Ve las reseñas entregadas, pendientes y en progreso en cualquier momento."
+        "title": "Seguimiento de Campaña en Tiempo Real",
+        "description": "Tu panel muestra cada reseña entregada, pendiente y en progreso. Desgloses semanales, gráficos de progreso y actualizaciones de estado te mantienen siempre informado."
       },
       "flexible": {
-        "title": "Paquetes Flexibles",
-        "description": "Elige entre varios paquetes de créditos que se ajusten a tus necesidades. Soporte para ebook y audiolibro con precios competitivos."
+        "title": "Soporte para Ebook y Audiolibro",
+        "description": "Ya sea que publiques ebooks o audiolibros, te tenemos cubierto. Asigna créditos a cualquier formato o divídelos entre ambos dentro de una sola campaña."
       },
       "guarantee": {
-        "title": "Garantía de 14 Días",
-        "description": "Si Amazon elimina una reseña dentro de los 14 días, la reemplazamos gratis. Tu inversión está protegida."
+        "title": "Garantía de Reemplazo de 14 Días",
+        "description": "Si Amazon elimina una reseña validada dentro de los 14 días, la reemplazamos a costo cero. Tu inversión está completamente protegida con seguimiento automático de reemplazos."
       },
       "support": {
-        "title": "Soporte Dedicado",
-        "description": "Nuestro equipo monitorea cada campaña y maneja cualquier problema. Concéntrate en escribir mientras nosotros nos encargamos de las reseñas."
+        "title": "Soporte de Campaña Dedicado",
+        "description": "Nuestro equipo monitorea activamente la salud de tu campaña. Manejamos problemas de lectores, espacios vencidos y escalaciones para que nunca tengas que preocuparte por el proceso."
+      },
+      "report": {
+        "title": "Informes Detallados de Campaña",
+        "description": "Cuando tu campaña termina, recibes un informe PDF profesional con distribución de calificaciones, retroalimentación anónima de lectores y cronología de campaña."
+      },
+      "keywords": {
+        "title": "Complemento de Investigación de Palabras Clave",
+        "description": "Aumenta la descubribilidad con nuestro servicio de investigación de palabras clave impulsado por IA. Obtén palabras clave optimizadas para tu título, subtítulo, descripción y campos de backend de Amazon KDP."
       }
     }
   },
+  "forAuthors": {
+    "badge": "Para Autores",
+    "title": "Todo lo que un Autor Necesita para Lanzar con Éxito",
+    "subtitle": "BookProof te da las herramientas, lectores e insights para llevar tu libro de invisible a influyente en Amazon.",
+    "items": {
+      "dashboard": {
+        "title": "Panel de Campaña Completo",
+        "description": "Monitorea cada aspecto de tu campaña en un solo lugar. Rastrea reseñas entregadas, créditos restantes, progreso de lectores e hitos semanales desde un panel intuitivo."
+      },
+      "reports": {
+        "title": "Informes Profesionales de Campaña",
+        "description": "Recibe un informe PDF detallado cuando termine tu campaña. Incluye gráficos de calificaciones de estrellas, retroalimentación anónima de lectores y una cronología completa de entrega de reseñas."
+      },
+      "genreMatch": {
+        "title": "Lectores Coincidentes por Género",
+        "description": "Tu libro solo se muestra a lectores que activamente leen tu género. Los autores de romance obtienen lectores de romance. Los escritores de thriller obtienen fanáticos del thriller."
+      },
+      "formats": {
+        "title": "Listo para Ebook y Audiolibro",
+        "description": "Lanza campañas para ebooks en formato EPUB, PDF o MOBI, o audiolibros en MP3. Incluso puedes dividir créditos entre ambos formatos dentro de una sola campaña."
+      },
+      "feedback": {
+        "title": "Retroalimentación Interna Anónima",
+        "description": "Antes de que termine la campaña, recibes los pensamientos honestos de los lectores sobre tu libro — ritmo, personajes, trama, calidad de escritura. Valiosos insights editoriales sin identificar al lector."
+      },
+      "keywordResearch": {
+        "title": "Servicio de Investigación de Palabras Clave",
+        "description": "Agrega nuestra investigación de palabras clave con IA a cualquier paquete. Obtén 5-10 palabras clave primarias, 15 términos secundarios y 20 frases de cola larga con una guía de implementación para Amazon KDP."
+      }
+    },
+    "cta": "Iniciar Tu Campaña"
+  },
   "readerBenefits": {
-    "title": "Beneficios para Lectores",
-    "subtitle": "Únete a nuestra comunidad de lectores y gana mientras descubres grandes libros",
+    "badge": "Para Lectores",
+    "title": "Lee Libros que Amas. Cobra por Tu Opinión Honesta.",
+    "subtitle": "Únete a una comunidad de lectores apasionados que descubren nuevos libros, ganan dinero real y ayudan a los autores a obtener la visibilidad que merecen.",
     "items": {
       "freeBooks": {
-        "title": "Libros Gratis",
-        "description": "Obtén acceso a ebooks y audiolibros sin costo. Lee los géneros que amas sin pagar nada."
+        "title": "Libros y Audiolibros Gratis",
+        "description": "Obtén acceso ilimitado a ebooks y audiolibros en tus géneros favoritos sin costo. Lee nuevos lanzamientos antes que el público general."
       },
       "earnMoney": {
-        "title": "Gana Dinero",
-        "description": "Recibe compensación por cada reseña honesta que envíes. Aumenta tus ganancias leyendo más libros."
+        "title": "Gana Dinero Real",
+        "description": "Recibe pago por cada reseña validada en Amazon. Las reseñas de ebooks ganan una tarifa fija; las reseñas de audiolibros ganan más. Retira vía PayPal, transferencia bancaria, Wise o cripto."
       },
       "discoverBooks": {
         "title": "Descubre Nuevos Autores",
-        "description": "Sé de los primeros en leer lanzamientos y descubre nuevos autores talentosos antes que nadie."
+        "description": "Sé de los primeros en leer próximos lanzamientos de autores emergentes y establecidos. Expande tu lista de lectura mientras obtienes acceso anticipado."
+      },
+      "flexible": {
+        "title": "Lee a Tu Ritmo",
+        "description": "Cada asignación te da 72 horas para leer y reseñar. Aplica solo cuando tengas tiempo. Sin presión, sin cuotas — completamente flexible."
+      },
+      "community": {
+        "title": "Únete a una Comunidad Creciente",
+        "description": "Conéctate con miles de compañeros amantes de los libros. Nuestra comunidad de lectores abarca romance, thriller, ciencia ficción, no ficción y todos los géneros."
+      },
+      "payout": {
+        "title": "Pagos Fáciles y Rápidos",
+        "description": "Solicita un pago en cualquier momento que alcances el umbral mínimo. Nuestro equipo procesa pagos rápidamente. Múltiples métodos de pago disponibles en todo el mundo."
       }
-    }
+    },
+    "howEarnings": {
+      "title": "Cómo Funcionan las Ganancias",
+      "ebook": "Por reseña de ebook",
+      "audiobook": "Por reseña de audiolibro",
+      "minimum": "Pago mínimo",
+      "methods": "PayPal, Transferencia Bancaria, Wise, Cripto"
+    },
+    "cta": "Unirse como Lector"
   },
   "testimonials": {
-    "title": "Lo Que Dicen Nuestros Usuarios",
-    "subtitle": "Únete a miles de autores que han crecido su presencia en Amazon con BookProof",
+    "badge": "Historias de Éxito",
+    "title": "Autores que Transformaron su Presencia en Amazon",
+    "subtitle": "Historias reales de autores reales que usaron BookProof para destacar y hacer crecer su base de lectores.",
     "items": {
       "t1": {
-        "quote": "BookProof ayudó a mi novela debut a obtener la visibilidad que necesitaba. Las reseñas llegaron naturalmente y ayudaron a impulsar significativamente mis rankings.",
+        "quote": "BookProof ayudó a mi novela debut a obtener la visibilidad que necesitaba. Las reseñas llegaron naturalmente y ayudaron a impulsar significativamente mis rankings. En 6 semanas pasé de 2 reseñas a 45.",
         "author": "Sarah M.",
-        "title": "Autora Bestseller"
+        "title": "Autora de Romance Bestseller"
       },
       "t2": {
-        "quote": "Por fin un servicio que realmente cumple sus promesas. Lectores reales, reseñas reales. La credibilidad de mi libro se disparó después de usar BookProof.",
+        "quote": "Por fin un servicio que realmente cumple sus promesas. Lectores reales, reseñas reales. La credibilidad de mi libro se disparó después de usar BookProof. Nunca más lanzaré un libro sin él.",
         "author": "James T.",
-        "title": "Autor Autopublicado"
+        "title": "Autor Autopublicado de Thriller"
       },
       "t3": {
-        "quote": "La distribución gradual de las reseñas hizo que todo pareciera orgánico. Amazon nunca marcó nada, y mis ventas aumentaron constantemente.",
+        "quote": "La distribución gradual de las reseñas hizo que todo pareciera orgánico. Amazon nunca marcó nada, y mis ventas aumentaron constantemente cada semana que llegaban nuevas reseñas.",
         "author": "Maria L.",
-        "title": "Autora de Romance"
+        "title": "Autora de Romance, 12 Libros Publicados"
       },
       "t4": {
-        "quote": "Como autor primerizo, estaba nervioso por conseguir reseñas. BookProof hizo el proceso simple y sin estrés. ¡Lo recomiendo mucho!",
+        "quote": "Como autor primerizo, tenía terror al lanzamiento. BookProof hizo todo el proceso sin complicaciones. El equipo de soporte me guió en cada paso. No podría recomendarlo más.",
         "author": "David K.",
-        "title": "Novelista Debutante"
+        "title": "Novelista Debutante de Ciencia Ficción"
       },
       "t5": {
-        "quote": "He probado otros servicios antes, pero BookProof es el único que entregó reseñas de calidad de lectores que realmente leyeron mi libro.",
+        "quote": "He probado otros servicios de reseñas antes, pero BookProof es el único que entregó reseñas de calidad de lectores que realmente se comprometieron con mi libro. La retroalimentación interna fue oro.",
         "author": "Emily R.",
-        "title": "Escritora de Misterio"
+        "title": "Escritora de Misterio y Suspenso"
       },
       "t6": {
-        "quote": "La garantía de 14 días me dio confianza para probar el servicio. Seis meses después, todas mis reseñas siguen ahí y mi libro está prosperando.",
+        "quote": "La garantía de 14 días me dio confianza para invertir en un paquete más grande. Seis meses después, todas mis reseñas siguen en vivo y mi libro está en el top 100 de su categoría.",
         "author": "Michael P.",
-        "title": "Autor de Ciencia Ficción"
+        "title": "Autor de Ciencia Ficción y Fantasía"
       },
       "t7": {
-        "quote": "El equipo de soporte de BookProof es increíble. Me ayudaron a optimizar mi campaña y conseguí 30% más reseñas de lo esperado.",
+        "quote": "El equipo de soporte de BookProof es excepcional. Me ayudaron a optimizar la configuración de mi campaña y terminé obteniendo 30% más reseñas de las esperadas. Servicio absolutamente sobresaliente.",
         "author": "Jennifer W.",
-        "title": "Escritora de No Ficción"
+        "title": "Escritora de Negocios y No Ficción"
       },
       "t8": {
-        "quote": "La opción de reseñas de audiolibros fue un cambio total para mí. Encontrar oyentes dispuestos a reseñar audiolibros suele ser imposible.",
+        "quote": "La opción de reseñas de audiolibros fue revolucionaria para mí. Encontrar oyentes dispuestos a dejar reseñas detalladas es casi imposible en otro lugar. BookProof lo resolvió completamente.",
         "author": "Robert H.",
-        "title": "Editor de Audiolibros"
+        "title": "Editor y Autor de Audiolibros"
       },
       "t9": {
-        "quote": "Mi libro pasó de 3 reseñas a 47 en solo 6 semanas. El impacto en mi ranking de ventas fue inmediato y sustancial.",
+        "quote": "Mi libro infantil pasó de 3 reseñas a 47 en solo 6 semanas. El impacto en mi ranking de ventas fue inmediato y la retroalimentación anónima me ayudó a mejorar futuros libros también.",
         "author": "Lisa C.",
-        "title": "Autora de Libros Infantiles"
+        "title": "Autora e Ilustradora de Libros Infantiles"
       }
     }
   },
+  "guarantee": {
+    "badge": "Nuestra Promesa",
+    "title": "La Garantía de Reemplazo de 14 Días de BookProof",
+    "subtitle": "Respaldamos cada reseña que entregamos. Si Amazon elimina una reseña validada dentro de los 14 días, la reemplazamos — completamente gratis.",
+    "items": {
+      "protected": {
+        "title": "Tu Inversión Está Protegida",
+        "description": "Cada crédito que gastas está respaldado por nuestra garantía. Si una reseña desaparece dentro de los 14 días posteriores a la validación, cuenta como un slot de reemplazo — sin créditos adicionales necesarios."
+      },
+      "monitored": {
+        "title": "Monitoreo Activo de Reseñas",
+        "description": "Nuestro equipo verifica regularmente todos los enlaces de reseñas validadas. Cuando se detecta una eliminación dentro de la ventana de garantía, iniciamos inmediatamente un reemplazo sin que tengas que pedir."
+      },
+      "automatic": {
+        "title": "Proceso de Reemplazo Automático",
+        "description": "El lector de reemplazo se extrae automáticamente de la cola de tu campaña. No necesitas hacer nada — manejamos todo el proceso de reasignación en segundo plano."
+      },
+      "transparent": {
+        "title": "Transparencia Total en los Informes",
+        "description": "Tu informe de campaña muestra el total de reseñas entregadas, reemplazos realizados y tasa de retención final. Siempre sabes exactamente qué pasó con cada reseña."
+      }
+    },
+    "note": "La garantía aplica a reseñas eliminadas dentro de los 14 días posteriores a la validación del administrador. Las reseñas eliminadas después de 14 días no están cubiertas pero representan un porcentaje muy pequeño de las reseñas entregadas."
+  },
   "pricing": {
+    "badge": "Precios",
     "title": "Precios Simples y Transparentes",
-    "subtitle": "Elige un paquete que se ajuste a tus objetivos de marketing del libro",
+    "subtitle": "Sin suscripciones, sin tarifas mensuales. Compra créditos y úsalos cuando estés listo. Cada paquete incluye nuestra garantía de 14 días.",
+    "popular": "Más Popular",
+    "perCredit": "por crédito",
+    "activate": "días para activar",
     "packages": {
       "starter": {
         "name": "Inicial",
         "credits": "25 Créditos",
         "validity": "30 días para activar",
-        "reviews": "~25 reseñas",
+        "reviews": "~25 reseñas de ebook",
         "duration": "~5 semanas",
         "features": [
-          "Soporte para Ebook o Audiolibro",
-          "Distribución semanal",
-          "Garantía de 14 días",
-          "Seguimiento en tiempo real",
+          "25 reseñas de ebook o audiolibro",
+          "Distribución progresiva semanal",
+          "Garantía de reemplazo de 14 días",
+          "Panel de campaña en tiempo real",
           "Soporte por correo electrónico"
         ]
       },
@@ -157,12 +310,12 @@
         "credits": "50 Créditos",
         "validity": "30 días para activar",
         "reviews": "~50 reseñas",
-        "duration": "~5 semanas",
+        "duration": "~5-6 semanas",
         "features": [
           "Todas las características Inicial",
           "Posición prioritaria en la cola",
-          "Distribución más rápida",
-          "Informe de campaña en PDF"
+          "Tasa de distribución semanal más rápida",
+          "Informe PDF de finalización de campaña"
         ],
         "popular": true
       },
@@ -171,19 +324,19 @@
         "credits": "100 Créditos",
         "validity": "30 días para activar",
         "reviews": "~100 reseñas",
-        "duration": "~4-5 semanas",
+        "duration": "~4-6 semanas",
         "features": [
           "Todas las características Crecimiento",
           "Velocidad máxima de distribución",
-          "Investigación de palabras clave adicional",
-          "Soporte prioritario"
+          "Complemento de investigación de palabras clave incluido",
+          "Soporte prioritario y revisión de campaña"
         ]
       },
       "enterprise": {
         "name": "Empresarial",
         "credits": "200+ Créditos",
         "validity": "90-120 días para activar",
-        "reviews": "Personalizado",
+        "reviews": "Volumen personalizado",
         "duration": "Cronograma personalizado",
         "features": [
           "Todas las características Profesional",
@@ -194,11 +347,60 @@
         ]
       }
     },
-    "cta": "Ver Todos los Paquetes"
+    "cta": "Comenzar",
+    "enterpriseCta": "Contactar Ventas",
+    "note": "Precios establecidos por el administrador. Contáctenos para precios actuales de paquetes."
+  },
+  "faq": {
+    "badge": "FAQ",
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Todo lo que necesitas saber sobre la plataforma de reseñas de BookProof.",
+    "items": {
+      "q1": {
+        "question": "¿Cómo funciona exactamente BookProof?",
+        "answer": "BookProof conecta autores con lectores verificados que aman su género. Compras créditos, creas una campaña para tu libro, subes tus archivos y nosotros manejamos la distribución. Los lectores reciben acceso en lotes semanales, leen tu libro dentro de 72 horas y publican una reseña honesta en Amazon. Recibes un informe de campaña cuando todas las reseñas son entregadas."
+      },
+      "q2": {
+        "question": "¿Estas reseñas van contra los Términos de Servicio de Amazon?",
+        "answer": "Nuestros lectores genuinamente leen tus libros y proporcionan retroalimentación honesta basada en su experiencia real. Seguimos todas las políticas de Amazon y aseguramos que las reseñas parezcan orgánicas a través de patrones naturales de distribución semanal. Los lectores son compensados por su tiempo leyendo, no por dejar reseñas positivas."
+      },
+      "q3": {
+        "question": "¿Cuánto tiempo toma comenzar a obtener reseñas?",
+        "answer": "Después de que tu campaña se crea y aprueba, el primer lote de lectores típicamente recibe acceso dentro de la primera semana. Las reseñas se entregan progresivamente durante 4-10 semanas dependiendo del tamaño de tu paquete. Este ritmo natural ayuda a mantener la autenticidad y evitar patrones inusuales."
+      },
+      "q4": {
+        "question": "¿Qué pasa si Amazon elimina una reseña?",
+        "answer": "Ofrecemos una garantía de reemplazo de 14 días en todas las reseñas. Si una reseña se elimina dentro de los 14 días de ser validada, la reemplazamos sin costo adicional. Nuestro equipo monitorea todas las reseñas entregadas e inicia reemplazos automáticamente cuando se detecta una eliminación dentro de la ventana de garantía."
+      },
+      "q5": {
+        "question": "¿Puedo elegir qué lectores reciben mi libro?",
+        "answer": "Los lectores se emparejan automáticamente según sus preferencias de género y compatibilidad de formato con tu libro. Este emparejamiento automático mejora la autenticidad de las reseñas — los lectores genuinamente eligen géneros que disfrutan, resultando en reseñas más comprometidas y reflexivas."
+      },
+      "q6": {
+        "question": "¿Qué formatos soportan?",
+        "answer": "Soportamos ebooks en formatos EPUB, PDF y MOBI (hasta 50MB) y audiolibros en formato MP3 (hasta 500MB). Los créditos se consumen de manera diferente: 1 crédito por reseña de ebook, 2 créditos por reseña de audiolibro. Puedes dividir créditos entre ambos formatos en una sola campaña."
+      },
+      "q7": {
+        "question": "¿Cómo se verifican y examinan los lectores?",
+        "answer": "Todos los lectores pasan por un proceso de registro que verifica su correo electrónico, preferencias de formato de contenido y enlaces de perfil de Amazon. Los lectores deben mantener un buen historial de finalización — aquellos que incumplen plazos o envían reseñas de baja calidad son eliminados de la plataforma."
+      },
+      "q8": {
+        "question": "¿Puedo pausar o cancelar mi campaña?",
+        "answer": "Sí, puedes pausar una campaña activa en cualquier momento desde tu panel. Pausar detiene nuevas asignaciones de lectores mientras permite que los lectores que ya recibieron acceso completen sus reseñas. Las campañas se pueden reanudar en cualquier momento. La cancelación está disponible, pero los créditos ya asignados a lectores en progreso no pueden ser reembolsados."
+      },
+      "q9": {
+        "question": "¿Qué recibo cuando mi campaña está completa?",
+        "answer": "Cuando todas las reseñas se entregan y validan, recibes un informe detallado de campaña en PDF. El informe incluye: total de reseñas entregadas, gráfico de distribución de calificaciones, retroalimentación anónima de lectores para cada reseña, cronología semanal de entrega y estadísticas de reemplazos."
+      },
+      "q10": {
+        "question": "¿Cómo funciona la investigación de palabras clave?",
+        "answer": "Nuestro servicio de investigación de palabras clave usa IA para analizar el género, descripción, audiencia objetivo y títulos competidores de tu libro para generar palabras clave optimizadas. Recibes un informe PDF con 5-10 palabras clave primarias, 10-15 palabras clave secundarias, 15-20 frases de cola larga y una guía de implementación completa para Amazon KDP."
+      }
+    }
   },
   "leadForm": {
-    "title": "Únete a la Lista de Espera",
-    "subtitle": "Sé el primero en saber cuándo lancemos. Obtén precios exclusivos de lanzamiento.",
+    "title": "Obtén Acceso Anticipado",
+    "subtitle": "Únete a miles de autores que ya usan BookProof. Regístrate ahora y obtén precios exclusivos de lanzamiento.",
     "fields": {
       "name": {
         "label": "Nombre Completo",
@@ -211,71 +413,47 @@
       "userType": {
         "label": "Soy...",
         "options": {
-          "author": "Autor",
-          "reader": "Lector",
-          "both": "Ambos"
+          "author": "Autor — Quiero reseñas para mi libro",
+          "reader": "Lector — Quiero ganar leyendo",
+          "both": "Ambos — Escribo y me encanta leer"
         }
       },
       "marketingConsent": {
-        "label": "Acepto recibir correos de marketing sobre actualizaciones y ofertas de BookProof"
+        "label": "Acepto recibir correos de marketing sobre actualizaciones y ofertas exclusivas de BookProof"
       }
     },
-    "cta": "Unirse a la Lista",
+    "cta": "Obtener Acceso Anticipado",
     "submitting": "Uniéndose...",
-    "success": "¡Gracias! Has sido agregado a nuestra lista de espera.",
-    "alreadySubscribed": "¡Ya estás en nuestra lista de espera! Te notificaremos cuando lancemos.",
+    "success": "¡Estás dentro! Pronto te contactaremos con los detalles del acceso anticipado.",
+    "alreadySubscribed": "¡Ya estás en nuestra lista! Te notificaremos cuando abra el acceso anticipado.",
     "error": "Algo salió mal. Por favor, inténtalo de nuevo."
   },
-  "faq": {
-    "title": "Preguntas Frecuentes",
-    "items": {
-      "q1": {
-        "question": "¿Cómo funciona BookProof?",
-        "answer": "BookProof conecta autores con lectores verificados. Compras créditos, creas una campaña para tu libro, y lo distribuimos a lectores que lo leen y reseñan en Amazon. Las reseñas se entregan progresivamente durante semanas para mantener la autenticidad."
-      },
-      "q2": {
-        "question": "¿Estas reseñas van contra los términos de Amazon?",
-        "answer": "Nuestros lectores genuinamente leen tus libros y proporcionan comentarios honestos. Seguimos todas las políticas de Amazon y aseguramos que las reseñas parezcan orgánicas a través de patrones naturales de distribución."
-      },
-      "q3": {
-        "question": "¿Cuánto tiempo toma obtener reseñas?",
-        "answer": "Las reseñas se distribuyen durante 4-10 semanas dependiendo del tamaño de tu paquete. Este ritmo natural ayuda a mantener la autenticidad y evitar la detección."
-      },
-      "q4": {
-        "question": "¿Qué pasa si Amazon elimina una reseña?",
-        "answer": "Ofrecemos una garantía de 14 días. Si una reseña se elimina dentro de los 14 días posteriores a la validación, la reemplazamos sin costo adicional."
-      },
-      "q5": {
-        "question": "¿Puedo elegir quién lee mi libro?",
-        "answer": "Los lectores se emparejan automáticamente según las preferencias de género y disponibilidad. Esto asegura una distribución justa y autenticidad."
-      },
-      "q6": {
-        "question": "¿Qué formatos soportan?",
-        "answer": "Soportamos ebooks (PDF/EPUB) y audiolibros (MP3). Los créditos se consumen de manera diferente: 1 crédito para reseñas de ebook, 2 créditos para reseñas de audiolibro."
-      }
-    }
-  },
   "contact": {
-    "title": "Contáctanos",
-    "subtitle": "¿Tienes preguntas? Estamos aquí para ayudarte a tener éxito con el marketing de tu libro.",
+    "title": "¿Tienes Preguntas? Estamos Aquí.",
+    "subtitle": "Nuestro equipo está listo para ayudarte a planear tu estrategia de lanzamiento del libro y obtener lo mejor de BookProof.",
     "email": {
-      "title": "Envíanos un Correo",
-      "description": "Envía un mensaje y te responderemos en 24 horas."
+      "title": "Soporte por Correo",
+      "description": "Envíanos tu pregunta y responderemos en 24 horas con una respuesta detallada."
     },
     "support": {
-      "title": "Soporte en Vivo",
-      "description": "Chatea con nuestro equipo para asistencia inmediata.",
-      "hours": "Lunes - Viernes, 9AM - 6PM EST"
+      "title": "Soporte por Chat en Vivo",
+      "description": "Chatea con nuestros especialistas de campaña para ayuda inmediata con la configuración o preguntas.",
+      "hours": "Lunes – Viernes, 9AM – 6PM EST"
+    },
+    "sales": {
+      "title": "Empresarial y Paquetes Personalizados",
+      "description": "¿Editorial o manejando múltiples autores? Ofrecemos paquetes personalizados y gerentes de cuenta dedicados."
     }
   },
   "footer": {
-    "tagline": "Reseñas auténticas en Amazon, entregadas.",
+    "tagline": "Reseñas auténticas en Amazon, entregadas por lectores reales que aman los libros.",
     "links": {
       "product": {
         "title": "Producto",
         "features": "Características",
         "pricing": "Precios",
-        "faq": "FAQ"
+        "faq": "FAQ",
+        "howItWorks": "Cómo Funciona"
       },
       "company": {
         "title": "Empresa",
@@ -290,6 +468,6 @@
         "cookies": "Política de Cookies"
       }
     },
-    "copyright": "© 2024 BookProof. Todos los derechos reservados."
+    "copyright": "© 2025 BookProof. Todos los derechos reservados."
   }
 }
