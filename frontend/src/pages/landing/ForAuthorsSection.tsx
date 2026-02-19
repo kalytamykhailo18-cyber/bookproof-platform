@@ -47,8 +47,8 @@ export function ForAuthorsSection() {
             const Icon = ICONS[i];
             const color = COLORS[i];
             const n = KEYS.length;
-            const totalOverlap = 200;
             const overlap = 150;
+            const totalOverlap = overlap * (n - 1); // 150 × 5 = 750
             return (
               <div
                 key={key}
@@ -81,10 +81,10 @@ export function ForAuthorsSection() {
                 >
                   <Icon className="h-4 w-4" style={{ color }} />
                 </div>
-                <h3 className="text-sm font-semibold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors duration-200">
+                <h3 className="text-md font-semibold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors duration-200">
                   {t(`items.${key}.title`)}
                 </h3>
-                <p className="text-xs text-slate-500 leading-relaxed flex-1">
+                <p className="text-sm text-slate-500 leading-relaxed flex-1">
                   {t(`items.${key}.description`)}
                 </p>
                 <div
