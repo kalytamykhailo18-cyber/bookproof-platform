@@ -54,7 +54,7 @@ export function TrustSection() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
           {TRUST_ITEMS.map(({ icon: Icon, color, title, description, animation }) => (
-            <div key={title} className={`landing-card landing-card-hover rounded-md p-7 group ${animation}`}>
+            <div key={title} className={`card-golden-hover landing-card landing-card-hover rounded-md p-7 group ${animation}`}>
               <div
                 className="inline-flex items-center justify-center w-11 h-11 rounded-md mb-5 transition-transform duration-200 group-hover:scale-110"
                 style={{ background: `${color}18`, border: `1px solid ${color}30` }}
@@ -80,7 +80,7 @@ export function TrustSection() {
           ].map((badge, bi) => (
             <div
               key={badge.label}
-              className={`flex flex-col items-center text-center px-5 py-3.5 rounded-md border ${bi % 2 === 0 ? 'animate-fade-up-fast' : 'animate-zoom-in-fast'}`}
+              className={`card-golden-hover flex flex-col items-center text-center px-5 py-3.5 rounded-md border ${bi % 2 === 0 ? 'animate-fade-up-fast' : 'animate-zoom-in-fast'}`}
               style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(71,85,105,0.3)' }}
             >
               <span className="text-sm font-bold text-white">{badge.label}</span>

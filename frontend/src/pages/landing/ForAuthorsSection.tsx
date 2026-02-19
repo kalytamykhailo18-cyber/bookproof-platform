@@ -23,15 +23,6 @@ export function ForAuthorsSection() {
       className="py-24 sm:py-32 relative overflow-hidden"
       style={{ background: '#f1f5f9' }}
     >
-      <div
-        className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none"
-        style={{ background: 'radial-gradient(circle at top right, rgba(59,130,246,0.05) 0%, transparent 60%)' }}
-      />
-      <div
-        className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none"
-        style={{ background: 'radial-gradient(circle at bottom left, rgba(99,102,241,0.04) 0%, transparent 60%)' }}
-      />
-
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16 sm:mb-20">
@@ -50,7 +41,62 @@ export function ForAuthorsSection() {
         </div>
 
         {/* Benefit cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-14 sm:mb-16">
+        {/* lg+: overlapping row with rotateY 3D effect */}
+        <div className="hidden lg:flex items-stretch justify-center mb-14 sm:mb-16">
+          {KEYS.map((key, i) => {
+            const Icon = ICONS[i];
+            const color = COLORS[i];
+            const n = KEYS.length;
+            const totalOverlap = 200;
+            const overlap = 150;
+            return (
+              <div
+                key={key}
+                className={`relative flex-shrink-0 landing-card-light rounded-md p-6 group flex flex-col ${CARD_ANIMATIONS[i]}`}
+                style={{
+                  width: `calc((100% + ${totalOverlap}px) / ${n})`,
+                  marginLeft: i === 0 ? 0 : -overlap,
+                  zIndex: i + 1,
+                  transform: 'perspective(600px) rotateY(45deg)',
+                  transformOrigin: 'center center',
+                  boxShadow: '-6px 0 20px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05)',
+                  transition: 'transform 0.4s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.3s ease',
+                }}
+                onMouseEnter={e => {
+                  const el = e.currentTarget as HTMLDivElement;
+                  el.style.zIndex = '50';
+                  el.style.transform = 'perspective(600px) rotateY(0deg) translateY(-12px)';
+                  el.style.boxShadow = '0 24px 48px rgba(0,0,0,0.14), 0 8px 16px rgba(0,0,0,0.08)';
+                }}
+                onMouseLeave={e => {
+                  const el = e.currentTarget as HTMLDivElement;
+                  el.style.zIndex = String(i + 1);
+                  el.style.transform = 'perspective(600px) rotateY(45deg)';
+                  el.style.boxShadow = '-6px 0 20px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05)';
+                }}
+              >
+                <div
+                  className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-md mb-4 transition-transform duration-200 group-hover:scale-110"
+                  style={{ background: `${color}12`, border: `1px solid ${color}28` }}
+                >
+                  <Icon className="h-4 w-4" style={{ color }} />
+                </div>
+                <h3 className="text-sm font-semibold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors duration-200">
+                  {t(`items.${key}.title`)}
+                </h3>
+                <p className="text-xs text-slate-500 leading-relaxed flex-1">
+                  {t(`items.${key}.description`)}
+                </p>
+                <div
+                  className="mt-4 h-0.5 w-0 group-hover:w-full transition-all duration-300 rounded-sm"
+                  style={{ background: `linear-gradient(90deg, ${color}, transparent)` }}
+                />
+              </div>
+            );
+          })}
+        </div>
+        {/* below lg: normal grid */}
+        <div className="grid sm:grid-cols-2 lg:hidden gap-5 sm:gap-6 mb-14 sm:mb-16">
           {KEYS.map((key, i) => {
             const Icon = ICONS[i];
             const color = COLORS[i];
@@ -142,6 +188,39 @@ export function ForAuthorsSection() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Overlapping book covers */}
+        <div className="flex flex-col items-center mb-10 animate-fade-up">
+          <div className="flex items-end overflow-visible mb-5">
+            {[0,1,2,3,4,5,6,7,8,9,10].map((n, i, arr) => {
+              const mid = Math.floor(arr.length / 2);
+              const angle = (i - mid) * 3;
+              return (
+                <img
+                  key={n}
+                  src={`/images/${n}.jpg`}
+                  alt={`Book ${n}`}
+                  style={{
+                    width: 58,
+                    height: 84,
+                    objectFit: 'cover',
+                    borderRadius: 4,
+                    marginLeft: i === 0 ? 0 : -22,
+                    zIndex: i <= mid ? i : arr.length - i,
+                    position: 'relative',
+                    boxShadow: '-3px 4px 10px rgba(0,0,0,0.22)',
+                    transform: `rotate(${angle}deg)`,
+                    transformOrigin: 'bottom center',
+                    border: '1px solid rgba(255,255,255,0.6)',
+                  }}
+                />
+              );
+            })}
+          </div>
+          <p className="text-xs text-slate-400 font-medium tracking-wide uppercase">
+            500+ authors already launched their books
+          </p>
         </div>
 
         {/* CTA */}

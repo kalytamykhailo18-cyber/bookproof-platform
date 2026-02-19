@@ -1,13 +1,43 @@
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Play, Star, Shield, Zap } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
+
+const BOOK_IMAGES = [...Array(11)].map((_, i) => `/images/${i}.jpg`);
+const LOOP_IMAGES = [...BOOK_IMAGES, ...BOOK_IMAGES, ...BOOK_IMAGES];
+const ITEM_W = 98; // 90px + 8px gap
 
 export function HeroSection() {
   const { t } = useTranslation('hero');
+  const [index, setIndex] = useState(BOOK_IMAGES.length);
+  const [scaledIndex, setScaledIndex] = useState(BOOK_IMAGES.length + 1);
+  const [sliding, setSliding] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setScaledIndex(s => s + 1);
+      setSliding(true);
+      setIndex(i => i + 1);
+    }, 2800);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, []);
+
+  // Loop reset — instant jump back to middle copy
+  useEffect(() => {
+    if (index >= BOOK_IMAGES.length * 2) {
+      const t = setTimeout(() => {
+        setSliding(false);
+        setIndex(BOOK_IMAGES.length);
+        setScaledIndex(BOOK_IMAGES.length + 1);
+      }, 450);
+      return () => clearTimeout(t);
+    }
+  }, [index]);
 
   return (
     <section
-      className="relative min-h-screen flex items-center overflow-hidden"
+      className="relative min-h-screen flex items-center"
       style={{ background: 'linear-gradient(135deg, #050d20 0%, #0a1628 35%, #0f1f42 65%, #0a1628 100%)' }}
     >
       <div className="absolute inset-0 landing-dot-grid opacity-40" />
@@ -27,63 +57,116 @@ export function HeroSection() {
         <div className="grid lg:grid-cols-2 gap-12 xl:gap-24 items-center">
 
           {/* ── Left: text ── */}
-          <div className="space-y-8">
-            <div className="animate-fade-up-fast">
-              <span
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium border"
-                style={{ background: 'rgba(59,130,246,0.12)', borderColor: 'rgba(59,130,246,0.35)', color: '#93c5fd' }}
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
-                Trusted by 500+ Authors Worldwide
-              </span>
-            </div>
+          <div className="relative space-y-8">
 
-            <div className="animate-fade-up">
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-extrabold text-white leading-[1.1] tracking-tight">
-                {t('title', 'Get Authentic Amazon Reviews That Last').split('Amazon').map((part, i, arr) =>
-                  i < arr.length - 1 ? (
-                    <span key={i}>{part}<span className="landing-gradient-text">Amazon</span></span>
-                  ) : <span key={i}>{part}</span>
-                )}
+            {/* Floating glow orbs */}
+            <div className="absolute -left-10 top-0 w-56 h-56 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.13) 0%, transparent 70%)', animation: 'float-y 7s ease-in-out infinite' }} />
+            <div className="absolute right-4 bottom-8 w-36 h-36 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', animation: 'float-y 9s ease-in-out infinite reverse' }} />
+
+            {/* Title */}
+            <div className="animate-fade-up relative z-10">
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-extrabold leading-[1.08] tracking-tight">
+                <span className="text-white block">Get Authentic</span>
+                <span className="animate-text-shimmer block my-1">Amazon Reviews</span>
+                <span className="text-slate-500 block font-semibold text-2xl sm:text-3xl lg:text-[2rem] mt-2">That Last.</span>
               </h1>
+              {/* Accent line */}
+              <div className="mt-5 h-px w-32"
+                style={{ background: 'linear-gradient(to right, #3b82f6, #8b5cf6, transparent)' }} />
             </div>
 
-            <p className="text-lg sm:text-xl text-slate-400 leading-relaxed max-w-lg animate-fade-up-light-slow">
+            {/* Subtitle */}
+            <p className="text-lg text-slate-400 leading-relaxed max-w-md animate-fade-up-light-slow relative z-10">
               {t('subtitle')}
             </p>
 
-            <div className="flex flex-wrap gap-4 animate-fade-up-slow">
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-3 animate-fade-up-slow relative z-10">
               <Link
                 to="/register"
-                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-semibold text-white landing-btn-primary"
+                className="animate-btn-shine relative overflow-hidden inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-semibold text-white landing-btn-primary"
+                style={{ boxShadow: '0 0 32px rgba(59,130,246,0.45), 0 4px 20px rgba(59,130,246,0.3)' }}
               >
                 {t('cta.primary', 'Start Getting Reviews')}
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <a
                 href="#how-it-works"
-                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-medium text-slate-300 border border-white/20 hover:bg-white/10 hover:text-white transition-all duration-200"
+                className="btn-golden-flow inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-medium text-slate-300 hover:text-white transition-colors duration-200"
               >
                 <Play className="h-4 w-4 fill-current" />
                 {t('cta.secondary', 'See How It Works')}
               </a>
             </div>
+
           </div>
 
-          {/* ── Right: hero image ── */}
-          <div className="relative flex items-center justify-center animate-zoom-in-light-slow">
-            <div className="relative w-full">
+          {/* ── Right: hero image + carousel ── */}
+          <div className="relative flex flex-col overflow-hidden animate-zoom-in-light-slow">
+            {/* Hero image */}
+            <div className="relative w-full" style={{ marginBottom: '-48px', zIndex: 10 }}>
               <img
                 src="/hero.png"
                 alt="BookProof platform"
                 className="w-full rounded-md object-cover"
                 style={{
-                  maskImage: 'linear-gradient(to bottom, black 55%, transparent 100%), linear-gradient(to right, black 60%, transparent 100%)',
-                  WebkitMaskImage: 'linear-gradient(to bottom, black 55%, transparent 100%), linear-gradient(to right, black 60%, transparent 100%)',
+                  transform: 'scale(1.04)',
+                  transformOrigin: 'top center',
+                  maskImage: 'linear-gradient(to bottom, black 55%, transparent 100%), linear-gradient(to right, black 65%, transparent 100%)',
+                  WebkitMaskImage: 'linear-gradient(to bottom, black 55%, transparent 100%), linear-gradient(to right, black 65%, transparent 100%)',
                   maskComposite: 'intersect',
                   WebkitMaskComposite: 'destination-in',
                 }}
               />
+            </div>
+
+            {/* Book carousel — hidden on mobile, visible sm+ */}
+            <div
+              className="relative overflow-x-hidden"
+              style={{
+                paddingTop: '150px',
+                maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
+              }}
+            >
+
+              <div
+                className="flex items-end"
+                style={{
+                  transform: `translateX(-${index * ITEM_W}px)`,
+                  transition: sliding ? 'transform 0.4s ease' : 'none',
+                  gap: '8px',
+                }}
+              >
+                {LOOP_IMAGES.map((src, i) => {
+                  const isFirst = i === scaledIndex;
+                  return (
+                    <div
+                      key={i}
+                      className="flex-shrink-0 overflow-hidden"
+                      style={{
+                        width: '90px',
+                        height: '132px',
+                        transform: isFirst ? 'scale(2)' : 'scale(1)',
+                        transformOrigin: 'left bottom',
+                        transition: 'transform 0.4s ease',
+                        zIndex: isFirst ? 10 : 1,
+                        position: 'relative',
+                        marginRight: isFirst ? '90px' : undefined,
+                      }}
+                    >
+                      <img
+                        src={src}
+                        alt=""
+                        className="w-full h-full object-cover transition-opacity duration-400"
+                        style={{ opacity: isFirst ? 1 : 0.45 }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

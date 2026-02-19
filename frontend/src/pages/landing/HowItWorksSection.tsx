@@ -94,7 +94,7 @@ export function HowItWorksSection() {
                 {/* Visual card side */}
                 <div className={`${!isEven ? 'lg:order-1' : ''} ${anim.card}`}>
                   <div
-                    className="landing-card rounded-md p-8 sm:p-10 space-y-6 relative overflow-hidden"
+                    className={`card-shine-always delay-${i} landing-card rounded-md p-8 sm:p-10 space-y-6 relative overflow-hidden`}
                     style={{ border: `1px solid ${color}22` }}
                   >
                     <div

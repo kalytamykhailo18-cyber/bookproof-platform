@@ -56,7 +56,7 @@ export function PricingSection() {
             return (
               <div
                 key={key}
-                className={`relative landing-card-light rounded-md p-7 flex flex-col ${animation} ${isPopular ? 'ring-2 ring-violet-400/40' : ''}`}
+                className={`relative landing-card-light rounded-md p-7 flex flex-col transition-transform duration-300 hover:scale-105 hover:z-10 ${animation} ${isPopular ? 'ring-2 ring-violet-400/40' : ''}`}
                 style={isPopular ? { boxShadow: `0 8px 32px ${color}18` } : undefined}
               >
                 {isPopular && (

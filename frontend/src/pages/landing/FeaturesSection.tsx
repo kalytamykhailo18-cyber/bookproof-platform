@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import {
   ShieldCheck, BarChart3, LineChart, Headphones,
   RefreshCw, Headset, FileText, Search,
+  Lock, Zap,
 } from 'lucide-react';
 
 const FEATURE_ICONS = [ShieldCheck, BarChart3, LineChart, Headphones, RefreshCw, Headset, FileText, Search];
@@ -54,7 +55,7 @@ export function FeaturesSection() {
             return (
               <div
                 key={key}
-                className={`landing-card landing-card-hover rounded-md p-7 group flex flex-col ${CARD_ANIMATIONS[i]}`}
+                className={`card-golden-hover landing-card landing-card-hover rounded-md p-7 group flex flex-col ${CARD_ANIMATIONS[i]}`}
               >
                 <div
                   className="inline-flex items-center justify-center w-11 h-11 rounded-md mb-5 transition-transform duration-200 group-hover:scale-110"
@@ -83,15 +84,20 @@ export function FeaturesSection() {
         {/* Trust strip */}
         <div className="mt-16 sm:mt-20 grid sm:grid-cols-3 gap-5 sm:gap-6">
           {[
-            { icon: '🔒', label: 'Amazon Policy Compliant', desc: 'Progressive delivery mimics organic review growth', anim: 'animate-fade-right-light-slow' },
-            { icon: '⚡', label: 'Fast Campaign Start', desc: 'First readers assigned within days of campaign creation', anim: 'animate-fade-up-light-slow' },
-            { icon: '📊', label: 'Full Transparency', desc: 'Real-time dashboard with every review and status update', anim: 'animate-fade-left-light-slow' },
-          ].map((item) => (
-            <div key={item.label} className={`flex items-start gap-4 p-6 landing-card rounded-md ${item.anim}`}>
-              <span className="text-2xl flex-shrink-0 mt-0.5">{item.icon}</span>
+            { Icon: Lock,       color: '#60a5fa', label: 'Amazon Policy Compliant', desc: 'Progressive delivery mimics organic review growth',        anim: 'animate-fade-right-light-slow' },
+            { Icon: Zap,        color: '#fbbf24', label: 'Fast Campaign Start',     desc: 'First readers assigned within days of campaign creation',  anim: 'animate-fade-up-light-slow'    },
+            { Icon: BarChart3,  color: '#34d399', label: 'Full Transparency',       desc: 'Real-time dashboard with every review and status update',  anim: 'animate-fade-left-light-slow'  },
+          ].map(({ Icon, color, label, desc, anim }) => (
+            <div key={label} className={`card-golden-hover flex items-start gap-4 p-6 landing-card rounded-md ${anim}`}>
+              <div
+                className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-md mt-0.5"
+                style={{ background: `${color}15`, border: `1px solid ${color}28` }}
+              >
+                <Icon className="h-4 w-4" style={{ color }} />
+              </div>
               <div>
-                <p className="text-sm font-semibold text-white mb-1.5">{item.label}</p>
-                <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
+                <p className="text-sm font-semibold text-white mb-1.5">{label}</p>
+                <p className="text-xs text-slate-500 leading-relaxed">{desc}</p>
               </div>
             </div>
           ))}

@@ -95,7 +95,7 @@ export function StatsSection() {
             return (
               <div
                 key={stat.key}
-                className={`${animClasses[i]} group text-center rounded-md p-5 transition-all duration-300 hover:-translate-y-1`}
+                className={`${animClasses[i]} card-golden-hover group text-center rounded-md p-5 transition-all duration-300 hover:-translate-y-1`}
                 style={{ background: 'rgba(15,30,55,0.6)', border: '1px solid rgba(71,85,105,0.4)' }}
               >
                 {/* Glowing icon */}
@@ -131,7 +131,7 @@ export function StatsSection() {
 
         {/* Trust banner */}
         <div
-          className="animate-fade-up-very-slow mt-12 rounded-md p-5 flex flex-col sm:flex-row items-center justify-between gap-4"
+          className="card-shine-hover animate-fade-up-very-slow mt-12 rounded-md p-5 flex flex-col sm:flex-row items-center justify-between gap-4"
           style={{ background: 'rgba(96,165,250,0.06)', border: '1px solid rgba(96,165,250,0.2)' }}
         >
           <div className="flex items-center gap-3">
