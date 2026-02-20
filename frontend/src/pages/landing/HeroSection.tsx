@@ -128,7 +128,7 @@ export function HeroSection() {
             <div
               className="relative overflow-x-hidden"
               style={{
-                paddingTop: '80px',
+                paddingTop: '150px',
                 maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
               }}
