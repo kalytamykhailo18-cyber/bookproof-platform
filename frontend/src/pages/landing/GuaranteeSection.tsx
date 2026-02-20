@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 
 const IMAGES = [
-  '/images/nature-1.jpg',
-  '/images/nature-2.jpg',
-  '/images/nature-3.jpg',
-  '/images/nature-4.jpg',
+  '/bg-3.png',
+  '/bg-4.png',
+  '/bg-5.jpeg',
+  '/book-007.jpg',
 ];
 const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b'];
 const KEYS = ['protected', 'monitored', 'automatic', 'transparent'] as const;

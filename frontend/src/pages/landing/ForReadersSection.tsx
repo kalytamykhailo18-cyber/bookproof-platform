@@ -19,22 +19,11 @@ export function ForReadersSection() {
   const { t } = useTranslation('readerBenefits');
 
   return (
-    <section
-      className="py-24 sm:py-32 relative overflow-hidden"
-      style={{ background: '#ffffff' }}
-    >
-      <div
-        className="absolute top-0 left-0 w-[400px] h-[400px] pointer-events-none"
-        style={{ background: 'radial-gradient(circle at top left, rgba(16,185,129,0.05) 0%, transparent 60%)' }}
-      />
-      <div
-        className="absolute bottom-0 right-0 w-[400px] h-[400px] pointer-events-none"
-        style={{ background: 'radial-gradient(circle at bottom right, rgba(59,130,246,0.05) 0%, transparent 60%)' }}
-      />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16 sm:mb-20">
+    <section className="relative overflow-hidden" style={{ background: '#ffffff' }}>
+      {/* Header — with bg-5 image */}
+      <div className="relative py-24 sm:py-32 overflow-hidden">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
           <span
             className="inline-block px-3.5 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider mb-5 animate-fade-down-fast"
             style={{ background: 'rgba(16,185,129,0.12)', color: '#059669', border: '1px solid rgba(16,185,129,0.25)' }}
@@ -48,7 +37,20 @@ export function ForReadersSection() {
             {t('subtitle')}
           </p>
         </div>
+        </div>
+      </div>
 
+      {/* Body */}
+      <div className="relative py-16 sm:py-20">
+        <div
+          className="absolute top-0 left-0 w-[400px] h-[400px] pointer-events-none"
+          style={{ background: 'radial-gradient(circle at top left, rgba(16,185,129,0.05) 0%, transparent 60%)' }}
+        />
+        <div
+          className="absolute bottom-0 right-0 w-[400px] h-[400px] pointer-events-none"
+          style={{ background: 'radial-gradient(circle at bottom right, rgba(59,130,246,0.05) 0%, transparent 60%)' }}
+        />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           {/* Benefits grid */}
           <div className="grid sm:grid-cols-2 gap-5">
@@ -168,6 +170,7 @@ export function ForReadersSection() {
               <p className="text-xs text-slate-400 mt-2.5 text-center">{t('freeToJoin')}</p>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>

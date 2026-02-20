@@ -184,8 +184,8 @@ export function AdminSidebar() {
       {/* Navigation */}
       <ScrollArea className="h-[calc(100vh-4rem)]">
         <div className="space-y-4 py-4">
-          {navSections.map((section) => (
-            <div key={section.title} className="px-3">
+          {navSections.map((section, idx) => (
+            <div key={idx} className="px-3">
               {!collapsed && (
                 <h4 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   {section.title}

@@ -4,9 +4,9 @@ import { Check } from 'lucide-react';
 const STEP_COLORS = ['#60a5fa', '#a78bfa', '#34d399', '#fbbf24'];
 const STEP_KEYS = ['purchase', 'submit', 'distribute', 'reviews'] as const;
 const STEP_IMAGES = [
-  '/images/cut-1.png',
-  '/images/cut-5.png',
+  '/images/cut-2.png',
   '/images/cut-3.png',
+  '/images/cut-4.png',
   '/images/cut-6.png',
 ];
 

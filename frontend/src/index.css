@@ -92,6 +92,11 @@
   background: hsl(var(--primary) / 0.6);
 }
 
+/* Fixed nav offset for anchor-link scrolling — applies to every section */
+html {
+  scroll-padding-top: 4rem; /* 64px = h-16 nav height */
+}
+
 /* ============================================================
    Landing Page - Dark Premium Theme
    ============================================================ */

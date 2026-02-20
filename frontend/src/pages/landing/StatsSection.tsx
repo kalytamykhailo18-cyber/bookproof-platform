@@ -63,27 +63,30 @@ export function StatsSection() {
     <section
       ref={sectionRef}
       className="py-24 sm:py-32 relative overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #0d1b2e 0%, #0a1628 100%)' }}
     >
-      {/* Top / bottom separator lines */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-700/60 to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-700/40 to-transparent" />
+      {/* Video background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+        src="https://res.cloudinary.com/dcfjvxt5h/video/upload/v1771591891/240_F_447936406_MhvmXBGyUq5hud7FhsluIIaaa3xzFhoq_ST_i0twrp.mp4"
+      />
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/30" />
+      {/* Top mask — blends into HeroSection (#0a1628) */}
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none z-10" style={{ background: 'linear-gradient(to bottom, #0a1628 0%, transparent 100%)' }} />
+      {/* Bottom mask — blends into HowItWorksSection (#0a1020) */}
+      <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10" style={{ background: 'linear-gradient(to top, #0a1020 0%, transparent 100%)' }} />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-14 sm:mb-16">
-          <div className="animate-fade-up-fast inline-flex mb-4">
-            <span
-              className="text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-md uppercase tracking-widest"
-              style={{ background: 'rgba(71,85,105,0.5)', border: '1px solid rgba(71,85,105,0.7)' }}
-            >
-              {t('badge', 'Platform Results')}
-            </span>
-          </div>
           <h2 className="animate-fade-up text-3xl sm:text-4xl font-bold text-white mb-4">
             {t('title', 'Numbers That Speak for Themselves')}
           </h2>
-          <p className="animate-fade-up-light-slow text-slate-400 text-lg max-w-2xl mx-auto">
+          <p className="animate-fade-up-light-slow text-[#ddd] text-lg max-w-2xl mx-auto">
             {t('subtitle')}
           </p>
         </div>
@@ -121,7 +124,7 @@ export function StatsSection() {
                 <div className="text-white text-xs font-semibold mb-1">
                   {t(`items.${stat.key}.label`)}
                 </div>
-                <div className="text-slate-500 text-[11px] leading-tight">
+                <div className="text-[#eee] text-[11px] leading-tight">
                   {t(`items.${stat.key}.description`)}
                 </div>
               </div>
@@ -147,14 +150,14 @@ export function StatsSection() {
             </div>
             <div>
               <p className="text-white font-semibold text-sm">{t('trustBanner.text')}</p>
-              <p className="text-slate-400 text-xs">{t('trustBanner.subtext')}</p>
+              <p className="text-[#eee] text-xs">{t('trustBanner.subtext')}</p>
             </div>
           </div>
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, j) => (
               <Star key={j} size={15} className="text-yellow-400 fill-yellow-400" />
             ))}
-            <span className="text-slate-300 text-sm font-semibold ml-2">{t('trustBanner.rating')}</span>
+            <span className="text-[#eee] text-sm font-semibold ml-2">{t('trustBanner.rating')}</span>
           </div>
         </div>
       </div>

@@ -14,20 +14,26 @@ export function TrustSection() {
 
   return (
     <section
-      className="py-24 sm:py-32 relative"
-      style={{ background: 'linear-gradient(180deg, #080d1a 0%, #0a1020 100%)' }}
+      className="py-24 sm:py-32 relative overflow-hidden"
+      style={{
+        backgroundImage: 'url(/bg-5.jpeg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.3), transparent)' }}
-      />
+      {/* 30% dark overlay */}
+      <div className="absolute inset-0 bg-black/30" />
+      {/* Top fade */}
+      <div className="absolute inset-x-0 top-0 h-32 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #fff 0%, transparent 100%)' }} />
+      {/* Bottom fade */}
+      <div className="absolute inset-x-0 bottom-0 h-32 pointer-events-none" style={{ background: 'linear-gradient(to top, #fff 0%, transparent 100%)' }} />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 sm:mb-20">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-5 animate-fade-up-fast">
             {t('title')}
           </h2>
-          <p className="text-slate-500 max-w-xl mx-auto animate-fade-up">
+          <p className="text-white max-w-xl mx-auto animate-fade-up">
             {t('subtitle')}
           </p>
         </div>
@@ -44,7 +50,7 @@ export function TrustSection() {
               <h3 className="text-sm font-semibold text-white mb-2.5 group-hover:text-blue-300 transition-colors duration-200">
                 {t(`items.${key}.title`)}
               </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">{t(`items.${key}.description`)}</p>
+              <p className="text-xs text-white leading-relaxed">{t(`items.${key}.description`)}</p>
             </div>
           ))}
         </div>
@@ -58,16 +64,12 @@ export function TrustSection() {
               style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(71,85,105,0.3)' }}
             >
               <span className="text-sm font-bold text-white">{badge.label}</span>
-              <span className="text-xs text-slate-600 mt-0.5">{badge.desc}</span>
+              <span className="text-xs text-white mt-0.5">{badge.desc}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div
-        className="absolute bottom-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.3), transparent)' }}
-      />
     </section>
   );
 }

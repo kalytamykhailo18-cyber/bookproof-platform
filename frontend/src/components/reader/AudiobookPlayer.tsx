@@ -41,10 +41,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
   // The backend accepts JWT token as query parameter for audio streaming
   const authenticatedUrl = useMemo(() => {
     const token = tokenManager.getToken();
-    if (!token) {
-      setError(t('audiobookPlayer.authRequired'));
-      return null;
-    }
+    if (!token) return null;
 
     // Build full URL with token for authentication
     // The audioUrl from backend is: /api/queue/assignments/:id/stream-audio
@@ -55,7 +52,14 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
       : `${audioUrl}?token=${encodeURIComponent(token)}`;
 
     return fullUrl;
-  }, [audioUrl, t]);
+  }, [audioUrl]);
+
+  // Show auth error if no token available
+  useEffect(() => {
+    if (!tokenManager.getToken()) {
+      setError(t('audiobookPlayer.authRequired'));
+    }
+  }, [t]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -80,7 +84,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
     };
-  }, [t]);
+  }, []);
 
   const togglePlay = () => {
     const audio = audioRef.current;

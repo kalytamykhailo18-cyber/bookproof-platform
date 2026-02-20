@@ -37,10 +37,12 @@ export function HeroSection() {
 
   return (
     <section
-      className="relative min-h-screen flex items-center"
+      className="relative min-h-screen flex items-center overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #050d20 0%, #0a1628 35%, #0f1f42 65%, #0a1628 100%)' }}
     >
       <div className="absolute inset-0 landing-dot-grid opacity-40" />
+      {/* Bottom mask — blends into StatsSection video (#0a1628) */}
+      <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10" style={{ background: 'linear-gradient(to top, #0a1628 0%, transparent 100%)' }} />
 
       {/* Primary glow */}
       <div
@@ -53,8 +55,8 @@ export function HeroSection() {
       />
 
       {/* Main content — top padding accounts for fixed 64px nav */}
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 sm:pt-40 pb-24 sm:pb-32">
-        <div className="grid lg:grid-cols-2 gap-12 xl:gap-24 items-center">
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 lg:pt-40 pb-16 sm:pb-24 lg:pb-32">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 xl:gap-24 items-center">
 
           {/* ── Left: text ── */}
           <div className="relative space-y-8">
@@ -70,7 +72,7 @@ export function HeroSection() {
               <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-extrabold leading-[1.08] tracking-tight">
                 <span className="text-white block">{t('titleLine1')}</span>
                 <span className="animate-text-shimmer block my-1">{t('titleLine2')}</span>
-                <span className="text-slate-500 block font-semibold text-2xl sm:text-3xl lg:text-[2rem] mt-2">{t('titleLine3')}</span>
+                <span className="text-white block font-semibold text-2xl sm:text-3xl lg:text-[2rem] mt-2">{t('titleLine3')}</span>
               </h1>
               {/* Accent line */}
               <div className="mt-5 h-px w-32"
@@ -78,7 +80,7 @@ export function HeroSection() {
             </div>
 
             {/* Subtitle */}
-            <p className="text-lg text-slate-400 leading-relaxed max-w-md animate-fade-up-light-slow relative z-10">
+            <p className="text-lg text-white leading-relaxed max-w-md animate-fade-up-light-slow relative z-10">
               {t('subtitle')}
             </p>
 
@@ -94,7 +96,7 @@ export function HeroSection() {
               </Link>
               <a
                 href="#how-it-works"
-                className="btn-golden-flow inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-medium text-slate-300 hover:text-white transition-colors duration-200"
+                className="btn-golden-flow inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-medium text-white hover:text-white transition-colors duration-200"
               >
                 <Play className="h-4 w-4 fill-current" />
                 {t('cta.secondary')}
@@ -103,8 +105,8 @@ export function HeroSection() {
 
           </div>
 
-          {/* ── Right: hero image + carousel ── */}
-          <div className="relative flex flex-col overflow-hidden animate-zoom-in-light-slow">
+          {/* ── Right: hero image + carousel — lg+ only ── */}
+          <div className="hidden lg:flex flex-col relative overflow-hidden animate-zoom-in-light-slow">
             {/* Hero image */}
             <div className="relative w-full" style={{ marginBottom: '-48px', zIndex: 10 }}>
               <img

@@ -41,16 +41,22 @@ export function LeadCaptureSection() {
     <section
       id="get-started"
       className="py-24 sm:py-32 relative overflow-hidden"
-      style={{ background: '#080d1a' }}
+      style={{
+        backgroundImage: 'url(/book-007.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
+      {/* Top mask */}
+      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none z-10" style={{ background: 'linear-gradient(to bottom, #ffffff 0%, transparent 100%)' }} />
+      {/* Bottom mask */}
+      <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none z-10" style={{ background: 'linear-gradient(to top, #f1f5f9 0%, transparent 100%)' }} />
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background: 'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.12) 0%, transparent 60%)',
         }}
       />
-      <div className="absolute inset-0 landing-dot-grid opacity-25" />
-
       <div className="relative max-w-xl mx-auto px-4 sm:px-6">
         {status === 'success' ? (
           <div
@@ -61,10 +67,10 @@ export function LeadCaptureSection() {
               className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-7"
               style={{ background: 'rgba(52,211,153,0.15)', border: '2px solid rgba(52,211,153,0.4)' }}
             >
-              <CheckCircle className="h-8 w-8 text-green-400" />
+              <CheckCircle className="h-8 w-8 text-[#fff]" />
             </div>
             <h3 className="text-2xl font-bold text-white mb-3">{t('successTitle')}</h3>
-            <p className="text-slate-400">{t('success')}</p>
+            <p className="text-[#fff]">{t('success')}</p>
           </div>
         ) : (
           <div
@@ -82,7 +88,7 @@ export function LeadCaptureSection() {
               <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 animate-fade-up-fast">
                 {t('title', 'Get Early Access')}
               </h2>
-              <p className="text-slate-400 text-sm animate-fade-up">
+              <p className="text-[#fff] text-sm animate-fade-up">
                 {t('subtitle')}
               </p>
             </div>
@@ -90,17 +96,17 @@ export function LeadCaptureSection() {
             <div className="space-y-5">
               {/* Name */}
               <div className="animate-fade-right-fast">
-                <label className="block text-xs font-medium text-slate-400 mb-2">
+                <label className="block text-xs font-medium text-[#fff] mb-2">
                   {t('fields.name.label', 'Full Name')}
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#fff]" />
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder={t('fields.name.placeholder', 'John Doe')}
-                    className="w-full pl-10 pr-4 py-3 rounded-md text-sm text-white placeholder-slate-600 border outline-none focus:border-blue-500/60 transition-colors duration-200"
+                    className="w-full pl-10 pr-4 py-3 rounded-md text-sm text-white placeholder-[#ccc] border outline-none focus:border-blue-500/60 transition-colors duration-200"
                     style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(71,85,105,0.5)' }}
                   />
                 </div>
@@ -108,17 +114,17 @@ export function LeadCaptureSection() {
 
               {/* Email */}
               <div className="animate-fade-left-fast">
-                <label className="block text-xs font-medium text-slate-400 mb-2">
+                <label className="block text-xs font-medium text-[#fff] mb-2">
                   {t('fields.email.label', 'Email Address')}
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#fff]" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={t('fields.email.placeholder', 'john@example.com')}
-                    className="w-full pl-10 pr-4 py-3 rounded-md text-sm text-white placeholder-slate-600 border outline-none focus:border-blue-500/60 transition-colors duration-200"
+                    className="w-full pl-10 pr-4 py-3 rounded-md text-sm text-white placeholder-[#ccc] border outline-none focus:border-blue-500/60 transition-colors duration-200"
                     style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(71,85,105,0.5)' }}
                   />
                 </div>
@@ -126,7 +132,7 @@ export function LeadCaptureSection() {
 
               {/* User type */}
               <div className="animate-fade-up">
-                <label className="block text-xs font-medium text-slate-400 mb-2.5">
+                <label className="block text-xs font-medium text-[#fff] mb-2.5">
                   {t('fields.userType.label', 'I am a...')}
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -134,10 +140,10 @@ export function LeadCaptureSection() {
                     <button
                       key={key}
                       onClick={() => setUserType(value)}
-                      className="flex items-center gap-2 px-3.5 py-3 rounded-md text-xs font-medium transition-all duration-200 border text-left"
+                      className="flex items-center gap-2 px-3.5 py-3 rounded-md text-xs font-medium transition-all duration-200 border text-left text-[#fff]"
                       style={userType === value
-                        ? { background: 'rgba(59,130,246,0.2)', borderColor: 'rgba(59,130,246,0.5)', color: '#93c5fd' }
-                        : { background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(71,85,105,0.5)', color: '#64748b' }}
+                        ? { background: 'rgba(0, 98, 255, 0.2)', borderColor: 'rgba(6, 101, 255, 0.5)', color: '#ffffffff' }
+                        : { background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(71,85,105,0.5)', color: '#ffffff' }}
                     >
                       <UserCheck className="h-3.5 w-3.5 flex-shrink-0" />
                       <span>{t(`fields.userType.options.${key}`)}</span>
@@ -152,7 +158,7 @@ export function LeadCaptureSection() {
                   onClick={() => setConsent(!consent)}
                   className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-sm flex items-center justify-center transition-all duration-200 border"
                   style={consent
-                    ? { background: '#3b82f6', borderColor: '#3b82f6' }
+                    ? { background: '#55f', borderColor: '#3b82f6' }
                     : { background: 'transparent', borderColor: 'rgba(71,85,105,0.7)' }}
                 >
                   {consent && (
@@ -161,7 +167,7 @@ export function LeadCaptureSection() {
                     </svg>
                   )}
                 </button>
-                <span className="text-xs text-slate-500 leading-relaxed cursor-pointer" onClick={() => setConsent(!consent)}>
+                <span className="text-xs text-[#fff] leading-relaxed cursor-pointer" onClick={() => setConsent(!consent)}>
                   {t('fields.marketingConsent.label')}
                 </span>
               </div>
@@ -186,7 +192,7 @@ export function LeadCaptureSection() {
               </div>
             </div>
 
-            <p className="text-center text-xs text-slate-600 mt-5">
+            <p className="text-center text-xs text-[#fff] mt-5">
               {t('noSpam')}
             </p>
           </div>
