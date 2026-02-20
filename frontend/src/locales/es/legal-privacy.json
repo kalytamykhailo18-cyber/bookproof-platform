@@ -1,0 +1,247 @@
+{
+  "title": "Política de Privacidad",
+  "lastUpdated": "Última actualización: 21 de enero de 2026",
+  "badge": "Legal",
+  "toc": "Contenido",
+  "goBack": "Volver",
+  "sections": [
+    "Introducción",
+    "Información que Recopilamos",
+    "Cómo Usamos su Información",
+    "Cómo Compartimos su Información",
+    "Seguridad de Datos",
+    "Cookies y Seguimiento",
+    "Retención de Datos",
+    "Sus Derechos (RGPD)",
+    "Transferencias Internacionales de Datos",
+    "Privacidad de los Menores",
+    "Cambios en esta Política",
+    "Contáctenos",
+    "Autoridad Supervisora de la UE"
+  ],
+  "s1": {
+    "title": "Introducción",
+    "p1": "BookProof (\"nosotros\", \"nuestro\", o \"nos\") está comprometido a proteger su privacidad. Esta Política de Privacidad explica cómo recopilamos, usamos, divulgamos y protegemos su información cuando utiliza nuestra plataforma.",
+    "p2": "Esta política se aplica a todos los usuarios de la plataforma BookProof, incluyendo Autores, Lectores, Afiliados y Administradores.",
+    "gdprLabel": "Cumplimiento del RGPD:",
+    "gdprText": "Para usuarios en la Unión Europea, cumplimos con el Reglamento General de Protección de Datos (RGPD). Tiene derechos específicos sobre sus datos personales según se describe en la Sección 8."
+  },
+  "s2": {
+    "title": "Información que Recopilamos",
+    "sub1": {
+      "title": "2.1 Información que Usted Proporciona",
+      "items": [
+        { "label": "Información de Cuenta", "desc": "Correo electrónico, nombre, contraseña, nombre de empresa, teléfono, país, idioma preferido" },
+        { "label": "Información de Perfil", "desc": "Biografía, foto de perfil, preferencias de contenido" },
+        { "label": "Información de Pago", "desc": "Datos de tarjeta de crédito (procesados de forma segura por Stripe), correo electrónico de PayPal para pagos" },
+        { "label": "Datos de Campaña", "desc": "Títulos de libros, descripciones, imágenes de portada, archivos de ebook/audiolibro, documentos de sinopsis" },
+        { "label": "Datos de Reseñas", "desc": "Enlaces de perfil de Amazon, envíos de reseñas, calificaciones" },
+        { "label": "Comunicación", "desc": "Mensajes, solicitudes de soporte, comentarios" }
+      ]
+    },
+    "sub2": {
+      "title": "2.2 Información Recopilada Automáticamente",
+      "items": [
+        { "label": "Datos de Uso", "desc": "Páginas visitadas, funciones utilizadas, tiempo en la plataforma" },
+        { "label": "Información del Dispositivo", "desc": "Dirección IP, tipo de navegador, sistema operativo, identificadores del dispositivo" },
+        { "label": "Cookies y Seguimiento", "desc": "Cookies de sesión, tokens de autenticación, datos analíticos" },
+        { "label": "Registros de Seguridad", "desc": "Intentos de inicio de sesión, acciones de cuenta, solicitudes de API" }
+      ]
+    },
+    "sub3": {
+      "title": "2.3 Información de Terceros",
+      "items": [
+        { "label": "Procesadores de Pago", "desc": "Datos de transacciones de Stripe" },
+        { "label": "Amazon", "desc": "Datos de reseñas disponibles públicamente para verificación" },
+        { "label": "Analítica", "desc": "Estadísticas de uso de Google Analytics (si está habilitado)" }
+      ]
+    }
+  },
+  "s3": {
+    "title": "Cómo Usamos su Información",
+    "sub1": {
+      "title": "3.1 Prestación del Servicio",
+      "items": [
+        "Crear y gestionar su cuenta",
+        "Procesar compras de créditos y pagos",
+        "Conectar autores con lectores para campañas",
+        "Entregar ebooks y audiolibros a los lectores",
+        "Procesar envíos de reseñas y verificación",
+        "Gestionar pagos a lectores y afiliados"
+      ]
+    },
+    "sub2": {
+      "title": "3.2 Comunicación",
+      "items": [
+        "Enviar correos electrónicos transaccionales (verificación de cuenta, restablecimiento de contraseña, recibos)",
+        "Notificarle sobre actualizaciones de campaña, plazos de reseñas y cambios importantes en la cuenta",
+        "Responder solicitudes de soporte e inquietudes",
+        "Enviar comunicaciones de marketing (solo con su consentimiento)"
+      ]
+    },
+    "sub3": {
+      "title": "3.3 Mejora de la Plataforma",
+      "items": [
+        "Analizar patrones de uso para mejorar la experiencia del usuario",
+        "Desarrollar nuevas funciones y servicios",
+        "Monitorear el rendimiento de la plataforma y solucionar problemas",
+        "Realizar investigaciones y análisis"
+      ]
+    },
+    "sub4": {
+      "title": "3.4 Seguridad y Cumplimiento",
+      "items": [
+        "Prevenir fraudes, spam y abusos",
+        "Hacer cumplir nuestros Términos de Servicio",
+        "Cumplir con obligaciones legales",
+        "Proteger los derechos y la seguridad de nuestros usuarios"
+      ]
+    }
+  },
+  "s4": {
+    "title": "Cómo Compartimos su Información",
+    "intro": "No vendemos su información personal. Podemos compartir sus datos en las siguientes circunstancias:",
+    "sub1": {
+      "title": "4.1 Proveedores de Servicios",
+      "items": [
+        { "label": "Stripe", "desc": "Procesamiento de pagos" },
+        { "label": "Cloudflare R2", "desc": "Almacenamiento y entrega de archivos" },
+        { "label": "Resend", "desc": "Entrega de correos electrónicos" },
+        { "label": "Upstash Redis", "desc": "Gestión de sesiones y caché" },
+        { "label": "Neon PostgreSQL", "desc": "Alojamiento de base de datos" },
+        { "label": "Sentry", "desc": "Monitoreo de errores" }
+      ]
+    },
+    "sub2": {
+      "title": "4.2 Socios Comerciales",
+      "items": [
+        { "label": "Autores y Lectores", "desc": "Información limitada compartida para facilitar campañas (detalles del libro, preferencias de contenido)" },
+        { "label": "Afiliados", "desc": "Datos de comisiones y estadísticas de conversión" }
+      ]
+    },
+    "sub3": {
+      "title": "4.3 Requisitos Legales",
+      "body": "Podemos divulgar su información si lo exige la ley o en respuesta a solicitudes legales válidas (citaciones, órdenes judiciales)."
+    },
+    "sub4": {
+      "title": "4.4 Transferencias Comerciales",
+      "body": "Si BookProof es adquirido o fusionado con otra empresa, su información puede transferirse al nuevo propietario."
+    }
+  },
+  "s5": {
+    "title": "Seguridad de Datos",
+    "intro": "Implementamos medidas de seguridad estándar de la industria para proteger sus datos:",
+    "sub1": {
+      "title": "5.1 Seguridad Técnica",
+      "items": [
+        { "label": "Cifrado en Tránsito", "desc": "Todos los datos transmitidos a través de HTTPS/TLS 1.2+" },
+        { "label": "Seguridad de Contraseña", "desc": "Contraseñas cifradas con bcrypt y salt" },
+        { "label": "Gestión de Sesiones", "desc": "Tokens JWT seguros con expiración de 24 horas" },
+        { "label": "Protección CAPTCHA", "desc": "Google reCAPTCHA v3 en formularios sensibles" },
+        { "label": "Bloqueo de Cuenta", "desc": "Bloqueo automático tras intentos fallidos de inicio de sesión" },
+        { "label": "Cabeceras de Seguridad", "desc": "HSTS, CSP, X-Frame-Options y otras cabeceras de protección" }
+      ]
+    },
+    "sub2": {
+      "title": "5.2 Controles de Acceso",
+      "items": [
+        "Control de acceso basado en roles (RBAC)",
+        "Autenticación multifactor para acciones sensibles",
+        "Auditorías de seguridad y pruebas de penetración regulares",
+        "Acceso de empleados limitado solo a los datos necesarios"
+      ]
+    },
+    "sub3": {
+      "title": "5.3 Respuesta a Violaciones de Datos",
+      "body": "En caso de una violación de datos, notificaremos a los usuarios afectados dentro de 72 horas según lo exige el RGPD y las leyes aplicables."
+    }
+  },
+  "s6": {
+    "title": "Cookies y Tecnologías de Seguimiento",
+    "intro": "Usamos cookies y tecnologías similares para mejorar su experiencia:",
+    "sub1": {
+      "title": "6.1 Cookies Esenciales",
+      "items": [
+        { "label": "Autenticación", "desc": "Mantenerlo conectado (tokens JWT)" },
+        { "label": "Gestión de Sesiones", "desc": "Mantener el estado de su sesión" },
+        { "label": "Seguridad", "desc": "Prevenir ataques CSRF y fraudes" }
+      ]
+    },
+    "sub2": {
+      "title": "6.2 Cookies Funcionales",
+      "items": [
+        { "label": "Preferencias", "desc": "Recordar su idioma y configuración de moneda" },
+        { "label": "Seguimiento de Afiliados", "desc": "Rastrear referencias para atribución de comisiones (cookie de 30 días)" }
+      ]
+    },
+    "sub3": {
+      "title": "6.3 Cookies de Análisis (Opcionales)",
+      "items": [
+        { "label": "Google Analytics", "desc": "Rastrear estadísticas de uso (requiere consentimiento)" },
+        { "label": "Monitoreo de Rendimiento", "desc": "Medir tiempos de carga de páginas y errores" }
+      ],
+      "note": "Puede gestionar las preferencias de cookies en la configuración de su navegador o a través de nuestro banner de consentimiento de cookies."
+    }
+  },
+  "s7": {
+    "title": "Retención de Datos",
+    "intro": "Conservamos sus datos durante el tiempo necesario para prestar nuestros servicios:",
+    "items": [
+      { "label": "Cuentas Activas", "desc": "Datos conservados mientras la cuenta está activa" },
+      { "label": "Cuentas Inactivas", "desc": "Eliminadas después de 3 años de inactividad (o a pedido)" },
+      { "label": "Registros de Transacciones", "desc": "Conservados durante 7 años para fines fiscales y contables" },
+      { "label": "Registros de Seguridad", "desc": "Conservados durante 90 días" },
+      { "label": "Datos de Marketing", "desc": "Eliminados inmediatamente al retirar el consentimiento" }
+    ],
+    "note": "Cuando solicita la eliminación de la cuenta, proporcionamos un período de gracia de 30 días durante el cual puede cancelar la solicitud."
+  },
+  "s8": {
+    "title": "Sus Derechos (RGPD)",
+    "intro": "Si se encuentra en la Unión Europea, tiene los siguientes derechos bajo el RGPD:",
+    "rights": [
+      { "title": "8.1 Derecho de Acceso", "body": "Puede solicitar una copia de todos los datos personales que tenemos sobre usted. Use la función Exportar Datos en la configuración de su cuenta para descargar su paquete de datos." },
+      { "title": "8.2 Derecho de Rectificación", "body": "Puede actualizar datos inexactos o incompletos a través de la configuración de su cuenta o contactando con soporte." },
+      { "title": "8.3 Derecho de Supresión (\"Derecho al Olvido\")", "body": "Puede solicitar la eliminación de su cuenta y todos los datos asociados. Use la función Eliminar Cuenta en la configuración de su cuenta. Proporcionamos un período de gracia de 30 días antes de la eliminación permanente." },
+      { "title": "8.4 Derecho a la Portabilidad de Datos", "body": "Puede exportar sus datos en un formato legible por máquina (JSON) para transferir a otro servicio." },
+      { "title": "8.5 Derecho de Oposición", "body": "Puede oponerse al tratamiento de sus datos con fines de marketing o basado en intereses legítimos." },
+      { "title": "8.6 Derecho a Limitar el Tratamiento", "body": "Puede solicitar que limitemos el uso de sus datos en ciertas circunstancias." },
+      { "title": "8.7 Derecho a Retirar el Consentimiento", "body": "Puede retirar el consentimiento para comunicaciones de marketing o seguimiento analítico en cualquier momento a través de la configuración de su cuenta." }
+    ],
+    "contactNote": "Para ejercer cualquiera de estos derechos, visite la configuración de su cuenta o contáctenos en"
+  },
+  "s9": {
+    "title": "Transferencias Internacionales de Datos",
+    "intro": "BookProof opera globalmente, y sus datos pueden ser transferidos y procesados en países fuera de su región. Garantizamos una protección adecuada mediante:",
+    "items": [
+      "Cláusulas Contractuales Estándar (CCE) aprobadas por la Comisión Europea",
+      "Salvaguardas adecuadas según lo exige el RGPD",
+      "Cumplimiento con los principios del Privacy Shield donde sea aplicable"
+    ]
+  },
+  "s10": {
+    "title": "Privacidad de los Menores",
+    "body": "BookProof no está destinado a usuarios menores de 18 años. No recopilamos conscientemente información personal de niños. Si nos percatamos de que un niño nos ha proporcionado datos personales, los eliminaremos de inmediato."
+  },
+  "s11": {
+    "title": "Cambios en esta Política de Privacidad",
+    "intro": "Podemos actualizar esta Política de Privacidad de vez en cuando. Le notificaremos sobre cualquier cambio material mediante:",
+    "items": [
+      "Publicar la nueva política en esta página con una fecha de \"Última Actualización\" actualizada",
+      "Enviar un correo electrónico a su dirección de correo registrada",
+      "Mostrar un aviso destacado en nuestra plataforma"
+    ],
+    "note": "Su uso continuado de BookProof después de que los cambios entren en vigor constituye la aceptación de la política revisada."
+  },
+  "s12": {
+    "title": "Contáctenos",
+    "intro": "Si tiene preguntas sobre esta Política de Privacidad o desea ejercer sus derechos, contáctenos:"
+  },
+  "s13": {
+    "title": "Autoridad Supervisora de la UE",
+    "body": "Si se encuentra en la Unión Europea y cree que no hemos atendido adecuadamente sus preocupaciones, tiene derecho a presentar una queja ante su autoridad local de supervisión de protección de datos."
+  },
+  "footer": {
+    "termsOfService": "Términos de Servicio",
+    "cookiePolicy": "Política de Cookies"
+  }
+}

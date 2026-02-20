@@ -37,6 +37,7 @@ type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 export function ResetPasswordPage() {
   const { t } = useTranslation('auth.resetPassword');
+  const { t: tAuth } = useTranslation('auth');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { startLoading, stopLoading } = useLoading();
@@ -77,13 +78,7 @@ export function ResetPasswordPage() {
     }
   };
 
-  const requirements = [
-    '8 or more characters',
-    'One uppercase letter (A–Z)',
-    'One lowercase letter (a–z)',
-    'One number (0–9)',
-    'One special character (!@#$%^&*)',
-  ];
+  const requirements = t('requirements', { returnObjects: true }) as string[];
 
   const LeftPanel = () => (
     <div
@@ -103,24 +98,24 @@ export function ResetPasswordPage() {
           </div>
           <span className="text-white font-bold text-xl tracking-tight cursor-pointer" onClick={() => navigate('/')}>BookProof</span>
         </div>
-        <p className="text-slate-500 text-xs">The Amazon Review Platform for Authors</p>
+        <p className="text-slate-500 text-xs">{tAuth('common.tagline')}</p>
       </div>
 
       {/* Main */}
       <div className="relative space-y-10">
         <div>
           <h2 className="text-3xl font-bold text-white leading-tight mb-4">
-            Create a new<br />
-            <span className="text-blue-400">secure password</span>
+            {t('leftHeading')}<br />
+            <span className="text-blue-400">{t('leftHeadingHighlight')}</span>
           </h2>
           <p className="text-slate-400 text-base leading-relaxed">
-            Choose a strong password that you haven't used before to keep your account safe.
+            {t('leftSubtitle')}
           </p>
         </div>
 
         {/* Password requirements */}
         <div>
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Password requirements</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">{t('requirementsTitle')}</p>
           <div className="space-y-2.5">
             {requirements.map((req) => (
               <div key={req} className="flex items-center gap-3">
@@ -132,11 +127,7 @@ export function ResetPasswordPage() {
         </div>
 
         <div className="flex items-center gap-8 pt-2 border-t border-slate-800">
-          {[
-            { value: 'All', label: 'Sessions Cleared' },
-            { value: '256-bit', label: 'Encryption' },
-            { value: 'bcrypt', label: 'Hashing' },
-          ].map(({ value, label }) => (
+          {(t('leftStats', { returnObjects: true }) as { value: string; label: string }[]).map(({ value, label }) => (
             <div key={label}>
               <p className="text-2xl font-bold text-white">{value}</p>
               <p className="text-xs text-slate-500 mt-0.5">{label}</p>
@@ -148,7 +139,7 @@ export function ResetPasswordPage() {
       {/* Bottom */}
       <div className="relative">
         <p className="text-xs text-slate-600">
-          After resetting, all existing sessions will be logged out for security.
+          {t('sessionNote')}
         </p>
       </div>
     </div>
@@ -176,7 +167,7 @@ export function ResetPasswordPage() {
                   onClick={() => { setIsNavLoading(true); navigate('/forgot-password'); }}
                   style={{ backgroundColor: '#3b82f6', fontWeight: 600 }}
                 >
-                  {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Request New Link'}
+                  {isNavLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : t('requestNewLink')}
                 </Button>
               </div>
             </div>
@@ -283,7 +274,7 @@ export function ResetPasswordPage() {
 
           {/* Trust signals */}
           <div className="mt-5 flex flex-wrap justify-center gap-4">
-            {['Sessions Cleared on Reset', 'bcrypt Hashed', 'HTTPS Encrypted'].map((label) => (
+            {(t('trustSignals', { returnObjects: true }) as string[]).map((label) => (
               <div key={label} className="flex items-center gap-1.5 text-gray-400 text-xs">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                 {label}

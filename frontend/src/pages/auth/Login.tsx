@@ -113,7 +113,7 @@ export function LoginPage() {
   const handleResendVerification = async () => {
     const email = getValues('email');
     if (!email) {
-      toast.error('Please enter your email address first');
+      toast.error(t('login.emailRequiredFirst'));
       return;
     }
 
@@ -129,18 +129,15 @@ export function LoginPage() {
     }
   };
 
+  const leftFeaturesData = t('login.leftFeatures', { returnObjects: true }) as { title: string; desc: string }[];
   const leftFeatures = [
-    { icon: ShieldCheck, color: '#34d399', title: 'Amazon Policy Compliant',    desc: 'Progressive delivery mimics organic review growth' },
-    { icon: BarChart2,   color: '#60a5fa', title: 'Real-Time Dashboard',        desc: 'Track every review and campaign status live' },
-    { icon: Users,       color: '#a78bfa', title: 'Global Reader Network',      desc: 'Verified readers across English, Portuguese & Spanish' },
-    { icon: RefreshCw,   color: '#fbbf24', title: '14-Day Replacement Guarantee', desc: 'Removed reviews replaced at no extra cost' },
+    { icon: ShieldCheck, color: '#34d399', ...leftFeaturesData[0] },
+    { icon: BarChart2,   color: '#60a5fa', ...leftFeaturesData[1] },
+    { icon: Users,       color: '#a78bfa', ...leftFeaturesData[2] },
+    { icon: RefreshCw,   color: '#fbbf24', ...leftFeaturesData[3] },
   ];
 
-  const leftStats = [
-    { value: '500+', label: 'Authors' },
-    { value: '94%',  label: 'Retention Rate' },
-    { value: '48h',  label: 'Campaign Start' },
-  ];
+  const leftStats = t('login.leftStats', { returnObjects: true }) as { value: string; label: string }[];
 
   return (
     <div className="min-h-screen flex">
@@ -169,18 +166,18 @@ export function LoginPage() {
             </div>
             <span className="text-white font-bold text-xl tracking-tight cursor-pointer" onClick={() => navigate('/')}>BookProof</span>
           </div>
-          <p className="text-slate-500 text-xs">The Amazon Review Platform for Authors</p>
+          <p className="text-slate-500 text-xs">{t('common.tagline')}</p>
         </div>
 
         {/* Main content */}
         <div className="relative space-y-10">
           <div>
             <h2 className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-4">
-              Launch your book with<br />
-              <span className="text-blue-400">verified reviews</span>
+              {t('login.leftHeading')}<br />
+              <span className="text-blue-400">{t('login.leftHeadingHighlight')}</span>
             </h2>
             <p className="text-slate-400 text-base leading-relaxed max-w-md">
-              Connect with real readers who genuinely read your book and leave authentic Amazon reviews — safely and at scale.
+              {t('login.leftSubtitle')}
             </p>
           </div>
 
@@ -217,9 +214,9 @@ export function LoginPage() {
         <div className="relative">
           <div className="rounded-md p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(71,85,105,0.3)' }}>
             <p className="text-sm text-slate-400 italic leading-relaxed">
-              "BookProof helped me go from zero reviews to a bestseller ranking in just 4 weeks."
+              "{t('login.quote')}"
             </p>
-            <p className="text-xs text-slate-600 mt-2">— Sarah M., Romance Author</p>
+            <p className="text-xs text-slate-600 mt-2">— {t('login.quoteAuthor')}</p>
           </div>
         </div>
       </div>
@@ -332,7 +329,7 @@ export function LoginPage() {
               {/* Divider */}
               <div className="flex items-center gap-3 my-6">
                 <div className="flex-1 h-px bg-gray-200" />
-                <span className="text-gray-400 text-xs">or</span>
+                <span className="text-gray-400 text-xs">{t('common.or')}</span>
                 <div className="flex-1 h-px bg-gray-200" />
               </div>
 
@@ -351,11 +348,7 @@ export function LoginPage() {
 
           {/* Trust signals */}
           <div className="mt-5 flex flex-wrap justify-center gap-4">
-            {[
-              { icon: ShieldCheck, label: 'Secure & Encrypted' },
-              { icon: Star,        label: '94% Review Retention' },
-              { icon: Clock,       label: 'Campaign Live in 48h' },
-            ].map(({ icon: Icon, label }) => (
+            {(t('login.trustSignals', { returnObjects: true }) as string[]).map((label) => (
               <div key={label} className="flex items-center gap-1.5 text-gray-400 text-xs">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                 {label}

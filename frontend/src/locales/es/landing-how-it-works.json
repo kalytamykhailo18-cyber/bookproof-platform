@@ -1,0 +1,48 @@
+{
+  "badge": "Proceso Simple",
+  "title": "De Cero Reseñas a Bestseller en 4 Pasos",
+  "subtitle": "Nuestro sistema optimizado se encarga de todo. Tú te enfocas en escribir — nosotros nos encargamos de las reseñas.",
+  "startCta": "Comienza Tu Campaña Hoy",
+  "steps": {
+    "purchase": {
+      "title": "Compra Créditos",
+      "description": "Elige un paquete de créditos que se ajuste a tus objetivos de marketing. Los créditos son flexibles y nunca expiran — úsalos en cualquier libro de tu catálogo.",
+      "details": [
+        "Selecciona de 25 a 1000+ créditos",
+        "Soporte para ebook o audiolibro",
+        "Sin tarifas ocultas ni compromisos",
+        "Activación instantánea de créditos"
+      ]
+    },
+    "submit": {
+      "title": "Crea Tu Campaña",
+      "description": "Sube los archivos de tu libro, establece el género y cuéntanos sobre tu audiencia objetivo. Nuestro sistema crea una campaña completamente configurada en minutos.",
+      "details": [
+        "Sube ebook (EPUB/PDF/MOBI) o audiolibro (MP3)",
+        "Establece géneros primario y secundario",
+        "Configura la asignación de créditos",
+        "Revisa la campaña antes de lanzarla"
+      ]
+    },
+    "distribute": {
+      "title": "Emparejamos y Distribuimos",
+      "description": "BookProof empareja tu libro con lectores que aman tu género. El acceso se otorga progresivamente cada semana, creando un patrón de reseñas natural.",
+      "details": [
+        "Selección de lectores por género",
+        "Distribución semanal progresiva",
+        "Ventana de lectura de 72 horas por lector",
+        "Reasignación automática si es necesario"
+      ]
+    },
+    "reviews": {
+      "title": "Recibe Reseñas Genuinas",
+      "description": "Los lectores envían su reseña honesta en Amazon más retroalimentación interna. Recibes un informe detallado de campaña e insights anónimos de lectores.",
+      "details": [
+        "Enlaces verificados de reseñas en Amazon",
+        "Informe de retroalimentación interna anónima",
+        "Gráfico de distribución de calificaciones",
+        "Informe PDF descargable de campaña"
+      ]
+    }
+  }
+}

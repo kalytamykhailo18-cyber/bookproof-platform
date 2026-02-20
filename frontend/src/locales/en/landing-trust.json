@@ -1,0 +1,29 @@
+{
+  "title": "Built for Authors Who Take Their Career Seriously",
+  "subtitle": "Every decision we made was based on what's best for your Amazon ranking, your readers, and your long-term success.",
+  "items": {
+    "compliant": {
+      "title": "Amazon Policy Compliant",
+      "description": "Our progressive delivery mimics natural, organic review growth. All readers genuinely read before reviewing."
+    },
+    "global": {
+      "title": "Global Reader Network",
+      "description": "Verified readers across English, Portuguese, and Spanish markets. Available for books in all three languages."
+    },
+    "secure": {
+      "title": "Secure & Private",
+      "description": "Book files are stored with encrypted access. Readers cannot download audiobooks, and file access expires automatically."
+    },
+    "retention": {
+      "title": "94% Review Retention Rate",
+      "description": "With a 94% long-term retention rate, your Amazon listing keeps growing long after the campaign ends."
+    }
+  },
+  "badges": [
+    { "label": "EPUB / PDF / MOBI", "desc": "Ebook formats" },
+    { "label": "MP3 Streaming", "desc": "Audiobook delivery" },
+    { "label": "Stripe Payments", "desc": "Secure checkout" },
+    { "label": "72-Hour Window", "desc": "Reader deadline" },
+    { "label": "Weekly Batches", "desc": "Natural distribution" }
+  ]
+}

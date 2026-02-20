@@ -10,6 +10,7 @@ import { authApi } from '@/lib/api/auth';
 
 export function VerifyEmailRequiredPage() {
   const { t } = useTranslation('auth.verifyEmail');
+  const { t: tAuth } = useTranslation('auth');
   const navigate = useNavigate();
   const { user, clearUser } = useAuthStore();
   const [isResending, setIsResending] = useState(false);
@@ -35,13 +36,14 @@ export function VerifyEmailRequiredPage() {
     tokenManager.clearToken();
     clearUser();
     navigate('/login');
-    toast.success('Logged out successfully');
+    toast.success(t('logoutSuccess'));
   };
 
+  const requiredLeftPointsData = t('requiredLeftPoints', { returnObjects: true }) as { title: string; desc: string }[];
   const leftPoints = [
-    { icon: Mail,        color: '#3b82f6', title: 'Check your inbox',     desc: 'We sent a verification link to your email address' },
-    { icon: CheckCircle2, color: '#10b981', title: 'Click the link',      desc: 'One click activates your account instantly' },
-    { icon: ShieldCheck, color: '#a78bfa', title: 'Stay secure',          desc: 'Verification prevents unauthorized access to your account' },
+    { icon: Mail,         color: '#3b82f6', ...requiredLeftPointsData[0] },
+    { icon: CheckCircle2, color: '#10b981', ...requiredLeftPointsData[1] },
+    { icon: ShieldCheck,  color: '#a78bfa', ...requiredLeftPointsData[2] },
   ];
 
   return (
@@ -65,18 +67,18 @@ export function VerifyEmailRequiredPage() {
             </div>
             <span className="text-white font-bold text-xl tracking-tight cursor-pointer" onClick={() => navigate('/')}>BookProof</span>
           </div>
-          <p className="text-slate-500 text-xs">The Amazon Review Platform for Authors</p>
+          <p className="text-slate-500 text-xs">{tAuth('common.tagline')}</p>
         </div>
 
         {/* Main */}
         <div className="relative space-y-10">
           <div>
             <h2 className="text-3xl font-bold text-white leading-tight mb-4">
-              One last step —<br />
-              <span className="text-blue-400">check your inbox</span>
+              {t('requiredLeftHeading')}<br />
+              <span className="text-blue-400">{t('requiredLeftHeadingHighlight')}</span>
             </h2>
             <p className="text-slate-400 text-base leading-relaxed">
-              We need to confirm your email before you can access your dashboard and launch campaigns.
+              {t('requiredLeftSubtitle')}
             </p>
           </div>
           <div className="space-y-4">
@@ -98,7 +100,7 @@ export function VerifyEmailRequiredPage() {
         {/* Bottom */}
         <div className="relative">
           <p className="text-xs text-slate-600">
-            Can't find the email? Check your spam folder or click Resend below.
+            {t('requiredLeftBottomNote')}
           </p>
         </div>
       </div>
@@ -119,16 +121,14 @@ export function VerifyEmailRequiredPage() {
               </div>
 
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                {resent ? 'Email Sent!' : 'Verify Your Email'}
+                {resent ? t('emailSentTitle') : t('requiredTitle')}
               </h1>
               <p className="text-gray-500 text-sm leading-relaxed mb-2">
-                {resent
-                  ? 'A new verification link has been sent. Please check your inbox.'
-                  : 'Please verify your email address to continue. Check your inbox for the verification link.'}
+                {resent ? t('emailSentMessage') : t('requiredMessage')}
               </p>
               {user?.email && (
                 <p className="text-sm text-gray-400 mb-8">
-                  Sent to: <strong className="text-gray-600">{user.email}</strong>
+                  {t('sentTo')} <strong className="text-gray-600">{user.email}</strong>
                 </p>
               )}
               {!user?.email && <div className="mb-8" />}
@@ -156,7 +156,7 @@ export function VerifyEmailRequiredPage() {
                   {isLogoutLoading
                     ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     : <LogOut className="mr-2 h-4 w-4" />}
-                  Sign out
+                  {t('signOut')}
                 </Button>
               </div>
             </div>
@@ -164,7 +164,7 @@ export function VerifyEmailRequiredPage() {
 
           {/* Trust signals */}
           <div className="mt-5 flex flex-wrap justify-center gap-4">
-            {['Secure Verification', 'Spam-Free', 'HTTPS Encrypted'].map((label) => (
+            {(t('requiredTrustSignals', { returnObjects: true }) as string[]).map((label) => (
               <div key={label} className="flex items-center gap-1.5 text-gray-400 text-xs">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                 {label}

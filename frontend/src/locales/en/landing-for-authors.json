@@ -1,0 +1,47 @@
+{
+  "badge": "For Authors",
+  "title": "Everything an Author Needs to Launch Successfully",
+  "subtitle": "BookProof gives you the tools, readers, and insights to take your book from invisible to influential on Amazon.",
+  "items": {
+    "dashboard": {
+      "title": "Complete Campaign Dashboard",
+      "description": "Monitor every aspect of your campaign in one place. Track reviews delivered, credits remaining, reader progress, and weekly milestones from a clean, intuitive dashboard."
+    },
+    "reports": {
+      "title": "Professional Campaign Reports",
+      "description": "Receive a detailed PDF report when your campaign ends. Includes star rating charts, anonymous reader feedback, and a full timeline of your review delivery."
+    },
+    "genreMatch": {
+      "title": "Genre-Matched Readers",
+      "description": "Your book is only shown to readers who actively read your genre. Romance authors get romance readers. Thriller writers get thriller fans. This improves review quality and authenticity."
+    },
+    "formats": {
+      "title": "Ebook & Audiobook Ready",
+      "description": "Launch campaigns for ebooks in EPUB, PDF, or MOBI format, or audiobooks in MP3. You can even split credits between both formats within a single campaign."
+    },
+    "feedback": {
+      "title": "Anonymous Internal Feedback",
+      "description": "Before the campaign ends, you receive honest reader thoughts about your book — pacing, characters, plot, writing quality. Valuable editorial insight without identifying the reader."
+    },
+    "keywordResearch": {
+      "title": "Keyword Research Service",
+      "description": "Add our AI-powered keyword research to any package. Get 5-10 primary keywords, 15 secondary terms, and 20 long-tail phrases with an implementation guide for Amazon KDP."
+    }
+  },
+  "cta": "Start Your Campaign",
+  "dashboardMock": {
+    "title": "Author Dashboard — My Campaigns",
+    "stats": {
+      "credits": "Available Credits",
+      "campaigns": "Active Campaigns",
+      "reviews": "Reviews Delivered",
+      "completion": "Completion Rate"
+    },
+    "status": {
+      "active": "Active",
+      "complete": "Complete"
+    }
+  },
+  "socialProof": "500+ authors already launched their books",
+  "noSubscription": "No subscription required. Pay per credit package."
+}

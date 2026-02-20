@@ -1,0 +1,32 @@
+{
+  "title": "Tem Dúvidas? Estamos Aqui.",
+  "subtitle": "Nossa equipe está pronta para ajudá-lo a planejar sua estratégia de lançamento do livro e obter o máximo da BookProof.",
+  "email": {
+    "title": "Suporte por Email",
+    "description": "Envie-nos sua dúvida e responderemos em 24 horas com uma resposta detalhada.",
+    "actionLabel": "Enviar Email"
+  },
+  "support": {
+    "title": "Suporte por Chat ao Vivo",
+    "description": "Converse com nossos especialistas de campanha para ajuda imediata com a configuração ou dúvidas.",
+    "hours": "Segunda – Sexta, 9h – 18h (Horário de Brasília)",
+    "actionLabel": "Iniciar Chat"
+  },
+  "sales": {
+    "title": "Empresarial e Pacotes Personalizados",
+    "description": "Editora ou gerenciando múltiplos autores? Oferecemos pacotes personalizados e gerentes de conta dedicados.",
+    "actionLabel": "Contatar Vendas"
+  },
+  "responsePromise": {
+    "title": "Promessa de Resposta Rápida",
+    "items": [
+      { "label": "Suporte por Email", "time": "Em até 24 horas" },
+      { "label": "Chat ao Vivo", "time": "Menos de 5 min (horário comercial)" },
+      { "label": "Consultas Empresariais", "time": "Em até 2 dias úteis" }
+    ]
+  },
+  "languages": {
+    "title": "Idiomas Suportados",
+    "description": "Nossa equipe de suporte pode atendê-lo em inglês, português e espanhol — no seu idioma preferido para uma experiência sem barreiras."
+  }
+}

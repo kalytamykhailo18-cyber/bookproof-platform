@@ -7,9 +7,79 @@ import commonEN from '../locales/en/common.json';
 import commonES from '../locales/es/common.json';
 import commonPT from '../locales/pt/common.json';
 
-import landingEN from '../locales/en/landing.json';
-import landingES from '../locales/es/landing.json';
-import landingPT from '../locales/pt/landing.json';
+// Landing page section translations (individual files per section)
+import landingHeroEN from '../locales/en/landing-hero.json';
+import landingHeroES from '../locales/es/landing-hero.json';
+import landingHeroPT from '../locales/pt/landing-hero.json';
+
+import landingStatsEN from '../locales/en/landing-stats.json';
+import landingStatsES from '../locales/es/landing-stats.json';
+import landingStatsPT from '../locales/pt/landing-stats.json';
+
+import landingHowItWorksEN from '../locales/en/landing-how-it-works.json';
+import landingHowItWorksES from '../locales/es/landing-how-it-works.json';
+import landingHowItWorksPT from '../locales/pt/landing-how-it-works.json';
+
+import landingFeaturesEN from '../locales/en/landing-features.json';
+import landingFeaturesES from '../locales/es/landing-features.json';
+import landingFeaturesPT from '../locales/pt/landing-features.json';
+
+import landingForAuthorsEN from '../locales/en/landing-for-authors.json';
+import landingForAuthorsES from '../locales/es/landing-for-authors.json';
+import landingForAuthorsPT from '../locales/pt/landing-for-authors.json';
+
+import landingReaderBenefitsEN from '../locales/en/landing-reader-benefits.json';
+import landingReaderBenefitsES from '../locales/es/landing-reader-benefits.json';
+import landingReaderBenefitsPT from '../locales/pt/landing-reader-benefits.json';
+
+import landingTestimonialsEN from '../locales/en/landing-testimonials.json';
+import landingTestimonialsES from '../locales/es/landing-testimonials.json';
+import landingTestimonialsPT from '../locales/pt/landing-testimonials.json';
+
+import landingGuaranteeEN from '../locales/en/landing-guarantee.json';
+import landingGuaranteeES from '../locales/es/landing-guarantee.json';
+import landingGuaranteePT from '../locales/pt/landing-guarantee.json';
+
+import landingPricingEN from '../locales/en/landing-pricing.json';
+import landingPricingES from '../locales/es/landing-pricing.json';
+import landingPricingPT from '../locales/pt/landing-pricing.json';
+
+import landingFaqEN from '../locales/en/landing-faq.json';
+import landingFaqES from '../locales/es/landing-faq.json';
+import landingFaqPT from '../locales/pt/landing-faq.json';
+
+import landingLeadFormEN from '../locales/en/landing-lead-form.json';
+import landingLeadFormES from '../locales/es/landing-lead-form.json';
+import landingLeadFormPT from '../locales/pt/landing-lead-form.json';
+
+import landingContactEN from '../locales/en/landing-contact.json';
+import landingContactES from '../locales/es/landing-contact.json';
+import landingContactPT from '../locales/pt/landing-contact.json';
+
+import landingFooterEN from '../locales/en/landing-footer.json';
+import landingFooterES from '../locales/es/landing-footer.json';
+import landingFooterPT from '../locales/pt/landing-footer.json';
+
+import landingCtaBannerEN from '../locales/en/landing-cta-banner.json';
+import landingCtaBannerES from '../locales/es/landing-cta-banner.json';
+import landingCtaBannerPT from '../locales/pt/landing-cta-banner.json';
+
+import landingTrustEN from '../locales/en/landing-trust.json';
+import landingTrustES from '../locales/es/landing-trust.json';
+import landingTrustPT from '../locales/pt/landing-trust.json';
+
+// Legal page translations
+import legalTermsEN from '../locales/en/legal-terms.json';
+import legalTermsES from '../locales/es/legal-terms.json';
+import legalTermsPT from '../locales/pt/legal-terms.json';
+
+import legalPrivacyEN from '../locales/en/legal-privacy.json';
+import legalPrivacyES from '../locales/es/legal-privacy.json';
+import legalPrivacyPT from '../locales/pt/legal-privacy.json';
+
+import legalCookiesEN from '../locales/en/legal-cookies.json';
+import legalCookiesES from '../locales/es/legal-cookies.json';
+import legalCookiesPT from '../locales/pt/legal-cookies.json';
 
 import authEN from '../locales/en/auth.json';
 import authES from '../locales/es/auth.json';
@@ -183,15 +253,6 @@ import closerEN from '../locales/en/closer.json';
 import closerES from '../locales/es/closer.json';
 import closerPT from '../locales/pt/closer.json';
 
-// Helper to flatten landing page sections into separate namespaces
-function flattenLanding(landingData: any) {
-  const flattened: Record<string, any> = {};
-  Object.keys(landingData).forEach((key) => {
-    flattened[key] = landingData[key];
-  });
-  return flattened;
-}
-
 // Build resources object with all translations
 const resources = {
   en: {
@@ -250,7 +311,24 @@ const resources = {
     reports: reportsEN,
     settings: settingsEN,
     closer: closerEN,
-    ...flattenLanding(landingEN),
+    hero: landingHeroEN,
+    stats: landingStatsEN,
+    howItWorks: landingHowItWorksEN,
+    features: landingFeaturesEN,
+    forAuthors: landingForAuthorsEN,
+    readerBenefits: landingReaderBenefitsEN,
+    testimonials: landingTestimonialsEN,
+    guarantee: landingGuaranteeEN,
+    pricing: landingPricingEN,
+    faq: landingFaqEN,
+    leadForm: landingLeadFormEN,
+    contact: landingContactEN,
+    footer: landingFooterEN,
+    ctaBanner: landingCtaBannerEN,
+    trust: landingTrustEN,
+    legalTerms: legalTermsEN,
+    legalPrivacy: legalPrivacyEN,
+    legalCookies: legalCookiesEN,
   },
   es: {
     common: commonES,
@@ -308,7 +386,24 @@ const resources = {
     reports: reportsES,
     settings: settingsES,
     closer: closerES,
-    ...flattenLanding(landingES),
+    hero: landingHeroES,
+    stats: landingStatsES,
+    howItWorks: landingHowItWorksES,
+    features: landingFeaturesES,
+    forAuthors: landingForAuthorsES,
+    readerBenefits: landingReaderBenefitsES,
+    testimonials: landingTestimonialsES,
+    guarantee: landingGuaranteeES,
+    pricing: landingPricingES,
+    faq: landingFaqES,
+    leadForm: landingLeadFormES,
+    contact: landingContactES,
+    footer: landingFooterES,
+    ctaBanner: landingCtaBannerES,
+    trust: landingTrustES,
+    legalTerms: legalTermsES,
+    legalPrivacy: legalPrivacyES,
+    legalCookies: legalCookiesES,
   },
   pt: {
     common: commonPT,
@@ -366,7 +461,24 @@ const resources = {
     reports: reportsPT,
     settings: settingsPT,
     closer: closerPT,
-    ...flattenLanding(landingPT),
+    hero: landingHeroPT,
+    stats: landingStatsPT,
+    howItWorks: landingHowItWorksPT,
+    features: landingFeaturesPT,
+    forAuthors: landingForAuthorsPT,
+    readerBenefits: landingReaderBenefitsPT,
+    testimonials: landingTestimonialsPT,
+    guarantee: landingGuaranteePT,
+    pricing: landingPricingPT,
+    faq: landingFaqPT,
+    leadForm: landingLeadFormPT,
+    contact: landingContactPT,
+    footer: landingFooterPT,
+    ctaBanner: landingCtaBannerPT,
+    trust: landingTrustPT,
+    legalTerms: legalTermsPT,
+    legalPrivacy: legalPrivacyPT,
+    legalCookies: legalCookiesPT,
   },
 };
 

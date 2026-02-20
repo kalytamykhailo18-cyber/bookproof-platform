@@ -133,16 +133,16 @@ export function ForAuthorsSection() {
             <div className="w-3 h-3 rounded-full bg-red-400" />
             <div className="w-3 h-3 rounded-full bg-yellow-400" />
             <div className="w-3 h-3 rounded-full bg-green-400" />
-            <span className="ml-3 text-xs text-slate-400">Author Dashboard — My Campaigns</span>
+            <span className="ml-3 text-xs text-slate-400">{t('dashboardMock.title')}</span>
           </div>
 
           {/* Stat tiles */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-7">
             {[
-              { label: 'Available Credits', value: '150', color: '#3b82f6' },
-              { label: 'Active Campaigns', value: '3',   color: '#10b981' },
-              { label: 'Reviews Delivered', value: '287', color: '#8b5cf6' },
-              { label: 'Completion Rate',   value: '94%', color: '#f59e0b' },
+              { labelKey: 'dashboardMock.stats.credits',    value: '150', color: '#3b82f6' },
+              { labelKey: 'dashboardMock.stats.campaigns',  value: '3',   color: '#10b981' },
+              { labelKey: 'dashboardMock.stats.reviews',    value: '287', color: '#8b5cf6' },
+              { labelKey: 'dashboardMock.stats.completion', value: '94%', color: '#f59e0b' },
             ].map((card, ci) => (
               <div
                 key={ci}
@@ -150,7 +150,7 @@ export function ForAuthorsSection() {
                 style={{ background: '#f8fafc', border: '1px solid rgba(203,213,225,0.8)' }}
               >
                 <div className="text-2xl font-bold mb-1.5" style={{ color: card.color }}>{card.value}</div>
-                <div className="text-xs text-slate-500">{card.label}</div>
+                <div className="text-xs text-slate-500">{t(card.labelKey)}</div>
               </div>
             ))}
           </div>
@@ -158,9 +158,9 @@ export function ForAuthorsSection() {
           {/* Campaign rows */}
           <div className="space-y-2.5">
             {[
-              { title: 'The Last Horizon',    progress: 72,  status: 'Active',   reviews: '72/100' },
-              { title: 'Voices in the Dark',  progress: 100, status: 'Complete', reviews: '50/50'  },
-              { title: 'Chronicles of Ember', progress: 28,  status: 'Active',   reviews: '28/100' },
+              { title: 'The Last Horizon',    progress: 72,  statusKey: 'dashboardMock.status.active',   reviews: '72/100' },
+              { title: 'Voices in the Dark',  progress: 100, statusKey: 'dashboardMock.status.complete', reviews: '50/50'  },
+              { title: 'Chronicles of Ember', progress: 28,  statusKey: 'dashboardMock.status.active',   reviews: '28/100' },
             ].map((camp, ci) => (
               <div
                 key={ci}
@@ -172,18 +172,18 @@ export function ForAuthorsSection() {
                   <div className="h-1.5 bg-slate-200 rounded-sm overflow-hidden">
                     <div
                       className="h-full rounded-sm"
-                      style={{ width: `${camp.progress}%`, background: camp.status === 'Complete' ? '#10b981' : '#3b82f6' }}
+                      style={{ width: `${camp.progress}%`, background: camp.statusKey.includes('complete') ? '#10b981' : '#3b82f6' }}
                     />
                   </div>
                 </div>
                 <div className="text-xs text-slate-400 whitespace-nowrap">{camp.reviews}</div>
                 <span
                   className="text-xs px-2.5 py-1 rounded-sm font-medium whitespace-nowrap"
-                  style={camp.status === 'Complete'
+                  style={camp.statusKey.includes('complete')
                     ? { background: 'rgba(16,185,129,0.12)', color: '#059669' }
                     : { background: 'rgba(59,130,246,0.12)', color: '#2563eb' }}
                 >
-                  {camp.status}
+                  {t(camp.statusKey)}
                 </span>
               </div>
             ))}
@@ -233,7 +233,7 @@ export function ForAuthorsSection() {
             });
           })()}
           <p className="text-xs text-slate-400 font-medium tracking-wide uppercase">
-            500+ authors already launched their books
+            {t('socialProof')}
           </p>
         </div>
 
@@ -246,7 +246,7 @@ export function ForAuthorsSection() {
             {t('cta', 'Start Your Campaign')}
             <ArrowRight className="h-4 w-4" />
           </Link>
-          <p className="text-xs text-slate-400 mt-3">No subscription required. Pay per credit package.</p>
+          <p className="text-xs text-slate-400 mt-3">{t('noSubscription')}</p>
         </div>
       </div>
     </section>

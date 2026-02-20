@@ -1,0 +1,53 @@
+{
+  "badge": "Para Leitores",
+  "title": "Leia Livros que Você Ama. Receba pela Sua Opinião Honesta.",
+  "subtitle": "Junte-se a uma comunidade de leitores apaixonados que descobrem novos livros, ganham dinheiro real e ajudam autores a obter a visibilidade que merecem.",
+  "items": {
+    "freeBooks": {
+      "title": "Livros e Audiobooks Gratuitos",
+      "description": "Tenha acesso ilimitado a ebooks e audiobooks nos seus gêneros favoritos sem custo. Leia novos lançamentos antes do público geral."
+    },
+    "earnMoney": {
+      "title": "Ganhe Dinheiro Real",
+      "description": "Receba pagamento por cada avaliação validada na Amazon. Avaliações de ebooks ganham uma taxa fixa; avaliações de audiobooks ganham mais. Saque via PayPal, transferência bancária, Wise ou cripto."
+    },
+    "discoverBooks": {
+      "title": "Descubra Novos Autores",
+      "description": "Seja um dos primeiros a ler próximos lançamentos de autores emergentes e estabelecidos. Expanda sua lista de leitura enquanto obtém acesso antecipado."
+    },
+    "flexible": {
+      "title": "Leia no Seu Ritmo",
+      "description": "Cada atribuição dá a você 72 horas para ler e avaliar. Candidate-se apenas quando tiver tempo. Sem pressão, sem cotas — completamente flexível."
+    },
+    "community": {
+      "title": "Junte-se a uma Comunidade Crescente",
+      "description": "Conecte-se com milhares de companheiros amantes de livros. Nossa comunidade de leitores abrange romance, thriller, ficção científica, não-ficção e todos os gêneros."
+    },
+    "payout": {
+      "title": "Saques Fáceis e Rápidos",
+      "description": "Solicite um saque a qualquer momento que atingir o valor mínimo. Nossa equipe processa pagamentos prontamente. Múltiplos métodos de pagamento disponíveis em todo o mundo."
+    }
+  },
+  "howEarnings": {
+    "title": "Como os Ganhos Funcionam",
+    "ebook": "Por avaliação de ebook",
+    "audiobook": "Por avaliação de audiobook",
+    "minimum": "Saque mínimo",
+    "methods": "PayPal, Transferência Bancária, Wise, Cripto",
+    "ebookLabel": "Avaliação de Ebook",
+    "audiobookLabel": "Avaliação de Audiobook",
+    "paymentMethods": "Métodos de Pagamento"
+  },
+  "howToGet": {
+    "title": "Como Começar como Leitor",
+    "steps": [
+      "Crie sua conta gratuita de leitor",
+      "Configure suas preferências de gênero e formato",
+      "Navegue pelos livros disponíveis e candidate-se",
+      "Leia em 72 horas e publique sua avaliação",
+      "Ganhe dinheiro quando sua avaliação for validada"
+    ]
+  },
+  "freeToJoin": "Grátis para entrar. Sem compromisso.",
+  "cta": "Entrar como Leitor"
+}

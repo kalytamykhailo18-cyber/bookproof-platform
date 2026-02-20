@@ -1,0 +1,53 @@
+{
+  "badge": "FAQ",
+  "title": "Perguntas Frequentes",
+  "subtitle": "Tudo que você precisa saber sobre a plataforma de avaliações da BookProof.",
+  "stillHave": {
+    "title": "Ainda tem dúvidas?",
+    "desc": "Nossa equipe terá prazer em ajudá-lo a encontrar as respostas que precisa.",
+    "email": "Suporte por Email",
+    "contact": "Ver Todas as Opções de Contato"
+  },
+  "items": {
+    "q1": {
+      "question": "Como funciona exatamente a BookProof?",
+      "answer": "A BookProof conecta autores com leitores verificados que amam seu gênero. Você compra créditos, cria uma campanha para seu livro, faz upload dos seus arquivos e nós cuidamos da distribuição. Os leitores recebem acesso em lotes semanais, leem seu livro em até 72 horas e publicam uma avaliação honesta na Amazon. Você recebe um relatório de campanha quando todas as avaliações são entregues."
+    },
+    "q2": {
+      "question": "Essas avaliações violam os Termos de Serviço da Amazon?",
+      "answer": "Nossos leitores genuinamente leem seus livros e fornecem feedback honesto baseado em sua experiência real. Seguimos todas as políticas da Amazon e garantimos que as avaliações pareçam orgânicas através de padrões naturais de distribuição semanal. Os leitores são compensados pelo tempo de leitura, não por deixar avaliações positivas."
+    },
+    "q3": {
+      "question": "Quanto tempo leva para começar a receber avaliações?",
+      "answer": "Após sua campanha ser criada e aprovada, o primeiro lote de leitores tipicamente recebe acesso dentro da primeira semana. As avaliações são então entregues progressivamente ao longo de 4-10 semanas dependendo do tamanho do seu pacote. Esse ritmo natural ajuda a manter a autenticidade e evitar padrões incomuns."
+    },
+    "q4": {
+      "question": "O que acontece se a Amazon remover uma avaliação?",
+      "answer": "Oferecemos uma garantia de substituição de 14 dias em todas as avaliações. Se uma avaliação for removida em até 14 dias de ser validada, a substituímos sem custo adicional. Nossa equipe monitora todas as avaliações entregues e inicia substituições automaticamente quando uma remoção é detectada dentro da janela de garantia."
+    },
+    "q5": {
+      "question": "Posso escolher quais leitores recebem meu livro?",
+      "answer": "Os leitores são automaticamente correspondidos com base em suas preferências de gênero e compatibilidade de formato com seu livro. Essa correspondência automática melhora a autenticidade das avaliações — os leitores genuinamente escolhem gêneros que gostam, resultando em avaliações mais engajadas e reflexivas."
+    },
+    "q6": {
+      "question": "Quais formatos vocês suportam?",
+      "answer": "Suportamos ebooks nos formatos EPUB, PDF e MOBI (até 50MB) e audiobooks no formato MP3 (até 500MB). Os créditos são consumidos de forma diferente: 1 crédito por avaliação de ebook, 2 créditos por avaliação de audiobook. Você pode dividir créditos entre ambos os formatos em uma única campanha."
+    },
+    "q7": {
+      "question": "Como os leitores são verificados e avaliados?",
+      "answer": "Todos os leitores passam por um processo de registro que verifica seu email, preferências de formato de conteúdo e links de perfil da Amazon. Os leitores devem manter um bom histórico de conclusão — aqueles que perdem prazos ou enviam avaliações de baixa qualidade são removidos da plataforma."
+    },
+    "q8": {
+      "question": "Posso pausar ou cancelar minha campanha?",
+      "answer": "Sim, você pode pausar uma campanha ativa a qualquer momento no seu painel. Pausar interrompe novas atribuições de leitores enquanto permite que leitores que já receberam acesso completem suas avaliações. As campanhas podem ser retomadas a qualquer momento. O cancelamento está disponível, mas os créditos já alocados a leitores em andamento não podem ser reembolsados."
+    },
+    "q9": {
+      "question": "O que recebo quando minha campanha está completa?",
+      "answer": "Quando todas as avaliações são entregues e validadas, você recebe um relatório detalhado de campanha em PDF. O relatório inclui: total de avaliações entregues, gráfico de distribuição de notas, feedback anônimo dos leitores para cada avaliação, cronograma semanal de entrega e estatísticas de substituições."
+    },
+    "q10": {
+      "question": "Como funciona a pesquisa de palavras-chave?",
+      "answer": "Nosso serviço de pesquisa de palavras-chave usa IA para analisar o gênero, descrição, público-alvo e títulos concorrentes do seu livro para gerar palavras-chave otimizadas. Você recebe um relatório PDF com 5-10 palavras-chave primárias, 10-15 palavras-chave secundárias, 15-20 frases de cauda longa e um guia completo de implementação para o Amazon KDP."
+    }
+  }
+}

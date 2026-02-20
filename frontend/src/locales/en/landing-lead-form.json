@@ -1,0 +1,33 @@
+{
+  "badge": "Early Access",
+  "successTitle": "You're In!",
+  "noSpam": "No spam. Unsubscribe anytime. We respect your privacy.",
+  "title": "Get Early Access",
+  "subtitle": "Join thousands of authors already using BookProof. Sign up now and get exclusive early-bird pricing.",
+  "fields": {
+    "name": {
+      "label": "Full Name",
+      "placeholder": "John Doe"
+    },
+    "email": {
+      "label": "Email Address",
+      "placeholder": "john@example.com"
+    },
+    "userType": {
+      "label": "I am a...",
+      "options": {
+        "author": "Author — I want reviews for my book",
+        "reader": "Reader — I want to earn by reading",
+        "both": "Both — I write and love to read"
+      }
+    },
+    "marketingConsent": {
+      "label": "I agree to receive marketing emails about BookProof updates and exclusive offers"
+    }
+  },
+  "cta": "Get Early Access",
+  "submitting": "Joining...",
+  "success": "We'll be in touch with early access details shortly.",
+  "alreadySubscribed": "You're already on our list! We'll notify you when early access opens.",
+  "error": "Something went wrong. Please try again."
+}

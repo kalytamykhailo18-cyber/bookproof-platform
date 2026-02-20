@@ -145,9 +145,9 @@ export function LandingFooter() {
             {t('copyright', '© 2025 BookProof. All rights reserved.')}
           </p>
           <div className="flex items-center gap-5">
-            <Link to="/terms"   className="text-xs text-slate-600 hover:text-slate-400 transition-colors duration-200">Terms</Link>
-            <Link to="/privacy" className="text-xs text-slate-600 hover:text-slate-400 transition-colors duration-200">Privacy</Link>
-            <Link to="/cookies" className="text-xs text-slate-600 hover:text-slate-400 transition-colors duration-200">Cookies</Link>
+            <Link to="/terms"   className="text-xs text-slate-600 hover:text-slate-400 transition-colors duration-200">{t('bottomBar.terms')}</Link>
+            <Link to="/privacy" className="text-xs text-slate-600 hover:text-slate-400 transition-colors duration-200">{t('bottomBar.privacy')}</Link>
+            <Link to="/cookies" className="text-xs text-slate-600 hover:text-slate-400 transition-colors duration-200">{t('bottomBar.cookies')}</Link>
           </div>
         </div>
       </div>

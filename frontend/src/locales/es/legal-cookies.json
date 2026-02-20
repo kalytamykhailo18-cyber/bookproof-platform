@@ -1,0 +1,113 @@
+{
+  "title": "Política de Cookies",
+  "lastUpdated": "Última actualización: 21 de enero de 2026",
+  "badge": "Legal",
+  "toc": "Contenido",
+  "goBack": "Volver",
+  "sections": [
+    "¿Qué Son las Cookies?",
+    "Tipos de Cookies que Usamos",
+    "Duración de las Cookies",
+    "Cookies de Terceros",
+    "Gestionar sus Preferencias de Cookies",
+    "Señales de No Rastrear",
+    "Actualizaciones de esta Política",
+    "Contáctenos"
+  ],
+  "s1": {
+    "title": "¿Qué Son las Cookies?",
+    "p1": "Las cookies son pequeños archivos de texto que se almacenan en su dispositivo cuando visita un sitio web. Ayudan al sitio web a recordar sus preferencias y mejorar su experiencia de navegación.",
+    "p2": "BookProof usa cookies y tecnologías similares para proporcionar, proteger y mejorar nuestra plataforma."
+  },
+  "s2": {
+    "title": "Tipos de Cookies que Usamos",
+    "sub1": {
+      "title": "2.1 Cookies Esenciales",
+      "intro": "Estas cookies son necesarias para que el sitio web funcione correctamente. No pueden desactivarse.",
+      "items": [
+        { "label": "Token de Autenticación", "desc": "Lo mantiene conectado de forma segura" },
+        { "label": "ID de Sesión", "desc": "Mantiene el estado de su sesión" },
+        { "label": "Token CSRF", "desc": "Protege contra ataques de falsificación de solicitudes entre sitios" },
+        { "label": "Cookies de Seguridad", "desc": "Ayudan a detectar y prevenir actividad maliciosa" }
+      ]
+    },
+    "sub2": {
+      "title": "2.2 Cookies Funcionales",
+      "intro": "Estas cookies permiten funcionalidades mejoradas y personalización.",
+      "items": [
+        { "label": "Preferencia de Idioma", "desc": "Recuerda su idioma seleccionado (en, pt, es)" },
+        { "label": "Preferencia de Moneda", "desc": "Recuerda su moneda preferida" },
+        { "label": "Preferencia de Tema", "desc": "Almacena su preferencia de modo claro/oscuro" }
+      ]
+    },
+    "sub3": {
+      "title": "2.3 Cookies de Seguimiento de Afiliados",
+      "intro": "Se utilizan para rastrear referencias para nuestro programa de afiliados.",
+      "items": [
+        { "label": "bp_aff_ref", "desc": "Almacena el código de referencia de afiliado (vence en 30 días)" },
+        { "label": "Seguimiento de Conversiones", "desc": "Atribuye registros a afiliados referenciadores" }
+      ]
+    },
+    "sub4": {
+      "title": "2.4 Cookies de Análisis (Opcionales)",
+      "intro": "Estas cookies nos ayudan a entender cómo los visitantes usan nuestro sitio web. Solo se configuran con su consentimiento.",
+      "items": [
+        { "label": "Google Analytics", "desc": "Rastrea vistas de página, duración de sesión y comportamiento del usuario" },
+        { "label": "Monitoreo de Rendimiento", "desc": "Nos ayuda a identificar y solucionar problemas técnicos" }
+      ]
+    }
+  },
+  "s3": {
+    "title": "Duración de las Cookies",
+    "intro": "Las cookies tienen diferentes ciclos de vida según su propósito:",
+    "tableHeader": { "type": "Tipo de Cookie", "duration": "Duración" },
+    "rows": [
+      { "type": "Cookies de Sesión", "duration": "Eliminadas al cerrar el navegador" },
+      { "type": "Cookies de Autenticación", "duration": "7 días (o hasta que cierre sesión)" },
+      { "type": "Cookies de Preferencias", "duration": "1 año" },
+      { "type": "Cookies de Afiliados", "duration": "30 días" },
+      { "type": "Cookies de Análisis", "duration": "Hasta 2 años" }
+    ]
+  },
+  "s4": {
+    "title": "Cookies de Terceros",
+    "intro": "Algunas cookies son establecidas por servicios de terceros que utilizamos:",
+    "items": [
+      { "label": "Stripe", "desc": "Procesamiento de pagos y prevención de fraudes" },
+      { "label": "Google reCAPTCHA", "desc": "Protección contra bots en formularios" },
+      { "label": "Google Analytics", "desc": "Análisis del sitio web (si está habilitado)" }
+    ]
+  },
+  "s5": {
+    "title": "Gestionar sus Preferencias de Cookies",
+    "intro": "Puede controlar las cookies de varias maneras:",
+    "sub1": {
+      "title": "5.1 Configuración del Navegador",
+      "body": "La mayoría de los navegadores le permiten bloquear o eliminar cookies a través de su configuración. Tenga en cuenta que bloquear cookies esenciales puede impedir el uso de ciertas funciones de nuestra plataforma."
+    },
+    "sub2": {
+      "title": "5.2 Banner de Consentimiento de Cookies",
+      "body": "Cuando visita nuestro sitio web por primera vez, puede elegir qué cookies opcionales aceptar a través de nuestro banner de consentimiento."
+    },
+    "sub3": {
+      "title": "5.3 Configuración de Cuenta",
+      "body": "Los usuarios que han iniciado sesión pueden gestionar sus preferencias de cookies en la configuración de su cuenta."
+    }
+  },
+  "s6": {
+    "title": "Señales de No Rastrear",
+    "body": "Respetamos las señales de No Rastrear (DNT) de su navegador. Cuando DNT está habilitado, no configuraremos cookies de análisis opcionales."
+  },
+  "s7": {
+    "title": "Actualizaciones de esta Política",
+    "body": "Podemos actualizar esta Política de Cookies de vez en cuando. Cualquier cambio se publicará en esta página con una fecha de revisión actualizada."
+  },
+  "s8": {
+    "title": "Contáctenos",
+    "intro": "Si tiene preguntas sobre nuestro uso de cookies, contáctenos:"
+  },
+  "footer": {
+    "privacyPolicy": "Política de Privacidad",
+    "termsOfService": "Términos de Servicio"
+  }
+}

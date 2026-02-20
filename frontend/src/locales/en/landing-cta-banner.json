@@ -1,0 +1,15 @@
+{
+  "title": "Ready to Launch Your Book",
+  "titleHighlight": "to the Top?",
+  "subtitle": "Join 500+ authors who trust BookProof for authentic, lasting Amazon reviews. Start your first campaign today and watch your rankings grow.",
+  "cta": {
+    "author": "Start as an Author",
+    "reader": "Join as a Reader"
+  },
+  "stats": [
+    { "value": "10,000+", "label": "Reviews Delivered" },
+    { "value": "500+", "label": "Happy Authors" },
+    { "value": "94%", "label": "Review Retention" },
+    { "value": "$0", "label": "Setup Fee" }
+  ]
+}

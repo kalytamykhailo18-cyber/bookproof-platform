@@ -21,6 +21,7 @@ type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export function ForgotPasswordPage() {
   const { t } = useTranslation('auth.forgotPassword');
+  const { t: tAuth } = useTranslation('auth');
   const navigate = useNavigate();
   const { startLoading, stopLoading } = useLoading();
   const { executeRecaptcha, isEnabled: isRecaptchaEnabled } = useRecaptcha();
@@ -60,10 +61,11 @@ export function ForgotPasswordPage() {
     }
   };
 
+  const leftPointsData = t('leftPoints', { returnObjects: true }) as { title: string; desc: string }[];
   const leftPoints = [
-    { icon: Mail,        color: '#3b82f6', title: 'Check your inbox',       desc: 'Reset link sent within seconds of submitting' },
-    { icon: Clock,       color: '#f59e0b', title: 'Link expires in 1 hour', desc: 'Request a new one any time if it expires' },
-    { icon: ShieldCheck, color: '#10b981', title: 'Secure process',         desc: 'Your account stays protected throughout the reset' },
+    { icon: Mail,        color: '#3b82f6', ...leftPointsData[0] },
+    { icon: Clock,       color: '#f59e0b', ...leftPointsData[1] },
+    { icon: ShieldCheck, color: '#10b981', ...leftPointsData[2] },
   ];
 
   const LeftPanel = () => (
@@ -84,18 +86,18 @@ export function ForgotPasswordPage() {
           </div>
           <span className="text-white font-bold text-xl tracking-tight cursor-pointer" onClick={() => navigate('/')}>BookProof</span>
         </div>
-        <p className="text-slate-500 text-xs">The Amazon Review Platform for Authors</p>
+        <p className="text-slate-500 text-xs">{tAuth('common.tagline')}</p>
       </div>
 
       {/* Main */}
       <div className="relative space-y-10">
         <div>
           <h2 className="text-3xl font-bold text-white leading-tight mb-4">
-            Forgot your<br />
-            <span className="text-blue-400">password?</span>
+            {t('leftHeading')}<br />
+            <span className="text-blue-400">{t('leftHeadingHighlight')}</span>
           </h2>
           <p className="text-slate-400 text-base leading-relaxed">
-            No worries — it happens. Enter your email and we'll send you a secure reset link instantly.
+            {t('leftSubtitle')}
           </p>
         </div>
         <div className="space-y-4">
@@ -118,9 +120,9 @@ export function ForgotPasswordPage() {
       <div className="relative">
         <div className="rounded-md p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(71,85,105,0.3)' }}>
           <p className="text-sm text-slate-400 italic leading-relaxed">
-            "Secure account recovery is a core part of how we protect our authors and readers."
+            "{t('quote')}"
           </p>
-          <p className="text-xs text-slate-600 mt-2">— BookProof Security Team</p>
+          <p className="text-xs text-slate-600 mt-2">— {t('quoteAuthor')}</p>
         </div>
       </div>
     </div>
@@ -222,7 +224,7 @@ export function ForgotPasswordPage() {
 
           {/* Trust signals */}
           <div className="mt-5 flex flex-wrap justify-center gap-4">
-            {['Secure Reset', 'Expires in 1 Hour', 'HTTPS Encrypted'].map((label) => (
+            {(t('trustSignals', { returnObjects: true }) as string[]).map((label) => (
               <div key={label} className="flex items-center gap-1.5 text-gray-400 text-xs">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                 {label}

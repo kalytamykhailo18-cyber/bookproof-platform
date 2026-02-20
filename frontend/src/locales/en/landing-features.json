@@ -1,0 +1,53 @@
+{
+  "badge": "Platform Features",
+  "title": "Everything Built for Your Book's Success",
+  "subtitle": "BookProof combines authentic reader engagement with smart technology to deliver reviews that stick.",
+  "items": {
+    "authentic": {
+      "title": "100% Authentic Reviews",
+      "description": "Real readers, real opinions. Every reviewer is a verified human who genuinely reads your book before writing. No bots, no outsourced reviews, no shortcuts."
+    },
+    "distributed": {
+      "title": "Natural Distribution Pattern",
+      "description": "Reviews are released in weekly batches that mirror organic reading patterns. Amazon's algorithm sees healthy, gradual review growth instead of suspicious spikes."
+    },
+    "tracking": {
+      "title": "Real-Time Campaign Tracking",
+      "description": "Your dashboard shows every review delivered, pending, and in progress. Weekly breakdowns, progress charts, and status updates keep you always informed."
+    },
+    "flexible": {
+      "title": "Ebook & Audiobook Support",
+      "description": "Whether you publish ebooks or audiobooks, we have you covered. Allocate credits to either format or split them across both within a single campaign."
+    },
+    "guarantee": {
+      "title": "14-Day Replacement Guarantee",
+      "description": "If Amazon removes a validated review within 14 days, we replace it at zero cost. Your investment is fully protected with automatic replacement tracking."
+    },
+    "support": {
+      "title": "Dedicated Campaign Support",
+      "description": "Our team actively monitors your campaign health. We handle reader issues, expired slots, and escalations so you never have to worry about the process."
+    },
+    "report": {
+      "title": "Detailed Campaign Reports",
+      "description": "When your campaign completes, receive a professional PDF report with rating distribution, anonymous reader feedback, and campaign timeline — ready to share or archive."
+    },
+    "keywords": {
+      "title": "Keyword Research Add-On",
+      "description": "Boost discoverability with our AI-powered keyword research service. Get optimized keywords for your title, subtitle, description, and Amazon KDP backend fields."
+    }
+  },
+  "trustStrip": {
+    "compliant": {
+      "label": "Amazon Policy Compliant",
+      "desc": "Progressive delivery mimics organic review growth"
+    },
+    "fast": {
+      "label": "Fast Campaign Start",
+      "desc": "First readers assigned within days of campaign creation"
+    },
+    "transparent": {
+      "label": "Full Transparency",
+      "desc": "Real-time dashboard with every review and status update"
+    }
+  }
+}

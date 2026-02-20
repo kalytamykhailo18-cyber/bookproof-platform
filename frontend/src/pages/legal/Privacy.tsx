@@ -1,13 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { BookOpen, ArrowLeft, Loader2, Shield, ExternalLink } from 'lucide-react';
-
-const SECTIONS = [
-  'Introduction', 'Information We Collect', 'How We Use Your Information',
-  'How We Share Your Information', 'Data Security', 'Cookies and Tracking',
-  'Data Retention', 'Your Rights (GDPR)', 'International Data Transfers',
-  "Children's Privacy", 'Changes to This Policy', 'Contact Us', 'EU Supervisory Authority',
-];
 
 function Section({ id, title, children }: { id: number; title: string; children: React.ReactNode }) {
   return (
@@ -43,11 +37,24 @@ function Bullets({ items }: { items: React.ReactNode[] }) {
   );
 }
 
+function LabeledBullets({ items }: { items: { label: string; desc: string }[] }) {
+  return (
+    <Bullets
+      items={items.map(({ label, desc }, i) => (
+        <span key={i}><strong className="text-slate-700">{label}:</strong> {desc}</span>
+      ))}
+    />
+  );
+}
+
 export function PrivacyPolicyPage() {
+  const { t } = useTranslation('legalPrivacy');
   const navigate = useNavigate();
   const [isBackLoading, setIsBackLoading] = useState(false);
   const [isTermsLoading, setIsTermsLoading] = useState(false);
   const [isCookiesLoading, setIsCookiesLoading] = useState(false);
+
+  const sections = t('sections', { returnObjects: true }) as string[];
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -78,10 +85,10 @@ export function PrivacyPolicyPage() {
             style={{ background: 'rgba(139,92,246,0.15)', color: '#c4b5fd', border: '1px solid rgba(139,92,246,0.25)' }}
           >
             <Shield className="h-3 w-3" />
-            Legal
+            {t('badge')}
           </div>
-          <h1 className="text-4xl font-bold text-white mb-3">Privacy Policy</h1>
-          <p className="text-slate-400 text-sm">Last updated: January 21, 2026</p>
+          <h1 className="text-4xl font-bold text-white mb-3">{t('title')}</h1>
+          <p className="text-slate-400 text-sm">{t('lastUpdated')}</p>
         </div>
       </div>
 
@@ -92,11 +99,11 @@ export function PrivacyPolicyPage() {
           {/* Sticky TOC */}
           <aside className="hidden lg:block w-56 flex-shrink-0">
             <div className="sticky top-6 bg-white rounded-md border border-gray-200 shadow-sm p-4">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Contents</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('toc')}</p>
               <nav className="space-y-1">
-                {SECTIONS.map((s, i) => (
+                {sections.map((s, i) => (
                   <a
-                    key={s}
+                    key={i}
                     href={`#section-${i + 1}`}
                     className="block text-xs text-gray-500 hover:text-blue-600 py-1 leading-snug transition-colors"
                   >
@@ -112,153 +119,96 @@ export function PrivacyPolicyPage() {
             <div className="h-1 w-full bg-gradient-to-r from-purple-500 via-blue-400 to-teal-400" />
             <div className="p-8 space-y-10">
 
-              <Section id={1} title="Introduction">
+              <Section id={1} title={t('s1.title')}>
                 <div className="space-y-3">
-                  <p>BookProof (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.</p>
-                  <p>This policy applies to all users of the BookProof platform, including Authors, Readers, Affiliates, and Administrators.</p>
+                  <p>{t('s1.p1')}</p>
+                  <p>{t('s1.p2')}</p>
                   <div className="rounded-md bg-purple-50 border border-purple-100 p-3">
-                    <p><strong className="text-purple-700">GDPR Compliance:</strong> <span className="text-purple-600">For users in the European Union, we comply with the General Data Protection Regulation (GDPR). You have specific rights regarding your personal data as outlined in Section 8.</span></p>
+                    <p><strong className="text-purple-700">{t('s1.gdprLabel')}</strong> <span className="text-purple-600">{t('s1.gdprText')}</span></p>
                   </div>
                 </div>
               </Section>
 
-              <Section id={2} title="Information We Collect">
-                <Sub title="2.1 Information You Provide">
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Account Information:</strong> Email, name, password, company name, phone number, country, preferred language</span>,
-                    <span key="b"><strong className="text-slate-700">Profile Information:</strong> Bio, profile photo, content preferences</span>,
-                    <span key="c"><strong className="text-slate-700">Payment Information:</strong> Credit card details (processed securely by Stripe), PayPal email for payouts</span>,
-                    <span key="d"><strong className="text-slate-700">Campaign Data:</strong> Book titles, descriptions, cover images, ebook/audiobook files, synopsis documents</span>,
-                    <span key="e"><strong className="text-slate-700">Review Data:</strong> Amazon profile links, review submissions, ratings</span>,
-                    <span key="f"><strong className="text-slate-700">Communication:</strong> Messages, support requests, feedback</span>,
-                  ]} />
+              <Section id={2} title={t('s2.title')}>
+                <Sub title={t('s2.sub1.title')}>
+                  <LabeledBullets items={t('s2.sub1.items', { returnObjects: true }) as { label: string; desc: string }[]} />
                 </Sub>
-                <Sub title="2.2 Automatically Collected Information">
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Usage Data:</strong> Pages visited, features used, time spent on platform</span>,
-                    <span key="b"><strong className="text-slate-700">Device Information:</strong> IP address, browser type, operating system, device identifiers</span>,
-                    <span key="c"><strong className="text-slate-700">Cookies and Tracking:</strong> Session cookies, authentication tokens, analytics data</span>,
-                    <span key="d"><strong className="text-slate-700">Security Logs:</strong> Login attempts, account actions, API requests</span>,
-                  ]} />
+                <Sub title={t('s2.sub2.title')}>
+                  <LabeledBullets items={t('s2.sub2.items', { returnObjects: true }) as { label: string; desc: string }[]} />
                 </Sub>
-                <Sub title="2.3 Third-Party Information">
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Payment Processors:</strong> Transaction data from Stripe</span>,
-                    <span key="b"><strong className="text-slate-700">Amazon:</strong> Publicly available review data for verification</span>,
-                    <span key="c"><strong className="text-slate-700">Analytics:</strong> Usage statistics from Google Analytics (if enabled)</span>,
-                  ]} />
+                <Sub title={t('s2.sub3.title')}>
+                  <LabeledBullets items={t('s2.sub3.items', { returnObjects: true }) as { label: string; desc: string }[]} />
                 </Sub>
               </Section>
 
-              <Section id={3} title="How We Use Your Information">
-                <Sub title="3.1 Service Delivery">
-                  <Bullets items={['Create and manage your account', 'Process credit purchases and payments', 'Match authors with readers for campaigns', 'Deliver ebooks and audiobooks to readers', 'Process review submissions and verification', 'Handle payouts to readers and affiliates']} />
+              <Section id={3} title={t('s3.title')}>
+                <Sub title={t('s3.sub1.title')}>
+                  <Bullets items={(t('s3.sub1.items', { returnObjects: true }) as string[])} />
                 </Sub>
-                <Sub title="3.2 Communication">
-                  <Bullets items={['Send transactional emails (account verification, password resets, receipts)', 'Notify you of campaign updates, review deadlines, and important account changes', 'Respond to support requests and inquiries', 'Send marketing communications (only with your consent)']} />
+                <Sub title={t('s3.sub2.title')}>
+                  <Bullets items={(t('s3.sub2.items', { returnObjects: true }) as string[])} />
                 </Sub>
-                <Sub title="3.3 Platform Improvement">
-                  <Bullets items={['Analyze usage patterns to improve user experience', 'Develop new features and services', 'Monitor platform performance and troubleshoot issues', 'Conduct research and analytics']} />
+                <Sub title={t('s3.sub3.title')}>
+                  <Bullets items={(t('s3.sub3.items', { returnObjects: true }) as string[])} />
                 </Sub>
-                <Sub title="3.4 Security and Compliance">
-                  <Bullets items={['Prevent fraud, spam, and abuse', 'Enforce our Terms of Service', 'Comply with legal obligations', 'Protect the rights and safety of our users']} />
-                </Sub>
-              </Section>
-
-              <Section id={4} title="How We Share Your Information">
-                <p className="mb-4">We do not sell your personal information. We may share your data in the following circumstances:</p>
-                <Sub title="4.1 Service Providers">
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Stripe:</strong> Payment processing</span>,
-                    <span key="b"><strong className="text-slate-700">Cloudflare R2:</strong> File storage and delivery</span>,
-                    <span key="c"><strong className="text-slate-700">Resend:</strong> Email delivery</span>,
-                    <span key="d"><strong className="text-slate-700">Upstash Redis:</strong> Session management and caching</span>,
-                    <span key="e"><strong className="text-slate-700">Neon PostgreSQL:</strong> Database hosting</span>,
-                    <span key="f"><strong className="text-slate-700">Sentry:</strong> Error monitoring</span>,
-                  ]} />
-                </Sub>
-                <Sub title="4.2 Business Partners">
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Authors and Readers:</strong> Limited information shared to facilitate campaigns (book details, content preferences)</span>,
-                    <span key="b"><strong className="text-slate-700">Affiliates:</strong> Commission data and conversion statistics</span>,
-                  ]} />
-                </Sub>
-                <Sub title="4.3 Legal Requirements">
-                  <p>We may disclose your information if required by law or in response to valid legal requests (subpoenas, court orders).</p>
-                </Sub>
-                <Sub title="4.4 Business Transfers">
-                  <p>If BookProof is acquired or merged with another company, your information may be transferred to the new owner.</p>
+                <Sub title={t('s3.sub4.title')}>
+                  <Bullets items={(t('s3.sub4.items', { returnObjects: true }) as string[])} />
                 </Sub>
               </Section>
 
-              <Section id={5} title="Data Security">
-                <p className="mb-4">We implement industry-standard security measures to protect your data:</p>
-                <Sub title="5.1 Technical Security">
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Encryption in Transit:</strong> All data transmitted via HTTPS/TLS 1.2+</span>,
-                    <span key="b"><strong className="text-slate-700">Password Security:</strong> Passwords hashed using bcrypt with salt</span>,
-                    <span key="c"><strong className="text-slate-700">Session Management:</strong> Secure JWT tokens with 24-hour expiration</span>,
-                    <span key="d"><strong className="text-slate-700">CAPTCHA Protection:</strong> Google reCAPTCHA v3 on sensitive forms</span>,
-                    <span key="e"><strong className="text-slate-700">Account Lockout:</strong> Automatic lockout after failed login attempts</span>,
-                    <span key="f"><strong className="text-slate-700">Security Headers:</strong> HSTS, CSP, X-Frame-Options, and other protective headers</span>,
-                  ]} />
+              <Section id={4} title={t('s4.title')}>
+                <p className="mb-4">{t('s4.intro')}</p>
+                <Sub title={t('s4.sub1.title')}>
+                  <LabeledBullets items={t('s4.sub1.items', { returnObjects: true }) as { label: string; desc: string }[]} />
                 </Sub>
-                <Sub title="5.2 Access Controls">
-                  <Bullets items={['Role-based access control (RBAC)', 'Multi-factor authentication for sensitive actions', 'Regular security audits and penetration testing', 'Employee access limited to necessary data only']} />
+                <Sub title={t('s4.sub2.title')}>
+                  <LabeledBullets items={t('s4.sub2.items', { returnObjects: true }) as { label: string; desc: string }[]} />
                 </Sub>
-                <Sub title="5.3 Data Breach Response">
-                  <p>In the event of a data breach, we will notify affected users within 72 hours as required by GDPR and applicable laws.</p>
+                <Sub title={t('s4.sub3.title')}>
+                  <p>{t('s4.sub3.body')}</p>
+                </Sub>
+                <Sub title={t('s4.sub4.title')}>
+                  <p>{t('s4.sub4.body')}</p>
                 </Sub>
               </Section>
 
-              <Section id={6} title="Cookies and Tracking Technologies">
-                <p className="mb-4">We use cookies and similar technologies to enhance your experience:</p>
-                <Sub title="6.1 Essential Cookies">
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Authentication:</strong> Keep you logged in (JWT tokens)</span>,
-                    <span key="b"><strong className="text-slate-700">Session Management:</strong> Maintain your session state</span>,
-                    <span key="c"><strong className="text-slate-700">Security:</strong> Prevent CSRF attacks and fraud</span>,
-                  ]} />
+              <Section id={5} title={t('s5.title')}>
+                <p className="mb-4">{t('s5.intro')}</p>
+                <Sub title={t('s5.sub1.title')}>
+                  <LabeledBullets items={t('s5.sub1.items', { returnObjects: true }) as { label: string; desc: string }[]} />
                 </Sub>
-                <Sub title="6.2 Functional Cookies">
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Preferences:</strong> Remember your language and currency settings</span>,
-                    <span key="b"><strong className="text-slate-700">Affiliate Tracking:</strong> Track referrals for commission attribution (30-day cookie)</span>,
-                  ]} />
+                <Sub title={t('s5.sub2.title')}>
+                  <Bullets items={(t('s5.sub2.items', { returnObjects: true }) as string[])} />
                 </Sub>
-                <Sub title="6.3 Analytics Cookies (Optional)">
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Google Analytics:</strong> Track usage statistics (requires consent)</span>,
-                    <span key="b"><strong className="text-slate-700">Performance Monitoring:</strong> Measure page load times and errors</span>,
-                  ]} />
-                  <p>You can manage cookie preferences in your browser settings or through our cookie consent banner.</p>
+                <Sub title={t('s5.sub3.title')}>
+                  <p>{t('s5.sub3.body')}</p>
                 </Sub>
               </Section>
 
-              <Section id={7} title="Data Retention">
-                <p className="mb-3">We retain your data for as long as necessary to provide our services:</p>
-                <Bullets items={[
-                  <span key="a"><strong className="text-slate-700">Active Accounts:</strong> Data retained while account is active</span>,
-                  <span key="b"><strong className="text-slate-700">Inactive Accounts:</strong> Deleted after 3 years of inactivity (or upon request)</span>,
-                  <span key="c"><strong className="text-slate-700">Transaction Records:</strong> Retained for 7 years for tax and accounting purposes</span>,
-                  <span key="d"><strong className="text-slate-700">Security Logs:</strong> Retained for 90 days</span>,
-                  <span key="e"><strong className="text-slate-700">Marketing Data:</strong> Deleted immediately upon consent withdrawal</span>,
-                ]} />
-                <p>When you request account deletion, we provide a 30-day grace period during which you can cancel the request.</p>
+              <Section id={6} title={t('s6.title')}>
+                <p className="mb-4">{t('s6.intro')}</p>
+                <Sub title={t('s6.sub1.title')}>
+                  <LabeledBullets items={t('s6.sub1.items', { returnObjects: true }) as { label: string; desc: string }[]} />
+                </Sub>
+                <Sub title={t('s6.sub2.title')}>
+                  <LabeledBullets items={t('s6.sub2.items', { returnObjects: true }) as { label: string; desc: string }[]} />
+                </Sub>
+                <Sub title={t('s6.sub3.title')}>
+                  <LabeledBullets items={t('s6.sub3.items', { returnObjects: true }) as { label: string; desc: string }[]} />
+                  <p>{t('s6.sub3.note')}</p>
+                </Sub>
               </Section>
 
-              <Section id={8} title="Your Rights (GDPR)">
-                <p className="mb-4">If you are in the European Union, you have the following rights under GDPR:</p>
+              <Section id={7} title={t('s7.title')}>
+                <p className="mb-3">{t('s7.intro')}</p>
+                <LabeledBullets items={t('s7.items', { returnObjects: true }) as { label: string; desc: string }[]} />
+                <p>{t('s7.note')}</p>
+              </Section>
+
+              <Section id={8} title={t('s8.title')}>
+                <p className="mb-4">{t('s8.intro')}</p>
                 <div className="space-y-3">
-                  {[
-                    { title: '8.1 Right to Access', body: 'You can request a copy of all personal data we hold about you. Use the Export Data feature in your account settings to download your data package.' },
-                    { title: '8.2 Right to Rectification', body: 'You can update inaccurate or incomplete data through your account settings or by contacting support.' },
-                    { title: '8.3 Right to Erasure ("Right to be Forgotten")', body: 'You can request deletion of your account and all associated data. Use the Delete Account feature in your account settings. We provide a 30-day grace period before permanent deletion.' },
-                    { title: '8.4 Right to Data Portability', body: 'You can export your data in a machine-readable format (JSON) for transfer to another service.' },
-                    { title: '8.5 Right to Object', body: 'You can object to processing of your data for marketing purposes or based on legitimate interests.' },
-                    { title: '8.6 Right to Restrict Processing', body: 'You can request that we limit how we use your data in certain circumstances.' },
-                    { title: '8.7 Right to Withdraw Consent', body: 'You can withdraw consent for marketing communications or analytics tracking at any time through your account settings.' },
-                  ].map(({ title, body }) => (
+                  {(t('s8.rights', { returnObjects: true }) as { title: string; body: string }[]).map(({ title, body }) => (
                     <div key={title} className="rounded-md bg-slate-50 border border-slate-100 p-3">
                       <p className="text-xs font-semibold text-slate-700 mb-1">{title}</p>
                       <p className="text-xs text-slate-500">{body}</p>
@@ -266,27 +216,27 @@ export function PrivacyPolicyPage() {
                   ))}
                 </div>
                 <p className="mt-4 font-medium text-slate-700">
-                  To exercise any of these rights, please visit your account settings or contact us at <a href="mailto:privacy@bookproof.app" className="text-blue-600 hover:underline">privacy@bookproof.app</a>. We will respond within 30 days.
+                  {t('s8.contactNote')} <a href="mailto:privacy@bookproof.app" className="text-blue-600 hover:underline">privacy@bookproof.app</a>.
                 </p>
               </Section>
 
-              <Section id={9} title="International Data Transfers">
-                <p className="mb-3">BookProof operates globally, and your data may be transferred to and processed in countries outside your region. We ensure adequate protection through:</p>
-                <Bullets items={['Standard Contractual Clauses (SCCs) approved by the European Commission', 'Adequate safeguards as required by GDPR', 'Compliance with Privacy Shield principles where applicable']} />
+              <Section id={9} title={t('s9.title')}>
+                <p className="mb-3">{t('s9.intro')}</p>
+                <Bullets items={(t('s9.items', { returnObjects: true }) as string[])} />
               </Section>
 
-              <Section id={10} title="Children's Privacy">
-                <p>BookProof is not intended for users under 18 years of age. We do not knowingly collect personal information from children. If we become aware that a child has provided us with personal data, we will delete it immediately.</p>
+              <Section id={10} title={t('s10.title')}>
+                <p>{t('s10.body')}</p>
               </Section>
 
-              <Section id={11} title="Changes to This Privacy Policy">
-                <p className="mb-3">We may update this Privacy Policy from time to time. We will notify you of any material changes by:</p>
-                <Bullets items={['Posting the new policy on this page with an updated "Last Updated" date', 'Sending an email to your registered email address', 'Displaying a prominent notice on our platform']} />
-                <p>Your continued use of BookProof after the changes take effect constitutes acceptance of the revised policy.</p>
+              <Section id={11} title={t('s11.title')}>
+                <p className="mb-3">{t('s11.intro')}</p>
+                <Bullets items={(t('s11.items', { returnObjects: true }) as string[])} />
+                <p>{t('s11.note')}</p>
               </Section>
 
-              <Section id={12} title="Contact Us">
-                <p className="mb-3">If you have questions about this Privacy Policy or wish to exercise your rights, please contact us:</p>
+              <Section id={12} title={t('s12.title')}>
+                <p className="mb-3">{t('s12.intro')}</p>
                 <div className="rounded-md bg-slate-50 border border-slate-200 p-4 space-y-1.5">
                   <p><strong className="text-slate-700">Email:</strong> <a href="mailto:privacy@bookproof.app" className="text-blue-600 hover:underline">privacy@bookproof.app</a></p>
                   <p><strong className="text-slate-700">Support:</strong> <a href="mailto:support@bookproof.app" className="text-blue-600 hover:underline">support@bookproof.app</a></p>
@@ -297,8 +247,8 @@ export function PrivacyPolicyPage() {
                 </div>
               </Section>
 
-              <Section id={13} title="EU Supervisory Authority">
-                <p>If you are in the European Union and believe we have not adequately addressed your concerns, you have the right to lodge a complaint with your local data protection supervisory authority.</p>
+              <Section id={13} title={t('s13.title')}>
+                <p>{t('s13.body')}</p>
               </Section>
 
               {/* Footer */}
@@ -309,7 +259,7 @@ export function PrivacyPolicyPage() {
                   className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 transition-colors disabled:opacity-60"
                 >
                   {isBackLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowLeft className="h-4 w-4" />}
-                  Go Back
+                  {t('goBack')}
                 </button>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -318,7 +268,7 @@ export function PrivacyPolicyPage() {
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 transition-colors disabled:opacity-60"
                   >
                     {isTermsLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ExternalLink className="h-3 w-3" />}
-                    Terms of Service
+                    {t('footer.termsOfService')}
                   </button>
                   <button
                     onClick={() => { if (!isCookiesLoading) { setIsCookiesLoading(true); navigate('/cookies'); } }}
@@ -326,7 +276,7 @@ export function PrivacyPolicyPage() {
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 transition-colors disabled:opacity-60"
                   >
                     {isCookiesLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ExternalLink className="h-3 w-3" />}
-                    Cookie Policy
+                    {t('footer.cookiePolicy')}
                   </button>
                 </div>
               </div>

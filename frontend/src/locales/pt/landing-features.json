@@ -1,0 +1,53 @@
+{
+  "badge": "Recursos da Plataforma",
+  "title": "Tudo Construído para o Sucesso do Seu Livro",
+  "subtitle": "A BookProof combina engajamento autêntico de leitores com tecnologia inteligente para entregar avaliações que ficam.",
+  "items": {
+    "authentic": {
+      "title": "Avaliações 100% Autênticas",
+      "description": "Leitores reais, opiniões reais. Cada avaliador é um humano verificado que genuinamente lê seu livro antes de escrever. Sem bots, sem avaliações terceirizadas, sem atalhos."
+    },
+    "distributed": {
+      "title": "Padrão de Distribuição Natural",
+      "description": "As avaliações são lançadas em lotes semanais que imitam padrões orgânicos de leitura. O algoritmo da Amazon vê um crescimento saudável e gradual de avaliações em vez de picos suspeitos."
+    },
+    "tracking": {
+      "title": "Acompanhamento de Campanha em Tempo Real",
+      "description": "Seu painel mostra cada avaliação entregue, pendente e em andamento. Detalhamentos semanais, gráficos de progresso e atualizações de status mantêm você sempre informado."
+    },
+    "flexible": {
+      "title": "Suporte para Ebook e Audiobook",
+      "description": "Seja publicando ebooks ou audiobooks, nós temos você coberto. Aloque créditos para qualquer formato ou divida-os entre ambos em uma única campanha."
+    },
+    "guarantee": {
+      "title": "Garantia de Substituição de 14 Dias",
+      "description": "Se a Amazon remover uma avaliação validada em até 14 dias, a substituímos a custo zero. Seu investimento está totalmente protegido com rastreamento automático de substituições."
+    },
+    "support": {
+      "title": "Suporte de Campanha Dedicado",
+      "description": "Nossa equipe monitora ativamente a saúde da sua campanha. Lidamos com problemas de leitores, vagas expiradas e escalações para que você nunca precise se preocupar com o processo."
+    },
+    "report": {
+      "title": "Relatórios Detalhados de Campanha",
+      "description": "Quando sua campanha termina, você recebe um relatório PDF profissional com distribuição de notas, feedback anônimo dos leitores e cronograma da campanha."
+    },
+    "keywords": {
+      "title": "Complemento de Pesquisa de Palavras-Chave",
+      "description": "Aumente a descoberta com nosso serviço de pesquisa de palavras-chave com IA. Obtenha palavras-chave otimizadas para seu título, subtítulo, descrição e campos de backend do Amazon KDP."
+    }
+  },
+  "trustStrip": {
+    "compliant": {
+      "label": "Conforme às Políticas da Amazon",
+      "desc": "A entrega progressiva imita o crescimento orgânico de avaliações"
+    },
+    "fast": {
+      "label": "Início Rápido de Campanha",
+      "desc": "Primeiros leitores atribuídos em dias após a criação da campanha"
+    },
+    "transparent": {
+      "label": "Total Transparência",
+      "desc": "Painel em tempo real com cada avaliação e atualização de status"
+    }
+  }
+}

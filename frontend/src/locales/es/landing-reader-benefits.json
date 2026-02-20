@@ -1,0 +1,53 @@
+{
+  "badge": "Para Lectores",
+  "title": "Lee Libros que Amas. Cobra por Tu Opinión Honesta.",
+  "subtitle": "Únete a una comunidad de lectores apasionados que descubren nuevos libros, ganan dinero real y ayudan a los autores a obtener la visibilidad que merecen.",
+  "items": {
+    "freeBooks": {
+      "title": "Libros y Audiolibros Gratis",
+      "description": "Obtén acceso ilimitado a ebooks y audiolibros en tus géneros favoritos sin costo. Lee nuevos lanzamientos antes que el público general."
+    },
+    "earnMoney": {
+      "title": "Gana Dinero Real",
+      "description": "Recibe pago por cada reseña validada en Amazon. Las reseñas de ebooks ganan una tarifa fija; las reseñas de audiolibros ganan más. Retira vía PayPal, transferencia bancaria, Wise o cripto."
+    },
+    "discoverBooks": {
+      "title": "Descubre Nuevos Autores",
+      "description": "Sé de los primeros en leer próximos lanzamientos de autores emergentes y establecidos. Expande tu lista de lectura mientras obtienes acceso anticipado."
+    },
+    "flexible": {
+      "title": "Lee a Tu Ritmo",
+      "description": "Cada asignación te da 72 horas para leer y reseñar. Aplica solo cuando tengas tiempo. Sin presión, sin cuotas — completamente flexible."
+    },
+    "community": {
+      "title": "Únete a una Comunidad Creciente",
+      "description": "Conéctate con miles de compañeros amantes de los libros. Nuestra comunidad de lectores abarca romance, thriller, ciencia ficción, no ficción y todos los géneros."
+    },
+    "payout": {
+      "title": "Pagos Fáciles y Rápidos",
+      "description": "Solicita un pago en cualquier momento que alcances el umbral mínimo. Nuestro equipo procesa pagos rápidamente. Múltiples métodos de pago disponibles en todo el mundo."
+    }
+  },
+  "howEarnings": {
+    "title": "Cómo Funcionan las Ganancias",
+    "ebook": "Por reseña de ebook",
+    "audiobook": "Por reseña de audiolibro",
+    "minimum": "Pago mínimo",
+    "methods": "PayPal, Transferencia Bancaria, Wise, Cripto",
+    "ebookLabel": "Reseña de Ebook",
+    "audiobookLabel": "Reseña de Audiolibro",
+    "paymentMethods": "Métodos de Pago"
+  },
+  "howToGet": {
+    "title": "Cómo Empezar como Lector",
+    "steps": [
+      "Crea tu cuenta gratuita de lector",
+      "Configura tus preferencias de género y formato",
+      "Navega los libros disponibles y aplica",
+      "Lee dentro de 72 horas y publica tu reseña",
+      "Gana dinero cuando tu reseña sea validada"
+    ]
+  },
+  "freeToJoin": "Gratis unirse. Sin compromiso.",
+  "cta": "Unirse como Lector"
+}

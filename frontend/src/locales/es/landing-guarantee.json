@@ -1,0 +1,33 @@
+{
+  "badge": "Nuestra Promesa",
+  "title": "La Garantía de Reemplazo de 14 Días de BookProof",
+  "subtitle": "Respaldamos cada reseña que entregamos. Si Amazon elimina una reseña validada dentro de los 14 días, la reemplazamos — completamente gratis.",
+  "items": {
+    "protected": {
+      "title": "Tu Inversión Está Protegida",
+      "description": "Cada crédito que gastas está respaldado por nuestra garantía. Si una reseña desaparece dentro de los 14 días posteriores a la validación, cuenta como un slot de reemplazo — sin créditos adicionales necesarios."
+    },
+    "monitored": {
+      "title": "Monitoreo Activo de Reseñas",
+      "description": "Nuestro equipo verifica regularmente todos los enlaces de reseñas validadas. Cuando se detecta una eliminación dentro de la ventana de garantía, iniciamos inmediatamente un reemplazo sin que tengas que pedir."
+    },
+    "automatic": {
+      "title": "Proceso de Reemplazo Automático",
+      "description": "El lector de reemplazo se extrae automáticamente de la cola de tu campaña. No necesitas hacer nada — manejamos todo el proceso de reasignación en segundo plano."
+    },
+    "transparent": {
+      "title": "Transparencia Total en los Informes",
+      "description": "Tu informe de campaña muestra el total de reseñas entregadas, reemplazos realizados y tasa de retención final. Siempre sabes exactamente qué pasó con cada reseña."
+    }
+  },
+  "timeline": {
+    "title": "Cronograma del Proceso de Reemplazo",
+    "steps": [
+      { "step": "1", "label": "Reseña Eliminada", "desc": "Amazon elimina una reseña validada" },
+      { "step": "2", "label": "Detectada", "desc": "Nuestro equipo detecta la eliminación en 14 días" },
+      { "step": "3", "label": "Iniciada", "desc": "Reemplazo asignado de la cola de campaña" },
+      { "step": "4", "label": "Completo", "desc": "Nueva reseña entregada sin costo adicional" }
+    ]
+  },
+  "note": "La garantía aplica a reseñas eliminadas dentro de los 14 días posteriores a la validación del administrador. Las reseñas eliminadas después de 14 días no están cubiertas pero representan un porcentaje muy pequeño de las reseñas entregadas."
+}

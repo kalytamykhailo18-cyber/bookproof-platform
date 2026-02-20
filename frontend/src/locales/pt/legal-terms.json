@@ -1,0 +1,115 @@
+{
+  "title": "Termos de Serviço",
+  "lastUpdated": "Última atualização: 21 de janeiro de 2026",
+  "badge": "Legal",
+  "toc": "Conteúdo",
+  "goBack": "Voltar",
+  "sections": [
+    "Aceitação dos Termos",
+    "Descrição do Serviço",
+    "Contas de Usuário",
+    "Termos para Autores",
+    "Termos para Leitores",
+    "Termos de Pagamento",
+    "Atividades Proibidas",
+    "Rescisão",
+    "Limitação de Responsabilidade",
+    "Alterações nos Termos",
+    "Fale Conosco"
+  ],
+  "s1": {
+    "title": "Aceitação dos Termos",
+    "body": "Ao acessar ou usar o BookProof (\"a Plataforma\"), você concorda em ficar vinculado a estes Termos de Serviço. Se você não concordar com estes termos, por favor não use a Plataforma."
+  },
+  "s2": {
+    "title": "Descrição do Serviço",
+    "intro": "O BookProof é uma plataforma que conecta Autores com Leitores com o objetivo de gerar avaliações autênticas de livros na Amazon. Nossos serviços incluem:",
+    "items": [
+      "Gerenciamento de campanhas de avaliações baseado em créditos para Autores",
+      "Distribuição de livros para Leitores qualificados",
+      "Rastreamento e verificação de avaliações",
+      "Programa de afiliados para parceiros de marketing"
+    ]
+  },
+  "s3": {
+    "title": "Contas de Usuário",
+    "intro": "Para usar nossa Plataforma, você deve criar uma conta e fornecer informações precisas. Você é responsável por:",
+    "items": [
+      "Manter a confidencialidade das credenciais de sua conta",
+      "Todas as atividades que ocorrem em sua conta",
+      "Nos notificar imediatamente sobre qualquer uso não autorizado"
+    ]
+  },
+  "s4": {
+    "title": "Termos para Autores",
+    "intro": "Como Autor, você concorda em:",
+    "items": [
+      "Enviar apenas livros que você possui ou tem direitos para distribuir",
+      "Fornecer informações precisas do livro e links da Amazon",
+      "Comprar créditos por meio de nosso sistema de pagamento oficial",
+      "Não tentar manipular ou incentivar conteúdo específico de avaliações",
+      "Aceitar que as avaliações são opiniões honestas dos Leitores"
+    ]
+  },
+  "s5": {
+    "title": "Termos para Leitores",
+    "intro": "Como Leitor, você concorda em:",
+    "items": [
+      "Ler os livros atribuídos completamente antes de avaliá-los",
+      "Enviar avaliações honestas e imparciais baseadas em sua experiência",
+      "Publicar avaliações na Amazon dentro do prazo especificado",
+      "Não aceitar pagamento de Autores fora da Plataforma",
+      "Manter uma conta Amazon válida e em bom estado"
+    ]
+  },
+  "s6": {
+    "title": "Termos de Pagamento",
+    "items": [
+      { "label": "Créditos", "text": "Os Autores compram créditos para financiar campanhas de avaliações. Os créditos não são reembolsáveis, exceto conforme especificado em nossa política de reembolso." },
+      { "label": "Pagamentos aos Leitores", "text": "Os Leitores são compensados por avaliações verificadas de acordo com as taxas de pagamento atuais exibidas na Plataforma." },
+      { "label": "Comissões de Afiliados", "text": "Os afiliados ganham comissões com base em indicações qualificadas conforme descrito nos termos do Programa de Afiliados." }
+    ]
+  },
+  "s7": {
+    "title": "Atividades Proibidas",
+    "intro": "Os usuários não podem:",
+    "items": [
+      "Enviar avaliações falsas ou manipular o conteúdo das avaliações",
+      "Criar múltiplas contas para fins fraudulentos",
+      "Compartilhar credenciais de conta com outras pessoas",
+      "Tentar contornar as medidas de segurança da Plataforma",
+      "Violar os Termos de Serviço da Amazon",
+      "Envolver-se em assédio ou comportamento abusivo"
+    ]
+  },
+  "s8": {
+    "title": "Rescisão",
+    "intro": "Reservamo-nos o direito de suspender ou encerrar contas que violem estes Termos. Após a rescisão:",
+    "items": [
+      "Créditos não utilizados podem ser confiscados",
+      "Pagamentos pendentes podem ser retidos durante a investigação",
+      "O acesso à Plataforma será revogado"
+    ]
+  },
+  "s9": {
+    "title": "Limitação de Responsabilidade",
+    "intro": "O BookProof é fornecido \"como está\" sem garantias de qualquer tipo. Não somos responsáveis por:",
+    "items": [
+      "Avaliações publicadas ou removidas pela Amazon",
+      "Ações tomadas pela Amazon em relação a contas de usuários",
+      "Perda de dados ou interrupções de serviço",
+      "Danos indiretos, incidentais ou consequentes"
+    ]
+  },
+  "s10": {
+    "title": "Alterações nos Termos",
+    "body": "Podemos atualizar estes Termos a qualquer momento. O uso continuado da Plataforma após as alterações constitui aceitação dos Termos atualizados."
+  },
+  "s11": {
+    "title": "Fale Conosco"
+  },
+  "footer": {
+    "privacyPolicy": "Política de Privacidade",
+    "cookiePolicy": "Política de Cookies"
+  }
+}

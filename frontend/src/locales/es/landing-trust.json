@@ -1,0 +1,29 @@
+{
+  "title": "Construido para Autores que se Toman su Carrera en Serio",
+  "subtitle": "Cada decisión que tomamos fue basada en lo mejor para tu ranking en Amazon, tus lectores y tu éxito a largo plazo.",
+  "items": {
+    "compliant": {
+      "title": "Compatible con Políticas de Amazon",
+      "description": "Nuestra entrega progresiva imita el crecimiento orgánico y natural de reseñas. Todos los lectores leen genuinamente antes de reseñar."
+    },
+    "global": {
+      "title": "Red Global de Lectores",
+      "description": "Lectores verificados en mercados de inglés, portugués y español. Disponible para libros en los tres idiomas."
+    },
+    "secure": {
+      "title": "Seguro y Privado",
+      "description": "Los archivos del libro se almacenan con acceso cifrado. Los lectores no pueden descargar audiolibros y el acceso a los archivos expira automáticamente."
+    },
+    "retention": {
+      "title": "Tasa de Retención de Reseñas del 94%",
+      "description": "Con una tasa de retención a largo plazo del 94%, tu listado en Amazon sigue creciendo mucho después de que termina la campaña."
+    }
+  },
+  "badges": [
+    { "label": "EPUB / PDF / MOBI", "desc": "Formatos de ebook" },
+    { "label": "Streaming MP3", "desc": "Entrega de audiolibros" },
+    { "label": "Pagos con Stripe", "desc": "Pago seguro" },
+    { "label": "Ventana de 72 Horas", "desc": "Plazo del lector" },
+    { "label": "Lotes Semanales", "desc": "Distribución natural" }
+  ]
+}

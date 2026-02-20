@@ -1,0 +1,15 @@
+{
+  "title": "Pronto para Lançar Seu Livro",
+  "titleHighlight": "ao Topo?",
+  "subtitle": "Junte-se a mais de 500 autores que confiam na BookProof para avaliações autênticas e duradouras na Amazon. Comece sua primeira campanha hoje e veja seus rankings crescerem.",
+  "cta": {
+    "author": "Começar como Autor",
+    "reader": "Entrar como Leitor"
+  },
+  "stats": [
+    { "value": "10.000+", "label": "Avaliações Entregues" },
+    { "value": "500+", "label": "Autores Satisfeitos" },
+    { "value": "94%", "label": "Retenção de Avaliações" },
+    { "value": "$0", "label": "Taxa de Configuração" }
+  ]
+}

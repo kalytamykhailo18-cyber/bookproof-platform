@@ -1,0 +1,53 @@
+{
+  "badge": "For Readers",
+  "title": "Read Books You Love. Get Paid for Your Honest Opinion.",
+  "subtitle": "Join a community of passionate readers who discover new books, earn real money, and help authors get the visibility they deserve.",
+  "items": {
+    "freeBooks": {
+      "title": "Free Books & Audiobooks",
+      "description": "Get unlimited access to ebooks and audiobooks in your favorite genres at zero cost. Read new releases before the general public."
+    },
+    "earnMoney": {
+      "title": "Earn Real Money",
+      "description": "Get paid for every validated Amazon review. Ebook reviews earn a fixed rate per book; audiobook reviews earn more. Withdraw via PayPal, bank transfer, Wise, or crypto."
+    },
+    "discoverBooks": {
+      "title": "Discover New Authors",
+      "description": "Be among the first to read upcoming releases from emerging and established authors. Expand your reading list while getting early access."
+    },
+    "flexible": {
+      "title": "Read on Your Schedule",
+      "description": "Each assignment gives you 72 hours to read and review. Apply only when you have time. No pressure, no quotas — completely flexible."
+    },
+    "community": {
+      "title": "Join a Growing Community",
+      "description": "Connect with thousands of fellow book lovers. Our reader community spans romance, thriller, science fiction, non-fiction, and every genre in between."
+    },
+    "payout": {
+      "title": "Easy, Fast Payouts",
+      "description": "Request a payout anytime you reach the minimum threshold. Our admin team processes payments promptly. Multiple payment methods supported worldwide."
+    }
+  },
+  "howEarnings": {
+    "title": "How Earnings Work",
+    "ebook": "Per ebook review",
+    "audiobook": "Per audiobook review",
+    "minimum": "Minimum payout",
+    "methods": "PayPal, Bank Transfer, Wise, Crypto",
+    "ebookLabel": "Ebook Review",
+    "audiobookLabel": "Audiobook Review",
+    "paymentMethods": "Payment Methods"
+  },
+  "howToGet": {
+    "title": "How to Get Started as a Reader",
+    "steps": [
+      "Create your free reader account",
+      "Set your genre & format preferences",
+      "Browse available books and apply",
+      "Read within 72 hours and post your review",
+      "Earn money when your review is validated"
+    ]
+  },
+  "freeToJoin": "Free to join. No commitment required.",
+  "cta": "Join as a Reader"
+}

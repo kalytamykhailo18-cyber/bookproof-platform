@@ -1,0 +1,82 @@
+{
+  "badge": "Preços",
+  "title": "Preços Simples e Transparentes",
+  "subtitle": "Sem assinaturas, sem taxas mensais. Compre créditos e use-os quando estiver pronto. Cada pacote inclui nossa garantia de 14 dias.",
+  "popular": "Mais Popular",
+  "perCredit": "por crédito",
+  "activate": "dias para ativar",
+  "infoRow": {
+    "reviews": "Avaliações",
+    "duration": "Duração",
+    "validity": "Validade"
+  },
+  "allInclude": {
+    "title": "Todos os Pacotes Incluem",
+    "items": [
+      "Garantia de Substituição de 14 Dias",
+      "Painel de Campanha em Tempo Real",
+      "Notificações e Atualizações por Email",
+      "Relatório PDF ao Concluir"
+    ]
+  },
+  "packages": {
+    "starter": {
+      "name": "Iniciante",
+      "credits": "25 Créditos",
+      "validity": "30 dias para ativar",
+      "reviews": "~25 avaliações de ebook",
+      "duration": "~5 semanas",
+      "features": [
+        "25 avaliações de ebook ou audiobook",
+        "Distribuição progressiva semanal",
+        "Garantia de substituição de 14 dias",
+        "Painel de campanha em tempo real",
+        "Suporte por email"
+      ]
+    },
+    "growth": {
+      "name": "Crescimento",
+      "credits": "50 Créditos",
+      "validity": "30 dias para ativar",
+      "reviews": "~50 avaliações",
+      "duration": "~5-6 semanas",
+      "features": [
+        "Todos os recursos Iniciante",
+        "Posição prioritária na fila",
+        "Taxa de distribuição semanal mais rápida",
+        "Relatório PDF de conclusão de campanha"
+      ],
+      "popular": true
+    },
+    "professional": {
+      "name": "Profissional",
+      "credits": "100 Créditos",
+      "validity": "30 dias para ativar",
+      "reviews": "~100 avaliações",
+      "duration": "~4-6 semanas",
+      "features": [
+        "Todos os recursos Crescimento",
+        "Velocidade máxima de distribuição",
+        "Complemento de pesquisa de palavras-chave incluído",
+        "Suporte prioritário e revisão de campanha"
+      ]
+    },
+    "enterprise": {
+      "name": "Empresarial",
+      "credits": "200+ Créditos",
+      "validity": "90-120 dias para ativar",
+      "reviews": "Volume personalizado",
+      "duration": "Cronograma personalizado",
+      "features": [
+        "Todos os recursos Profissional",
+        "Pacotes personalizados disponíveis",
+        "Gerente de conta dedicado",
+        "Descontos por volume",
+        "Entre em contato com vendas para preços"
+      ]
+    }
+  },
+  "cta": "Começar",
+  "enterpriseCta": "Contatar Vendas",
+  "note": "Preços definidos pelo administrador. Entre em contato para preços atuais dos pacotes."
+}

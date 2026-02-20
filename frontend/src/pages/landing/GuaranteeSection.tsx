@@ -98,25 +98,24 @@ export function GuaranteeSection() {
 
         {/* Process timeline */}
         <div className="landing-card-light rounded-md p-7 sm:p-8 mb-10 animate-fade-up-slow">
-          <h4 className="text-sm font-semibold text-slate-900 mb-8 text-center">Replacement Process Timeline</h4>
+          <h4 className="text-sm font-semibold text-slate-900 mb-8 text-center">{t('timeline.title')}</h4>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {[
-              { step: '1', label: 'Review Removed', desc: 'Amazon removes a validated review',              color: '#ec4899' },
-              { step: '2', label: 'Detected',        desc: 'Our team detects removal within 14 days',        color: '#f59e0b' },
-              { step: '3', label: 'Initiated',       desc: 'Replacement assigned from your campaign queue',  color: '#3b82f6' },
-              { step: '4', label: 'Complete',        desc: 'New review delivered at no extra cost',          color: '#10b981' },
-            ].map((item, ti) => (
-              <div key={ti} className="text-center animate-zoom-in-fast">
-                <div
-                  className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold mx-auto mb-3"
-                  style={{ background: `${item.color}14`, border: `2px solid ${item.color}35`, color: item.color }}
-                >
-                  {item.step}
+            {(t('timeline.steps', { returnObjects: true }) as Array<{ step: string; label: string; desc: string }>).map((item, ti) => {
+              const colors = ['#ec4899', '#f59e0b', '#3b82f6', '#10b981'];
+              const color = colors[ti];
+              return (
+                <div key={ti} className="text-center animate-zoom-in-fast">
+                  <div
+                    className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold mx-auto mb-3"
+                    style={{ background: `${color}14`, border: `2px solid ${color}35`, color }}
+                  >
+                    {item.step}
+                  </div>
+                  <p className="text-sm font-semibold text-slate-900 mb-1.5">{item.label}</p>
+                  <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
                 </div>
-                <p className="text-sm font-semibold text-slate-900 mb-1.5">{item.label}</p>
-                <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

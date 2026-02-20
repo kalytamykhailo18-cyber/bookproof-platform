@@ -68,9 +68,9 @@ export function HeroSection() {
             {/* Title */}
             <div className="animate-fade-up relative z-10">
               <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-extrabold leading-[1.08] tracking-tight">
-                <span className="text-white block">Get Authentic</span>
-                <span className="animate-text-shimmer block my-1">Amazon Reviews</span>
-                <span className="text-slate-500 block font-semibold text-2xl sm:text-3xl lg:text-[2rem] mt-2">That Last.</span>
+                <span className="text-white block">{t('titleLine1')}</span>
+                <span className="animate-text-shimmer block my-1">{t('titleLine2')}</span>
+                <span className="text-slate-500 block font-semibold text-2xl sm:text-3xl lg:text-[2rem] mt-2">{t('titleLine3')}</span>
               </h1>
               {/* Accent line */}
               <div className="mt-5 h-px w-32"

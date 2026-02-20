@@ -1,0 +1,15 @@
+{
+  "title": "¿Listo para Lanzar Tu Libro",
+  "titleHighlight": "a la Cima?",
+  "subtitle": "Únete a más de 500 autores que confían en BookProof para reseñas auténticas y duraderas en Amazon. Inicia tu primera campaña hoy y ve crecer tus rankings.",
+  "cta": {
+    "author": "Empezar como Autor",
+    "reader": "Unirse como Lector"
+  },
+  "stats": [
+    { "value": "10.000+", "label": "Reseñas Entregadas" },
+    { "value": "500+", "label": "Autores Satisfechos" },
+    { "value": "94%", "label": "Retención de Reseñas" },
+    { "value": "$0", "label": "Cuota de Configuración" }
+  ]
+}

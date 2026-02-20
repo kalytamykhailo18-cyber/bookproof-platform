@@ -1,0 +1,33 @@
+{
+  "badge": "Our Promise",
+  "title": "The BookProof 14-Day Replacement Guarantee",
+  "subtitle": "We stand behind every review we deliver. If Amazon removes a validated review within 14 days, we replace it — completely free.",
+  "items": {
+    "protected": {
+      "title": "Your Investment Is Protected",
+      "description": "Every credit you spend is backed by our guarantee. If a review disappears within 14 days of validation, it counts as a replacement slot — no additional credits needed."
+    },
+    "monitored": {
+      "title": "Active Review Monitoring",
+      "description": "Our team regularly checks all validated review links. When a removal is detected within the guarantee window, we immediately initiate a replacement without you having to ask."
+    },
+    "automatic": {
+      "title": "Automatic Replacement Process",
+      "description": "The replacement reader is pulled from your campaign queue automatically. You don't need to do anything — we handle the entire reassignment process behind the scenes."
+    },
+    "transparent": {
+      "title": "Full Transparency in Reports",
+      "description": "Your campaign report shows total reviews delivered, replacements made, and final retention rate. You always know exactly what happened with every review."
+    }
+  },
+  "timeline": {
+    "title": "Replacement Process Timeline",
+    "steps": [
+      { "step": "1", "label": "Review Removed", "desc": "Amazon removes a validated review" },
+      { "step": "2", "label": "Detected", "desc": "Our team detects removal within 14 days" },
+      { "step": "3", "label": "Initiated", "desc": "Replacement assigned from your campaign queue" },
+      { "step": "4", "label": "Complete", "desc": "New review delivered at no extra cost" }
+    ]
+  },
+  "note": "Guarantee applies to reviews removed within 14 days of admin validation. Reviews removed after 14 days are not covered but represent a very small percentage of delivered reviews."
+}

@@ -87,9 +87,9 @@ export function PricingSection() {
                 {/* Key info */}
                 <div className="space-y-2 mb-6 pb-6 border-b border-slate-200">
                   {[
-                    ['Reviews', t(`packages.${key}.reviews`)],
-                    ['Duration', t(`packages.${key}.duration`)],
-                    ['Validity', t(`packages.${key}.validity`)],
+                    [t('infoRow.reviews'), t(`packages.${key}.reviews`)],
+                    [t('infoRow.duration'), t(`packages.${key}.duration`)],
+                    [t('infoRow.validity'), t(`packages.${key}.validity`)],
                   ].map(([label, value]) => (
                     <div key={label} className="flex items-center justify-between">
                       <span className="text-xs text-slate-500">{label}</span>
@@ -144,15 +144,18 @@ export function PricingSection() {
 
         {/* All plans include strip */}
         <div className="mt-16 sm:mt-20 landing-card-light rounded-md p-7 sm:p-8 animate-zoom-in-slow">
-          <h4 className="text-sm font-semibold text-slate-900 text-center mb-7">All Packages Include</h4>
+          <h4 className="text-sm font-semibold text-slate-900 text-center mb-7">{t('allInclude.title')}</h4>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              { Icon: ShieldCheck, color: '#3b82f6', label: '14-Day Replacement Guarantee', anim: 'animate-fade-up-fast' },
-              { Icon: BarChart2,   color: '#8b5cf6', label: 'Real-Time Campaign Dashboard',  anim: 'animate-fade-up' },
-              { Icon: Bell,        color: '#f59e0b', label: 'Email Notifications & Updates', anim: 'animate-fade-up-light-slow' },
-              { Icon: FileText,    color: '#10b981', label: 'PDF Report on Completion',      anim: 'animate-fade-up-slow' },
-            ].map(({ Icon, color, label, anim }) => (
-              <div key={label} className={`flex items-center gap-3.5 ${anim}`}>
+            {(t('allInclude.items', { returnObjects: true }) as string[]).map((label, idx) => {
+              const iconData = [
+                { Icon: ShieldCheck, color: '#3b82f6', anim: 'animate-fade-up-fast' },
+                { Icon: BarChart2,   color: '#8b5cf6', anim: 'animate-fade-up' },
+                { Icon: Bell,        color: '#f59e0b', anim: 'animate-fade-up-light-slow' },
+                { Icon: FileText,    color: '#10b981', anim: 'animate-fade-up-slow' },
+              ][idx];
+              const { Icon, color, anim } = iconData;
+              return (
+              <div key={idx} className={`flex items-center gap-3.5 ${anim}`}>
                 <span
                   className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-md"
                   style={{ background: `${color}12`, border: `1px solid ${color}25` }}
@@ -161,7 +164,8 @@ export function PricingSection() {
                 </span>
                 <span className="text-xs text-slate-600 leading-relaxed">{label}</span>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

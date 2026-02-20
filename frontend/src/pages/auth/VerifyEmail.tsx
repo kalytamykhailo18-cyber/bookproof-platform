@@ -8,6 +8,7 @@ import { BookOpen, Mail, ShieldCheck, Clock, CheckCircle2, XCircle, Loader2 } fr
 
 export function VerifyEmailPage() {
   const { t } = useTranslation('auth.verifyEmail');
+  const { t: tAuth } = useTranslation('auth');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { startLoading, stopLoading } = useLoading();
@@ -41,10 +42,11 @@ export function VerifyEmailPage() {
     verify();
   }, [searchParams, startLoading, stopLoading, t]);
 
+  const leftPointsData = t('leftPoints', { returnObjects: true }) as { title: string; desc: string }[];
   const leftPoints = [
-    { icon: Mail,        color: '#3b82f6', title: 'Check your inbox',        desc: 'Look for an email from BookProof with a verification link' },
-    { icon: Clock,       color: '#f59e0b', title: 'Link expires in 24 hours', desc: 'Request a new link from the login page if it expires' },
-    { icon: ShieldCheck, color: '#10b981', title: 'Keeps your account safe', desc: 'Verification prevents unauthorized access to your account' },
+    { icon: Mail,        color: '#3b82f6', ...leftPointsData[0] },
+    { icon: Clock,       color: '#f59e0b', ...leftPointsData[1] },
+    { icon: ShieldCheck, color: '#10b981', ...leftPointsData[2] },
   ];
 
   const LeftPanel = () => (
@@ -65,18 +67,18 @@ export function VerifyEmailPage() {
           </div>
           <span className="text-white font-bold text-xl tracking-tight cursor-pointer" onClick={() => navigate('/')}>BookProof</span>
         </div>
-        <p className="text-slate-500 text-xs">The Amazon Review Platform for Authors</p>
+        <p className="text-slate-500 text-xs">{tAuth('common.tagline')}</p>
       </div>
 
       {/* Main */}
       <div className="relative space-y-10">
         <div>
           <h2 className="text-3xl font-bold text-white leading-tight mb-4">
-            Almost there —<br />
-            <span className="text-blue-400">verify your email</span>
+            {t('leftHeading')}<br />
+            <span className="text-blue-400">{t('leftHeadingHighlight')}</span>
           </h2>
           <p className="text-slate-400 text-base leading-relaxed">
-            Email verification keeps your account secure and ensures you receive important campaign updates.
+            {t('leftSubtitle')}
           </p>
         </div>
         <div className="space-y-4">
@@ -98,7 +100,7 @@ export function VerifyEmailPage() {
       {/* Bottom */}
       <div className="relative">
         <p className="text-xs text-slate-600">
-          After verification, you'll have full access to campaigns, credits, and reporting.
+          {t('leftBottomNote')}
         </p>
       </div>
     </div>
@@ -179,7 +181,7 @@ export function VerifyEmailPage() {
           {/* Trust signals */}
           {status !== 'verifying' && (
             <div className="mt-5 flex flex-wrap justify-center gap-4">
-              {['Secure Verification', 'Expires in 24h', 'HTTPS Encrypted'].map((label) => (
+              {(t('trustSignals', { returnObjects: true }) as string[]).map((label) => (
                 <div key={label} className="flex items-center gap-1.5 text-gray-400 text-xs">
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                   {label}

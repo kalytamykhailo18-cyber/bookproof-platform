@@ -146,15 +146,15 @@ export function StatsSection() {
               <Star size={17} style={{ color: '#60a5fa' }} />
             </div>
             <div>
-              <p className="text-white font-semibold text-sm">Trusted by 500+ authors worldwide</p>
-              <p className="text-slate-400 text-xs">Romance, thriller, sci-fi, non-fiction and every genre in between</p>
+              <p className="text-white font-semibold text-sm">{t('trustBanner.text')}</p>
+              <p className="text-slate-400 text-xs">{t('trustBanner.subtext')}</p>
             </div>
           </div>
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, j) => (
               <Star key={j} size={15} className="text-yellow-400 fill-yellow-400" />
             ))}
-            <span className="text-slate-300 text-sm font-semibold ml-2">4.9/5 average rating</span>
+            <span className="text-slate-300 text-sm font-semibold ml-2">{t('trustBanner.rating')}</span>
           </div>
         </div>
       </div>

@@ -1,0 +1,53 @@
+{
+  "badge": "FAQ",
+  "title": "Frequently Asked Questions",
+  "subtitle": "Everything you need to know about BookProof's review platform.",
+  "stillHave": {
+    "title": "Still have questions?",
+    "desc": "Our team is happy to help you find the answers you need.",
+    "email": "Email Support",
+    "contact": "View All Contact Options"
+  },
+  "items": {
+    "q1": {
+      "question": "How does BookProof work exactly?",
+      "answer": "BookProof connects authors with verified readers who love their genre. You purchase credits, create a campaign for your book, upload your files, and we handle distribution. Readers receive access in weekly batches, read your book within 72 hours, and post an honest Amazon review. You receive a campaign report when all reviews are delivered."
+    },
+    "q2": {
+      "question": "Are these reviews against Amazon's Terms of Service?",
+      "answer": "Our readers genuinely read your books and provide honest feedback based on their real experience. We follow all Amazon policies and ensure reviews appear organic through natural weekly distribution patterns. Reviews are not incentivized in ways that violate Amazon's policies — readers are compensated for their time reading, not for leaving positive reviews."
+    },
+    "q3": {
+      "question": "How long does it take to start getting reviews?",
+      "answer": "After your campaign is created and approved, the first batch of readers typically receives access within the first week. Reviews are then delivered progressively over 4-10 weeks depending on your package size. This natural pacing helps maintain authenticity and avoids any unusual patterns that could trigger review flags."
+    },
+    "q4": {
+      "question": "What happens if Amazon removes a review?",
+      "answer": "We offer a 14-day replacement guarantee on all reviews. If a review is removed within 14 days of being validated, we replace it at no additional cost. Our team monitors all delivered reviews and initiates replacements automatically when a removal is detected within the guarantee window."
+    },
+    "q5": {
+      "question": "Can I choose which readers get my book?",
+      "answer": "Readers are automatically matched based on their genre preferences and format compatibility with your book. This automatic matching actually improves review authenticity — readers genuinely choose genres they enjoy, resulting in more engaged, thoughtful reviews. You cannot select specific readers, but the genre-matching system ensures quality."
+    },
+    "q6": {
+      "question": "What formats do you support?",
+      "answer": "We support ebooks in EPUB, PDF, and MOBI formats (up to 50MB) and audiobooks in MP3 format (up to 500MB). Credits are consumed differently: 1 credit per ebook review, 2 credits per audiobook review. You can split credits between both formats in a single campaign if your book is available in both."
+    },
+    "q7": {
+      "question": "How are readers verified and vetted?",
+      "answer": "All readers go through a registration process that verifies their email, content format preferences, and Amazon profile links. Readers must maintain a good completion record — those who miss deadlines or submit poor-quality reviews are removed from the platform. We also check for duplicate accounts and ensure reader authenticity."
+    },
+    "q8": {
+      "question": "Can I pause or cancel my campaign?",
+      "answer": "Yes, you can pause an active campaign at any time from your dashboard. Pausing stops new reader assignments while allowing readers who already received access to complete their reviews. Campaigns can be resumed at any time. Cancellation is available, but credits already allocated to readers in progress cannot be refunded."
+    },
+    "q9": {
+      "question": "What do I receive when my campaign is complete?",
+      "answer": "When all reviews are delivered and validated, you receive a detailed campaign report as a PDF. The report includes: total reviews delivered, star rating distribution chart, anonymous reader feedback for each review, weekly delivery timeline, and replacement statistics. The report is also permanently available in your dashboard."
+    },
+    "q10": {
+      "question": "How does keyword research work?",
+      "answer": "Our keyword research service uses AI to analyze your book's genre, description, target audience, and competing titles to generate optimized keywords. You receive a PDF report with 5-10 primary keywords, 10-15 secondary keywords, 15-20 long-tail phrases, and a complete implementation guide for Amazon KDP title, subtitle, description, and backend keyword fields."
+    }
+  }
+}

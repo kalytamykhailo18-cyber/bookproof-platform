@@ -13,6 +13,7 @@ import { BookOpen, FileText, Shield, Lock, CheckCircle2, Loader2, ShieldCheck, S
 
 export function AcceptTermsPage() {
   const { t } = useTranslation('auth.acceptTerms');
+  const { t: tAuth } = useTranslation('auth');
   const navigate = useNavigate();
   const { user, setUser, clearUser } = useAuthStore();
   const { startLoading, stopLoading } = useLoading();
@@ -51,11 +52,12 @@ export function AcceptTermsPage() {
     return null;
   }
 
+  const leftPointsData = t('leftPoints', { returnObjects: true }) as { title: string; desc: string }[];
   const leftPoints = [
-    { icon: FileText,    color: '#3b82f6', title: 'Transparent Rules',    desc: 'Clear and fair platform terms that protect everyone' },
-    { icon: ShieldCheck, color: '#10b981', title: 'Amazon Compliant',     desc: 'Our review process follows Amazons policies' },
-    { icon: Lock,        color: '#a78bfa', title: 'Data Privacy',         desc: 'Your information is encrypted and never sold' },
-    { icon: Star,        color: '#f59e0b', title: 'Account Protection',   desc: 'We enforce terms to keep the platform trustworthy' },
+    { icon: FileText,    color: '#3b82f6', ...leftPointsData[0] },
+    { icon: ShieldCheck, color: '#10b981', ...leftPointsData[1] },
+    { icon: Lock,        color: '#a78bfa', ...leftPointsData[2] },
+    { icon: Star,        color: '#f59e0b', ...leftPointsData[3] },
   ];
 
   return (
@@ -79,18 +81,18 @@ export function AcceptTermsPage() {
             </div>
             <span className="text-white font-bold text-xl tracking-tight cursor-pointer" onClick={() => navigate('/')}>BookProof</span>
           </div>
-          <p className="text-slate-500 text-xs">The Amazon Review Platform for Authors</p>
+          <p className="text-slate-500 text-xs">{tAuth('common.tagline')}</p>
         </div>
 
         {/* Main content */}
         <div className="relative space-y-10">
           <div>
             <h2 className="text-3xl font-bold text-white leading-tight mb-4">
-              Before you begin,<br />
-              <span className="text-purple-400">review the rules</span>
+              {t('leftHeading')}<br />
+              <span className="text-purple-400">{t('leftHeadingHighlight')}</span>
             </h2>
             <p className="text-slate-400 text-base leading-relaxed">
-              These terms keep our platform fair, safe, and Amazon-compliant for every author and reader.
+              {t('leftSubtitle')}
             </p>
           </div>
 
@@ -112,11 +114,7 @@ export function AcceptTermsPage() {
           </div>
 
           <div className="flex items-center gap-8 pt-2 border-t border-slate-800">
-            {[
-              { value: '8', label: 'Key Terms' },
-              { value: '100%', label: 'Policy Compliant' },
-              { value: 'GDPR', label: 'Data Protected' },
-            ].map(({ value, label }) => (
+            {(t('leftStats', { returnObjects: true }) as { value: string; label: string }[]).map(({ value, label }) => (
               <div key={label}>
                 <p className="text-2xl font-bold text-white">{value}</p>
                 <p className="text-xs text-slate-500 mt-0.5">{label}</p>
@@ -129,7 +127,7 @@ export function AcceptTermsPage() {
         <div className="relative">
           <div className="flex items-center gap-2 text-xs text-slate-600">
             <Lock className="h-3 w-3" />
-            Your acceptance is recorded securely on our servers.
+            {t('securityNote')}
           </div>
         </div>
       </div>
@@ -165,38 +163,12 @@ export function AcceptTermsPage() {
                 </div>
                 <div className="h-[220px] overflow-y-auto rounded-md border border-gray-200 bg-white p-4">
                   <div className="space-y-4 text-sm text-gray-500 leading-relaxed">
-                    <p>
-                      <strong className="text-gray-700">1. Acceptance of Terms</strong><br />
-                      By using BookProof, you agree to these terms of service. If you do not agree, please do not use our platform.
-                    </p>
-                    <p>
-                      <strong className="text-gray-700">2. Service Description</strong><br />
-                      BookProof connects authors with readers to facilitate authentic book reviews on Amazon. Authors purchase credits to initiate review campaigns for their books.
-                    </p>
-                    <p>
-                      <strong className="text-gray-700">3. Author Responsibilities</strong><br />
-                      Authors must provide accurate book information, high-quality materials, and comply with all Amazon policies regarding reviews.
-                    </p>
-                    <p>
-                      <strong className="text-gray-700">4. Review Authenticity</strong><br />
-                      All reviews facilitated through BookProof must be genuine and reflect the reader&apos;s honest opinion. Fake reviews are strictly prohibited.
-                    </p>
-                    <p>
-                      <strong className="text-gray-700">5. Payment and Credits</strong><br />
-                      Credits purchased are non-refundable except as specified in our refund policy. Credits expire 12 months from the purchase date.
-                    </p>
-                    <p>
-                      <strong className="text-gray-700">6. Privacy</strong><br />
-                      Your personal information is protected according to our Privacy Policy. We do not share your data with third parties without consent.
-                    </p>
-                    <p>
-                      <strong className="text-gray-700">7. Limitation of Liability</strong><br />
-                      BookProof is not responsible for review outcomes on Amazon or any consequences of using our service.
-                    </p>
-                    <p>
-                      <strong className="text-gray-700">8. Termination</strong><br />
-                      We reserve the right to terminate accounts that violate these terms.
-                    </p>
+                    {(t('termsContent', { returnObjects: true }) as { heading: string; body: string }[]).map(({ heading, body }) => (
+                      <p key={heading}>
+                        <strong className="text-gray-700">{heading}</strong><br />
+                        {body}
+                      </p>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -253,7 +225,7 @@ export function AcceptTermsPage() {
 
           {/* Trust signals */}
           <div className="mt-5 flex flex-wrap justify-center gap-4">
-            {['Secure & Encrypted', '100% Policy Compliant', 'GDPR Protected'].map((label) => (
+            {(t('trustSignals', { returnObjects: true }) as string[]).map((label) => (
               <div key={label} className="flex items-center gap-1.5 text-gray-400 text-xs">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                 {label}

@@ -1,0 +1,47 @@
+{
+  "badge": "Para Autores",
+  "title": "Todo lo que un Autor Necesita para Lanzar con Éxito",
+  "subtitle": "BookProof te da las herramientas, lectores e insights para llevar tu libro de invisible a influyente en Amazon.",
+  "items": {
+    "dashboard": {
+      "title": "Panel de Campaña Completo",
+      "description": "Monitorea cada aspecto de tu campaña en un solo lugar. Rastrea reseñas entregadas, créditos restantes, progreso de lectores e hitos semanales desde un panel intuitivo."
+    },
+    "reports": {
+      "title": "Informes Profesionales de Campaña",
+      "description": "Recibe un informe PDF detallado cuando termine tu campaña. Incluye gráficos de calificaciones de estrellas, retroalimentación anónima de lectores y una cronología completa de entrega de reseñas."
+    },
+    "genreMatch": {
+      "title": "Lectores Coincidentes por Género",
+      "description": "Tu libro solo se muestra a lectores que activamente leen tu género. Los autores de romance obtienen lectores de romance. Los escritores de thriller obtienen fanáticos del thriller."
+    },
+    "formats": {
+      "title": "Listo para Ebook y Audiolibro",
+      "description": "Lanza campañas para ebooks en formato EPUB, PDF o MOBI, o audiolibros en MP3. Incluso puedes dividir créditos entre ambos formatos dentro de una sola campaña."
+    },
+    "feedback": {
+      "title": "Retroalimentación Interna Anónima",
+      "description": "Antes de que termine la campaña, recibes los pensamientos honestos de los lectores sobre tu libro — ritmo, personajes, trama, calidad de escritura. Valiosos insights editoriales sin identificar al lector."
+    },
+    "keywordResearch": {
+      "title": "Servicio de Investigación de Palabras Clave",
+      "description": "Agrega nuestra investigación de palabras clave con IA a cualquier paquete. Obtén 5-10 palabras clave primarias, 15 términos secundarios y 20 frases de cola larga con una guía de implementación para Amazon KDP."
+    }
+  },
+  "cta": "Iniciar Tu Campaña",
+  "dashboardMock": {
+    "title": "Panel del Autor — Mis Campañas",
+    "stats": {
+      "credits": "Créditos Disponibles",
+      "campaigns": "Campañas Activas",
+      "reviews": "Reseñas Entregadas",
+      "completion": "Tasa de Completitud"
+    },
+    "status": {
+      "active": "Activo",
+      "complete": "Completo"
+    }
+  },
+  "socialProof": "Más de 500 autores ya lanzaron sus libros",
+  "noSubscription": "Sin suscripción. Paga por paquete de créditos."
+}

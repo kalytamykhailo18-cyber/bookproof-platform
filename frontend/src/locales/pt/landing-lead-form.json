@@ -1,0 +1,33 @@
+{
+  "badge": "Acesso Antecipado",
+  "successTitle": "Você está dentro!",
+  "noSpam": "Sem spam. Cancele quando quiser. Respeitamos sua privacidade.",
+  "title": "Obtenha Acesso Antecipado",
+  "subtitle": "Junte-se a milhares de autores que já usam a BookProof. Cadastre-se agora e obtenha preços exclusivos de lançamento.",
+  "fields": {
+    "name": {
+      "label": "Nome Completo",
+      "placeholder": "João Silva"
+    },
+    "email": {
+      "label": "Endereço de Email",
+      "placeholder": "joao@exemplo.com"
+    },
+    "userType": {
+      "label": "Eu sou...",
+      "options": {
+        "author": "Autor — Quero avaliações para meu livro",
+        "reader": "Leitor — Quero ganhar lendo",
+        "both": "Ambos — Escrevo e adoro ler"
+      }
+    },
+    "marketingConsent": {
+      "label": "Concordo em receber emails de marketing sobre atualizações e ofertas exclusivas da BookProof"
+    }
+  },
+  "cta": "Obter Acesso Antecipado",
+  "submitting": "Entrando...",
+  "success": "Em breve entraremos em contato com detalhes do acesso antecipado.",
+  "alreadySubscribed": "Você já está na nossa lista! Notificaremos quando o acesso antecipado abrir.",
+  "error": "Algo deu errado. Por favor, tente novamente."
+}

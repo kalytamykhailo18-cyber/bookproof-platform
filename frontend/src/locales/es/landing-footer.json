@@ -1,0 +1,30 @@
+{
+  "tagline": "Reseñas auténticas en Amazon, entregadas por lectores reales que aman los libros.",
+  "bottomBar": {
+    "terms": "Términos",
+    "privacy": "Privacidad",
+    "cookies": "Cookies"
+  },
+  "links": {
+    "product": {
+      "title": "Producto",
+      "features": "Características",
+      "pricing": "Precios",
+      "faq": "FAQ",
+      "howItWorks": "Cómo Funciona"
+    },
+    "company": {
+      "title": "Empresa",
+      "about": "Acerca de",
+      "contact": "Contacto",
+      "blog": "Blog"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Política de Privacidad",
+      "terms": "Términos de Servicio",
+      "cookies": "Política de Cookies"
+    }
+  },
+  "copyright": "© 2025 BookProof. Todos los derechos reservados."
+}

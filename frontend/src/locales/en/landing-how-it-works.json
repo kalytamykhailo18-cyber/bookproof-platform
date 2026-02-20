@@ -1,0 +1,48 @@
+{
+  "badge": "Simple Process",
+  "title": "From Zero Reviews to Bestseller in 4 Steps",
+  "subtitle": "Our streamlined system handles everything. You focus on writing — we handle the reviews.",
+  "startCta": "Start Your Campaign Today",
+  "steps": {
+    "purchase": {
+      "title": "Purchase Credits",
+      "description": "Choose a credit package that fits your marketing goals. Credits are flexible and never expire — use them across any book in your catalog.",
+      "details": [
+        "Select from 25 to 1000+ credits",
+        "Ebook or audiobook support",
+        "No hidden fees or commitments",
+        "Instant credit activation"
+      ]
+    },
+    "submit": {
+      "title": "Create Your Campaign",
+      "description": "Upload your book files, set your genre, and tell us about your target audience. Our system creates a fully configured campaign in minutes.",
+      "details": [
+        "Upload ebook (EPUB/PDF/MOBI) or audiobook (MP3)",
+        "Set primary and secondary genres",
+        "Configure credit allocation",
+        "Review campaign before launch"
+      ]
+    },
+    "distribute": {
+      "title": "We Match & Distribute",
+      "description": "BookProof matches your book with readers who love your genre. Access is granted progressively each week, creating a natural review pattern.",
+      "details": [
+        "Genre-matched reader selection",
+        "Progressive weekly distribution",
+        "72-hour reading window per reader",
+        "Automatic reassignment if needed"
+      ]
+    },
+    "reviews": {
+      "title": "Collect Genuine Reviews",
+      "description": "Readers submit their honest Amazon review plus internal feedback. You get a detailed campaign report and anonymous reader insights.",
+      "details": [
+        "Verified Amazon review links",
+        "Anonymous internal feedback report",
+        "Star rating distribution chart",
+        "Downloadable PDF campaign report"
+      ]
+    }
+  }
+}

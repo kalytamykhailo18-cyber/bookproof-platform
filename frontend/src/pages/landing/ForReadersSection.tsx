@@ -92,7 +92,7 @@ export function ForReadersSection() {
                     <BookMarked className="h-4 w-4 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500 mb-0.5">Ebook Review</p>
+                    <p className="text-xs text-slate-500 mb-0.5">{t('howEarnings.ebookLabel')}</p>
                     <p className="text-sm font-semibold text-slate-800">{t('howEarnings.ebook', 'Per ebook review')}</p>
                   </div>
                 </div>
@@ -108,7 +108,7 @@ export function ForReadersSection() {
                     <Wallet className="h-4 w-4 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500 mb-0.5">Audiobook Review</p>
+                    <p className="text-xs text-slate-500 mb-0.5">{t('howEarnings.audiobookLabel')}</p>
                     <p className="text-sm font-semibold text-slate-800">{t('howEarnings.audiobook', 'Per audiobook review')}</p>
                   </div>
                 </div>
@@ -121,7 +121,7 @@ export function ForReadersSection() {
                   <span className="text-sm font-semibold text-slate-900">$50</span>
                 </div>
                 <div className="animate-fade-left-fast">
-                  <p className="text-xs text-slate-500 mb-2.5">Payment Methods</p>
+                  <p className="text-xs text-slate-500 mb-2.5">{t('howEarnings.paymentMethods')}</p>
                   <div className="flex flex-wrap gap-2">
                     {['PayPal', 'Bank Transfer', 'Wise', 'Crypto'].map((m) => (
                       <span
@@ -139,15 +139,9 @@ export function ForReadersSection() {
 
             {/* Steps checklist */}
             <div className="landing-card-light rounded-md p-7 animate-zoom-in-light-slow">
-              <p className="text-sm font-semibold text-slate-900 mb-5">How to Get Started as a Reader</p>
+              <p className="text-sm font-semibold text-slate-900 mb-5">{t('howToGet.title')}</p>
               <div className="space-y-3.5">
-                {[
-                  'Create your free reader account',
-                  'Set your genre & format preferences',
-                  'Browse available books and apply',
-                  'Read within 72 hours and post your review',
-                  'Earn money when your review is validated',
-                ].map((step, si) => (
+                {(t('howToGet.steps', { returnObjects: true }) as string[]).map((step, si) => (
                   <div key={si} className="flex items-center gap-3 animate-fade-right-fast">
                     <div
                       className="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-sm"
@@ -171,7 +165,7 @@ export function ForReadersSection() {
                 {t('cta', 'Join as a Reader')}
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <p className="text-xs text-slate-400 mt-2.5 text-center">Free to join. No commitment required.</p>
+              <p className="text-xs text-slate-400 mt-2.5 text-center">{t('freeToJoin')}</p>
             </div>
           </div>
         </div>

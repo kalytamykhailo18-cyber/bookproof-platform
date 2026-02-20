@@ -105,7 +105,7 @@ export function TestimonialsSection() {
             {[...Array(5)].map((_, i) => (
               <Star key={i} size={18} className="text-yellow-400 fill-yellow-400" />
             ))}
-            <span className="text-slate-400 text-sm ml-2">4.9/5 from 500+ authors</span>
+            <span className="text-slate-400 text-sm ml-2">{t('rating')}</span>
           </div>
         </div>
 

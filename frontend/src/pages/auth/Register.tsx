@@ -83,6 +83,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 
 export function RegisterPage() {
   const { t } = useTranslation('auth.register');
+  const { t: tAuth } = useTranslation('auth');
   const navigate = useNavigate();
   const { setUser } = useAuthStore();
   const { startLoading, stopLoading } = useLoading();
@@ -170,28 +171,11 @@ export function RegisterPage() {
     }
   };
 
+  const leftRolesData = t('leftRoles', { returnObjects: true }) as { title: string; desc: string }[];
   const roles = [
-    {
-      key: 'AUTHOR',
-      icon: PenLine,
-      color: '#60a5fa',
-      title: 'Author',
-      desc: 'Launch your book with verified reviews',
-    },
-    {
-      key: 'READER',
-      icon: Headphones,
-      color: '#34d399',
-      title: 'Reader',
-      desc: 'Read books & earn per review',
-    },
-    {
-      key: 'AFFILIATE',
-      icon: Link2,
-      color: '#a78bfa',
-      title: 'Affiliate',
-      desc: 'Refer authors & earn commissions',
-    },
+    { key: 'AUTHOR',    icon: PenLine,    color: '#60a5fa', title: leftRolesData[0].title, desc: leftRolesData[0].desc },
+    { key: 'READER',    icon: Headphones, color: '#34d399', title: leftRolesData[1].title, desc: leftRolesData[1].desc },
+    { key: 'AFFILIATE', icon: Link2,      color: '#a78bfa', title: leftRolesData[2].title, desc: leftRolesData[2].desc },
   ];
 
   return (
@@ -220,18 +204,18 @@ export function RegisterPage() {
             </div>
             <span className="text-white font-bold text-xl tracking-tight cursor-pointer" onClick={() => navigate('/')}>BookProof</span>
           </div>
-          <p className="text-slate-500 text-xs">The Amazon Review Platform for Authors</p>
+          <p className="text-slate-500 text-xs">{tAuth('common.tagline')}</p>
         </div>
 
         {/* Main content */}
         <div className="relative space-y-10">
           <div>
             <h2 className="text-3xl font-bold text-white leading-tight mb-4">
-              Join the platform<br />
-              <span className="text-purple-400">built for books</span>
+              {t('leftHeading')}<br />
+              <span className="text-purple-400">{t('leftHeadingHighlight')}</span>
             </h2>
             <p className="text-slate-400 text-base leading-relaxed">
-              Whether you're an author, a reader, or a marketer — there's a place for you on BookProof.
+              {t('leftSubtitle')}
             </p>
           </div>
 
@@ -259,11 +243,7 @@ export function RegisterPage() {
 
           {/* Stats */}
           <div className="flex items-center gap-8 pt-2 border-t border-slate-800">
-            {[
-              { icon: Users,       value: '500+', label: 'Authors' },
-              { icon: Star,        value: '94%',  label: 'Retention' },
-              { icon: DollarSign,  value: '20%',  label: 'Affiliate Cut' },
-            ].map(({ icon: Icon, value, label }) => (
+            {(t('leftStats', { returnObjects: true }) as { value: string; label: string }[]).map(({ value, label }) => (
               <div key={label}>
                 <p className="text-2xl font-bold text-white">{value}</p>
                 <p className="text-xs text-slate-500 mt-0.5">{label}</p>
@@ -276,7 +256,7 @@ export function RegisterPage() {
         <div className="relative">
           <div className="flex items-center gap-2 text-xs text-slate-600">
             <Lock className="h-3 w-3" />
-            Your data is encrypted and never shared with third parties.
+            {t('dataPrivacyNote')}
           </div>
         </div>
       </div>
@@ -393,22 +373,22 @@ export function RegisterPage() {
                     <Label>{t('country') || 'Country'} *</Label>
                     <Select onValueChange={(value) => setValue('country', value)} disabled={isRegistering}>
                       <SelectTrigger className={errors.country ? 'border-destructive' : ''}>
-                        <SelectValue placeholder="Select country" />
+                        <SelectValue placeholder={t('selectCountryPlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="US">United States</SelectItem>
-                        <SelectItem value="GB">United Kingdom</SelectItem>
-                        <SelectItem value="CA">Canada</SelectItem>
-                        <SelectItem value="AU">Australia</SelectItem>
-                        <SelectItem value="BR">Brazil</SelectItem>
-                        <SelectItem value="MX">Mexico</SelectItem>
-                        <SelectItem value="ES">Spain</SelectItem>
-                        <SelectItem value="PT">Portugal</SelectItem>
-                        <SelectItem value="DE">Germany</SelectItem>
-                        <SelectItem value="FR">France</SelectItem>
-                        <SelectItem value="IT">Italy</SelectItem>
-                        <SelectItem value="IN">India</SelectItem>
-                        <SelectItem value="OTHER">Other</SelectItem>
+                        <SelectItem value="US">{t('countryUS')}</SelectItem>
+                        <SelectItem value="GB">{t('countryGB')}</SelectItem>
+                        <SelectItem value="CA">{t('countryCA')}</SelectItem>
+                        <SelectItem value="AU">{t('countryAU')}</SelectItem>
+                        <SelectItem value="BR">{t('countryBR')}</SelectItem>
+                        <SelectItem value="MX">{t('countryMX')}</SelectItem>
+                        <SelectItem value="ES">{t('countryES')}</SelectItem>
+                        <SelectItem value="PT">{t('countryPT')}</SelectItem>
+                        <SelectItem value="DE">{t('countryDE')}</SelectItem>
+                        <SelectItem value="FR">{t('countryFR')}</SelectItem>
+                        <SelectItem value="IT">{t('countryIT')}</SelectItem>
+                        <SelectItem value="IN">{t('countryIN')}</SelectItem>
+                        <SelectItem value="OTHER">{t('countryOther')}</SelectItem>
                       </SelectContent>
                     </Select>
                     {errors.country && <p className="text-sm text-destructive">{errors.country.message}</p>}
@@ -471,12 +451,12 @@ export function RegisterPage() {
                       <Label>{t('contentPreference') || 'Content Format Preference'} *</Label>
                       <Select onValueChange={(v) => setValue('contentPreference', v as 'EBOOK' | 'AUDIOBOOK' | 'BOTH')} disabled={isRegistering}>
                         <SelectTrigger className={errors.contentPreference ? 'border-destructive' : ''}>
-                          <SelectValue placeholder="Select preferred format" />
+                          <SelectValue placeholder={t('selectFormatPlaceholder')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="EBOOK">Ebook Only</SelectItem>
-                          <SelectItem value="AUDIOBOOK">Audiobook Only</SelectItem>
-                          <SelectItem value="BOTH">Both Formats</SelectItem>
+                          <SelectItem value="EBOOK">{t('contentPreferenceEbook')}</SelectItem>
+                          <SelectItem value="AUDIOBOOK">{t('contentPreferenceAudiobook')}</SelectItem>
+                          <SelectItem value="BOTH">{t('contentPreferenceBoth')}</SelectItem>
                         </SelectContent>
                       </Select>
                       {errors.contentPreference && <p className="text-sm text-destructive">{errors.contentPreference.message}</p>}
@@ -523,7 +503,7 @@ export function RegisterPage() {
                     <div className="space-y-1.5">
                       <Label>{t('socialMediaUrls') || 'Social Media URLs'}</Label>
                       <Input placeholder="https://twitter.com/you, https://instagram.com/you" {...register('socialMediaUrls')} disabled={isRegistering} />
-                      <p className="text-xs text-gray-400">Comma-separated (optional)</p>
+                      <p className="text-xs text-gray-400">{t('commaSeparatedHint')}</p>
                     </div>
 
                     <div className="space-y-1.5">
@@ -600,14 +580,14 @@ export function RegisterPage() {
                 {/* Legal note */}
                 <p className="flex items-center justify-center gap-1.5 text-xs text-gray-400">
                   <Lock className="h-3 w-3 flex-shrink-0" />
-                  By registering, you agree to our Terms of Service and Privacy Policy.
+                  {t('legalNote')}
                 </p>
               </div>
 
               {/* Divider */}
               <div className="flex items-center gap-3 my-6">
                 <div className="flex-1 h-px bg-gray-200" />
-                <span className="text-gray-400 text-xs">or</span>
+                <span className="text-gray-400 text-xs">{tAuth('common.or')}</span>
                 <div className="flex-1 h-px bg-gray-200" />
               </div>
 
@@ -626,11 +606,7 @@ export function RegisterPage() {
 
           {/* Trust signals */}
           <div className="mt-5 flex flex-wrap justify-center gap-4">
-            {[
-              { label: 'Secure & Encrypted' },
-              { label: '94% Review Retention' },
-              { label: 'Amazon Policy Compliant' },
-            ].map(({ label }) => (
+            {(t('trustSignals', { returnObjects: true }) as string[]).map((label) => (
               <div key={label} className="flex items-center gap-1.5 text-gray-400 text-xs">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                 {label}

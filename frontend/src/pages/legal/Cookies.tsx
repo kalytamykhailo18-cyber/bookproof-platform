@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { BookOpen, ArrowLeft, Loader2, Cookie, ExternalLink } from 'lucide-react';
-
-const SECTIONS = [
-  'What Are Cookies', 'Types of Cookies We Use', 'Cookie Duration',
-  'Third-Party Cookies', 'Managing Your Cookie Preferences',
-  'Do Not Track Signals', 'Updates to This Policy', 'Contact Us',
-];
 
 function Section({ id, title, children }: { id: number; title: string; children: React.ReactNode }) {
   return (
@@ -42,11 +37,26 @@ function Bullets({ items }: { items: React.ReactNode[] }) {
   );
 }
 
+function LabeledBullets({ items }: { items: { label: string; desc: string }[] }) {
+  return (
+    <Bullets
+      items={items.map(({ label, desc }, i) => (
+        <span key={i}><strong className="text-slate-700">{label}:</strong> {desc}</span>
+      ))}
+    />
+  );
+}
+
 export function CookiePolicyPage() {
+  const { t } = useTranslation('legalCookies');
   const navigate = useNavigate();
   const [isBackLoading, setIsBackLoading] = useState(false);
   const [isPrivacyLoading, setIsPrivacyLoading] = useState(false);
   const [isTermsLoading, setIsTermsLoading] = useState(false);
+
+  const sections = t('sections', { returnObjects: true }) as string[];
+  const tableHeader = t('s3.tableHeader', { returnObjects: true }) as { type: string; duration: string };
+  const tableRows = t('s3.rows', { returnObjects: true }) as { type: string; duration: string }[];
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -77,10 +87,10 @@ export function CookiePolicyPage() {
             style={{ background: 'rgba(16,185,129,0.15)', color: '#6ee7b7', border: '1px solid rgba(16,185,129,0.25)' }}
           >
             <Cookie className="h-3 w-3" />
-            Legal
+            {t('badge')}
           </div>
-          <h1 className="text-4xl font-bold text-white mb-3">Cookie Policy</h1>
-          <p className="text-slate-400 text-sm">Last updated: January 21, 2026</p>
+          <h1 className="text-4xl font-bold text-white mb-3">{t('title')}</h1>
+          <p className="text-slate-400 text-sm">{t('lastUpdated')}</p>
         </div>
       </div>
 
@@ -91,11 +101,11 @@ export function CookiePolicyPage() {
           {/* Sticky TOC */}
           <aside className="hidden lg:block w-56 flex-shrink-0">
             <div className="sticky top-6 bg-white rounded-md border border-gray-200 shadow-sm p-4">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Contents</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('toc')}</p>
               <nav className="space-y-1">
-                {SECTIONS.map((s, i) => (
+                {sections.map((s, i) => (
                   <a
-                    key={s}
+                    key={i}
                     href={`#section-${i + 1}`}
                     className="block text-xs text-gray-500 hover:text-blue-600 py-1 leading-snug transition-colors"
                   >
@@ -111,65 +121,44 @@ export function CookiePolicyPage() {
             <div className="h-1 w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-blue-400" />
             <div className="p-8 space-y-10">
 
-              <Section id={1} title="What Are Cookies">
+              <Section id={1} title={t('s1.title')}>
                 <div className="space-y-3">
-                  <p>Cookies are small text files that are stored on your device when you visit a website. They help the website remember your preferences and improve your browsing experience.</p>
-                  <p>BookProof uses cookies and similar technologies to provide, protect, and improve our platform.</p>
+                  <p>{t('s1.p1')}</p>
+                  <p>{t('s1.p2')}</p>
                 </div>
               </Section>
 
-              <Section id={2} title="Types of Cookies We Use">
-                <Sub title="2.1 Essential Cookies">
-                  <p className="mb-2">These cookies are necessary for the website to function properly. They cannot be disabled.</p>
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Authentication Token:</strong> Keeps you logged in securely</span>,
-                    <span key="b"><strong className="text-slate-700">Session ID:</strong> Maintains your session state</span>,
-                    <span key="c"><strong className="text-slate-700">CSRF Token:</strong> Protects against cross-site request forgery attacks</span>,
-                    <span key="d"><strong className="text-slate-700">Security Cookies:</strong> Help detect and prevent malicious activity</span>,
-                  ]} />
+              <Section id={2} title={t('s2.title')}>
+                <Sub title={t('s2.sub1.title')}>
+                  <p className="mb-2">{t('s2.sub1.intro')}</p>
+                  <LabeledBullets items={t('s2.sub1.items', { returnObjects: true }) as { label: string; desc: string }[]} />
                 </Sub>
-                <Sub title="2.2 Functional Cookies">
-                  <p className="mb-2">These cookies enable enhanced functionality and personalization.</p>
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Language Preference:</strong> Remembers your selected language (en, pt, es)</span>,
-                    <span key="b"><strong className="text-slate-700">Currency Preference:</strong> Remembers your preferred currency</span>,
-                    <span key="c"><strong className="text-slate-700">Theme Preference:</strong> Stores your light/dark mode preference</span>,
-                  ]} />
+                <Sub title={t('s2.sub2.title')}>
+                  <p className="mb-2">{t('s2.sub2.intro')}</p>
+                  <LabeledBullets items={t('s2.sub2.items', { returnObjects: true }) as { label: string; desc: string }[]} />
                 </Sub>
-                <Sub title="2.3 Affiliate Tracking Cookies">
-                  <p className="mb-2">Used to track referrals for our affiliate program.</p>
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">bp_aff_ref:</strong> Stores affiliate referral code (30-day expiration)</span>,
-                    <span key="b"><strong className="text-slate-700">Conversion Tracking:</strong> Attributes sign-ups to referring affiliates</span>,
-                  ]} />
+                <Sub title={t('s2.sub3.title')}>
+                  <p className="mb-2">{t('s2.sub3.intro')}</p>
+                  <LabeledBullets items={t('s2.sub3.items', { returnObjects: true }) as { label: string; desc: string }[]} />
                 </Sub>
-                <Sub title="2.4 Analytics Cookies (Optional)">
-                  <p className="mb-2">These cookies help us understand how visitors use our website. They are only set with your consent.</p>
-                  <Bullets items={[
-                    <span key="a"><strong className="text-slate-700">Google Analytics:</strong> Tracks page views, session duration, and user behavior</span>,
-                    <span key="b"><strong className="text-slate-700">Performance Monitoring:</strong> Helps us identify and fix technical issues</span>,
-                  ]} />
+                <Sub title={t('s2.sub4.title')}>
+                  <p className="mb-2">{t('s2.sub4.intro')}</p>
+                  <LabeledBullets items={t('s2.sub4.items', { returnObjects: true }) as { label: string; desc: string }[]} />
                 </Sub>
               </Section>
 
-              <Section id={3} title="Cookie Duration">
-                <p className="mb-3">Cookies have different lifespans depending on their purpose:</p>
+              <Section id={3} title={t('s3.title')}>
+                <p className="mb-3">{t('s3.intro')}</p>
                 <div className="rounded-md border border-gray-200 overflow-hidden">
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="bg-slate-50 border-b border-gray-200">
-                        <th className="text-left px-4 py-2.5 font-semibold text-slate-700">Cookie Type</th>
-                        <th className="text-left px-4 py-2.5 font-semibold text-slate-700">Duration</th>
+                        <th className="text-left px-4 py-2.5 font-semibold text-slate-700">{tableHeader.type}</th>
+                        <th className="text-left px-4 py-2.5 font-semibold text-slate-700">{tableHeader.duration}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                      {[
-                        ['Session Cookies', 'Deleted when you close your browser'],
-                        ['Authentication Cookies', '7 days (or until you log out)'],
-                        ['Preference Cookies', '1 year'],
-                        ['Affiliate Cookies', '30 days'],
-                        ['Analytics Cookies', 'Up to 2 years'],
-                      ].map(([type, duration]) => (
+                      {tableRows.map(({ type, duration }) => (
                         <tr key={type} className="hover:bg-slate-50 transition-colors">
                           <td className="px-4 py-2.5 font-medium text-slate-700">{type}</td>
                           <td className="px-4 py-2.5 text-slate-500">{duration}</td>
@@ -180,38 +169,34 @@ export function CookiePolicyPage() {
                 </div>
               </Section>
 
-              <Section id={4} title="Third-Party Cookies">
-                <p className="mb-3">Some cookies are set by third-party services we use:</p>
-                <Bullets items={[
-                  <span key="a"><strong className="text-slate-700">Stripe:</strong> Payment processing and fraud prevention</span>,
-                  <span key="b"><strong className="text-slate-700">Google reCAPTCHA:</strong> Bot protection on forms</span>,
-                  <span key="c"><strong className="text-slate-700">Google Analytics:</strong> Website analytics (if enabled)</span>,
-                ]} />
+              <Section id={4} title={t('s4.title')}>
+                <p className="mb-3">{t('s4.intro')}</p>
+                <LabeledBullets items={t('s4.items', { returnObjects: true }) as { label: string; desc: string }[]} />
               </Section>
 
-              <Section id={5} title="Managing Your Cookie Preferences">
-                <p className="mb-4">You can control cookies in several ways:</p>
-                <Sub title="5.1 Browser Settings">
-                  <p>Most browsers allow you to block or delete cookies through their settings. Note that blocking essential cookies may prevent you from using certain features of our platform.</p>
+              <Section id={5} title={t('s5.title')}>
+                <p className="mb-4">{t('s5.intro')}</p>
+                <Sub title={t('s5.sub1.title')}>
+                  <p>{t('s5.sub1.body')}</p>
                 </Sub>
-                <Sub title="5.2 Cookie Consent Banner">
-                  <p>When you first visit our website, you can choose which optional cookies to accept through our consent banner.</p>
+                <Sub title={t('s5.sub2.title')}>
+                  <p>{t('s5.sub2.body')}</p>
                 </Sub>
-                <Sub title="5.3 Account Settings">
-                  <p>Logged-in users can manage their cookie preferences in their account settings.</p>
+                <Sub title={t('s5.sub3.title')}>
+                  <p>{t('s5.sub3.body')}</p>
                 </Sub>
               </Section>
 
-              <Section id={6} title="Do Not Track Signals">
-                <p>We respect Do Not Track (DNT) signals from your browser. When DNT is enabled, we will not set optional analytics cookies.</p>
+              <Section id={6} title={t('s6.title')}>
+                <p>{t('s6.body')}</p>
               </Section>
 
-              <Section id={7} title="Updates to This Policy">
-                <p>We may update this Cookie Policy from time to time. Any changes will be posted on this page with an updated revision date.</p>
+              <Section id={7} title={t('s7.title')}>
+                <p>{t('s7.body')}</p>
               </Section>
 
-              <Section id={8} title="Contact Us">
-                <p className="mb-3">If you have questions about our use of cookies, please contact us:</p>
+              <Section id={8} title={t('s8.title')}>
+                <p className="mb-3">{t('s8.intro')}</p>
                 <div className="rounded-md bg-slate-50 border border-slate-200 p-4">
                   <p><strong className="text-slate-700">Email:</strong> <a href="mailto:privacy@bookproof.app" className="text-blue-600 hover:underline">privacy@bookproof.app</a></p>
                 </div>
@@ -225,7 +210,7 @@ export function CookiePolicyPage() {
                   className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 transition-colors disabled:opacity-60"
                 >
                   {isBackLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowLeft className="h-4 w-4" />}
-                  Go Back
+                  {t('goBack')}
                 </button>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -234,7 +219,7 @@ export function CookiePolicyPage() {
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 transition-colors disabled:opacity-60"
                   >
                     {isPrivacyLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ExternalLink className="h-3 w-3" />}
-                    Privacy Policy
+                    {t('footer.privacyPolicy')}
                   </button>
                   <button
                     onClick={() => { if (!isTermsLoading) { setIsTermsLoading(true); navigate('/terms'); } }}
@@ -242,7 +227,7 @@ export function CookiePolicyPage() {
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 transition-colors disabled:opacity-60"
                   >
                     {isTermsLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ExternalLink className="h-3 w-3" />}
-                    Terms of Service
+                    {t('footer.termsOfService')}
                   </button>
                 </div>
               </div>

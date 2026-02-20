@@ -1,0 +1,247 @@
+{
+  "title": "Privacy Policy",
+  "lastUpdated": "Last updated: January 21, 2026",
+  "badge": "Legal",
+  "toc": "Contents",
+  "goBack": "Go Back",
+  "sections": [
+    "Introduction",
+    "Information We Collect",
+    "How We Use Your Information",
+    "How We Share Your Information",
+    "Data Security",
+    "Cookies and Tracking",
+    "Data Retention",
+    "Your Rights (GDPR)",
+    "International Data Transfers",
+    "Children's Privacy",
+    "Changes to This Policy",
+    "Contact Us",
+    "EU Supervisory Authority"
+  ],
+  "s1": {
+    "title": "Introduction",
+    "p1": "BookProof (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.",
+    "p2": "This policy applies to all users of the BookProof platform, including Authors, Readers, Affiliates, and Administrators.",
+    "gdprLabel": "GDPR Compliance:",
+    "gdprText": "For users in the European Union, we comply with the General Data Protection Regulation (GDPR). You have specific rights regarding your personal data as outlined in Section 8."
+  },
+  "s2": {
+    "title": "Information We Collect",
+    "sub1": {
+      "title": "2.1 Information You Provide",
+      "items": [
+        { "label": "Account Information", "desc": "Email, name, password, company name, phone number, country, preferred language" },
+        { "label": "Profile Information", "desc": "Bio, profile photo, content preferences" },
+        { "label": "Payment Information", "desc": "Credit card details (processed securely by Stripe), PayPal email for payouts" },
+        { "label": "Campaign Data", "desc": "Book titles, descriptions, cover images, ebook/audiobook files, synopsis documents" },
+        { "label": "Review Data", "desc": "Amazon profile links, review submissions, ratings" },
+        { "label": "Communication", "desc": "Messages, support requests, feedback" }
+      ]
+    },
+    "sub2": {
+      "title": "2.2 Automatically Collected Information",
+      "items": [
+        { "label": "Usage Data", "desc": "Pages visited, features used, time spent on platform" },
+        { "label": "Device Information", "desc": "IP address, browser type, operating system, device identifiers" },
+        { "label": "Cookies and Tracking", "desc": "Session cookies, authentication tokens, analytics data" },
+        { "label": "Security Logs", "desc": "Login attempts, account actions, API requests" }
+      ]
+    },
+    "sub3": {
+      "title": "2.3 Third-Party Information",
+      "items": [
+        { "label": "Payment Processors", "desc": "Transaction data from Stripe" },
+        { "label": "Amazon", "desc": "Publicly available review data for verification" },
+        { "label": "Analytics", "desc": "Usage statistics from Google Analytics (if enabled)" }
+      ]
+    }
+  },
+  "s3": {
+    "title": "How We Use Your Information",
+    "sub1": {
+      "title": "3.1 Service Delivery",
+      "items": [
+        "Create and manage your account",
+        "Process credit purchases and payments",
+        "Match authors with readers for campaigns",
+        "Deliver ebooks and audiobooks to readers",
+        "Process review submissions and verification",
+        "Handle payouts to readers and affiliates"
+      ]
+    },
+    "sub2": {
+      "title": "3.2 Communication",
+      "items": [
+        "Send transactional emails (account verification, password resets, receipts)",
+        "Notify you of campaign updates, review deadlines, and important account changes",
+        "Respond to support requests and inquiries",
+        "Send marketing communications (only with your consent)"
+      ]
+    },
+    "sub3": {
+      "title": "3.3 Platform Improvement",
+      "items": [
+        "Analyze usage patterns to improve user experience",
+        "Develop new features and services",
+        "Monitor platform performance and troubleshoot issues",
+        "Conduct research and analytics"
+      ]
+    },
+    "sub4": {
+      "title": "3.4 Security and Compliance",
+      "items": [
+        "Prevent fraud, spam, and abuse",
+        "Enforce our Terms of Service",
+        "Comply with legal obligations",
+        "Protect the rights and safety of our users"
+      ]
+    }
+  },
+  "s4": {
+    "title": "How We Share Your Information",
+    "intro": "We do not sell your personal information. We may share your data in the following circumstances:",
+    "sub1": {
+      "title": "4.1 Service Providers",
+      "items": [
+        { "label": "Stripe", "desc": "Payment processing" },
+        { "label": "Cloudflare R2", "desc": "File storage and delivery" },
+        { "label": "Resend", "desc": "Email delivery" },
+        { "label": "Upstash Redis", "desc": "Session management and caching" },
+        { "label": "Neon PostgreSQL", "desc": "Database hosting" },
+        { "label": "Sentry", "desc": "Error monitoring" }
+      ]
+    },
+    "sub2": {
+      "title": "4.2 Business Partners",
+      "items": [
+        { "label": "Authors and Readers", "desc": "Limited information shared to facilitate campaigns (book details, content preferences)" },
+        { "label": "Affiliates", "desc": "Commission data and conversion statistics" }
+      ]
+    },
+    "sub3": {
+      "title": "4.3 Legal Requirements",
+      "body": "We may disclose your information if required by law or in response to valid legal requests (subpoenas, court orders)."
+    },
+    "sub4": {
+      "title": "4.4 Business Transfers",
+      "body": "If BookProof is acquired or merged with another company, your information may be transferred to the new owner."
+    }
+  },
+  "s5": {
+    "title": "Data Security",
+    "intro": "We implement industry-standard security measures to protect your data:",
+    "sub1": {
+      "title": "5.1 Technical Security",
+      "items": [
+        { "label": "Encryption in Transit", "desc": "All data transmitted via HTTPS/TLS 1.2+" },
+        { "label": "Password Security", "desc": "Passwords hashed using bcrypt with salt" },
+        { "label": "Session Management", "desc": "Secure JWT tokens with 24-hour expiration" },
+        { "label": "CAPTCHA Protection", "desc": "Google reCAPTCHA v3 on sensitive forms" },
+        { "label": "Account Lockout", "desc": "Automatic lockout after failed login attempts" },
+        { "label": "Security Headers", "desc": "HSTS, CSP, X-Frame-Options, and other protective headers" }
+      ]
+    },
+    "sub2": {
+      "title": "5.2 Access Controls",
+      "items": [
+        "Role-based access control (RBAC)",
+        "Multi-factor authentication for sensitive actions",
+        "Regular security audits and penetration testing",
+        "Employee access limited to necessary data only"
+      ]
+    },
+    "sub3": {
+      "title": "5.3 Data Breach Response",
+      "body": "In the event of a data breach, we will notify affected users within 72 hours as required by GDPR and applicable laws."
+    }
+  },
+  "s6": {
+    "title": "Cookies and Tracking Technologies",
+    "intro": "We use cookies and similar technologies to enhance your experience:",
+    "sub1": {
+      "title": "6.1 Essential Cookies",
+      "items": [
+        { "label": "Authentication", "desc": "Keep you logged in (JWT tokens)" },
+        { "label": "Session Management", "desc": "Maintain your session state" },
+        { "label": "Security", "desc": "Prevent CSRF attacks and fraud" }
+      ]
+    },
+    "sub2": {
+      "title": "6.2 Functional Cookies",
+      "items": [
+        { "label": "Preferences", "desc": "Remember your language and currency settings" },
+        { "label": "Affiliate Tracking", "desc": "Track referrals for commission attribution (30-day cookie)" }
+      ]
+    },
+    "sub3": {
+      "title": "6.3 Analytics Cookies (Optional)",
+      "items": [
+        { "label": "Google Analytics", "desc": "Track usage statistics (requires consent)" },
+        { "label": "Performance Monitoring", "desc": "Measure page load times and errors" }
+      ],
+      "note": "You can manage cookie preferences in your browser settings or through our cookie consent banner."
+    }
+  },
+  "s7": {
+    "title": "Data Retention",
+    "intro": "We retain your data for as long as necessary to provide our services:",
+    "items": [
+      { "label": "Active Accounts", "desc": "Data retained while account is active" },
+      { "label": "Inactive Accounts", "desc": "Deleted after 3 years of inactivity (or upon request)" },
+      { "label": "Transaction Records", "desc": "Retained for 7 years for tax and accounting purposes" },
+      { "label": "Security Logs", "desc": "Retained for 90 days" },
+      { "label": "Marketing Data", "desc": "Deleted immediately upon consent withdrawal" }
+    ],
+    "note": "When you request account deletion, we provide a 30-day grace period during which you can cancel the request."
+  },
+  "s8": {
+    "title": "Your Rights (GDPR)",
+    "intro": "If you are in the European Union, you have the following rights under GDPR:",
+    "rights": [
+      { "title": "8.1 Right to Access", "body": "You can request a copy of all personal data we hold about you. Use the Export Data feature in your account settings to download your data package." },
+      { "title": "8.2 Right to Rectification", "body": "You can update inaccurate or incomplete data through your account settings or by contacting support." },
+      { "title": "8.3 Right to Erasure (\"Right to be Forgotten\")", "body": "You can request deletion of your account and all associated data. Use the Delete Account feature in your account settings. We provide a 30-day grace period before permanent deletion." },
+      { "title": "8.4 Right to Data Portability", "body": "You can export your data in a machine-readable format (JSON) for transfer to another service." },
+      { "title": "8.5 Right to Object", "body": "You can object to processing of your data for marketing purposes or based on legitimate interests." },
+      { "title": "8.6 Right to Restrict Processing", "body": "You can request that we limit how we use your data in certain circumstances." },
+      { "title": "8.7 Right to Withdraw Consent", "body": "You can withdraw consent for marketing communications or analytics tracking at any time through your account settings." }
+    ],
+    "contactNote": "To exercise any of these rights, please visit your account settings or contact us at"
+  },
+  "s9": {
+    "title": "International Data Transfers",
+    "intro": "BookProof operates globally, and your data may be transferred to and processed in countries outside your region. We ensure adequate protection through:",
+    "items": [
+      "Standard Contractual Clauses (SCCs) approved by the European Commission",
+      "Adequate safeguards as required by GDPR",
+      "Compliance with Privacy Shield principles where applicable"
+    ]
+  },
+  "s10": {
+    "title": "Children's Privacy",
+    "body": "BookProof is not intended for users under 18 years of age. We do not knowingly collect personal information from children. If we become aware that a child has provided us with personal data, we will delete it immediately."
+  },
+  "s11": {
+    "title": "Changes to This Privacy Policy",
+    "intro": "We may update this Privacy Policy from time to time. We will notify you of any material changes by:",
+    "items": [
+      "Posting the new policy on this page with an updated \"Last Updated\" date",
+      "Sending an email to your registered email address",
+      "Displaying a prominent notice on our platform"
+    ],
+    "note": "Your continued use of BookProof after the changes take effect constitutes acceptance of the revised policy."
+  },
+  "s12": {
+    "title": "Contact Us",
+    "intro": "If you have questions about this Privacy Policy or wish to exercise your rights, please contact us:"
+  },
+  "s13": {
+    "title": "EU Supervisory Authority",
+    "body": "If you are in the European Union and believe we have not adequately addressed your concerns, you have the right to lodge a complaint with your local data protection supervisory authority."
+  },
+  "footer": {
+    "termsOfService": "Terms of Service",
+    "cookiePolicy": "Cookie Policy"
+  }
+}

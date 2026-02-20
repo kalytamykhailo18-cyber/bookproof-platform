@@ -107,11 +107,11 @@ export function FeaturesSection() {
         {/* Trust strip */}
         <div className="mt-16 sm:mt-20 grid sm:grid-cols-3 gap-5 sm:gap-6">
           {[
-            { Icon: Lock,       color: '#60a5fa', label: 'Amazon Policy Compliant', desc: 'Progressive delivery mimics organic review growth',        anim: 'animate-fade-right-light-slow' },
-            { Icon: Zap,        color: '#fbbf24', label: 'Fast Campaign Start',     desc: 'First readers assigned within days of campaign creation',  anim: 'animate-fade-up-light-slow'    },
-            { Icon: BarChart3,  color: '#34d399', label: 'Full Transparency',       desc: 'Real-time dashboard with every review and status update',  anim: 'animate-fade-left-light-slow'  },
-          ].map(({ Icon, color, label, desc, anim }) => (
-            <div key={label} className={`card-golden-hover flex items-start gap-4 p-6 landing-card rounded-md ${anim}`}>
+            { Icon: Lock,      color: '#60a5fa', key: 'compliant', anim: 'animate-fade-right-light-slow' },
+            { Icon: Zap,       color: '#fbbf24', key: 'fast',      anim: 'animate-fade-up-light-slow'    },
+            { Icon: BarChart3, color: '#34d399', key: 'transparent', anim: 'animate-fade-left-light-slow' },
+          ].map(({ Icon, color, key, anim }) => (
+            <div key={key} className={`card-golden-hover flex items-start gap-4 p-6 landing-card rounded-md ${anim}`}>
               <div
                 className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-md mt-0.5"
                 style={{ background: `${color}15`, border: `1px solid ${color}28` }}
@@ -119,8 +119,8 @@ export function FeaturesSection() {
                 <Icon className="h-4 w-4" style={{ color }} />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white mb-1.5">{label}</p>
-                <p className="text-xs text-slate-500 leading-relaxed">{desc}</p>
+                <p className="text-sm font-semibold text-white mb-1.5">{t(`trustStrip.${key}.label`)}</p>
+                <p className="text-xs text-slate-500 leading-relaxed">{t(`trustStrip.${key}.desc`)}</p>
               </div>
             </div>
           ))}

@@ -1,0 +1,53 @@
+{
+  "badge": "Características de la Plataforma",
+  "title": "Todo Diseñado para el Éxito de Tu Libro",
+  "subtitle": "BookProof combina la participación auténtica de lectores con tecnología inteligente para entregar reseñas que permanecen.",
+  "items": {
+    "authentic": {
+      "title": "Reseñas 100% Auténticas",
+      "description": "Lectores reales, opiniones reales. Cada reseñador es un humano verificado que genuinamente lee tu libro antes de escribir. Sin bots, sin reseñas subcontratadas, sin atajos."
+    },
+    "distributed": {
+      "title": "Patrón de Distribución Natural",
+      "description": "Las reseñas se publican en lotes semanales que imitan los patrones orgánicos de lectura. El algoritmo de Amazon ve un crecimiento saludable y gradual de reseñas en lugar de picos sospechosos."
+    },
+    "tracking": {
+      "title": "Seguimiento de Campaña en Tiempo Real",
+      "description": "Tu panel muestra cada reseña entregada, pendiente y en progreso. Desgloses semanales, gráficos de progreso y actualizaciones de estado te mantienen siempre informado."
+    },
+    "flexible": {
+      "title": "Soporte para Ebook y Audiolibro",
+      "description": "Ya sea que publiques ebooks o audiolibros, te tenemos cubierto. Asigna créditos a cualquier formato o divídelos entre ambos dentro de una sola campaña."
+    },
+    "guarantee": {
+      "title": "Garantía de Reemplazo de 14 Días",
+      "description": "Si Amazon elimina una reseña validada dentro de los 14 días, la reemplazamos a costo cero. Tu inversión está completamente protegida con seguimiento automático de reemplazos."
+    },
+    "support": {
+      "title": "Soporte de Campaña Dedicado",
+      "description": "Nuestro equipo monitorea activamente la salud de tu campaña. Manejamos problemas de lectores, espacios vencidos y escalaciones para que nunca tengas que preocuparte por el proceso."
+    },
+    "report": {
+      "title": "Informes Detallados de Campaña",
+      "description": "Cuando tu campaña termina, recibes un informe PDF profesional con distribución de calificaciones, retroalimentación anónima de lectores y cronología de campaña."
+    },
+    "keywords": {
+      "title": "Complemento de Investigación de Palabras Clave",
+      "description": "Aumenta la descubribilidad con nuestro servicio de investigación de palabras clave impulsado por IA. Obtén palabras clave optimizadas para tu título, subtítulo, descripción y campos de backend de Amazon KDP."
+    }
+  },
+  "trustStrip": {
+    "compliant": {
+      "label": "Compatible con Políticas de Amazon",
+      "desc": "La entrega progresiva imita el crecimiento orgánico de reseñas"
+    },
+    "fast": {
+      "label": "Inicio de Campaña Rápido",
+      "desc": "Primeros lectores asignados en días tras la creación de la campaña"
+    },
+    "transparent": {
+      "label": "Total Transparencia",
+      "desc": "Panel en tiempo real con cada reseña y actualización de estado"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "badge": "Processo Simples",
+  "title": "De Zero Avaliações a Bestseller em 4 Passos",
+  "subtitle": "Nosso sistema otimizado cuida de tudo. Você foca em escrever — nós cuidamos das avaliações.",
+  "startCta": "Comece Sua Campanha Hoje",
+  "steps": {
+    "purchase": {
+      "title": "Compre Créditos",
+      "description": "Escolha um pacote de créditos que atenda aos seus objetivos de marketing. Os créditos são flexíveis e nunca expiram — use-os em qualquer livro do seu catálogo.",
+      "details": [
+        "Selecione de 25 a 1000+ créditos",
+        "Suporte para ebook ou audiobook",
+        "Sem taxas ocultas ou compromissos",
+        "Ativação instantânea de créditos"
+      ]
+    },
+    "submit": {
+      "title": "Crie Sua Campanha",
+      "description": "Faça upload dos arquivos do seu livro, defina o gênero e conte-nos sobre seu público-alvo. Nosso sistema cria uma campanha totalmente configurada em minutos.",
+      "details": [
+        "Upload de ebook (EPUB/PDF/MOBI) ou audiobook (MP3)",
+        "Defina gêneros primário e secundário",
+        "Configure a alocação de créditos",
+        "Revise a campanha antes de lançar"
+      ]
+    },
+    "distribute": {
+      "title": "Combinamos e Distribuímos",
+      "description": "A BookProof combina seu livro com leitores que amam seu gênero. O acesso é concedido progressivamente a cada semana, criando um padrão natural de avaliações.",
+      "details": [
+        "Seleção de leitores por gênero",
+        "Distribuição semanal progressiva",
+        "Janela de leitura de 72 horas por leitor",
+        "Reatribuição automática se necessário"
+      ]
+    },
+    "reviews": {
+      "title": "Receba Avaliações Genuínas",
+      "description": "Os leitores enviam sua avaliação honesta na Amazon mais feedback interno. Você recebe um relatório detalhado da campanha e insights anônimos dos leitores.",
+      "details": [
+        "Links verificados de avaliações na Amazon",
+        "Relatório de feedback interno anônimo",
+        "Gráfico de distribuição de notas",
+        "Relatório PDF baixável da campanha"
+      ]
+    }
+  }
+}

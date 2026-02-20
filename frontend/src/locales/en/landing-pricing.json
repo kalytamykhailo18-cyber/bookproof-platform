@@ -1,0 +1,82 @@
+{
+  "badge": "Pricing",
+  "title": "Simple, Transparent Pricing",
+  "subtitle": "No subscriptions, no monthly fees. Purchase credits and use them when you're ready. Every package includes our 14-day guarantee.",
+  "popular": "Most Popular",
+  "perCredit": "per credit",
+  "activate": "days to activate",
+  "infoRow": {
+    "reviews": "Reviews",
+    "duration": "Duration",
+    "validity": "Validity"
+  },
+  "allInclude": {
+    "title": "All Packages Include",
+    "items": [
+      "14-Day Replacement Guarantee",
+      "Real-Time Campaign Dashboard",
+      "Email Notifications & Updates",
+      "PDF Report on Completion"
+    ]
+  },
+  "packages": {
+    "starter": {
+      "name": "Starter",
+      "credits": "25 Credits",
+      "validity": "30 days to activate",
+      "reviews": "~25 ebook reviews",
+      "duration": "~5 weeks",
+      "features": [
+        "25 ebook or audiobook reviews",
+        "Weekly progressive distribution",
+        "14-day replacement guarantee",
+        "Real-time campaign dashboard",
+        "Email support"
+      ]
+    },
+    "growth": {
+      "name": "Growth",
+      "credits": "50 Credits",
+      "validity": "30 days to activate",
+      "reviews": "~50 reviews",
+      "duration": "~5-6 weeks",
+      "features": [
+        "All Starter features",
+        "Priority reader queue placement",
+        "Faster weekly distribution rate",
+        "Campaign completion PDF report"
+      ],
+      "popular": true
+    },
+    "professional": {
+      "name": "Professional",
+      "credits": "100 Credits",
+      "validity": "30 days to activate",
+      "reviews": "~100 reviews",
+      "duration": "~4-6 weeks",
+      "features": [
+        "All Growth features",
+        "Maximum distribution speed",
+        "Keyword research add-on included",
+        "Priority support & campaign review"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "credits": "200+ Credits",
+      "validity": "90-120 days to activate",
+      "reviews": "Custom volume",
+      "duration": "Custom timeline",
+      "features": [
+        "All Professional features",
+        "Custom packages available",
+        "Dedicated account manager",
+        "Volume discounts",
+        "Contact sales for pricing"
+      ]
+    }
+  },
+  "cta": "Get Started",
+  "enterpriseCta": "Contact Sales",
+  "note": "Prices set by admin. Contact us for current package pricing."
+}

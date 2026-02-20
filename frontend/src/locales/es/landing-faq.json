@@ -1,0 +1,53 @@
+{
+  "badge": "FAQ",
+  "title": "Preguntas Frecuentes",
+  "subtitle": "Todo lo que necesitas saber sobre la plataforma de reseñas de BookProof.",
+  "stillHave": {
+    "title": "¿Aún tienes preguntas?",
+    "desc": "Nuestro equipo está feliz de ayudarte a encontrar las respuestas que necesitas.",
+    "email": "Soporte por Email",
+    "contact": "Ver Todas las Opciones de Contacto"
+  },
+  "items": {
+    "q1": {
+      "question": "¿Cómo funciona exactamente BookProof?",
+      "answer": "BookProof conecta autores con lectores verificados que aman su género. Compras créditos, creas una campaña para tu libro, subes tus archivos y nosotros manejamos la distribución. Los lectores reciben acceso en lotes semanales, leen tu libro dentro de 72 horas y publican una reseña honesta en Amazon. Recibes un informe de campaña cuando todas las reseñas son entregadas."
+    },
+    "q2": {
+      "question": "¿Estas reseñas van contra los Términos de Servicio de Amazon?",
+      "answer": "Nuestros lectores genuinamente leen tus libros y proporcionan retroalimentación honesta basada en su experiencia real. Seguimos todas las políticas de Amazon y aseguramos que las reseñas parezcan orgánicas a través de patrones naturales de distribución semanal. Los lectores son compensados por su tiempo leyendo, no por dejar reseñas positivas."
+    },
+    "q3": {
+      "question": "¿Cuánto tiempo toma comenzar a obtener reseñas?",
+      "answer": "Después de que tu campaña se crea y aprueba, el primer lote de lectores típicamente recibe acceso dentro de la primera semana. Las reseñas se entregan progresivamente durante 4-10 semanas dependiendo del tamaño de tu paquete. Este ritmo natural ayuda a mantener la autenticidad y evitar patrones inusuales."
+    },
+    "q4": {
+      "question": "¿Qué pasa si Amazon elimina una reseña?",
+      "answer": "Ofrecemos una garantía de reemplazo de 14 días en todas las reseñas. Si una reseña se elimina dentro de los 14 días de ser validada, la reemplazamos sin costo adicional. Nuestro equipo monitorea todas las reseñas entregadas e inicia reemplazos automáticamente cuando se detecta una eliminación dentro de la ventana de garantía."
+    },
+    "q5": {
+      "question": "¿Puedo elegir qué lectores reciben mi libro?",
+      "answer": "Los lectores se emparejan automáticamente según sus preferencias de género y compatibilidad de formato con tu libro. Este emparejamiento automático mejora la autenticidad de las reseñas — los lectores genuinamente eligen géneros que disfrutan, resultando en reseñas más comprometidas y reflexivas."
+    },
+    "q6": {
+      "question": "¿Qué formatos soportan?",
+      "answer": "Soportamos ebooks en formatos EPUB, PDF y MOBI (hasta 50MB) y audiolibros en formato MP3 (hasta 500MB). Los créditos se consumen de manera diferente: 1 crédito por reseña de ebook, 2 créditos por reseña de audiolibro. Puedes dividir créditos entre ambos formatos en una sola campaña."
+    },
+    "q7": {
+      "question": "¿Cómo se verifican y examinan los lectores?",
+      "answer": "Todos los lectores pasan por un proceso de registro que verifica su correo electrónico, preferencias de formato de contenido y enlaces de perfil de Amazon. Los lectores deben mantener un buen historial de finalización — aquellos que incumplen plazos o envían reseñas de baja calidad son eliminados de la plataforma."
+    },
+    "q8": {
+      "question": "¿Puedo pausar o cancelar mi campaña?",
+      "answer": "Sí, puedes pausar una campaña activa en cualquier momento desde tu panel. Pausar detiene nuevas asignaciones de lectores mientras permite que los lectores que ya recibieron acceso completen sus reseñas. Las campañas se pueden reanudar en cualquier momento. La cancelación está disponible, pero los créditos ya asignados a lectores en progreso no pueden ser reembolsados."
+    },
+    "q9": {
+      "question": "¿Qué recibo cuando mi campaña está completa?",
+      "answer": "Cuando todas las reseñas se entregan y validan, recibes un informe detallado de campaña en PDF. El informe incluye: total de reseñas entregadas, gráfico de distribución de calificaciones, retroalimentación anónima de lectores para cada reseña, cronología semanal de entrega y estadísticas de reemplazos."
+    },
+    "q10": {
+      "question": "¿Cómo funciona la investigación de palabras clave?",
+      "answer": "Nuestro servicio de investigación de palabras clave usa IA para analizar el género, descripción, audiencia objetivo y títulos competidores de tu libro para generar palabras clave optimizadas. Recibes un informe PDF con 5-10 palabras clave primarias, 10-15 palabras clave secundarias, 15-20 frases de cola larga y una guía de implementación completa para Amazon KDP."
+    }
+  }
+}

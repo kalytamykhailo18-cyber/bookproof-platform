@@ -63,7 +63,7 @@ export function LeadCaptureSection() {
             >
               <CheckCircle className="h-8 w-8 text-green-400" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-3">You're In!</h3>
+            <h3 className="text-2xl font-bold text-white mb-3">{t('successTitle')}</h3>
             <p className="text-slate-400">{t('success')}</p>
           </div>
         ) : (
@@ -77,7 +77,7 @@ export function LeadCaptureSection() {
                 className="inline-block px-3.5 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider mb-5 animate-fade-down-fast"
                 style={{ background: 'rgba(59,130,246,0.15)', color: '#93c5fd', border: '1px solid rgba(59,130,246,0.3)' }}
               >
-                Early Access
+                {t('badge')}
               </span>
               <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 animate-fade-up-fast">
                 {t('title', 'Get Early Access')}
@@ -187,7 +187,7 @@ export function LeadCaptureSection() {
             </div>
 
             <p className="text-center text-xs text-slate-600 mt-5">
-              No spam. Unsubscribe anytime. We respect your privacy.
+              {t('noSpam')}
             </p>
           </div>
         )}

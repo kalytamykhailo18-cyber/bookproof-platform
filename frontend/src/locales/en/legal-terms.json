@@ -1,0 +1,115 @@
+{
+  "title": "Terms of Service",
+  "lastUpdated": "Last updated: January 21, 2026",
+  "badge": "Legal",
+  "toc": "Contents",
+  "goBack": "Go Back",
+  "sections": [
+    "Acceptance of Terms",
+    "Service Description",
+    "User Accounts",
+    "Author Terms",
+    "Reader Terms",
+    "Payment Terms",
+    "Prohibited Activities",
+    "Termination",
+    "Limitation of Liability",
+    "Changes to Terms",
+    "Contact Us"
+  ],
+  "s1": {
+    "title": "Acceptance of Terms",
+    "body": "By accessing or using BookProof (\"the Platform\"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Platform."
+  },
+  "s2": {
+    "title": "Service Description",
+    "intro": "BookProof is a platform that connects Authors with Readers for the purpose of generating authentic book reviews on Amazon. Our services include:",
+    "items": [
+      "Credit-based review campaign management for Authors",
+      "Book distribution to qualified Readers",
+      "Review tracking and verification",
+      "Affiliate program for marketing partners"
+    ]
+  },
+  "s3": {
+    "title": "User Accounts",
+    "intro": "To use our Platform, you must create an account and provide accurate information. You are responsible for:",
+    "items": [
+      "Maintaining the confidentiality of your account credentials",
+      "All activities that occur under your account",
+      "Notifying us immediately of any unauthorized use"
+    ]
+  },
+  "s4": {
+    "title": "Author Terms",
+    "intro": "As an Author, you agree to:",
+    "items": [
+      "Only submit books that you own or have rights to distribute",
+      "Provide accurate book information and Amazon links",
+      "Purchase credits through our official payment system",
+      "Not attempt to manipulate or incentivize specific review content",
+      "Accept that reviews are honest opinions of Readers"
+    ]
+  },
+  "s5": {
+    "title": "Reader Terms",
+    "intro": "As a Reader, you agree to:",
+    "items": [
+      "Read assigned books completely before reviewing",
+      "Submit honest, unbiased reviews based on your experience",
+      "Post reviews on Amazon within the specified deadline",
+      "Not accept payment from Authors outside the Platform",
+      "Maintain a valid Amazon account in good standing"
+    ]
+  },
+  "s6": {
+    "title": "Payment Terms",
+    "items": [
+      { "label": "Credits", "text": "Authors purchase credits to fund review campaigns. Credits are non-refundable except as specified in our refund policy." },
+      { "label": "Reader Payments", "text": "Readers are compensated for verified reviews according to the current payment rates displayed on the Platform." },
+      { "label": "Affiliate Commissions", "text": "Affiliates earn commissions based on qualified referrals as outlined in the Affiliate Program terms." }
+    ]
+  },
+  "s7": {
+    "title": "Prohibited Activities",
+    "intro": "Users may not:",
+    "items": [
+      "Submit fake reviews or manipulate review content",
+      "Create multiple accounts for fraudulent purposes",
+      "Share account credentials with others",
+      "Attempt to circumvent Platform security measures",
+      "Violate Amazon's Terms of Service",
+      "Engage in harassment or abusive behavior"
+    ]
+  },
+  "s8": {
+    "title": "Termination",
+    "intro": "We reserve the right to suspend or terminate accounts that violate these Terms. Upon termination:",
+    "items": [
+      "Unused credits may be forfeited",
+      "Pending payouts may be withheld pending investigation",
+      "Access to the Platform will be revoked"
+    ]
+  },
+  "s9": {
+    "title": "Limitation of Liability",
+    "intro": "BookProof is provided \"as is\" without warranties of any kind. We are not liable for:",
+    "items": [
+      "Reviews posted or removed by Amazon",
+      "Actions taken by Amazon regarding user accounts",
+      "Loss of data or service interruptions",
+      "Indirect, incidental, or consequential damages"
+    ]
+  },
+  "s10": {
+    "title": "Changes to Terms",
+    "body": "We may update these Terms at any time. Continued use of the Platform after changes constitutes acceptance of the updated Terms."
+  },
+  "s11": {
+    "title": "Contact Us"
+  },
+  "footer": {
+    "privacyPolicy": "Privacy Policy",
+    "cookiePolicy": "Cookie Policy"
+  }
+}

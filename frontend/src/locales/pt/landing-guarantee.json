@@ -1,0 +1,33 @@
+{
+  "badge": "Nossa Promessa",
+  "title": "A Garantia de Substituição de 14 Dias da BookProof",
+  "subtitle": "Garantimos cada avaliação que entregamos. Se a Amazon remover uma avaliação validada em até 14 dias, a substituímos — completamente grátis.",
+  "items": {
+    "protected": {
+      "title": "Seu Investimento Está Protegido",
+      "description": "Cada crédito que você gasta é respaldado pela nossa garantia. Se uma avaliação desaparecer em até 14 dias após a validação, conta como uma vaga de substituição — sem créditos adicionais necessários."
+    },
+    "monitored": {
+      "title": "Monitoramento Ativo de Avaliações",
+      "description": "Nossa equipe verifica regularmente todos os links de avaliações validadas. Quando uma remoção é detectada dentro da janela de garantia, iniciamos imediatamente uma substituição sem que você precise pedir."
+    },
+    "automatic": {
+      "title": "Processo de Substituição Automático",
+      "description": "O leitor substituto é retirado automaticamente da fila da sua campanha. Você não precisa fazer nada — cuidamos de todo o processo de reatribuição nos bastidores."
+    },
+    "transparent": {
+      "title": "Transparência Total nos Relatórios",
+      "description": "Seu relatório de campanha mostra o total de avaliações entregues, substituições realizadas e taxa de retenção final. Você sempre sabe exatamente o que aconteceu com cada avaliação."
+    }
+  },
+  "timeline": {
+    "title": "Cronograma do Processo de Substituição",
+    "steps": [
+      { "step": "1", "label": "Avaliação Removida", "desc": "A Amazon remove uma avaliação validada" },
+      { "step": "2", "label": "Detectada", "desc": "Nossa equipe detecta a remoção em até 14 dias" },
+      { "step": "3", "label": "Iniciada", "desc": "Substituto atribuído da fila da sua campanha" },
+      { "step": "4", "label": "Concluída", "desc": "Nova avaliação entregue sem custo extra" }
+    ]
+  },
+  "note": "A garantia se aplica a avaliações removidas em até 14 dias após a validação do administrador. Avaliações removidas após 14 dias não estão cobertas, mas representam uma porcentagem muito pequena das avaliações entregues."
+}

@@ -1,0 +1,47 @@
+{
+  "badge": "Para Autores",
+  "title": "Tudo que um Autor Precisa para Lançar com Sucesso",
+  "subtitle": "A BookProof oferece as ferramentas, leitores e insights para levar seu livro de invisível a influente na Amazon.",
+  "items": {
+    "dashboard": {
+      "title": "Painel de Campanha Completo",
+      "description": "Monitore cada aspecto da sua campanha em um só lugar. Rastreie avaliações entregues, créditos restantes, progresso dos leitores e marcos semanais em um painel intuitivo."
+    },
+    "reports": {
+      "title": "Relatórios Profissionais de Campanha",
+      "description": "Receba um relatório PDF detalhado quando sua campanha terminar. Inclui gráficos de estrelas, feedback anônimo dos leitores e um cronograma completo de entrega de avaliações."
+    },
+    "genreMatch": {
+      "title": "Leitores Correspondentes por Gênero",
+      "description": "Seu livro só é mostrado para leitores que leem ativamente seu gênero. Autores de romance recebem leitores de romance. Escritores de thriller recebem fãs de thriller."
+    },
+    "formats": {
+      "title": "Pronto para Ebook e Audiobook",
+      "description": "Lance campanhas para ebooks em formato EPUB, PDF ou MOBI, ou audiobooks em MP3. Você pode até dividir créditos entre ambos os formatos em uma única campanha."
+    },
+    "feedback": {
+      "title": "Feedback Interno Anônimo",
+      "description": "Antes do fim da campanha, você recebe os pensamentos honestos dos leitores sobre seu livro — ritmo, personagens, enredo, qualidade da escrita. Insights editoriais valiosos sem identificar o leitor."
+    },
+    "keywordResearch": {
+      "title": "Serviço de Pesquisa de Palavras-Chave",
+      "description": "Adicione nossa pesquisa de palavras-chave com IA a qualquer pacote. Obtenha 5-10 palavras-chave primárias, 15 termos secundários e 20 frases de cauda longa com um guia de implementação para o Amazon KDP."
+    }
+  },
+  "cta": "Iniciar Sua Campanha",
+  "dashboardMock": {
+    "title": "Painel do Autor — Minhas Campanhas",
+    "stats": {
+      "credits": "Créditos Disponíveis",
+      "campaigns": "Campanhas Ativas",
+      "reviews": "Avaliações Entregues",
+      "completion": "Taxa de Conclusão"
+    },
+    "status": {
+      "active": "Ativo",
+      "complete": "Completo"
+    }
+  },
+  "socialProof": "Mais de 500 autores já lançaram seus livros",
+  "noSubscription": "Sem assinatura. Pague por pacote de créditos."
+}

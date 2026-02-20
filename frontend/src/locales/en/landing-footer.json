@@ -1,0 +1,30 @@
+{
+  "tagline": "Authentic Amazon reviews, delivered by real readers who love books.",
+  "bottomBar": {
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "cookies": "Cookies"
+  },
+  "links": {
+    "product": {
+      "title": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "howItWorks": "How It Works"
+    },
+    "company": {
+      "title": "Company",
+      "about": "About",
+      "contact": "Contact",
+      "blog": "Blog"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy"
+    }
+  },
+  "copyright": "© 2025 BookProof. All rights reserved."
+}

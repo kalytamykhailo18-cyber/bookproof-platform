@@ -91,22 +91,22 @@ export function FAQSection() {
 
         {/* Still have questions */}
         <div className="mt-14 sm:mt-16 text-center landing-card-light rounded-md p-8 sm:p-10 animate-zoom-in-slow">
-          <h3 className="text-lg font-semibold text-slate-900 mb-2.5">Still have questions?</h3>
+          <h3 className="text-lg font-semibold text-slate-900 mb-2.5">{t('stillHave.title')}</h3>
           <p className="text-sm text-slate-600 mb-7">
-            Our team is happy to help you find the answers you need.
+            {t('stillHave.desc')}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href="mailto:support@bookproof.app"
               className="px-6 py-3 rounded-md text-sm font-medium text-white landing-btn-primary"
             >
-              Email Support
+              {t('stillHave.email')}
             </a>
             <a
               href="#contact"
               className="px-6 py-3 rounded-md text-sm font-medium text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200"
             >
-              View All Contact Options
+              {t('stillHave.contact')}
             </a>
           </div>
         </div>

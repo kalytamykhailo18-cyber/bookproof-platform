@@ -1,0 +1,42 @@
+{
+  "badge": "Resultados de la Plataforma",
+  "title": "Números que Hablan por Sí Mismos",
+  "subtitle": "Miles de autores confían en BookProof para hacer crecer su presencia en Amazon con reseñas reales y duraderas.",
+  "items": {
+    "reviews": {
+      "value": "10.000+",
+      "label": "Reseñas Entregadas",
+      "description": "Reseñas auténticas de lectores reales"
+    },
+    "authors": {
+      "value": "500+",
+      "label": "Autores Atendidos",
+      "description": "Autores de todos los géneros"
+    },
+    "readers": {
+      "value": "2.500+",
+      "label": "Lectores Verificados",
+      "description": "Comunidad activa de amantes de los libros"
+    },
+    "retention": {
+      "value": "94%",
+      "label": "Retención de Reseñas",
+      "description": "Reseñas que permanecen en Amazon"
+    },
+    "satisfaction": {
+      "value": "4.9/5",
+      "label": "Calificación de Autores",
+      "description": "Puntuación promedio de satisfacción"
+    },
+    "books": {
+      "value": "100+",
+      "label": "Libros Lanzados",
+      "description": "Campañas completadas con éxito"
+    }
+  },
+  "trustBanner": {
+    "text": "Con la confianza de más de 500 autores en todo el mundo",
+    "subtext": "Romance, thriller, ciencia ficción, no ficción y todos los géneros",
+    "rating": "Calificación promedio 4.9/5"
+  }
+}
