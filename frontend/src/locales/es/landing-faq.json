@@ -39,7 +39,11 @@
     },
     "q8": {
       "question": "¿Puedo pausar o cancelar mi campaña?",
-      "answer": "Sí, puedes pausar una campaña activa en cualquier momento desde tu panel. Pausar detiene nuevas asignaciones de lectores mientras permite que los lectores que ya recibieron acceso completen sus reseñas. Las campañas se pueden reanudar en cualquier momento. La cancelación está disponible, pero los créditos ya asignados a lectores en progreso no pueden ser reembolsados."
+      "answer": "Sí, puedes pausar una campaña activa en cualquier momento desde tu panel. Pausar detiene nuevas asignaciones de lectores mientras permite que los lectores que ya recibieron acceso completen sus reseñas. Las campañas se pueden reanudar en cualquier momento. Ten en cuenta que los créditos no son reembolsables una vez comprados — permanecen válidos dentro del período de validez de tu paquete y pueden usarse en múltiples campañas."
+    },
+    "q11": {
+      "question": "¿Cuál es la política de reembolso y cuánto tiempo son válidos los créditos?",
+      "answer": "Los créditos no son reembolsables una vez comprados. Los paquetes estándar (Inicial, Crecimiento, Profesional) tienen una ventana de validez de 180 días, y los paquetes Empresariales incluyen una ventana de validez de 360 días (1 año). Tus créditos no necesitan usarse en una sola campaña — puedes distribuirlos en múltiples campañas en cualquier momento dentro del período de validez."
     },
     "q9": {
       "question": "¿Qué recibo cuando mi campaña está completa?",

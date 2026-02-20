@@ -433,12 +433,8 @@
     "subtitle": "Nuestro equipo está listo para ayudarte a planear tu estrategia de lanzamiento del libro y obtener lo mejor de BookProof.",
     "email": {
       "title": "Soporte por Correo",
-      "description": "Envíanos tu pregunta y responderemos en 24 horas con una respuesta detallada."
-    },
-    "support": {
-      "title": "Soporte por Chat en Vivo",
-      "description": "Chatea con nuestros especialistas de campaña para ayuda inmediata con la configuración o preguntas.",
-      "hours": "Lunes – Viernes, 9AM – 6PM EST"
+      "description": "Envíanos tu pregunta y responderemos en 24 horas durante el horario comercial estándar (Lunes – Viernes).",
+      "hours": "Lunes – Viernes, horario comercial estándar"
     },
     "sales": {
       "title": "Empresarial y Paquetes Personalizados",

@@ -45,7 +45,7 @@
     "title": "Como os Créditos Funcionam",
     "ebook": "1 crédito = 1 avaliação de ebook",
     "audiobook": "2 créditos = 1 avaliação de audiolivro",
-    "validity": "Os créditos expiram com base no período de validade do pacote",
+    "validity": "Pacotes padrão válidos por 180 dias, pacotes Empresariais válidos por 360 dias. Os créditos podem ser usados em múltiplas campanhas dentro do período de validade. Os créditos não são reembolsáveis após a compra.",
     "secure": "Processamento de pagamento seguro via Stripe"
   }
 }

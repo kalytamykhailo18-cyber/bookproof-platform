@@ -39,7 +39,11 @@
     },
     "q8": {
       "question": "Posso pausar ou cancelar minha campanha?",
-      "answer": "Sim, você pode pausar uma campanha ativa a qualquer momento no seu painel. Pausar interrompe novas atribuições de leitores enquanto permite que leitores que já receberam acesso completem suas avaliações. As campanhas podem ser retomadas a qualquer momento. O cancelamento está disponível, mas os créditos já alocados a leitores em andamento não podem ser reembolsados."
+      "answer": "Sim, você pode pausar uma campanha ativa a qualquer momento no seu painel. Pausar interrompe novas atribuições de leitores enquanto permite que leitores que já receberam acesso completem suas avaliações. As campanhas podem ser retomadas a qualquer momento. Observe que os créditos não são reembolsáveis após a compra — eles permanecem válidos dentro do período de validade do seu pacote e podem ser usados em múltiplas campanhas."
+    },
+    "q11": {
+      "question": "Qual é a política de reembolso e por quanto tempo os créditos são válidos?",
+      "answer": "Os créditos não são reembolsáveis após a compra. Pacotes padrão (Iniciante, Crescimento, Profissional) têm uma janela de validade de 180 dias, e pacotes Empresariais incluem uma janela de validade de 360 dias (1 ano). Seus créditos não precisam ser usados em uma única campanha — você pode distribuí-los em múltiplas campanhas a qualquer momento dentro do período de validade."
     },
     "q9": {
       "question": "O que recebo quando minha campanha está completa?",

@@ -11,13 +11,6 @@ export function ContactSection() {
       color: '#3b82f6',
       href: 'mailto:support@bookproof.app',
       animation: 'animate-fade-right-fast',
-    },
-    {
-      image: '/images/cut-5.png',
-      key: 'support',
-      color: '#10b981',
-      href: '#',
-      animation: 'animate-fade-up-fast',
       hours: true,
     },
     {
@@ -62,7 +55,7 @@ export function ContactSection() {
         </div>
 
         {/* Contact channels */}
-        <div className="grid sm:grid-cols-3 gap-5 sm:gap-6 mb-14 sm:mb-16">
+        <div className="grid sm:grid-cols-2 gap-5 sm:gap-6 mb-14 sm:mb-16">
           {channels.map(({ image, key, color, href, animation, hours }) => (
             <div key={key} className={`rounded-md overflow-hidden group ${animation}`}>
               <img

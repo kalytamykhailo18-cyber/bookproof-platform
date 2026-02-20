@@ -23,7 +23,7 @@
     "starter": {
       "name": "Inicial",
       "credits": "25 Créditos",
-      "validity": "30 días para activar",
+      "validity": "180 días para activar",
       "reviews": "~25 reseñas de ebook",
       "duration": "~5 semanas",
       "features": [
@@ -37,7 +37,7 @@
     "growth": {
       "name": "Crecimiento",
       "credits": "50 Créditos",
-      "validity": "30 días para activar",
+      "validity": "180 días para activar",
       "reviews": "~50 reseñas",
       "duration": "~5-6 semanas",
       "features": [
@@ -51,7 +51,7 @@
     "professional": {
       "name": "Profesional",
       "credits": "100 Créditos",
-      "validity": "30 días para activar",
+      "validity": "180 días para activar",
       "reviews": "~100 reseñas",
       "duration": "~4-6 semanas",
       "features": [
@@ -64,7 +64,7 @@
     "enterprise": {
       "name": "Empresarial",
       "credits": "200+ Créditos",
-      "validity": "90-120 días para activar",
+      "validity": "360 días para activar",
       "reviews": "Volumen personalizado",
       "duration": "Cronograma personalizado",
       "features": [

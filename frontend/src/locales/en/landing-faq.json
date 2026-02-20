@@ -39,7 +39,11 @@
     },
     "q8": {
       "question": "Can I pause or cancel my campaign?",
-      "answer": "Yes, you can pause an active campaign at any time from your dashboard. Pausing stops new reader assignments while allowing readers who already received access to complete their reviews. Campaigns can be resumed at any time. Cancellation is available, but credits already allocated to readers in progress cannot be refunded."
+      "answer": "Yes, you can pause an active campaign at any time from your dashboard. Pausing stops new reader assignments while allowing readers who already received access to complete their reviews. Campaigns can be resumed at any time. Please note that credits are non-refundable once purchased — they remain valid within your package validity period and can be used across multiple campaigns."
+    },
+    "q11": {
+      "question": "What is the refund policy and how long are credits valid?",
+      "answer": "Credits are non-refundable once purchased. Standard packages (Starter, Growth, Professional) come with a 180-day validity window, and Enterprise packages include a 360-day (1-year) validity window. Your credits do not need to be used in a single campaign — you can spread them across multiple campaigns at any time within the validity period."
     },
     "q9": {
       "question": "What do I receive when my campaign is complete?",

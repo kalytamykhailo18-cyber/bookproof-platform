@@ -3,14 +3,9 @@
   "subtitle": "Our team is ready to help you plan your book launch strategy and get the most from BookProof.",
   "email": {
     "title": "Email Support",
-    "description": "Send us your question and we'll respond within 24 hours with a detailed answer.",
+    "description": "Send us your question and we'll respond within 24 hours during standard business hours (Monday – Friday).",
+    "hours": "Monday – Friday, standard business hours",
     "actionLabel": "Send Email"
-  },
-  "support": {
-    "title": "Live Chat Support",
-    "description": "Chat with our campaign specialists for immediate help with your campaign setup or questions.",
-    "hours": "Monday – Friday, 9AM – 6PM EST",
-    "actionLabel": "Start Chat"
   },
   "sales": {
     "title": "Enterprise & Custom Packages",
@@ -21,7 +16,6 @@
     "title": "Quick Response Promise",
     "items": [
       { "label": "Email Support", "time": "Within 24 hours" },
-      { "label": "Live Chat", "time": "Under 5 min (business hours)" },
       { "label": "Enterprise Inquiries", "time": "Within 2 business days" }
     ]
   },

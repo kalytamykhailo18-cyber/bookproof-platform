@@ -84,7 +84,7 @@ export function Header() {
                 <a
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-slate-300 hover:text-white transition-colors duration-200 font-medium whitespace-nowrap"
+                  className="text-sm text-[#ddd] hover:text-white transition-colors duration-200 font-medium whitespace-nowrap"
                 >
                   {link.label}
                 </a>
@@ -98,7 +98,7 @@ export function Header() {
             <div className="relative" ref={langRef}>
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1 px-2 py-1.5 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-200"
+                className="flex items-center gap-1 px-2 py-1.5 rounded-md text-sm font-medium text-[#ddd] hover:text-white hover:bg-white/10 transition-all duration-200"
               >
                 <Globe className="h-3.5 w-3.5 shrink-0" />
                 <span>{currentLang.label}</span>
@@ -116,11 +116,11 @@ export function Header() {
                       className={`block w-full text-left px-4 py-2 text-sm transition-colors duration-200 ${
                         lang.code === currentLang.code
                           ? 'text-blue-400 bg-blue-500/10'
-                          : 'text-slate-300 hover:text-white hover:bg-white/10'
+                          : 'text-[#ddd] hover:text-white hover:bg-white/10'
                       }`}
                     >
                       <span className="font-medium">{lang.label}</span>
-                      <span className="ml-2 text-slate-400 text-xs">{lang.name}</span>
+                      <span className="ml-2 text-[#ddd] text-xs">{lang.name}</span>
                     </button>
                   ))}
                 </div>
@@ -139,7 +139,7 @@ export function Header() {
               <>
                 <Link
                   to="/login"
-                  className="select-none px-3 py-1.5 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 visited:text-slate-300 focus:outline-none transition-all duration-200 whitespace-nowrap"
+                  className="select-none px-3 py-1.5 rounded-md text-sm font-medium text-[#ddd] hover:text-white hover:bg-white/10 visited:text-[#ddd] focus:outline-none transition-all duration-200 whitespace-nowrap"
                 >
                   {t('nav.login')}
                 </Link>
@@ -156,7 +156,7 @@ export function Header() {
           {/* Hamburger — below lg */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden shrink-0 text-slate-300 hover:text-white transition-colors p-1"
+            className="lg:hidden shrink-0 text-[#ddd] hover:text-white transition-colors p-1"
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -181,7 +181,7 @@ export function Header() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2.5 rounded-md text-sm text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-200"
+                    className="block px-3 py-2.5 rounded-md text-sm text-[#ddd] hover:text-white hover:bg-white/10 transition-all duration-200"
                   >
                     {link.label}
                   </a>
@@ -191,7 +191,7 @@ export function Header() {
 
             {/* Language row */}
             <div className="py-3 border-t border-white/10 flex items-center gap-2">
-              <Globe className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+              <Globe className="h-3.5 w-3.5 text-[#ddd] shrink-0" />
               {LANGUAGES.map((lang) => (
                 <button
                   key={lang.code}
@@ -199,7 +199,7 @@ export function Header() {
                   className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
                     lang.code === currentLang.code
                       ? 'text-blue-400 bg-blue-500/10'
-                      : 'text-slate-400 hover:text-white hover:bg-white/10'
+                      : 'text-[#ddd] hover:text-white hover:bg-white/10'
                   }`}
                 >
                   {lang.label}
@@ -222,7 +222,7 @@ export function Header() {
                 <>
                   <Link
                     to="/login"
-                    className="select-none text-center py-2.5 rounded-md text-sm font-medium text-slate-300 visited:text-slate-300 border border-white/20 hover:bg-white/10 focus:outline-none transition-all duration-200"
+                    className="select-none text-center py-2.5 rounded-md text-sm font-medium text-[#ddd] visited:text-[#ddd] border border-white/20 hover:bg-white/10 focus:outline-none transition-all duration-200"
                     onClick={() => setMobileOpen(false)}
                   >
                     {t('nav.login')}

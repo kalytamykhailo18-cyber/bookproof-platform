@@ -45,7 +45,7 @@
     "title": "How Credits Work",
     "ebook": "1 credit = 1 ebook review",
     "audiobook": "2 credits = 1 audiobook review",
-    "validity": "Credits expire based on package validity period",
+    "validity": "Standard packages valid for 180 days, Enterprise packages valid for 360 days. Credits can be used across multiple campaigns within the validity period. Credits are non-refundable once purchased.",
     "secure": "Secure payment processing via Stripe"
   }
 }
