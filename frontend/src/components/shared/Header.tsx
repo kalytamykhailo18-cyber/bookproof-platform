@@ -1,42 +1,246 @@
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { LanguageSelector } from './LanguageSelector';
-import { Button } from '@/components/ui/button';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Globe, Menu, X, ChevronDown, LayoutDashboard } from 'lucide-react';
+import i18n from '@/lib/i18n';
+import { useAuthStore } from '@/stores/authStore';
+
+const LANGUAGES = [
+  { code: 'en', label: 'EN', name: 'English' },
+  { code: 'es', label: 'ES', name: 'Español' },
+  { code: 'pt', label: 'PT', name: 'Português' },
+];
+
+function getDashboardPath(role: string): string {
+  switch (role) {
+    case 'ADMIN':     return '/admin/dashboard';
+    case 'AUTHOR':    return '/author';
+    case 'READER':    return '/reader';
+    case 'AFFILIATE': return '/affiliate/dashboard';
+    case 'CLOSER':    return '/closer';
+    default:          return '/';
+  }
+}
 
 export function Header() {
-  const { t, i18n } = useTranslation('common');
+  const { t } = useTranslation('common');
+  const location = useLocation();
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuthStore();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const currentLang = LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0];
+  const langRef = useRef<HTMLDivElement>(null);
+
+  const isLanding = location.pathname === '/';
+
+  // Anchor nav links — only shown on landing page
+  const navLinks = [
+    { href: '#features',     label: t('nav.features')   },
+    { href: '#how-it-works', label: t('nav.howItWorks') },
+    { href: '#pricing',      label: t('nav.pricing')    },
+    { href: '#faq',          label: t('nav.faq')        },
+  ];
+
+  useEffect(() => {
+    function handleOutside(e: MouseEvent) {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    }
+    if (langOpen) document.addEventListener('mousedown', handleOutside);
+    return () => document.removeEventListener('mousedown', handleOutside);
+  }, [langOpen]);
+
+  function handleLangChange(code: string) {
+    i18n.changeLanguage(code);
+    setLangOpen(false);
+    setMobileOpen(false);
+  }
+
+  const dashboardPath = user ? getDashboardPath(user.role) : '/';
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex animate-fade-right-fast items-center gap-2">
-          <span
-            className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-2xl font-bold text-transparent cursor-pointer"
-            onClick={() => navigate('/')}
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 border-b border-white/10"
+      style={{ background: 'rgba(8, 13, 26, 0.85)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+    >
+      {/* ── Desktop bar ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 gap-4">
+
+          {/* Logo */}
+          <div
+            className="flex items-center shrink-0 cursor-pointer"
+            onClick={() => isLanding ? window.scrollTo({ top: 0, behavior: 'smooth' }) : navigate('/')}
           >
-            {t('app.name')}
-          </span>
-        </div>
-        <div className="flex items-center gap-4">
-          <LanguageSelector />
-          <Button
-            type="button"
-            variant="ghost"
-            className="animate-fade-left-fast"
-            onClick={() => navigate(`/login`)}
+            <img src="/logo.png" alt="BookProof" className="h-14 w-auto px-1" />
+          </div>
+
+          {/* Nav links — lg+, landing page only */}
+          {isLanding && (
+            <div className="hidden lg:flex items-center gap-6 flex-1 justify-center">
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-slate-300 hover:text-white transition-colors duration-200 font-medium whitespace-nowrap"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          )}
+
+          {/* Right actions — lg+ */}
+          <div className="hidden lg:flex items-center gap-2 shrink-0">
+            {/* Language switcher */}
+            <div className="relative" ref={langRef}>
+              <button
+                onClick={() => setLangOpen(!langOpen)}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-200"
+              >
+                <Globe className="h-3.5 w-3.5 shrink-0" />
+                <span>{currentLang.label}</span>
+                <ChevronDown className={`h-3 w-3 shrink-0 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {langOpen && (
+                <div
+                  className="absolute right-0 top-full mt-1 rounded-md border border-white/10 py-1 shadow-xl min-w-max z-10"
+                  style={{ background: 'rgba(15, 23, 42, 0.97)', backdropFilter: 'blur(12px)' }}
+                >
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => handleLangChange(lang.code)}
+                      className={`block w-full text-left px-4 py-2 text-sm transition-colors duration-200 ${
+                        lang.code === currentLang.code
+                          ? 'text-blue-400 bg-blue-500/10'
+                          : 'text-slate-300 hover:text-white hover:bg-white/10'
+                      }`}
+                    >
+                      <span className="font-medium">{lang.label}</span>
+                      <span className="ml-2 text-slate-400 text-xs">{lang.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {isAuthenticated && user ? (
+              <Link
+                to={dashboardPath}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-semibold text-white landing-btn-primary whitespace-nowrap"
+              >
+                <LayoutDashboard className="h-3.5 w-3.5" />
+                {t('nav.dashboard', 'Dashboard')}
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="select-none px-3 py-1.5 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 visited:text-slate-300 focus:outline-none transition-all duration-200 whitespace-nowrap"
+                >
+                  {t('nav.login')}
+                </Link>
+                <Link
+                  to="/register"
+                  className="select-none px-3 py-1.5 rounded-md text-sm font-medium text-white visited:text-white focus:outline-none landing-btn-primary whitespace-nowrap"
+                >
+                  {t('nav.signup')}
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Hamburger — below lg */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="lg:hidden shrink-0 text-slate-300 hover:text-white transition-colors p-1"
+            aria-label="Toggle menu"
           >
-            {t('nav.login')}
-          </Button>
-          <Button
-            type="button"
-            className="animate-fade-left"
-            onClick={() => navigate(`/register`)}
-          >
-            {t('nav.signup')}
-          </Button>
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+
         </div>
       </div>
-    </header>
+
+      {/* ── Mobile menu ── */}
+      {mobileOpen && (
+        <div
+          className="lg:hidden border-t border-white/10"
+          style={{ background: 'rgba(8, 13, 26, 0.98)' }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            {/* Nav links — landing page only */}
+            {isLanding && (
+              <div className="py-3 space-y-1">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="block px-3 py-2.5 rounded-md text-sm text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-200"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            )}
+
+            {/* Language row */}
+            <div className="py-3 border-t border-white/10 flex items-center gap-2">
+              <Globe className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+              {LANGUAGES.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => handleLangChange(lang.code)}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
+                    lang.code === currentLang.code
+                      ? 'text-blue-400 bg-blue-500/10'
+                      : 'text-slate-400 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  {lang.label}
+                </button>
+              ))}
+            </div>
+
+            {/* CTA buttons */}
+            <div className="pb-4 flex flex-col gap-2">
+              {isAuthenticated && user ? (
+                <Link
+                  to={dashboardPath}
+                  onClick={() => setMobileOpen(false)}
+                  className="inline-flex items-center justify-center gap-2 py-2.5 rounded-md text-sm font-semibold text-white landing-btn-primary"
+                >
+                  <LayoutDashboard className="h-3.5 w-3.5" />
+                  {t('nav.dashboard', 'Dashboard')}
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="select-none text-center py-2.5 rounded-md text-sm font-medium text-slate-300 visited:text-slate-300 border border-white/20 hover:bg-white/10 focus:outline-none transition-all duration-200"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {t('nav.login')}
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="select-none text-center py-2.5 rounded-md text-sm font-medium text-white visited:text-white focus:outline-none landing-btn-primary"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {t('nav.signup')}
+                  </Link>
+                </>
+              )}
+            </div>
+
+          </div>
+        </div>
+      )}
+    </nav>
   );
 }

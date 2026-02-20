@@ -1,4 +1,3 @@
-import { LandingNav } from './LandingNav';
 import { HeroSection } from './HeroSection';
 import { StatsSection } from './StatsSection';
 import { HowItWorksSection } from './HowItWorksSection';
@@ -13,13 +12,14 @@ import { FAQSection } from './FAQSection';
 import { LeadCaptureSection } from './LeadCaptureSection';
 import { ContactSection } from './ContactSection';
 import { CTABannerSection } from './CTABannerSection';
-import { LandingFooter } from './LandingFooter';
+import { Header } from '@/components/shared/Header';
+import { Footer } from '@/components/shared/Footer';
 
 export function LandingPage() {
   return (
     <div>
       {/* Fixed navigation */}
-      <LandingNav />
+      <Header />
 
       {/* 1. Hero — dark bg close to primary blue */}
       <HeroSection />
@@ -64,7 +64,7 @@ export function LandingPage() {
       <CTABannerSection />
 
       {/* 15. Footer */}
-      <LandingFooter />
+      <Footer />
     </div>
   );
 }
