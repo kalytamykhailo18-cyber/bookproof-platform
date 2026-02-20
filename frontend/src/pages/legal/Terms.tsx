@@ -50,16 +50,8 @@ export function TermsOfServicePage() {
           style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '28px 28px' }}
         />
         <div className="relative max-w-4xl mx-auto">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-9 h-9 rounded-md bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
-              <BookOpen className="h-5 w-5 text-blue-400" />
-            </div>
-            <span
-              className="text-white font-bold text-lg tracking-tight cursor-pointer"
-              onClick={() => navigate('/')}
-            >
-              BookProof
-            </span>
+          <div className="flex items-center gap-3 mb-6 cursor-pointer" onClick={() => navigate('/')}>
+            <img src="/logo.png" alt="BookProof" className="h-[120px] w-auto px-1 rounded" />
           </div>
           <div
             className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-semibold uppercase tracking-wider mb-4"

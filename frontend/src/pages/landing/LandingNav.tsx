@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { BookOpen, Globe, Menu, X, ChevronDown } from 'lucide-react';
+import { Globe, Menu, X, ChevronDown } from 'lucide-react';
 import i18n from '../../lib/i18n';
 
 const LANGUAGES = [
@@ -52,18 +52,10 @@ export function LandingNav() {
 
           {/* Logo */}
           <div
-            className="flex items-center gap-2 shrink-0 cursor-pointer"
+            className="flex items-center shrink-0 cursor-pointer"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <div
-              className="flex items-center justify-center w-8 h-8 rounded-md shrink-0"
-              style={{ background: 'linear-gradient(135deg, #3b82f6, #6366f1)' }}
-            >
-              <BookOpen className="h-4 w-4 text-white" />
-            </div>
-            <span className="text-white font-bold text-lg tracking-tight">
-              Book<span className="landing-gradient-text">Proof</span>
-            </span>
+            <img src="/logo.png" alt="BookProof" className="h-14 w-auto px-1" />
           </div>
 
           {/* Nav links — lg+ */}

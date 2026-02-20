@@ -61,11 +61,8 @@ export function VerifyEmailPage() {
 
       {/* Logo */}
       <div className="relative">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-9 h-9 rounded-md bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
-            <BookOpen className="h-5 w-5 text-blue-400" />
-          </div>
-          <span className="text-white font-bold text-xl tracking-tight cursor-pointer" onClick={() => navigate('/')}>BookProof</span>
+        <div className="flex items-center gap-3 mb-2 cursor-pointer" onClick={() => navigate('/')}>
+          <img src="/logo.png" alt="BookProof" className="h-[120px] w-auto px-1 rounded" />
         </div>
         <p className="text-slate-500 text-xs">{tAuth('common.tagline')}</p>
       </div>

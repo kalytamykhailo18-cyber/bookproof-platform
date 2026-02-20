@@ -106,23 +106,17 @@ export function CloserSidebar() {
       )}
     >
       {/* Logo */}
-      <div className="flex h-16 items-center justify-between border-b px-4">
-        <button
-          type="button"
-          onClick={() => handleNavigation('/closer')}
-          className="flex items-center gap-2"
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
-            B
-          </div>
+      <div className="flex h-14 items-center justify-between border-b px-4 bg-primary">
+        {!collapsed && <button onClick={() => handleNavigation('/')} className="flex items-center gap-2">
+          <img src="/logo.png" alt="BookProof" className="h-10 w-auto px-1 rounded" />
           {!collapsed && (
-            <span className="text-lg font-bold">BookProof</span>
+            <span className="text-lg font-bold text-white">BookProof</span>
           )}
-        </button>
+        </button>}
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8"
+          className="h-8 w-8 text-white"
           onClick={() => setCollapsed(!collapsed)}
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}

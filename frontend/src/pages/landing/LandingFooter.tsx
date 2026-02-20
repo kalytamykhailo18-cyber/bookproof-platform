@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { BookOpen, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Twitter, Linkedin, Instagram } from 'lucide-react';
 import i18n from '../../lib/i18n';
 
 const LANGUAGES = [
@@ -56,16 +56,11 @@ export function LandingFooter() {
 
           {/* Brand */}
           <div className="lg:col-span-2 space-y-6 animate-fade-right-fast">
-            <div className="flex items-center gap-2.5">
-              <div
-                className="flex items-center justify-center w-8 h-8 rounded-md"
-                style={{ background: 'linear-gradient(135deg, #3b82f6, #6366f1)' }}
-              >
-                <BookOpen className="h-4 w-4 text-white" />
-              </div>
-              <span className="text-white font-bold text-lg tracking-tight">
-                Book<span className="landing-gradient-text">Proof</span>
-              </span>
+            <div
+              className="flex items-center shrink-0 cursor-pointer"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+              <img src="/logo.png" alt="BookProof" className="h-[90px] w-auto px-1" />
             </div>
 
             <p className="text-sm text-slate-500 leading-relaxed max-w-xs">
