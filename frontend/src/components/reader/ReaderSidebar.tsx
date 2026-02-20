@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -32,6 +33,7 @@ export function ReaderSidebar() {
   const navigate = useNavigate();
   const params = useParams();
   const { pathname } = useLocation();
+  const { t } = useTranslation('common');
   const locale = (params?.locale as string) || 'en';
   const [collapsed, setCollapsed] = useState(false);
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
@@ -43,31 +45,31 @@ export function ReaderSidebar() {
 
   const navSections: NavSection[] = [
     {
-      title: 'Overview',
+      title: t('sidebar.reader.overview'),
       items: [
-        { title: 'Dashboard', href: '/reader', icon: LayoutDashboard },
+        { title: t('sidebar.reader.dashboard'), href: '/reader', icon: LayoutDashboard },
       ],
     },
     {
-      title: 'Reviews',
+      title: t('sidebar.reader.reviews'),
       items: [
-        { title: 'Browse Campaigns', href: '/reader/campaigns', icon: BookOpen },
+        { title: t('sidebar.reader.browseCampaigns'), href: '/reader/campaigns', icon: BookOpen },
       ],
     },
     {
-      title: 'Earnings',
+      title: t('sidebar.reader.earnings'),
       items: [
-        { title: 'Wallet', href: '/reader/wallet', icon: Wallet },
-        { title: 'Statistics', href: '/reader/stats', icon: BarChart3 },
+        { title: t('sidebar.reader.wallet'), href: '/reader/wallet', icon: Wallet },
+        { title: t('sidebar.reader.statistics'), href: '/reader/stats', icon: BarChart3 },
       ],
     },
     {
-      title: 'Account',
+      title: t('sidebar.reader.account'),
       items: [
-        { title: 'Profile', href: '/reader/profile', icon: User },
-        { title: 'Notifications', href: '/reader/notifications', icon: Bell },
-        { title: 'Settings', href: '/reader/settings', icon: Settings },
-        { title: 'Support', href: '/reader/support', icon: HelpCircle },
+        { title: t('sidebar.reader.profile'), href: '/reader/profile', icon: User },
+        { title: t('sidebar.reader.notifications'), href: '/reader/notifications', icon: Bell },
+        { title: t('sidebar.reader.settings'), href: '/reader/settings', icon: Settings },
+        { title: t('sidebar.reader.support'), href: '/reader/support', icon: HelpCircle },
       ],
     },
   ];

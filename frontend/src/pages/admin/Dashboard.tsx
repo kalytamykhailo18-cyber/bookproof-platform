@@ -143,7 +143,7 @@ export function AdminDashboardPage() {
           disabled={loadingPath === 'validation'}
         >
           {loadingPath === 'validation' ? <Loader2 className="h-5 w-5 animate-spin" /> : <Flag className="h-5 w-5 text-red-500" />}
-          <span className="text-xs">Flagged Reviews</span>
+          <span className="text-xs">{t('quickActions.flaggedReviews')}</span>
           {dashboard?.quickActions?.flaggedReviewsCount ? (
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               {dashboard.quickActions.flaggedReviewsCount}

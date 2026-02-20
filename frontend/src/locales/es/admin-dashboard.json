@@ -81,5 +81,8 @@
     "queue": "Cola de Validación",
     "description": "Reseñas esperando validación del admin"
   },
-  "loading": "Cargando panel..."
+  "loading": "Cargando panel...",
+  "quickActions": {
+    "flaggedReviews": "Reseñas marcadas"
+  }
 }

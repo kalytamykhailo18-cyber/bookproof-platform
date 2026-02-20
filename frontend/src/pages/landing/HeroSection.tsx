@@ -89,7 +89,7 @@ export function HeroSection() {
                 className="animate-btn-shine relative overflow-hidden inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-semibold text-white landing-btn-primary"
                 style={{ boxShadow: '0 0 32px rgba(59,130,246,0.45), 0 4px 20px rgba(59,130,246,0.3)' }}
               >
-                {t('cta.primary', 'Start Getting Reviews')}
+                {t('cta.primary')}
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <a
@@ -97,7 +97,7 @@ export function HeroSection() {
                 className="btn-golden-flow inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-medium text-slate-300 hover:text-white transition-colors duration-200"
               >
                 <Play className="h-4 w-4 fill-current" />
-                {t('cta.secondary', 'See How It Works')}
+                {t('cta.secondary')}
               </a>
             </div>
 

@@ -31,13 +31,13 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ showLogo = false }: DashboardHeaderProps) {
   const { user, clearUser } = useAuthStore();
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { t } = useTranslation('common');
 
   const logout = () => {
     tokenManager.clearToken();
     clearUser();
     navigate('/login');
-    toast.success('Logged out successfully');
+    toast.success(t('header.logoutSuccess'));
   };
 
   // Get the base path based on user role
@@ -129,17 +129,17 @@ export function DashboardHeader({ showLogo = false }: DashboardHeaderProps) {
               {basePath !== 'admin' && (
                 <DropdownMenuItem onClick={() => handleNavigate('profile')}>
                   <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
+                  <span>{t('header.profile')}</span>
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem onClick={() => handleNavigate('settings')}>
                 <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+                <span>{t('header.settings')}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout}>
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
+                <span>{t('header.logout')}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

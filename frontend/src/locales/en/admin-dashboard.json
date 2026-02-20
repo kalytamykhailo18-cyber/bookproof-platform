@@ -81,5 +81,8 @@
     "queue": "Validation Queue",
     "description": "Reviews awaiting admin validation"
   },
-  "loading": "Loading dashboard..."
+  "loading": "Loading dashboard...",
+  "quickActions": {
+    "flaggedReviews": "Flagged Reviews"
+  }
 }

@@ -22,10 +22,10 @@ export function LandingNav() {
   }
 
   const navLinks = [
-    { href: '#features', label: t('nav.features', 'Features') },
-    { href: '#how-it-works', label: t('nav.howItWorks', 'How It Works') },
-    { href: '#pricing', label: t('nav.pricing', 'Pricing') },
-    { href: '#faq', label: t('nav.faq', 'FAQ') },
+    { href: '#features', label: t('nav.features') },
+    { href: '#how-it-works', label: t('nav.howItWorks') },
+    { href: '#pricing', label: t('nav.pricing') },
+    { href: '#faq', label: t('nav.faq') },
   ];
 
   return (
@@ -98,13 +98,13 @@ export function LandingNav() {
               to="/login"
               className="px-4 py-1.5 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 transition-all duration-200"
             >
-              {t('nav.login', 'Login')}
+              {t('nav.login')}
             </Link>
             <Link
               to="/register"
               className="px-4 py-1.5 rounded-md text-sm font-medium text-white landing-btn-primary"
             >
-              {t('nav.signup', 'Sign Up')}
+              {t('nav.signup')}
             </Link>
           </div>
 
@@ -153,14 +153,14 @@ export function LandingNav() {
               className="flex-1 text-center px-4 py-2 rounded-md text-sm font-medium text-slate-300 border border-white/20 hover:bg-white/10 transition-all duration-200"
               onClick={() => setMobileOpen(false)}
             >
-              {t('nav.login', 'Login')}
+              {t('nav.login')}
             </Link>
             <Link
               to="/register"
               className="flex-1 text-center px-4 py-2 rounded-md text-sm font-medium text-white landing-btn-primary"
               onClick={() => setMobileOpen(false)}
             >
-              {t('nav.signup', 'Sign Up')}
+              {t('nav.signup')}
             </Link>
           </div>
         </div>

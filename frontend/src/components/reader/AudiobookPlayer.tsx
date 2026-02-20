@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -26,6 +27,7 @@ interface AudiobookPlayerProps {
  * The audioUrl prop should be in format: /api/queue/assignments/:id/stream-audio
  */
 export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookPlayerProps) {
+  const { t } = useTranslation('common');
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -40,7 +42,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
   const authenticatedUrl = useMemo(() => {
     const token = tokenManager.getToken();
     if (!token) {
-      setError('Authentication required. Please log in again.');
+      setError(t('audiobookPlayer.authRequired'));
       return null;
     }
 
@@ -53,7 +55,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
       : `${audioUrl}?token=${encodeURIComponent(token)}`;
 
     return fullUrl;
-  }, [audioUrl]);
+  }, [audioUrl, t]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -63,9 +65,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
     const updateDuration = () => setDuration(audio.duration);
     const handleEnded = () => setIsPlaying(false);
     const handleError = () => {
-      setError(
-        'Unable to play audiobook. Access may have expired or you may need to log in again.',
-      );
+      setError(t('audiobookPlayer.errorExpired'));
       setIsPlaying(false);
     };
 
@@ -80,7 +80,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
     };
-  }, []);
+  }, [t]);
 
   const togglePlay = () => {
     const audio = audioRef.current;
@@ -90,7 +90,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
       audio.pause();
     } else {
       audio.play().catch(() => {
-        setError('Unable to play audiobook. Please try again.');
+        setError(t('audiobookPlayer.errorRetry'));
       });
       // Track first play to mark assignment as IN_PROGRESS
       if (!hasPlayed && onFirstPlay) {
@@ -166,7 +166,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
         <CardContent className="pt-6">
           <div className="text-center">
             <AlertCircle className="mx-auto mb-3 h-12 w-12 text-red-500" />
-            <h3 className="font-semibold text-red-700 dark:text-red-400">Playback Error</h3>
+            <h3 className="font-semibold text-red-700 dark:text-red-400">{t('audiobookPlayer.playbackError')}</h3>
             <p className="mt-2 text-sm text-muted-foreground">{error}</p>
             <Button
               variant="outline"
@@ -176,7 +176,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
                 window.location.reload();
               }}
             >
-              Retry
+              {t('audiobookPlayer.retry')}
             </Button>
           </div>
         </CardContent>
@@ -190,7 +190,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
         <div className="space-y-4">
           {/* Title */}
           <div className="text-center">
-            <p className="text-sm text-muted-foreground">Now Playing</p>
+            <p className="text-sm text-muted-foreground">{t('audiobookPlayer.nowPlaying')}</p>
             <h3 className="font-semibold">{bookTitle}</h3>
           </div>
 
@@ -226,7 +226,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
               variant="ghost"
               size="icon"
               onClick={skipBackward}
-              title="Skip back 15 seconds"
+              title={t('audiobookPlayer.skipBack')}
               disabled={!authenticatedUrl}
             >
               <SkipBack className="h-5 w-5" />
@@ -245,7 +245,7 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
               variant="ghost"
               size="icon"
               onClick={skipForward}
-              title="Skip forward 15 seconds"
+              title={t('audiobookPlayer.skipForward')}
               disabled={!authenticatedUrl}
             >
               <SkipForward className="h-5 w-5" />
@@ -273,10 +273,9 @@ export function AudiobookPlayer({ audioUrl, bookTitle, onFirstPlay }: AudiobookP
 
           {/* Security Notice */}
           <div className="rounded border border-blue-200 bg-blue-50 p-3 text-xs text-blue-900 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-100">
-            <p className="font-medium">Secure Streaming</p>
+            <p className="font-medium">{t('audiobookPlayer.secureStreaming')}</p>
             <p className="mt-1 text-blue-700 dark:text-blue-300">
-              This audiobook streams securely from our servers. Access is limited to 7 days from
-              release. You cannot download or share this content.
+              {t('audiobookPlayer.secureStreamingDesc')}
             </p>
           </div>
         </div>

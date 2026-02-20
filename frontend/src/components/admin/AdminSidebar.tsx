@@ -45,6 +45,7 @@ interface NavSection {
 export function AdminSidebar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { t } = useTranslation('common');
   const [collapsed, setCollapsed] = useState(false);
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
 
@@ -65,65 +66,65 @@ export function AdminSidebar() {
 
   const navSections: NavSection[] = [
     {
-      title: 'Overview',
+      title: t('sidebar.admin.overview'),
       items: [
-        { title: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+        { title: t('sidebar.admin.dashboard'), href: '/admin/dashboard', icon: LayoutDashboard },
       ],
     },
     {
-      title: 'Users',
+      title: t('sidebar.admin.users'),
       items: [
-        { title: 'Authors', href: '/admin/authors', icon: Users },
-        { title: 'Readers', href: '/admin/readers', icon: UserCheck },
-        { title: 'Affiliates', href: '/admin/affiliates', icon: UsersRound },
-        { title: 'Team', href: '/admin/team', icon: Users },
+        { title: t('sidebar.admin.authors'), href: '/admin/authors', icon: Users },
+        { title: t('sidebar.admin.readers'), href: '/admin/readers', icon: UserCheck },
+        { title: t('sidebar.admin.affiliates'), href: '/admin/affiliates', icon: UsersRound },
+        { title: t('sidebar.admin.team'), href: '/admin/team', icon: Users },
       ],
     },
     {
-      title: 'Campaigns',
+      title: t('sidebar.admin.campaigns'),
       items: [
-        { title: 'All Campaigns', href: '/admin/campaigns', icon: BookOpen },
-        { title: 'Validation Queue', href: '/admin/validation', icon: Flag },
-        { title: 'Disputes', href: '/admin/disputes', icon: MessageSquare },
-        { title: 'Issues', href: '/admin/issues', icon: AlertTriangle },
-        { title: 'Exceptions', href: '/admin/exceptions', icon: AlertCircle },
+        { title: t('sidebar.admin.allCampaigns'), href: '/admin/campaigns', icon: BookOpen },
+        { title: t('sidebar.admin.validationQueue'), href: '/admin/validation', icon: Flag },
+        { title: t('sidebar.admin.disputes'), href: '/admin/disputes', icon: MessageSquare },
+        { title: t('sidebar.admin.issues'), href: '/admin/issues', icon: AlertTriangle },
+        { title: t('sidebar.admin.exceptions'), href: '/admin/exceptions', icon: AlertCircle },
       ],
     },
     {
-      title: 'Finance',
+      title: t('sidebar.admin.finance'),
       items: [
-        { title: 'Payouts', href: '/admin/payouts', icon: CreditCard },
-        { title: 'Refunds', href: '/admin/refunds', icon: Receipt },
-        { title: 'Payment Issues', href: '/admin/payment-issues', icon: AlertTriangle },
-        { title: 'Coupons', href: '/admin/coupons', icon: Ticket },
-        { title: 'Package Approvals', href: '/admin/package-approvals', icon: Package },
+        { title: t('sidebar.admin.payouts'), href: '/admin/payouts', icon: CreditCard },
+        { title: t('sidebar.admin.refunds'), href: '/admin/refunds', icon: Receipt },
+        { title: t('sidebar.admin.paymentIssues'), href: '/admin/payment-issues', icon: AlertTriangle },
+        { title: t('sidebar.admin.coupons'), href: '/admin/coupons', icon: Ticket },
+        { title: t('sidebar.admin.packageApprovals'), href: '/admin/package-approvals', icon: Package },
       ],
     },
     {
-      title: 'Content',
+      title: t('sidebar.admin.content'),
       items: [
-        { title: 'Keyword Research', href: '/admin/keyword-research', icon: Search },
-        { title: 'Landing Pages', href: '/admin/landing-pages', icon: Globe },
-        { title: 'Notifications', href: '/admin/notifications', icon: Bell },
+        { title: t('sidebar.admin.keywordResearch'), href: '/admin/keyword-research', icon: Search },
+        { title: t('sidebar.admin.landingPages'), href: '/admin/landing-pages', icon: Globe },
+        { title: t('sidebar.admin.notifications'), href: '/admin/notifications', icon: Bell },
       ],
     },
     {
-      title: 'Reports',
+      title: t('sidebar.admin.reports'),
       items: [
-        { title: 'Financial', href: '/admin/reports/financial', icon: FileText },
-        { title: 'Operational', href: '/admin/reports/operational', icon: Activity },
-        { title: 'Affiliates', href: '/admin/reports/affiliates', icon: UsersRound },
+        { title: t('sidebar.admin.financial'), href: '/admin/reports/financial', icon: FileText },
+        { title: t('sidebar.admin.operational'), href: '/admin/reports/operational', icon: Activity },
+        { title: t('sidebar.admin.affiliatesReport'), href: '/admin/reports/affiliates', icon: UsersRound },
       ],
     },
     {
-      title: 'System',
+      title: t('sidebar.admin.system'),
       items: [
         // Note: Log routes commented out in router as they don't exist yet
         // { title: 'Activity Logs', href: `/admin/logs/activity`, icon: Activity },
         // { title: 'Email Logs', href: `/admin/logs/emails`, icon: Mail },
         // { title: 'Error Logs', href: `/admin/logs/errors`, icon: AlertCircle },
-        { title: 'Reader Behavior', href: '/admin/reader-behavior', icon: UserCheck },
-        { title: 'Settings', href: '/admin/settings', icon: Settings },
+        { title: t('sidebar.admin.readerBehavior'), href: '/admin/reader-behavior', icon: UserCheck },
+        { title: t('sidebar.admin.settings'), href: '/admin/settings', icon: Settings },
       ],
     },
   ];

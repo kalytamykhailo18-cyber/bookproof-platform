@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import {
   Bell,
   CreditCard,
@@ -50,6 +51,8 @@ export function NotificationList({
   onNotificationClick,
   compact = false,
 }: NotificationListProps) {
+  const { t } = useTranslation('common');
+
   if (isLoading) {
     return (
       <div className="space-y-2 p-4">
@@ -75,9 +78,9 @@ export function NotificationList({
         <div className="rounded-full bg-gray-100 p-4 mb-4 animate-zoom-in-fast">
           <Bell className="h-8 w-8 text-gray-400" />
         </div>
-        <h3 className="font-medium text-sm mb-1 animate-fade-up-fast">No notifications</h3>
+        <h3 className="font-medium text-sm mb-1 animate-fade-up-fast">{t('notifications.empty')}</h3>
         <p className="text-xs text-muted-foreground animate-fade-up-normal">
-          You're all caught up!
+          {t('notifications.caughtUp')}
         </p>
       </div>
     );
@@ -144,7 +147,7 @@ export function NotificationList({
                 {notification.actionUrl && (
                   <>
                     <span>•</span>
-                    <span className="text-blue-600 hover:underline">View</span>
+                    <span className="text-blue-600 hover:underline">{t('notifications.view')}</span>
                   </>
                 )}
               </div>

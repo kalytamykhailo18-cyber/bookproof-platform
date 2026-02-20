@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -32,6 +33,7 @@ export function AffiliateSidebar() {
   const navigate = useNavigate();
   const params = useParams();
   const { pathname } = useLocation();
+  const { t } = useTranslation('common');
   const locale = (params?.locale as string) || 'en';
   const [collapsed, setCollapsed] = useState(false);
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
@@ -43,36 +45,36 @@ export function AffiliateSidebar() {
 
   const navSections: NavSection[] = [
     {
-      title: 'Overview',
+      title: t('sidebar.affiliate.overview'),
       items: [
-        { title: 'Dashboard', href: '/affiliate/dashboard', icon: LayoutDashboard },
+        { title: t('sidebar.affiliate.dashboard'), href: '/affiliate/dashboard', icon: LayoutDashboard },
       ],
     },
     {
-      title: 'Referrals',
+      title: t('sidebar.affiliate.referrals'),
       items: [
-        { title: 'Referral Links', href: '/affiliate/referral-links', icon: Link2 },
-        { title: 'Referred Authors', href: '/affiliate/referred-authors', icon: Users },
+        { title: t('sidebar.affiliate.referralLinks'), href: '/affiliate/referral-links', icon: Link2 },
+        { title: t('sidebar.affiliate.referredAuthors'), href: '/affiliate/referred-authors', icon: Users },
       ],
     },
     {
-      title: 'Earnings',
+      title: t('sidebar.affiliate.earnings'),
       items: [
-        { title: 'Commissions', href: '/affiliate/commissions', icon: DollarSign },
-        { title: 'Payouts', href: '/affiliate/payouts', icon: Wallet },
+        { title: t('sidebar.affiliate.commissions'), href: '/affiliate/commissions', icon: DollarSign },
+        { title: t('sidebar.affiliate.payouts'), href: '/affiliate/payouts', icon: Wallet },
       ],
     },
     {
-      title: 'Resources',
+      title: t('sidebar.affiliate.resources'),
       items: [
-        { title: 'Marketing Materials', href: '/affiliate/marketing-materials', icon: Image },
+        { title: t('sidebar.affiliate.marketingMaterials'), href: '/affiliate/marketing-materials', icon: Image },
       ],
     },
     {
-      title: 'Account',
+      title: t('sidebar.affiliate.account'),
       items: [
-        { title: 'Notifications', href: '/affiliate/notifications', icon: Bell },
-        { title: 'Settings', href: '/affiliate/settings', icon: Settings },
+        { title: t('sidebar.affiliate.notifications'), href: '/affiliate/notifications', icon: Bell },
+        { title: t('sidebar.affiliate.settings'), href: '/affiliate/settings', icon: Settings },
       ],
     },
   ];

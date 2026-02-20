@@ -81,5 +81,8 @@
     "queue": "Fila de Validação",
     "description": "Avaliações aguardando validação do admin"
   },
-  "loading": "Carregando painel..."
+  "loading": "Carregando painel...",
+  "quickActions": {
+    "flaggedReviews": "Avaliações sinalizadas"
+  }
 }

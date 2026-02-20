@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -34,6 +35,7 @@ export function AuthorSidebar() {
   const navigate = useNavigate();
   const params = useParams();
   const { pathname } = useLocation();
+  const { t } = useTranslation('common');
   const locale = (params?.locale as string) || 'en';
   const [collapsed, setCollapsed] = useState(false);
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
@@ -45,39 +47,39 @@ export function AuthorSidebar() {
 
   const navSections: NavSection[] = [
     {
-      title: 'Overview',
+      title: t('sidebar.author.overview'),
       items: [
-        { title: 'Dashboard', href: '/author', icon: LayoutDashboard },
+        { title: t('sidebar.author.dashboard'), href: '/author', icon: LayoutDashboard },
       ],
     },
     {
-      title: 'Campaigns',
+      title: t('sidebar.author.campaigns'),
       items: [
-        { title: 'My Campaigns', href: '/author/campaigns', icon: BookOpen },
+        { title: t('sidebar.author.myCampaigns'), href: '/author/campaigns', icon: BookOpen },
       ],
     },
     {
-      title: 'Credits',
+      title: t('sidebar.author.credits'),
       items: [
-        { title: 'Credit Balance', href: '/author/credits', icon: CreditCard },
-        { title: 'Purchase Credits', href: '/author/credits/purchase', icon: ShoppingCart },
-        { title: 'Transactions', href: '/author/transactions', icon: Receipt },
+        { title: t('sidebar.author.creditBalance'), href: '/author/credits', icon: CreditCard },
+        { title: t('sidebar.author.purchaseCredits'), href: '/author/credits/purchase', icon: ShoppingCart },
+        { title: t('sidebar.author.transactions'), href: '/author/transactions', icon: Receipt },
       ],
     },
     {
-      title: 'Services',
+      title: t('sidebar.author.services'),
       items: [
-        { title: 'Keyword Research', href: '/author/keyword-research', icon: Search },
-        { title: 'Reports', href: '/author/reports', icon: FileText },
+        { title: t('sidebar.author.keywordResearch'), href: '/author/keyword-research', icon: Search },
+        { title: t('sidebar.author.reports'), href: '/author/reports', icon: FileText },
       ],
     },
     {
-      title: 'Account',
+      title: t('sidebar.author.account'),
       items: [
-        { title: 'Notifications', href: '/author/notifications', icon: Bell },
-        { title: 'Subscription', href: '/author/subscription', icon: CreditCard },
-        { title: 'Settings', href: '/author/settings', icon: Settings },
-        { title: 'Support', href: '/author/support', icon: HelpCircle },
+        { title: t('sidebar.author.notifications'), href: '/author/notifications', icon: Bell },
+        { title: t('sidebar.author.subscription'), href: '/author/subscription', icon: CreditCard },
+        { title: t('sidebar.author.settings'), href: '/author/settings', icon: Settings },
+        { title: t('sidebar.author.support'), href: '/author/support', icon: HelpCircle },
       ],
     },
   ];

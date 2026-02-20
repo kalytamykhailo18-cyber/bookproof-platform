@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -29,6 +30,7 @@ export function CloserSidebar() {
   const navigate = useNavigate();
   const params = useParams();
   const { pathname } = useLocation();
+  const { t } = useTranslation('common');
   const locale = (params?.locale as string) || 'en';
   const [collapsed, setCollapsed] = useState(false);
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
@@ -40,23 +42,23 @@ export function CloserSidebar() {
 
   const navSections: NavSection[] = [
     {
-      title: 'Overview',
+      title: t('sidebar.closer.overview'),
       items: [
-        { title: 'Dashboard', href: '/closer', icon: LayoutDashboard },
+        { title: t('sidebar.closer.dashboard'), href: '/closer', icon: LayoutDashboard },
       ],
     },
     {
-      title: 'Sales',
+      title: t('sidebar.closer.sales'),
       items: [
-        { title: 'Custom Packages', href: '/closer/packages', icon: Package },
-        { title: 'Sales History', href: '/closer/sales', icon: DollarSign },
-        { title: 'Invoices', href: '/closer/invoices', icon: FileText },
+        { title: t('sidebar.closer.customPackages'), href: '/closer/packages', icon: Package },
+        { title: t('sidebar.closer.salesHistory'), href: '/closer/sales', icon: DollarSign },
+        { title: t('sidebar.closer.invoices'), href: '/closer/invoices', icon: FileText },
       ],
     },
     {
-      title: 'Account',
+      title: t('sidebar.closer.account'),
       items: [
-        { title: 'Settings', href: '/closer/settings', icon: Settings },
+        { title: t('sidebar.closer.settings'), href: '/closer/settings', icon: Settings },
       ],
     },
   ];

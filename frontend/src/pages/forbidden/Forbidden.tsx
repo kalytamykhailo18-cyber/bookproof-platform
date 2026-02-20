@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { ShieldX, Home, ArrowLeft, Loader2 } from 'lucide-react';
 
@@ -9,6 +10,7 @@ import { ShieldX, Home, ArrowLeft, Loader2 } from 'lucide-react';
  */
 export function ForbiddenPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation('common');
   const [isHomeLoading, setIsHomeLoading] = useState(false);
 
   return (
@@ -26,12 +28,12 @@ export function ForbiddenPage() {
 
         {/* Title */}
         <h2 className="mb-4 text-2xl font-semibold text-foreground">
-          Access Forbidden
+          {t('forbidden.title')}
         </h2>
 
         {/* Description */}
         <p className="mb-8 text-muted-foreground">
-          You don't have permission to access this resource. This area is restricted to authorized users only.
+          {t('forbidden.description')}
         </p>
 
         {/* Navigation Options */}
@@ -47,7 +49,7 @@ export function ForbiddenPage() {
             disabled={isHomeLoading}
           >
             {isHomeLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Home className="h-4 w-4" />}
-            Go to Home
+            {t('forbidden.goHome')}
           </Button>
 
           <Button
@@ -58,21 +60,21 @@ export function ForbiddenPage() {
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="h-4 w-4" />
-            Go Back
+            {t('forbidden.goBack')}
           </Button>
         </div>
 
         {/* Explanation */}
         <div className="mt-12 border-t pt-8">
           <p className="mb-4 text-sm font-medium text-muted-foreground">
-            Why am I seeing this?
+            {t('forbidden.whyTitle')}
           </p>
           <div className="text-sm text-muted-foreground">
             <ul className="space-y-2 text-left">
-              <li>You may not have the required role or permissions</li>
-              <li>Your account may need to be upgraded</li>
-              <li>The resource may be restricted to specific users</li>
-              <li>Your session may have expired</li>
+              <li>{t('forbidden.reason1')}</li>
+              <li>{t('forbidden.reason2')}</li>
+              <li>{t('forbidden.reason3')}</li>
+              <li>{t('forbidden.reason4')}</li>
             </ul>
           </div>
         </div>
@@ -80,12 +82,12 @@ export function ForbiddenPage() {
         {/* Contact Support */}
         <div className="mt-8 text-sm text-muted-foreground">
           <p>
-            Think this is a mistake?{' '}
+            {t('forbidden.contactText')}{' '}
             <a
               href="mailto:support@bookproof.app"
               className="text-primary hover:underline"
             >
-              Contact Support
+              {t('forbidden.contactLink')}
             </a>
           </p>
         </div>
