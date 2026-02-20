@@ -105,8 +105,8 @@ export function HeroSection() {
 
           </div>
 
-          {/* ── Right: hero image + carousel — lg+ only ── */}
-          <div className="hidden lg:flex flex-col relative overflow-hidden animate-zoom-in-light-slow">
+          {/* ── Right: hero image + carousel ── */}
+          <div className="flex flex-col relative overflow-hidden animate-zoom-in-light-slow">
             {/* Hero image */}
             <div className="relative w-full" style={{ marginBottom: '-48px', zIndex: 10 }}>
               <img
@@ -124,11 +124,11 @@ export function HeroSection() {
               />
             </div>
 
-            {/* Book carousel — hidden on mobile, visible sm+ */}
+            {/* Book carousel */}
             <div
               className="relative overflow-x-hidden"
               style={{
-                paddingTop: '150px',
+                paddingTop: '80px',
                 maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
               }}
