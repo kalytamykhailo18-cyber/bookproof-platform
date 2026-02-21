@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '@/lib/utils';
 import { stripeApi } from '@/lib/api/stripe';
 import { toast } from 'sonner';
 import {
@@ -32,7 +33,7 @@ import {
   Loader2 } from 'lucide-react';
 
 export function SubscriptionPage() {
-  const { t: _t } = useTranslation('subscription');
+  const { t: _t, i18n } = useTranslation('subscription');
   void _t; // Will use later for translations
 
   const [subscription, setSubscription] = useState<any>(null);
@@ -224,7 +225,7 @@ export function SubscriptionPage() {
               <div>
                 <p className="mb-1 text-sm text-muted-foreground">Monthly Price</p>
                 <p className="text-2xl font-bold">
-                  ${subscription.subscription.pricePerMonth.toFixed(2)}
+                  {formatCurrency(subscription.subscription.pricePerMonth, subscription.subscription.currency || 'USD', i18n.language)}
                 </p>
               </div>
               <div>
@@ -372,7 +373,7 @@ export function SubscriptionPage() {
                 <CardContent className="space-y-4">
                   <div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-bold">${plan.pricePerMonth}</span>
+                      <span className="text-4xl font-bold">{formatCurrency(plan.pricePerMonth, plan.currency || 'USD', i18n.language)}</span>
                       <span className="text-muted-foreground">/month</span>
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">
@@ -391,7 +392,7 @@ export function SubscriptionPage() {
 
                   <div className="pt-2">
                     <p className="text-xs text-muted-foreground">
-                      Price per credit: ${(plan.pricePerMonth / plan.creditsPerMonth).toFixed(2)}
+                      Price per credit: {formatCurrency(plan.pricePerMonth / plan.creditsPerMonth, plan.currency || 'USD', i18n.language)}
                     </p>
                   </div>
                 </CardContent>

@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -16,13 +17,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle } from '@/components/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Save, Send, Copy, ExternalLink, Clock, Eye, CheckCircle, QrCode, CreditCard, User, Loader2 } from 'lucide-react';
+import { ArrowLeft, Save, Send, Copy, ExternalLink, Clock, Eye, CheckCircle, QrCode, CreditCard, User, Search, Loader2 } from 'lucide-react';
 import { CustomPackageStatus } from '@/lib/api/closer';
 import { toast } from 'sonner';
 
@@ -51,9 +46,14 @@ export function PackageDetailPage() {
     currency: 'USD',
     validityDays: 90,
     specialTerms: '',
+    internalNotes: '',
     clientName: '',
     clientEmail: '',
-    clientCompany: '' });
+    clientCompany: '',
+    clientPhone: '',
+    includeKeywordResearch: false,
+    keywordResearchCredits: 0,
+  });
 
   // Initialize form data when package loads
   if (pkg && !formData.packageName && !isEditing) {
@@ -65,9 +65,14 @@ export function PackageDetailPage() {
       currency: pkg.currency,
       validityDays: pkg.validityDays,
       specialTerms: pkg.specialTerms || '',
+      internalNotes: pkg.internalNotes || '',
       clientName: pkg.clientName,
       clientEmail: pkg.clientEmail,
-      clientCompany: pkg.clientCompany || '' });
+      clientCompany: pkg.clientCompany || '',
+      clientPhone: pkg.clientPhone || '',
+      includeKeywordResearch: pkg.includeKeywordResearch || false,
+      keywordResearchCredits: pkg.keywordResearchCredits || 0,
+    });
   }
 
   // Fetch package data
@@ -104,9 +109,13 @@ export function PackageDetailPage() {
         currency: formData.currency,
         validityDays: formData.validityDays,
         specialTerms: formData.specialTerms || undefined,
+        internalNotes: formData.internalNotes || undefined,
         clientName: formData.clientName,
         clientEmail: formData.clientEmail,
         clientCompany: formData.clientCompany || undefined,
+        clientPhone: formData.clientPhone || undefined,
+        includeKeywordResearch: formData.includeKeywordResearch,
+        keywordResearchCredits: formData.keywordResearchCredits,
       });
       toast.success('Package updated successfully');
       setIsEditing(false);
@@ -173,9 +182,15 @@ export function PackageDetailPage() {
     }
   };
 
-  const updateField = (field: string, value: string | number) => {
+  const updateField = (field: string, value: string | number | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+
+  // Live price-per-credit for edit mode
+  const editPricePerCredit =
+    formData.credits > 0 && formData.price > 0
+      ? (formData.price / formData.credits).toFixed(4)
+      : null;
 
   if (isLoading) {
     return (
@@ -471,7 +486,9 @@ export function PackageDetailPage() {
                   <Input
                     id="credits"
                     type="number"
-                    value={formData.credits}
+                    min={1}
+                    placeholder="e.g. 100"
+                    value={formData.credits === 0 ? '' : formData.credits}
                     onChange={(e) => updateField('credits', parseInt(e.target.value) || 0)}
                   />
                 </div>
@@ -492,27 +509,34 @@ export function PackageDetailPage() {
                     id="price"
                     type="number"
                     step={0.01}
-                    value={formData.price}
+                    min={0}
+                    value={formData.price === 0 ? '' : formData.price}
                     onChange={(e) => updateField('price', parseFloat(e.target.value) || 0)}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="currency">{t('createPackage.currency')}</Label>
-                  <Select
+                  <select
+                    id="currency"
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-ring"
                     value={formData.currency}
-                    onValueChange={(value) => updateField('currency', value)}
+                    onChange={(e) => updateField('currency', e.target.value)}
                   >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="USD">USD</SelectItem>
-                      <SelectItem value="EUR">EUR</SelectItem>
-                      <SelectItem value="GBP">GBP</SelectItem>
-                      <SelectItem value="BRL">BRL</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    <option value="USD">USD - US Dollar</option>
+                    <option value="EUR">EUR - Euro</option>
+                    <option value="GBP">GBP - British Pound</option>
+                    <option value="BRL">BRL - Brazilian Real</option>
+                  </select>
                 </div>
+              </div>
+              <div className="rounded-lg bg-muted p-4">
+                <p className="text-sm">
+                  <span className="font-medium">{t('createPackage.pricePerCredit')}:</span>{' '}
+                  {editPricePerCredit !== null
+                    ? `${formData.currency} ${editPricePerCredit}`
+                    : <span className="text-muted-foreground italic">Enter credits and price above</span>
+                  }
+                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="specialTerms">{t('createPackage.specialTerms')}</Label>
@@ -523,12 +547,62 @@ export function PackageDetailPage() {
                   rows={2}
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="internalNotes">{t('createPackage.internalNotes') || 'Internal Notes'}</Label>
+                <Textarea
+                  id="internalNotes"
+                  placeholder={t('createPackage.internalNotesPlaceholder') || 'E.g., Negotiated by John on 01/15/2024...'}
+                  value={formData.internalNotes}
+                  onChange={(e) => updateField('internalNotes', e.target.value)}
+                  rows={2}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t('createPackage.internalNotesWarning') || 'These notes are for your reference only and will NOT be shared with the client.'}
+                </p>
+              </div>
+              {/* Keyword Research Inclusions */}
+              <div className="space-y-3 rounded-lg border p-4">
+                <div className="flex items-center gap-2">
+                  <Search className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">{t('createPackage.inclusions') || 'Inclusions'}</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="includeKeywordResearch"
+                    checked={formData.includeKeywordResearch}
+                    onCheckedChange={(checked) => updateField('includeKeywordResearch', checked as boolean)}
+                  />
+                  <div className="space-y-1">
+                    <Label htmlFor="includeKeywordResearch" className="cursor-pointer font-medium">
+                      {t('createPackage.includeKeywordResearch') || 'Include Keyword Research'}
+                    </Label>
+                    <p className="text-xs text-muted-foreground">
+                      {t('createPackage.includeKeywordResearchHelp') || 'Add keyword research credits for the client'}
+                    </p>
+                  </div>
+                </div>
+                {formData.includeKeywordResearch && (
+                  <div className="ml-6 space-y-2">
+                    <Label htmlFor="keywordResearchCredits">
+                      {t('createPackage.keywordResearchCredits') || 'Number of Keyword Research Credits'}
+                    </Label>
+                    <Input
+                      id="keywordResearchCredits"
+                      type="number"
+                      min={1}
+                      value={formData.keywordResearchCredits}
+                      onChange={(e) => updateField('keywordResearchCredits', parseInt(e.target.value) || 0)}
+                      className="max-w-[200px]"
+                    />
+                  </div>
+                )}
+              </div>
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
                   {t('common.cancel')}
                 </Button>
                 <Button type="button" onClick={handleSave} disabled={isUpdating}>
-                  <Save className="mr-2 h-4 w-4" />
+                  {isUpdating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                   {isUpdating
                     ? t('packageDetail.saving')
                     : t('packageDetail.saveChanges')}
@@ -571,6 +645,20 @@ export function PackageDetailPage() {
                   <p className="font-medium">{pkg.specialTerms}</p>
                 </div>
               )}
+              {pkg.includeKeywordResearch && (
+                <div className="md:col-span-2">
+                  <p className="text-sm text-muted-foreground">{t('createPackage.inclusions') || 'Inclusions'}</p>
+                  <p className="font-medium">
+                    {t('createPackage.includeKeywordResearch') || 'Keyword Research'} — {pkg.keywordResearchCredits} {t('common.credits') || 'credits'}
+                  </p>
+                </div>
+              )}
+              {pkg.internalNotes && (
+                <div className="md:col-span-2">
+                  <p className="text-sm text-muted-foreground">{t('createPackage.internalNotes') || 'Internal Notes'}</p>
+                  <p className="font-medium">{pkg.internalNotes}</p>
+                </div>
+              )}
             </div>
           )}
         </CardContent>
@@ -603,13 +691,25 @@ export function PackageDetailPage() {
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="clientCompany">{t('createPackage.clientCompany')}</Label>
-                <Input
-                  id="clientCompany"
-                  value={formData.clientCompany}
-                  onChange={(e) => updateField('clientCompany', e.target.value)}
-                />
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="clientCompany">{t('createPackage.clientCompany')}</Label>
+                  <Input
+                    id="clientCompany"
+                    value={formData.clientCompany}
+                    onChange={(e) => updateField('clientCompany', e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="clientPhone">{t('createPackage.clientPhone') || 'Phone'}</Label>
+                  <Input
+                    id="clientPhone"
+                    type="tel"
+                    placeholder="+1-555-123-4567"
+                    value={formData.clientPhone}
+                    onChange={(e) => updateField('clientPhone', e.target.value)}
+                  />
+                </div>
               </div>
             </div>
           ) : (
@@ -623,9 +723,15 @@ export function PackageDetailPage() {
                 <p className="font-medium">{pkg.clientEmail}</p>
               </div>
               {pkg.clientCompany && (
-                <div className="md:col-span-2">
+                <div>
                   <p className="text-sm text-muted-foreground">{t('packageDetail.company')}</p>
                   <p className="font-medium">{pkg.clientCompany}</p>
+                </div>
+              )}
+              {pkg.clientPhone && (
+                <div>
+                  <p className="text-sm text-muted-foreground">{t('createPackage.clientPhone') || 'Phone'}</p>
+                  <p className="font-medium">{pkg.clientPhone}</p>
                 </div>
               )}
             </div>

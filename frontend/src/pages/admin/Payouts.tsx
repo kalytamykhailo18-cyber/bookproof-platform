@@ -29,6 +29,7 @@ import PayoutDetailsDialog from './payouts/PayoutDetailsDialog';
 import ApprovePayoutDialog from './payouts/ApprovePayoutDialog';
 import RejectPayoutDialog from './payouts/RejectPayoutDialog';
 import CompletePayoutDialog from './payouts/CompletePayoutDialog';
+import { formatCurrency } from '@/lib/utils';
 
 type PayoutStatus =
   | 'REQUESTED'
@@ -137,7 +138,7 @@ export function AdminPayoutsPage() {
               className={`animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}
             >
               <TableCell className="font-medium">{payout.readerProfileId}</TableCell>
-              <TableCell className="font-semibold">${payout.amount.toFixed(2)}</TableCell>
+              <TableCell className="font-semibold">{formatCurrency(payout.amount, payout.currency || "USD", i18n.language)}</TableCell>
               <TableCell>{payout.paymentMethod}</TableCell>
               <TableCell>{format(new Date(payout.requestedAt), 'PP')}</TableCell>
               <TableCell>
@@ -289,7 +290,7 @@ export function AdminPayoutsPage() {
             <DollarSign className="h-4 w-4 text-purple-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-600">${totalAmount.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-purple-600">{formatCurrency(totalAmount, "USD", i18n.language)}</div>
             <p className="text-xs text-muted-foreground">{t('stats.allPayouts')}</p>
           </CardContent>
         </Card>

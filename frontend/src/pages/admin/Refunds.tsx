@@ -40,7 +40,7 @@ import {
   CreditCard,
   RefreshCw,
   Loader2 } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatCurrency } from '@/lib/utils';
 
 const getStatusBadge = (status: RefundRequestStatus, t: any) => {
   switch (status) {
@@ -229,7 +229,7 @@ export function AdminRefundsPage() {
             <DollarSign className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">${totalRefunded.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-blue-600">{formatCurrency(totalRefunded, "USD", i18n.language)}</div>
             <p className="text-xs text-muted-foreground">{t('stats.totalRefundedDesc')}</p>
           </CardContent>
         </Card>
@@ -421,7 +421,7 @@ export function AdminRefundsPage() {
                   <div className="flex items-center gap-2">
                     <DollarSign className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm font-medium">
-                      ${selectedRequestData.originalAmount.toFixed(2)} {selectedRequestData.currency}
+                      {formatCurrency(selectedRequestData.originalAmount, selectedRequestData.currency || "USD", i18n.language)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -507,7 +507,7 @@ export function AdminRefundsPage() {
                     />
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {t('dialog.maximumAmount')} ${selectedRequestData.originalAmount.toFixed(2)}
+                    {t('dialog.maximumAmount')} {formatCurrency(selectedRequestData.originalAmount, selectedRequestData.currency || 'USD', i18n.language)}
                   </p>
                 </div>
               )}
@@ -545,7 +545,7 @@ export function AdminRefundsPage() {
               ) : decision === 'approve' ? (
                 t('dialog.approveButton')
               ) : decision === 'approve_partial' ? (
-                t('dialog.approvePartialButton', { amount: `$${partialAmount.toFixed(2)}` })
+                t('dialog.approvePartialButton', { amount: formatCurrency(partialAmount, 'USD', i18n.language) })
               ) : (
                 t('dialog.rejectButton')
               )}

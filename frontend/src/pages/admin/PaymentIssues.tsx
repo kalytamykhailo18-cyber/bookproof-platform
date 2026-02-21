@@ -31,13 +31,14 @@ import {
   SelectValue } from '@/components/ui/select';
 import { CheckCircle, RefreshCw, DollarSign, MessageSquare } from 'lucide-react';
 import {
+import { formatCurrency } from '@/lib/utils';
   PaymentIssueStatus,
   PaymentIssueType,
   PaymentIssuePriority,
   PaymentIssueAction } from '@/lib/api/payment-issues';
 
 export function PaymentIssuesPage() {
-  const { t } = useTranslation('adminPaymentIssues');
+  const { t, i18n } = useTranslation('adminPaymentIssues');
 
   const [issues, setIssues] = useState<any>(null);
   const [stats, setStats] = useState<any>(null);
@@ -309,7 +310,7 @@ export function PaymentIssuesPage() {
                       <Badge variant="outline">{getTypeLabel(issue.type)}</Badge>
                     </TableCell>
                     <TableCell className="font-medium">
-                      ${issue.amount.toFixed(2)} {issue.currency}
+                      {formatCurrency(issue.amount, issue.currency || 'USD', i18n.language)}
                     </TableCell>
                     <TableCell>
                       <Badge variant={getPriorityColor(issue.priority)}>{issue.priority}</Badge>

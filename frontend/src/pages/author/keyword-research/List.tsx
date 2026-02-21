@@ -15,12 +15,12 @@ import {
   Loader2,
   Eye,
 } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatCurrency } from '@/lib/utils';
 import { KeywordResearchStatus } from '@/lib/api/keywords';
 import { toast } from 'sonner';
 
 export function KeywordResearchListPage() {
-  const { t } = useTranslation('keywordResearch');
+  const { t, i18n } = useTranslation('keywordResearch');
   const navigate = useNavigate();
 
   const [researches, setResearches] = useState<any[]>([]);
@@ -168,7 +168,7 @@ export function KeywordResearchListPage() {
                   !research.paid &&
                   research.price > 0 && (
                     <div className="rounded-md bg-yellow-50 p-2 text-sm text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">
-                      Payment required: ${research.price.toFixed(2)}
+                      Payment required: {formatCurrency(research.price, research.currency || 'USD', i18n.language)}
                     </div>
                   )}
 

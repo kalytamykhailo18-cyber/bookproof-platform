@@ -8,12 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeft, Save, Search, Loader2 } from 'lucide-react';
 
@@ -26,18 +20,18 @@ export function CreatePackagePage() {
   const [formData, setFormData] = useState({
     packageName: '',
     description: '',
-    credits: 500, // Enterprise packages require minimum 500 credits
-    price: 250,
+    credits: 0,
+    price: 0,
     currency: 'USD',
     validityDays: 90,
     specialTerms: '',
-    internalNotes: '', // Internal notes (not visible to client, per Section 5.2)
+    internalNotes: '',
     clientName: '',
     clientEmail: '',
     clientCompany: '',
-    clientPhone: '', // Client phone (per Section 5.2)
-    includeKeywordResearch: false, // Include keyword research (per Section 5.2)
-    keywordResearchCredits: 0, // Number of keyword research credits (per Section 5.2)
+    clientPhone: '',
+    includeKeywordResearch: false,
+    keywordResearchCredits: 0,
   });
 
   const handleFormSubmit = async () => {
@@ -73,9 +67,11 @@ export function CreatePackagePage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Calculate price per credit
+  // Calculate price per credit — only when both values are set
   const pricePerCredit =
-    formData.credits > 0 ? (formData.price / formData.credits).toFixed(2) : '0.00';
+    formData.credits > 0 && formData.price > 0
+      ? (formData.price / formData.credits).toFixed(4)
+      : null;
 
   return (
     <div className="container mx-auto max-w-3xl space-y-6 px-4 py-8">
@@ -144,29 +140,22 @@ export function CreatePackagePage() {
                     id="credits"
                     type="number"
                     min={1}
-                    value={formData.credits}
+                    placeholder="e.g. 100"
+                    value={formData.credits === 0 ? '' : formData.credits}
                     onChange={(e) => updateField('credits', parseInt(e.target.value) || 0)}
                   />
                   <p className="text-xs text-muted-foreground">{t('createPackage.creditsHelp')}</p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="validityDays">{t('createPackage.validityPeriod')} *</Label>
-                  <Select
-                    value={formData.validityDays.toString()}
-                    onValueChange={(value) => updateField('validityDays', parseInt(value))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="30">30 {t('packageDetail.days')}</SelectItem>
-                      <SelectItem value="60">60 {t('packageDetail.days')}</SelectItem>
-                      <SelectItem value="90">90 {t('packageDetail.days')}</SelectItem>
-                      <SelectItem value="120">120 {t('packageDetail.days')}</SelectItem>
-                      <SelectItem value="180">180 {t('packageDetail.days')}</SelectItem>
-                      <SelectItem value="365">365 {t('packageDetail.days')}</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="validityDays"
+                    type="number"
+                    min={1}
+                    placeholder="e.g. 90"
+                    value={formData.validityDays}
+                    onChange={(e) => updateField('validityDays', parseInt(e.target.value) || 1)}
+                  />
                   <p className="text-xs text-muted-foreground">{t('createPackage.validityHelp')}</p>
                 </div>
               </div>
@@ -178,32 +167,33 @@ export function CreatePackagePage() {
                     type="number"
                     min={0}
                     step={0.01}
-                    value={formData.price}
+                    placeholder="e.g. 500.00"
+                    value={formData.price === 0 ? '' : formData.price}
                     onChange={(e) => updateField('price', parseFloat(e.target.value) || 0)}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="currency">{t('createPackage.currency')}</Label>
-                  <Select
+                  <select
+                    id="currency"
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-ring"
                     value={formData.currency}
-                    onValueChange={(value) => updateField('currency', value)}
+                    onChange={(e) => updateField('currency', e.target.value)}
                   >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="USD">USD - US Dollar</SelectItem>
-                      <SelectItem value="EUR">EUR - Euro</SelectItem>
-                      <SelectItem value="GBP">GBP - British Pound</SelectItem>
-                      <SelectItem value="BRL">BRL - Brazilian Real</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    <option value="USD">USD - US Dollar</option>
+                    <option value="EUR">EUR - Euro</option>
+                    <option value="GBP">GBP - British Pound</option>
+                    <option value="BRL">BRL - Brazilian Real</option>
+                  </select>
                 </div>
               </div>
               <div className="rounded-lg bg-muted p-4">
                 <p className="text-sm">
                   <span className="font-medium">{t('createPackage.pricePerCredit')}:</span>{' '}
-                  {formData.currency} {pricePerCredit}
+                  {pricePerCredit !== null
+                    ? `${formData.currency} ${pricePerCredit}`
+                    : <span className="text-muted-foreground italic">Enter credits and price above</span>
+                  }
                 </p>
               </div>
             </CardContent>

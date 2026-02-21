@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '@/lib/utils';
 import { format } from 'date-fns';
 import {
   DollarSign,
@@ -188,11 +189,11 @@ export function WalletPage() {
             <Wallet className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${availableBalance.toFixed(2)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(availableBalance, 'USD', i18n.language)}</div>
             <p className="mt-1 text-xs text-muted-foreground">
               {availableBalance >= 50
                 ? 'Ready to request payout'
-                : `$${(50 - availableBalance).toFixed(2)} until minimum`}
+                : `${formatCurrency(50 - availableBalance, 'USD', i18n.language)} until minimum`}
             </p>
           </CardContent>
         </Card>
@@ -203,7 +204,7 @@ export function WalletPage() {
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${pendingEarnings.toFixed(2)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(pendingEarnings, 'USD', i18n.language)}</div>
             <p className="mt-1 text-xs text-muted-foreground">Reviews being validated</p>
           </CardContent>
         </Card>
@@ -214,7 +215,7 @@ export function WalletPage() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalEarned.toFixed(2)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(totalEarned, 'USD', i18n.language)}</div>
             <p className="mt-1 text-xs text-muted-foreground">Lifetime earnings</p>
           </CardContent>
         </Card>
@@ -225,7 +226,7 @@ export function WalletPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalWithdrawn.toFixed(2)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(totalWithdrawn, 'USD', i18n.language)}</div>
             <p className="mt-1 text-xs text-muted-foreground">Total payouts received</p>
           </CardContent>
         </Card>
@@ -278,10 +279,10 @@ export function WalletPage() {
                       <p
                         className={`font-semibold ${tx.amount >= 0 ? 'text-green-600' : 'text-red-500'}`}
                       >
-                        {tx.amount >= 0 ? '+' : ''}${tx.amount.toFixed(2)}
+                        {tx.amount >= 0 ? '+' : ''}{formatCurrency(tx.amount, 'USD', i18n.language)}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        Balance: ${tx.balanceAfter.toFixed(2)}
+                        Balance: {formatCurrency(tx.balanceAfter, 'USD', i18n.language)}
                       </p>
                     </div>
                   </div>
@@ -345,7 +346,7 @@ export function WalletPage() {
                           />
                           <div className="flex items-center gap-2">
                             <span className="text-lg font-semibold">
-                              ${payout.amount.toFixed(2)}
+                              {formatCurrency(payout.amount, 'USD', i18n.language)}
                             </span>
                             <Badge variant="outline">{t(`status.${payout.status}`)}</Badge>
                           </div>

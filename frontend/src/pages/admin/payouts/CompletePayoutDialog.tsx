@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 
 interface CompletePayoutDialogProps {
   payout: PayoutResponse;
@@ -62,7 +63,7 @@ export default function CompletePayoutDialog({
         <DialogHeader>
           <DialogTitle>{t('dialog.completeTitle')}</DialogTitle>
           <DialogDescription>
-            Mark payout of ${payout.amount.toFixed(2)} as completed for reader{' '}
+            Mark payout of {formatCurrency(payout.amount, 'USD', i18n.language)} as completed for reader{' '}
             {payout.readerProfileId}
           </DialogDescription>
         </DialogHeader>

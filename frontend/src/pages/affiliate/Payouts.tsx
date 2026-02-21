@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '@/lib/utils';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -171,7 +172,7 @@ export function AffiliatePayoutsPage() {
                 <div className="rounded-lg bg-muted p-4">
                   <p className="text-sm font-medium">{t('request.availableBalance')}</p>
                   <p className="text-2xl font-bold">
-                    ${stats?.approvedEarnings.toFixed(2) || '0.00'}
+                    {formatCurrency(stats?.approvedEarnings || 0, 'USD', i18n.language)}
                   </p>
                 </div>
 
@@ -294,19 +295,19 @@ export function AffiliatePayoutsPage() {
               <div>
                 <p className="text-sm text-muted-foreground">{t('balance.approved')}</p>
                 <p className="text-2xl font-bold text-green-600">
-                  ${stats?.approvedEarnings.toFixed(2) || '0.00'}
+                  {formatCurrency(stats?.approvedEarnings || 0, 'USD', i18n.language)}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">{t('balance.pending')}</p>
                 <p className="text-2xl font-bold text-yellow-600">
-                  ${stats?.pendingEarnings.toFixed(2) || '0.00'}
+                  {formatCurrency(stats?.pendingEarnings || 0, 'USD', i18n.language)}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">{t('balance.paid')}</p>
                 <p className="text-2xl font-bold text-blue-600">
-                  ${stats?.paidEarnings.toFixed(2) || '0.00'}
+                  {formatCurrency(stats?.paidEarnings || 0, 'USD', i18n.language)}
                 </p>
               </div>
             </div>
@@ -354,7 +355,7 @@ export function AffiliatePayoutsPage() {
                       key={payout.id}
                       className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
                     >
-                      <TableCell className="font-semibold">${payout.amount.toFixed(2)}</TableCell>
+                      <TableCell className="font-semibold">{formatCurrency(payout.amount, 'USD', i18n.language)}</TableCell>
                       <TableCell>{payout.paymentMethod}</TableCell>
                       <TableCell>{getPayoutStatusBadge(payout.status)}</TableCell>
                       <TableCell>{formatDate(payout.requestedAt)}</TableCell>

@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 
 interface RejectPayoutDialogProps {
   payout: PayoutResponse;
@@ -59,7 +60,7 @@ export default function RejectPayoutDialog({
         <DialogHeader>
           <DialogTitle>{t('dialog.rejectTitle')}</DialogTitle>
           <DialogDescription>
-            Reject payout request of ${payout.amount.toFixed(2)} for reader {payout.readerProfileId}
+            Reject payout request of {formatCurrency(payout.amount, 'USD', i18n.language)} for reader {payout.readerProfileId}
           </DialogDescription>
         </DialogHeader>
 

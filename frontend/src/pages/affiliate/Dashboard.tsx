@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '@/lib/utils';
 import { affiliatesApi } from '@/lib/api/affiliates';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -303,10 +304,10 @@ export function AffiliateDashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
-                  ${stats?.totalEarnings.toFixed(2) || '0.00'}
+                  {formatCurrency(stats?.totalEarnings || 0, 'USD', i18n.language)}
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  {t('stats.approvedEarnings')}: ${stats?.approvedEarnings.toFixed(2) || '0.00'}
+                  {t('stats.approvedEarnings')}: {formatCurrency(stats?.approvedEarnings || 0, 'USD', i18n.language)}
                 </p>
               </CardContent>
             </Card>
@@ -318,7 +319,7 @@ export function AffiliateDashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-yellow-600">
-                  ${stats?.pendingEarnings.toFixed(2) || '0.00'}
+                  {formatCurrency(stats?.pendingEarnings || 0, 'USD', i18n.language)}
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">{t('stats.pendingDescription')}</p>
               </CardContent>
@@ -385,7 +386,7 @@ export function AffiliateDashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-emerald-600">
-                  ${stats?.approvedEarnings.toFixed(2) || '0.00'}
+                  {formatCurrency(stats?.approvedEarnings || 0, 'USD', i18n.language)}
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">
                   {t('stats.availableDescription') || 'Ready to withdraw'}
@@ -400,7 +401,7 @@ export function AffiliateDashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-gray-600">
-                  ${stats?.paidEarnings.toFixed(2) || '0.00'}
+                  {formatCurrency(stats?.paidEarnings || 0, 'USD', i18n.language)}
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">
                   {t('stats.totalPaidDescription') || 'Already withdrawn'}
@@ -525,9 +526,9 @@ export function AffiliateDashboardPage() {
                     key={commission.id}
                     className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
                   >
-                    <TableCell>${commission.purchaseAmount.toFixed(2)}</TableCell>
+                    <TableCell>{formatCurrency(commission.purchaseAmount, 'USD', i18n.language)}</TableCell>
                     <TableCell className="font-semibold">
-                      ${commission.commissionAmount.toFixed(2)}
+                      {formatCurrency(commission.commissionAmount, 'USD', i18n.language)}
                     </TableCell>
                     <TableCell>{getCommissionStatusBadge(commission.status)}</TableCell>
                     <TableCell>{formatDate(commission.createdAt)}</TableCell>
@@ -585,7 +586,7 @@ export function AffiliateDashboardPage() {
                     key={payout.id}
                     className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
                   >
-                    <TableCell className="font-semibold">${payout.amount.toFixed(2)}</TableCell>
+                    <TableCell className="font-semibold">{formatCurrency(payout.amount, 'USD', i18n.language)}</TableCell>
                     <TableCell>{payout.paymentMethod}</TableCell>
                     <TableCell>{getPayoutStatusBadge(payout.status)}</TableCell>
                     <TableCell>{formatDate(payout.requestedAt)}</TableCell>

@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
+import { formatCurrency } from '@/lib/utils';
   Users,
   Search,
   Eye,
@@ -36,7 +37,7 @@ import {
 } from 'lucide-react';
 
 export function AdminAffiliatesListPage() {
-  const { t } = useTranslation('adminAffiliates');
+  const { t, i18n } = useTranslation('adminAffiliates');
   const navigate = useNavigate();
 
   // Data state
@@ -203,7 +204,7 @@ export function AdminAffiliatesListPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${stats.totalEarnings.toFixed(2)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(stats.totalEarnings, "USD", i18n.language)}</div>
           </CardContent>
         </Card>
 
@@ -335,7 +336,7 @@ export function AdminAffiliatesListPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="font-medium">${(affiliate.totalEarnings || 0).toFixed(2)}</div>
+                      <div className="font-medium">{formatCurrency(affiliate.totalEarnings || 0, "USD", i18n.language)}</div>
                     </TableCell>
                     <TableCell className="text-right">
                       <Button

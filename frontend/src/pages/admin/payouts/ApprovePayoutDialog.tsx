@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 
 interface ApprovePayoutDialogProps {
   payout: PayoutResponse;
@@ -52,7 +53,7 @@ export default function ApprovePayoutDialog({
         <DialogHeader>
           <DialogTitle>{t('dialog.approveTitle')}</DialogTitle>
           <DialogDescription>
-            Approve payout request of ${payout.amount.toFixed(2)} for reader{' '}
+            Approve payout request of {formatCurrency(payout.amount, 'USD', i18n.language)} for reader{' '}
             {payout.readerProfileId}
           </DialogDescription>
         </DialogHeader>

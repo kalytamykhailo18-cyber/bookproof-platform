@@ -16,7 +16,7 @@ import {
   TableHead,
   TableHeader,
   TableRow } from '@/components/ui/table';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatCurrency } from '@/lib/utils';
 
 export function CouponUsagePage() {
   const { t, i18n } = useTranslation('adminCoupons');
@@ -164,7 +164,7 @@ export function CouponUsagePage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${stats.totalDiscountGiven.toFixed(2)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(stats.totalDiscountGiven, "USD", i18n.language)}</div>
             <p className="text-xs text-muted-foreground">total savings for users</p>
           </CardContent>
         </Card>
@@ -231,7 +231,7 @@ export function CouponUsagePage() {
                   <TableRow key={usage.id}>
                     <TableCell className="font-medium">{usage.userId}</TableCell>
                     <TableCell>{usage.userEmail}</TableCell>
-                    <TableCell>${usage.discountApplied.toFixed(2)}</TableCell>
+                    <TableCell>{formatCurrency(usage.discountApplied, usage.currency || "USD", i18n.language)}</TableCell>
                     <TableCell>
                       {usage.creditPurchaseId && <Badge variant="outline">Credit Purchase</Badge>}
                       {usage.keywordResearchId && <Badge variant="outline">Keyword Research</Badge>}

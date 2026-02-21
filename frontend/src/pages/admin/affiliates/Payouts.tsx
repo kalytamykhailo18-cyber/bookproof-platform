@@ -49,7 +49,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Filter } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatCurrency } from '@/lib/utils';
 import { PayoutAction, PayoutRequestStatus, PayoutResponseDto } from '@/lib/api/affiliates';
 
 const processPayoutSchema = z
@@ -221,7 +221,7 @@ export function AdminAffiliatePayoutsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${payouts?.reduce((sum, p) => sum + p.amount, 0).toFixed(2) || '0.00'}
+              {formatCurrency(payouts?.reduce((sum, p) => sum + p.amount, 0) || 0, 'USD', i18n.language)}
             </div>
             <p className="text-xs text-muted-foreground">{t('stats.totalPending')}</p>
           </CardContent>
@@ -355,7 +355,7 @@ export function AdminAffiliatePayoutsPage() {
                         </p>
                       </div>
                     </TableCell>
-                    <TableCell className="font-semibold">${payout.amount.toFixed(2)}</TableCell>
+                    <TableCell className="font-semibold">{formatCurrency(payout.amount, "USD", i18n.language)}</TableCell>
                     <TableCell>{payout.paymentMethod}</TableCell>
                     <TableCell>{getPayoutStatusBadge(payout.status)}</TableCell>
                     <TableCell>{formatDate(payout.requestedAt)}</TableCell>
@@ -422,7 +422,7 @@ export function AdminAffiliatePayoutsPage() {
             <DialogDescription>
               {selectedPayout && (
                 <>
-                  {t('dialog.amount')}: ${selectedPayout.amount.toFixed(2)} -{' '}
+                  {t('dialog.amount')}: {formatCurrency(selectedPayout.amount, 'USD', i18n.language)} -{' '}
                   {selectedPayout.paymentMethod}
                 </>
               )}

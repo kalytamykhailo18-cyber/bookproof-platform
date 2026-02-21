@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '@/lib/utils';
 import { useNavigate,  useParams, useSearchParams, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -696,24 +697,24 @@ export function NewKeywordResearchPage() {
                     <span className="font-medium text-green-700 dark:text-green-400">
                       Already Paid
                     </span>
-                    <span className="font-bold text-green-700 dark:text-green-400">$0.00</span>
+                    <span className="font-bold text-green-700 dark:text-green-400">{formatCurrency(0, pricing?.currency || 'USD', i18n.language)}</span>
                   </div>
                 ) : (
                   // Standard pricing
                   <>
                     <div className="flex justify-between text-sm">
                       <span>{t('new.review.subtotal')}</span>
-                      <span>${basePrice.toFixed(2)}</span>
+                      <span>{formatCurrency(basePrice, pricing?.currency || 'USD', i18n.language)}</span>
                     </div>
                     {discount > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
                         <span>{t('new.review.discount')}</span>
-                        <span>-${discount.toFixed(2)}</span>
+                        <span>-{formatCurrency(discount, pricing?.currency || 'USD', i18n.language)}</span>
                       </div>
                     )}
                     <div className="flex justify-between border-t pt-2 text-lg font-bold">
                       <span>{t('new.review.total')}</span>
-                      <span>${finalPrice.toFixed(2)}</span>
+                      <span>{formatCurrency(finalPrice, pricing?.currency || 'USD', i18n.language)}</span>
                     </div>
                   </>
                 )}

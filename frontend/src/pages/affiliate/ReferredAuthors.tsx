@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '@/lib/utils';
 import { affiliatesApi } from '@/lib/api/affiliates';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -144,7 +145,7 @@ export function ReferredAuthorsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-purple-600">
-              ${totalCommissionEarned.toFixed(2)}
+              {formatCurrency(totalCommissionEarned, 'USD', i18n.language)}
             </div>
           </CardContent>
         </Card>
@@ -193,7 +194,7 @@ export function ReferredAuthorsPage() {
                     <TableCell>{formatDate(author.signUpDate)}</TableCell>
                     <TableCell>{author.totalPurchases}</TableCell>
                     <TableCell className="font-semibold text-green-600">
-                      ${author.totalCommissionEarned.toFixed(2)}
+                      {formatCurrency(author.totalCommissionEarned, 'USD', i18n.language)}
                     </TableCell>
                     <TableCell>
                       {author.lastPurchaseDate ? formatDate(author.lastPurchaseDate) : '-'}
@@ -265,7 +266,7 @@ export function ReferredAuthorsPage() {
                       {t('detail.totalCommission') || 'Total Commission'}
                     </p>
                     <p className="font-semibold text-green-600">
-                      ${authorDetail.totalCommissionEarned.toFixed(2)}
+                      {formatCurrency(authorDetail.totalCommissionEarned, 'USD', i18n.language)}
                     </p>
                   </div>
                 </div>
@@ -293,9 +294,9 @@ export function ReferredAuthorsPage() {
                       {authorDetail.purchaseHistory.map((purchase, index) => (
                         <TableRow key={index}>
                           <TableCell>{formatDate(purchase.date)}</TableCell>
-                          <TableCell>${purchase.amount.toFixed(2)}</TableCell>
+                          <TableCell>{formatCurrency(purchase.amount, 'USD', i18n.language)}</TableCell>
                           <TableCell className="font-semibold text-green-600">
-                            ${purchase.commission.toFixed(2)}
+                            {formatCurrency(purchase.commission, 'USD', i18n.language)}
                           </TableCell>
                         </TableRow>
                       ))}

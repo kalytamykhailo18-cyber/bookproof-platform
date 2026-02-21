@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatCurrency } from '@/lib/utils';
 import { readersApi, ReaderProfile, ContentPreference as ContentPref } from '@/lib/api/readers';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -420,17 +421,17 @@ export function ReaderProfilePage() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">{t('stats.walletBalance')}:</span>
-                    <span className="text-lg font-bold">${profile.walletBalance.toFixed(2)}</span>
+                    <span className="text-lg font-bold">{formatCurrency(profile.walletBalance, 'USD', i18n.language)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">{t('stats.totalEarned')}:</span>
                     <span className="font-medium text-green-600">
-                      ${profile.totalEarned.toFixed(2)}
+                      {formatCurrency(profile.totalEarned, 'USD', i18n.language)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">{t('stats.totalWithdrawn')}:</span>
-                    <span className="font-medium">${profile.totalWithdrawn.toFixed(2)}</span>
+                    <span className="font-medium">{formatCurrency(profile.totalWithdrawn, 'USD', i18n.language)}</span>
                   </div>
                 </div>
 

@@ -9,6 +9,7 @@ import {
   DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { formatCurrency } from '@/lib/utils';
 
 interface PayoutDetailsDialogProps {
   payout: PayoutResponse;
@@ -70,7 +71,7 @@ export default function PayoutDetailsDialog({
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <span className="text-muted-foreground">{t('fields.amount')}:</span>
-                <p className="text-lg font-medium">${payout.amount.toFixed(2)}</p>
+                <p className="text-lg font-medium">{formatCurrency(payout.amount, "USD", i18n.language)}</p>
               </div>
               <div>
                 <span className="text-muted-foreground">{t('fields.paymentMethod')}:</span>

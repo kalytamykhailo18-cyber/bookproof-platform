@@ -37,7 +37,7 @@ import {
   Power,
   Percent,
   ArrowLeft } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatCurrency } from '@/lib/utils';
 import { CommissionStatus } from '@/lib/api/affiliates';
 
 export function AdminAffiliateDetailsPage() {
@@ -634,9 +634,9 @@ export function AdminAffiliateDetailsPage() {
                     key={commission.id}
                     className={`animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}
                   >
-                    <TableCell>${commission.purchaseAmount.toFixed(2)}</TableCell>
+                    <TableCell>{formatCurrency(commission.purchaseAmount, "USD", i18n.language)}</TableCell>
                     <TableCell className="font-semibold">
-                      ${commission.commissionAmount.toFixed(2)}
+                      {formatCurrency(commission.commissionAmount, "USD", i18n.language)}
                     </TableCell>
                     <TableCell>{getCommissionStatusBadge(commission.status)}</TableCell>
                     <TableCell>{formatDate(commission.createdAt)}</TableCell>
@@ -685,7 +685,7 @@ export function AdminAffiliateDetailsPage() {
                     <TableCell>{formatDate(author.signUpDate)}</TableCell>
                     <TableCell>{author.totalPurchases}</TableCell>
                     <TableCell className="font-semibold text-green-600">
-                      ${author.totalCommissionEarned.toFixed(2)}
+                      {formatCurrency(author.totalCommissionEarned, "USD", i18n.language)}
                     </TableCell>
                     <TableCell>
                       {author.lastPurchaseDate ? formatDate(author.lastPurchaseDate) : '-'}
@@ -728,7 +728,7 @@ export function AdminAffiliateDetailsPage() {
                     key={payout.id}
                     className={`animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}
                   >
-                    <TableCell className="font-semibold">${payout.amount.toFixed(2)}</TableCell>
+                    <TableCell className="font-semibold">{formatCurrency(payout.amount, "USD", i18n.language)}</TableCell>
                     <TableCell>{payout.paymentMethod}</TableCell>
                     <TableCell>
                       <Badge

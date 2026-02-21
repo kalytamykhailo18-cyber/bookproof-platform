@@ -35,9 +35,10 @@ import {
 } from 'lucide-react';
 import type { AdminReaderListItemDto } from '@/lib/api/admin-readers';
 import { ContentPreference } from '@/lib/api/readers';
+import { formatCurrency } from '@/lib/utils';
 
 export function AdminReadersListPage() {
-  const { t } = useTranslation('adminReaders');
+  const { t, i18n } = useTranslation('adminReaders');
   const navigate = useNavigate();
 
   // Data state
@@ -214,7 +215,7 @@ export function AdminReadersListPage() {
             <Wallet className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${stats.totalWalletBalance.toFixed(2)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(stats.totalWalletBalance, "USD", i18n.language)}</div>
           </CardContent>
         </Card>
 
@@ -366,9 +367,9 @@ export function AdminReadersListPage() {
                     </TableCell>
                     <TableCell>
                       <div className="space-y-1 text-sm">
-                        <div className="font-medium">${reader.walletBalance.toFixed(2)}</div>
+                        <div className="font-medium">{formatCurrency(reader.walletBalance, "USD", i18n.language)}</div>
                         <div className="text-xs text-muted-foreground">
-                          ${reader.totalEarned.toFixed(2)} earned
+                          {formatCurrency(reader.totalEarned, "USD", i18n.language)} earned
                         </div>
                       </div>
                     </TableCell>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '@/lib/utils';
 import { dashboardsApi, ReaderStatsDto } from '@/lib/api/dashboards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -22,7 +23,7 @@ import {
   AlertCircle } from 'lucide-react';
 
 export function ReaderStatsPage() {
-  const { t } = useTranslation('readerStats');
+  const { t, i18n } = useTranslation('readerStats');
 
   // Stats state
   const [stats, setStats] = useState<ReaderStatsDto | null>(null);
@@ -340,7 +341,7 @@ export function ReaderStatsPage() {
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <p className="text-sm text-muted-foreground">{t('performanceOverTime.earnings')}</p>
-                      <p className="font-medium">${month.earnings.toFixed(2)}</p>
+                      <p className="font-medium">{formatCurrency(month.earnings, 'USD', i18n.language)}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm text-muted-foreground">{t('performanceOverTime.expired')}</p>

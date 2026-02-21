@@ -35,6 +35,7 @@ import {
   TableHeader,
   TableRow } from '@/components/ui/table';
 import {
+import { formatCurrency } from '@/lib/utils';
   ArrowLeft,
   User,
   Wallet,
@@ -779,18 +780,18 @@ export function AdminReaderDetailPage() {
                 <CardContent className="space-y-4">
                   <div>
                     <Label className="text-muted-foreground">{t('wallet.balance')}</Label>
-                    <p className="text-3xl font-bold">${reader.walletBalance.toFixed(2)}</p>
+                    <p className="text-3xl font-bold">{formatCurrency(reader.walletBalance, "USD", i18n.language)}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label className="text-muted-foreground">{t('wallet.totalEarned')}</Label>
                       <p className="text-lg font-semibold text-green-600">
-                        ${reader.totalEarned.toFixed(2)}
+                        {formatCurrency(reader.totalEarned, "USD", i18n.language)}
                       </p>
                     </div>
                     <div>
                       <Label className="text-muted-foreground">{t('wallet.totalWithdrawn')}</Label>
-                      <p className="text-lg font-semibold">${reader.totalWithdrawn.toFixed(2)}</p>
+                      <p className="text-lg font-semibold">{formatCurrency(reader.totalWithdrawn, "USD", i18n.language)}</p>
                     </div>
                   </div>
                   <Button
@@ -932,7 +933,7 @@ export function AdminReaderDetailPage() {
                 <CardTitle>{t('wallet.currentBalance')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-4xl font-bold">${reader.walletBalance.toFixed(2)}</p>
+                <p className="text-4xl font-bold">{formatCurrency(reader.walletBalance, "USD", i18n.language)}</p>
               </CardContent>
             </Card>
             <Card className="animate-fade-up-light-slow">
@@ -950,7 +951,7 @@ export function AdminReaderDetailPage() {
                 <CardTitle>{t('wallet.totalWithdrawn')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-4xl font-bold">${reader.totalWithdrawn.toFixed(2)}</p>
+                <p className="text-4xl font-bold">{formatCurrency(reader.totalWithdrawn, "USD", i18n.language)}</p>
               </CardContent>
             </Card>
           </div>
@@ -1027,7 +1028,7 @@ export function AdminReaderDetailPage() {
                         className={`animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}
                       >
                         <TableCell>{new Date(payout.requestedAt).toLocaleDateString()}</TableCell>
-                        <TableCell className="font-medium">${payout.amount.toFixed(2)}</TableCell>
+                        <TableCell className="font-medium">{formatCurrency(payout.amount, "USD", i18n.language)}</TableCell>
                         <TableCell>{payout.paymentMethod}</TableCell>
                         <TableCell>
                           <Badge

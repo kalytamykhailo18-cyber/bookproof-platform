@@ -40,7 +40,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Loader2, MoreHorizontal, Download, RefreshCw, Eye, X } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatCurrency } from '@/lib/utils';
 import { KeywordResearchStatus } from '@/lib/api/keywords';
 
 export function AdminKeywordResearchPage() {
@@ -208,7 +208,7 @@ export function AdminKeywordResearchPage() {
             <CardDescription>{t('stats.totalRevenue')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-primary">${stats.revenue.toFixed(2)}</p>
+            <p className="text-3xl font-bold text-primary">{formatCurrency(stats.revenue, "USD", i18n.language)}</p>
           </CardContent>
         </Card>
       </div>
@@ -279,7 +279,7 @@ export function AdminKeywordResearchPage() {
                         {tCommon(`status.${research.status.toLowerCase()}`)}
                       </Badge>
                     </TableCell>
-                    <TableCell>${research.price.toFixed(2)}</TableCell>
+                    <TableCell>{formatCurrency(research.price, research.currency || "USD", i18n.language)}</TableCell>
                     <TableCell>
                       {research.paid ? (
                         <Badge
@@ -373,7 +373,7 @@ export function AdminKeywordResearchPage() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Price</label>
-                  <p className="mt-1 text-base">${selectedResearch.price.toFixed(2)}</p>
+                  <p className="mt-1 text-base">{formatCurrency(selectedResearch.price, selectedResearch.currency || "USD", i18n.language)}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Paid</label>

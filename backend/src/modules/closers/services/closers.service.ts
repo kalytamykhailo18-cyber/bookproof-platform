@@ -301,13 +301,6 @@ export class ClosersService {
       throw new ForbiddenException('Closer profile is not active');
     }
 
-    // Enterprise is defined as 500+ credits
-    if (dto.credits < this.ENTERPRISE_CREDIT_THRESHOLD) {
-      throw new BadRequestException(
-        `Enterprise packages require a minimum of ${this.ENTERPRISE_CREDIT_THRESHOLD} credits`,
-      );
-    }
-
     // Calculate if approval is required based on pricing
     const { approvalRequired, minimumPrice } = this.calculateApprovalRequirement(
       dto.credits,
@@ -395,15 +388,36 @@ export class ClosersService {
       throw new BadRequestException('Cannot update a paid package');
     }
 
+    // Recalculate approval requirement if price or credits changed
+    const newCredits = dto.credits ?? pkg.credits;
+    const newPrice = dto.price ?? Number(pkg.price);
+    const { approvalRequired, minimumPrice } = this.calculateApprovalRequirement(
+      newCredits,
+      newPrice,
+    );
+    // Only reset approval status if the requirement itself changed
+    const approvalStatusUpdate =
+      approvalRequired !== pkg.approvalRequired
+        ? {
+            approvalRequired,
+            approvalStatus: approvalRequired
+              ? PackageApprovalStatus.PENDING
+              : PackageApprovalStatus.NOT_REQUIRED,
+            approvedBy: null,
+            approvedAt: null,
+            rejectionReason: null,
+          }
+        : {};
+
     const updatedPkg = await this.prisma.customPackage.update({
       where: { id: packageId },
       data: {
         ...(dto.packageName && { packageName: dto.packageName }),
         ...(dto.description !== undefined && { description: dto.description }),
-        ...(dto.credits && { credits: dto.credits }),
+        ...(dto.credits !== undefined && { credits: dto.credits }),
         ...(dto.price !== undefined && { price: dto.price }),
         ...(dto.currency && { currency: dto.currency }),
-        ...(dto.validityDays && { validityDays: dto.validityDays }),
+        ...(dto.validityDays !== undefined && { validityDays: dto.validityDays }),
         ...(dto.specialTerms !== undefined && { specialTerms: dto.specialTerms }),
         ...(dto.internalNotes !== undefined && { internalNotes: dto.internalNotes }),
         ...(dto.clientName && { clientName: dto.clientName }),
@@ -412,6 +426,7 @@ export class ClosersService {
         ...(dto.clientPhone !== undefined && { clientPhone: dto.clientPhone }),
         ...(dto.includeKeywordResearch !== undefined && { includeKeywordResearch: dto.includeKeywordResearch }),
         ...(dto.keywordResearchCredits !== undefined && { keywordResearchCredits: dto.keywordResearchCredits }),
+        ...approvalStatusUpdate,
       },
     });
 

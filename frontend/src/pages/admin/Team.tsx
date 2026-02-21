@@ -52,7 +52,7 @@ import {
   PowerOff,
   Loader2,
 } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatCurrency } from '@/lib/utils';
 
 interface CloserListItem {
   id: string;
@@ -84,7 +84,7 @@ interface AdminListItem {
 }
 
 export function AdminTeamPage() {
-  const { t } = useTranslation('adminTeam');
+  const { t, i18n } = useTranslation('adminTeam');
   const [activeTab, setActiveTab] = useState('closers');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -287,7 +287,7 @@ export function AdminTeamPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              ${closerStats.totalSales.toFixed(2)}
+              {formatCurrency(closerStats.totalSales, "USD", i18n.language)}
             </div>
             <p className="text-xs text-muted-foreground">{t('closers.table.sales')}</p>
           </CardContent>
@@ -313,7 +313,7 @@ export function AdminTeamPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-purple-600">
-              ${closerStats.totalCommission.toFixed(2)}
+              {formatCurrency(closerStats.totalCommission, "USD", i18n.language)}
             </div>
             <p className="text-xs text-muted-foreground">{t('closers.table.commission')}</p>
           </CardContent>
@@ -403,7 +403,7 @@ export function AdminTeamPage() {
                         <TableCell className="font-medium">{closer.name}</TableCell>
                         <TableCell>{closer.email}</TableCell>
                         <TableCell>{closer.commissionRate}%</TableCell>
-                        <TableCell>${closer.totalSales.toFixed(2)}</TableCell>
+                        <TableCell>{formatCurrency(closer.totalSales, "USD", i18n.language)}</TableCell>
                         <TableCell>{closer.totalPackagesSold}</TableCell>
                         <TableCell>
                           {closer.isActive ? (

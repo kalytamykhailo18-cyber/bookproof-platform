@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '@/lib/utils';
 import { toast } from 'sonner';
 import { creditsApi, PackageTier as PackageTierType } from '@/lib/api/credits';
 import { useLoading } from '@/components/providers/LoadingProvider';
@@ -31,7 +32,6 @@ import {
   CreditCard,
   Check,
   Calendar,
-  DollarSign,
   Package,
   Receipt,
   Loader2,
@@ -45,7 +45,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useNavigate,  useParams } from 'react-router-dom';
 
 export function CreditPurchasePage() {
-  const { t: _t } = useTranslation('credits');
+  const { t: _t, i18n } = useTranslation('credits');
   void _t; // Will use later for translations
   const navigate = useNavigate();
   const { startLoading, stopLoading } = useLoading();
@@ -208,7 +208,7 @@ export function CreditPurchasePage() {
       return `${coupon.discountPercent}% off`;
     }
     if (coupon.type === 'FIXED_AMOUNT' && coupon.discountAmount) {
-      return `$${coupon.discountAmount} off`;
+      return `${formatCurrency(coupon.discountAmount, 'USD', i18n.language)} off`;
     }
     if (coupon.type === 'FREE_ADDON') {
       return 'Free addon included';
@@ -261,8 +261,9 @@ export function CreditPurchasePage() {
                 <CardContent className="space-y-4">
                   <div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-bold">${pkg.basePrice}</span>
-                      <span className="text-muted-foreground">{pkg.currency}</span>
+                      <span className="text-4xl font-bold">
+                        {formatCurrency(pkg.basePrice, pkg.currency, i18n.language)}
+                      </span>
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">
                       {pkg.credits} credits • Valid for {pkg.validityDays} days
@@ -282,7 +283,7 @@ export function CreditPurchasePage() {
 
                   <div className="pt-2">
                     <p className="text-xs text-muted-foreground">
-                      Price per credit: ${(pkg.basePrice / pkg.credits).toFixed(2)}
+                      Price per credit: {formatCurrency(pkg.basePrice / pkg.credits, pkg.currency, i18n.language)}
                     </p>
                   </div>
                 </CardContent>
@@ -349,7 +350,7 @@ export function CreditPurchasePage() {
                   htmlFor="keywordResearch"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Include Keyword Research (+${keywordPrice.toFixed(2)})
+                  Include Keyword Research (+{formatCurrency(keywordPrice, keywordPricing?.currency || 'USD', i18n.language)})
                 </label>
               </div>
               <div className="grid gap-2 text-sm text-muted-foreground">
@@ -368,7 +369,7 @@ export function CreditPurchasePage() {
               </div>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-primary">${keywordPrice.toFixed(2)}</div>
+              <div className="text-2xl font-bold text-primary">{formatCurrency(keywordPrice, keywordPricing?.currency || 'USD', i18n.language)}</div>
               <div className="text-xs text-muted-foreground">per book</div>
             </div>
           </div>
@@ -513,10 +514,7 @@ export function CreditPurchasePage() {
                       <Badge variant="outline">{transaction.credits} credits</Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1">
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                        {transaction.amountPaid.toFixed(2)} {transaction.currency}
-                      </div>
+                      {formatCurrency(transaction.amountPaid, transaction.currency, i18n.language)}
                     </TableCell>
                     <TableCell>
                       <Badge

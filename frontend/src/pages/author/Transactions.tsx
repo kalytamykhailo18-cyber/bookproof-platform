@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '@/lib/utils';
 import { toast } from 'sonner';
 import { dashboardsApi, AuthorTransactionDto } from '@/lib/api/dashboards';
 import { refundsApi, RefundReason, RefundRequestStatus } from '@/lib/api/refunds';
@@ -472,7 +473,7 @@ export function TransactionsPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalSpent.toFixed(2)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(totalSpent, 'USD', i18n.language)}</div>
             <p className="text-xs text-muted-foreground">All time</p>
           </CardContent>
         </Card>
@@ -544,7 +545,7 @@ export function TransactionsPage() {
                   <p className="text-sm text-muted-foreground">{purchaseCount} transactions</p>
                 </div>
               </div>
-              <p className="text-lg font-bold">${purchaseTotal.toFixed(2)}</p>
+              <p className="text-lg font-bold">{formatCurrency(purchaseTotal, 'USD', i18n.language)}</p>
             </div>
 
             <div className="flex items-center justify-between rounded-md border p-3">
@@ -555,7 +556,7 @@ export function TransactionsPage() {
                   <p className="text-sm text-muted-foreground">{subscriptionCount} transactions</p>
                 </div>
               </div>
-              <p className="text-lg font-bold">${subscriptionTotal.toFixed(2)}</p>
+              <p className="text-lg font-bold">{formatCurrency(subscriptionTotal, 'USD', i18n.language)}</p>
             </div>
           </div>
         </CardContent>
@@ -960,7 +961,7 @@ export function TransactionsPage() {
                     <TableCell>{formatDate(request.createdAt)}</TableCell>
                     <TableCell>
                       <span className="font-medium">
-                        ${request.originalAmount.toFixed(2)} {request.currency}
+                        {formatCurrency(request.originalAmount, request.currency, i18n.language)}
                       </span>
                     </TableCell>
                     <TableCell>
@@ -1032,7 +1033,7 @@ export function TransactionsPage() {
                 <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
                   <div>
                     <span className="text-muted-foreground">Purchase Amount:</span>{' '}
-                    <span className="font-medium">${eligibility.originalAmount.toFixed(2)}</span>
+                    <span className="font-medium">{formatCurrency(eligibility.originalAmount, 'USD', i18n.language)}</span>
                   </div>
                   <div>
                     <span className="text-muted-foreground">Days Since Purchase:</span>{' '}

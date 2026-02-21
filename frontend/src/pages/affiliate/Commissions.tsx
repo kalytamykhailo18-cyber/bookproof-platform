@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '@/lib/utils';
 import { affiliatesApi, CommissionStatus } from '@/lib/api/affiliates';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -103,7 +104,7 @@ export function AffiliateCommissionsPage() {
                 <CardTitle className="text-sm font-medium">{t('summary.total')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-green-600">${totals.total.toFixed(2)}</div>
+                <div className="text-2xl font-bold text-green-600">{formatCurrency(totals.total, 'USD', i18n.language)}</div>
               </CardContent>
             </Card>
 
@@ -112,7 +113,7 @@ export function AffiliateCommissionsPage() {
                 <CardTitle className="text-sm font-medium">{t('summary.pending')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-yellow-600">${totals.pending.toFixed(2)}</div>
+                <div className="text-2xl font-bold text-yellow-600">{formatCurrency(totals.pending, 'USD', i18n.language)}</div>
               </CardContent>
             </Card>
 
@@ -121,7 +122,7 @@ export function AffiliateCommissionsPage() {
                 <CardTitle className="text-sm font-medium">{t('summary.approved')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-green-600">${totals.approved.toFixed(2)}</div>
+                <div className="text-2xl font-bold text-green-600">{formatCurrency(totals.approved, 'USD', i18n.language)}</div>
               </CardContent>
             </Card>
 
@@ -130,7 +131,7 @@ export function AffiliateCommissionsPage() {
                 <CardTitle className="text-sm font-medium">{t('summary.paid')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-blue-600">${totals.paid.toFixed(2)}</div>
+                <div className="text-2xl font-bold text-blue-600">{formatCurrency(totals.paid, 'USD', i18n.language)}</div>
               </CardContent>
             </Card>
           </>
@@ -205,9 +206,9 @@ export function AffiliateCommissionsPage() {
                       className={`animate-fade-up-${index % 2 === 0 ? 'fast' : 'light-slow'}`}
                     >
                       <TableCell className="font-mono text-sm">{commission.authorIdentifier}</TableCell>
-                      <TableCell>${commission.purchaseAmount.toFixed(2)}</TableCell>
+                      <TableCell>{formatCurrency(commission.purchaseAmount, 'USD', i18n.language)}</TableCell>
                       <TableCell className="font-semibold">
-                        ${commission.commissionAmount.toFixed(2)}
+                        {formatCurrency(commission.commissionAmount, 'USD', i18n.language)}
                       </TableCell>
                       <TableCell>{commission.commissionRate}%</TableCell>
                       <TableCell>{getCommissionStatusBadge(commission.status)}</TableCell>

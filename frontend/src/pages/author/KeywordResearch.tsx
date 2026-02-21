@@ -17,7 +17,7 @@ import {
   Edit,
   CreditCard,
   AlertTriangle } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatCurrency } from '@/lib/utils';
 import { KeywordResearchStatus, TargetMarket } from '@/lib/api/keywords';
 import { toast } from 'sonner';
 
@@ -247,7 +247,7 @@ export function KeywordResearchDetailsPage() {
                 ) : (
                   <CreditCard className="mr-2 h-4 w-4" />
                 )}
-                Pay Now (${research.price.toFixed(2)})
+                Pay Now ({formatCurrency(research.price, 'USD', i18n.language)})
               </Button>
             )}
           {/* Download button - only for COMPLETED status */}
@@ -273,7 +273,7 @@ export function KeywordResearchDetailsPage() {
             <AlertTitle>Payment Required</AlertTitle>
             <AlertDescription>
               Your keyword research order is awaiting payment. Please complete payment to start
-              processing. Amount due: <strong>${research.price.toFixed(2)}</strong>
+              processing. Amount due: <strong>{formatCurrency(research.price, 'USD', i18n.language)}</strong>
             </AlertDescription>
           </Alert>
         )}
