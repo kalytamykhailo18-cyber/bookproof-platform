@@ -20,7 +20,7 @@ import {
   Loader2 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, getCurrencyForLanguage } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 
 function StatsCard({
@@ -362,9 +362,9 @@ export function ReaderDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           title={t('stats.walletBalance')}
-          value={formatCurrency(stats?.walletBalance ?? 0, 'USD', i18n.language)}
+          value={formatCurrency(stats?.walletBalance ?? 0, getCurrencyForLanguage(i18n.language), i18n.language)}
           icon={DollarSign}
-          description={t('stats.totalEarned', { amount: formatCurrency(stats?.totalEarned ?? 0, 'USD', i18n.language) })}
+          description={t('stats.totalEarned', { amount: formatCurrency(stats?.totalEarned ?? 0, getCurrencyForLanguage(i18n.language), i18n.language) })}
           className="animate-fade-up-fast"
         />
         <StatsCard
@@ -383,7 +383,7 @@ export function ReaderDashboard() {
         />
         <StatsCard
           title={t('stats.pendingPayouts')}
-          value={formatCurrency(stats?.pendingPayouts ?? 0, 'USD', i18n.language)}
+          value={formatCurrency(stats?.pendingPayouts ?? 0, getCurrencyForLanguage(i18n.language), i18n.language)}
           icon={Banknote}
           description={t('stats.awaitingProcessing')}
           className="animate-fade-up-heavy-slow"

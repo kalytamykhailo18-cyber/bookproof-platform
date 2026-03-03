@@ -70,6 +70,24 @@ export function formatDateTime(date: string | Date, locale?: string): string {
 }
 
 /**
+ * Map language codes to their primary currency codes
+ * en → USD, pt (Brazilian Portuguese) → BRL, es → USD (Latin America mostly uses USD for commerce)
+ */
+const currencyMap: Record<string, string> = {
+  en: 'USD',
+  pt: 'BRL',
+  es: 'USD',
+};
+
+/**
+ * Get the appropriate currency code for a given language
+ */
+export function getCurrencyForLanguage(lang?: string): string {
+  if (!lang) return 'USD';
+  return currencyMap[lang] || 'USD';
+}
+
+/**
  * Format currency according to the specified locale
  * @param amount - Numeric amount
  * @param currency - Currency code (USD, EUR, BRL)

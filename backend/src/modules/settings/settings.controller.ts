@@ -205,6 +205,44 @@ export class SettingsController {
     );
   }
 
+  /**
+   * Get closer standard price per credit (Admin only)
+   */
+  @Get('admin/pricing/closer')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get closer standard price per credit (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Closer standard price per credit' })
+  async getCloserPricing(): Promise<{ pricePerCredit: number; minimumThreshold: number }> {
+    const pricePerCredit = await this.settingsService.getCloserStandardPricePerCredit();
+    return { pricePerCredit, minimumThreshold: pricePerCredit * 0.80 };
+  }
+
+  /**
+   * Update closer standard price per credit (Admin only)
+   */
+  @Put('admin/pricing/closer')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update closer standard price per credit (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Closer standard price updated' })
+  async updateCloserPricing(
+    @Body() dto: { pricePerCredit: number; reason?: string },
+    @Req() req: Request,
+  ): Promise<{ pricePerCredit: number; minimumThreshold: number }> {
+    await this.settingsService.updateSetting(
+      'closer_standard_price_per_credit',
+      { value: dto.pricePerCredit.toFixed(2), reason: dto.reason },
+      req.user!.id,
+      req.user!.email,
+      req.ip,
+    );
+    const pricePerCredit = await this.settingsService.getCloserStandardPricePerCredit();
+    return { pricePerCredit, minimumThreshold: pricePerCredit * 0.80 };
+  }
+
   // ============================================
   // FEATURE TOGGLE ENDPOINTS (Admin only)
   // ============================================

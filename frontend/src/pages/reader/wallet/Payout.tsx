@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, getCurrencyForLanguage } from '@/lib/utils';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -262,12 +262,12 @@ export function RequestPayoutPage() {
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-bold">{formatCurrency(availableBalance, 'USD', i18n.language)}</span>
+            <span className="text-4xl font-bold">{formatCurrency(availableBalance, getCurrencyForLanguage(i18n.language), i18n.language)}</span>
           </div>
           {availableBalance < MIN_PAYOUT_AMOUNT && (
             <Alert className="mt-4" variant="destructive">
               <AlertDescription>
-                You need at least {formatCurrency(MIN_PAYOUT_AMOUNT, 'USD', i18n.language)} to request a payout. Current balance: {formatCurrency(availableBalance, 'USD', i18n.language)}
+                You need at least {formatCurrency(MIN_PAYOUT_AMOUNT, getCurrencyForLanguage(i18n.language), i18n.language)} to request a payout. Current balance: {formatCurrency(availableBalance, getCurrencyForLanguage(i18n.language), i18n.language)}
               </AlertDescription>
             </Alert>
           )}
@@ -320,7 +320,7 @@ export function RequestPayoutPage() {
               )}
               {amount > availableBalance && (
                 <p className="mt-1 text-sm text-red-500">
-                  Amount cannot exceed available balance ({formatCurrency(availableBalance, 'USD', i18n.language)})
+                  Amount cannot exceed available balance ({formatCurrency(availableBalance, getCurrencyForLanguage(i18n.language), i18n.language)})
                 </p>
               )}
             </div>

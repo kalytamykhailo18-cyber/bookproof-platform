@@ -3,6 +3,9 @@
     "title": "Get Authentic Amazon Reviews That Last",
     "subtitle": "Connect your book with verified readers who genuinely read, listen, and leave honest reviews. Progressive delivery keeps your rankings growing naturally.",
     "heroImage": "Authentic Amazon Reviews",
+    "titleLine1": "Get Authentic",
+    "titleLine2": "Amazon Reviews",
+    "titleLine3": "That Actually Last",
     "cta": {
       "primary": "Start Getting Reviews",
       "secondary": "See How It Works"
@@ -48,6 +51,11 @@
         "label": "Books Launched",
         "description": "Successful campaigns completed"
       }
+    },
+    "trustBanner": {
+      "text": "Trusted by 500+ Authors Worldwide",
+      "subtext": "Join thousands of successful authors growing their presence on Amazon",
+      "rating": "4.9 / 5"
     }
   },
   "howItWorks": {
@@ -95,7 +103,8 @@
           "Downloadable PDF campaign report"
         ]
       }
-    }
+    },
+    "startCta": "Start Your Campaign Today"
   },
   "features": {
     "badge": "Platform Features",
@@ -134,6 +143,20 @@
         "title": "Keyword Research Add-On",
         "description": "Boost discoverability with our AI-powered keyword research service. Get optimized keywords for your title, subtitle, description, and Amazon KDP backend fields."
       }
+    },
+    "trustStrip": {
+      "compliant": {
+        "label": "Amazon Policy Compliant",
+        "desc": "All campaigns follow Amazon's Terms of Service. Every review is from a genuine reader who actually read your book."
+      },
+      "fast": {
+        "label": "Fast, Progressive Delivery",
+        "desc": "Reviews are distributed weekly for natural growth. Most campaigns start delivering within the first week."
+      },
+      "transparent": {
+        "label": "Full Campaign Transparency",
+        "desc": "Track every review in real time. Your dashboard shows everything — no surprises, no hidden steps."
+      }
     }
   },
   "forAuthors": {
@@ -166,7 +189,9 @@
         "description": "Add our AI-powered keyword research to any package. Get 5-10 primary keywords, 15 secondary terms, and 20 long-tail phrases with an implementation guide for Amazon KDP."
       }
     },
-    "cta": "Start Your Campaign"
+    "cta": "Start Your Campaign",
+    "socialProof": "500+ Authors Trust Their Book Launches to BookProof",
+    "noSubscription": "No subscription required — buy credits and use them whenever you're ready."
   },
   "readerBenefits": {
     "badge": "For Readers",
@@ -200,17 +225,33 @@
     },
     "howEarnings": {
       "title": "How Earnings Work",
+      "ebookLabel": "Ebook review",
       "ebook": "Per ebook review",
+      "audiobookLabel": "Audiobook review",
       "audiobook": "Per audiobook review",
       "minimum": "Minimum payout",
+      "paymentMethods": "Supported payment methods",
       "methods": "PayPal, Bank Transfer, Wise, Crypto"
     },
+    "howToGet": {
+      "title": "How to Start Earning",
+      "steps": [
+        "Register as a reader — it's completely free",
+        "Browse available books in your preferred genre",
+        "Apply to review a book that interests you",
+        "Read the book within your 72-hour window",
+        "Post your honest review on Amazon",
+        "Submit your review link and receive your payment"
+      ]
+    },
+    "freeToJoin": "Free to join — no fees, no commitments, no minimum activity required.",
     "cta": "Join as a Reader"
   },
   "testimonials": {
     "badge": "Success Stories",
     "title": "Authors Who Transformed Their Amazon Presence",
     "subtitle": "Real stories from real authors who used BookProof to break through and grow their readership.",
+    "rating": "4.9 / 5 — Average Author Satisfaction",
     "items": {
       "t1": {
         "quote": "BookProof helped my debut novel get the visibility it needed. The reviews came in naturally and helped boost my rankings significantly. Within 6 weeks I went from 2 reviews to 45.",
@@ -281,6 +322,15 @@
         "description": "Your campaign report shows total reviews delivered, replacements made, and final retention rate. You always know exactly what happened with every review."
       }
     },
+    "timeline": {
+      "title": "How the 14-Day Guarantee Works",
+      "steps": [
+        { "step": "1", "label": "Review Validated", "desc": "Admin verifies your Amazon review link and approves it" },
+        { "step": "2", "label": "14-Day Window", "desc": "We monitor your review for 14 days after validation" },
+        { "step": "3", "label": "Removal Detected", "desc": "If Amazon removes the review, we detect it within 48 hours" },
+        { "step": "4", "label": "Free Replacement", "desc": "We assign a new reader at zero cost — automatically" }
+      ]
+    },
     "note": "Guarantee applies to reviews removed within 14 days of admin validation. Reviews removed after 14 days are not covered but represent a very small percentage of delivered reviews."
   },
   "pricing": {
@@ -290,11 +340,16 @@
     "popular": "Most Popular",
     "perCredit": "per credit",
     "activate": "days to activate",
+    "infoRow": {
+      "reviews": "Reviews",
+      "duration": "Duration",
+      "validity": "Credit Validity"
+    },
     "packages": {
       "starter": {
         "name": "Starter",
         "credits": "25 Credits",
-        "validity": "30 days to activate",
+        "validity": "180 days to activate",
         "reviews": "~25 ebook reviews",
         "duration": "~5 weeks",
         "features": [
@@ -308,7 +363,7 @@
       "growth": {
         "name": "Growth",
         "credits": "50 Credits",
-        "validity": "30 days to activate",
+        "validity": "180 days to activate",
         "reviews": "~50 reviews",
         "duration": "~5-6 weeks",
         "features": [
@@ -322,7 +377,7 @@
       "professional": {
         "name": "Professional",
         "credits": "100 Credits",
-        "validity": "30 days to activate",
+        "validity": "180 days to activate",
         "reviews": "~100 reviews",
         "duration": "~4-6 weeks",
         "features": [
@@ -335,7 +390,7 @@
       "enterprise": {
         "name": "Enterprise",
         "credits": "200+ Credits",
-        "validity": "90-120 days to activate",
+        "validity": "360 days to activate",
         "reviews": "Custom volume",
         "duration": "Custom timeline",
         "features": [
@@ -349,7 +404,16 @@
     },
     "cta": "Get Started",
     "enterpriseCta": "Contact Sales",
-    "note": "Prices set by admin. Contact us for current package pricing."
+    "note": "Prices set by admin. Contact us for current package pricing.",
+    "allInclude": {
+      "title": "All Plans Include",
+      "items": [
+        "14-day replacement guarantee on every review",
+        "Real-time campaign dashboard and analytics",
+        "Email notifications at every campaign milestone",
+        "Downloadable PDF report when campaign completes"
+      ]
+    }
   },
   "faq": {
     "badge": "FAQ",
@@ -395,7 +459,17 @@
       "q10": {
         "question": "How does keyword research work?",
         "answer": "Our keyword research service uses AI to analyze your book's genre, description, target audience, and competing titles to generate optimized keywords. You receive a PDF report with 5-10 primary keywords, 10-15 secondary keywords, 15-20 long-tail phrases, and a complete implementation guide for Amazon KDP title, subtitle, description, and backend keyword fields."
+      },
+      "q11": {
+        "question": "What is your refund policy?",
+        "answer": "BookProof does not offer refunds after purchase. Credits are non-refundable once bought. However, your credits are valid for 180 days (standard packages) or 360 days (enterprise packages), giving you ample time to use them. Credits can be applied across multiple campaigns and multiple books within the validity period, so you always get the full value of your investment."
       }
+    },
+    "stillHave": {
+      "title": "Still Have Questions?",
+      "desc": "Our support team is available Monday through Friday during standard business hours. We typically respond within 24 hours.",
+      "email": "Email Support",
+      "contact": "View Contact Page"
     }
   },
   "leadForm": {

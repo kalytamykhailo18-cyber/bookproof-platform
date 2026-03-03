@@ -95,6 +95,11 @@ export function AdminSettingsPage() {
   const [allSettingsLoading, setAllSettingsLoading] = useState(true);
   const [systemConfig, setSystemConfig] = useState<any>(null);
   const [systemConfigLoading, setSystemConfigLoading] = useState(true);
+  const [closerPricing, setCloserPricing] = useState<{ pricePerCredit: number; minimumThreshold: number } | null>(null);
+  const [closerPricingLoading, setCloserPricingLoading] = useState(true);
+  const [isEditingCloserPricing, setIsEditingCloserPricing] = useState(false);
+  const [closerPriceInput, setCloserPriceInput] = useState('0.60');
+  const [closerPriceReason, setCloserPriceReason] = useState('');
 
   // State for mutations
   const [isUpdatingPricing, setIsUpdatingPricing] = useState(false);
@@ -102,6 +107,7 @@ export function AdminSettingsPage() {
   const [isUpdatingReviewRates, setIsUpdatingReviewRates] = useState(false);
   const [isUpdatingSetting, setIsUpdatingSetting] = useState(false);
   const [isUpdatingSystemConfig, setIsUpdatingSystemConfig] = useState(false);
+  const [isUpdatingCloserPricing, setIsUpdatingCloserPricing] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingSystemConfig, setIsEditingSystemConfig] = useState(false);
@@ -148,6 +154,19 @@ export function AdminSettingsPage() {
     }
   };
 
+  const refetchCloserPricing = async () => {
+    try {
+      setCloserPricingLoading(true);
+      const data = await settingsApi.getCloserPricing();
+      setCloserPricing(data);
+      setCloserPriceInput(data.pricePerCredit.toFixed(2));
+    } catch (error: any) {
+      console.error('Closer pricing error:', error);
+    } finally {
+      setCloserPricingLoading(false);
+    }
+  };
+
   const refetchSystemConfig = async () => {
     try {
       setSystemConfigLoading(true);
@@ -179,6 +198,7 @@ export function AdminSettingsPage() {
     refetchReviewRates();
     refetchSystemConfig();
     fetchAllSettings();
+    refetchCloserPricing();
   }, []);
 
   const form = useForm<KeywordPricingFormData>({
@@ -326,6 +346,26 @@ export function AdminSettingsPage() {
       reviewRatesForm.setValue('audiobookRate', reviewRates.audiobookRate);
     }
     reviewRatesForm.setValue('reason', '');
+  };
+
+  const handleCloserPricingSubmit = async () => {
+    const price = parseFloat(closerPriceInput);
+    if (isNaN(price) || price <= 0) {
+      toast.error('Please enter a valid price per credit');
+      return;
+    }
+    try {
+      setIsUpdatingCloserPricing(true);
+      await settingsApi.updateCloserPricing({ pricePerCredit: price, reason: closerPriceReason || undefined });
+      toast.success('Closer standard price updated successfully');
+      await refetchCloserPricing();
+      setIsEditingCloserPricing(false);
+      setCloserPriceReason('');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to update closer pricing');
+    } finally {
+      setIsUpdatingCloserPricing(false);
+    }
   };
 
   const handleSystemConfigSubmit = async () => {
@@ -766,6 +806,117 @@ export function AdminSettingsPage() {
               </div>
             </div>
           </Form>
+        </CardContent>
+      </Card>
+
+      {/* Closer Pricing Section */}
+      <Card className="animate-fade-up-light-slow">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <DollarSign className="h-5 w-5 text-purple-600" />
+              <CardTitle>Closer Standard Credit Price</CardTitle>
+            </div>
+            <Button type="button" variant="outline" size="sm" onClick={refetchCloserPricing}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Refresh
+            </Button>
+          </div>
+          <CardDescription>
+            The standard price per credit used by Closers to determine if a custom package requires Super Admin approval. Packages priced below 80% of this value need approval.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {closerPricingLoading ? (
+            <Skeleton className="h-24" />
+          ) : (
+            <div className="rounded-lg border p-4">
+              <div className="mb-4 flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold">Standard Price Per Credit</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Packages priced below ${closerPricing ? (closerPricing.pricePerCredit * 0.80).toFixed(2) : '0.48'}/credit (80% threshold) require Super Admin approval
+                  </p>
+                </div>
+                {!isEditingCloserPricing && (
+                  <Button type="button" variant="outline" onClick={() => setIsEditingCloserPricing(true)}>
+                    Edit
+                  </Button>
+                )}
+              </div>
+
+              {isEditingCloserPricing ? (
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="closerPrice">Price Per Credit (USD)</Label>
+                    <div className="relative mt-1">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                      <Input
+                        id="closerPrice"
+                        type="number"
+                        step="0.01"
+                        min="0.01"
+                        max="99.99"
+                        className="pl-7"
+                        value={closerPriceInput}
+                        onChange={(e) => setCloserPriceInput(e.target.value)}
+                      />
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Approval threshold: ${(parseFloat(closerPriceInput || '0') * 0.80).toFixed(2)}/credit
+                    </p>
+                  </div>
+                  <div>
+                    <Label htmlFor="closerPriceReason">Reason for Change (Optional)</Label>
+                    <Textarea
+                      id="closerPriceReason"
+                      value={closerPriceReason}
+                      onChange={(e) => setCloserPriceReason(e.target.value)}
+                      placeholder="Reason for updating the standard price..."
+                      rows={2}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button type="button" onClick={handleCloserPricingSubmit} disabled={isUpdatingCloserPricing}>
+                      {isUpdatingCloserPricing ? (
+                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</>
+                      ) : (
+                        <><Save className="mr-2 h-4 w-4" />Save</>
+                      )}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setIsEditingCloserPricing(false);
+                        setCloserPriceInput(closerPricing?.pricePerCredit.toFixed(2) || '0.60');
+                        setCloserPriceReason('');
+                      }}
+                      disabled={isUpdatingCloserPricing}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm text-muted-foreground">Standard Price</Label>
+                    <p className="text-2xl font-bold text-purple-600">
+                      ${closerPricing?.pricePerCredit?.toFixed(2) || '0.60'} / credit
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm text-muted-foreground">Approval Threshold (80%)</Label>
+                    <p className="text-2xl font-bold text-orange-600">
+                      ${closerPricing?.minimumThreshold?.toFixed(2) || '0.48'} / credit
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { adminReportsApi, FinancialReportDto } from '@/lib/api/admin-reports';
 import { toast } from 'sonner';
-import { Download, FileText, DollarSign, TrendingUp, TrendingDown, FileDown } from 'lucide-react';
+import { Download, FileText, DollarSign, TrendingUp, TrendingDown, FileDown, Lock } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency } from '@/lib/utils';
 import { startOfMonth, endOfMonth, format } from 'date-fns';
@@ -17,6 +17,7 @@ export function AdminFinancialReportsPage() {
   // Data state
   const [report, setReport] = useState<FinancialReportDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [accessDenied, setAccessDenied] = useState(false);
 
   // Export loading states
   const [isExportingCsv, setIsExportingCsv] = useState(false);
@@ -34,9 +35,13 @@ export function AdminFinancialReportsPage() {
           dateRange.endDate
         );
         setReport(data);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Financial report error:', err);
-        toast.error('Failed to load financial report');
+        if (err?.response?.status === 403) {
+          setAccessDenied(true);
+        } else {
+          toast.error('Failed to load financial report');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -84,6 +89,21 @@ export function AdminFinancialReportsPage() {
   const handleDateRangeChange = (start: string, end: string) => {
     setDateRange({ startDate: start, endDate: end });
   };
+
+  if (accessDenied) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4 p-6">
+        <div className="flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10">
+          <Lock className="h-8 w-8 text-destructive" />
+        </div>
+        <h2 className="text-xl font-semibold">Access Restricted</h2>
+        <p className="text-sm text-muted-foreground text-center max-w-md">
+          Financial reports are only accessible to Super Administrators.
+          Please contact your Super Admin if you need access to this data.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 p-6">

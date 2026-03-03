@@ -8,6 +8,7 @@ import { PrismaService } from '@common/prisma/prisma.service';
 import { AuditService } from '../../audit/audit.service';
 import { EmailService } from '../../email/email.service';
 import { ConfigService } from '@nestjs/config';
+import { SettingsService } from '../../settings/settings.service';
 import {
   CustomPackageStatus,
   PaymentStatus,
@@ -43,10 +44,9 @@ import {
 export class ClosersService {
   private appUrl: string;
 
-  // Standard pricing: Professional package = $179 for 300 credits = $0.5967/credit
-  // Minimum threshold: 80% of standard rate
-  // Enterprise defined as 500+ credits
-  private readonly STANDARD_PRICE_PER_CREDIT = 0.60; // Based on Professional package rate
+  // Standard pricing thresholds (dynamic via settings, these are fallback defaults)
+  // MINIMUM_PRICE_THRESHOLD: 80% of standard rate — packages below this require Super Admin approval
+  // ENTERPRISE_CREDIT_THRESHOLD: 500+ credits is considered an Enterprise package
   private readonly MINIMUM_PRICE_THRESHOLD = 0.80; // 80% of standard rate
   private readonly ENTERPRISE_CREDIT_THRESHOLD = 500; // Enterprise defined as 500+ credits
 
@@ -55,20 +55,22 @@ export class ClosersService {
     private auditService: AuditService,
     private emailService: EmailService,
     private configService: ConfigService,
+    private settingsService: SettingsService,
   ) {
     this.appUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
   }
 
   /**
    * Calculate if the package price requires Super Admin approval
-   * Approval is required if price per credit is below 80% of standard rate
+   * Approval is required if price per credit is below 80% of the configurable standard rate
    */
-  private calculateApprovalRequirement(
+  private async calculateApprovalRequirement(
     credits: number,
     price: number,
-  ): { approvalRequired: boolean; pricePerCredit: number; minimumPrice: number } {
+  ): Promise<{ approvalRequired: boolean; pricePerCredit: number; minimumPrice: number }> {
+    const standardPricePerCredit = await this.settingsService.getCloserStandardPricePerCredit();
     const pricePerCredit = price / credits;
-    const minimumPricePerCredit = this.STANDARD_PRICE_PER_CREDIT * this.MINIMUM_PRICE_THRESHOLD;
+    const minimumPricePerCredit = standardPricePerCredit * this.MINIMUM_PRICE_THRESHOLD;
     const minimumPrice = credits * minimumPricePerCredit;
 
     return {
@@ -302,7 +304,7 @@ export class ClosersService {
     }
 
     // Calculate if approval is required based on pricing
-    const { approvalRequired, minimumPrice } = this.calculateApprovalRequirement(
+    const { approvalRequired, minimumPrice } = await this.calculateApprovalRequirement(
       dto.credits,
       dto.price,
     );
@@ -391,7 +393,7 @@ export class ClosersService {
     // Recalculate approval requirement if price or credits changed
     const newCredits = dto.credits ?? pkg.credits;
     const newPrice = dto.price ?? Number(pkg.price);
-    const { approvalRequired, minimumPrice } = this.calculateApprovalRequirement(
+    const { approvalRequired, minimumPrice } = await this.calculateApprovalRequirement(
       newCredits,
       newPrice,
     );

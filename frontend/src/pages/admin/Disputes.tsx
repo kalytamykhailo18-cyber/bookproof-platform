@@ -37,6 +37,7 @@ export function DisputesPage() {
   // Data state
   const [disputes, setDisputes] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [stats, setStats] = useState<any>(null);
   const [slaStats, setSlaStats] = useState<any>(null);
 
@@ -50,10 +51,12 @@ export function DisputesPage() {
   const fetchDisputes = async () => {
     try {
       setIsLoading(true);
+      setIsError(false);
       const data = await disputesApi.getOpenDisputes();
       setDisputes(data);
     } catch (err) {
       console.error('Disputes error:', err);
+      setIsError(true);
       toast.error(t('messages.loadError'));
     } finally {
       setIsLoading(false);
@@ -233,6 +236,20 @@ export function DisputesPage() {
   const getTypeLabel = (type: DisputeType) => {
     return t(`types.${type}`, { defaultValue: type });
   };
+
+  if (isError && !isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex h-64 flex-col items-center justify-center gap-4">
+          <AlertTriangle className="h-12 w-12 text-destructive" />
+          <p className="text-muted-foreground">{t('messages.loadError')}</p>
+          <Button variant="outline" onClick={fetchDisputes}>
+            {t('table.retry', 'Retry')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

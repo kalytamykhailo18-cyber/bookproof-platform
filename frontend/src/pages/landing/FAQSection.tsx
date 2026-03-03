@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown, HelpCircle } from 'lucide-react';
 
-const FAQ_KEYS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'] as const;
+const FAQ_KEYS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11'] as const;
 
 const ITEM_ANIMATIONS = [
   'animate-fade-right-fast', 'animate-fade-left-fast',
@@ -10,6 +10,7 @@ const ITEM_ANIMATIONS = [
   'animate-fade-right-light-slow', 'animate-fade-left-light-slow',
   'animate-fade-right-slow', 'animate-fade-left-slow',
   'animate-zoom-in-light-slow', 'animate-zoom-in-slow',
+  'animate-fade-up-slow',
 ];
 
 export function FAQSection() {

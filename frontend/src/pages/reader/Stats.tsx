@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, getCurrencyForLanguage } from '@/lib/utils';
 import { dashboardsApi, ReaderStatsDto } from '@/lib/api/dashboards';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -74,10 +74,8 @@ export function ReaderStatsPage() {
       day: 'numeric' });
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD' }).format(amount);
+  const formatAmount = (amount: number) => {
+    return formatCurrency(amount, getCurrencyForLanguage(i18n.language), i18n.language);
   };
 
   return (
@@ -205,7 +203,7 @@ export function ReaderStatsPage() {
               </div>
               <div className="text-right">
                 <p className="text-xl font-bold text-primary">
-                  {formatCurrency(stats.wallet.currentBalance)}
+                  {formatAmount(stats.wallet.currentBalance)}
                 </p>
               </div>
             </div>
@@ -217,7 +215,7 @@ export function ReaderStatsPage() {
               </div>
               <div className="text-right">
                 <p className="text-xl font-bold text-green-600">
-                  {formatCurrency(stats.wallet.totalEarned)}
+                  {formatAmount(stats.wallet.totalEarned)}
                 </p>
               </div>
             </div>
@@ -228,7 +226,7 @@ export function ReaderStatsPage() {
                 <p className="text-xs text-muted-foreground">{t('wallet.successfullyPaidOut')}</p>
               </div>
               <div className="text-right">
-                <p className="text-xl font-bold">{formatCurrency(stats.wallet.totalWithdrawn)}</p>
+                <p className="text-xl font-bold">{formatAmount(stats.wallet.totalWithdrawn)}</p>
               </div>
             </div>
           </CardContent>
@@ -341,7 +339,7 @@ export function ReaderStatsPage() {
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <p className="text-sm text-muted-foreground">{t('performanceOverTime.earnings')}</p>
-                      <p className="font-medium">{formatCurrency(month.earnings, 'USD', i18n.language)}</p>
+                      <p className="font-medium">{formatAmount(month.earnings)}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm text-muted-foreground">{t('performanceOverTime.expired')}</p>

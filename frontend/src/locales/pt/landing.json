@@ -3,6 +3,9 @@
     "title": "Obtenha Avaliações Autênticas na Amazon que Duram",
     "subtitle": "Conecte seu livro com leitores verificados que genuinamente leem, ouvem e deixam avaliações honestas. A entrega progressiva faz seus rankings crescerem naturalmente.",
     "heroImage": "Avaliações Autênticas na Amazon",
+    "titleLine1": "Obtenha Avaliações",
+    "titleLine2": "Autênticas na Amazon",
+    "titleLine3": "Que Realmente Duram",
     "cta": {
       "primary": "Começar a Obter Avaliações",
       "secondary": "Ver Como Funciona"
@@ -48,6 +51,11 @@
         "label": "Livros Lançados",
         "description": "Campanhas concluídas com sucesso"
       }
+    },
+    "trustBanner": {
+      "text": "Confiado por mais de 500 Autores em Todo o Mundo",
+      "subtext": "Junte-se a milhares de autores de sucesso que crescem sua presença na Amazon",
+      "rating": "4,9 / 5"
     }
   },
   "howItWorks": {
@@ -95,7 +103,8 @@
           "Relatório PDF baixável da campanha"
         ]
       }
-    }
+    },
+    "startCta": "Inicie Sua Campanha Hoje"
   },
   "features": {
     "badge": "Recursos da Plataforma",
@@ -134,6 +143,20 @@
         "title": "Complemento de Pesquisa de Palavras-Chave",
         "description": "Aumente a descoberta com nosso serviço de pesquisa de palavras-chave com IA. Obtenha palavras-chave otimizadas para seu título, subtítulo, descrição e campos de backend do Amazon KDP."
       }
+    },
+    "trustStrip": {
+      "compliant": {
+        "label": "Em Conformidade com as Políticas da Amazon",
+        "desc": "Todas as campanhas seguem os Termos de Serviço da Amazon. Cada avaliação é de um leitor genuíno que realmente leu seu livro."
+      },
+      "fast": {
+        "label": "Entrega Rápida e Progressiva",
+        "desc": "As avaliações são distribuídas semanalmente para crescimento natural. A maioria das campanhas começa a entregar na primeira semana."
+      },
+      "transparent": {
+        "label": "Transparência Total da Campanha",
+        "desc": "Acompanhe cada avaliação em tempo real. Seu painel mostra tudo — sem surpresas, sem etapas ocultas."
+      }
     }
   },
   "forAuthors": {
@@ -166,7 +189,9 @@
         "description": "Adicione nossa pesquisa de palavras-chave com IA a qualquer pacote. Obtenha 5-10 palavras-chave primárias, 15 termos secundários e 20 frases de cauda longa com um guia de implementação para o Amazon KDP."
       }
     },
-    "cta": "Iniciar Sua Campanha"
+    "cta": "Iniciar Sua Campanha",
+    "socialProof": "Mais de 500 Autores Confiam Seus Lançamentos à BookProof",
+    "noSubscription": "Sem assinatura necessária — compre créditos e use-os quando estiver pronto."
   },
   "readerBenefits": {
     "badge": "Para Leitores",
@@ -200,17 +225,33 @@
     },
     "howEarnings": {
       "title": "Como os Ganhos Funcionam",
+      "ebookLabel": "Avaliação de ebook",
       "ebook": "Por avaliação de ebook",
+      "audiobookLabel": "Avaliação de audiobook",
       "audiobook": "Por avaliação de audiobook",
       "minimum": "Saque mínimo",
+      "paymentMethods": "Métodos de pagamento disponíveis",
       "methods": "PayPal, Transferência Bancária, Wise, Cripto"
     },
+    "howToGet": {
+      "title": "Como Começar a Ganhar",
+      "steps": [
+        "Cadastre-se como leitor — é completamente gratuito",
+        "Explore os livros disponíveis no seu gênero preferido",
+        "Candidate-se para avaliar um livro que te interessa",
+        "Leia o livro dentro da sua janela de 72 horas",
+        "Publique sua avaliação honesta na Amazon",
+        "Envie o link da avaliação e receba seu pagamento"
+      ]
+    },
+    "freeToJoin": "Gratuito para entrar — sem taxas, sem compromissos, sem atividade mínima exigida.",
     "cta": "Entrar como Leitor"
   },
   "testimonials": {
     "badge": "Histórias de Sucesso",
     "title": "Autores que Transformaram sua Presença na Amazon",
     "subtitle": "Histórias reais de autores reais que usaram a BookProof para se destacar e crescer sua base de leitores.",
+    "rating": "4,9 / 5 — Satisfação Média dos Autores",
     "items": {
       "t1": {
         "quote": "A BookProof ajudou meu romance de estreia a obter a visibilidade que precisava. As avaliações chegaram naturalmente e ajudaram a impulsionar significativamente meus rankings. Em 6 semanas passei de 2 avaliações para 45.",
@@ -281,6 +322,15 @@
         "description": "Seu relatório de campanha mostra o total de avaliações entregues, substituições realizadas e taxa de retenção final. Você sempre sabe exatamente o que aconteceu com cada avaliação."
       }
     },
+    "timeline": {
+      "title": "Como a Garantia de 14 Dias Funciona",
+      "steps": [
+        { "step": "1", "label": "Avaliação Validada", "desc": "O administrador verifica o link da sua avaliação na Amazon e aprova" },
+        { "step": "2", "label": "Janela de 14 Dias", "desc": "Monitoramos sua avaliação por 14 dias após a validação" },
+        { "step": "3", "label": "Remoção Detectada", "desc": "Se a Amazon remover a avaliação, detectamos em até 48 horas" },
+        { "step": "4", "label": "Substituição Gratuita", "desc": "Atribuímos um novo leitor a custo zero — automaticamente" }
+      ]
+    },
     "note": "A garantia se aplica a avaliações removidas em até 14 dias após a validação do administrador. Avaliações removidas após 14 dias não estão cobertas, mas representam uma porcentagem muito pequena das avaliações entregues."
   },
   "pricing": {
@@ -290,11 +340,16 @@
     "popular": "Mais Popular",
     "perCredit": "por crédito",
     "activate": "dias para ativar",
+    "infoRow": {
+      "reviews": "Avaliações",
+      "duration": "Duração",
+      "validity": "Validade dos Créditos"
+    },
     "packages": {
       "starter": {
         "name": "Iniciante",
         "credits": "25 Créditos",
-        "validity": "30 dias para ativar",
+        "validity": "180 dias para ativar",
         "reviews": "~25 avaliações de ebook",
         "duration": "~5 semanas",
         "features": [
@@ -308,7 +363,7 @@
       "growth": {
         "name": "Crescimento",
         "credits": "50 Créditos",
-        "validity": "30 dias para ativar",
+        "validity": "180 dias para ativar",
         "reviews": "~50 avaliações",
         "duration": "~5-6 semanas",
         "features": [
@@ -322,7 +377,7 @@
       "professional": {
         "name": "Profissional",
         "credits": "100 Créditos",
-        "validity": "30 dias para ativar",
+        "validity": "180 dias para ativar",
         "reviews": "~100 avaliações",
         "duration": "~4-6 semanas",
         "features": [
@@ -335,7 +390,7 @@
       "enterprise": {
         "name": "Empresarial",
         "credits": "200+ Créditos",
-        "validity": "90-120 dias para ativar",
+        "validity": "360 dias para ativar",
         "reviews": "Volume personalizado",
         "duration": "Cronograma personalizado",
         "features": [
@@ -349,7 +404,16 @@
     },
     "cta": "Começar",
     "enterpriseCta": "Contatar Vendas",
-    "note": "Preços definidos pelo administrador. Entre em contato para preços atuais dos pacotes."
+    "note": "Preços definidos pelo administrador. Entre em contato para preços atuais dos pacotes.",
+    "allInclude": {
+      "title": "Todos os Planos Incluem",
+      "items": [
+        "Garantia de substituição de 14 dias em cada avaliação",
+        "Painel de campanha e análises em tempo real",
+        "Notificações por email em cada marco da campanha",
+        "Relatório PDF baixável quando a campanha for concluída"
+      ]
+    }
   },
   "faq": {
     "badge": "FAQ",
@@ -395,7 +459,17 @@
       "q10": {
         "question": "Como funciona a pesquisa de palavras-chave?",
         "answer": "Nosso serviço de pesquisa de palavras-chave usa IA para analisar o gênero, descrição, público-alvo e títulos concorrentes do seu livro para gerar palavras-chave otimizadas. Você recebe um relatório PDF com 5-10 palavras-chave primárias, 10-15 palavras-chave secundárias, 15-20 frases de cauda longa e um guia completo de implementação para o Amazon KDP."
+      },
+      "q11": {
+        "question": "Qual é a política de reembolso?",
+        "answer": "A BookProof não oferece reembolsos após a compra. Os créditos não são reembolsáveis após a aquisição. No entanto, seus créditos são válidos por 180 dias (pacotes padrão) ou 360 dias (pacotes empresariais), dando a você tempo suficiente para utilizá-los. Os créditos podem ser aplicados em múltiplas campanhas e múltiplos livros dentro do período de validade, garantindo que você aproveite todo o valor do seu investimento."
       }
+    },
+    "stillHave": {
+      "title": "Ainda tem Dúvidas?",
+      "desc": "Nossa equipe de suporte está disponível de segunda a sexta em horário comercial padrão. Geralmente respondemos em até 24 horas.",
+      "email": "Suporte por Email",
+      "contact": "Ver Página de Contato"
     }
   },
   "leadForm": {

@@ -26,6 +26,7 @@ export const SETTING_KEYS = {
   REVIEW_DEADLINE_HOURS: 'review_deadline_hours', // Default 72 hours
   MIN_REVIEW_WORD_COUNT: 'min_review_word_count', // Default 50 words
   MIN_PAYOUT_THRESHOLD: 'min_payout_threshold', // Minimum amount for payout requests
+  CLOSER_STANDARD_PRICE_PER_CREDIT: 'closer_standard_price_per_credit', // Standard price per credit for closers approval threshold
 } as const;
 
 // Default values for settings
@@ -117,6 +118,13 @@ const DEFAULT_SETTINGS: Record<
     category: 'payments',
     description: 'Minimum wallet balance required to request payout (USD) - per Section 3.9',
     isPublic: true,
+  },
+  [SETTING_KEYS.CLOSER_STANDARD_PRICE_PER_CREDIT]: {
+    value: '0.60',
+    dataType: 'number',
+    category: 'pricing',
+    description: 'Standard price per credit used by Closers for approval threshold calculation. Packages priced below 80% of this value require Super Admin approval.',
+    isPublic: false,
   },
 };
 
@@ -530,6 +538,14 @@ export class SettingsService {
 
     this.logger.log(`System configuration updated by ${adminEmail}`);
     return this.getSystemConfiguration();
+  }
+
+  /**
+   * Get the standard price per credit for Closers approval threshold
+   */
+  async getCloserStandardPricePerCredit(): Promise<number> {
+    const setting = await this.getSetting(SETTING_KEYS.CLOSER_STANDARD_PRICE_PER_CREDIT);
+    return setting ? parseFloat(setting.value) : 0.60;
   }
 
   /**

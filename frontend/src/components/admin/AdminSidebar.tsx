@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useAuthStore } from '@/stores/authStore';
 import {
   LayoutDashboard,
   Users,
@@ -48,6 +49,7 @@ export function AdminSidebar() {
   const { t } = useTranslation('common');
   const [collapsed, setCollapsed] = useState(false);
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
+  const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin());
 
   // Reset loading state when navigation completes
   useEffect(() => {
@@ -90,7 +92,8 @@ export function AdminSidebar() {
         { title: t('sidebar.admin.exceptions'), href: '/admin/exceptions', icon: AlertCircle },
       ],
     },
-    {
+    // Finance section is restricted to Super Admin only
+    ...(isSuperAdmin ? [{
       title: t('sidebar.admin.finance'),
       items: [
         { title: t('sidebar.admin.payouts'), href: '/admin/payouts', icon: CreditCard },
@@ -99,7 +102,7 @@ export function AdminSidebar() {
         { title: t('sidebar.admin.coupons'), href: '/admin/coupons', icon: Ticket },
         { title: t('sidebar.admin.packageApprovals'), href: '/admin/package-approvals', icon: Package },
       ],
-    },
+    }] : []),
     {
       title: t('sidebar.admin.content'),
       items: [
@@ -111,7 +114,8 @@ export function AdminSidebar() {
     {
       title: t('sidebar.admin.reports'),
       items: [
-        { title: t('sidebar.admin.financial'), href: '/admin/reports/financial', icon: FileText },
+        // Financial report is restricted to Super Admin only
+        ...(isSuperAdmin ? [{ title: t('sidebar.admin.financial'), href: '/admin/reports/financial', icon: FileText }] : []),
         { title: t('sidebar.admin.operational'), href: '/admin/reports/operational', icon: Activity },
         { title: t('sidebar.admin.affiliatesReport'), href: '/admin/reports/affiliates', icon: UsersRound },
       ],

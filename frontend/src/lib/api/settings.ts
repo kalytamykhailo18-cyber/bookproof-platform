@@ -182,6 +182,25 @@ export const settingsApi = {
     return response.data;
   },
 
+  // Closer pricing endpoints (Admin only)
+  async getCloserPricing(): Promise<{ pricePerCredit: number; minimumThreshold: number }> {
+    const response = await apiClient.get<{ pricePerCredit: number; minimumThreshold: number }>(
+      '/settings/admin/pricing/closer',
+    );
+    return response.data;
+  },
+
+  async updateCloserPricing(data: {
+    pricePerCredit: number;
+    reason?: string;
+  }): Promise<{ pricePerCredit: number; minimumThreshold: number }> {
+    const response = await apiClient.put<{ pricePerCredit: number; minimumThreshold: number }>(
+      '/settings/admin/pricing/closer',
+      data,
+    );
+    return response.data;
+  },
+
   // Public endpoints (for author checkout display)
   async getPublicKeywordResearchPricing(): Promise<KeywordPricingResponse> {
     const response = await apiClient.get<KeywordPricingResponse>(
