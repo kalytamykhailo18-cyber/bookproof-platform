@@ -171,16 +171,30 @@ export function CampaignsListPage() {
               onClick={() => navigate(`/author/campaigns/${campaign.id}`)}
             >
               <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-xl">{campaign.title}</CardTitle>
-                    <CardDescription className="mt-1">
-                      {campaign.authorName} • {campaign.language}
-                    </CardDescription>
+                <div className="flex items-start justify-between gap-4">
+                  {/* Book Cover Thumbnail */}
+                  {campaign.coverImageUrl ? (
+                    <img
+                      src={campaign.coverImageUrl}
+                      alt={campaign.title}
+                      className="h-24 w-16 flex-shrink-0 rounded-md object-cover shadow-sm"
+                    />
+                  ) : (
+                    <div className="flex h-24 w-16 flex-shrink-0 items-center justify-center rounded-md bg-muted">
+                      <BookOpen className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                  )}
+                  <div className="flex flex-1 items-start justify-between">
+                    <div className="flex-1">
+                      <CardTitle className="text-xl">{campaign.title}</CardTitle>
+                      <CardDescription className="mt-1">
+                        {campaign.authorName} • {campaign.language}
+                      </CardDescription>
+                    </div>
+                    <Badge className={getStatusColor(campaign.status)}>
+                      {campaign.status}
+                    </Badge>
                   </div>
-                  <Badge className={getStatusColor(campaign.status)}>
-                    {campaign.status}
-                  </Badge>
                 </div>
               </CardHeader>
               <CardContent>
@@ -855,7 +869,16 @@ export function CampaignDetailPage() {
                 </div>
                 <div>
                   <p className="text-muted-foreground">{t('details.asin')}</p>
-                  <p className="font-semibold">{campaign.asin}</p>
+                  <a
+                    href={`https://www.amazon.com/dp/${campaign.asin}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-primary hover:underline flex items-center gap-1"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {campaign.asin}
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
                 </div>
                 <div>
                   <p className="text-muted-foreground">{t('details.format')}</p>

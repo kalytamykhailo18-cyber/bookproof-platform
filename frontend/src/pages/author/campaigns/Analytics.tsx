@@ -241,40 +241,172 @@ export function CampaignAnalyticsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Clock className="h-5 w-5" />
-            {t('timeline.title') || 'Campaign Timeline'}
+            {t('timeline.title') || 'Campaign Activity Timeline'}
           </CardTitle>
           <CardDescription>
-            {t('timeline.description') || 'Key dates and milestones'}
+            {t('timeline.description') || 'Detailed campaign events and milestones'}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <div className="flex items-start gap-3">
-              <Calendar className="mt-0.5 h-5 w-5 text-muted-foreground" />
-              <div>
-                <p className="text-sm font-medium">Campaign Started</p>
-                <p className="text-sm text-muted-foreground">
-                  {formatDate(tracking.campaign.campaignStartDate)}
-                </p>
+        <CardContent className="space-y-6">
+          {/* Timeline Events */}
+          <div className="relative space-y-4 pl-6 before:absolute before:left-0 before:top-2 before:h-[calc(100%-1rem)] before:w-0.5 before:bg-border">
+            {/* Campaign Created */}
+            <div className="relative">
+              <div className="absolute -left-[1.6rem] mt-1 h-3 w-3 rounded-full border-2 border-primary bg-background" />
+              <div className="flex items-start gap-3">
+                <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Campaign Created</p>
+                  <p className="text-sm text-muted-foreground">
+                    {formatDate(tracking.campaign.campaignStartDate)}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex items-start gap-3">
-              <Calendar className="mt-0.5 h-5 w-5 text-muted-foreground" />
-              <div>
-                <p className="text-sm font-medium">Expected End Date</p>
-                <p className="text-sm text-muted-foreground">
-                  {formatDate(tracking.campaign.expectedEndDate)}
-                </p>
+
+            {/* First Review Delivered */}
+            {tracking.campaign.reviewsDelivered > 0 && (
+              <div className="relative">
+                <div className="absolute -left-[1.6rem] mt-1 h-3 w-3 rounded-full border-2 border-primary bg-background" />
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">First Review Delivered</p>
+                    <p className="text-sm text-muted-foreground">
+                      Campaign progress began
+                    </p>
+                  </div>
+                </div>
               </div>
+            )}
+
+            {/* Milestones: 25%, 50%, 75% */}
+            {tracking.campaign.completionPercentage >= 25 && (
+              <div className="relative">
+                <div className="absolute -left-[1.6rem] mt-1 h-3 w-3 rounded-full border-2 border-primary bg-background" />
+                <div className="flex items-start gap-3">
+                  <TrendingUp className="mt-0.5 h-5 w-5 text-blue-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">25% Milestone Reached</p>
+                    <p className="text-sm text-muted-foreground">
+                      {Math.round(tracking.campaign.targetReviews * 0.25)} reviews delivered
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {tracking.campaign.completionPercentage >= 50 && (
+              <div className="relative">
+                <div className="absolute -left-[1.6rem] mt-1 h-3 w-3 rounded-full border-2 border-primary bg-background" />
+                <div className="flex items-start gap-3">
+                  <TrendingUp className="mt-0.5 h-5 w-5 text-blue-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">50% Milestone Reached</p>
+                    <p className="text-sm text-muted-foreground">
+                      Halfway through campaign
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {tracking.campaign.completionPercentage >= 75 && (
+              <div className="relative">
+                <div className="absolute -left-[1.6rem] mt-1 h-3 w-3 rounded-full border-2 border-primary bg-background" />
+                <div className="flex items-start gap-3">
+                  <TrendingUp className="mt-0.5 h-5 w-5 text-blue-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">75% Milestone Reached</p>
+                    <p className="text-sm text-muted-foreground">
+                      {Math.round(tracking.campaign.targetReviews * 0.75)} reviews delivered
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Amazon Removals */}
+            {tracking.amazonRemovals && tracking.amazonRemovals.total > 0 && (
+              <div className="relative">
+                <div className="absolute -left-[1.6rem] mt-1 h-3 w-3 rounded-full border-2 border-yellow-500 bg-background" />
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="mt-0.5 h-5 w-5 text-yellow-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Amazon Removals Detected</p>
+                    <p className="text-sm text-muted-foreground">
+                      {tracking.amazonRemovals.total} review{tracking.amazonRemovals.total > 1 ? 's' : ''} removed by Amazon
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Delays */}
+            {tracking.delays && tracking.delays.length > 0 && tracking.delays.slice(0, 3).map((delay, index) => (
+              <div key={index} className="relative">
+                <div className="absolute -left-[1.6rem] mt-1 h-3 w-3 rounded-full border-2 border-red-500 bg-background" />
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="mt-0.5 h-5 w-5 text-red-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{delay.reason}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {formatDate(delay.date)} • {delay.impact}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Expected/Actual End */}
+            {tracking.campaign.status === 'completed' ? (
+              <div className="relative">
+                <div className="absolute -left-[1.6rem] mt-1 h-3 w-3 rounded-full border-2 border-green-500 bg-background" />
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Campaign Completed</p>
+                    <p className="text-sm text-muted-foreground">
+                      All reviews delivered successfully
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="relative">
+                <div className="absolute -left-[1.6rem] mt-1 h-3 w-3 rounded-full border-2 border-muted-foreground bg-background" />
+                <div className="flex items-start gap-3">
+                  <Clock className="mt-0.5 h-5 w-5 text-muted-foreground" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Expected End Date</p>
+                    <p className="text-sm text-muted-foreground">
+                      {formatDate(tracking.campaign.expectedEndDate)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Summary Stats */}
+          <div className="grid grid-cols-1 gap-4 border-t pt-4 md:grid-cols-3">
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">Campaign Duration</p>
+              <p className="text-lg font-bold">
+                {tracking.campaign.totalWeeks} weeks
+              </p>
             </div>
-            <div className="flex items-start gap-3">
-              <Clock className="mt-0.5 h-5 w-5 text-muted-foreground" />
-              <div>
-                <p className="text-sm font-medium">Current Progress</p>
-                <p className="text-sm text-muted-foreground">
-                  Week {tracking.campaign.currentWeek} of {tracking.campaign.totalWeeks}
-                </p>
-              </div>
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">Current Week</p>
+              <p className="text-lg font-bold">
+                Week {tracking.campaign.currentWeek}
+              </p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">Overall Progress</p>
+              <p className="text-lg font-bold text-primary">
+                {tracking.campaign.completionPercentage}%
+              </p>
             </div>
           </div>
         </CardContent>

@@ -1,11 +1,17 @@
 {
   "title": "Comprar Créditos",
   "description": "Elija un paquete que se adapte a sus necesidades",
+  "activationWindow": {
+    "alertTitle": "Acerca de las Ventanas de Activación:",
+    "alertDescription": "Después de comprar créditos, tiene una ventana de tiempo específica para comenzar a usarlos creando su primera campaña. Una vez activados, puede continuar usando los créditos para esa campaña hasta completarla.",
+    "activateWithin": "Activar dentro de {{days}} días"
+  },
   "packages": {
     "mostPopular": "Más Popular",
     "purchaseButton": "Comprar Paquete",
     "purchasing": "Procesando...",
     "perCredit": "Precio por crédito",
+    "creditsLabel": "{{count}} créditos",
     "starter": {
       "name": "Iniciante",
       "description": "Perfecto para probar la plataforma"
@@ -27,7 +33,13 @@
     "analyticsDashboard": "Panel de Análisis",
     "dedicatedSupport": "Soporte Dedicado",
     "customAnalytics": "Análisis Personalizados",
-    "bulkOperations": "Operaciones en Masa"
+    "bulkOperations": "Operaciones en Masa",
+    "defaultFeatures": {
+      "verifiedReviews": "{{count}} reseñas verificadas",
+      "daysToStart": "{{days}} días para iniciar su campaña",
+      "overbooking": "20% de buffer de sobrecontratación incluido",
+      "support": "Soporte por email"
+    }
   },
   "coupon": {
     "title": "¿Tiene un Código de Cupón?",
@@ -67,15 +79,16 @@
   },
   "faq": {
     "title": "Preguntas Frecuentes",
-    "question1": "¿Cómo se convierten los créditos en reseñas?",
-    "answer1": "1 crédito equivale a 1 reseña de ebook, y 2 créditos equivalen a 1 reseña de audiolibro. Los audiolibros requieren más créditos porque demandan más tiempo y esfuerzo de los lectores.",
-    "question2": "¿Cuánto tiempo son válidos los créditos?",
-    "answer2": "Los créditos deben activarse (asignarse a una campaña) dentro de 30, 90 o 120 días según el tamaño del paquete. Una vez creada la campaña, continúa hasta completarse sin límite de tiempo.",
+    "question1": "¿Qué es la ventana de activación?",
+    "answer1": "Cada paquete tiene una ventana de activación (30, 90 o 120 días según el paquete). Debe COMENZAR a usar sus créditos dentro de este plazo creando una campaña. Una vez activados, puede continuar usando los créditos para esa campaña hasta completarla.",
+    "answer1Example": "Ejemplo: Si compra el paquete de 100 créditos con una ventana de activación de 30 días, tiene 30 días para crear una campaña. Una vez que crea la campaña y asigna créditos, esos créditos no expiran - puede usarlos hasta que su campaña esté completa.",
+    "question2": "¿Qué sucede si no activo dentro de la ventana?",
+    "answer2": "Si no crea una campaña dentro de la ventana de activación, los créditos no utilizados expirarán. Recomendamos comprar créditos cuando esté listo para lanzar su campaña para evitar perderlos.",
     "question3": "¿Puedo obtener un reembolso?",
     "answer3": "Los créditos no utilizados pueden ser reembolsados dentro de los 14 días de la compra. Una vez que los créditos se asignan a una campaña, se vuelven no reembolsables.",
     "question4": "¿Qué métodos de pago aceptan?",
     "answer4": "Aceptamos todas las principales tarjetas de crédito, tarjetas de débito y billeteras digitales a través de nuestra pasarela de pago segura Stripe.",
     "question5": "¿Puedo comprar créditos para varios libros?",
-    "answer5": "¡Sí! Los créditos se agregan al saldo de su cuenta y pueden asignarse a cualquiera de sus campañas."
+    "answer5": "¡Sí! Los créditos se agregan al saldo de su cuenta y pueden asignarse a cualquiera de sus campañas. Sin embargo, recuerde activarlos creando una campaña dentro de la ventana de activación."
   }
 }

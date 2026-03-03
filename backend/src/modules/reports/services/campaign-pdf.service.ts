@@ -8,9 +8,15 @@ interface RatingTrendData {
   count: number;
 }
 
+interface FeedbackWithRating {
+  feedback: string;
+  rating: number;
+}
+
 interface CampaignReportData {
   bookTitle: string;
   authorName: string;
+  coverImageUrl: string | null;
   totalReviewsDelivered: number;
   totalReviewsValidated: number;
   averageRating: number;
@@ -19,11 +25,13 @@ interface CampaignReportData {
   threeStarCount: number;
   twoStarCount: number;
   oneStarCount: number;
+  ebookReviewCount: number;
+  audiobookReviewCount: number;
   campaignStartDate: Date;
   campaignEndDate: Date;
   totalWeeks: number;
   ratingTrends: RatingTrendData[];
-  anonymousFeedback: string[];
+  anonymousFeedback: FeedbackWithRating[];
   delaysEncountered: number;
   replacementsProvided: number;
   successRate: number;
@@ -93,7 +101,7 @@ export class CampaignPdfService {
     };
 
     let totalRating = 0;
-    const anonymousFeedback: string[] = [];
+    const anonymousFeedback: FeedbackWithRating[] = [];
 
     reviews.forEach((review) => {
       if (review.internalRating) {
@@ -102,12 +110,23 @@ export class CampaignPdfService {
         totalRating += rating;
       }
 
-      if (review.internalFeedback) {
-        anonymousFeedback.push(review.internalFeedback);
+      if (review.internalFeedback && review.internalRating) {
+        anonymousFeedback.push({
+          feedback: review.internalFeedback,
+          rating: review.internalRating,
+        });
       }
     });
 
     const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+
+    // Calculate format breakdown (ebook vs audiobook)
+    const ebookReviewCount = reviews.filter(
+      (r) => r.readerAssignment.formatAssigned === 'EBOOK',
+    ).length;
+    const audiobookReviewCount = reviews.filter(
+      (r) => r.readerAssignment.formatAssigned === 'AUDIOBOOK',
+    ).length;
 
     // Calculate delays and replacements
     const assignments = await this.prisma.readerAssignment.findMany({
@@ -142,6 +161,7 @@ export class CampaignPdfService {
     return {
       bookTitle: book.title,
       authorName: book.authorName,
+      coverImageUrl: book.coverImageUrl,
       totalReviewsDelivered: reviews.length,
       totalReviewsValidated: reviews.length,
       averageRating: parseFloat(averageRating.toFixed(2)),
@@ -150,11 +170,15 @@ export class CampaignPdfService {
       threeStarCount: ratingCounts[3],
       twoStarCount: ratingCounts[2],
       oneStarCount: ratingCounts[1],
+      ebookReviewCount,
+      audiobookReviewCount,
       campaignStartDate: startDate,
       campaignEndDate: endDate,
       totalWeeks,
       ratingTrends,
-      anonymousFeedback: anonymousFeedback.slice(0, 10), // Limit to 10 feedback items
+      anonymousFeedback: anonymousFeedback
+        .sort((a, b) => b.rating - a.rating) // Sort by rating (highest first)
+        .slice(0, 10), // Limit to 10 feedback items
       delaysEncountered,
       replacementsProvided,
       successRate: parseFloat(successRate.toString()),
@@ -373,9 +397,28 @@ export class CampaignPdfService {
       margin: 15px 0;
       border-left: 4px solid #3498db;
       border-radius: 4px;
-      font-style: italic;
       color: #495057;
       line-height: 1.7;
+    }
+
+    .feedback-rating {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #3498db;
+    }
+
+    .star {
+      color: #f39c12;
+      font-size: 16px;
+    }
+
+    .feedback-text {
+      font-style: italic;
+      color: #495057;
     }
 
     .performance-grid {
@@ -462,6 +505,15 @@ export class CampaignPdfService {
   <div class="page cover-page">
     <div class="logo">BookProof</div>
     <h1>Campaign Report</h1>
+    ${
+      data.coverImageUrl
+        ? `
+    <div style="margin: 30px auto; max-width: 200px;">
+      <img src="${data.coverImageUrl}" alt="${data.bookTitle}" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" />
+    </div>
+    `
+        : ''
+    }
     <h2>${data.bookTitle}</h2>
     <p>by ${data.authorName}</p>
     <p class="date">Campaign Duration: ${data.campaignStartDate.toLocaleDateString()} - ${data.campaignEndDate.toLocaleDateString()}</p>
@@ -572,13 +624,17 @@ export class CampaignPdfService {
   <!-- Feedback Page -->
   <div class="page content-page">
     <h2>Reader Feedback</h2>
-    <p style="color: #6c757d; margin-bottom: 20px;">All feedback is anonymized to protect reader privacy.</p>
+    <p style="color: #6c757d; margin-bottom: 20px;">All feedback is anonymized to protect reader privacy. Sorted by rating (highest first).</p>
     <div class="feedback-section">
       ${data.anonymousFeedback
         .map(
-          (feedback) => `
+          (item) => `
         <div class="feedback-item">
-          "${feedback}"
+          <div class="feedback-rating">
+            <span>${'★'.repeat(item.rating)}${'☆'.repeat(5 - item.rating)}</span>
+            <span>(${item.rating}/5)</span>
+          </div>
+          <div class="feedback-text">"${item.feedback}"</div>
         </div>
       `,
         )
@@ -605,6 +661,28 @@ export class CampaignPdfService {
         <h4>Replacements</h4>
         <p>${data.replacementsProvided}</p>
       </div>
+    </div>
+
+    <h2>Review Format Breakdown</h2>
+    <p style="color: #6c757d; margin-bottom: 20px;">Distribution of reviews by format type</p>
+    <div class="metrics-grid" style="grid-template-columns: repeat(2, 1fr);">
+      <div class="metric">
+        <h3>${data.ebookReviewCount}</h3>
+        <p>Ebook Reviews</p>
+      </div>
+      <div class="metric">
+        <h3>${data.audiobookReviewCount}</h3>
+        <p>Audiobook Reviews</p>
+      </div>
+    </div>
+    <div style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 6px;">
+      <p style="text-align: center; font-size: 14px; color: #6c757d;">
+        ${data.ebookReviewCount > 0 && data.audiobookReviewCount > 0 ? `
+          <strong>Format Distribution:</strong>
+          ${((data.ebookReviewCount / data.totalReviewsDelivered) * 100).toFixed(1)}% Ebook •
+          ${((data.audiobookReviewCount / data.totalReviewsDelivered) * 100).toFixed(1)}% Audiobook
+        ` : data.ebookReviewCount > 0 ? 'All reviews were for Ebook format' : 'All reviews were for Audiobook format'}
+      </p>
     </div>
 
     <div class="footer">

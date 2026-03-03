@@ -43,6 +43,7 @@ import {
   XCircle } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useNavigate,  useParams } from 'react-router-dom';
+import { ReviewOrderModal } from '@/components/author/ReviewOrderModal';
 
 export function CreditPurchasePage() {
   const { t: _t, i18n } = useTranslation('credits');
@@ -64,6 +65,10 @@ export function CreditPurchasePage() {
   const [validatedCoupon, setValidatedCoupon] = useState<CouponValidationResponseDto | null>(null);
   const [downloadingReceiptId, setDownloadingReceiptId] = useState<string | null>(null);
   const [isValidating, setIsValidating] = useState(false);
+
+  // Review order modal state
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<PackageTierType | null>(null);
 
   // Fetch transactions
   useEffect(() => {
@@ -137,15 +142,19 @@ export function CreditPurchasePage() {
   // Get packages from API - packages are fetched dynamically from backend
   const packages = packageTiers || [];
 
-  // Determine which package to mark as popular (middle tier for visual emphasis)
-  const getPopularIndex = (pkgs: PackageTier[]) => {
-    if (pkgs.length <= 1) return -1;
-    if (pkgs.length === 2) return 1;
-    return Math.floor(pkgs.length / 2);
+  // Show review order modal
+  const handlePurchase = (packageId: string) => {
+    const pkg = packages.find((p) => p.id === packageId);
+    if (pkg) {
+      setSelectedPackage(pkg);
+      setShowReviewModal(true);
+    }
   };
-  const popularIndex = getPopularIndex(packages);
 
-  const handlePurchase = async (packageId: string) => {
+  // Proceed to Stripe checkout after review
+  const proceedToStripeCheckout = async () => {
+    if (!selectedPackage) return;
+
     try {
       setIsPurchasing(true);
       startLoading('Creating checkout session...');
@@ -156,7 +165,7 @@ export function CreditPurchasePage() {
       const cancelUrl = `${window.location.origin}/author/credits/cancel`;
 
       const response = await creditsApi.createCheckoutSession({
-        packageTierId: packageId,
+        packageTierId: selectedPackage.id,
         couponCode: validatedCoupon?.valid ? couponCode : undefined,
         includeKeywordResearch: includeKeywordResearch || undefined,
         successUrl,
@@ -172,9 +181,9 @@ export function CreditPurchasePage() {
     } catch (error: any) {
       console.error('Purchase error:', error);
       stopLoading();
+      setShowReviewModal(false);
       const message = error.response?.data?.message || 'Failed to create checkout session';
       toast.error(message);
-    } finally {
       setIsPurchasing(false);
     }
   };
@@ -230,6 +239,14 @@ export function CreditPurchasePage() {
         <p className="text-muted-foreground">Choose a package that fits your needs</p>
       </div>
 
+      {/* Activation Window Info */}
+      <Alert className="border-blue-500 bg-blue-50 dark:bg-blue-950/20">
+        <Calendar className="h-4 w-4 text-blue-600" />
+        <AlertDescription className="text-blue-700 dark:text-blue-400">
+          <span className="font-medium">About Activation Windows:</span> After purchasing credits, you have a specific time window to <strong>start using them</strong> by creating your first campaign. Once activated, you can continue using the credits for that campaign until completion.
+        </AlertDescription>
+      </Alert>
+
       {/* Package Selection */}
       {isLoadingPackages ? (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -239,14 +256,13 @@ export function CreditPurchasePage() {
         </div>
       ) : packages.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {packages.map((pkg, index) => {
-            const isPopular = index === popularIndex;
+          {packages.map((pkg) => {
             return (
               <Card
                 key={pkg.id}
-                className={`relative ${isPopular ? 'border-primary shadow-lg' : ''}`}
+                className={`relative ${pkg.isPopular ? 'border-primary shadow-lg' : ''}`}
               >
-                {isPopular && (
+                {pkg.isPopular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
                   </div>
@@ -266,20 +282,43 @@ export function CreditPurchasePage() {
                       </span>
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {pkg.credits} credits • Valid for {pkg.validityDays} days
+                      {pkg.credits} credits
                     </p>
+                    <div className="mt-2 flex items-center gap-1.5 text-sm font-medium text-orange-600 dark:text-orange-400">
+                      <Calendar className="h-4 w-4" />
+                      <span>Activate within {pkg.validityDays} days</span>
+                    </div>
                   </div>
 
-                  {pkg.features && pkg.features.length > 0 && (
-                    <div className="space-y-2">
-                      {pkg.features.map((feature, idx) => (
+                  <div className="space-y-2">
+                    {pkg.features && pkg.features.length > 0 ? (
+                      pkg.features.map((feature, idx) => (
                         <div key={idx} className="flex items-start gap-2">
                           <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
                           <span className="text-sm">{feature}</span>
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      ))
+                    ) : (
+                      <>
+                        <div className="flex items-start gap-2">
+                          <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                          <span className="text-sm">{pkg.credits} verified reviews</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                          <span className="text-sm">{pkg.validityDays} days to start your campaign</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                          <span className="text-sm">20% overbooking buffer included</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                          <span className="text-sm">Email support</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
 
                   <div className="pt-2">
                     <p className="text-xs text-muted-foreground">
@@ -291,7 +330,7 @@ export function CreditPurchasePage() {
                   <Button
                     type="button"
                     className="w-full"
-                    variant={isPopular ? 'default' : 'outline'}
+                    variant={pkg.isPopular ? 'default' : 'outline'}
                     onClick={() => handlePurchase(pkg.id)}
                     disabled={isPurchasing}
                   >
@@ -577,10 +616,23 @@ export function CreditPurchasePage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <h4 className="mb-1 font-medium">How long are credits valid?</h4>
+            <h4 className="mb-1 font-medium">What is the activation window?</h4>
             <p className="text-sm text-muted-foreground">
-              Each package has a specific validity period (90, 180, or 365 days). Credits must be
-              used within this timeframe.
+              Each package has an activation window (30, 90, or 120 days depending on the package).
+              You must <strong>START using your credits</strong> within this timeframe by creating a campaign.
+              Once activated, you can continue using the credits for that campaign until completion.
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              <strong>Example:</strong> If you buy the 100-credit package with a 30-day activation window,
+              you have 30 days to create a campaign. Once you create the campaign and allocate credits,
+              those credits don't expire - you can use them until your campaign is complete.
+            </p>
+          </div>
+          <div>
+            <h4 className="mb-1 font-medium">What happens if I don't activate within the window?</h4>
+            <p className="text-sm text-muted-foreground">
+              If you don't create a campaign within the activation window, the unused credits will expire.
+              We recommend purchasing credits when you're ready to launch your campaign to avoid losing them.
             </p>
           </div>
           <div>
@@ -601,11 +653,27 @@ export function CreditPurchasePage() {
             <h4 className="mb-1 font-medium">Can I purchase credits for multiple books?</h4>
             <p className="text-sm text-muted-foreground">
               Yes! Credits are added to your account balance and can be allocated to any of your
-              campaigns.
+              campaigns. However, remember to activate them by creating a campaign within the activation window.
             </p>
           </div>
         </CardContent>
       </Card>
+
+      {/* Review Order Modal */}
+      {selectedPackage && (
+        <ReviewOrderModal
+          open={showReviewModal}
+          onClose={() => setShowReviewModal(false)}
+          onConfirm={proceedToStripeCheckout}
+          selectedPackage={selectedPackage}
+          validatedCoupon={validatedCoupon}
+          includeKeywordResearch={includeKeywordResearch}
+          keywordResearchPrice={keywordPrice}
+          keywordResearchCurrency={keywordPricing?.currency || 'USD'}
+          isPurchasing={isPurchasing}
+          language={i18n.language}
+        />
+      )}
     </div>
   );
 }
