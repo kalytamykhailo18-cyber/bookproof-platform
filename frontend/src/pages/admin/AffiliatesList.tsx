@@ -24,7 +24,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-import { formatCurrency } from '@/lib/utils';
   Users,
   Search,
   Eye,
@@ -35,6 +34,7 @@ import { formatCurrency } from '@/lib/utils';
   Clock,
   AlertCircle,
 } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 
 export function AdminAffiliatesListPage() {
   const { t, i18n } = useTranslation('adminAffiliates');

@@ -35,7 +35,6 @@ import {
   TableHeader,
   TableRow } from '@/components/ui/table';
 import {
-import { formatCurrency } from '@/lib/utils';
   ArrowLeft,
   User,
   Wallet,
@@ -62,6 +61,7 @@ import { formatCurrency } from '@/lib/utils';
   MailCheck,
   Send,
   Loader2 } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 
 export function AdminReaderDetailPage() {
   const { t, i18n } = useTranslation('adminReaders');

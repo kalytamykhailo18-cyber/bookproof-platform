@@ -31,11 +31,11 @@ import {
   SelectValue } from '@/components/ui/select';
 import { CheckCircle, RefreshCw, DollarSign, MessageSquare } from 'lucide-react';
 import {
-import { formatCurrency } from '@/lib/utils';
   PaymentIssueStatus,
   PaymentIssueType,
   PaymentIssuePriority,
   PaymentIssueAction } from '@/lib/api/payment-issues';
+import { formatCurrency } from '@/lib/utils';
 
 export function PaymentIssuesPage() {
   const { t, i18n } = useTranslation('adminPaymentIssues');
