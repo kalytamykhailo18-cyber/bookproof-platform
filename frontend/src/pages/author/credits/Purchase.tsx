@@ -42,6 +42,12 @@ import {
   CheckCircle,
   XCircle } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { useNavigate,  useParams } from 'react-router-dom';
 import { ReviewOrderModal } from '@/components/author/ReviewOrderModal';
 
@@ -614,48 +620,60 @@ export function CreditPurchasePage() {
         <CardHeader>
           <CardTitle>Frequently Asked Questions</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <h4 className="mb-1 font-medium">What is the activation window?</h4>
-            <p className="text-sm text-muted-foreground">
-              Each package has an activation window (30, 90, or 120 days depending on the package).
-              You must <strong>START using your credits</strong> within this timeframe by creating a campaign.
-              Once activated, you can continue using the credits for that campaign until completion.
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              <strong>Example:</strong> If you buy the 100-credit package with a 30-day activation window,
-              you have 30 days to create a campaign. Once you create the campaign and allocate credits,
-              those credits don't expire - you can use them until your campaign is complete.
-            </p>
-          </div>
-          <div>
-            <h4 className="mb-1 font-medium">What happens if I don't activate within the window?</h4>
-            <p className="text-sm text-muted-foreground">
-              If you don't create a campaign within the activation window, the unused credits will expire.
-              We recommend purchasing credits when you're ready to launch your campaign to avoid losing them.
-            </p>
-          </div>
-          <div>
-            <h4 className="mb-1 font-medium">Can I get a refund?</h4>
-            <p className="text-sm text-muted-foreground">
-              Unused credits can be refunded within 14 days of purchase. Once credits are allocated
-              to a campaign, they become non-refundable.
-            </p>
-          </div>
-          <div>
-            <h4 className="mb-1 font-medium">What payment methods do you accept?</h4>
-            <p className="text-sm text-muted-foreground">
-              We accept all major credit cards, debit cards, and digital wallets through our secure
-              Stripe payment gateway.
-            </p>
-          </div>
-          <div>
-            <h4 className="mb-1 font-medium">Can I purchase credits for multiple books?</h4>
-            <p className="text-sm text-muted-foreground">
-              Yes! Credits are added to your account balance and can be allocated to any of your
-              campaigns. However, remember to activate them by creating a campaign within the activation window.
-            </p>
-          </div>
+        <CardContent>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="activation-window">
+              <AccordionTrigger>What is the activation window?</AccordionTrigger>
+              <AccordionContent>
+                <p className="text-muted-foreground">
+                  Each package has an activation window (30, 90, or 120 days depending on the package).
+                  You must <strong>START using your credits</strong> within this timeframe by creating a campaign.
+                  Once activated, you can continue using the credits for that campaign until completion.
+                </p>
+                <p className="mt-2 text-muted-foreground">
+                  <strong>Example:</strong> If you buy the 100-credit package with a 30-day activation window,
+                  you have 30 days to create a campaign. Once you create the campaign and allocate credits,
+                  those credits don't expire - you can use them until your campaign is complete.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="no-activation">
+              <AccordionTrigger>What happens if I don't activate within the window?</AccordionTrigger>
+              <AccordionContent>
+                <p className="text-muted-foreground">
+                  If you don't create a campaign within the activation window, the unused credits will expire.
+                  We recommend purchasing credits when you're ready to launch your campaign to avoid losing them.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="refund">
+              <AccordionTrigger>Can I get a refund?</AccordionTrigger>
+              <AccordionContent>
+                <p className="text-muted-foreground">
+                  Unused credits can be refunded within 14 days of purchase. Once credits are allocated
+                  to a campaign, they become non-refundable.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="payment-methods">
+              <AccordionTrigger>What payment methods do you accept?</AccordionTrigger>
+              <AccordionContent>
+                <p className="text-muted-foreground">
+                  We accept all major credit cards, debit cards, and digital wallets through our secure
+                  Stripe payment gateway.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="multiple-books">
+              <AccordionTrigger>Can I purchase credits for multiple books?</AccordionTrigger>
+              <AccordionContent>
+                <p className="text-muted-foreground">
+                  Yes! Credits are added to your account balance and can be allocated to any of your
+                  campaigns. However, remember to activate them by creating a campaign within the activation window.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </CardContent>
       </Card>
 
