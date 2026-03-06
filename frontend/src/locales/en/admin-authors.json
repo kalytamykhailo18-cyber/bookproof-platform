@@ -31,6 +31,7 @@
     "title": "Authors",
     "description": "All registered authors on the platform",
     "author": "Author",
+    "company": "Company",
     "verified": "Status",
     "totalCredits": "Total Credits",
     "available": "Available",

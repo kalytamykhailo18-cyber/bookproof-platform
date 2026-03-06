@@ -31,6 +31,7 @@
     "title": "Autores",
     "description": "Todos os autores registrados na plataforma",
     "author": "Autor",
+    "company": "Empresa",
     "verified": "Status",
     "totalCredits": "Créditos Totais",
     "available": "Disponíveis",
