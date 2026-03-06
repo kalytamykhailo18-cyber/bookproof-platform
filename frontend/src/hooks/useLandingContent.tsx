@@ -124,8 +124,8 @@ export function useHeroContent() {
     titleLine2: t('titleLine2'),
     titleLine3: t('titleLine3'),
     subtitle: t('subtitle'),
-    ctaPrimary: t('ctaPrimary'),
-    ctaSecondary: t('ctaSecondary'),
+    ctaPrimary: t('cta.primary'),
+    ctaSecondary: t('cta.secondary'),
     isFromCms: false,
   };
 }
