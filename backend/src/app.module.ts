@@ -55,6 +55,7 @@ import { UsersModule } from '@modules/users/users.module';
     // Configuration module
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
       load: [
         appConfig,
         databaseConfig,
