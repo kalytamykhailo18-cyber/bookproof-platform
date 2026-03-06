@@ -15,8 +15,10 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
 import { RolesGuard } from '@common/guards/roles.guard';
+import { AdminRolesGuard } from '@common/guards/admin-roles.guard';
 import { Roles } from '@common/decorators/roles.decorator';
-import { UserRole } from '@prisma/client';
+import { AdminRoles } from '@common/decorators/admin-roles.decorator';
+import { UserRole, AdminRole } from '@prisma/client';
 import { TeamManagementService } from '../services/team-management.service';
 import {
   CloserListItemDto,
@@ -29,12 +31,16 @@ import {
 /**
  * Controller for team management (listing closers and admins)
  * Per requirements.md Sections 1.3 and 1.4
+ *
+ * Restricted to SUPER_ADMIN, ADMIN, MODERATOR only (excludes SUPPORT)
+ * Team data includes financial information (sales, commissions)
  */
 @ApiTags('Admin - Team Management')
 @ApiBearerAuth()
 @Controller('admin/team')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard, AdminRolesGuard)
 @Roles(UserRole.ADMIN)
+@AdminRoles(AdminRole.SUPER_ADMIN, AdminRole.ADMIN, AdminRole.MODERATOR)
 export class TeamManagementController {
   constructor(private readonly teamManagementService: TeamManagementService) {}
 

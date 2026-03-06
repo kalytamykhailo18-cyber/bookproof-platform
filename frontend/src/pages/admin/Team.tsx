@@ -1,8 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { apiClient } from '@/lib/api/client';
 import { teamApi } from '@/lib/api/team';
+import { useAuthStore } from '@/stores/authStore';
 import { CreateCloserDialog } from './team/CreateCloserDialog';
 import { CreateAdminDialog } from './team/CreateAdminDialog';
 import { UnlockAccountDialog } from './team/UnlockAccountDialog';
@@ -84,7 +86,9 @@ interface AdminListItem {
 }
 
 export function AdminTeamPage() {
+  const navigate = useNavigate();
   const { t, i18n } = useTranslation('adminTeam');
+  const isSupport = useAuthStore((s) => s.isSupport());
   const [activeTab, setActiveTab] = useState('closers');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -94,6 +98,16 @@ export function AdminTeamPage() {
   const [admins, setAdmins] = useState<AdminListItem[]>([]);
   const [closersLoading, setClosersLoading] = useState(true);
   const [adminsLoading, setAdminsLoading] = useState(true);
+
+  // Redirect Support users - they don't have access to Team Management (contains financial data)
+  useEffect(() => {
+    if (isSupport) {
+      toast.error('Access Denied', {
+        description: 'You do not have permission to access Team Management.',
+      });
+      navigate('/admin/dashboard');
+    }
+  }, [isSupport, navigate]);
 
   // Fetch closers
   const fetchClosers = async () => {
@@ -109,8 +123,10 @@ export function AdminTeamPage() {
   };
 
   useEffect(() => {
-    fetchClosers();
-  }, []);
+    if (!isSupport) {
+      fetchClosers();
+    }
+  }, [isSupport]);
 
   // Fetch admins
   const fetchAdmins = async () => {
@@ -126,8 +142,10 @@ export function AdminTeamPage() {
   };
 
   useEffect(() => {
-    fetchAdmins();
-  }, []);
+    if (!isSupport) {
+      fetchAdmins();
+    }
+  }, [isSupport]);
 
   // Toggle active status handlers
   const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
@@ -234,6 +252,11 @@ export function AdminTeamPage() {
   }, [admins]);
 
   const isLoading = closersLoading || adminsLoading;
+
+  // Support users are redirected - don't render anything
+  if (isSupport) {
+    return null;
+  }
 
   if (isLoading) {
     return (

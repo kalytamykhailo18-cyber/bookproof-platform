@@ -50,6 +50,7 @@ export function AdminSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
   const isSuperAdmin = useAuthStore((s) => s.isSuperAdmin());
+  const isSupport = useAuthStore((s) => s.isSupport());
 
   // Reset loading state when navigation completes
   useEffect(() => {
@@ -79,7 +80,8 @@ export function AdminSidebar() {
         { title: t('sidebar.admin.authors'), href: '/admin/authors', icon: Users },
         { title: t('sidebar.admin.readers'), href: '/admin/readers', icon: UserCheck },
         { title: t('sidebar.admin.affiliates'), href: '/admin/affiliates', icon: UsersRound },
-        { title: t('sidebar.admin.team'), href: '/admin/team', icon: Users },
+        // Team Management shows financial data (sales, commissions) - hide from Support users
+        ...(!isSupport ? [{ title: t('sidebar.admin.team'), href: '/admin/team', icon: Users }] : []),
       ],
     },
     {

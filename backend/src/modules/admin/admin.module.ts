@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from '../../common/prisma/prisma.module';
 import { EmailModule } from '../email/email.module';
 import { ClosersModule } from '../closers/closers.module';
+import { AdminRolesGuard } from '../../common/guards/admin-roles.guard';
 import { CampaignControlsService } from './services/campaign-controls.service';
 import { ExceptionHandlingService } from './services/exception-handling.service';
 import { DisputeService } from './services/dispute.service';
@@ -54,6 +55,7 @@ import { UserManagementController } from './controllers/user-management.controll
     ReaderManagementService,
     AuthorManagementService,
     UserManagementService,
+    AdminRolesGuard, // Required for team-management role check (excludes SUPPORT)
   ],
   exports: [
     CampaignControlsService,

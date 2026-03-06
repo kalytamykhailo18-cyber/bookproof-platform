@@ -12,6 +12,7 @@ interface AuthState {
   // Admin role helpers for role-based access control (Section 5.1, 5.5)
   isSuperAdmin: () => boolean;
   isAdmin: () => boolean;
+  isSupport: () => boolean;
   hasPermission: (permission: string) => boolean;
 }
 
@@ -44,6 +45,11 @@ export const useAuthStore = create<AuthState>()(
       isAdmin: () => {
         const { user } = get();
         return user?.role === 'ADMIN';
+      },
+      // Check if user is a Support role (limited access, no financial data)
+      isSupport: () => {
+        const { user } = get();
+        return user?.role === 'ADMIN' && user?.adminRole === 'SUPPORT';
       },
       // Check if user has a specific permission
       hasPermission: (permission: string) => {
