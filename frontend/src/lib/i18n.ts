@@ -174,6 +174,10 @@ import adminReaderBehaviorEN from '../locales/en/admin-reader-behavior.json';
 import adminReaderBehaviorES from '../locales/es/admin-reader-behavior.json';
 import adminReaderBehaviorPT from '../locales/pt/admin-reader-behavior.json';
 
+import adminLogsEN from '../locales/en/admin-logs.json';
+import adminLogsES from '../locales/es/admin-logs.json';
+import adminLogsPT from '../locales/pt/admin-logs.json';
+
 // Affiliate page translations
 import affiliatesEN from '../locales/en/affiliates.json';
 import affiliatesES from '../locales/es/affiliates.json';
@@ -287,6 +291,7 @@ const resources = {
     adminDisputes: adminDisputesEN,
     adminIssues: adminIssuesEN,
     adminReaderBehavior: adminReaderBehaviorEN,
+    adminLogs: adminLogsEN,
     affiliates: affiliatesEN,
     'affiliates.dashboard': affiliatesEN.dashboard,
     'affiliates.referralLinks': affiliatesEN.referralLinks,
@@ -363,6 +368,7 @@ const resources = {
     adminDisputes: adminDisputesES,
     adminIssues: adminIssuesES,
     adminReaderBehavior: adminReaderBehaviorES,
+    adminLogs: adminLogsES,
     affiliates: affiliatesES,
     'affiliates.dashboard': affiliatesES.dashboard,
     'affiliates.referralLinks': affiliatesES.referralLinks,
@@ -439,6 +445,7 @@ const resources = {
     adminDisputes: adminDisputesPT,
     adminIssues: adminIssuesPT,
     adminReaderBehavior: adminReaderBehaviorPT,
+    adminLogs: adminLogsPT,
     affiliates: affiliatesPT,
     'affiliates.dashboard': affiliatesPT.dashboard,
     'affiliates.referralLinks': affiliatesPT.referralLinks,
