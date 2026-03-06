@@ -24,6 +24,7 @@ import {
   ForceCompleteCampaignDto,
   ManualGrantAccessDto,
   RemoveReaderFromCampaignDto,
+  ReaderSearchResultDto,
 } from '../dto/campaign-controls.dto';
 
 @ApiTags('Admin - Campaign Controls')
@@ -192,6 +193,16 @@ export class CampaignControlsController {
     );
   }
 
+  @Get('readers/search')
+  @ApiOperation({ summary: 'Search readers by name or email (Section 4.3 Bug M4)' })
+  @ApiResponse({ status: 200, description: 'Reader search results', type: [ReaderSearchResultDto] })
+  @ApiQuery({ name: 'q', required: true, type: String, description: 'Search query (name or email)' })
+  async searchReaders(
+    @Query('q') query: string,
+  ): Promise<ReaderSearchResultDto[]> {
+    return this.campaignControlsService.searchReaders(query);
+  }
+
   @Get('authors')
   @ApiOperation({ summary: 'Get all authors with credit information and pagination' })
   @ApiResponse({ status: 200, description: 'Authors list retrieved' })
@@ -208,12 +219,12 @@ export class CampaignControlsController {
   }
 
   @Get('authors/:id')
-  @ApiOperation({ summary: 'Get author details by ID' })
-  @ApiResponse({ status: 200, description: 'Author details retrieved', type: AuthorListItemDto })
-  async getAuthorDetails(
+  @ApiOperation({ summary: 'Get author detail view' })
+  @ApiResponse({ status: 200, description: 'Author detail view retrieved' })
+  async getAuthorDetailView(
     @Param('id') authorProfileId: string,
-  ): Promise<AuthorListItemDto> {
-    return this.campaignControlsService.getAuthorDetails(authorProfileId);
+  ): Promise<any> {
+    return this.campaignControlsService.getAuthorDetailView(authorProfileId);
   }
 
   @Get('authors/:id/transactions')

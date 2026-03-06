@@ -386,6 +386,9 @@ export class AuthService {
     // Clear failed attempts on successful login
     await this.clearFailedAttempts(email);
 
+    // Check if account is suspended (per requirements.md Section 4.5: Suspended author cannot log in)
+    await this.checkAccountSuspension(user.id, user.role, email);
+
     this.logger.log(`User logged in: ${email}${rememberMe ? ' (remember me enabled)' : ''}`);
 
     // Generate JWT token with tokenVersion for session invalidation support
@@ -622,6 +625,44 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  /**
+   * Check if user account is suspended
+   * Per requirements.md Section 4.5: Suspended authors/readers cannot log in
+   */
+  private async checkAccountSuspension(userId: string, role: UserRole, email: string): Promise<void> {
+    if (role === UserRole.AUTHOR) {
+      const authorProfile = await this.prisma.authorProfile.findUnique({
+        where: { userId },
+        select: {
+          isSuspended: true,
+          suspendReason: true,
+        },
+      });
+
+      if (authorProfile?.isSuspended) {
+        this.logger.warn(`Login attempt by suspended author: ${email}`);
+        throw new UnauthorizedException(
+          `Your account has been suspended. Reason: ${authorProfile.suspendReason || 'No reason provided'}. Please contact support for assistance.`,
+        );
+      }
+    } else if (role === UserRole.READER) {
+      const readerProfile = await this.prisma.readerProfile.findUnique({
+        where: { userId },
+        select: {
+          isSuspended: true,
+          suspendReason: true,
+        },
+      });
+
+      if (readerProfile?.isSuspended) {
+        this.logger.warn(`Login attempt by suspended reader: ${email}`);
+        throw new UnauthorizedException(
+          `Your account has been suspended. Reason: ${readerProfile.suspendReason || 'No reason provided'}. Please contact support for assistance.`,
+        );
+      }
+    }
   }
 
   /**

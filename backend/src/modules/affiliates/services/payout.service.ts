@@ -2,6 +2,7 @@ import { Injectable, Logger, BadRequestException, NotFoundException } from '@nes
 import { PrismaService } from '@common/prisma/prisma.service';
 import { EmailService } from '@modules/email/email.service';
 import { NotificationsService } from '@modules/notifications/notifications.service';
+import { SettingsService } from '@modules/settings/settings.service';
 import { PayoutRequestStatus, CommissionStatus, EmailType, UserRole } from '@prisma/client';
 import { RequestPayoutDto, ProcessPayoutDto, PayoutAction } from '../dto';
 import { Decimal } from '@prisma/client/runtime/library';
@@ -9,12 +10,12 @@ import { Decimal } from '@prisma/client/runtime/library';
 @Injectable()
 export class AffiliatePayoutService {
   private readonly logger = new Logger(AffiliatePayoutService.name);
-  private readonly MIN_PAYOUT = 50; // Minimum $50 for payout
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
     private readonly notificationsService: NotificationsService,
+    private readonly settingsService: SettingsService,
   ) {}
 
   /**
@@ -38,9 +39,10 @@ export class AffiliatePayoutService {
         throw new BadRequestException('Affiliate account is not active');
       }
 
-      // Check minimum payout amount
-      if (dto.amount < this.MIN_PAYOUT) {
-        throw new BadRequestException(`Minimum payout amount is $${this.MIN_PAYOUT}`);
+      // Check minimum payout amount (Section 6.5 - configurable)
+      const minPayoutThreshold = await this.settingsService.getMinPayoutThreshold();
+      if (dto.amount < minPayoutThreshold) {
+        throw new BadRequestException(`Minimum payout amount is $${minPayoutThreshold}`);
       }
 
       // Check available balance (approved earnings)
@@ -405,9 +407,9 @@ export class AffiliatePayoutService {
   }
 
   /**
-   * Get minimum payout amount
+   * Get minimum payout amount (Section 6.5 - configurable)
    */
-  getMinimumPayout(): number {
-    return this.MIN_PAYOUT;
+  async getMinimumPayout(): Promise<number> {
+    return await this.settingsService.getMinPayoutThreshold();
   }
 }

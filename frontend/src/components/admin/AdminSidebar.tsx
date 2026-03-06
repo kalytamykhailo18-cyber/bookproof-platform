@@ -123,10 +123,10 @@ export function AdminSidebar() {
     {
       title: t('sidebar.admin.system'),
       items: [
-        // Note: Log routes commented out in router as they don't exist yet
-        // { title: 'Activity Logs', href: `/admin/logs/activity`, icon: Activity },
-        // { title: 'Email Logs', href: `/admin/logs/emails`, icon: Mail },
-        // { title: 'Error Logs', href: `/admin/logs/errors`, icon: AlertCircle },
+        // Log pages (Section 4.10 - System Monitoring)
+        { title: 'Activity Logs', href: `/admin/logs/activity`, icon: Activity },
+        { title: 'Email Logs', href: `/admin/logs/emails`, icon: Mail },
+        { title: 'Error Logs', href: `/admin/logs/errors`, icon: AlertCircle },
         { title: t('sidebar.admin.readerBehavior'), href: '/admin/reader-behavior', icon: UserCheck },
         { title: t('sidebar.admin.settings'), href: '/admin/settings', icon: Settings },
       ],

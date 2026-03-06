@@ -40,6 +40,18 @@ export function AssignmentDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
 
+  // Real-time countdown timer state
+  const [currentTime, setCurrentTime] = useState(Date.now());
+
+  // Update current time every second for real-time countdown
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000); // Update every second for real-time countdown
+
+    return () => clearInterval(interval);
+  }, []);
+
   // Fetch assignment
   useEffect(() => {
     if (!params.id) {
@@ -175,7 +187,28 @@ export function AssignmentDetailPage() {
     return 'normal'; // >24h: Green
   };
 
-  const deadlineUrgency = getDeadlineUrgency(assignment.hoursRemaining);
+  // Calculate real-time remaining time (updates every second)
+  const calculateRealTimeRemaining = () => {
+    if (!assignment?.deadlineAt) return null;
+
+    const deadline = new Date(assignment.deadlineAt).getTime();
+    const now = currentTime;
+    const diff = deadline - now;
+
+    if (diff <= 0) {
+      return { hours: 0, minutes: 0, seconds: 0, totalHours: 0 };
+    }
+
+    const totalHours = diff / (1000 * 60 * 60);
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    return { hours, minutes, seconds, totalHours };
+  };
+
+  const realTimeRemaining = calculateRealTimeRemaining();
+  const deadlineUrgency = getDeadlineUrgency(realTimeRemaining?.totalHours);
   const isUrgent = deadlineUrgency === 'urgent' || deadlineUrgency === 'critical';
 
   const handleEbookDownload = () => {
@@ -328,11 +361,30 @@ export function AssignmentDetailPage() {
                               : 'text-green-800 dark:text-green-200'
                       }`}
                     >
-                      {t('deadline.due', {
-                        time: formatDistanceToNow(new Date(assignment.deadlineAt), {
-                          addSuffix: true }) })}
-                      {assignment.hoursRemaining &&
-                        ` (${Math.floor(assignment.hoursRemaining)} ${t('deadline.hoursRemaining')})`}
+                      {realTimeRemaining && realTimeRemaining.totalHours > 0 ? (
+                        <>
+                          {t('deadline.due', {
+                            time: formatDistanceToNow(new Date(assignment.deadlineAt), {
+                              addSuffix: true }) })}
+                          <span className={`ml-2 font-mono font-semibold ${
+                            deadlineUrgency === 'critical'
+                              ? 'text-red-900 dark:text-red-100'
+                              : deadlineUrgency === 'urgent'
+                                ? 'text-red-900 dark:text-red-100'
+                                : deadlineUrgency === 'warning'
+                                  ? 'text-yellow-900 dark:text-yellow-100'
+                                  : 'text-green-900 dark:text-green-100'
+                          }`}>
+                            ({realTimeRemaining.hours.toString().padStart(2, '0')}:
+                            {realTimeRemaining.minutes.toString().padStart(2, '0')}:
+                            {realTimeRemaining.seconds.toString().padStart(2, '0')} {t('deadline.remaining')})
+                          </span>
+                        </>
+                      ) : (
+                        <span className="font-semibold text-red-900 dark:text-red-100">
+                          {t('deadline.expired') || 'Deadline has passed'}
+                        </span>
+                      )}
                     </p>
                   </div>
                 </div>

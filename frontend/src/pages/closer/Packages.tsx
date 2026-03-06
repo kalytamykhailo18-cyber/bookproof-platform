@@ -17,9 +17,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle } from '@/components/ui/dialog';
-import { ArrowLeft, Save, Send, Copy, ExternalLink, Clock, Eye, CheckCircle, QrCode, CreditCard, User, Search, Loader2 } from 'lucide-react';
+import { ArrowLeft, Save, Send, Copy, ExternalLink, Clock, Eye, CheckCircle, QrCode, CreditCard, User, Search, Loader2, Download } from 'lucide-react';
 import { CustomPackageStatus } from '@/lib/api/closer';
 import { toast } from 'sonner';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 export function PackageDetailPage() {
   const { t, i18n } = useTranslation('closer');
@@ -155,6 +157,163 @@ export function PackageDetailPage() {
   const copyPaymentLink = (link: string) => {
     navigator.clipboard.writeText(link);
     toast.success('Payment link copied to clipboard');
+  };
+
+  const downloadPDFInvoice = () => {
+    if (!pkg || !pkg.paymentLink) return;
+
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+
+    // Header
+    doc.setFillColor(59, 130, 246); // Primary blue
+    doc.rect(0, 0, pageWidth, 40, 'F');
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('BookProof', 14, 20);
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Custom Package Invoice', 14, 30);
+
+    // Reset text color
+    doc.setTextColor(0, 0, 0);
+
+    // Invoice Details
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Invoice Date: ${new Date(pkg.createdAt).toLocaleDateString()}`, pageWidth - 60, 20, { align: 'right' });
+    doc.text(`Package ID: ${pkg.id.slice(0, 8)}...`, pageWidth - 60, 27, { align: 'right' });
+
+    let yPos = 55;
+
+    // Client Information Section
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Bill To:', 14, yPos);
+
+    yPos += 7;
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.text(pkg.clientName, 14, yPos);
+    yPos += 6;
+    doc.text(pkg.clientEmail, 14, yPos);
+
+    if (pkg.clientCompany) {
+      yPos += 6;
+      doc.text(pkg.clientCompany, 14, yPos);
+    }
+
+    if (pkg.clientPhone) {
+      yPos += 6;
+      doc.text(pkg.clientPhone, 14, yPos);
+    }
+
+    yPos += 15;
+
+    // Package Details Table
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Package Details', 14, yPos);
+
+    yPos += 5;
+
+    autoTable(doc, {
+      startY: yPos,
+      head: [['Item', 'Details']],
+      body: [
+        ['Package Name', pkg.packageName],
+        ['Number of Credits', pkg.credits.toString()],
+        ['Price', formatCurrency(pkg.price, pkg.currency)],
+        ['Price per Credit', formatCurrency(pkg.price / pkg.credits, pkg.currency)],
+        ['Activation Window', `${pkg.validityDays} days from purchase`],
+        ...(pkg.includeKeywordResearch ? [['Keyword Research Credits', pkg.keywordResearchCredits.toString()]] : []),
+        ...(pkg.description ? [['Description', pkg.description]] : []),
+      ],
+      theme: 'striped',
+      headStyles: { fillColor: [59, 130, 246] },
+      margin: { left: 14, right: 14 },
+    });
+
+    yPos = (doc as any).lastAutoTable.finalY + 15;
+
+    // Payment Information
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Payment Information', 14, yPos);
+
+    yPos += 10;
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Payment Link:', 14, yPos);
+    yPos += 6;
+    doc.setTextColor(59, 130, 246);
+    doc.textWithLink(pkg.paymentLink.substring(0, 70) + '...', 14, yPos, { url: pkg.paymentLink });
+    doc.setTextColor(0, 0, 0);
+
+    if (pkg.paymentLinkExpiresAt) {
+      yPos += 8;
+      doc.setFontSize(10);
+      doc.setTextColor(220, 38, 38); // Red for expiration warning
+      doc.text(`Link expires: ${new Date(pkg.paymentLinkExpiresAt).toLocaleString()}`, 14, yPos);
+      doc.setTextColor(0, 0, 0);
+    }
+
+    // QR Code
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(pkg.paymentLink)}`;
+    const qrX = pageWidth - 40;
+    const qrY = yPos - 30;
+
+    // Add QR code image (using external API, so we add it as image)
+    try {
+      const img = new Image();
+      img.src = qrCodeUrl;
+      img.onload = () => {
+        doc.addImage(img, 'PNG', qrX, qrY, 30, 30);
+        finalizePDF();
+      };
+      img.onerror = () => {
+        // If QR code fails to load, just generate PDF without it
+        finalizePDF();
+      };
+    } catch {
+      finalizePDF();
+    }
+
+    const finalizePDF = () => {
+      let finalYPos = yPos + 15;
+
+      // Special Terms
+      if (pkg.specialTerms) {
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Special Terms:', 14, finalYPos);
+        finalYPos += 7;
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        const splitTerms = doc.splitTextToSize(pkg.specialTerms, pageWidth - 28);
+        doc.text(splitTerms, 14, finalYPos);
+        finalYPos += splitTerms.length * 5 + 10;
+      }
+
+      // Footer
+      const footerY = doc.internal.pageSize.getHeight() - 20;
+      doc.setFontSize(9);
+      doc.setTextColor(107, 114, 128); // Gray
+      doc.text('Thank you for choosing BookProof!', pageWidth / 2, footerY, { align: 'center' });
+      doc.text('For questions, contact support@bookproof.com', pageWidth / 2, footerY + 5, { align: 'center' });
+
+      // Save PDF
+      const fileName = `BookProof_Invoice_${pkg.packageName.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      doc.save(fileName);
+      toast.success('Invoice downloaded successfully');
+    };
+
+    // If QR code isn't needed or fails, we still need to call finalizePDF
+    // The img.onload will handle it, but as fallback:
+    setTimeout(() => finalizePDF(), 100);
   };
 
   const formatCurrency = (amount: number, currency: string = 'USD') => {
@@ -376,6 +535,15 @@ export function PackageDetailPage() {
                     onClick={() => window.open(pkg.paymentLink!, '_blank')}
                   >
                     <ExternalLink className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={downloadPDFInvoice}
+                    title="Download PDF Invoice"
+                  >
+                    <Download className="h-4 w-4" />
                   </Button>
                 </div>
                 {pkg.paymentLinkExpiresAt && (

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { adminControlsApi } from '@/lib/api/admin-controls';
+import { adminControlsApi, type ReaderSearchResultDto } from '@/lib/api/admin-controls';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,7 +35,9 @@ import {
   UserPlus,
   FileText,
   CheckCircle2,
-  Loader2 } from 'lucide-react';
+  Loader2,
+  Check,
+  Search as SearchIcon } from 'lucide-react';
 
 export function CampaignControlsPage() {
   const navigate = useNavigate();
@@ -91,6 +93,12 @@ export function CampaignControlsPage() {
   const [grantAccessReason, setGrantAccessReason] = useState('');
   const [grantAccessFormat, setGrantAccessFormat] = useState('ebook');
   const [grantAccessNotes, setGrantAccessNotes] = useState('');
+
+  // Section 4.3 Bug M4 - Reader search
+  const [selectedReader, setSelectedReader] = useState<ReaderSearchResultDto | null>(null);
+  const [readerSearchQuery, setReaderSearchQuery] = useState('');
+  const [readerSearchResults, setReaderSearchResults] = useState<ReaderSearchResultDto[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const [removeReaderDialogOpen, setRemoveReaderDialogOpen] = useState(false);
   const [removeAssignmentId, setRemoveAssignmentId] = useState('');
@@ -158,6 +166,30 @@ export function CampaignControlsPage() {
     fetchHealth();
     fetchAnalytics();
   }, [bookId]);
+
+  // Section 4.3 Bug M4 - Debounced reader search
+  useEffect(() => {
+    const searchReaders = async () => {
+      if (readerSearchQuery.length < 2) {
+        setReaderSearchResults([]);
+        return;
+      }
+
+      try {
+        setIsSearching(true);
+        const results = await adminControlsApi.searchReaders(readerSearchQuery);
+        setReaderSearchResults(results);
+      } catch (error: any) {
+        console.error('Reader search error:', error);
+        toast.error('Failed to search readers');
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    const timer = setTimeout(searchReaders, 300);
+    return () => clearTimeout(timer);
+  }, [readerSearchQuery]);
 
   const handlePause = async () => {
     try {
@@ -278,17 +310,19 @@ export function CampaignControlsPage() {
   };
 
   const handleGrantAccess = async () => {
+    if (!selectedReader) return;
     try {
       setIsGrantingAccess(true);
       await adminControlsApi.manualGrantAccess(bookId, {
-        readerProfileId: grantAccessReaderId,
+        readerProfileId: selectedReader.id,
         reason: grantAccessReason,
         preferredFormat: grantAccessFormat,
         notes: grantAccessNotes || undefined
       });
       toast.success('Access granted to reader successfully');
       setGrantAccessDialogOpen(false);
-      setGrantAccessReaderId('');
+      setSelectedReader(null);
+      setReaderSearchQuery('');
       setGrantAccessReason('');
       setGrantAccessFormat('ebook');
       setGrantAccessNotes('');
@@ -896,14 +930,92 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                     Bypass the normal queue to grant a specific reader immediate access to this
                     campaign.
                   </p>
-                  <div>
-                    <Label htmlFor="grant-access-reader">Reader Profile ID *</Label>
-                    <Input
-                      id="grant-access-reader"
-                      value={grantAccessReaderId}
-                      onChange={(e) => setGrantAccessReaderId(e.target.value)}
-                      placeholder="Enter reader profile ID"
-                    />
+                  {/* Section 4.3 Bug M4 - Reader Search */}
+                  <div className="space-y-2">
+                    <Label>Search and Select Reader *</Label>
+                    {selectedReader ? (
+                      <div className="border rounded-md p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium">{selectedReader.name}</p>
+                            <p className="text-sm text-muted-foreground">{selectedReader.email}</p>
+                            <div className="flex gap-2 mt-1">
+                              <Badge variant="outline" className="text-xs">
+                                {selectedReader.totalReviewsCompleted} reviews
+                              </Badge>
+                              <Badge variant="outline" className="text-xs capitalize">
+                                {selectedReader.formatPreference.toLowerCase()}
+                              </Badge>
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedReader(null);
+                              setReaderSearchQuery('');
+                            }}
+                          >
+                            Change
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <div className="relative">
+                          <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                          <Input
+                            placeholder="Type reader name or email..."
+                            value={readerSearchQuery}
+                            onChange={(e) => setReaderSearchQuery(e.target.value)}
+                            className="pl-9"
+                          />
+                        </div>
+                        {readerSearchQuery.length >= 2 && (
+                          <div className="border rounded-md max-h-48 overflow-y-auto">
+                            {isSearching ? (
+                              <div className="p-4 text-center text-sm text-muted-foreground">
+                                Searching...
+                              </div>
+                            ) : readerSearchResults.length === 0 ? (
+                              <div className="p-4 text-center text-sm text-muted-foreground">
+                                No readers found
+                              </div>
+                            ) : (
+                              <div className="divide-y">
+                                {readerSearchResults.map((reader) => (
+                                  <button
+                                    key={reader.id}
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedReader(reader);
+                                      setReaderSearchQuery('');
+                                    }}
+                                    className="w-full p-3 text-left hover:bg-muted transition-colors"
+                                  >
+                                    <p className="font-medium">{reader.name}</p>
+                                    <p className="text-sm text-muted-foreground">{reader.email}</p>
+                                    <div className="flex gap-2 mt-1">
+                                      <Badge variant="outline" className="text-xs">
+                                        {reader.totalReviewsCompleted} reviews
+                                      </Badge>
+                                      <Badge variant="outline" className="text-xs capitalize">
+                                        {reader.formatPreference.toLowerCase()}
+                                      </Badge>
+                                    </div>
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        {readerSearchQuery.length > 0 && readerSearchQuery.length < 2 && (
+                          <p className="text-xs text-muted-foreground">
+                            Type at least 2 characters to search
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="grant-access-format">Preferred Format</Label>
@@ -939,7 +1051,7 @@ ${r.rating ? `Rating: ${r.rating}` : ''}
                     type="button"
                     onClick={handleGrantAccess}
                     disabled={
-                      !grantAccessReaderId || !grantAccessReason || isGrantingAccess
+                      !selectedReader || !grantAccessReason || isGrantingAccess
                     }
                     className="w-full"
                   >

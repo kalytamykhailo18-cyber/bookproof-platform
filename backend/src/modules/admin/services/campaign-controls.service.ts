@@ -21,6 +21,7 @@ import {
   ForceCompleteCampaignDto,
   ManualGrantAccessDto,
   RemoveReaderFromCampaignDto,
+  ReaderSearchResultDto,
 } from '../dto/campaign-controls.dto';
 import { BookFormat, CampaignStatus, CreditTransactionType, EmailType, Language, UserRole } from '@prisma/client';
 
@@ -192,6 +193,7 @@ export class CampaignControlsService {
 
     const newBalance = authorProfile.availableCredits + dto.creditsToAdd;
     const newTotalPurchased = authorProfile.totalCreditsPurchased + dto.creditsToAdd;
+    const activationWindowDays = dto.activationWindowDays || 30; // Default to 30 days
 
     // Update author credits
     const updated = await this.prisma.authorProfile.update({
@@ -199,6 +201,29 @@ export class CampaignControlsService {
       data: {
         availableCredits: newBalance,
         totalCreditsPurchased: newTotalPurchased,
+      },
+    });
+
+    // Create CreditPurchase record to track manually added credits with activation window
+    // Per requirements.md Section 4.5: Add Credits should support "Activation window (or use default)"
+    const now = new Date();
+    const activationWindowExpiresAt = new Date(now);
+    activationWindowExpiresAt.setDate(activationWindowExpiresAt.getDate() + activationWindowDays);
+
+    await this.prisma.creditPurchase.create({
+      data: {
+        authorProfileId,
+        credits: dto.creditsToAdd,
+        amountPaid: 0, // No payment for manual addition
+        currency: 'USD',
+        validityDays: activationWindowDays,
+        activationWindowDays: activationWindowDays,
+        purchaseDate: now,
+        activationWindowExpiresAt,
+        activated: true, // Mark as activated immediately
+        activatedAt: now,
+        paymentStatus: 'COMPLETED',
+        adminNotes: `Manual credit addition by admin. Reason: ${dto.reason}${dto.notes ? `. Notes: ${dto.notes}` : ''}`,
       },
     });
 
@@ -251,6 +276,8 @@ export class CampaignControlsService {
       previousBalance: authorProfile.availableCredits,
       newBalance,
       reason: dto.reason,
+      activationWindowDays,
+      activationWindowExpiresAt: activationWindowExpiresAt.toISOString(),
     };
   }
 
@@ -539,13 +566,54 @@ export class CampaignControlsService {
    * Get campaign analytics (nested structure for frontend)
    */
   async getCampaignAnalytics(bookId: string): Promise<CampaignAnalyticsDto> {
-    const book = await this.prisma.book.findUnique({
+    // Fetch book with author and assignments (Section 4.3 Bug H1, H2)
+    const bookWithDetails = await this.prisma.book.findUnique({
       where: { id: bookId },
+      include: {
+        authorProfile: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        readerAssignments: {
+          include: {
+            readerProfile: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                  },
+                },
+              },
+            },
+            review: {
+              select: {
+                id: true,
+                amazonReviewLink: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+      },
     });
 
-    if (!book) {
+    if (!bookWithDetails) {
       throw new NotFoundException('Campaign not found');
     }
+
+    // Use type assertion for included relations
+    const book = bookWithDetails as any;
 
     const health = await this.getCampaignHealth(bookId);
 
@@ -564,6 +632,30 @@ export class CampaignControlsService {
     const totalDeliveryAttempts = book.totalReviewsDelivered + book.totalReviewsExpired;
     const onTimeDeliveryRate =
       totalDeliveryAttempts > 0 ? (book.totalReviewsDelivered / totalDeliveryAttempts) * 100 : 0;
+
+    // Map reader assignments (Section 4.3 Bug H2)
+    const assignments = book.readerAssignments.map((assignment: any) => ({
+      id: assignment.id,
+      readerProfileId: assignment.readerProfileId,
+      readerName: assignment.readerProfile.user.name || 'Unknown',
+      readerEmail: assignment.readerProfile.user.email,
+      status: assignment.status,
+      assignedAt: assignment.createdAt, // Use createdAt as assignment date
+      deadlineAt: assignment.deadlineAt,
+      completedAt: assignment.completedAt,
+      reviewUrl: assignment.review?.amazonReviewLink || null,
+      isManualAssignment: assignment.isManualGrant || false,
+      format: assignment.formatAssigned, // Use formatAssigned field
+    }));
+
+    // Calculate queue statistics (Section 4.3 Bug L7)
+    const queueStatistics = {
+      totalAssignments: assignments.length,
+      activeCount: assignments.filter((a: any) => a.status === 'ACTIVE').length,
+      completedCount: assignments.filter((a: any) => a.status === 'COMPLETED').length,
+      expiredCount: assignments.filter((a: any) => a.status === 'EXPIRED').length,
+      pendingCount: assignments.filter((a: any) => a.status === 'PENDING').length,
+    };
 
     return {
       campaign: {
@@ -597,6 +689,17 @@ export class CampaignControlsService {
         expectedEndDate: book.expectedEndDate?.toISOString() || '',
         projectedEndDate: health.projectedCompletionDate,
       },
+      // Section 4.3 Bug H1 - Author information
+      author: {
+        id: book.authorProfile.id,
+        name: book.authorProfile.user.name || 'Unknown',
+        email: book.authorProfile.user.email,
+        company: book.authorProfile.company || null,
+      },
+      // Section 4.3 Bug H2 - Reader assignments
+      assignments,
+      // Section 4.3 Bug L7 - Queue statistics
+      queueStatistics,
     };
   }
 
@@ -645,6 +748,7 @@ export class CampaignControlsService {
             select: {
               email: true,
               name: true,
+              companyName: true,
               emailVerified: true,
               createdAt: true,
             },
@@ -665,11 +769,34 @@ export class CampaignControlsService {
       this.prisma.authorProfile.count(),
     ]);
 
+    // Calculate total spent for all authors
+    const authorIds = authors.map((a) => a.id);
+    const purchaseTotals = await this.prisma.creditPurchase.groupBy({
+      by: ['authorProfileId'],
+      where: {
+        authorProfileId: { in: authorIds },
+        paymentStatus: 'COMPLETED',
+      },
+      _sum: {
+        amountPaid: true,
+      },
+    });
+
+    // Create a map for quick lookup
+    const spentMap = new Map<string, number>();
+    purchaseTotals.forEach((pt) => {
+      const totalCents = pt._sum.amountPaid
+        ? Math.round(parseFloat(pt._sum.amountPaid.toString()) * 100)
+        : 0;
+      spentMap.set(pt.authorProfileId, totalCents);
+    });
+
     const authorItems = authors.map((author) => ({
       id: author.id,
       userId: author.userId,
       email: author.user.email,
       name: author.user.name || 'Unknown',
+      companyName: author.user.companyName || undefined,
       totalCreditsPurchased: author.totalCreditsPurchased,
       totalCreditsUsed: author.totalCreditsUsed,
       availableCredits: author.availableCredits,
@@ -680,13 +807,195 @@ export class CampaignControlsService {
       totalCampaigns: author.books.length,
       createdAt: author.createdAt,
       isVerified: author.user.emailVerified,
+      isSuspended: author.isSuspended,
+      totalSpentCents: spentMap.get(author.id) || 0,
     }));
 
     return { authors: authorItems, total };
   }
 
   /**
-   * Get single author details for admin
+   * Search readers by name or email (Section 4.3 Bug M4)
+   */
+  async searchReaders(query: string): Promise<ReaderSearchResultDto[]> {
+    if (!query || query.length < 2) {
+      return [];
+    }
+
+    const readers = await this.prisma.readerProfile.findMany({
+      where: {
+        user: {
+          OR: [
+            {
+              name: {
+                contains: query,
+                mode: 'insensitive',
+              },
+            },
+            {
+              email: {
+                contains: query,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            preferredLanguage: true,
+          },
+        },
+      },
+      take: 10,
+      orderBy: {
+        reviewsCompleted: 'desc',
+      },
+    });
+
+    return readers.map((reader) => ({
+      id: reader.id,
+      name: reader.user.name || 'Unknown',
+      email: reader.user.email,
+      country: null, // Country not stored in ReaderProfile
+      preferredLanguage: reader.user.preferredLanguage,
+      formatPreference: reader.contentPreference, // Use contentPreference field
+      totalReviewsCompleted: reader.reviewsCompleted,
+      reliabilityScore: reader.reliabilityScore ? parseFloat(reader.reliabilityScore.toString()) : 100,
+    }));
+  }
+
+  /**
+   * Get detailed author view (Section 4.5 - Bug H2)
+   */
+  async getAuthorDetailView(authorProfileId: string): Promise<any> {
+    // Fetch author with all related data
+    const [author, campaigns, purchases] = await Promise.all([
+      this.prisma.authorProfile.findUnique({
+        where: { id: authorProfileId },
+        include: {
+          user: {
+            select: {
+              email: true,
+              name: true,
+              companyName: true,
+              phone: true,
+              country: true,
+              preferredLanguage: true,
+              emailVerified: true,
+            },
+          },
+        },
+      }),
+      // Fetch campaigns separately
+      this.prisma.book.findMany({
+        where: { authorProfileId },
+        select: {
+          id: true,
+          title: true,
+          status: true,
+          creditsAllocated: true,
+          targetReviews: true,
+          totalReviewsValidated: true,
+          campaignStartDate: true,
+          campaignEndDate: true,
+          createdAt: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      // Fetch purchases separately
+      this.prisma.creditPurchase.findMany({
+        where: {
+          authorProfileId,
+          paymentStatus: 'COMPLETED',
+        },
+        include: {
+          packageTier: {
+            select: {
+              name: true,
+            },
+          },
+          coupon: {
+            select: {
+              code: true,
+            },
+          },
+        },
+        orderBy: {
+          purchaseDate: 'desc',
+        },
+      }),
+    ]);
+
+    if (!author) {
+      throw new NotFoundException('Author profile not found');
+    }
+
+    // Calculate total spent
+    const totalSpentCents = purchases.reduce((sum, purchase) => {
+      return sum + Math.round(parseFloat(purchase.amountPaid.toString()) * 100);
+    }, 0);
+
+    // Map campaigns
+    const campaignDtos = campaigns.map((book) => ({
+      id: book.id,
+      title: book.title,
+      status: book.status,
+      creditsAllocated: book.creditsAllocated,
+      targetReviews: book.targetReviews,
+      reviewsCompleted: book.totalReviewsValidated,
+      startDate: book.campaignStartDate,
+      endDate: book.campaignEndDate,
+      createdAt: book.createdAt,
+    }));
+
+    // Map purchases
+    const purchaseDtos = purchases.map((purchase) => ({
+      id: purchase.id,
+      credits: purchase.credits,
+      amountPaidCents: Math.round(parseFloat(purchase.amountPaid.toString()) * 100),
+      currency: purchase.currency,
+      paymentStatus: purchase.paymentStatus,
+      purchaseDate: purchase.purchaseDate,
+      packageTierName: purchase.packageTier?.name,
+      couponCode: purchase.coupon?.code,
+      discountAmountCents: purchase.discountAmount
+        ? Math.round(parseFloat(purchase.discountAmount.toString()) * 100)
+        : undefined,
+    }));
+
+    return {
+      id: author.id,
+      userId: author.userId,
+      name: author.user.name || 'Unknown',
+      email: author.user.email,
+      companyName: author.user.companyName,
+      phone: author.user.phone,
+      country: author.user.country,
+      preferredLanguage: author.user.preferredLanguage,
+      isVerified: author.user.emailVerified,
+      isSuspended: author.isSuspended,
+      suspendReason: author.suspendReason,
+      totalCreditsPurchased: author.totalCreditsPurchased,
+      totalCreditsUsed: author.totalCreditsUsed,
+      availableCredits: author.availableCredits,
+      totalSpentCents,
+      adminNotes: author.adminNotes,
+      createdAt: author.createdAt,
+      lastLoginAt: author.lastLoginAt,
+      campaigns: campaignDtos,
+      purchases: purchaseDtos,
+    };
+  }
+
+  /**
+   * Get single author details for admin (legacy method)
    */
   async getAuthorDetails(authorProfileId: string): Promise<AuthorListItemDto> {
     const author = await this.prisma.authorProfile.findUnique({
@@ -696,6 +1005,7 @@ export class CampaignControlsService {
           select: {
             email: true,
             name: true,
+            companyName: true,
             emailVerified: true,
             createdAt: true,
           },
@@ -713,11 +1023,27 @@ export class CampaignControlsService {
       throw new NotFoundException('Author profile not found');
     }
 
+    // Calculate total spent
+    const purchaseTotal = await this.prisma.creditPurchase.aggregate({
+      where: {
+        authorProfileId: author.id,
+        paymentStatus: 'COMPLETED',
+      },
+      _sum: {
+        amountPaid: true,
+      },
+    });
+
+    const totalSpentCents = purchaseTotal._sum.amountPaid
+      ? Math.round(parseFloat(purchaseTotal._sum.amountPaid.toString()) * 100)
+      : 0;
+
     return {
       id: author.id,
       userId: author.userId,
       email: author.user.email,
       name: author.user.name || 'Unknown',
+      companyName: author.user.companyName || undefined,
       totalCreditsPurchased: author.totalCreditsPurchased,
       totalCreditsUsed: author.totalCreditsUsed,
       availableCredits: author.availableCredits,
@@ -728,6 +1054,8 @@ export class CampaignControlsService {
       totalCampaigns: author.books.length,
       createdAt: author.createdAt,
       isVerified: author.user.emailVerified,
+      isSuspended: author.isSuspended,
+      totalSpentCents,
     };
   }
 

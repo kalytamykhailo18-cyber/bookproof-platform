@@ -107,6 +107,14 @@ export class PayoutResponseDto {
   requestedAt: Date;
   createdAt: Date;
   updatedAt: Date;
+  // Nested data included for admin payout lists (Section 4.8)
+  readerProfile?: {
+    user?: {
+      id: string;
+      email: string;
+      name: string;
+    };
+  };
 }
 
 // Wallet Transaction DTOs

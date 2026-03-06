@@ -71,7 +71,7 @@ const AdminCampaignControlsPage = lazy(() => import('../pages/admin/campaigns/Co
 const AdminDisputesPage = lazy(() => import('../pages/admin/Disputes').then(m => ({ default: m.DisputesPage })));
 const AdminIssuesPage = lazy(() => import('../pages/admin/Issues').then(m => ({ default: m.AdminIssuesPage })));
 const AdminExceptionsPage = lazy(() => import('../pages/admin/Exceptions').then(m => ({ default: m.ExceptionsPage })));
-const AdminPayoutsPage = lazy(() => import('../pages/admin/Payouts').then(m => ({ default: m.AdminPayoutsPage })));
+const AdminPayoutsPage = lazy(() => import('../pages/admin/payouts/UnifiedPayouts').then(m => ({ default: m.UnifiedPayoutsPage })));
 const AdminRefundsPage = lazy(() => import('../pages/admin/Refunds').then(m => ({ default: m.AdminRefundsPage })));
 const AdminPaymentIssuesPage = lazy(() => import('../pages/admin/PaymentIssues').then(m => ({ default: m.PaymentIssuesPage })));
 const AdminTeamPage = lazy(() => import('../pages/admin/Team').then(m => ({ default: m.AdminTeamPage })));
@@ -87,15 +87,16 @@ const AdminKeywordResearchPage = lazy(() => import('../pages/admin/KeywordResear
 const AdminAffiliatesListPage = lazy(() => import('../pages/admin/AffiliatesList').then(m => ({ default: m.AdminAffiliatesListPage })));
 const AdminAffiliateDetailsPage = lazy(() => import('../pages/admin/Affiliates').then(m => ({ default: m.AdminAffiliateDetailsPage })));
 const AdminAffiliatesPayoutsPage = lazy(() => import('../pages/admin/affiliates/Payouts').then(m => ({ default: m.AdminAffiliatePayoutsPage })));
+const AdminAuthorDetailPage = lazy(() => import('../pages/admin/AuthorDetail').then(m => ({ default: m.AdminAuthorDetailPage })));
 const AdminAuthorsTransactionsPage = lazy(() => import('../pages/admin/authors/Transactions').then(m => ({ default: m.AuthorTransactionsPage })));
 const AdminLandingPagesPage = lazy(() => import('../pages/admin/LandingPages').then(m => ({ default: m.AdminLandingPagesPage })));
 const AdminLandingPagesContentPage = lazy(() => import('../pages/admin/landing-pages/Content').then(m => ({ default: m.LandingPageContentEditor })));
 const AdminReaderBehaviorPage = lazy(() => import('../pages/admin/ReaderBehavior').then(m => ({ default: m.ReaderBehaviorPage })));
 const AdminPackageApprovalsPage = lazy(() => import('../pages/admin/PackageApprovals').then(m => ({ default: m.PackageApprovalsPage })));
-// Log pages - not yet implemented
-// const AdminLogsActivityPage = lazy(() => import('../pages/admin/logs/Activity').then(m => ({ default: m.ActivityLogsPage })));
-// const AdminLogsEmailsPage = lazy(() => import('../pages/admin/logs/Emails').then(m => ({ default: m.EmailLogsPage })));
-// const AdminLogsErrorsPage = lazy(() => import('../pages/admin/logs/Errors').then(m => ({ default: m.ErrorLogsPage })));
+// Log pages (Section 4.10 - System Monitoring)
+const AdminLogsActivityPage = lazy(() => import('../pages/admin/logs/Activity').then(m => ({ default: m.ActivityLogsPage })));
+const AdminLogsEmailsPage = lazy(() => import('../pages/admin/logs/Emails').then(m => ({ default: m.EmailLogsPage })));
+const AdminLogsErrorsPage = lazy(() => import('../pages/admin/logs/Errors').then(m => ({ default: m.ErrorLogsPage })));
 const AdminReportsFinancialPage = lazy(() => import('../pages/admin/reports/Financial').then(m => ({ default: m.AdminFinancialReportsPage })));
 const AdminReportsOperationalPage = lazy(() => import('../pages/admin/reports/Operational').then(m => ({ default: m.AdminOperationalReportsPage })));
 const AdminReportsAffiliatesPage = lazy(() => import('../pages/admin/reports/Affiliates').then(m => ({ default: m.AdminAffiliateReportsPage })));
@@ -229,6 +230,7 @@ export const router = createBrowserRouter([
               { path: 'dashboard', element: <LazyRoute component={AdminDashboardPage} /> },
               { path: 'validation', element: <LazyRoute component={AdminValidationPage} /> },
               { path: 'authors', element: <LazyRoute component={AdminAuthorsPage} /> },
+              { path: 'authors/:id', element: <LazyRoute component={AdminAuthorDetailPage} /> },
               { path: 'authors/:id/transactions', element: <LazyRoute component={AdminAuthorsTransactionsPage} /> },
               { path: 'readers', element: <LazyRoute component={AdminReadersListPage} /> },
               { path: 'readers/:id', element: <LazyRoute component={AdminReaderDetailPage} /> },
@@ -258,10 +260,10 @@ export const router = createBrowserRouter([
               { path: 'landing-pages/content', element: <LazyRoute component={AdminLandingPagesContentPage} /> },
               { path: 'reader-behavior', element: <LazyRoute component={AdminReaderBehaviorPage} /> },
               { path: 'package-approvals', element: <LazyRoute component={AdminPackageApprovalsPage} /> },
-              // Log routes - not yet implemented
-              // { path: 'logs/activity', element: <LazyRoute component={AdminLogsActivityPage} /> },
-              // { path: 'logs/emails', element: <LazyRoute component={AdminLogsEmailsPage} /> },
-              // { path: 'logs/errors', element: <LazyRoute component={AdminLogsErrorsPage} /> },
+              // Log routes (Section 4.10 - System Monitoring)
+              { path: 'logs/activity', element: <LazyRoute component={AdminLogsActivityPage} /> },
+              { path: 'logs/emails', element: <LazyRoute component={AdminLogsEmailsPage} /> },
+              { path: 'logs/errors', element: <LazyRoute component={AdminLogsErrorsPage} /> },
               { path: 'reports/financial', element: <LazyRoute component={AdminReportsFinancialPage} /> },
               { path: 'reports/operational', element: <LazyRoute component={AdminReportsOperationalPage} /> },
               { path: 'reports/affiliates', element: <LazyRoute component={AdminReportsAffiliatesPage} /> },

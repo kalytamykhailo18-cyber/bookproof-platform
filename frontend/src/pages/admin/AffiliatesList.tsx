@@ -48,6 +48,8 @@ export function AdminAffiliatesListPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
   const [activeFilter, setActiveFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [minCommission, setMinCommission] = useState<string>('');
+  const [maxCommission, setMaxCommission] = useState<string>('');
 
   // Safety mechanism: prevent duplicate fetches
   const hasFetchedRef = useRef(false);
@@ -96,9 +98,14 @@ export function AdminAffiliatesListPage() {
         (activeFilter === 'active' && affiliate.isActive) ||
         (activeFilter === 'inactive' && !affiliate.isActive);
 
-      return matchesSearch && matchesStatus && matchesActive;
+      // Commission range filter (Section 4.6 requirement)
+      const matchesCommissionRange =
+        (minCommission === '' || (affiliate.totalEarnings || 0) >= parseFloat(minCommission)) &&
+        (maxCommission === '' || (affiliate.totalEarnings || 0) <= parseFloat(maxCommission));
+
+      return matchesSearch && matchesStatus && matchesActive && matchesCommissionRange;
     });
-  }, [affiliates, searchQuery, statusFilter, activeFilter]);
+  }, [affiliates, searchQuery, statusFilter, activeFilter, minCommission, maxCommission]);
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -270,6 +277,45 @@ export function AdminAffiliatesListPage() {
                   <SelectItem value="inactive">{t('filters.inactive')}</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+
+          {/* Commission Range Filter (Section 4.6 requirement) */}
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Commission Range (USD)</label>
+              <div className="flex gap-2">
+                <Input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="Min"
+                  value={minCommission}
+                  onChange={(e) => setMinCommission(e.target.value)}
+                />
+                <Input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="Max"
+                  value={maxCommission}
+                  onChange={(e) => setMaxCommission(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex items-end">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSearchQuery('');
+                  setStatusFilter('all');
+                  setActiveFilter('all');
+                  setMinCommission('');
+                  setMaxCommission('');
+                }}
+              >
+                Clear Filters
+              </Button>
             </div>
           </div>
         </CardContent>

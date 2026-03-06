@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import {
   Select,
@@ -46,6 +47,13 @@ export function AdminCampaignsListPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [authorFilter, setAuthorFilter] = useState<string>('all'); // Section 4.3 Bug M3
+  const [authors, setAuthors] = useState<Array<{id: string, name: string}>>([]);
+  // Section 4.3 Bug M5 - Date range filter
+  const [dateFrom, setDateFrom] = useState<string>('');
+  const [dateTo, setDateTo] = useState<string>('');
+  // Section 4.3 Bug M6 - Health status filter
+  const [healthFilter, setHealthFilter] = useState<string>('all');
 
   // Fetch campaigns
   const fetchCampaigns = async () => {
@@ -61,8 +69,19 @@ export function AdminCampaignsListPage() {
     }
   };
 
+  // Fetch authors for filter (Section 4.3 Bug M3)
+  const fetchAuthors = async () => {
+    try {
+      const data = await adminControlsApi.getAllAuthors();
+      setAuthors(data.map(a => ({ id: a.id, name: a.name })));
+    } catch (error: any) {
+      console.error('Authors error:', error);
+    }
+  };
+
   useEffect(() => {
     fetchCampaigns();
+    fetchAuthors();
   }, []);
 
   // ✅ PATTERN: useMemo for filtered arrays (prevents infinite render loops)
@@ -75,15 +94,61 @@ export function AdminCampaignsListPage() {
         return false;
       }
 
-      // Search filter
+      // Author filter (Section 4.3 Bug M3)
+      if (authorFilter !== 'all' && item.author.id !== authorFilter) {
+        return false;
+      }
+
+      // Date range filter (Section 4.3 Bug M5)
+      if (dateFrom || dateTo) {
+        const campaignDate = new Date(item.timeline.startDate);
+        if (dateFrom) {
+          const fromDate = new Date(dateFrom);
+          fromDate.setHours(0, 0, 0, 0);
+          if (campaignDate < fromDate) {
+            return false;
+          }
+        }
+        if (dateTo) {
+          const toDate = new Date(dateTo);
+          toDate.setHours(23, 59, 59, 999);
+          if (campaignDate > toDate) {
+            return false;
+          }
+        }
+      }
+
+      // Health status filter (Section 4.3 Bug M6)
+      if (healthFilter !== 'all') {
+        // Calculate health status based on progress and performance
+        const expectedReviews = (item.distribution.currentWeek - 1) * item.distribution.reviewsPerWeek;
+        const variance = item.progress.reviewsDelivered - expectedReviews;
+        const totalReviews = item.progress.reviewsValidated + item.progress.reviewsRejected;
+        const rejectionRate = totalReviews > 0 ? item.progress.reviewsRejected / totalReviews : 0;
+
+        let health = 'on-track';
+        if (rejectionRate > 0.1 || item.progress.reviewsExpired > 5) {
+          health = 'issues';
+        } else if (variance < -(item.distribution.reviewsPerWeek)) {
+          health = 'delayed';
+        }
+
+        if (healthFilter !== health) {
+          return false;
+        }
+      }
+
+      // Search filter (Section 4.3 Bug L8 - also search by author name)
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        return item.campaign.title.toLowerCase().includes(query);
+        const titleMatch = item.campaign.title.toLowerCase().includes(query);
+        const authorMatch = item.author.name.toLowerCase().includes(query);
+        return titleMatch || authorMatch;
       }
 
       return true;
     });
-  }, [campaigns, statusFilter, searchQuery]);
+  }, [campaigns, statusFilter, authorFilter, searchQuery, dateFrom, dateTo, healthFilter]);
 
   // ✅ PATTERN: useMemo for computed stats
   const stats = useMemo(() => {
@@ -208,8 +273,9 @@ export function AdminCampaignsListPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col gap-4 md:flex-row">
-            <div className="flex-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Search */}
+            <div className="md:col-span-2 lg:col-span-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -220,7 +286,10 @@ export function AdminCampaignsListPage() {
                 />
               </div>
             </div>
-            <div className="w-full md:w-48">
+
+            {/* Status Filter */}
+            <div>
+              <Label className="text-sm text-muted-foreground mb-1.5 block">Status</Label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder={t('list.filters.statusPlaceholder')} />
@@ -234,6 +303,79 @@ export function AdminCampaignsListPage() {
                   <SelectItem value="CANCELLED">{t('list.filters.cancelled')}</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* Section 4.3 Bug M3 - Author Filter */}
+            <div>
+              <Label className="text-sm text-muted-foreground mb-1.5 block">Author</Label>
+              <Select value={authorFilter} onValueChange={setAuthorFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Authors" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Authors</SelectItem>
+                  {authors.map((author) => (
+                    <SelectItem key={author.id} value={author.id}>
+                      {author.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Section 4.3 Bug M6 - Health Status Filter */}
+            <div>
+              <Label className="text-sm text-muted-foreground mb-1.5 block">Health Status</Label>
+              <Select value={healthFilter} onValueChange={setHealthFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Health Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Health Status</SelectItem>
+                  <SelectItem value="on-track">On Track</SelectItem>
+                  <SelectItem value="delayed">Delayed</SelectItem>
+                  <SelectItem value="issues">Issues</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Section 4.3 Bug M5 - Date Range Filter */}
+            <div>
+              <Label className="text-sm text-muted-foreground mb-1.5 block">Start Date From</Label>
+              <Input
+                type="date"
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+                placeholder="From date"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm text-muted-foreground mb-1.5 block">Start Date To</Label>
+              <Input
+                type="date"
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
+                placeholder="To date"
+              />
+            </div>
+
+            {/* Clear Filters Button */}
+            <div className="flex items-end">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => {
+                  setSearchQuery('');
+                  setStatusFilter('all');
+                  setAuthorFilter('all');
+                  setHealthFilter('all');
+                  setDateFrom('');
+                  setDateTo('');
+                }}
+              >
+                Clear Filters
+              </Button>
             </div>
           </div>
         </CardContent>

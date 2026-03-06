@@ -18,8 +18,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  FileEdit,
-  AlertCircle } from 'lucide-react';
+  FileEdit } from 'lucide-react';
+import { ContentEditor } from './landing/ContentEditor';
 
 import {
   getAllLandingPages,
@@ -847,95 +847,7 @@ export function AdminLandingPagesPage() {
           </TabsContent>
 
           <TabsContent value="content" className="mt-6">
-            <Card className="border-yellow-200 bg-yellow-50/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileEdit className="h-5 w-5" />
-                  Content Management System (CMS)
-                  <Badge variant="outline" className="ml-2 border-yellow-600 text-yellow-700">
-                    Coming Soon
-                  </Badge>
-                </CardTitle>
-                <CardDescription>
-                  Visual editor for landing page content - Hero, Features, Testimonials, FAQs
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="rounded-lg border border-yellow-200 bg-white p-6">
-                  <div className="flex items-start gap-4">
-                    <AlertCircle className="h-6 w-6 text-yellow-600 flex-shrink-0" />
-                    <div className="flex-1 space-y-3">
-                      <h3 className="font-semibold text-lg">Feature Under Development</h3>
-                      <p className="text-muted-foreground">
-                        This CMS feature will allow you to edit all landing page content without touching code.
-                        Currently, landing page content is managed via i18n translation files.
-                      </p>
-                      <div className="rounded-md bg-yellow-50 p-4 text-sm">
-                        <p className="font-medium mb-2">Current Implementation:</p>
-                        <ul className="space-y-1 text-muted-foreground">
-                          <li>• Content stored in: <code className="text-xs bg-white px-1 py-0.5 rounded">frontend/src/locales/[lang]/</code></li>
-                          <li>• Files: hero.json, features.json, testimonials.json, faq.json</li>
-                          <li>• Languages: EN, PT, ES</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-base">Planned Features</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2 text-sm text-muted-foreground">
-                        <li className="flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
-                          Hero section (headline, subtitle, CTAs, image)
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
-                          Features list (add/edit/remove/reorder)
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
-                          Testimonials (quotes, authors, ratings)
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
-                          FAQs (questions and answers)
-                        </li>
-                      </ul>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-base">Multi-Language Support</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Content will be managed separately for each language:
-                      </p>
-                      <ul className="space-y-2 text-sm">
-                        <li className="flex items-center gap-2">
-                          <Badge variant="outline">EN</Badge>
-                          <span className="text-muted-foreground">English</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Badge variant="outline">PT</Badge>
-                          <span className="text-muted-foreground">Portuguese</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Badge variant="outline">ES</Badge>
-                          <span className="text-muted-foreground">Spanish</span>
-                        </li>
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CardContent>
-            </Card>
+            <ContentEditor />
           </TabsContent>
 
           <TabsContent value="settings" className="mt-6">

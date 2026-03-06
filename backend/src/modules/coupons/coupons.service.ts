@@ -289,6 +289,38 @@ export class CouponsService {
         };
       }
 
+      // Check first purchase only restriction (Section 4.7)
+      if (coupon.firstPurchaseOnly && userId) {
+        const previousPurchases = await this.prisma.creditPurchase.count({
+          where: {
+            authorProfile: { userId },
+            paymentStatus: 'COMPLETED',
+          },
+        });
+
+        if (previousPurchases > 0) {
+          return {
+            valid: false,
+            error: 'This coupon is only valid for first-time purchases',
+          };
+        }
+      }
+
+      // Check specific user email restriction (Section 4.7)
+      if (coupon.specificUserEmail && userId) {
+        const user = await this.prisma.user.findUnique({
+          where: { id: userId },
+          select: { email: true },
+        });
+
+        if (!user || user.email !== coupon.specificUserEmail) {
+          return {
+            valid: false,
+            error: 'This coupon is not available for your account',
+          };
+        }
+      }
+
       // Calculate discount if purchase amount provided
       let discountAmount: number | undefined;
       let finalPrice: number | undefined;
@@ -297,9 +329,16 @@ export class CouponsService {
         if (coupon.type === 'PERCENTAGE' && coupon.discountPercent) {
           discountAmount =
             (dto.purchaseAmount * coupon.discountPercent.toNumber()) / 100;
-          finalPrice = dto.purchaseAmount - discountAmount;
         } else if (coupon.type === 'FIXED_AMOUNT' && coupon.discountAmount) {
           discountAmount = coupon.discountAmount.toNumber();
+        }
+
+        // Apply maximum discount cap if set (Section 4.7)
+        if (discountAmount && coupon.maxDiscountAmount) {
+          discountAmount = Math.min(discountAmount, coupon.maxDiscountAmount.toNumber());
+        }
+
+        if (discountAmount) {
           finalPrice = Math.max(0, dto.purchaseAmount - discountAmount);
         }
       }

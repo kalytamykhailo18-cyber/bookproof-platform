@@ -46,7 +46,7 @@ export function CouponsListPage() {
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
   // Filter state
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'expired'>('all');
   const [typeFilter, setTypeFilter] = useState<CouponType | 'all'>('all');
 
   // Fetch coupons
@@ -54,7 +54,8 @@ export function CouponsListPage() {
     try {
       setIsLoading(true);
       const filters: any = {};
-      if (statusFilter !== 'all') {
+      // Don't send expired filter to backend - handled client-side
+      if (statusFilter !== 'all' && statusFilter !== 'expired') {
         filters.isActive = statusFilter === 'active';
       }
       if (typeFilter !== 'all') {
@@ -73,6 +74,16 @@ export function CouponsListPage() {
   useEffect(() => {
     fetchCoupons();
   }, [statusFilter, typeFilter]);
+
+  // Client-side filtering for expired coupons
+  const filteredCoupons = useMemo(() => {
+    if (statusFilter !== 'expired') {
+      return coupons;
+    }
+
+    const now = new Date();
+    return coupons.filter(c => c.validUntil && new Date(c.validUntil) < now);
+  }, [coupons, statusFilter]);
 
   const handleDelete = async (id: string) => {
     try {
@@ -176,6 +187,7 @@ export function CouponsListPage() {
             <SelectItem value="all">{t('filters.allStatus')}</SelectItem>
             <SelectItem value="active">{t('filters.active')}</SelectItem>
             <SelectItem value="inactive">{t('filters.inactive')}</SelectItem>
+            <SelectItem value="expired">{t('filters.expired')}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -201,7 +213,7 @@ export function CouponsListPage() {
           <CardDescription>{t('table.description')}</CardDescription>
         </CardHeader>
         <CardContent>
-          {coupons.length === 0 ? (
+          {filteredCoupons.length === 0 ? (
             <div className="py-16 text-center">
               <p className="text-lg font-semibold">{t('empty.title')}</p>
               <p className="text-muted-foreground">{t('empty.description')}</p>
@@ -221,7 +233,7 @@ export function CouponsListPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {coupons.map((coupon, index) => (
+                {filteredCoupons.map((coupon, index) => (
                   <TableRow
                     key={coupon.id}
                     className={`animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}

@@ -26,6 +26,12 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { BookFormat } from '@/lib/api/campaigns';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+  DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 
 // Truncate synopsis to 200 characters
 function truncateSynopsis(text: string, maxLength: number = 200): string {
@@ -594,8 +600,8 @@ export function CampaignsPage() {
   const [campaigns, setCampaigns] = useState<AvailableCampaign[] | null>(null);
   const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState<string>('all');
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedFormat, setSelectedFormat] = useState<string>('all');
 
   // Modal state for book detail
@@ -701,8 +707,8 @@ export function CampaignsPage() {
       campaign.authorName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       campaign.synopsis.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesGenre = selectedGenre === 'all' || campaign.genre === selectedGenre;
-    const matchesLanguage = selectedLanguage === 'all' || campaign.language === selectedLanguage;
+    const matchesGenre = selectedGenres.length === 0 || selectedGenres.includes(campaign.genre);
+    const matchesLanguage = selectedLanguages.length === 0 || selectedLanguages.includes(campaign.language);
     const matchesFormat =
       selectedFormat === 'all' ||
       campaign.availableFormats === selectedFormat ||
@@ -758,40 +764,110 @@ export function CampaignsPage() {
               </div>
             </div>
 
-            {/* Genre Filter */}
+            {/* Genre Filter - Multi-Select */}
             <div className="animate-fade-up-light-slow space-y-2">
-              <Label htmlFor="genre">{t('filters.genre')}</Label>
-              <Select value={selectedGenre} onValueChange={setSelectedGenre}>
-                <SelectTrigger id="genre">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('filters.allGenres')}</SelectItem>
+              <Label>{t('filters.genre')}</Label>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full justify-between font-normal"
+                  >
+                    {selectedGenres.length === 0
+                      ? t('filters.allGenres')
+                      : `${selectedGenres.length} selected`}
+                    <Filter className="ml-2 h-4 w-4 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 max-h-64 overflow-y-auto">
                   {genres.map((genre) => (
-                    <SelectItem key={genre} value={genre}>
+                    <DropdownMenuCheckboxItem
+                      key={genre}
+                      checked={selectedGenres.includes(genre)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedGenres([...selectedGenres, genre]);
+                        } else {
+                          setSelectedGenres(selectedGenres.filter((g) => g !== genre));
+                        }
+                      }}
+                    >
                       {genre}
-                    </SelectItem>
+                    </DropdownMenuCheckboxItem>
                   ))}
-                </SelectContent>
-              </Select>
+                  {selectedGenres.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="w-full"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedGenres([]);
+                        }}
+                      >
+                        {t('filters.clearAll') || 'Clear All'}
+                      </Button>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
-            {/* Language Filter */}
+            {/* Language Filter - Multi-Select */}
             <div className="animate-fade-up-medium-slow space-y-2">
-              <Label htmlFor="language">{t('filters.language')}</Label>
-              <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-                <SelectTrigger id="language">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('filters.allLanguages')}</SelectItem>
+              <Label>{t('filters.language')}</Label>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full justify-between font-normal"
+                  >
+                    {selectedLanguages.length === 0
+                      ? t('filters.allLanguages')
+                      : `${selectedLanguages.length} selected`}
+                    <Filter className="ml-2 h-4 w-4 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 max-h-64 overflow-y-auto">
                   {languages.map((lang) => (
-                    <SelectItem key={lang} value={lang}>
+                    <DropdownMenuCheckboxItem
+                      key={lang}
+                      checked={selectedLanguages.includes(lang)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedLanguages([...selectedLanguages, lang]);
+                        } else {
+                          setSelectedLanguages(selectedLanguages.filter((l) => l !== lang));
+                        }
+                      }}
+                    >
                       {lang}
-                    </SelectItem>
+                    </DropdownMenuCheckboxItem>
                   ))}
-                </SelectContent>
-              </Select>
+                  {selectedLanguages.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="w-full"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedLanguages([]);
+                        }}
+                      >
+                        {t('filters.clearAll') || 'Clear All'}
+                      </Button>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
             {/* Format Filter */}

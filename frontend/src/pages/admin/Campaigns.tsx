@@ -31,6 +31,7 @@ import {
   BookOpen,
   TrendingUp,
   Users,
+  User,
   Clock,
   CheckCircle,
   AlertCircle,
@@ -510,6 +511,196 @@ export function AdminCampaignDetailPage() {
                   </p>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Section 4.3 Bug H1 - Author Information */}
+          <Card className="animate-fade-up-heavy-slow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <User className="h-5 w-5" />
+                Campaign Author
+              </CardTitle>
+              <CardDescription>
+                Information about the campaign owner
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-muted-foreground">Author Name</Label>
+                  <p className="text-lg font-semibold">{analytics.author.name}</p>
+                </div>
+                <div>
+                  <Label className="text-muted-foreground">Email</Label>
+                  <a
+                    href={`mailto:${analytics.author.email}`}
+                    className="text-lg font-medium text-blue-600 hover:underline"
+                  >
+                    {analytics.author.email}
+                  </a>
+                </div>
+                {analytics.author.company && (
+                  <div>
+                    <Label className="text-muted-foreground">Company</Label>
+                    <p className="text-lg font-semibold">{analytics.author.company}</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section 4.3 Bug L7 - Queue Statistics */}
+          <Card className="animate-fade-up-heavy-slow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Queue Statistics
+              </CardTitle>
+              <CardDescription>
+                Breakdown of reader assignments by status
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground">Active</Label>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {analytics.queueStatistics.activeCount}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground">Completed</Label>
+                  <p className="text-2xl font-bold text-green-600">
+                    {analytics.queueStatistics.completedCount}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground">Expired</Label>
+                  <p className="text-2xl font-bold text-red-600">
+                    {analytics.queueStatistics.expiredCount}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground">Total</Label>
+                  <p className="text-2xl font-bold text-gray-700">
+                    {analytics.queueStatistics.totalAssignments}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section 4.3 Bug H2 - Reader Assignments List */}
+          <Card className="animate-fade-up-heavy-slow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Reader Assignments ({analytics.assignments.length})
+              </CardTitle>
+              <CardDescription>
+                All readers assigned to this campaign
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {analytics.assignments.length === 0 ? (
+                <div className="text-center py-8">
+                  <Users className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">No assignments yet</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Reader</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Format</TableHead>
+                        <TableHead>Assigned</TableHead>
+                        <TableHead>Deadline</TableHead>
+                        <TableHead>Review</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {analytics.assignments.map((assignment) => (
+                        <TableRow key={assignment.id}>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                <span className="text-sm font-medium text-blue-700">
+                                  {assignment.readerName.charAt(0).toUpperCase()}
+                                </span>
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="font-medium">{assignment.readerName}</span>
+                                {assignment.isManualAssignment && (
+                                  <Badge variant="outline" className="text-xs w-fit">
+                                    Manual
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <a
+                              href={`mailto:${assignment.readerEmail}`}
+                              className="text-blue-600 hover:underline text-sm"
+                            >
+                              {assignment.readerEmail}
+                            </a>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                assignment.status === 'COMPLETED'
+                                  ? 'default'
+                                  : assignment.status === 'ACTIVE'
+                                    ? 'secondary'
+                                    : 'destructive'
+                              }
+                            >
+                              {assignment.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-sm capitalize">
+                            {assignment.format.toLowerCase()}
+                          </TableCell>
+                          <TableCell className="text-sm">
+                            {new Date(assignment.assignedAt).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell className="text-sm">
+                            {new Date(assignment.deadlineAt).toLocaleDateString()}
+                            {new Date(assignment.deadlineAt) < new Date() &&
+                              assignment.status === 'ACTIVE' && (
+                                <span className="ml-2 text-red-600 text-xs font-semibold">
+                                  Overdue
+                                </span>
+                              )}
+                          </TableCell>
+                          <TableCell>
+                            {assignment.reviewUrl ? (
+                              <a
+                                href={assignment.reviewUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline flex items-center gap-1"
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                                View
+                              </a>
+                            ) : (
+                              <span className="text-muted-foreground text-sm">
+                                {assignment.status === 'ACTIVE' ? 'Pending' : 'N/A'}
+                              </span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

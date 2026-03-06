@@ -61,6 +61,8 @@ export function AdminAuthorsPage() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [minCredits, setMinCredits] = useState<string>('');
+  const [maxCredits, setMaxCredits] = useState<string>('');
   const [selectedAuthor, setSelectedAuthor] = useState<AuthorListItemDto | null>(null);
   const [loadingAuthorId, setLoadingAuthorId] = useState<string | null>(null);
 
@@ -74,6 +76,7 @@ export function AdminAuthorsPage() {
   const [creditsAmount, setCreditsAmount] = useState('');
   const [creditReason, setCreditReason] = useState('');
   const [creditNotes, setCreditNotes] = useState('');
+  const [activationWindowDays, setActivationWindowDays] = useState('30');
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [unsuspendDialogOpen, setUnsuspendDialogOpen] = useState(false);
   const [notesDialogOpen, setNotesDialogOpen] = useState(false);
@@ -119,11 +122,16 @@ export function AdminAuthorsPage() {
         (statusFilter === 'verified' && author.isVerified) ||
         (statusFilter === 'unverified' && !author.isVerified) ||
         (statusFilter === 'active' && author.activeCampaigns > 0) ||
-        (statusFilter === 'inactive' && author.activeCampaigns === 0);
+        (statusFilter === 'inactive' && author.activeCampaigns === 0) ||
+        (statusFilter === 'suspended' && author.isSuspended);
 
-      return matchesSearch && matchesStatus;
+      const matchesCreditsRange =
+        (minCredits === '' || author.availableCredits >= parseInt(minCredits)) &&
+        (maxCredits === '' || author.availableCredits <= parseInt(maxCredits));
+
+      return matchesSearch && matchesStatus && matchesCreditsRange;
     });
-  }, [authors, searchTerm, statusFilter]);
+  }, [authors, searchTerm, statusFilter, minCredits, maxCredits]);
 
   const stats = useMemo(() => {
     if (!authors)
@@ -144,7 +152,8 @@ export function AdminAuthorsPage() {
         await adminControlsApi.addCreditsToAuthor(selectedAuthor.id, {
           creditsToAdd: parseInt(creditsAmount),
           reason: creditReason,
-          notes: creditNotes || undefined
+          notes: creditNotes || undefined,
+          activationWindowDays: activationWindowDays ? parseInt(activationWindowDays) : 30
         });
         toast.success('Credits added successfully');
         setAddCreditsDialogOpen(false);
@@ -183,6 +192,7 @@ export function AdminAuthorsPage() {
     setCreditsAmount('');
     setCreditReason('');
     setCreditNotes('');
+    setActivationWindowDays('30');
     setSelectedAuthor(null);
   };
 
@@ -368,31 +378,70 @@ export function AdminAuthorsPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col gap-4 md:flex-row">
-            <div className="flex-1 animate-fade-left-fast">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder={t('filters.searchPlaceholder')}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
+              <div className="flex-1 animate-fade-left-fast">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    placeholder={t('filters.searchPlaceholder')}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <div className="w-full animate-fade-left-light-slow md:w-48">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('filters.status')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('filters.allStatuses')}</SelectItem>
+                    <SelectItem value="verified">{t('filters.verified')}</SelectItem>
+                    <SelectItem value="unverified">{t('filters.unverified')}</SelectItem>
+                    <SelectItem value="active">{t('filters.withActiveCampaigns')}</SelectItem>
+                    <SelectItem value="inactive">{t('filters.noActiveCampaigns')}</SelectItem>
+                    <SelectItem value="suspended">Suspended</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
-            <div className="w-full animate-fade-left-light-slow md:w-48">
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder={t('filters.status')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('filters.allStatuses')}</SelectItem>
-                  <SelectItem value="verified">{t('filters.verified')}</SelectItem>
-                  <SelectItem value="unverified">{t('filters.unverified')}</SelectItem>
-                  <SelectItem value="active">{t('filters.withActiveCampaigns')}</SelectItem>
-                  <SelectItem value="inactive">{t('filters.noActiveCampaigns')}</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex flex-col gap-4 md:flex-row">
+              <div className="w-full md:w-1/2">
+                <Label htmlFor="min-credits">Credit Balance Range</Label>
+                <div className="flex gap-2 mt-2">
+                  <Input
+                    id="min-credits"
+                    type="number"
+                    min="0"
+                    placeholder="Min"
+                    value={minCredits}
+                    onChange={(e) => setMinCredits(e.target.value)}
+                  />
+                  <Input
+                    id="max-credits"
+                    type="number"
+                    min="0"
+                    placeholder="Max"
+                    value={maxCredits}
+                    onChange={(e) => setMaxCredits(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex items-end">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSearchTerm('');
+                    setStatusFilter('all');
+                    setMinCredits('');
+                    setMaxCredits('');
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>
@@ -419,10 +468,12 @@ export function AdminAuthorsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t('table.author')}</TableHead>
+                  <TableHead>{t('table.company')}</TableHead>
                   <TableHead>{t('table.verified')}</TableHead>
                   <TableHead className="text-right">{t('table.totalCredits')}</TableHead>
                   <TableHead className="text-right">{t('table.available')}</TableHead>
                   <TableHead className="text-right">{t('table.used')}</TableHead>
+                  <TableHead className="text-right">Total Spent</TableHead>
                   <TableHead className="text-center">{t('table.campaigns')}</TableHead>
                   <TableHead className="text-right">{t('table.actions')}</TableHead>
                 </TableRow>
@@ -440,17 +491,30 @@ export function AdminAuthorsPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      {author.isVerified ? (
-                        <Badge className="bg-green-100 text-green-800">
-                          <CheckCircle className="mr-1 h-3 w-3" />
-                          {t('status.verified')}
-                        </Badge>
-                      ) : (
-                        <Badge className="bg-yellow-100 text-yellow-800">
-                          <XCircle className="mr-1 h-3 w-3" />
-                          {t('status.unverified')}
-                        </Badge>
-                      )}
+                      <div className="text-sm">
+                        {author.companyName || <span className="text-muted-foreground italic">N/A</span>}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1">
+                        {author.isVerified ? (
+                          <Badge className="bg-green-100 text-green-800">
+                            <CheckCircle className="mr-1 h-3 w-3" />
+                            {t('status.verified')}
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-yellow-100 text-yellow-800">
+                            <XCircle className="mr-1 h-3 w-3" />
+                            {t('status.unverified')}
+                          </Badge>
+                        )}
+                        {author.isSuspended && (
+                          <Badge className="bg-red-100 text-red-800">
+                            <Ban className="mr-1 h-3 w-3" />
+                            Suspended
+                          </Badge>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell className="text-right">
                       {author.totalCreditsPurchased.toLocaleString()}
@@ -460,6 +524,9 @@ export function AdminAuthorsPage() {
                     </TableCell>
                     <TableCell className="text-right text-muted-foreground">
                       {author.totalCreditsUsed.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-right font-semibold">
+                      ${(author.totalSpentCents / 100).toFixed(2)}
                     </TableCell>
                     <TableCell className="text-center">
                       <Badge variant="outline">
@@ -472,11 +539,21 @@ export function AdminAuthorsPage() {
                           type="button"
                           variant="ghost"
                           size="sm"
+                          onClick={() => navigate(`/admin/authors/${author.id}`)}
+                          title="View Details"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
                           onClick={() => {
                             setLoadingAuthorId(author.id);
                             navigate(`/admin/authors/${author.id}/transactions`);
                           }}
                           disabled={loadingAuthorId === author.id}
+                          title="View Transactions"
                         >
                           {loadingAuthorId === author.id ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -512,24 +589,28 @@ export function AdminAuthorsPage() {
                         >
                           <FileText className="h-4 w-4" />
                         </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openSuspendDialog(author)}
-                          title="Suspend Author"
-                        >
-                          <Ban className="h-4 w-4 text-red-600" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openUnsuspendDialog(author)}
-                          title="Unsuspend Author"
-                        >
-                          <ShieldCheck className="h-4 w-4 text-green-600" />
-                        </Button>
+                        {!author.isSuspended && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openSuspendDialog(author)}
+                            title="Suspend Author"
+                          >
+                            <Ban className="h-4 w-4 text-red-600" />
+                          </Button>
+                        )}
+                        {author.isSuspended && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openUnsuspendDialog(author)}
+                            title="Unsuspend Author"
+                          >
+                            <ShieldCheck className="h-4 w-4 text-green-600" />
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -583,6 +664,23 @@ export function AdminAuthorsPage() {
                 onChange={(e) => setCreditNotes(e.target.value)}
                 placeholder={t('dialogs.notesPlaceholder')}
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="activation-window-days">
+                Activation Window (days) *
+              </Label>
+              <Input
+                id="activation-window-days"
+                type="number"
+                min="1"
+                max="365"
+                value={activationWindowDays}
+                onChange={(e) => setActivationWindowDays(e.target.value)}
+                placeholder="30"
+              />
+              <p className="text-sm text-muted-foreground">
+                Number of days before these credits expire (default: 30 days)
+              </p>
             </div>
           </div>
           <DialogFooter>

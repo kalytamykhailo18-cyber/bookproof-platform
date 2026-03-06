@@ -1317,6 +1317,11 @@ model CustomPackage {
   viewedAt  DateTime? // When client viewed the offer
   viewCount Int       @default(0)
 
+  // Payment tracking (Section 5.5)
+  paidAt          DateTime?
+  stripePaymentId String?   @unique
+  accountCreated  Boolean   @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -1660,6 +1665,11 @@ model Coupon {
   minimumPurchase Decimal? @db.Decimal(10, 2)
   minimumCredits  Int?
 
+  // Restrictions (Section 4.7 requirements)
+  maxDiscountAmount Decimal? @db.Decimal(10, 2) // Maximum discount cap
+  firstPurchaseOnly Boolean  @default(false)     // Only valid for first-time purchases
+  specificUserEmail String?                      // Restrict to specific user email
+
   // Usage limits
   maxUses        Int? // Null = unlimited
   maxUsesPerUser Int  @default(1)
@@ -1967,6 +1977,7 @@ enum EmailType {
   READER_REVIEW_SUBMITTED // When reader submits review (awaiting validation)
   READER_REVIEW_VALIDATED
   READER_REVIEW_REJECTED
+  READER_PAYOUT_REQUESTED // When reader submits payout request (confirmation email)
   READER_PAYOUT_COMPLETED
   READER_ASSIGNMENT_REASSIGNED // When assignment is reassigned to another book
   READER_ASSIGNMENT_CANCELLED // When admin cancels reader assignment
@@ -1984,6 +1995,8 @@ enum EmailType {
   AUTHOR_CREDITS_EXPIRED
   AUTHOR_CREDITS_ADDED // When admin manually adds credits
   AUTHOR_CREDITS_REMOVED // When admin manually removes credits
+  AUTHOR_SUSPENDED // When admin suspends author account (Section 4.5)
+  AUTHOR_UNSUSPENDED // When admin unsuspends author account (Section 4.5)
 
   // Admin notifications
   ADMIN_NEW_ISSUE

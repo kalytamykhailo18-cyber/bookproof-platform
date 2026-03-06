@@ -3,8 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * DTO for review submission
- * Per Milestone 4.4 - Review Submission Process:
- * - Review text must be 150+ characters minimum
+ * Per Section 3.6 - Review Submission Form:
+ * - Review text must be 20+ characters minimum, 2000 characters maximum
  * - Star rating must be 1-5
  * - Reader must agree to Amazon TOS compliance
  * - Reader must confirm review guidelines acknowledgement
@@ -31,14 +31,14 @@ export class SubmitReviewDto {
   internalRating: number;
 
   @ApiProperty({
-    description: 'Internal feedback text (anonymized for author report). 150-2000 characters required.',
-    example: 'This book had an incredible storyline that kept me engaged from start to finish. The author has a unique way of developing characters that made me feel deeply connected to their journeys.',
-    minLength: 150,
+    description: 'Internal feedback text (anonymized for author report). 20-2000 characters required.',
+    example: 'Great book with engaging storyline!',
+    minLength: 20,
     maxLength: 2000,
   })
   @IsString()
   @IsNotEmpty()
-  @MinLength(150, { message: 'Review feedback must be at least 150 characters' })
+  @MinLength(20, { message: 'Review feedback must be at least 20 characters' })
   @MaxLength(2000, { message: 'Review feedback cannot exceed 2000 characters' })
   internalFeedback: string;
 

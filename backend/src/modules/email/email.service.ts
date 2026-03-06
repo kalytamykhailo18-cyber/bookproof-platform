@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import { EmailTemplateService, EmailVariables } from './email-template.service';
 import { PrismaService } from '@common/prisma/prisma.service';
-import { EmailType, EmailStatus, Language, NotificationType } from '@prisma/client';
+import { EmailType, EmailStatus, Language, NotificationType, UserRole } from '@prisma/client';
 
 /**
  * Transactional email types that MUST always be sent regardless of user preferences
@@ -19,6 +19,7 @@ const TRANSACTIONAL_EMAIL_TYPES: EmailType[] = [
   EmailType.REFUND_PROCESSED,
   EmailType.AUTHOR_PAYMENT_RECEIVED,
   EmailType.AUTHOR_PAYMENT_FAILED,
+  EmailType.READER_PAYOUT_REQUESTED,
   EmailType.READER_PAYOUT_COMPLETED,
   EmailType.READER_ASSIGNMENT_EXPIRED,
   EmailType.READER_MATERIALS_READY,
@@ -1013,5 +1014,67 @@ export class EmailService {
         </body>
       </html>
     `;
+  }
+
+  /**
+   * Send notification email to all active admin users
+   * Used for system alerts, stalled jobs, critical errors, etc.
+   *
+   * @param type - The email type (ADMIN_NEW_ISSUE, ADMIN_URGENT_ISSUE, etc.)
+   * @param variables - Email template variables
+   */
+  async sendAdminNotification(
+    type: EmailType,
+    variables: EmailVariables,
+  ): Promise<void> {
+    try {
+      // Find all active admin users
+      const admins = await this.prisma.user.findMany({
+        where: {
+          role: UserRole.ADMIN,
+          isActive: true,
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          preferredLanguage: true,
+        },
+      });
+
+      if (admins.length === 0) {
+        this.logger.warn('No active admin users found to send notification');
+        return;
+      }
+
+      this.logger.log(
+        `Sending ${type} notification to ${admins.length} admin(s)`,
+      );
+
+      // Send email to each admin
+      for (const admin of admins) {
+        try {
+          await this.sendTemplatedEmail(
+            admin.email,
+            type,
+            {
+              ...variables,
+              adminName: admin.name || 'Admin',
+            },
+            admin.id,
+            admin.preferredLanguage || Language.EN,
+          );
+        } catch (error) {
+          this.logger.error(
+            `Failed to send ${type} to admin ${admin.email}:`,
+            error,
+          );
+          // Continue sending to other admins even if one fails
+        }
+      }
+    } catch (error) {
+      this.logger.error(`Failed to send admin notification ${type}:`, error);
+      throw error;
+    }
   }
 }

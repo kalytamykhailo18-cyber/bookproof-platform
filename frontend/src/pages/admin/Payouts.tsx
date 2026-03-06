@@ -123,7 +123,8 @@ export function AdminPayoutsPage() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t('table.reader')}</TableHead>
+            <TableHead>{t('table.name')}</TableHead>
+            <TableHead>{t('table.email')}</TableHead>
             <TableHead>{t('table.amount')}</TableHead>
             <TableHead>{t('table.method')}</TableHead>
             <TableHead>{t('table.requestedAt')}</TableHead>
@@ -137,7 +138,12 @@ export function AdminPayoutsPage() {
               key={payout.id}
               className={`animate-fade-up-${['fast', 'light-slow', 'medium-slow', 'heavy-slow'][index % 4]}`}
             >
-              <TableCell className="font-medium">{payout.readerProfileId}</TableCell>
+              <TableCell className="font-medium">
+                {payout.readerProfile?.user?.name || 'N/A'}
+              </TableCell>
+              <TableCell className="text-sm text-muted-foreground">
+                {payout.readerProfile?.user?.email || 'N/A'}
+              </TableCell>
               <TableCell className="font-semibold">{formatCurrency(payout.amount, payout.currency || "USD", i18n.language)}</TableCell>
               <TableCell>{payout.paymentMethod}</TableCell>
               <TableCell>{format(new Date(payout.requestedAt), 'PP')}</TableCell>

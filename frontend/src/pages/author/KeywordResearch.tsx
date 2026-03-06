@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate,  useSearchParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { keywordsApi } from '@/lib/api/keywords';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,6 +21,9 @@ import { formatDate, formatCurrency } from '@/lib/utils';
 import { KeywordResearchStatus, TargetMarket } from '@/lib/api/keywords';
 import { toast } from 'sonner';
 
+// Polling interval for PROCESSING status (10 seconds)
+const PROCESSING_POLL_INTERVAL = 10000;
+
 export function KeywordResearchDetailsPage() {
   const { t, i18n } = useTranslation('keywordResearch');
   const navigate = useNavigate();
@@ -32,26 +35,63 @@ export function KeywordResearchDetailsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch keyword research
-  const fetchResearch = async () => {
+  const fetchResearch = useCallback(async (showLoading = true) => {
     try {
-      setIsLoading(true);
+      if (showLoading) setIsLoading(true);
       const data = await keywordsApi.getById(id);
       setResearch(data);
+
+      // If status changed from PROCESSING to something else, show notification
+      if (research?.status === KeywordResearchStatus.PROCESSING &&
+          data.status !== KeywordResearchStatus.PROCESSING) {
+        if (data.status === KeywordResearchStatus.COMPLETED) {
+          toast.success('Your keyword research report is ready!');
+        } else if (data.status === KeywordResearchStatus.FAILED) {
+          toast.error('Keyword research processing failed. Please contact support.');
+        }
+      }
     } catch (error: any) {
       console.error('Research error:', error);
-      toast.error('Failed to load keyword research');
+      if (showLoading) toast.error('Failed to load keyword research');
     } finally {
-      setIsLoading(false);
+      if (showLoading) setIsLoading(false);
     }
-  };
+  }, [id, research?.status]);
 
+  // Initial fetch
   useEffect(() => {
     if (id) {
       fetchResearch();
     }
   }, [id]);
+
+  // Polling for PROCESSING status - auto-refresh every 10 seconds
+  // Per Section 9.3: Target processing time is under 5 minutes
+  useEffect(() => {
+    // Clear any existing interval
+    if (pollIntervalRef.current) {
+      clearInterval(pollIntervalRef.current);
+      pollIntervalRef.current = null;
+    }
+
+    // Start polling if status is PROCESSING
+    if (research?.status === KeywordResearchStatus.PROCESSING) {
+      pollIntervalRef.current = setInterval(() => {
+        fetchResearch(false); // Don't show loading spinner during poll
+      }, PROCESSING_POLL_INTERVAL);
+    }
+
+    // Cleanup on unmount or status change
+    return () => {
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+    };
+  }, [research?.status, fetchResearch]);
 
   // Handle payment success/cancel query params
   useEffect(() => {

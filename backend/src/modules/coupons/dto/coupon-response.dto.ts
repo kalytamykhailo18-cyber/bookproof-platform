@@ -27,6 +27,15 @@ export class CouponResponseDto {
   minimumCredits?: number;
 
   @ApiPropertyOptional()
+  maxDiscountAmount?: number;
+
+  @ApiProperty()
+  firstPurchaseOnly: boolean;
+
+  @ApiPropertyOptional()
+  specificUserEmail?: string;
+
+  @ApiPropertyOptional()
   maxUses?: number;
 
   @ApiProperty()

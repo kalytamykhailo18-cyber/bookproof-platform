@@ -39,17 +39,40 @@ async function main() {
   console.log('📋 Creating system settings...');
 
   const systemSettings = [
+    // General Settings (Section 4.9)
+    { category: 'general', key: 'platform_name', value: 'BookProof', dataType: 'string', description: 'Platform name displayed to users', isPublic: true },
+    { category: 'general', key: 'support_email', value: 'support@bookproof.com', dataType: 'string', description: 'Support email for customer inquiries', isPublic: true },
+    { category: 'general', key: 'default_language', value: 'en', dataType: 'string', description: 'Default platform language (en, es, pt)', isPublic: true },
+
+    // Pricing Settings
     { category: 'pricing', key: 'keyword_research_price', value: '49.99', dataType: 'number', description: 'Price for keyword research service', isPublic: true },
     { category: 'pricing', key: 'keyword_research_enabled', value: 'true', dataType: 'boolean', description: 'Enable/disable keyword research feature', isPublic: true },
     { category: 'pricing', key: 'ebook_credit_cost', value: '1', dataType: 'number', description: 'Credits per ebook review', isPublic: true },
     { category: 'pricing', key: 'audiobook_credit_cost', value: '2', dataType: 'number', description: 'Credits per audiobook review', isPublic: true },
+
+    // Credit Settings (Section 4.9)
+    { category: 'credit', key: 'minimum_credits_per_campaign', value: '10', dataType: 'number', description: 'Minimum credits required to create a campaign', isPublic: true },
+
+    // Reader Settings (Section 4.9)
     { category: 'reader', key: 'ebook_payout_amount', value: '2.00', dataType: 'number', description: 'Reader payout for ebook review', isPublic: false },
     { category: 'reader', key: 'audiobook_payout_amount', value: '4.00', dataType: 'number', description: 'Reader payout for audiobook review', isPublic: false },
     { category: 'reader', key: 'min_payout_amount', value: '10.00', dataType: 'number', description: 'Minimum payout request amount', isPublic: true },
+    { category: 'reader', key: 'max_reviews_per_reader_per_book', value: '1', dataType: 'number', description: 'Maximum reviews per reader per book', isPublic: false },
+
+    // Campaign/Queue Settings
     { category: 'campaign', key: 'overbooking_percent', value: '20', dataType: 'number', description: 'Default overbooking buffer percentage', isPublic: false },
     { category: 'campaign', key: 'review_deadline_hours', value: '72', dataType: 'number', description: 'Hours for reader to submit review', isPublic: true },
-    { category: 'affiliate', key: 'default_commission_rate', value: '20', dataType: 'number', description: 'Default affiliate commission rate', isPublic: false },
+    { category: 'campaign', key: 'default_weekly_distribution_rate', value: '20', dataType: 'number', description: 'Default number of reviews distributed per week', isPublic: false },
+    { category: 'campaign', key: 'reminder_schedule', value: '24,48', dataType: 'string', description: 'Hours before deadline to send reminders (comma-separated)', isPublic: false },
+
+    // Affiliate Settings (Section 4.9)
+    { category: 'affiliate', key: 'default_commission_rate', value: '20', dataType: 'number', description: 'Default affiliate commission rate (%)', isPublic: false },
     { category: 'affiliate', key: 'commission_pending_days', value: '14', dataType: 'number', description: 'Days before commission becomes approved', isPublic: false },
+    { category: 'affiliate', key: 'cookie_duration_days', value: '30', dataType: 'number', description: 'Affiliate cookie duration in days', isPublic: false },
+
+    // Keyword Research Settings (Section 4.9)
+    { category: 'keyword_research', key: 'ai_provider', value: 'openai', dataType: 'string', description: 'AI provider for keyword research (openai, anthropic)', isPublic: false },
+    { category: 'keyword_research', key: 'ai_model', value: 'gpt-4', dataType: 'string', description: 'AI model to use for keyword research', isPublic: false },
   ];
 
   for (const setting of systemSettings) {

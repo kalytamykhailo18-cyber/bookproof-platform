@@ -14,9 +14,11 @@ import { ContactSection } from './ContactSection';
 import { CTABannerSection } from './CTABannerSection';
 import { Header } from '@/components/shared/Header';
 import { Footer } from '@/components/shared/Footer';
+import { LandingContentProvider } from '@/hooks/useLandingContent';
 
 export function LandingPage() {
   return (
+    <LandingContentProvider>
     <div>
       {/* Fixed navigation */}
       <Header />
@@ -66,5 +68,6 @@ export function LandingPage() {
       {/* 15. Footer */}
       <Footer />
     </div>
+    </LandingContentProvider>
   );
 }

@@ -128,6 +128,37 @@ export class LandingPagesService {
   }
 
   /**
+   * Get public landing page content (for frontend rendering)
+   * Only returns content if page is published
+   */
+  async getPublicContent(language: Language): Promise<{ content: string; isPublished: boolean }> {
+    try {
+      const landingPage = await this.prisma.landingPage.findUnique({
+        where: { language },
+        select: {
+          content: true,
+          isPublished: true,
+        },
+      });
+
+      if (!landingPage) {
+        return {
+          content: '{}',
+          isPublished: false,
+        };
+      }
+
+      return {
+        content: landingPage.content,
+        isPublished: landingPage.isPublished,
+      };
+    } catch (error) {
+      this.logger.error(`Error getting public content: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
    * Get analytics for a specific language
    */
   async getAnalyticsByLanguage(language: Language): Promise<AnalyticsStatsDto> {

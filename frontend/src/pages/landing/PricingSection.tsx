@@ -1,18 +1,19 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Check, Zap, Star, Crown, Building2, ShieldCheck, BarChart2, Bell, FileText } from 'lucide-react';
+import { usePricingContent } from '@/hooks/useLandingContent';
 
-type PackageKey = 'starter' | 'growth' | 'professional' | 'enterprise';
-
-const PACKAGES: { key: PackageKey; icon: typeof Zap; color: string; animation: string }[] = [
-  { key: 'starter',      icon: Zap,       color: '#3b82f6', animation: 'animate-fade-up-fast' },
-  { key: 'growth',       icon: Star,      color: '#8b5cf6', animation: 'animate-fade-up' },
-  { key: 'professional', icon: Crown,     color: '#f59e0b', animation: 'animate-fade-up-light-slow' },
-  { key: 'enterprise',   icon: Building2, color: '#10b981', animation: 'animate-fade-up-slow' },
+// Visual styling per package index
+const PACKAGE_STYLES = [
+  { icon: Zap,       color: '#3b82f6', animation: 'animate-fade-up-fast' },
+  { icon: Star,      color: '#8b5cf6', animation: 'animate-fade-up' },
+  { icon: Crown,     color: '#f59e0b', animation: 'animate-fade-up-light-slow' },
+  { icon: Building2, color: '#10b981', animation: 'animate-fade-up-slow' },
 ];
 
 export function PricingSection() {
   const { t } = useTranslation('pricing');
+  const content = usePricingContent();
 
   return (
     <section
@@ -36,26 +37,30 @@ export function PricingSection() {
             className="inline-block px-3.5 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider mb-5 animate-fade-down-fast"
             style={{ background: 'rgba(139,92,246,0.1)', color: '#7c3aed', border: '1px solid rgba(139,92,246,0.25)' }}
           >
-            {t('badge', 'Pricing')}
+            {content.badge}
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-5 animate-fade-up-fast">
-            {t('title', 'Simple, Transparent Pricing')}
+            {content.title}
           </h2>
           <p className="text-slate-600 text-lg max-w-2xl mx-auto animate-fade-up">
-            {t('subtitle')}
+            {content.subtitle}
           </p>
         </div>
 
         {/* Pricing cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-          {PACKAGES.map(({ key, icon: Icon, color, animation }) => {
-            const isPopular = key === 'growth';
-            const isEnterprise = key === 'enterprise';
-            const features: string[] = t(`packages.${key}.features`, { returnObjects: true }) as string[];
+          {content.packages.map((pkg, index) => {
+            const style = PACKAGE_STYLES[index % PACKAGE_STYLES.length];
+            const Icon = style.icon;
+            const color = style.color;
+            const animation = style.animation;
+            const isPopular = pkg.isPopular;
+            const isEnterprise = pkg.isEnterprise;
+            const features = Array.isArray(pkg.features) ? pkg.features : [];
 
             return (
               <div
-                key={key}
+                key={pkg.key}
                 className={`relative landing-card-light rounded-md p-7 flex flex-col transition-transform duration-300 hover:scale-105 hover:z-10 ${animation} ${isPopular ? 'ring-2 ring-violet-400/40' : ''}`}
                 style={isPopular ? { boxShadow: `0 8px 32px ${color}18` } : undefined}
               >
@@ -78,20 +83,20 @@ export function PricingSection() {
                   >
                     <Icon className="h-5 w-5" style={{ color }} />
                   </div>
-                  <h3 className="text-base font-bold text-slate-900">{t(`packages.${key}.name`)}</h3>
+                  <h3 className="text-base font-bold text-slate-900">{pkg.name}</h3>
                   <p className="text-sm font-semibold mt-1" style={{ color }}>
-                    {t(`packages.${key}.credits`)}
+                    {pkg.credits}
                   </p>
                 </div>
 
                 {/* Key info */}
                 <div className="space-y-2 mb-6 pb-6 border-b border-slate-200">
                   {[
-                    [t('infoRow.reviews'), t(`packages.${key}.reviews`)],
-                    [t('infoRow.duration'), t(`packages.${key}.duration`)],
-                    [t('infoRow.validity'), t(`packages.${key}.validity`)],
+                    [t('infoRow.reviews'), pkg.reviews],
+                    [t('infoRow.duration'), pkg.duration],
+                    [t('infoRow.validity'), pkg.validity],
                   ].map(([label, value]) => (
-                    <div key={label} className="flex items-center justify-between">
+                    <div key={label as string} className="flex items-center justify-between">
                       <span className="text-xs text-slate-500">{label}</span>
                       <span className="text-xs font-medium text-slate-700">{value}</span>
                     </div>
@@ -100,7 +105,7 @@ export function PricingSection() {
 
                 {/* Features */}
                 <ul className="space-y-2.5 mb-8 flex-1">
-                  {Array.isArray(features) && features.map((feature, fi) => (
+                  {features.map((feature, fi) => (
                     <li key={fi} className="flex items-start gap-2.5 animate-fade-right-fast">
                       <span
                         className="flex-shrink-0 mt-0.5 flex items-center justify-center w-4 h-4 rounded-sm"
@@ -120,7 +125,7 @@ export function PricingSection() {
                     className="block text-center px-4 py-3 rounded-md text-sm font-semibold transition-all duration-200 border"
                     style={{ color, borderColor: `${color}35`, background: `${color}0a` }}
                   >
-                    {t('enterpriseCta', 'Contact Sales')}
+                    {content.enterpriseCta}
                   </a>
                 ) : (
                   <Link
@@ -130,7 +135,7 @@ export function PricingSection() {
                       ? { background: `linear-gradient(135deg, ${color}, #6366f1)`, boxShadow: `0 4px 16px ${color}28` }
                       : { background: `${color}18`, border: `1px solid ${color}28`, color }}
                   >
-                    {t('cta', 'Get Started')}
+                    {content.ctaText}
                   </Link>
                 )}
               </div>
@@ -139,35 +144,37 @@ export function PricingSection() {
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-8 animate-fade-up-very-slow">
-          {t('note', 'Prices set by admin. Contact us for current package pricing.')}
+          {content.note}
         </p>
 
         {/* All plans include strip */}
-        <div className="mt-16 sm:mt-20 landing-card-light rounded-md p-7 sm:p-8 animate-zoom-in-slow">
-          <h4 className="text-sm font-semibold text-slate-900 text-center mb-7">{t('allInclude.title')}</h4>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {(t('allInclude.items', { returnObjects: true }) as string[]).map((label, idx) => {
-              const iconData = [
-                { Icon: ShieldCheck, color: '#3b82f6', anim: 'animate-fade-up-fast' },
-                { Icon: BarChart2,   color: '#8b5cf6', anim: 'animate-fade-up' },
-                { Icon: Bell,        color: '#f59e0b', anim: 'animate-fade-up-light-slow' },
-                { Icon: FileText,    color: '#10b981', anim: 'animate-fade-up-slow' },
-              ][idx];
-              const { Icon, color, anim } = iconData;
-              return (
-              <div key={idx} className={`flex items-center gap-3.5 ${anim}`}>
-                <span
-                  className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-md"
-                  style={{ background: `${color}12`, border: `1px solid ${color}25` }}
-                >
-                  <Icon className="h-4 w-4" style={{ color }} />
-                </span>
-                <span className="text-xs text-slate-600 leading-relaxed">{label}</span>
-              </div>
-              );
-            })}
+        {content.allInclude && content.allInclude.length > 0 && (
+          <div className="mt-16 sm:mt-20 landing-card-light rounded-md p-7 sm:p-8 animate-zoom-in-slow">
+            <h4 className="text-sm font-semibold text-slate-900 text-center mb-7">{t('allInclude.title')}</h4>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {content.allInclude.map((label, idx) => {
+                const iconData = [
+                  { Icon: ShieldCheck, color: '#3b82f6', anim: 'animate-fade-up-fast' },
+                  { Icon: BarChart2,   color: '#8b5cf6', anim: 'animate-fade-up' },
+                  { Icon: Bell,        color: '#f59e0b', anim: 'animate-fade-up-light-slow' },
+                  { Icon: FileText,    color: '#10b981', anim: 'animate-fade-up-slow' },
+                ][idx % 4];
+                const { Icon, color, anim } = iconData;
+                return (
+                <div key={idx} className={`flex items-center gap-3.5 ${anim}`}>
+                  <span
+                    className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-md"
+                    style={{ background: `${color}12`, border: `1px solid ${color}25` }}
+                  >
+                    <Icon className="h-4 w-4" style={{ color }} />
+                  </span>
+                  <span className="text-xs text-slate-600 leading-relaxed">{label}</span>
+                </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

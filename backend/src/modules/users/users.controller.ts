@@ -2,6 +2,7 @@ import { Controller, Get, Post, Patch, Delete, Body, UseGuards, HttpCode, HttpSt
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { DataExportResponseDto, DeleteAccountDto, DeleteAccountResponseDto, UpdateConsentDto, ConsentResponseDto, UpdateLanguageDto, UpdateLanguageResponseDto } from './dto/gdpr.dto';
+import { UpdateProfileDto, UpdateProfileResponseDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
 import { CurrentUser, CurrentUserData } from '@common/decorators/current-user.decorator';
 
@@ -196,5 +197,31 @@ export class UsersController {
     @Body() dto: UpdateLanguageDto,
   ): Promise<UpdateLanguageResponseDto> {
     return this.usersService.updateLanguage(user.id, dto);
+  }
+
+  /**
+   * Update user's basic profile information
+   *
+   * Per requirements.md Section 3.10: Reader Profile Settings
+   * - User can update name and country
+   */
+  @Patch('me/profile')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Update basic profile information',
+    description: 'Update user name and/or country',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile updated successfully',
+    type: UpdateProfileResponseDto,
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async updateProfile(
+    @CurrentUser() user: CurrentUserData,
+    @Body() dto: UpdateProfileDto,
+  ): Promise<UpdateProfileResponseDto> {
+    return this.usersService.updateProfile(user.id, dto);
   }
 }

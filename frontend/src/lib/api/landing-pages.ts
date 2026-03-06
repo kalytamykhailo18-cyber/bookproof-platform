@@ -248,3 +248,158 @@ export async function submitLead(data: SubmitLeadRequest): Promise<SubmitLeadRes
   const response = await apiClient.post<SubmitLeadResponse>('/landing-pages/leads', data);
   return response.data;
 }
+
+// ==========================================
+// CONTENT MANAGEMENT TYPES (Section 10.4)
+// ==========================================
+
+export interface HeroContent {
+  titleLine1: string;
+  titleLine2: string;
+  titleLine3?: string;
+  subtitle: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+  heroImage?: string;
+}
+
+export interface HowItWorksStep {
+  title: string;
+  description: string;
+  details: string[];
+  image?: string;
+}
+
+export interface HowItWorksContent {
+  badge: string;
+  title: string;
+  subtitle: string;
+  steps: HowItWorksStep[];
+  ctaText: string;
+}
+
+export interface BenefitItem {
+  key: string;
+  title: string;
+  description: string;
+  icon?: string;
+}
+
+export interface BenefitsSection {
+  badge: string;
+  title: string;
+  subtitle: string;
+  items: BenefitItem[];
+  ctaText: string;
+  note?: string;
+}
+
+export interface PricingPackage {
+  key: string;
+  name: string;
+  credits: string;
+  reviews: string;
+  duration: string;
+  validity: string;
+  features: string[];
+  isPopular?: boolean;
+  isEnterprise?: boolean;
+}
+
+export interface PricingSection {
+  badge: string;
+  title: string;
+  subtitle: string;
+  packages: PricingPackage[];
+  ctaText: string;
+  enterpriseCta: string;
+  note?: string;
+  allInclude: string[];
+}
+
+export interface Testimonial {
+  key: string;
+  quote: string;
+  author: string;
+  title: string;
+  rating: number;
+  industry?: string;
+  avatar?: string;
+}
+
+export interface TestimonialsSection {
+  badge: string;
+  title: string;
+  subtitle: string;
+  rating: string;
+  items: Testimonial[];
+}
+
+export interface FaqItem {
+  key: string;
+  question: string;
+  answer: string;
+}
+
+export interface FaqSection {
+  badge: string;
+  title: string;
+  subtitle: string;
+  items: FaqItem[];
+  stillHaveTitle: string;
+  stillHaveDesc: string;
+}
+
+export interface LandingPageContent {
+  hero?: HeroContent;
+  howItWorks?: HowItWorksContent;
+  forAuthors?: BenefitsSection;
+  forReaders?: BenefitsSection;
+  pricing?: PricingSection;
+  testimonials?: TestimonialsSection;
+  faq?: FaqSection;
+}
+
+/**
+ * Get public landing page content (for rendering)
+ */
+export async function getPublicContent(language: Language): Promise<{ content: string; isPublished: boolean }> {
+  const response = await apiClient.get<{ content: string; isPublished: boolean }>(
+    `/landing-pages/content/${language}`
+  );
+  return response.data;
+}
+
+/**
+ * Parse content JSON to typed object
+ */
+export function parseContent(contentJson: string): LandingPageContent {
+  try {
+    return JSON.parse(contentJson) as LandingPageContent;
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * Upload image for CMS (admin)
+ */
+export async function uploadCmsImage(
+  file: File,
+  section: string = 'landing',
+): Promise<{ url: string; key: string }> {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('section', section);
+
+  const response = await apiClient.post<{ url: string; key: string }>(
+    '/landing-pages/admin/upload-image',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  );
+  return response.data;
+}

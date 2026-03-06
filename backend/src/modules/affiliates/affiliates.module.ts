@@ -8,6 +8,7 @@ import { TrackingModule } from './tracking.module';
 import { CommissionModule } from './commission.module';
 import { EmailModule } from '@modules/email/email.module';
 import { NotificationsModule } from '@modules/notifications/notifications.module';
+import { SettingsModule } from '@modules/settings/settings.module';
 
 /**
  * Affiliates Module
@@ -26,6 +27,7 @@ import { NotificationsModule } from '@modules/notifications/notifications.module
     CommissionModule, // For commission management
     EmailModule, // For sending email notifications
     NotificationsModule, // For in-app notifications (Section 13.2)
+    SettingsModule, // For configurable settings (Section 6.5)
   ],
   controllers: [AffiliatesController],
   providers: [

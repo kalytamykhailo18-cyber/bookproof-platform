@@ -17,10 +17,26 @@ export interface KeywordGenerationInput {
   additionalNotes?: string;
 }
 
+export interface PrimaryKeyword {
+  keyword: string;
+  relevance: string; // Why this keyword is relevant for the book
+  usage: string; // How to use this keyword
+}
+
+export interface SecondaryKeyword {
+  keyword: string;
+  note: string; // Brief note about the keyword
+}
+
+export interface LongTailKeyword {
+  phrase: string;
+  searchIntent: string; // What readers are looking for when they search this
+}
+
 export interface KeywordGenerationResult {
-  primaryKeywords: string[];
-  secondaryKeywords: string[];
-  longTailKeywords: string[];
+  primaryKeywords: PrimaryKeyword[];
+  secondaryKeywords: SecondaryKeyword[];
+  longTailKeywords: LongTailKeyword[];
   usageGuidelines: {
     location: string;
     instruction: string;
@@ -118,14 +134,21 @@ ${input.additionalNotes ? `- Additional Notes: ${input.additionalNotes}` : ''}
 **Instructions:**
 Generate keywords optimized for Amazon KDP specifically for the ${marketInstructions} marketplace in the following structure:
 
-1. **Primary Keywords** (5-10): Broad, high-volume search terms that define the book's main topic
-2. **Secondary Keywords** (10-20): More specific terms related to subtopics and themes
-3. **Long-tail Keywords** (20-30): Specific phrases that readers might search for (3-5 words each)
+1. **Primary Keywords** (5-10): Broad, high-volume search terms that define the book's main topic. For each keyword, include:
+   - The keyword itself
+   - Why it's relevant for this book
+   - How the author should use it
+
+2. **Secondary Keywords** (10-20): More specific terms related to subtopics and themes. For each keyword, include a brief note.
+
+3. **Long-tail Keywords** (15-25): Specific phrases that readers might search for (3-5 words each). For each phrase, explain the search intent.
+
 4. **Usage Guidelines**: Practical instructions for where to use these keywords:
    - Title optimization
    - Subtitle optimization
    - Description optimization
    - KDP backend keywords (7 keyword boxes)
+
 5. **KDP Suggestions**: Specific recommendations for:
    - Title keyword variations
    - Subtitle keyword variations
@@ -135,9 +158,18 @@ Generate keywords optimized for Amazon KDP specifically for the ${marketInstruct
 **Output Format (JSON):**
 \`\`\`json
 {
-  "primaryKeywords": ["keyword1", "keyword2", ...],
-  "secondaryKeywords": ["keyword1", "keyword2", ...],
-  "longTailKeywords": ["long tail phrase 1", "long tail phrase 2", ...],
+  "primaryKeywords": [
+    {"keyword": "keyword1", "relevance": "Why this keyword is relevant", "usage": "How to use it"},
+    ...
+  ],
+  "secondaryKeywords": [
+    {"keyword": "keyword1", "note": "Brief note about this keyword"},
+    ...
+  ],
+  "longTailKeywords": [
+    {"phrase": "long tail phrase", "searchIntent": "What readers want when searching this"},
+    ...
+  ],
   "usageGuidelines": [
     {
       "location": "Title",
@@ -192,16 +224,50 @@ Generate comprehensive, relevant keywords that will help this book reach its tar
    * Validate and format the AI response
    */
   private validateAndFormatResult(result: any): KeywordGenerationResult {
+    // Handle primaryKeywords - convert from old format if needed
+    const primaryKeywords = Array.isArray(result.primaryKeywords)
+      ? result.primaryKeywords.slice(0, 10).map((pk: any) => {
+          if (typeof pk === 'string') {
+            return { keyword: pk, relevance: 'Relevant to your book topic', usage: 'Use in title or description' };
+          }
+          return {
+            keyword: pk.keyword || '',
+            relevance: pk.relevance || 'Relevant to your book topic',
+            usage: pk.usage || 'Use in title or description',
+          };
+        })
+      : [];
+
+    // Handle secondaryKeywords - convert from old format if needed
+    const secondaryKeywords = Array.isArray(result.secondaryKeywords)
+      ? result.secondaryKeywords.slice(0, 20).map((sk: any) => {
+          if (typeof sk === 'string') {
+            return { keyword: sk, note: 'Related to your book\'s theme' };
+          }
+          return {
+            keyword: sk.keyword || '',
+            note: sk.note || 'Related to your book\'s theme',
+          };
+        })
+      : [];
+
+    // Handle longTailKeywords - convert from old format if needed
+    const longTailKeywords = Array.isArray(result.longTailKeywords)
+      ? result.longTailKeywords.slice(0, 25).map((lt: any) => {
+          if (typeof lt === 'string') {
+            return { phrase: lt, searchIntent: 'Readers searching for specific guidance' };
+          }
+          return {
+            phrase: lt.phrase || '',
+            searchIntent: lt.searchIntent || 'Readers searching for specific guidance',
+          };
+        })
+      : [];
+
     return {
-      primaryKeywords: Array.isArray(result.primaryKeywords)
-        ? result.primaryKeywords.slice(0, 10)
-        : [],
-      secondaryKeywords: Array.isArray(result.secondaryKeywords)
-        ? result.secondaryKeywords.slice(0, 20)
-        : [],
-      longTailKeywords: Array.isArray(result.longTailKeywords)
-        ? result.longTailKeywords.slice(0, 30)
-        : [],
+      primaryKeywords,
+      secondaryKeywords,
+      longTailKeywords,
       usageGuidelines: Array.isArray(result.usageGuidelines)
         ? result.usageGuidelines
         : [],
@@ -227,8 +293,8 @@ Generate comprehensive, relevant keywords that will help this book reach its tar
     const descriptionWords = this.extractKeywords(input.description);
     const audienceWords = this.extractKeywords(input.targetAudience);
 
-    // Generate primary keywords (broad terms)
-    const primaryKeywords = [
+    // Generate primary keywords with detailed info
+    const primaryKeywordStrings = [
       ...new Set([
         ...genreWords.slice(0, 3),
         ...categoryWords.slice(0, 3),
@@ -236,8 +302,18 @@ Generate comprehensive, relevant keywords that will help this book reach its tar
       ]),
     ].slice(0, 10);
 
-    // Generate secondary keywords (more specific)
-    const secondaryKeywords = [
+    const primaryKeywords: PrimaryKeyword[] = primaryKeywordStrings.map((kw, idx) => ({
+      keyword: kw,
+      relevance: idx < 3
+        ? `High-volume search term for ${input.genre} books`
+        : `Related to your book's core topic`,
+      usage: idx < 2
+        ? 'Include in your title for maximum visibility'
+        : 'Use in subtitle or description',
+    }));
+
+    // Generate secondary keywords with notes
+    const secondaryKeywordStrings = [
       ...new Set([
         ...descriptionWords.slice(0, 10),
         ...audienceWords.slice(0, 5),
@@ -245,10 +321,24 @@ Generate comprehensive, relevant keywords that will help this book reach its tar
       ]),
     ].slice(0, 20);
 
-    // Generate long-tail keywords (3+ word phrases)
-    const longTailKeywords = [
-      ...this.generateLongTailPhrases(input),
-    ].slice(0, 30);
+    const secondaryKeywords: SecondaryKeyword[] = secondaryKeywordStrings.map(kw => ({
+      keyword: kw,
+      note: kw.includes(' ')
+        ? 'Combination term that captures multiple search intents'
+        : `Specific term related to ${input.genre}`,
+    }));
+
+    // Generate long-tail keywords with search intent
+    const longTailPhrases = this.generateLongTailPhrases(input).slice(0, 25);
+
+    const longTailKeywords: LongTailKeyword[] = longTailPhrases.map(phrase => ({
+      phrase,
+      searchIntent: phrase.includes('for ')
+        ? 'Readers looking for targeted guidance for their specific situation'
+        : phrase.includes('how to')
+          ? 'Readers seeking practical, actionable advice'
+          : 'Readers searching for comprehensive resources on this topic',
+    }));
 
     // Generate usage guidelines
     const usageGuidelines = [
@@ -256,16 +346,16 @@ Generate comprehensive, relevant keywords that will help this book reach its tar
         location: 'Title',
         instruction: 'Include 1-2 primary keywords naturally in your title',
         examples: [
-          `${primaryKeywords[0] || 'keyword'} for ${audienceWords[0] || 'readers'}`,
-          `The Complete Guide to ${primaryKeywords[0] || 'topic'}`,
+          `${primaryKeywords[0]?.keyword || 'keyword'} for ${audienceWords[0] || 'readers'}`,
+          `The Complete Guide to ${primaryKeywords[0]?.keyword || 'topic'}`,
         ],
       },
       {
         location: 'Subtitle',
         instruction: 'Use 2-3 secondary keywords to expand on your topic',
         examples: [
-          `A Practical Guide to ${secondaryKeywords[0] || 'subtopic'}`,
-          `Master ${secondaryKeywords[0] || 'skill'} and ${secondaryKeywords[1] || 'skill'}`,
+          `A Practical Guide to ${secondaryKeywords[0]?.keyword || 'subtopic'}`,
+          `Master ${secondaryKeywords[0]?.keyword || 'skill'} and ${secondaryKeywords[1]?.keyword || 'skill'}`,
         ],
       },
       {
@@ -292,24 +382,24 @@ Generate comprehensive, relevant keywords that will help this book reach its tar
     const kdpSuggestions = {
       title: [
         `${input.bookTitle}`,
-        `${primaryKeywords[0] || 'Topic'}: ${input.bookTitle}`,
+        `${primaryKeywords[0]?.keyword || 'Topic'}: ${input.bookTitle}`,
       ],
       subtitle: [
-        `A Complete Guide to ${primaryKeywords[0] || 'Topic'}`,
-        `Master ${secondaryKeywords[0] || 'Skill'} in ${genreWords[0] || 'Field'}`,
+        `A Complete Guide to ${primaryKeywords[0]?.keyword || 'Topic'}`,
+        `Master ${secondaryKeywords[0]?.keyword || 'Skill'} in ${genreWords[0] || 'Field'}`,
       ],
       description: [
-        `Start with a hook using ${primaryKeywords[0] || 'keywords'}...`,
-        `Highlight benefits with ${secondaryKeywords[0] || 'keywords'}...`,
-        `End with call-to-action mentioning ${primaryKeywords[1] || 'keywords'}...`,
+        `Start with a hook using ${primaryKeywords[0]?.keyword || 'keywords'}...`,
+        `Highlight benefits with ${secondaryKeywords[0]?.keyword || 'keywords'}...`,
+        `End with call-to-action mentioning ${primaryKeywords[1]?.keyword || 'keywords'}...`,
       ],
       backendKeywords: [
-        primaryKeywords.slice(0, 3).join(', '),
-        secondaryKeywords.slice(0, 3).join(', '),
-        longTailKeywords.slice(0, 2).join(', '),
-        longTailKeywords.slice(2, 4).join(', '),
-        secondaryKeywords.slice(3, 6).join(', '),
-        primaryKeywords.slice(3, 6).join(', '),
+        primaryKeywordStrings.slice(0, 3).join(', '),
+        secondaryKeywordStrings.slice(0, 3).join(', '),
+        longTailPhrases.slice(0, 2).join(', '),
+        longTailPhrases.slice(2, 4).join(', '),
+        secondaryKeywordStrings.slice(3, 6).join(', '),
+        primaryKeywordStrings.slice(3, 6).join(', '),
         audienceWords.slice(0, 3).join(', '),
       ].slice(0, 7),
     };

@@ -22,6 +22,9 @@ export interface CreateCouponDto {
   discountAmount?: number;
   minimumPurchase?: number;
   minimumCredits?: number;
+  maxDiscountAmount?: number;
+  firstPurchaseOnly: boolean;
+  specificUserEmail?: string;
   maxUses?: number;
   maxUsesPerUser: number;
   isActive: boolean;
@@ -37,6 +40,9 @@ export interface UpdateCouponDto {
   discountAmount?: number;
   minimumPurchase?: number;
   minimumCredits?: number;
+  maxDiscountAmount?: number;
+  firstPurchaseOnly?: boolean;
+  specificUserEmail?: string;
   maxUses?: number;
   maxUsesPerUser?: number;
   isActive?: boolean;
@@ -60,6 +66,9 @@ export interface CouponResponseDto {
   discountAmount?: number;
   minimumPurchase?: number;
   minimumCredits?: number;
+  maxDiscountAmount?: number;
+  firstPurchaseOnly: boolean;
+  specificUserEmail?: string;
   maxUses?: number;
   maxUsesPerUser: number;
   currentUses: number;

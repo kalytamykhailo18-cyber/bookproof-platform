@@ -48,6 +48,15 @@ export interface PayoutResponse {
   requestedAt: string;
   createdAt: string;
   updatedAt: string;
+  currency?: string;
+  // Nested data included for admin payout lists (Section 4.8)
+  readerProfile?: {
+    user?: {
+      id: string;
+      email: string;
+      name: string;
+    };
+  };
 }
 
 export interface ApprovePayoutData {

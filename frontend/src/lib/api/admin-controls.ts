@@ -24,6 +24,7 @@ export interface AddCreditsDto {
   creditsToAdd: number;
   reason: string;
   notes?: string;
+  activationWindowDays?: number;
 }
 
 export interface RemoveCreditsDto {
@@ -176,6 +177,50 @@ export interface CampaignHealthDto {
   daysOffSchedule: number;
 }
 
+// Section 4.3 - Author information in campaign
+export interface CampaignAuthorDto {
+  id: string;
+  name: string;
+  email: string;
+  company?: string | null;
+}
+
+// Section 4.3 - Reader assignment in campaign detail
+export interface ReaderAssignmentDto {
+  id: string;
+  readerProfileId: string;
+  readerName: string;
+  readerEmail: string;
+  status: string;
+  assignedAt: string;
+  deadlineAt: string;
+  completedAt?: string | null;
+  reviewUrl?: string | null;
+  isManualAssignment: boolean;
+  format: string;
+}
+
+// Section 4.3 - Queue statistics breakdown
+export interface QueueStatisticsDto {
+  totalAssignments: number;
+  activeCount: number;
+  completedCount: number;
+  expiredCount: number;
+  pendingCount: number;
+}
+
+// Section 4.3 Bug M4 - Reader search results
+export interface ReaderSearchResultDto {
+  id: string;
+  name: string;
+  email: string;
+  country?: string | null;
+  preferredLanguage: string;
+  formatPreference: string;
+  totalReviewsCompleted: number;
+  reliabilityScore: number;
+}
+
 export interface CampaignAnalyticsDto {
   campaign: {
     id: string;
@@ -206,6 +251,12 @@ export interface CampaignAnalyticsDto {
     expectedEndDate: string;
     projectedEndDate: string;
   };
+  // Section 4.3 Bug H1 - Author information
+  author: CampaignAuthorDto;
+  // Section 4.3 Bug H2 - Reader assignments
+  assignments: ReaderAssignmentDto[];
+  // Section 4.3 Bug L7 - Queue statistics
+  queueStatistics: QueueStatisticsDto;
 }
 
 export interface AuthorListItemDto {
@@ -213,6 +264,7 @@ export interface AuthorListItemDto {
   userId: string;
   email: string;
   name: string;
+  companyName?: string;
   totalCreditsPurchased: number;
   totalCreditsUsed: number;
   availableCredits: number;
@@ -220,6 +272,55 @@ export interface AuthorListItemDto {
   totalCampaigns: number;
   createdAt: string;
   isVerified: boolean;
+  isSuspended: boolean;
+  totalSpentCents: number;
+}
+
+export interface AuthorDetailViewDto {
+  id: string;
+  userId: string;
+  name: string;
+  email: string;
+  companyName?: string;
+  phone?: string;
+  country?: string;
+  preferredLanguage: string;
+  isVerified: boolean;
+  isSuspended: boolean;
+  suspendReason?: string;
+  totalCreditsPurchased: number;
+  totalCreditsUsed: number;
+  availableCredits: number;
+  totalSpentCents: number;
+  adminNotes?: string;
+  createdAt: string;
+  lastLoginAt?: string;
+  campaigns: AuthorCampaignDto[];
+  purchases: CreditPurchaseHistoryDto[];
+}
+
+export interface AuthorCampaignDto {
+  id: string;
+  title: string;
+  status: string;
+  creditsAllocated: number;
+  targetReviews: number;
+  reviewsCompleted: number;
+  startDate: string;
+  endDate?: string;
+  createdAt: string;
+}
+
+export interface CreditPurchaseHistoryDto {
+  id: string;
+  credits: number;
+  amountPaidCents: number;
+  currency: string;
+  paymentStatus: string;
+  purchaseDate: string;
+  packageTierName?: string;
+  couponCode?: string;
+  discountAmountCents?: number;
 }
 
 export type CreditTransactionType =
@@ -374,6 +475,28 @@ export const adminControlsApi = {
   async getAllAuthors(): Promise<AuthorListItemDto[]> {
     const response = await apiClient.get<{ authors: AuthorListItemDto[]; total: number }>('/admin/campaigns/authors');
     return response.data.authors;
+  },
+
+  /**
+   * Get author detail view (Section 4.5 Bug H2)
+   */
+  async getAuthorDetailView(authorProfileId: string): Promise<AuthorDetailViewDto> {
+    const response = await apiClient.get<AuthorDetailViewDto>(`/admin/campaigns/authors/${authorProfileId}`);
+    return response.data;
+  },
+
+  /**
+   * Search readers by name or email (Section 4.3 Bug M4)
+   */
+  async searchReaders(query: string): Promise<ReaderSearchResultDto[]> {
+    if (!query || query.length < 2) {
+      return [];
+    }
+    const response = await apiClient.get<ReaderSearchResultDto[]>(
+      `/admin/campaigns/readers/search`,
+      { params: { q: query } }
+    );
+    return response.data;
   },
 
   /**

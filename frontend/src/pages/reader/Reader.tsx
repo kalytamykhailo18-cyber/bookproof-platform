@@ -49,17 +49,47 @@ function StatsCard({
   );
 }
 
-// Format hours remaining as HH:MM
-function formatTimeRemaining(hoursRemaining: number): string {
-  const hours = Math.floor(hoursRemaining);
-  const minutes = Math.round((hoursRemaining - hours) * 60);
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-}
-
 function AssignmentCard({ assignment, className }: { assignment: Assignment; className?: string }) {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation('reader.dashboard');
   const [isNavLoading, setIsNavLoading] = useState(false);
+
+  // Real-time countdown timer
+  const [currentTime, setCurrentTime] = useState(Date.now());
+
+  // Update current time every second for real-time countdown
+  useEffect(() => {
+    // Only update if assignment has a deadline
+    if (!assignment.deadlineAt) return;
+
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000); // Update every second
+
+    return () => clearInterval(interval);
+  }, [assignment.deadlineAt]);
+
+  // Calculate real-time remaining time
+  const calculateRealTimeRemaining = () => {
+    if (!assignment.deadlineAt) return null;
+
+    const deadline = new Date(assignment.deadlineAt).getTime();
+    const now = currentTime;
+    const diff = deadline - now;
+
+    if (diff <= 0) {
+      return { hours: 0, minutes: 0, seconds: 0, totalHours: 0 };
+    }
+
+    const totalHours = diff / (1000 * 60 * 60);
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    return { hours, minutes, seconds, totalHours };
+  };
+
+  const realTimeRemaining = calculateRealTimeRemaining();
 
   const getStatusVariant = (
     status: AssignmentStatus,
@@ -105,7 +135,7 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
     }
   };
 
-  const isUrgent = assignment.hoursRemaining && assignment.hoursRemaining < 24;
+  const isUrgent = realTimeRemaining && realTimeRemaining.totalHours < 24;
 
   const handleCardClick = () => {
     setIsNavLoading(true);
@@ -163,8 +193,8 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
           </div>
         )}
 
-        {/* Deadline with countdown timer */}
-        {assignment.deadlineAt && assignment.status === AssignmentStatus.APPROVED && (
+        {/* Deadline with countdown timer - Shows for APPROVED and IN_PROGRESS */}
+        {assignment.deadlineAt && (assignment.status === AssignmentStatus.APPROVED || assignment.status === AssignmentStatus.IN_PROGRESS) && (
           <div
             className={`flex items-center gap-2 text-sm ${isUrgent ? 'font-semibold text-red-600' : 'text-muted-foreground'}`}
           >
@@ -173,9 +203,16 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
               {isUrgent && <AlertCircle className="mr-1 inline h-4 w-4" />}
               {t('deadline')}:{' '}
               {formatDistanceToNow(new Date(assignment.deadlineAt), { addSuffix: true })}
-              {assignment.hoursRemaining !== undefined && (
-                <span className={`ml-1 font-mono ${assignment.hoursRemaining < 12 ? 'text-red-600' : assignment.hoursRemaining < 24 ? 'text-yellow-600' : 'text-green-600'}`}>
-                  ({formatTimeRemaining(assignment.hoursRemaining)} {t('remaining')})
+              {realTimeRemaining && (
+                <span className={`ml-1 font-mono font-semibold ${
+                  realTimeRemaining.totalHours < 1 ? 'text-red-600 animate-pulse' :
+                  realTimeRemaining.totalHours < 12 ? 'text-red-600' :
+                  realTimeRemaining.totalHours < 24 ? 'text-yellow-600' :
+                  'text-green-600'
+                }`}>
+                  ({realTimeRemaining.hours.toString().padStart(2, '0')}:
+                  {realTimeRemaining.minutes.toString().padStart(2, '0')}:
+                  {realTimeRemaining.seconds.toString().padStart(2, '0')} {t('remaining')})
                 </span>
               )}
             </span>
@@ -186,6 +223,106 @@ function AssignmentCard({ assignment, className }: { assignment: Assignment; cla
           <BookOpen className="h-4 w-4" />
           <span>{assignment.book.genre}</span>
         </div>
+
+        {/* Action Buttons Based on Status */}
+        <div className="mt-4 border-t pt-4">
+          {assignment.status === AssignmentStatus.APPROVED && (
+            <Button
+              type="button"
+              className="w-full"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsNavLoading(true);
+                navigate(`/reader/assignments/${assignment.id}`);
+              }}
+              disabled={isNavLoading}
+            >
+              {isNavLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <ArrowRight className="mr-2 h-4 w-4" />
+              )}
+              {t('actions.accessMaterials') || 'Access Materials'}
+            </Button>
+          )}
+          {assignment.status === AssignmentStatus.IN_PROGRESS && (
+            <Button
+              type="button"
+              variant="default"
+              className="w-full bg-orange-600 hover:bg-orange-700"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsNavLoading(true);
+                navigate(`/reader/assignments/${assignment.id}/submit`);
+              }}
+              disabled={isNavLoading}
+            >
+              {isNavLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <CheckCircle className="mr-2 h-4 w-4" />
+              )}
+              {t('actions.submitReview') || 'Submit Review'}
+            </Button>
+          )}
+          {(assignment.status === AssignmentStatus.WAITING || assignment.status === AssignmentStatus.SCHEDULED) && (
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsNavLoading(true);
+                navigate(`/reader/assignments/${assignment.id}`);
+              }}
+              disabled={isNavLoading}
+            >
+              {isNavLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Eye className="mr-2 h-4 w-4" />
+              )}
+              {t('actions.viewDetails') || 'View Details'}
+            </Button>
+          )}
+          {assignment.status === AssignmentStatus.SUBMITTED && (
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full"
+              size="sm"
+              disabled
+            >
+              <Clock className="mr-2 h-4 w-4" />
+              {t('actions.pendingValidation') || 'Pending Validation'}
+            </Button>
+          )}
+          {(assignment.status === AssignmentStatus.COMPLETED || assignment.status === AssignmentStatus.VALIDATED) && (
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsNavLoading(true);
+                navigate(`/reader/assignments/${assignment.id}`);
+              }}
+              disabled={isNavLoading}
+            >
+              {isNavLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+              )}
+              {t('actions.viewCompleted') || 'View Completed'}
+            </Button>
+          )}
+        </div>
+
         {isNavLoading && (
           <div className="mt-3 flex items-center justify-center">
             <Loader2 className="h-5 w-5 animate-spin text-primary" />

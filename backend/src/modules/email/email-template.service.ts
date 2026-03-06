@@ -66,8 +66,12 @@ export interface EmailVariables {
   issueType?: string;
   issueDescription?: string;
 
-  // Admin variables
+  // Admin notification variables
   adminName?: string;
+  authorEmail?: string;
+  keywordResearchId?: string;
+  processingStartedAt?: string;
+  actionRequired?: string;
 
   // Reader queue variables
   readerName?: string;
@@ -152,6 +156,12 @@ export interface EmailVariables {
   creditsPurchased?: number;
   amountPaid?: string;
   activationDeadline?: string;
+
+  // Account suspension (Section 4.5)
+  suspendedAt?: string;
+  unsuspendedAt?: string;
+  pausedCampaignsCount?: number;
+  supportEmail?: string;
 }
 
 @Injectable()
@@ -262,6 +272,11 @@ export class EmailTemplateService {
         EN: `Review Needs Revision - ${variables.bookTitle || 'Your Review'}`,
         ES: `La reseña necesita revisión - ${variables.bookTitle || 'Tu reseña'}`,
         PT: `Avaliação precisa de revisão - ${variables.bookTitle || 'Sua avaliação'}`,
+      },
+      READER_PAYOUT_REQUESTED: {
+        EN: `Payout Request Received - $${variables.amount || '0'}`,
+        ES: `Solicitud de pago recibida - $${variables.amount || '0'}`,
+        PT: `Solicitação de pagamento recebida - $${variables.amount || '0'}`,
       },
       READER_PAYOUT_COMPLETED: {
         EN: `Payout Completed - $${variables.amount || '0'} Sent`,
@@ -457,6 +472,16 @@ export class EmailTemplateService {
         EN: `Credits Removed from Your Account - ${variables.creditsRemoved || 0} Credits`,
         ES: `Créditos eliminados de tu cuenta - ${variables.creditsRemoved || 0} Créditos`,
         PT: `Créditos removidos da sua conta - ${variables.creditsRemoved || 0} Créditos`,
+      },
+      AUTHOR_SUSPENDED: {
+        EN: 'Important: Your BookProof Account Has Been Suspended',
+        ES: 'Importante: Tu cuenta de BookProof ha sido suspendida',
+        PT: 'Importante: Sua conta BookProof foi suspensa',
+      },
+      AUTHOR_UNSUSPENDED: {
+        EN: 'Good News: Your BookProof Account Has Been Restored',
+        ES: 'Buenas noticias: Tu cuenta de BookProof ha sido restaurada',
+        PT: 'Boas notícias: Sua conta BookProof foi restaurada',
       },
 
       // Affiliate

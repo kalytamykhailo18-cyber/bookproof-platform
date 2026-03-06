@@ -149,6 +149,26 @@ export interface LanguageResponse {
   preferredLanguage: Language;
 }
 
+export interface UpdateProfileRequest {
+  name?: string;
+  country?: string;
+}
+
+export interface UpdateProfileResponse {
+  message: string;
+  name?: string;
+  country?: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ChangePasswordResponse {
+  message: string;
+}
+
 // API methods
 
 /**
@@ -213,5 +233,28 @@ export const getLanguage = async (): Promise<LanguageResponse> => {
  */
 export const updateLanguage = async (request: UpdateLanguageRequest): Promise<UpdateLanguageResponse> => {
   const { data } = await apiClient.patch<UpdateLanguageResponse>('/users/me/language', request);
+  return data;
+};
+
+/**
+ * Update user's basic profile information
+ *
+ * Per requirements.md Section 3.10: Reader Profile Settings
+ * - User can update name and country
+ */
+export const updateProfile = async (request: UpdateProfileRequest): Promise<UpdateProfileResponse> => {
+  const { data } = await apiClient.patch<UpdateProfileResponse>('/users/me/profile', request);
+  return data;
+};
+
+/**
+ * Change password for authenticated user
+ *
+ * Per requirements.md Section 15.1: Session Security
+ * - Verifies current password
+ * - Invalidates all sessions on password change
+ */
+export const changePassword = async (request: ChangePasswordRequest): Promise<ChangePasswordResponse> => {
+  const { data } = await apiClient.post<ChangePasswordResponse>('/auth/change-password', request);
   return data;
 };

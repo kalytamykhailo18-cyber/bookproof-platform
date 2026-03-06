@@ -50,6 +50,10 @@ export function AdminReadersListPage() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended' | 'flagged'>('all');
   const [contentFilter, setContentFilter] = useState<ContentPreference | 'all'>('all');
   const [verifiedFilter, setVerifiedFilter] = useState<'all' | 'verified' | 'unverified'>('all');
+  // Section 4.4 Bug M1 - Country filter
+  const [countryFilter, setCountryFilter] = useState<string>('all');
+  // Section 4.4 Bug M2 - Language filter
+  const [languageFilter, setLanguageFilter] = useState<string>('all');
 
   // Safety mechanism: prevent duplicate fetches
   const hasFetchedRef = useRef(false);
@@ -105,9 +109,28 @@ export function AdminReadersListPage() {
         (verifiedFilter === 'verified' && reader.verifiedAmazonProfiles > 0) ||
         (verifiedFilter === 'unverified' && reader.verifiedAmazonProfiles === 0);
 
-      return matchesSearch && matchesStatus && matchesContent && matchesVerified;
+      // Country filter (Section 4.4 Bug M1)
+      const matchesCountry = countryFilter === 'all' || reader.country === countryFilter;
+
+      // Language filter (Section 4.4 Bug M2)
+      const matchesLanguage = languageFilter === 'all' || reader.language === languageFilter;
+
+      return matchesSearch && matchesStatus && matchesContent && matchesVerified && matchesCountry && matchesLanguage;
     });
-  }, [readers, searchQuery, statusFilter, contentFilter, verifiedFilter]);
+  }, [readers, searchQuery, statusFilter, contentFilter, verifiedFilter, countryFilter, languageFilter]);
+
+  // Get unique countries and languages for filters (Section 4.4 Bug M1, M2)
+  const countries = useMemo(() => {
+    if (!readers || readers.length === 0) return [];
+    const unique = new Set(readers.map((r) => r.country));
+    return Array.from(unique).sort();
+  }, [readers]);
+
+  const languages = useMemo(() => {
+    if (!readers || readers.length === 0) return [];
+    const unique = new Set(readers.map((r) => r.language));
+    return Array.from(unique).sort();
+  }, [readers]);
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -237,9 +260,9 @@ export function AdminReadersListPage() {
           <CardDescription>{t('filters.description')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-4">
-            {/* Search */}
-            <div className="space-y-2">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {/* Search - spans 2 columns on larger screens */}
+            <div className="space-y-2 md:col-span-2 lg:col-span-3 xl:col-span-4">
               <label className="text-sm font-medium">{t('filters.search')}</label>
               <div className="relative">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -264,6 +287,42 @@ export function AdminReadersListPage() {
                   <SelectItem value="active">{t('filters.active')}</SelectItem>
                   <SelectItem value="suspended">{t('filters.suspended')}</SelectItem>
                   <SelectItem value="flagged">{t('filters.flagged')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Section 4.4 Bug M1 - Country Filter */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Country</label>
+              <Select value={countryFilter} onValueChange={setCountryFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Countries" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Countries</SelectItem>
+                  {countries.map((country) => (
+                    <SelectItem key={country} value={country}>
+                      {country}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Section 4.4 Bug M2 - Language Filter */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Language</label>
+              <Select value={languageFilter} onValueChange={setLanguageFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Languages" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Languages</SelectItem>
+                  {languages.map((language) => (
+                    <SelectItem key={language} value={language}>
+                      {language}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

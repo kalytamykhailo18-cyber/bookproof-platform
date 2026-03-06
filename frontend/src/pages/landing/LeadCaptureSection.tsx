@@ -1,11 +1,26 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { Send, CheckCircle, Loader2, User, Mail, UserCheck } from 'lucide-react';
 
 type UserType = 'author' | 'reader' | 'both' | '';
 
+// Helper to extract UTM parameters from URL (per Section 10.3)
+function useUtmParams() {
+  const [searchParams] = useSearchParams();
+  return useMemo(() => ({
+    source: searchParams.get('utm_source') || undefined,
+    medium: searchParams.get('utm_medium') || undefined,
+    campaign: searchParams.get('utm_campaign') || undefined,
+    content: searchParams.get('utm_content') || undefined,
+    term: searchParams.get('utm_term') || undefined,
+    affiliateRef: searchParams.get('ref') || undefined,
+  }), [searchParams]);
+}
+
 export function LeadCaptureSection() {
-  const { t } = useTranslation('leadForm');
+  const { t, i18n } = useTranslation('leadForm');
+  const utmParams = useUtmParams();
   const [name, setName]           = useState('');
   const [email, setEmail]         = useState('');
   const [userType, setUserType]   = useState<UserType>('');
@@ -18,10 +33,23 @@ export function LeadCaptureSection() {
     setStatus('submitting');
     setErrorMsg('');
     try {
-      const res = await fetch('/api/v1/leads', {
+      // Get current language from i18n (EN, ES, PT)
+      const language = i18n.language.toUpperCase() === 'ES' ? 'ES' :
+                       i18n.language.toUpperCase() === 'PT' ? 'PT' : 'EN';
+
+      const res = await fetch('/api/v1/landing-pages/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, userType: userType || undefined, marketingConsent: consent }),
+        body: JSON.stringify({
+          name,
+          email,
+          userType: userType || undefined,
+          marketingConsent: consent,
+          language,
+          // UTM tracking parameters (per Section 10.3)
+          ...utmParams,
+          referrer: document.referrer || undefined,
+        }),
       });
       if (!res.ok && res.status !== 409) throw new Error();
       setStatus('success');

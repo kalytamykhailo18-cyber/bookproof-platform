@@ -1,20 +1,18 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTestimonialsContent } from '@/hooks/useLandingContent';
 
-const tKeys = ['t1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9'] as const;
-const N = tKeys.length;
-
-const meta = [
-  { accent: '#60a5fa', industry: 'Romance',     avatar: 'https://i.pravatar.cc/40?img=1'  },
-  { accent: '#a78bfa', industry: 'Thriller',    avatar: 'https://i.pravatar.cc/40?img=5'  },
-  { accent: '#34d399', industry: 'Sci-Fi',      avatar: 'https://i.pravatar.cc/40?img=11' },
-  { accent: '#fbbf24', industry: 'Non-Fiction', avatar: 'https://i.pravatar.cc/40?img=15' },
-  { accent: '#f472b6', industry: 'Mystery',     avatar: 'https://i.pravatar.cc/40?img=20' },
-  { accent: '#38bdf8', industry: 'Fantasy',     avatar: 'https://i.pravatar.cc/40?img=25' },
-  { accent: '#f87171', industry: 'Business',    avatar: 'https://i.pravatar.cc/40?img=32' },
-  { accent: '#818cf8', industry: 'Audiobook',   avatar: 'https://i.pravatar.cc/40?img=44' },
-  { accent: '#2dd4bf', industry: "Children's",  avatar: 'https://i.pravatar.cc/40?img=47' },
+// Default styling for testimonial cards
+const defaultMeta = [
+  { accent: '#60a5fa', avatar: 'https://i.pravatar.cc/40?img=1'  },
+  { accent: '#a78bfa', avatar: 'https://i.pravatar.cc/40?img=5'  },
+  { accent: '#34d399', avatar: 'https://i.pravatar.cc/40?img=11' },
+  { accent: '#fbbf24', avatar: 'https://i.pravatar.cc/40?img=15' },
+  { accent: '#f472b6', avatar: 'https://i.pravatar.cc/40?img=20' },
+  { accent: '#38bdf8', avatar: 'https://i.pravatar.cc/40?img=25' },
+  { accent: '#f87171', avatar: 'https://i.pravatar.cc/40?img=32' },
+  { accent: '#818cf8', avatar: 'https://i.pravatar.cc/40?img=44' },
+  { accent: '#2dd4bf', avatar: 'https://i.pravatar.cc/40?img=47' },
 ];
 
 function QuoteIcon({ color }: { color: string }) {
@@ -26,10 +24,12 @@ function QuoteIcon({ color }: { color: string }) {
 }
 
 export function TestimonialsSection() {
-  const { t } = useTranslation('testimonials');
+  const content = useTestimonialsContent();
   const [current, setCurrent] = useState(0);
   const [visibleCount, setVisibleCount] = useState(3);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const N = content.items.length || 1;
 
   // Responsive visible count
   useEffect(() => {
@@ -92,20 +92,20 @@ export function TestimonialsSection() {
               className="text-xs font-semibold px-3 py-1.5 rounded-md uppercase tracking-widest"
               style={{ background: 'rgba(251,191,36,0.15)', color: '#fde68a', border: '1px solid rgba(251,191,36,0.3)' }}
             >
-              {t('badge', 'Success Stories')}
+              {content.badge}
             </span>
           </div>
           <h2 className="animate-fade-up text-3xl sm:text-4xl font-bold text-white mb-4">
-            {t('title', 'Authors Who Transformed Their Amazon Presence')}
+            {content.title}
           </h2>
           <p className="animate-fade-up-light-slow text-slate-400 text-lg max-w-2xl mx-auto">
-            {t('subtitle')}
+            {content.subtitle}
           </p>
           <div className="animate-fade-up-slow flex items-center justify-center gap-1 mt-5">
             {[...Array(5)].map((_, i) => (
               <Star key={i} size={18} className="text-yellow-400 fill-yellow-400" />
             ))}
-            <span className="text-slate-400 text-sm ml-2">{t('rating')}</span>
+            <span className="text-slate-400 text-sm ml-2">{content.rating}</span>
           </div>
         </div>
 
@@ -119,12 +119,13 @@ export function TestimonialsSection() {
               transform: `translateX(calc(-${current} * 100% / ${N}))`,
             }}
           >
-            {tKeys.map((key, i) => {
-              const m = meta[i];
-              const authorName = t(`items.${key}.author`);
+            {content.items.map((item, i) => {
+              const m = defaultMeta[i % defaultMeta.length];
+              const industry = item.industry || '';
+              const rating = item.rating || 5;
               return (
                 <div
-                  key={key}
+                  key={item.key}
                   className="px-2.5"
                   style={{ width: `${100 / N}%` }}
                 >
@@ -156,27 +157,29 @@ export function TestimonialsSection() {
                     </div>
 
                     {/* Industry tag */}
-                    <span
-                      className="self-start ml-2 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded mb-4"
-                      style={{
-                        color: m.accent,
-                        background: `${m.accent}15`,
-                        border: `1px solid ${m.accent}30`,
-                      }}
-                    >
-                      {m.industry}
-                    </span>
+                    {industry && (
+                      <span
+                        className="self-start ml-2 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded mb-4"
+                        style={{
+                          color: m.accent,
+                          background: `${m.accent}15`,
+                          border: `1px solid ${m.accent}30`,
+                        }}
+                      >
+                        {industry}
+                      </span>
+                    )}
 
                     {/* Stars */}
                     <div className="flex gap-0.5 mb-3 pl-2">
-                      {[...Array(5)].map((_, j) => (
+                      {[...Array(rating)].map((_, j) => (
                         <Star key={j} size={13} className="text-yellow-400 fill-yellow-400" />
                       ))}
                     </div>
 
                     {/* Quote */}
                     <p className="text-slate-300 text-sm leading-relaxed flex-1 mb-5 italic pl-2">
-                      &ldquo;{t(`items.${key}.quote`)}&rdquo;
+                      &ldquo;{item.quote}&rdquo;
                     </p>
 
                     {/* Author */}
@@ -186,13 +189,13 @@ export function TestimonialsSection() {
                     >
                       <img
                         src={m.avatar}
-                        alt={authorName}
+                        alt={item.author}
                         className="w-10 h-10 rounded-full flex-shrink-0 object-cover"
                         style={{ border: `2px solid ${m.accent}55` }}
                       />
                       <div>
-                        <p className="text-white text-sm font-semibold">{authorName}</p>
-                        <p className="text-slate-500 text-xs mt-0.5">{t(`items.${key}.title`)}</p>
+                        <p className="text-white text-sm font-semibold">{item.author}</p>
+                        <p className="text-slate-500 text-xs mt-0.5">{item.title}</p>
                       </div>
                     </div>
                   </div>

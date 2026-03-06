@@ -11,13 +11,18 @@ import {
   HttpStatus,
   Res,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiBearerAuth, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { Response } from 'express';
 import { Public } from '@common/decorators/public.decorator';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
 import { RolesGuard } from '@common/guards/roles.guard';
 import { LandingPagesService } from './landing-pages.service';
+import { FilesService } from '@modules/files/files.service';
 import { CaptureLeadDto, CaptureLeadResponseDto } from './dto/capture-lead.dto';
 import { TrackPageViewDto, TrackPageViewResponseDto } from './dto/track-page-view.dto';
 import { AnalyticsStatsDto, GlobalAnalyticsDto } from './dto/analytics.dto';
@@ -33,7 +38,10 @@ import { Roles } from '@common/decorators/roles.decorator';
 @ApiTags('Landing Pages')
 @Controller('landing-pages')
 export class LandingPagesController {
-  constructor(private readonly landingPagesService: LandingPagesService) {}
+  constructor(
+    private readonly landingPagesService: LandingPagesService,
+    private readonly filesService: FilesService,
+  ) {}
 
   @Public()
   @Post('leads')
@@ -51,6 +59,14 @@ export class LandingPagesController {
   @ApiResponse({ status: 200, description: 'Page view tracked successfully', type: TrackPageViewResponseDto })
   async trackPageView(@Body() trackPageViewDto: TrackPageViewDto): Promise<TrackPageViewResponseDto> {
     return this.landingPagesService.trackPageView(trackPageViewDto);
+  }
+
+  @Public()
+  @Get('content/:language')
+  @ApiOperation({ summary: 'Get published landing page content by language (public)' })
+  @ApiResponse({ status: 200, description: 'Content retrieved successfully' })
+  async getPublicContent(@Param('language') language: Language): Promise<{ content: string; isPublished: boolean }> {
+    return this.landingPagesService.getPublicContent(language);
   }
 
   @Get('analytics')
@@ -185,5 +201,67 @@ export class LandingPagesController {
   @ApiResponse({ status: 403, description: 'Forbidden - Admin access only' })
   async resendWelcomeEmail(@Param('id') id: string): Promise<{ success: boolean }> {
     return this.landingPagesService.resendWelcomeEmail(id);
+  }
+
+  // ==========================================
+  // CMS IMAGE UPLOAD ENDPOINT
+  // ==========================================
+
+  @Post('admin/upload-image')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @ApiBearerAuth()
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Upload image for landing page CMS' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Image file: JPG, PNG, WebP (max 5MB)',
+        },
+        section: {
+          type: 'string',
+          description: 'Section name (hero, features, etc.)',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Image uploaded successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid file type or size' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Admin access only' })
+  async uploadImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('section') section: string = 'landing',
+  ): Promise<{ url: string; key: string }> {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+
+    // Validate file type
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedMimeTypes.includes(file.mimetype)) {
+      throw new BadRequestException('Invalid file type. Allowed: JPG, PNG, WebP');
+    }
+
+    // Validate file size (5MB max)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      throw new BadRequestException('File size exceeds 5MB limit');
+    }
+
+    // Generate unique key for landing page images
+    const timestamp = Date.now();
+    const sanitizedFilename = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const key = `landing/${section}/${timestamp}-${sanitizedFilename}`;
+
+    // Upload to storage
+    const result = await this.filesService.uploadFile(file.buffer, key, file.mimetype);
+
+    return { url: result.url, key: result.key };
   }
 }

@@ -7,6 +7,7 @@ import { CampaignCompletionProcessor } from './processors/campaign-completion.pr
 import { CreditExpirationProcessor } from './processors/credit-expiration.processor';
 import { AmazonMonitorProcessor } from './processors/amazon-monitor.processor';
 import { KeywordGenerationProcessor } from './processors/keyword-generation.processor';
+import { KeywordStalledProcessor } from './processors/keyword-stalled.processor';
 import { PrismaModule } from '@common/prisma/prisma.module';
 import { NotificationsModule } from '@modules/notifications/notifications.module';
 import { ReportsModule } from '@modules/reports/reports.module';
@@ -31,6 +32,7 @@ import { KeywordsModule } from '@modules/keywords/keywords.module';
     CreditExpirationProcessor,
     AmazonMonitorProcessor,
     KeywordGenerationProcessor,
+    KeywordStalledProcessor,
   ],
   exports: [QueueService],
 })

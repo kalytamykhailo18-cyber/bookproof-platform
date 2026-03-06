@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ChevronDown, HelpCircle } from 'lucide-react';
-
-const FAQ_KEYS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11'] as const;
+import { useTranslation } from 'react-i18next';
+import { useFaqContent } from '@/hooks/useLandingContent';
 
 const ITEM_ANIMATIONS = [
   'animate-fade-right-fast', 'animate-fade-left-fast',
@@ -15,6 +14,7 @@ const ITEM_ANIMATIONS = [
 
 export function FAQSection() {
   const { t } = useTranslation('faq');
+  const content = useFaqContent();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
@@ -36,24 +36,24 @@ export function FAQSection() {
             className="inline-block px-3.5 py-1.5 rounded-md text-xs font-semibold uppercase tracking-wider mb-5 animate-fade-down-fast"
             style={{ background: 'rgba(59,130,246,0.1)', color: '#2563eb', border: '1px solid rgba(59,130,246,0.25)' }}
           >
-            {t('badge', 'FAQ')}
+            {content.badge}
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-5 animate-fade-up-fast">
-            {t('title', 'Frequently Asked Questions')}
+            {content.title}
           </h2>
           <p className="text-slate-600 text-lg max-w-xl mx-auto animate-fade-up">
-            {t('subtitle')}
+            {content.subtitle}
           </p>
         </div>
 
         {/* Accordion */}
         <div className="space-y-3">
-          {FAQ_KEYS.map((key, i) => {
+          {content.items.map((item, i) => {
             const isOpen = openIndex === i;
             return (
               <div
-                key={key}
-                className={`rounded-md overflow-hidden transition-all duration-200 ${ITEM_ANIMATIONS[i]}`}
+                key={item.key}
+                className={`rounded-md overflow-hidden transition-all duration-200 ${ITEM_ANIMATIONS[i % ITEM_ANIMATIONS.length]}`}
                 style={{
                   background: isOpen ? 'rgba(59,130,246,0.05)' : '#ffffff',
                   border: `1px solid ${isOpen ? 'rgba(59,130,246,0.3)' : 'rgba(203,213,225,0.8)'}`,
@@ -69,7 +69,7 @@ export function FAQSection() {
                     style={{ color: isOpen ? '#3b82f6' : '#94a3b8' }}
                   />
                   <span className={`flex-1 text-sm font-medium transition-colors duration-200 ${isOpen ? 'text-slate-900' : 'text-slate-700'}`}>
-                    {t(`items.${key}.question`)}
+                    {item.question}
                   </span>
                   <ChevronDown
                     className={`h-4 w-4 flex-shrink-0 transition-all duration-300 ${isOpen ? 'rotate-180 text-blue-500' : 'text-slate-400'}`}
@@ -80,7 +80,7 @@ export function FAQSection() {
                   <div className="px-6 pb-6 animate-fade-down-fast">
                     <div className="pl-8 border-l-2 border-blue-400/30">
                       <p className="text-sm text-slate-600 leading-relaxed">
-                        {t(`items.${key}.answer`)}
+                        {item.answer}
                       </p>
                     </div>
                   </div>
@@ -92,9 +92,9 @@ export function FAQSection() {
 
         {/* Still have questions */}
         <div className="mt-14 sm:mt-16 text-center landing-card-light rounded-md p-8 sm:p-10 animate-zoom-in-slow">
-          <h3 className="text-lg font-semibold text-slate-900 mb-2.5">{t('stillHave.title')}</h3>
+          <h3 className="text-lg font-semibold text-slate-900 mb-2.5">{content.stillHaveTitle}</h3>
           <p className="text-sm text-slate-600 mb-7">
-            {t('stillHave.desc')}
+            {content.stillHaveDesc}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a

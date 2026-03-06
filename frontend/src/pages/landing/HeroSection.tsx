@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play } from 'lucide-react';
+import { useHeroContent } from '@/hooks/useLandingContent';
 
 const BOOK_IMAGES = [...Array(11)].map((_, i) => `/images/${i}.jpg`);
 const LOOP_IMAGES = [...BOOK_IMAGES, ...BOOK_IMAGES, ...BOOK_IMAGES];
 const ITEM_W = 98; // 90px + 8px gap
 
 export function HeroSection() {
-  const { t } = useTranslation('hero');
+  const content = useHeroContent();
   const [index, setIndex] = useState(BOOK_IMAGES.length);
   const [scaledIndex, setScaledIndex] = useState(BOOK_IMAGES.length + 1);
   const [sliding, setSliding] = useState(false);
@@ -70,9 +70,9 @@ export function HeroSection() {
             {/* Title */}
             <div className="animate-fade-up relative z-10">
               <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-extrabold leading-[1.08] tracking-tight">
-                <span className="text-white block">{t('titleLine1')}</span>
-                <span className="animate-text-shimmer block my-1">{t('titleLine2')}</span>
-                <span className="text-white block font-semibold text-2xl sm:text-3xl lg:text-[2rem] mt-2">{t('titleLine3')}</span>
+                <span className="text-white block">{content.titleLine1}</span>
+                <span className="animate-text-shimmer block my-1">{content.titleLine2}</span>
+                <span className="text-white block font-semibold text-2xl sm:text-3xl lg:text-[2rem] mt-2">{content.titleLine3}</span>
               </h1>
               {/* Accent line */}
               <div className="mt-5 h-px w-32"
@@ -81,7 +81,7 @@ export function HeroSection() {
 
             {/* Subtitle */}
             <p className="text-lg text-white leading-relaxed max-w-md animate-fade-up-light-slow relative z-10">
-              {t('subtitle')}
+              {content.subtitle}
             </p>
 
             {/* CTAs */}
@@ -91,7 +91,7 @@ export function HeroSection() {
                 className="animate-btn-shine relative overflow-hidden inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-semibold text-white landing-btn-primary"
                 style={{ boxShadow: '0 0 32px rgba(59,130,246,0.45), 0 4px 20px rgba(59,130,246,0.3)' }}
               >
-                {t('cta.primary')}
+                {content.ctaPrimary}
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <a
@@ -99,7 +99,7 @@ export function HeroSection() {
                 className="btn-golden-flow inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-medium text-white hover:text-white transition-colors duration-200"
               >
                 <Play className="h-4 w-4 fill-current" />
-                {t('cta.secondary')}
+                {content.ctaSecondary}
               </a>
             </div>
 

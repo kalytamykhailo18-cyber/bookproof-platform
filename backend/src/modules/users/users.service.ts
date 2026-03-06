@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { DataExportResponseDto, DeleteAccountDto, DeleteAccountResponseDto, UpdateConsentDto, ConsentResponseDto, ConsentType, UpdateLanguageDto, UpdateLanguageResponseDto } from './dto/gdpr.dto';
+import { UpdateProfileDto, UpdateProfileResponseDto } from './dto/update-profile.dto';
 import { UserRole, Language } from '@prisma/client';
 
 /**
@@ -514,5 +515,69 @@ export class UsersService {
     }
 
     return { preferredLanguage: user.preferredLanguage };
+  }
+
+  /**
+   * Update user's basic profile information
+   *
+   * Per requirements.md Section 3.10: Reader Profile Settings
+   * - User can update name and country
+   *
+   * @param userId - ID of the user
+   * @param dto - Profile update details
+   * @returns Updated profile confirmation
+   */
+  async updateProfile(userId: string, dto: UpdateProfileDto): Promise<UpdateProfileResponseDto> {
+    this.logger.log(`Profile update requested by user ${userId}`);
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Build update data object with only provided fields
+    const updateData: { name?: string; country?: string } = {};
+    if (dto.name !== undefined) {
+      updateData.name = dto.name;
+    }
+    if (dto.country !== undefined) {
+      updateData.country = dto.country;
+    }
+
+    // Update the user's profile
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
+      data: updateData,
+    });
+
+    // Create audit log for profile change
+    await this.prisma.auditLog.create({
+      data: {
+        userId,
+        action: 'PROFILE_UPDATED',
+        entity: 'User',
+        entityId: userId,
+        changes: JSON.stringify({
+          previousName: user.name,
+          newName: updatedUser.name,
+          previousCountry: user.country,
+          newCountry: updatedUser.country,
+          timestamp: new Date().toISOString(),
+        }),
+        description: `User updated profile information`,
+        severity: 'INFO',
+      },
+    });
+
+    this.logger.log(`Profile updated for user ${userId}`);
+
+    return {
+      message: 'Profile updated successfully',
+      name: updatedUser.name,
+      country: updatedUser.country || undefined,
+    };
   }
 }

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, Min, Max } from 'class-validator';
 
 /**
  * DTO for pausing a campaign
@@ -97,6 +97,19 @@ export class AddCreditsDto {
   @IsString()
   @IsOptional()
   notes?: string;
+
+  @ApiPropertyOptional({
+    description: 'Activation window in days (default: 30)',
+    example: 30,
+    minimum: 1,
+    maximum: 365,
+    default: 30,
+  })
+  @IsInt()
+  @Min(1)
+  @Max(365)
+  @IsOptional()
+  activationWindowDays?: number;
 }
 
 /**
@@ -248,6 +261,9 @@ export class AuthorListItemDto {
   @ApiProperty({ description: 'Author name' })
   name: string;
 
+  @ApiProperty({ description: 'Company name', required: false })
+  companyName?: string;
+
   @ApiProperty({ description: 'Total credits purchased', example: 500 })
   totalCreditsPurchased: number;
 
@@ -268,6 +284,135 @@ export class AuthorListItemDto {
 
   @ApiProperty({ description: 'Account verified status' })
   isVerified: boolean;
+
+  @ApiProperty({ description: 'Account suspension status' })
+  isSuspended: boolean;
+
+  @ApiProperty({ description: 'Total amount spent (in cents)', example: 49900 })
+  totalSpentCents: number;
+}
+
+/**
+ * Author Detail View DTO (Section 4.5 - Bug H2)
+ */
+export class AuthorDetailViewDto {
+  @ApiProperty({ description: 'Author profile ID' })
+  id: string;
+
+  @ApiProperty({ description: 'User ID' })
+  userId: string;
+
+  @ApiProperty({ description: 'Author name' })
+  name: string;
+
+  @ApiProperty({ description: 'Author email' })
+  email: string;
+
+  @ApiProperty({ description: 'Company name', required: false })
+  companyName?: string;
+
+  @ApiProperty({ description: 'Phone number', required: false })
+  phone?: string;
+
+  @ApiProperty({ description: 'Country', required: false })
+  country?: string;
+
+  @ApiProperty({ description: 'Preferred language' })
+  preferredLanguage: string;
+
+  @ApiProperty({ description: 'Account verified status' })
+  isVerified: boolean;
+
+  @ApiProperty({ description: 'Account suspension status' })
+  isSuspended: boolean;
+
+  @ApiProperty({ description: 'Suspension reason', required: false })
+  suspendReason?: string;
+
+  @ApiProperty({ description: 'Total credits purchased' })
+  totalCreditsPurchased: number;
+
+  @ApiProperty({ description: 'Total credits used' })
+  totalCreditsUsed: number;
+
+  @ApiProperty({ description: 'Available credits' })
+  availableCredits: number;
+
+  @ApiProperty({ description: 'Total amount spent in cents' })
+  totalSpentCents: number;
+
+  @ApiProperty({ description: 'Admin notes', required: false })
+  adminNotes?: string;
+
+  @ApiProperty({ description: 'Account created date' })
+  createdAt: Date;
+
+  @ApiProperty({ description: 'Last login date', required: false })
+  lastLoginAt?: Date;
+
+  @ApiProperty({ description: 'List of campaigns' })
+  campaigns: AuthorCampaignDto[];
+
+  @ApiProperty({ description: 'Credit purchase history' })
+  purchases: CreditPurchaseHistoryDto[];
+}
+
+export class AuthorCampaignDto {
+  @ApiProperty({ description: 'Campaign ID' })
+  id: string;
+
+  @ApiProperty({ description: 'Book title' })
+  title: string;
+
+  @ApiProperty({ description: 'Campaign status' })
+  status: string;
+
+  @ApiProperty({ description: 'Credits allocated' })
+  creditsAllocated: number;
+
+  @ApiProperty({ description: 'Target reviews' })
+  targetReviews: number;
+
+  @ApiProperty({ description: 'Reviews completed' })
+  reviewsCompleted: number;
+
+  @ApiProperty({ description: 'Start date' })
+  startDate: Date;
+
+  @ApiProperty({ description: 'End date', required: false })
+  endDate?: Date;
+
+  @ApiProperty({ description: 'Created date' })
+  createdAt: Date;
+}
+
+export class CreditPurchaseHistoryDto {
+  @ApiProperty({ description: 'Purchase ID' })
+  id: string;
+
+  @ApiProperty({ description: 'Credits purchased' })
+  credits: number;
+
+  @ApiProperty({ description: 'Amount paid in cents' })
+  amountPaidCents: number;
+
+  @ApiProperty({ description: 'Currency' })
+  currency: string;
+
+  @ApiProperty({ description: 'Payment status' })
+  paymentStatus: string;
+
+  @ApiProperty({ description: 'Purchase date' })
+  purchaseDate: Date;
+
+  @ApiProperty({ description: 'Package tier name', required: false })
+  packageTierName?: string;
+
+  @ApiProperty({ description: 'Coupon applied', required: false })
+  couponCode?: string;
+
+  @ApiProperty({ description: 'Discount amount in cents', required: false })
+  discountAmountCents?: number;
 }
 
 /**
@@ -341,6 +486,81 @@ export class CampaignTimelineDto {
 }
 
 /**
+ * DTO for author information in campaign (Section 4.3)
+ */
+export class CampaignAuthorDto {
+  @ApiProperty({ description: 'Author profile ID' })
+  id: string;
+
+  @ApiProperty({ description: 'Author name' })
+  name: string;
+
+  @ApiProperty({ description: 'Author email' })
+  email: string;
+
+  @ApiProperty({ description: 'Company name', required: false })
+  company?: string | null;
+}
+
+/**
+ * DTO for reader assignment in campaign detail (Section 4.3)
+ */
+export class ReaderAssignmentDto {
+  @ApiProperty({ description: 'Assignment ID' })
+  id: string;
+
+  @ApiProperty({ description: 'Reader profile ID' })
+  readerProfileId: string;
+
+  @ApiProperty({ description: 'Reader name' })
+  readerName: string;
+
+  @ApiProperty({ description: 'Reader email' })
+  readerEmail: string;
+
+  @ApiProperty({ description: 'Assignment status', example: 'ACTIVE' })
+  status: string;
+
+  @ApiProperty({ description: 'Assignment date' })
+  assignedAt: Date;
+
+  @ApiProperty({ description: 'Deadline date' })
+  deadlineAt: Date;
+
+  @ApiProperty({ description: 'Completion date', required: false })
+  completedAt?: Date | null;
+
+  @ApiProperty({ description: 'Review URL if submitted', required: false })
+  reviewUrl?: string | null;
+
+  @ApiProperty({ description: 'Whether this was a manual assignment' })
+  isManualAssignment: boolean;
+
+  @ApiProperty({ description: 'Book format', example: 'ebook' })
+  format: string;
+}
+
+/**
+ * DTO for queue statistics breakdown (Section 4.3)
+ */
+export class QueueStatisticsDto {
+  @ApiProperty({ description: 'Total assignments' })
+  totalAssignments: number;
+
+  @ApiProperty({ description: 'Active assignments count' })
+  activeCount: number;
+
+  @ApiProperty({ description: 'Completed assignments count' })
+  completedCount: number;
+
+  @ApiProperty({ description: 'Expired assignments count' })
+  expiredCount: number;
+
+  @ApiProperty({ description: 'Pending assignments count' })
+  pendingCount: number;
+}
+
+/**
  * Response DTO for campaign analytics (nested structure for frontend)
  */
 export class CampaignAnalyticsDto {
@@ -358,6 +578,15 @@ export class CampaignAnalyticsDto {
 
   @ApiProperty({ description: 'Timeline info', type: CampaignTimelineDto })
   timeline: CampaignTimelineDto;
+
+  @ApiProperty({ description: 'Author information', type: CampaignAuthorDto })
+  author: CampaignAuthorDto;
+
+  @ApiProperty({ description: 'Reader assignments list', type: [ReaderAssignmentDto] })
+  assignments: ReaderAssignmentDto[];
+
+  @ApiProperty({ description: 'Queue statistics', type: QueueStatisticsDto })
+  queueStatistics: QueueStatisticsDto;
 }
 
 /**
@@ -556,6 +785,35 @@ export class ForceCompleteCampaignDto {
   @IsString()
   @IsOptional()
   notes?: string;
+}
+
+/**
+ * DTO for reader search results (Section 4.3 Bug M4)
+ */
+export class ReaderSearchResultDto {
+  @ApiProperty({ description: 'Reader profile ID' })
+  id: string;
+
+  @ApiProperty({ description: 'Reader name' })
+  name: string;
+
+  @ApiProperty({ description: 'Reader email' })
+  email: string;
+
+  @ApiProperty({ description: 'Country', required: false })
+  country?: string | null;
+
+  @ApiProperty({ description: 'Preferred language' })
+  preferredLanguage: string;
+
+  @ApiProperty({ description: 'Format preference' })
+  formatPreference: string;
+
+  @ApiProperty({ description: 'Total reviews completed' })
+  totalReviewsCompleted: number;
+
+  @ApiProperty({ description: 'Reliability score' })
+  reliabilityScore: number;
 }
 
 /**

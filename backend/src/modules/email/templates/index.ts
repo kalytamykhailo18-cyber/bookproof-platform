@@ -672,6 +672,81 @@ export function getEmailTemplateContent(
       `,
     },
 
+    READER_PAYOUT_REQUESTED: {
+      EN: `
+        <h1 style="color: #3b82f6;">Payout Request Received</h1>
+        <p>Hi {{userName}},</p>
+        <p>We've received your payout request. Your funds have been reserved and are awaiting admin processing.</p>
+        <div class="info-box">
+          <h3 style="margin-top: 0;">Request Details:</h3>
+          <p style="margin: 5px 0;"><strong>Amount:</strong> \${{amount}}</p>
+          <p style="margin: 5px 0;"><strong>Payment Method:</strong> {{paymentMethod}}</p>
+          <p style="margin: 5px 0;"><strong>Status:</strong> Pending Admin Processing</p>
+        </div>
+        <p>Your payout request will be reviewed and processed by our admin team. You'll receive another email once the payment has been sent.</p>
+        <p><strong>What happens next:</strong></p>
+        <ul style="margin-left: 20px;">
+          <li>Admin reviews your payout request</li>
+          <li>Payment is processed to your {{paymentMethod}} account</li>
+          <li>You receive confirmation email once completed</li>
+        </ul>
+        <div style="text-align: center;">
+          <a href="{{dashboardUrl}}" class="button" style="background-color: #3b82f6;">View Wallet</a>
+        </div>
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          Processing typically takes 1-3 business days. Thank you for your patience!
+        </p>
+      `,
+      ES: `
+        <h1 style="color: #3b82f6;">Solicitud de pago recibida</h1>
+        <p>Hola {{userName}},</p>
+        <p>Hemos recibido tu solicitud de pago. Tus fondos han sido reservados y están esperando el procesamiento del administrador.</p>
+        <div class="info-box">
+          <h3 style="margin-top: 0;">Detalles de la solicitud:</h3>
+          <p style="margin: 5px 0;"><strong>Monto:</strong> \${{amount}}</p>
+          <p style="margin: 5px 0;"><strong>Método de pago:</strong> {{paymentMethod}}</p>
+          <p style="margin: 5px 0;"><strong>Estado:</strong> Pendiente de procesamiento</p>
+        </div>
+        <p>Tu solicitud de pago será revisada y procesada por nuestro equipo de administración. Recibirás otro correo electrónico una vez que se haya enviado el pago.</p>
+        <p><strong>Qué sucede ahora:</strong></p>
+        <ul style="margin-left: 20px;">
+          <li>El administrador revisa tu solicitud de pago</li>
+          <li>El pago se procesa a tu cuenta de {{paymentMethod}}</li>
+          <li>Recibes un correo de confirmación una vez completado</li>
+        </ul>
+        <div style="text-align: center;">
+          <a href="{{dashboardUrl}}" class="button" style="background-color: #3b82f6;">Ver billetera</a>
+        </div>
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          El procesamiento generalmente toma de 1 a 3 días hábiles. ¡Gracias por tu paciencia!
+        </p>
+      `,
+      PT: `
+        <h1 style="color: #3b82f6;">Solicitação de pagamento recebida</h1>
+        <p>Olá {{userName}},</p>
+        <p>Recebemos sua solicitação de pagamento. Seus fundos foram reservados e estão aguardando o processamento do administrador.</p>
+        <div class="info-box">
+          <h3 style="margin-top: 0;">Detalhes da solicitação:</h3>
+          <p style="margin: 5px 0;"><strong>Valor:</strong> \${{amount}}</p>
+          <p style="margin: 5px 0;"><strong>Método de pagamento:</strong> {{paymentMethod}}</p>
+          <p style="margin: 5px 0;"><strong>Status:</strong> Pendente de processamento</p>
+        </div>
+        <p>Sua solicitação de pagamento será revisada e processada por nossa equipe administrativa. Você receberá outro e-mail assim que o pagamento for enviado.</p>
+        <p><strong>O que acontece agora:</strong></p>
+        <ul style="margin-left: 20px;">
+          <li>O administrador revisa sua solicitação de pagamento</li>
+          <li>O pagamento é processado para sua conta {{paymentMethod}}</li>
+          <li>Você recebe um e-mail de confirmação assim que concluído</li>
+        </ul>
+        <div style="text-align: center;">
+          <a href="{{dashboardUrl}}" class="button" style="background-color: #3b82f6;">Ver carteira</a>
+        </div>
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          O processamento geralmente leva de 1 a 3 dias úteis. Obrigado pela sua paciência!
+        </p>
+      `,
+    },
+
     READER_PAYOUT_COMPLETED: {
       EN: `
         <h1 style="color: #10b981;">Payout Completed!</h1>
@@ -2678,6 +2753,206 @@ export function getEmailTemplateContent(
         <div style="text-align: center; margin: 30px 0;">
           <a href="{{dashboardUrl}}" class="button">Ver Seus Créditos</a>
         </div>
+      `,
+    },
+
+    // Author account suspended (Section 4.5)
+    AUTHOR_SUSPENDED: {
+      EN: `
+        <h1 style="color: #ef4444;">Your Account Has Been Suspended</h1>
+        <p>Hi {{userName}},</p>
+        <p>We're writing to inform you that your BookProof author account has been suspended.</p>
+
+        <div class="warning-box">
+          <h3 style="margin-top: 0;">Suspension Details</h3>
+          <p><strong>Reason:</strong> {{reason}}</p>
+          <p><strong>Date:</strong> {{suspendedAt}}</p>
+          {{#if pausedCampaignsCount}}
+          <p><strong>Campaigns Affected:</strong> {{pausedCampaignsCount}} active campaign(s) have been paused</p>
+          {{/if}}
+        </div>
+
+        <div class="info-box">
+          <h3 style="margin-top: 0;">What This Means</h3>
+          <ul style="margin: 10px 0;">
+            <li>You will not be able to log in to your account</li>
+            <li>All active campaigns have been paused</li>
+            <li>No new reviews will be distributed</li>
+          </ul>
+        </div>
+
+        <p>If you believe this suspension was made in error or would like to appeal this decision, please contact our support team:</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{{supportUrl}}" class="button">Contact Support</a>
+        </div>
+
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          <strong>Support Email:</strong> {{supportEmail}}
+        </p>
+      `,
+      ES: `
+        <h1 style="color: #ef4444;">Tu Cuenta Ha Sido Suspendida</h1>
+        <p>Hola {{userName}},</p>
+        <p>Te escribimos para informarte que tu cuenta de autor de BookProof ha sido suspendida.</p>
+
+        <div class="warning-box">
+          <h3 style="margin-top: 0;">Detalles de la Suspensión</h3>
+          <p><strong>Razón:</strong> {{reason}}</p>
+          <p><strong>Fecha:</strong> {{suspendedAt}}</p>
+          {{#if pausedCampaignsCount}}
+          <p><strong>Campañas Afectadas:</strong> {{pausedCampaignsCount}} campaña(s) activa(s) han sido pausadas</p>
+          {{/if}}
+        </div>
+
+        <div class="info-box">
+          <h3 style="margin-top: 0;">Qué Significa Esto</h3>
+          <ul style="margin: 10px 0;">
+            <li>No podrás iniciar sesión en tu cuenta</li>
+            <li>Todas las campañas activas han sido pausadas</li>
+            <li>No se distribuirán nuevas reseñas</li>
+          </ul>
+        </div>
+
+        <p>Si crees que esta suspensión fue un error o deseas apelar esta decisión, por favor contacta a nuestro equipo de soporte:</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{{supportUrl}}" class="button">Contactar Soporte</a>
+        </div>
+
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          <strong>Email de Soporte:</strong> {{supportEmail}}
+        </p>
+      `,
+      PT: `
+        <h1 style="color: #ef4444;">Sua Conta Foi Suspensa</h1>
+        <p>Olá {{userName}},</p>
+        <p>Estamos escrevendo para informá-lo que sua conta de autor BookProof foi suspensa.</p>
+
+        <div class="warning-box">
+          <h3 style="margin-top: 0;">Detalhes da Suspensão</h3>
+          <p><strong>Motivo:</strong> {{reason}}</p>
+          <p><strong>Data:</strong> {{suspendedAt}}</p>
+          {{#if pausedCampaignsCount}}
+          <p><strong>Campanhas Afetadas:</strong> {{pausedCampaignsCount}} campanha(s) ativa(s) foram pausadas</p>
+          {{/if}}
+        </div>
+
+        <div class="info-box">
+          <h3 style="margin-top: 0;">O Que Isso Significa</h3>
+          <ul style="margin: 10px 0;">
+            <li>Você não poderá fazer login na sua conta</li>
+            <li>Todas as campanhas ativas foram pausadas</li>
+            <li>Nenhuma nova avaliação será distribuída</li>
+          </ul>
+        </div>
+
+        <p>Se você acredita que esta suspensão foi feita por engano ou gostaria de apelar desta decisão, por favor entre em contato com nossa equipe de suporte:</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{{supportUrl}}" class="button">Contatar Suporte</a>
+        </div>
+
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          <strong>Email de Suporte:</strong> {{supportEmail}}
+        </p>
+      `,
+    },
+
+    // Author account unsuspended (Section 4.5)
+    AUTHOR_UNSUSPENDED: {
+      EN: `
+        <h1 style="color: #10b981;">Your Account Has Been Restored</h1>
+        <p>Hi {{userName}},</p>
+        <p>Good news! Your BookProof author account has been unsuspended and restored to full functionality.</p>
+
+        <div class="success-box">
+          <h3 style="margin-top: 0;">Restoration Details</h3>
+          <p><strong>Reason:</strong> {{reason}}</p>
+          <p><strong>Date:</strong> {{unsuspendedAt}}</p>
+        </div>
+
+        <div class="info-box">
+          <h3 style="margin-top: 0;">What You Can Do Now</h3>
+          <ul style="margin: 10px 0;">
+            <li>Log in to your account</li>
+            <li>Resume your paused campaigns</li>
+            <li>Create new campaigns</li>
+            <li>Access all platform features</li>
+          </ul>
+        </div>
+
+        <p>We're glad to have you back! You can now log in and continue using BookProof.</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{{loginUrl}}" class="button">Log In to Your Account</a>
+        </div>
+
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          If you have any questions, please don't hesitate to contact our support team.
+        </p>
+      `,
+      ES: `
+        <h1 style="color: #10b981;">Tu Cuenta Ha Sido Restaurada</h1>
+        <p>Hola {{userName}},</p>
+        <p>¡Buenas noticias! Tu cuenta de autor de BookProof ha sido reactivada y restaurada a plena funcionalidad.</p>
+
+        <div class="success-box">
+          <h3 style="margin-top: 0;">Detalles de la Restauración</h3>
+          <p><strong>Razón:</strong> {{reason}}</p>
+          <p><strong>Fecha:</strong> {{unsuspendedAt}}</p>
+        </div>
+
+        <div class="info-box">
+          <h3 style="margin-top: 0;">Qué Puedes Hacer Ahora</h3>
+          <ul style="margin: 10px 0;">
+            <li>Iniciar sesión en tu cuenta</li>
+            <li>Reanudar tus campañas pausadas</li>
+            <li>Crear nuevas campañas</li>
+            <li>Acceder a todas las funciones de la plataforma</li>
+          </ul>
+        </div>
+
+        <p>¡Nos alegra tenerte de vuelta! Ahora puedes iniciar sesión y continuar usando BookProof.</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{{loginUrl}}" class="button">Iniciar Sesión en Tu Cuenta</a>
+        </div>
+
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          Si tienes alguna pregunta, no dudes en contactar a nuestro equipo de soporte.
+        </p>
+      `,
+      PT: `
+        <h1 style="color: #10b981;">Sua Conta Foi Restaurada</h1>
+        <p>Olá {{userName}},</p>
+        <p>Boas notícias! Sua conta de autor BookProof foi reativada e restaurada para funcionalidade completa.</p>
+
+        <div class="success-box">
+          <h3 style="margin-top: 0;">Detalhes da Restauração</h3>
+          <p><strong>Motivo:</strong> {{reason}}</p>
+          <p><strong>Data:</strong> {{unsuspendedAt}}</p>
+        </div>
+
+        <div class="info-box">
+          <h3 style="margin-top: 0;">O Que Você Pode Fazer Agora</h3>
+          <ul style="margin: 10px 0;">
+            <li>Fazer login na sua conta</li>
+            <li>Retomar suas campanhas pausadas</li>
+            <li>Criar novas campanhas</li>
+            <li>Acessar todos os recursos da plataforma</li>
+          </ul>
+        </div>
+
+        <p>Estamos felizes em tê-lo de volta! Agora você pode fazer login e continuar usando o BookProof.</p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{{loginUrl}}" class="button">Fazer Login na Sua Conta</a>
+        </div>
+
+        <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+          Se você tiver alguma dúvida, não hesite em entrar em contato com nossa equipe de suporte.
+        </p>
       `,
     },
 

@@ -2,19 +2,34 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { EmailService } from '@modules/email/email.service';
 import { NotificationsService } from '@modules/notifications/notifications.service';
+import { SettingsService, SETTING_KEYS } from '@modules/settings/settings.service';
 import { CommissionStatus, EmailType } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class CommissionService {
   private readonly logger = new Logger(CommissionService.name);
-  private readonly PENDING_DAYS = 30; // Commission holds for 30 days to account for refunds (per requirements)
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
     private readonly notificationsService: NotificationsService,
+    private readonly settingsService: SettingsService,
   ) {}
+
+  /**
+   * Get commission pending days from platform settings (Section 6.4)
+   * Default: 14 days
+   */
+  private async getPendingDays(): Promise<number> {
+    try {
+      const setting = await this.settingsService.getSetting(SETTING_KEYS.COMMISSION_PENDING_DAYS);
+      return setting ? parseInt(setting.value, 10) : 14;
+    } catch (error) {
+      this.logger.warn(`Failed to get commission pending days setting, using default 14: ${error.message}`);
+      return 14;
+    }
+  }
 
   /**
    * Create commission for a credit purchase
@@ -66,9 +81,10 @@ export class CommissionService {
       const commissionRate = referral.affiliateProfile.commissionRate;
       const commissionAmount = purchaseAmount.mul(commissionRate).div(100);
 
-      // Calculate pending until date
+      // Calculate pending until date (Section 6.4 - configurable pending period)
+      const pendingDays = await this.getPendingDays();
       const pendingUntil = new Date();
-      pendingUntil.setDate(pendingUntil.getDate() + this.PENDING_DAYS);
+      pendingUntil.setDate(pendingUntil.getDate() + pendingDays);
 
       // Create commission record
       await this.prisma.affiliateCommission.create({

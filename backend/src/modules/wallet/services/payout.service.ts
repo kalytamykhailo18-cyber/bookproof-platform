@@ -147,6 +147,42 @@ export class WalletPayoutService {
 
     this.logger.log(`Payout request created: ${payoutRequest.id}`);
 
+    // Send confirmation email to reader (Section 3.9)
+    try {
+      const readerProfile = await this.prisma.readerProfile.findUnique({
+        where: { id: readerProfileId },
+        include: {
+          user: {
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              preferredLanguage: true,
+            },
+          },
+        },
+      });
+
+      if (readerProfile?.user) {
+        await this.emailService.sendTemplatedEmail(
+          readerProfile.user.email,
+          EmailType.READER_PAYOUT_REQUESTED,
+          {
+            userName: readerProfile.user.name || 'Reader',
+            amount: dto.amount,
+            paymentMethod: dto.paymentMethod,
+            dashboardUrl: `${this.configService.get('app.url')}/reader/wallet`,
+          },
+          readerProfile.user.id,
+          readerProfile.user.preferredLanguage,
+        );
+        this.logger.log(`Payout request confirmation sent to ${readerProfile.user.email}`);
+      }
+    } catch (emailError) {
+      this.logger.error(`Failed to send reader confirmation email: ${emailError.message}`);
+      // Don't fail the request if email fails
+    }
+
     // Send notification to all admins about new payout request (Section 13.2)
     try {
       const admins = await this.prisma.user.findMany({
@@ -415,6 +451,19 @@ export class WalletPayoutService {
           in: [PayoutRequestStatus.REQUESTED, PayoutRequestStatus.APPROVED],
         },
       },
+      include: {
+        readerProfile: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
       orderBy: { requestedAt: 'asc' },
     });
 
@@ -423,6 +472,19 @@ export class WalletPayoutService {
 
   async getAllPayouts(): Promise<PayoutResponseDto[]> {
     const payouts = await this.prisma.payoutRequest.findMany({
+      include: {
+        readerProfile: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
       orderBy: { requestedAt: 'desc' },
     });
 
@@ -540,6 +602,14 @@ export class WalletPayoutService {
       requestedAt: payout.requestedAt,
       createdAt: payout.createdAt,
       updatedAt: payout.updatedAt,
+      // Include nested readerProfile data when available (for admin views)
+      readerProfile: payout.readerProfile ? {
+        user: payout.readerProfile.user ? {
+          id: payout.readerProfile.user.id,
+          email: payout.readerProfile.user.email,
+          name: payout.readerProfile.user.name,
+        } : undefined,
+      } : undefined,
     };
   }
 }

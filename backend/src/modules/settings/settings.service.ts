@@ -13,16 +13,39 @@ import {
 
 // Setting keys as constants to prevent typos
 export const SETTING_KEYS = {
+  // General Settings (Section 4.9)
+  PLATFORM_NAME: 'platform_name',
+  SUPPORT_EMAIL: 'support_email',
+  DEFAULT_LANGUAGE: 'default_language',
+
+  // Pricing & Keyword Research
   KEYWORD_RESEARCH_PRICE: 'keyword_research_price',
   KEYWORD_RESEARCH_CURRENCY: 'keyword_research_currency',
   KEYWORD_RESEARCH_ENABLED: 'keyword_research_enabled',
+  AI_PROVIDER: 'ai_provider', // Section 4.9
+  AI_MODEL: 'ai_model', // Section 4.9
+
+  // Review Payment Rates
   EBOOK_REVIEW_PAYMENT_RATE: 'ebook_review_payment_rate',
   AUDIOBOOK_REVIEW_PAYMENT_RATE: 'audiobook_review_payment_rate',
   PAYMENT_CURRENCY: 'payment_currency',
+
+  // Credit Settings (Section 4.9)
+  MINIMUM_CREDITS_PER_CAMPAIGN: 'minimum_credits_per_campaign',
+
+  // Reader Settings (Section 4.9)
+  MAX_REVIEWS_PER_READER_PER_BOOK: 'max_reviews_per_reader_per_book',
+
+  // Affiliate Settings (Section 4.9)
+  COOKIE_DURATION_DAYS: 'cookie_duration_days',
+  COMMISSION_PENDING_DAYS: 'commission_pending_days', // Section 6.4
+
   // System configuration settings (Section 5.6)
   DISTRIBUTION_DAY: 'distribution_day', // Day of weekly distribution (1-7, Monday=1)
   DISTRIBUTION_HOUR: 'distribution_hour', // Hour of distribution (0-23 UTC)
   OVERBOOKING_PERCENTAGE: 'overbooking_percentage', // Default 20%
+  DEFAULT_WEEKLY_DISTRIBUTION_RATE: 'default_weekly_distribution_rate', // Section 4.9
+  REMINDER_SCHEDULE: 'reminder_schedule', // Section 4.9
   REVIEW_DEADLINE_HOURS: 'review_deadline_hours', // Default 72 hours
   MIN_REVIEW_WORD_COUNT: 'min_review_word_count', // Default 50 words
   MIN_PAYOUT_THRESHOLD: 'min_payout_threshold', // Minimum amount for payout requests
@@ -34,6 +57,30 @@ const DEFAULT_SETTINGS: Record<
   string,
   { value: string; dataType: string; category: string; description: string; isPublic: boolean }
 > = {
+  // General Settings (Section 4.9)
+  [SETTING_KEYS.PLATFORM_NAME]: {
+    value: 'BookProof',
+    dataType: 'string',
+    category: 'general',
+    description: 'Platform name displayed to users',
+    isPublic: true,
+  },
+  [SETTING_KEYS.SUPPORT_EMAIL]: {
+    value: 'support@bookproof.com',
+    dataType: 'string',
+    category: 'general',
+    description: 'Support email for customer inquiries',
+    isPublic: true,
+  },
+  [SETTING_KEYS.DEFAULT_LANGUAGE]: {
+    value: 'en',
+    dataType: 'string',
+    category: 'general',
+    description: 'Default platform language (en, es, pt)',
+    isPublic: true,
+  },
+
+  // Pricing & Keyword Research
   [SETTING_KEYS.KEYWORD_RESEARCH_PRICE]: {
     value: '49.99',
     dataType: 'number',
@@ -55,6 +102,22 @@ const DEFAULT_SETTINGS: Record<
     description: 'Enable or disable keyword research feature globally',
     isPublic: true,
   },
+  [SETTING_KEYS.AI_PROVIDER]: {
+    value: 'openai',
+    dataType: 'string',
+    category: 'keyword_research',
+    description: 'AI provider for keyword research (openai, anthropic)',
+    isPublic: false,
+  },
+  [SETTING_KEYS.AI_MODEL]: {
+    value: 'gpt-4',
+    dataType: 'string',
+    category: 'keyword_research',
+    description: 'AI model to use for keyword research',
+    isPublic: false,
+  },
+
+  // Review Payment Rates
   [SETTING_KEYS.EBOOK_REVIEW_PAYMENT_RATE]: {
     value: '1.00',
     dataType: 'number',
@@ -76,7 +139,42 @@ const DEFAULT_SETTINGS: Record<
     description: 'Currency for reader payment rates',
     isPublic: true,
   },
-  // System configuration settings (Section 5.6)
+
+  // Credit Settings (Section 4.9)
+  [SETTING_KEYS.MINIMUM_CREDITS_PER_CAMPAIGN]: {
+    value: '10',
+    dataType: 'number',
+    category: 'credit',
+    description: 'Minimum credits required to create a campaign',
+    isPublic: true,
+  },
+
+  // Reader Settings (Section 4.9)
+  [SETTING_KEYS.MAX_REVIEWS_PER_READER_PER_BOOK]: {
+    value: '1',
+    dataType: 'number',
+    category: 'reader',
+    description: 'Maximum reviews per reader per book',
+    isPublic: false,
+  },
+
+  // Affiliate Settings (Section 4.9)
+  [SETTING_KEYS.COOKIE_DURATION_DAYS]: {
+    value: '30',
+    dataType: 'number',
+    category: 'affiliate',
+    description: 'Affiliate cookie duration in days',
+    isPublic: false,
+  },
+  [SETTING_KEYS.COMMISSION_PENDING_DAYS]: {
+    value: '14',
+    dataType: 'number',
+    category: 'affiliate',
+    description: 'Days before commission becomes approved (refund protection period) - Section 6.4',
+    isPublic: false,
+  },
+
+  // System configuration settings (Section 5.6 & 4.9)
   [SETTING_KEYS.DISTRIBUTION_DAY]: {
     value: '1', // Monday
     dataType: 'number',
@@ -96,6 +194,20 @@ const DEFAULT_SETTINGS: Record<
     dataType: 'number',
     category: 'distribution',
     description: 'Overbooking percentage for reader slots (default 20%)',
+    isPublic: false,
+  },
+  [SETTING_KEYS.DEFAULT_WEEKLY_DISTRIBUTION_RATE]: {
+    value: '20',
+    dataType: 'number',
+    category: 'campaign',
+    description: 'Default number of reviews distributed per week',
+    isPublic: false,
+  },
+  [SETTING_KEYS.REMINDER_SCHEDULE]: {
+    value: '24,48',
+    dataType: 'string',
+    category: 'campaign',
+    description: 'Hours before deadline to send reminders (comma-separated)',
     isPublic: false,
   },
   [SETTING_KEYS.REVIEW_DEADLINE_HOURS]: {

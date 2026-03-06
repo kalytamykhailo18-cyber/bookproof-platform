@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { closerApi, CustomPackageStatus } from '@/lib/api/closer';
@@ -14,7 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Plus, Eye, Loader2, Package } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Plus, Eye, Loader2, Package, Filter } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function PackagesListPage() {
@@ -24,6 +31,7 @@ export function PackagesListPage() {
   const [packages, setPackages] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreateLoading, setIsCreateLoading] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   // Fetch packages
   useEffect(() => {
@@ -41,6 +49,12 @@ export function PackagesListPage() {
     };
     fetchPackages();
   }, []);
+
+  // Filter packages by status (Section 5.4)
+  const filteredPackages = useMemo(() => {
+    if (statusFilter === 'all') return packages;
+    return packages.filter((pkg) => pkg.status === statusFilter);
+  }, [packages, statusFilter]);
 
   const getStatusBadge = (status: CustomPackageStatus) => {
     const statusConfig = {
@@ -108,8 +122,52 @@ export function PackagesListPage() {
         </Button>
       </div>
 
+      {/* Filters (Section 5.4) */}
+      <Card className="animate-fade-up-fast">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            {t('filters.title') || 'Filters'}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-4">
+            <div className="flex-1 max-w-xs">
+              <label className="mb-2 block text-sm font-medium">
+                {t('packages.statusFilter') || 'Status'}
+              </label>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('filters.allStatuses') || 'All Statuses'}</SelectItem>
+                  <SelectItem value={CustomPackageStatus.DRAFT}>Draft</SelectItem>
+                  <SelectItem value={CustomPackageStatus.PENDING_APPROVAL}>Pending Approval</SelectItem>
+                  <SelectItem value={CustomPackageStatus.SENT}>Sent</SelectItem>
+                  <SelectItem value={CustomPackageStatus.VIEWED}>Viewed (Pending Payment)</SelectItem>
+                  <SelectItem value={CustomPackageStatus.PAID}>Paid</SelectItem>
+                  <SelectItem value={CustomPackageStatus.EXPIRED}>Expired</SelectItem>
+                  <SelectItem value={CustomPackageStatus.CANCELLED}>Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {statusFilter !== 'all' && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setStatusFilter('all')}
+                className="mt-7"
+              >
+                {t('filters.clear') || 'Clear Filter'}
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Packages Table */}
-      <Card>
+      <Card className="animate-fade-up-light-slow">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Package className="h-5 w-5" />
@@ -117,11 +175,19 @@ export function PackagesListPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {packages.length === 0 ? (
+          {filteredPackages.length === 0 ? (
             <div className="flex min-h-[200px] flex-col items-center justify-center gap-2 text-center">
               <Package className="h-12 w-12 text-muted-foreground" />
-              <p className="text-lg font-medium">{t('packages.noPackages')}</p>
-              <p className="text-sm text-muted-foreground">{t('packages.createFirst')}</p>
+              <p className="text-lg font-medium">
+                {statusFilter === 'all'
+                  ? t('packages.noPackages')
+                  : t('packages.noPackagesWithFilter') || 'No packages found with this filter'}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {statusFilter === 'all'
+                  ? t('packages.createFirst')
+                  : t('packages.tryDifferentFilter') || 'Try a different filter or clear the current one'}
+              </p>
             </div>
           ) : (
             <Table>
@@ -137,7 +203,7 @@ export function PackagesListPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {packages.map((pkg) => (
+                {filteredPackages.map((pkg) => (
                   <TableRow key={pkg.id}>
                     <TableCell className="font-medium">{pkg.packageName}</TableCell>
                     <TableCell>

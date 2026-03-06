@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsOptional, IsInt, IsBoolean, IsDateString, IsNumber, Min, Max, IsNotEmpty } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsInt, IsBoolean, IsDateString, IsNumber, Min, Max, IsNotEmpty, IsEmail } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CouponType, CouponAppliesTo } from '@prisma/client';
 
@@ -63,6 +63,31 @@ export class CreateCouponDto {
   @IsInt()
   @Min(0)
   minimumCredits?: number;
+
+  @ApiPropertyOptional({
+    description: 'Maximum discount amount cap in dollars (Section 4.7)',
+    example: 100,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  maxDiscountAmount?: number;
+
+  @ApiProperty({
+    description: 'Only valid for first-time purchases (Section 4.7)',
+    example: false,
+    default: false,
+  })
+  @IsBoolean()
+  firstPurchaseOnly: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Restrict coupon to specific user email (Section 4.7)',
+    example: 'user@example.com',
+  })
+  @IsOptional()
+  @IsEmail()
+  specificUserEmail?: string;
 
   @ApiPropertyOptional({
     description: 'Maximum total uses (null = unlimited)',

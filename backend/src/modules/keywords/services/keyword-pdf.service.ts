@@ -344,8 +344,18 @@ export class KeywordPdfService {
     <p class="section-description">
       Broad, high-volume search terms that define your book's main topic. Use these in your title and throughout your listing.
     </p>
-    <div class="keyword-grid">
-      ${keywords.primaryKeywords.map(kw => `<div class="keyword-item">${this.escapeHtml(kw)}</div>`).join('')}
+    <div style="margin-bottom: 20px;">
+      ${keywords.primaryKeywords.map(pk => `
+        <div class="guideline" style="margin-bottom: 15px;">
+          <div class="guideline-title">${this.escapeHtml(pk.keyword)}</div>
+          <div class="guideline-instruction" style="margin-bottom: 8px;">
+            <strong>Relevance:</strong> ${this.escapeHtml(pk.relevance)}
+          </div>
+          <div style="font-size: 13px; color: #4a5568;">
+            <strong>Usage:</strong> ${this.escapeHtml(pk.usage)}
+          </div>
+        </div>
+      `).join('')}
     </div>
   </div>
 
@@ -355,9 +365,22 @@ export class KeywordPdfService {
     <p class="section-description">
       More specific terms related to subtopics and themes in your book. Include these in your subtitle and description.
     </p>
-    <ul class="keyword-list">
-      ${keywords.secondaryKeywords.map(kw => `<li>${this.escapeHtml(kw)}</li>`).join('')}
-    </ul>
+    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+      <thead>
+        <tr style="background: #f7fafc;">
+          <th style="padding: 10px; text-align: left; border-bottom: 2px solid #667eea; width: 35%;">Keyword</th>
+          <th style="padding: 10px; text-align: left; border-bottom: 2px solid #667eea;">Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${keywords.secondaryKeywords.map(sk => `
+          <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 8px 10px; font-weight: 600; color: #2d3748;">${this.escapeHtml(sk.keyword)}</td>
+            <td style="padding: 8px 10px; color: #718096;">${this.escapeHtml(sk.note)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
   </div>
 
   <!-- Long-tail Keywords -->
@@ -366,9 +389,22 @@ export class KeywordPdfService {
     <p class="section-description">
       Specific phrases that readers might search for (3-5 words each). These often have less competition and higher conversion rates.
     </p>
-    <ul class="keyword-list">
-      ${keywords.longTailKeywords.map(kw => `<li>${this.escapeHtml(kw)}</li>`).join('')}
-    </ul>
+    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+      <thead>
+        <tr style="background: #f7fafc;">
+          <th style="padding: 10px; text-align: left; border-bottom: 2px solid #667eea; width: 40%;">Phrase</th>
+          <th style="padding: 10px; text-align: left; border-bottom: 2px solid #667eea;">Search Intent</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${keywords.longTailKeywords.map(lt => `
+          <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 8px 10px; font-weight: 600; color: #2d3748;">${this.escapeHtml(lt.phrase)}</td>
+            <td style="padding: 8px 10px; color: #718096;">${this.escapeHtml(lt.searchIntent)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
   </div>
 
   <!-- Usage Guidelines -->
@@ -464,7 +500,7 @@ export class KeywordPdfService {
         <ul>
           <li>${keywords.kdpSuggestions.subtitle && keywords.kdpSuggestions.subtitle.length > 0
             ? this.escapeHtml(keywords.kdpSuggestions.subtitle[0])
-            : `Master ${keywords.primaryKeywords[0] || 'Your Topic'} with Practical Strategies for ${keywords.primaryKeywords[1] || 'Success'}`}</li>
+            : `Master ${keywords.primaryKeywords[0]?.keyword || 'Your Topic'} with Practical Strategies for ${keywords.primaryKeywords[1]?.keyword || 'Success'}`}</li>
         </ul>
       </div>
     </div>
@@ -477,7 +513,7 @@ export class KeywordPdfService {
       <div class="guideline-examples">
         <strong>Example opening paragraph:</strong>
         <p style="margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 4px; font-style: italic;">
-          "Are you looking for ${keywords.primaryKeywords[0] || 'guidance'}? This comprehensive guide covers everything you need to know about ${keywords.primaryKeywords[1] || 'your topic'}. Whether you're a beginner or experienced, you'll discover ${keywords.secondaryKeywords[0] || 'strategies'} that will help you achieve ${keywords.secondaryKeywords[1] || 'your goals'}."
+          "Are you looking for ${keywords.primaryKeywords[0]?.keyword || 'guidance'}? This comprehensive guide covers everything you need to know about ${keywords.primaryKeywords[1]?.keyword || 'your topic'}. Whether you're a beginner or experienced, you'll discover ${keywords.secondaryKeywords[0]?.keyword || 'strategies'} that will help you achieve ${keywords.secondaryKeywords[1]?.keyword || 'your goals'}."
         </p>
       </div>
     </div>

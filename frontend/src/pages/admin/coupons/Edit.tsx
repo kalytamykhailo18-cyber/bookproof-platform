@@ -37,6 +37,9 @@ const formSchema = z
     discountAmount: z.number().min(0).optional(),
     minimumPurchase: z.number().min(0).optional(),
     minimumCredits: z.number().int().min(0).optional(),
+    maxDiscountAmount: z.number().min(0).optional(),
+    firstPurchaseOnly: z.boolean().default(false),
+    specificUserEmail: z.string().email().optional().or(z.literal('')),
     maxUses: z.number().int().min(1).optional(),
     maxUsesPerUser: z.number().int().min(1).default(1),
     isActive: z.boolean().default(true),
@@ -106,6 +109,7 @@ export function EditCouponPage() {
     defaultValues: {
       type: CouponType.PERCENTAGE,
       appliesTo: CouponAppliesTo.CREDITS,
+      firstPurchaseOnly: false,
       maxUsesPerUser: 1,
       isActive: true,
       validFrom: new Date().toISOString().slice(0, 16) } });
@@ -120,6 +124,9 @@ export function EditCouponPage() {
         discountAmount: coupon.discountAmount || undefined,
         minimumPurchase: coupon.minimumPurchase || undefined,
         minimumCredits: coupon.minimumCredits || undefined,
+        maxDiscountAmount: coupon.maxDiscountAmount || undefined,
+        firstPurchaseOnly: coupon.firstPurchaseOnly || false,
+        specificUserEmail: coupon.specificUserEmail || undefined,
         maxUses: coupon.maxUses || undefined,
         maxUsesPerUser: coupon.maxUsesPerUser,
         isActive: coupon.isActive,
@@ -465,6 +472,80 @@ export function EditCouponPage() {
                   )}
                 />
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Restrictions (Section 4.7) */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Restrictions</CardTitle>
+              <CardDescription>Optional restrictions for coupon usage</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="maxDiscountAmount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Maximum Discount Amount (USD)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="No limit"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                        }
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Cap the maximum discount that can be applied (leave empty for no limit)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="firstPurchaseOnly"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">First Purchase Only</FormLabel>
+                      <FormDescription>
+                        Only valid for users making their first purchase
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="specificUserEmail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Specific User Email (Optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="user@example.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Restrict this coupon to a specific user's email address
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </CardContent>
           </Card>
 

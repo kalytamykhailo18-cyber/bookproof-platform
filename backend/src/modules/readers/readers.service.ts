@@ -210,7 +210,9 @@ export class ReadersService {
       totalAssignments: assignments.length,
       waitingAssignments: statusCounts.waiting,
       scheduledAssignments: statusCounts.scheduled,
-      activeAssignments: statusCounts.approved,
+      // Active assignments includes both APPROVED (materials released but not accessed)
+      // and IN_PROGRESS (reader has accessed materials and is working on review)
+      activeAssignments: statusCounts.approved + statusCounts.inProgress,
       inProgressAssignments: statusCounts.inProgress,
       submittedAssignments: statusCounts.submitted,
       completedAssignments: statusCounts.completed,

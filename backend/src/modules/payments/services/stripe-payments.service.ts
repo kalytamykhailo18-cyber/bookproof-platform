@@ -733,11 +733,14 @@ export class StripePaymentsService {
       };
     }
 
-    // Update package status to PAID
+    // Update package status to PAID with payment tracking fields (Section 5.5)
     await this.prisma.customPackage.update({
       where: { id: customPackageId },
       data: {
         status: CustomPackageStatus.PAID,
+        paidAt: new Date(),
+        stripePaymentId: session.payment_intent as string,
+        accountCreated: false, // Will be updated below if account is created
       },
     });
 
@@ -845,6 +848,12 @@ export class StripePaymentsService {
         temporaryPassword,
         verificationToken,
       );
+
+      // Update package to mark account as created (Section 5.5)
+      await this.prisma.customPackage.update({
+        where: { id: customPackageId },
+        data: { accountCreated: true },
+      });
     }
 
     // Create invoice for this payment
