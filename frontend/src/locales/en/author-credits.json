@@ -47,5 +47,12 @@
     "audiobook": "2 credits = 1 audiobook review",
     "validity": "Standard packages valid for 180 days, Enterprise packages valid for 360 days. Credits can be used across multiple campaigns within the validity period. Credits are non-refundable once purchased.",
     "secure": "Secure payment processing via Stripe"
+  },
+  "success": {
+    "title": "Payment Successful!",
+    "message": "Your credits have been added to your account and are ready to use.",
+    "info": "Credits have been automatically added to your balance. You can now use them to launch review campaigns for your books.",
+    "createCampaign": "Create New Campaign",
+    "backToDashboard": "Back to Dashboard"
   }
 }

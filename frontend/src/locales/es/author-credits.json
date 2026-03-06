@@ -47,5 +47,12 @@
     "audiobook": "2 créditos = 1 reseña de audiolibro",
     "validity": "Paquetes estándar válidos por 180 días, paquetes Empresariales válidos por 360 días. Los créditos pueden usarse en múltiples campañas dentro del período de validez. Los créditos no son reembolsables una vez comprados.",
     "secure": "Procesamiento de pago seguro vía Stripe"
+  },
+  "success": {
+    "title": "¡Pago Exitoso!",
+    "message": "Tus créditos han sido añadidos a tu cuenta y están listos para usar.",
+    "info": "Los créditos se han añadido automáticamente a tu saldo. Ahora puedes usarlos para lanzar campañas de reseñas para tus libros.",
+    "createCampaign": "Crear Nueva Campaña",
+    "backToDashboard": "Volver al Panel"
   }
 }

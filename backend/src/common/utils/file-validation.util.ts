@@ -185,8 +185,10 @@ export class FileValidationUtil {
       }
     }
 
-    // Check buffer for null bytes (file upload attack indicator)
-    if (file.buffer && file.buffer.includes(0x00)) {
+    // Check buffer for null bytes only in text-based files
+    // Binary files (images, audio, ebooks) naturally contain null bytes
+    const textBasedTypes = ['text/plain'];
+    if (textBasedTypes.includes(file.mimetype) && file.buffer && file.buffer.includes(0x00)) {
       throw new BadRequestException(
         `${fileType} file contains suspicious content`,
       );
