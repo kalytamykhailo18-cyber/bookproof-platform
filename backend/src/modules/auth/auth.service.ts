@@ -353,9 +353,13 @@ export class AuthService {
       );
     }
 
-    // Find user
+    // Find user with profiles for role-based access control
     const user = await this.prisma.user.findUnique({
       where: { email },
+      include: {
+        adminProfile: true, // For adminRole in response
+        authorProfile: true, // For termsAccepted in response
+      },
     });
 
     if (!user) {

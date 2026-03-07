@@ -88,7 +88,10 @@ interface AdminListItem {
 export function AdminTeamPage() {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation('adminTeam');
-  const isSupport = useAuthStore((s) => s.isSupport());
+  const user = useAuthStore((s) => s.user);
+  const hasHydrated = useAuthStore((s) => s._hasHydrated);
+  // Compute isSupport directly from user object to ensure reactivity
+  const isSupport = user?.role === 'ADMIN' && user?.adminRole === 'SUPPORT';
   const [activeTab, setActiveTab] = useState('closers');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -100,16 +103,17 @@ export function AdminTeamPage() {
   const [adminsLoading, setAdminsLoading] = useState(true);
 
   // Redirect Support users - they don't have access to Team Management (contains financial data)
+  // Wait for store hydration and user data to be loaded before checking
   useEffect(() => {
-    if (isSupport) {
+    if (hasHydrated && user && isSupport) {
       toast.error('Access Denied', {
         description: 'You do not have permission to access Team Management.',
       });
       navigate('/admin/dashboard');
     }
-  }, [isSupport, navigate]);
+  }, [hasHydrated, user, isSupport, navigate]);
 
-  // Fetch closers
+  // Fetch closers - only after hydration, user loaded, and confirmed not Support
   const fetchClosers = async () => {
     try {
       setClosersLoading(true);
@@ -123,12 +127,13 @@ export function AdminTeamPage() {
   };
 
   useEffect(() => {
-    if (!isSupport) {
+    // Only fetch if store hydrated, user loaded, and NOT a Support user
+    if (hasHydrated && user && !isSupport) {
       fetchClosers();
     }
-  }, [isSupport]);
+  }, [hasHydrated, user, isSupport]);
 
-  // Fetch admins
+  // Fetch admins - only after hydration, user loaded, and confirmed not Support
   const fetchAdmins = async () => {
     try {
       setAdminsLoading(true);
@@ -142,10 +147,11 @@ export function AdminTeamPage() {
   };
 
   useEffect(() => {
-    if (!isSupport) {
+    // Only fetch if store hydrated, user loaded, and NOT a Support user
+    if (hasHydrated && user && !isSupport) {
       fetchAdmins();
     }
-  }, [isSupport]);
+  }, [hasHydrated, user, isSupport]);
 
   // Toggle active status handlers
   const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
@@ -253,8 +259,9 @@ export function AdminTeamPage() {
 
   const isLoading = closersLoading || adminsLoading;
 
-  // Support users are redirected - don't render anything
-  if (isSupport) {
+  // Wait for store hydration and user data to load before rendering
+  // Support users are redirected - don't render anything while redirect happens
+  if (!hasHydrated || !user || isSupport) {
     return null;
   }
 
