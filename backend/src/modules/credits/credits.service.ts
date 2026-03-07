@@ -68,20 +68,35 @@ export class CreditsService {
   }
 
   /**
-   * Get all active package tiers
+   * Get all active package tiers with optional currency-specific pricing
+   * @param currency - Optional currency code (USD, BRL, etc.). If provided, returns prices in that currency.
    */
-  async getPackageTiers(): Promise<PackageTierResponseDto[]> {
+  async getPackageTiers(currency?: string): Promise<PackageTierResponseDto[]> {
     const tiers = await this.prisma.packageTier.findMany({
       where: { isActive: true },
       orderBy: { displayOrder: 'asc' },
+      include: {
+        prices: currency ? {
+          where: { currency: currency.toUpperCase() },
+        } : false,
+      },
     });
 
-    return tiers.map((tier) => ({
-      ...tier,
-      basePrice: tier.basePrice.toNumber(),
-      description: tier.description ?? undefined,
-      features: tier.features ? JSON.parse(tier.features) : undefined,
-    }));
+    return tiers.map((tier) => {
+      // Use currency-specific price if available, otherwise fall back to base price
+      const currencyPrice = currency && tier.prices?.length > 0
+        ? tier.prices[0]
+        : null;
+
+      return {
+        ...tier,
+        basePrice: currencyPrice ? currencyPrice.price.toNumber() : tier.basePrice.toNumber(),
+        currency: currencyPrice ? currencyPrice.currency : tier.currency,
+        description: tier.description ?? undefined,
+        features: tier.features ? JSON.parse(tier.features) : undefined,
+        prices: undefined, // Don't expose the prices relation
+      };
+    });
   }
 
   /**
@@ -187,14 +202,34 @@ export class CreditsService {
     // Ensure Stripe is properly configured
     this.ensureStripeConfigured();
 
-    // Get package tier
+    // Get package tier with currency-specific pricing if requested
     const packageTier = await this.prisma.packageTier.findUnique({
       where: { id: dto.packageTierId },
+      include: {
+        prices: dto.currency ? {
+          where: { currency: dto.currency.toUpperCase() },
+        } : false,
+      },
     });
 
     if (!packageTier || !packageTier.isActive) {
       throw new NotFoundException('Package tier not found or inactive');
     }
+
+    // Determine the price and currency to use
+    // If currency was specified and we have a price for it, use it
+    // Otherwise fall back to the package's default price and currency
+    const currencyPrice = dto.currency && packageTier.prices?.length > 0
+      ? packageTier.prices[0]
+      : null;
+
+    const checkoutCurrency = currencyPrice
+      ? currencyPrice.currency
+      : packageTier.currency;
+
+    const basePrice = currencyPrice
+      ? currencyPrice.price.toNumber()
+      : packageTier.basePrice.toNumber();
 
     // Get author profile
     const authorProfile = await this.prisma.authorProfile.findUnique({
@@ -229,7 +264,7 @@ export class CreditsService {
     }
 
     // Calculate price and apply coupon if provided
-    let finalPrice = packageTier.basePrice.toNumber();
+    let finalPrice = basePrice;
     let discountAmount = 0;
     let couponId: string | undefined;
 
@@ -314,7 +349,7 @@ export class CreditsService {
     const lineItems = [
       {
         price_data: {
-          currency: packageTier.currency.toLowerCase(),
+          currency: checkoutCurrency.toLowerCase(),
           product_data: {
             name: `${packageTier.name} - ${packageTier.credits} Credits`,
             description: packageTier.description || undefined,
@@ -329,7 +364,7 @@ export class CreditsService {
     if (dto.includeKeywordResearch) {
       lineItems.push({
         price_data: {
-          currency: packageTier.currency.toLowerCase(),
+          currency: checkoutCurrency.toLowerCase(),
           product_data: {
             name: 'Keyword Research Service',
             description: 'Professional keyword analysis for Amazon KDP optimization',
@@ -371,6 +406,8 @@ export class CreditsService {
           discountAmount: discountAmount.toString(),
           includeKeywordResearch: dto.includeKeywordResearch ? 'true' : 'false',
           keywordResearchPrice: keywordResearchPrice.toString(),
+          currency: checkoutCurrency, // Store the currency used for checkout
+          basePrice: basePrice.toString(), // Store original base price before discounts
         },
       });
 

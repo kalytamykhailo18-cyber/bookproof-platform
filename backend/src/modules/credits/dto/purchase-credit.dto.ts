@@ -16,6 +16,15 @@ export class PurchaseCreditDto {
   @IsOptional()
   includeKeywordResearch?: boolean;
 
+  @ApiProperty({
+    description: 'Currency code for checkout (USD, BRL, etc.). Uses package default if not specified.',
+    required: false,
+    example: 'BRL',
+  })
+  @IsString()
+  @IsOptional()
+  currency?: string;
+
   @ApiProperty({ description: 'Success URL for Stripe redirect' })
   @IsString()
   successUrl: string;

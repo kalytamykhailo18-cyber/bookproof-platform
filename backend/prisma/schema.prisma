@@ -166,8 +166,8 @@ model PackageTier {
   id           String  @id @default(cuid())
   name         String // e.g., "Starter", "Professional", "Enterprise"
   credits      Int     @unique
-  basePrice    Decimal @db.Decimal(10, 2)
-  currency     String  @default("USD")
+  basePrice    Decimal @db.Decimal(10, 2) // Default price in USD
+  currency     String  @default("USD") // Default currency
   validityDays Int // 30, 90, or 120 days
 
   // Display
@@ -184,10 +184,29 @@ model PackageTier {
 
   // Relations
   purchases CreditPurchase[]
+  prices    PackageTierPrice[] // Multi-currency pricing
 
   @@index([credits])
   @@index([isActive])
   @@index([displayOrder])
+}
+
+// Multi-currency pricing for package tiers
+// Each package can have different prices in different currencies
+model PackageTierPrice {
+  id            String      @id @default(cuid())
+  packageTierId String
+  packageTier   PackageTier @relation(fields: [packageTierId], references: [id], onDelete: Cascade)
+
+  currency String  // Currency code (USD, BRL, EUR, etc.)
+  price    Decimal @db.Decimal(10, 2) // Price in this currency
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([packageTierId, currency]) // One price per currency per package
+  @@index([packageTierId])
+  @@index([currency])
 }
 
 model CreditPurchase {

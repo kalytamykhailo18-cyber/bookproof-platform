@@ -47,6 +47,7 @@ export interface PurchaseCreditRequest {
   packageTierId: string;
   couponCode?: string;
   includeKeywordResearch?: boolean;
+  currency?: string; // Currency code (USD, BRL, etc.)
   successUrl: string;
   cancelUrl: string;
 }
@@ -58,10 +59,12 @@ export interface CheckoutSessionResponse {
 
 export const creditsApi = {
   /**
-   * Get all active package tiers
+   * Get all active package tiers with optional currency-specific pricing
+   * @param currency - Optional currency code (USD, BRL, EUR). Returns prices in specified currency if available.
    */
-  getPackageTiers: async (): Promise<PackageTier[]> => {
-    const response = await apiClient.get<PackageTier[]>('/credits/packages');
+  getPackageTiers: async (currency?: string): Promise<PackageTier[]> => {
+    const params = currency ? { currency: currency.toUpperCase() } : {};
+    const response = await apiClient.get<PackageTier[]>('/credits/packages', { params });
     return response.data;
   },
 

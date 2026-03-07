@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, getCurrencyForLanguage } from '@/lib/utils';
 import { toast } from 'sonner';
 import { creditsApi, PackageTier as PackageTierType } from '@/lib/api/credits';
 import { useLoading } from '@/components/providers/LoadingProvider';
@@ -105,12 +105,15 @@ export function CreditPurchasePage() {
     fetchKeywordPricing();
   }, []);
 
-  // Fetch package tiers
+  // Get currency based on current language
+  const userCurrency = useMemo(() => getCurrencyForLanguage(i18n.language), [i18n.language]);
+
+  // Fetch package tiers with currency-specific pricing
   useEffect(() => {
     const fetchPackageTiers = async () => {
       try {
         setIsLoadingPackages(true);
-        const data = await creditsApi.getPackageTiers();
+        const data = await creditsApi.getPackageTiers(userCurrency);
         setPackageTiers(data);
       } catch (err) {
         console.error('Package tiers error:', err);
@@ -120,7 +123,7 @@ export function CreditPurchasePage() {
       }
     };
     fetchPackageTiers();
-  }, []);
+  }, [userCurrency]);
 
   // Handle receipt download
   const handleDownloadReceipt = useCallback(async (transactionId: string) => {
@@ -174,6 +177,7 @@ export function CreditPurchasePage() {
         packageTierId: selectedPackage.id,
         couponCode: validatedCoupon?.valid ? couponCode : undefined,
         includeKeywordResearch: includeKeywordResearch || undefined,
+        currency: userCurrency, // Pass currency based on user's language
         successUrl,
         cancelUrl
       });

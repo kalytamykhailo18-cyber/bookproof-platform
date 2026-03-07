@@ -211,6 +211,38 @@ async function main() {
     console.log(`✓ Package tier: ${created.name} (${created.credits} credits, $${tier.basePrice})`);
   }
 
+  // Create BRL pricing for each package tier (approximately 5:1 exchange rate)
+  console.log('\n💱 Creating BRL pricing for package tiers...');
+  const brlPrices: Record<string, number> = {
+    'Starter': 124.99,      // ~$24.99 × 5
+    'Basic': 245.00,        // ~$49.00 × 5
+    'Growth': 445.00,       // ~$89.00 × 5
+    'Professional': 845.00, // ~$169.00 × 5
+    'Premium': 1999.00,     // ~$399.00 × 5
+    'Enterprise': 3749.00,  // ~$749.00 × 5
+  };
+
+  for (const [tierName, brlPrice] of Object.entries(brlPrices)) {
+    const tier = createdTiers[tierName];
+    if (tier) {
+      await prisma.packageTierPrice.upsert({
+        where: {
+          packageTierId_currency: {
+            packageTierId: tier.id,
+            currency: 'BRL',
+          },
+        },
+        update: { price: brlPrice },
+        create: {
+          packageTierId: tier.id,
+          currency: 'BRL',
+          price: brlPrice,
+        },
+      });
+      console.log(`✓ BRL price for ${tierName}: R$${brlPrice}`);
+    }
+  }
+
   // ============================================
   // 3. COUPONS
   // ============================================

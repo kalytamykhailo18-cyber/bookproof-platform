@@ -3,16 +3,18 @@ import {
   Get,
   Post,
   Body,
+  Query,
   UseGuards,
   Req,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
 import { RolesGuard } from '@common/guards/roles.guard';
 import { Roles } from '@common/decorators/roles.decorator';
+import { Public } from '@common/decorators/public.decorator';
 import { UserRole } from '@prisma/client';
 import { CreditsService } from './credits.service';
 import {
@@ -29,14 +31,21 @@ export class CreditsController {
   constructor(private readonly creditsService: CreditsService) {}
 
   @Get('packages')
-  @ApiOperation({ summary: 'Get all active package tiers' })
+  @Public() // Package tiers should be publicly accessible for pricing display
+  @ApiOperation({ summary: 'Get all active package tiers with optional currency-specific pricing' })
+  @ApiQuery({
+    name: 'currency',
+    required: false,
+    description: 'Currency code (USD, BRL, EUR). Returns prices in specified currency if available.',
+    example: 'BRL',
+  })
   @ApiResponse({
     status: 200,
     description: 'Package tiers retrieved successfully',
     type: [PackageTierResponseDto],
   })
-  async getPackageTiers(): Promise<PackageTierResponseDto[]> {
-    return this.creditsService.getPackageTiers();
+  async getPackageTiers(@Query('currency') currency?: string): Promise<PackageTierResponseDto[]> {
+    return this.creditsService.getPackageTiers(currency);
   }
 
   @Get('balance')
