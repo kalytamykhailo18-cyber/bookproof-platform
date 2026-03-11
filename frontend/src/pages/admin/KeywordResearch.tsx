@@ -38,7 +38,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, MoreHorizontal, Download, RefreshCw, Eye, X } from 'lucide-react';
+import { Loader2, MoreHorizontal, Download, RefreshCw, Eye, X, Trash2 } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { KeywordResearchStatus } from '@/lib/api/keywords';
@@ -52,6 +52,8 @@ export function AdminKeywordResearchPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showRegenerateDialog, setShowRegenerateDialog] = useState(false);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [loadingResearchId, setLoadingResearchId] = useState<string | null>(null);
 
   const [researches, setResearches] = useState<any[]>([]);
@@ -143,6 +145,26 @@ export function AdminKeywordResearchPage() {
       toast.error(message);
     } finally {
       setIsDownloading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (selectedId) {
+      try {
+        setIsDeleting(true);
+        await keywordsApi.delete(selectedId);
+        toast.success(t('messages.deleteSuccess') || 'Keyword research deleted successfully');
+        setShowDeleteDialog(false);
+        setSelectedId(null);
+        // Refetch researches list
+        await fetchResearches();
+      } catch (error: any) {
+        console.error('Delete error:', error);
+        const message = error.response?.data?.message || t('messages.deleteError') || 'Failed to delete keyword research';
+        toast.error(message);
+      } finally {
+        setIsDeleting(false);
+      }
     }
   };
 
@@ -330,6 +352,16 @@ export function AdminKeywordResearchPage() {
                           >
                             <RefreshCw className="mr-2 h-4 w-4" />
                             {t('actions.regenerate')}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setSelectedId(research.id);
+                              setShowDeleteDialog(true);
+                            }}
+                            className="text-destructive focus:text-destructive"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            {t('actions.delete') || 'Delete'}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -548,6 +580,35 @@ export function AdminKeywordResearchPage() {
                 </>
               ) : (
                 t('regenerateDialog.confirm')
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('deleteDialog.title') || 'Delete Keyword Research'}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('deleteDialog.description') || 'Are you sure you want to delete this keyword research? This action cannot be undone.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('deleteDialog.cancel') || 'Cancel'}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t('deleteDialog.deleting') || 'Deleting...'}
+                </>
+              ) : (
+                t('deleteDialog.confirm') || 'Delete'
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

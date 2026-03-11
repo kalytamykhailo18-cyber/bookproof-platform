@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Patch,
+  Delete,
   Body,
   Param,
   UseGuards,
@@ -153,6 +154,29 @@ export class KeywordsController {
     @GetUser('authorProfileId') authorProfileId: string,
   ): Promise<KeywordResearchResponseDto> {
     return this.keywordsService.update(id, updateDto, authorProfileId);
+  }
+
+  /**
+   * Delete keyword research order (Author: only PENDING unpaid, Admin: any)
+   */
+  @Delete(':id')
+  @Roles(UserRole.AUTHOR, UserRole.ADMIN)
+  @UseGuards(RolesGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Delete keyword research order',
+    description: 'Authors can only delete their own PENDING unpaid orders. Admins can delete any order.',
+  })
+  @ApiResponse({ status: 204, description: 'Keyword research deleted' })
+  @ApiResponse({ status: 400, description: 'Cannot delete - already paid/processed or not owner' })
+  @ApiResponse({ status: 404, description: 'Research not found' })
+  async delete(
+    @Param('id') id: string,
+    @GetUser('role') role: UserRole,
+    @GetUser('authorProfileId') authorProfileId: string,
+  ): Promise<void> {
+    const isAdmin = role === UserRole.ADMIN;
+    await this.keywordsService.delete(id, authorProfileId, isAdmin);
   }
 
   /**

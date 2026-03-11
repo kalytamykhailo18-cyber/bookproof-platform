@@ -346,6 +346,42 @@ export class KeywordsService {
   }
 
   /**
+   * Delete keyword research order
+   * Authors can only delete their own PENDING (unpaid) orders
+   * Admins can delete any order
+   */
+  async delete(id: string, authorProfileId?: string, isAdmin: boolean = false): Promise<void> {
+    const research = await this.prisma.keywordResearch.findUnique({
+      where: { id },
+    });
+
+    if (!research) {
+      throw new NotFoundException('Keyword research not found');
+    }
+
+    // If not admin, verify ownership and status
+    if (!isAdmin) {
+      if (!authorProfileId || research.authorProfileId !== authorProfileId) {
+        throw new BadRequestException('Not authorized to delete this research');
+      }
+
+      // Authors can only delete PENDING unpaid orders
+      if (research.status !== KeywordResearchStatus.PENDING || research.paid) {
+        throw new BadRequestException(
+          'Can only delete keyword research orders that are pending and unpaid. Paid or processed orders cannot be deleted.',
+        );
+      }
+    }
+
+    // Delete the research
+    await this.prisma.keywordResearch.delete({
+      where: { id },
+    });
+
+    this.logger.log(`Keyword research ${id} deleted by ${isAdmin ? 'admin' : `author ${authorProfileId}`}`);
+  }
+
+  /**
    * Download PDF
    */
   async downloadPdf(id: string, authorProfileId?: string): Promise<string> {

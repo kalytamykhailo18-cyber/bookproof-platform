@@ -184,6 +184,15 @@ export const keywordsApi = {
   },
 
   /**
+   * Delete keyword research order
+   * Authors can only delete their own PENDING unpaid orders
+   * Admins can delete any order
+   */
+  delete: async (id: string): Promise<void> => {
+    await apiClient.delete(`/keyword-research/${id}`);
+  },
+
+  /**
    * Regenerate keywords and PDF (Admin only)
    */
   regenerate: async (id: string): Promise<KeywordResearchResponseDto> => {

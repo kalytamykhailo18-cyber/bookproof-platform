@@ -57,9 +57,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export function EditKeywordResearchPage() {
-  const { t, i18n } = useTranslation('keyword-research');
-  const tNew = useTranslation('keyword-research.new').t;
-  const tEdit = useTranslation('keyword-research.edit').t;
+  const { t, i18n } = useTranslation('keywordResearch');
   const navigate = useNavigate();
   const params = useParams();
   const id = params.id as string;
@@ -200,7 +198,7 @@ export function EditKeywordResearchPage() {
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Cannot Edit</AlertTitle>
-          <AlertDescription>{tEdit('cannotEdit')}</AlertDescription>
+          <AlertDescription>{t('edit.cannotEdit')}</AlertDescription>
         </Alert>
         <div className="mt-4">
           <Button type="button" variant="outline" onClick={() => navigate(`/author/keyword-research/${id}`)}>
@@ -224,8 +222,8 @@ export function EditKeywordResearchPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Details
         </Button>
-        <h1 className="text-3xl font-bold">{tEdit('title')}</h1>
-        <p className="mt-2 text-muted-foreground">{tEdit('subtitle')}</p>
+        <h1 className="text-3xl font-bold">{t('edit.title')}</h1>
+        <p className="mt-2 text-muted-foreground">{t('edit.subtitle')}</p>
       </div>
 
       <Form {...form}>
@@ -233,7 +231,7 @@ export function EditKeywordResearchPage() {
           {/* Book Information */}
           <Card>
             <CardHeader>
-              <CardTitle>{tNew('steps.bookInfo')}</CardTitle>
+              <CardTitle>{t('new.steps.bookInfo')}</CardTitle>
               <CardDescription>Update book information for keyword research</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -242,11 +240,11 @@ export function EditKeywordResearchPage() {
                 name="bookTitle"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{tNew('fields.bookTitle.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.bookTitle.label')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={tNew('fields.bookTitle.placeholder')} {...field} />
+                      <Input placeholder={t('new.fields.bookTitle.placeholder')} {...field} />
                     </FormControl>
-                    <FormDescription>{tNew('fields.bookTitle.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.bookTitle.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -272,7 +270,7 @@ export function EditKeywordResearchPage() {
           {/* Book Details */}
           <Card>
             <CardHeader>
-              <CardTitle>{tNew('steps.details')}</CardTitle>
+              <CardTitle>{t('new.steps.details')}</CardTitle>
               <CardDescription>Provide detailed information about your book</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -282,11 +280,11 @@ export function EditKeywordResearchPage() {
                   name="genre"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{tNew('fields.genre.label')}</FormLabel>
+                      <FormLabel>{t('new.fields.genre.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder={tNew('fields.genre.placeholder')} {...field} />
+                        <Input placeholder={t('new.fields.genre.placeholder')} {...field} />
                       </FormControl>
-                      <FormDescription>{tNew('fields.genre.description')}</FormDescription>
+                      <FormDescription>{t('new.fields.genre.description')}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -297,7 +295,7 @@ export function EditKeywordResearchPage() {
                   name="bookLanguage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{tNew('fields.bookLanguage.label')}</FormLabel>
+                      <FormLabel>{t('new.fields.bookLanguage.label')}</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
@@ -310,7 +308,7 @@ export function EditKeywordResearchPage() {
                           <SelectItem value={Language.PT}>Portuguese</SelectItem>
                         </SelectContent>
                       </Select>
-                      <FormDescription>{tNew('fields.bookLanguage.description')}</FormDescription>
+                      <FormDescription>{t('new.fields.bookLanguage.description')}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -322,7 +320,7 @@ export function EditKeywordResearchPage() {
                 name="targetMarket"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{tNew('fields.targetMarket.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.targetMarket.label')}</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
@@ -338,7 +336,7 @@ export function EditKeywordResearchPage() {
                         </SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormDescription>{tNew('fields.targetMarket.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.targetMarket.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -349,11 +347,11 @@ export function EditKeywordResearchPage() {
                 name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{tNew('fields.category.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.category.label')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={tNew('fields.category.placeholder')} {...field} />
+                      <Input placeholder={t('new.fields.category.placeholder')} {...field} />
                     </FormControl>
-                    <FormDescription>{tNew('fields.category.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.category.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -364,15 +362,15 @@ export function EditKeywordResearchPage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{tNew('fields.description.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.description.label')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={tNew('fields.description.placeholder')}
+                        placeholder={t('new.fields.description.placeholder')}
                         rows={4}
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>{tNew('fields.description.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.description.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -383,11 +381,11 @@ export function EditKeywordResearchPage() {
                 name="targetAudience"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{tNew('fields.targetAudience.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.targetAudience.label')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={tNew('fields.targetAudience.placeholder')} {...field} />
+                      <Input placeholder={t('new.fields.targetAudience.placeholder')} {...field} />
                     </FormControl>
-                    <FormDescription>{tNew('fields.targetAudience.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.targetAudience.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -398,15 +396,15 @@ export function EditKeywordResearchPage() {
                 name="competingBooks"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{tNew('fields.competingBooks.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.competingBooks.label')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={tNew('fields.competingBooks.placeholder')}
+                        placeholder={t('new.fields.competingBooks.placeholder')}
                         rows={3}
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>{tNew('fields.competingBooks.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.competingBooks.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -438,15 +436,15 @@ export function EditKeywordResearchPage() {
                 name="additionalNotes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{tNew('fields.additionalNotes.label')}</FormLabel>
+                    <FormLabel>{t('new.fields.additionalNotes.label')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={tNew('fields.additionalNotes.placeholder')}
+                        placeholder={t('new.fields.additionalNotes.placeholder')}
                         rows={3}
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>{tNew('fields.additionalNotes.description')}</FormDescription>
+                    <FormDescription>{t('new.fields.additionalNotes.description')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -467,10 +465,10 @@ export function EditKeywordResearchPage() {
               {isUpdating ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {tEdit('submitting')}
+                  {t('edit.submitting')}
                 </>
               ) : (
-                tEdit('submit')
+                t('edit.submit')
               )}
             </Button>
           </div>

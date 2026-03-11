@@ -14,6 +14,7 @@ import {
   XCircle,
   Loader2,
   Eye,
+  Trash2,
 } from 'lucide-react';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { KeywordResearchStatus } from '@/lib/api/keywords';
@@ -25,6 +26,7 @@ export function KeywordResearchListPage() {
 
   const [researches, setResearches] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchResearches = async () => {
     try {
@@ -42,6 +44,26 @@ export function KeywordResearchListPage() {
   useEffect(() => {
     fetchResearches();
   }, []);
+
+  const handleDelete = async (id: string, bookTitle: string) => {
+    if (!confirm(`Are you sure you want to delete the keyword research for "${bookTitle}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      setDeletingId(id);
+      await keywordsApi.delete(id);
+      toast.success('Keyword research deleted successfully');
+      // Remove from list
+      setResearches((prev) => prev.filter((r) => r.id !== id));
+    } catch (error: any) {
+      console.error('Delete error:', error);
+      const message = error.response?.data?.message || 'Failed to delete keyword research';
+      toast.error(message);
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const getStatusColor = (status: KeywordResearchStatus) => {
     switch (status) {
@@ -178,14 +200,32 @@ export function KeywordResearchListPage() {
                   </div>
                 )}
 
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => navigate(`/author/keyword-research/${research.id}`)}
-                >
-                  <Eye className="mr-2 h-4 w-4" />
-                  View Details
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => navigate(`/author/keyword-research/${research.id}`)}
+                  >
+                    <Eye className="mr-2 h-4 w-4" />
+                    View Details
+                  </Button>
+                  {/* Delete button - only for PENDING unpaid orders */}
+                  {research.status === KeywordResearchStatus.PENDING && !research.paid && (
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                      onClick={() => handleDelete(research.id, research.bookTitle)}
+                      disabled={deletingId === research.id}
+                    >
+                      {deletingId === research.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </Button>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}

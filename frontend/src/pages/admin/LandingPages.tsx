@@ -18,7 +18,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  FileEdit } from 'lucide-react';
+  FileEdit,
+  AlertCircle } from 'lucide-react';
 import { ContentEditor } from './landing/ContentEditor';
 
 import {
@@ -578,6 +579,18 @@ function CtaSettingsTabContent() {
       ctaLink: selectedPage?.ctaLink || '#',
       ctaMode: (selectedPage?.ctaMode as 'PRE_LAUNCH' | 'LIVE') || 'PRE_LAUNCH',
       isPublished: selectedPage?.isPublished || false } });
+
+  // Reset form when pages data loads or selected page changes
+  useEffect(() => {
+    if (selectedPage) {
+      form.reset({
+        ctaText: selectedPage.ctaText,
+        ctaLink: selectedPage.ctaLink,
+        ctaMode: selectedPage.ctaMode as 'PRE_LAUNCH' | 'LIVE',
+        isPublished: selectedPage.isPublished });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPage]);
 
   // Update form when language changes
   const handleLanguageChange = (language: Language) => {
