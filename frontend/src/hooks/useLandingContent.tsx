@@ -43,6 +43,13 @@ function mapLanguage(lang: string): Language {
  * Provider component that fetches CMS content and provides it to children
  */
 export function LandingContentProvider({ children }: { children: ReactNode }) {
+  // CMS DISABLED - Using static translation files only
+  // To re-enable CMS, uncomment the useEffect below and remove this block
+  const [content] = useState<LandingPageContent | null>(null);
+  const [isLoading] = useState(false);
+  const [isUsingCms] = useState(false);
+
+  /* CMS DISABLED - Original code preserved for future use:
   const { i18n } = useTranslation();
   const [content, setContent] = useState<LandingPageContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -74,6 +81,7 @@ export function LandingContentProvider({ children }: { children: ReactNode }) {
 
     fetchContent();
   }, [i18n.language]);
+  */
 
   const value: LandingContentContextValue = {
     hero: content?.hero || null,

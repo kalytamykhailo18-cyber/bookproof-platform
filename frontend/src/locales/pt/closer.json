@@ -1,4 +1,8 @@
 {
+  "filters": {
+    "title": "Filtros",
+    "allStatuses": "Todos os Status"
+  },
   "dashboard": {
     "title": "Painel de Vendas",
     "description": "Crie pacotes personalizados e acompanhe seu desempenho de vendas",
@@ -40,6 +44,7 @@
     "createPackage": "Criar Pacote",
     "packagesFound": "pacotes encontrados",
     "filterByStatus": "Filtrar por status",
+    "statusFilter": "Filtrar por Status",
     "allPackages": "Todos os Pacotes",
     "noPackages": "Ainda não há pacotes",
     "noPackagesFound": "Nenhum pacote encontrado",

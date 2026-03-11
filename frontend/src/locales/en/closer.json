@@ -1,4 +1,8 @@
 {
+  "filters": {
+    "title": "Filters",
+    "allStatuses": "All Statuses"
+  },
   "dashboard": {
     "title": "Sales Dashboard",
     "description": "Create custom packages and track your sales performance",
@@ -40,6 +44,7 @@
     "createPackage": "Create Package",
     "packagesFound": "packages found",
     "filterByStatus": "Filter by status",
+    "statusFilter": "Filter by Status",
     "allPackages": "All Packages",
     "noPackages": "No packages yet",
     "noPackagesFound": "No packages found",
