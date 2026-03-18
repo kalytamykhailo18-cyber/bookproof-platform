@@ -8,7 +8,26 @@
     "currentDesc": "Configure suas preferências de leitura",
     "editDesc": "Atualize as configurações do seu perfil",
     "amazonProfiles": "Perfis da Amazon",
-    "amazonProfilesDesc": "Adicione suas URLs de perfil de avaliador da Amazon para verificação"
+    "amazonProfilesDesc": "Adicione suas URLs de perfil de avaliador da Amazon para verificação",
+    "basicInfo": "Informações Básicas",
+    "basicInfoDesc": "Detalhes da sua conta e informações pessoais",
+    "passwordChange": "Alterar Senha",
+    "passwordChangeDesc": "Atualize a senha da sua conta"
+  },
+  "basicInfo": {
+    "name": "Nome Completo",
+    "country": "País",
+    "language": "Idioma",
+    "languageNote": "Isso afeta o idioma dos e-mails e notificações",
+    "email": "Endereço de E-mail",
+    "emailNote": "Entre em contato com o administrador para alterar seu e-mail"
+  },
+  "password": {
+    "current": "Senha Atual",
+    "new": "Nova Senha",
+    "requirements": "A senha deve ter pelo menos 8 caracteres",
+    "confirm": "Confirmar Nova Senha",
+    "change": "Alterar Senha"
   },
   "contentPreference": {
     "label": "Preferência de Conteúdo",
@@ -42,6 +61,7 @@
   },
   "actions": {
     "save": "Salvar Alterações",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "edit": "Editar"
   }
 }

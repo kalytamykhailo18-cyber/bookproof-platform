@@ -54,5 +54,11 @@
     "info": "Credits have been automatically added to your balance. You can now use them to launch review campaigns for your books.",
     "createCampaign": "Create New Campaign",
     "backToDashboard": "Back to Dashboard"
+  },
+  "cancel": {
+    "title": "Payment Cancelled",
+    "message": "Your payment was cancelled. No charges have been made to your account. You can try again whenever you're ready.",
+    "tryAgain": "Try Again",
+    "backToDashboard": "Back to Dashboard"
   }
 }

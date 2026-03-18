@@ -198,18 +198,15 @@ export class CreditsService {
 
   /**
    * Create checkout session for credit purchase
-   * Routes to Pagar.me for BRL payments, Stripe for all other currencies
+   * Uses Stripe for all payments (supports USD, BRL, EUR, etc.)
+   * Note: Pagar.me integration is disabled - requires customer data (CPF, phone) we don't collect
    */
   async createCheckoutSession(
     authorProfileId: string,
     dto: PurchaseCreditDto,
   ): Promise<CheckoutSessionResponseDto> {
-    // Check if this is a BRL payment and Pagar.me is configured
-    if (dto.currency?.toUpperCase() === 'BRL' && this.pagarmePaymentsService?.isConfigured()) {
-      return this.createPagarmeCheckout(authorProfileId, dto);
-    }
-
-    // Ensure Stripe is properly configured for non-BRL payments
+    // Use Stripe for all payments - it supports BRL and other currencies
+    // Pagar.me disabled: requires CPF/phone data collection which we don't have
     this.ensureStripeConfigured();
 
     // Get package tier with currency-specific pricing if requested

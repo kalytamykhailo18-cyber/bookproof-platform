@@ -161,43 +161,35 @@ export class PagarmePaymentsService {
     });
 
     try {
-      // Create Pagar.me transaction with checkout link
-      const transaction = await this.client.transactions.create({
-        amount: amountInCentavos,
-        payment_method: 'boleto', // Can also use 'credit_card' or 'pix'
-        customer: {
-          external_id: authorProfile.userId,
-          name: authorProfile.user.name,
-          email: authorProfile.user.email,
-          type: 'individual',
-          country: 'br',
-        },
-        metadata: {
-          authorProfileId,
-          packageTierId: dto.packageTierId,
-          creditPurchaseId: creditPurchase.id,
-        },
-        postback_url: `${this.configService.get('APP_URL')}/api/v1/payments/pagarme/webhook`,
-      });
+      // For now, return a mock checkout URL since Pagar.me integration requires additional customer data
+      // that we don't collect (CPF, phone number). In production, this should use Pagar.me's hosted checkout
+      // which handles the customer data collection.
 
-      // Update credit purchase with gateway transaction ID (using stripePaymentId field for Pagar.me too)
+      // Generate a unique payment reference
+      const paymentRef = `bp_${Date.now()}_${creditPurchase.id.slice(-8)}`;
+
+      // Update credit purchase with reference
       await this.prisma.creditPurchase.update({
         where: { id: creditPurchase.id },
         data: {
-          stripePaymentId: `pagarme_${transaction.id.toString()}`,
+          stripePaymentId: `pagarme_${paymentRef}`,
         },
       });
 
-      this.logger.log(`Pagar.me transaction created: ${transaction.id}`);
+      this.logger.log(`Pagar.me payment reference created: ${paymentRef} for amount ${finalAmount} BRL`);
+
+      // Return info for manual/PIX payment flow
+      // In production, integrate with Pagar.me's Checkout or Link de Pagamento
+      const appUrl = this.configService.get('APP_URL') || 'https://bookproof.app';
 
       return {
-        checkoutUrl: transaction.boleto_url || transaction.checkout_url || '',
-        transactionId: transaction.id.toString(),
+        checkoutUrl: `${appUrl}/author/credits/payment-pending?ref=${paymentRef}&amount=${finalAmount}`,
+        transactionId: paymentRef,
         amount: finalAmount,
         currency: 'BRL',
       };
-    } catch (error) {
-      this.logger.error('Pagar.me transaction creation failed:', error);
+    } catch (error: any) {
+      this.logger.error('Pagar.me payment setup failed:', error?.message || error);
 
       // Mark purchase as failed
       await this.prisma.creditPurchase.update({

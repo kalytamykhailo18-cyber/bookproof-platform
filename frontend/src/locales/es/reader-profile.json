@@ -8,7 +8,26 @@
     "currentDesc": "Configure sus preferencias de lectura",
     "editDesc": "Actualice la configuración de su perfil",
     "amazonProfiles": "Perfiles de Amazon",
-    "amazonProfilesDesc": "Agregue sus URLs de perfil de revisor de Amazon para verificación"
+    "amazonProfilesDesc": "Agregue sus URLs de perfil de revisor de Amazon para verificación",
+    "basicInfo": "Información Básica",
+    "basicInfoDesc": "Detalles de su cuenta e información personal",
+    "passwordChange": "Cambiar Contraseña",
+    "passwordChangeDesc": "Actualice la contraseña de su cuenta"
+  },
+  "basicInfo": {
+    "name": "Nombre Completo",
+    "country": "País",
+    "language": "Idioma",
+    "languageNote": "Esto afecta el idioma de los correos y notificaciones",
+    "email": "Correo Electrónico",
+    "emailNote": "Contacte al administrador para cambiar su correo"
+  },
+  "password": {
+    "current": "Contraseña Actual",
+    "new": "Nueva Contraseña",
+    "requirements": "La contraseña debe tener al menos 8 caracteres",
+    "confirm": "Confirmar Nueva Contraseña",
+    "change": "Cambiar Contraseña"
   },
   "contentPreference": {
     "label": "Preferencia de Contenido",
@@ -42,6 +61,7 @@
   },
   "actions": {
     "save": "Guardar Cambios",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "edit": "Editar"
   }
 }

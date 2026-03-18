@@ -42,5 +42,10 @@
   "empty": {
     "title": "Ainda Não Há Atribuições",
     "description": "Comece a explorar livros disponíveis e solicite atribuições de avaliação"
+  },
+  "actions": {
+    "viewDetails": "Ver Detalhes",
+    "pendingValidation": "Validação Pendente",
+    "viewCompleted": "Ver Concluído"
   }
 }

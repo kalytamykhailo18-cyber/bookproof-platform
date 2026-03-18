@@ -8,7 +8,26 @@
     "currentDesc": "Configure your reading preferences",
     "editDesc": "Update your profile settings",
     "amazonProfiles": "Amazon Profiles",
-    "amazonProfilesDesc": "Add your Amazon reviewer profile URLs for verification"
+    "amazonProfilesDesc": "Add your Amazon reviewer profile URLs for verification",
+    "basicInfo": "Basic Information",
+    "basicInfoDesc": "Your account details and personal information",
+    "passwordChange": "Change Password",
+    "passwordChangeDesc": "Update your account password"
+  },
+  "basicInfo": {
+    "name": "Full Name",
+    "country": "Country",
+    "language": "Language",
+    "languageNote": "This affects the language of emails and notifications",
+    "email": "Email Address",
+    "emailNote": "Contact your administrator to change your email"
+  },
+  "password": {
+    "current": "Current Password",
+    "new": "New Password",
+    "requirements": "Password must be at least 8 characters",
+    "confirm": "Confirm New Password",
+    "change": "Change Password"
   },
   "contentPreference": {
     "label": "Content Preference",
@@ -42,6 +61,7 @@
   },
   "actions": {
     "save": "Save Changes",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "edit": "Edit"
   }
 }

@@ -75,7 +75,7 @@ type ProcessPayoutFormData = z.infer<typeof processPayoutSchema>;
 export function AdminAffiliatePayoutsPage() {
   const { t, i18n } = useTranslation('adminAffiliatePayouts');
   const navigate = useNavigate();
-  const [statusFilter, setStatusFilter] = useState<PayoutRequestStatus | undefined>(undefined);
+  const [statusFilter, setStatusFilter] = useState<PayoutRequestStatus | 'all'>('all');
   const [selectedPayout, setSelectedPayout] = useState<PayoutResponseDto | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [actionType, setActionType] = useState<'approve' | 'reject' | 'complete'>('approve');
@@ -90,7 +90,7 @@ export function AdminAffiliatePayoutsPage() {
     const fetchPayouts = async () => {
       try {
         setIsLoading(true);
-        const data = await affiliatesApi.getPayoutsForAdmin(statusFilter);
+        const data = await affiliatesApi.getPayoutsForAdmin(statusFilter === 'all' ? undefined : statusFilter);
         setPayouts(data);
       } catch (error: any) {
         console.error('Payouts error:', error);
@@ -291,10 +291,8 @@ export function AdminAffiliatePayoutsPage() {
         <CardContent>
           <div className="w-48 animate-fade-left-fast">
             <Select
-              value={statusFilter || 'all'}
-              onValueChange={(value) =>
-                setStatusFilter(value === 'all' ? undefined : (value as PayoutRequestStatus))
-              }
+              value={statusFilter}
+              onValueChange={(value) => setStatusFilter(value as PayoutRequestStatus | 'all')}
             >
               <SelectTrigger>
                 <SelectValue />

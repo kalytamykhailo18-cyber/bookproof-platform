@@ -125,6 +125,7 @@ const AuthorKeywordResearchListPage = lazy(() => import('../pages/author/keyword
 const AuthorKeywordResearchDetailsPage = lazy(() => import('../pages/author/KeywordResearch').then(m => ({ default: m.KeywordResearchDetailsPage })));
 const AuthorKeywordResearchNewPage = lazy(() => import('../pages/author/keyword-research/New').then(m => ({ default: m.NewKeywordResearchPage })));
 const AuthorKeywordResearchEditPage = lazy(() => import('../pages/author/keyword-research/Edit').then(m => ({ default: m.EditKeywordResearchPage })));
+const AuthorProfilePage = lazy(() => import('../pages/author/Profile').then(m => ({ default: m.AuthorProfilePage })));
 
 // ============================================
 // READER PAGES
@@ -292,6 +293,7 @@ export const router = createBrowserRouter([
               { path: 'transactions', element: <LazyRoute component={AuthorTransactionsPage} /> },
               { path: 'reports', element: <LazyRoute component={AuthorReportsPage} /> },
               { path: 'settings', element: <LazyRoute component={AuthorSettingsPage} /> },
+              { path: 'profile', element: <LazyRoute component={AuthorProfilePage} /> },
               { path: 'support', element: <LazyRoute component={AuthorSupportPage} /> },
               { path: 'notifications', element: <LazyRoute component={AuthorNotificationsPage} /> },
               { path: 'notifications/settings', element: <LazyRoute component={AuthorNotificationsSettingsPage} /> },

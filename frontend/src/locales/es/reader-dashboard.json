@@ -42,5 +42,10 @@
   "empty": {
     "title": "Aún No Hay Asignaciones",
     "description": "Comience a explorar libros disponibles y solicite asignaciones de reseñas"
+  },
+  "actions": {
+    "viewDetails": "Ver Detalles",
+    "pendingValidation": "Validación Pendiente",
+    "viewCompleted": "Ver Completado"
   }
 }

@@ -42,5 +42,10 @@
   "empty": {
     "title": "No Assignments Yet",
     "description": "Start browsing available books and apply for review assignments"
+  },
+  "actions": {
+    "viewDetails": "View Details",
+    "pendingValidation": "Pending Validation",
+    "viewCompleted": "View Completed"
   }
 }

@@ -1,0 +1,38 @@
+{
+  "title": "Perfil do Autor",
+  "subtitle": "Gerencie suas informações de conta",
+  "sections": {
+    "basicInfo": "Informações Básicas",
+    "basicInfoDesc": "Detalhes da sua conta e informações pessoais",
+    "passwordChange": "Alterar Senha",
+    "passwordChangeDesc": "Atualize a senha da sua conta"
+  },
+  "basicInfo": {
+    "name": "Nome Completo",
+    "country": "País",
+    "language": "Idioma",
+    "languageNote": "Isso afeta o idioma dos e-mails e notificações",
+    "email": "Endereço de E-mail",
+    "emailNote": "Entre em contato com o suporte para alterar seu e-mail"
+  },
+  "password": {
+    "current": "Senha Atual",
+    "new": "Nova Senha",
+    "requirements": "A senha deve ter pelo menos 8 caracteres",
+    "confirm": "Confirmar Nova Senha",
+    "change": "Alterar Senha"
+  },
+  "actions": {
+    "edit": "Editar",
+    "save": "Salvar Alterações",
+    "cancel": "Cancelar"
+  },
+  "messages": {
+    "profileUpdated": "Perfil atualizado com sucesso",
+    "updateFailed": "Falha ao atualizar perfil",
+    "passwordChanged": "Senha alterada com sucesso",
+    "passwordChangeFailed": "Falha ao alterar senha",
+    "passwordMismatch": "As senhas não coincidem",
+    "passwordTooShort": "A senha deve ter pelo menos 8 caracteres"
+  }
+}

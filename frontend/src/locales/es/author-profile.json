@@ -1,0 +1,38 @@
+{
+  "title": "Perfil del Autor",
+  "subtitle": "Administre la información de su cuenta",
+  "sections": {
+    "basicInfo": "Información Básica",
+    "basicInfoDesc": "Detalles de su cuenta e información personal",
+    "passwordChange": "Cambiar Contraseña",
+    "passwordChangeDesc": "Actualice la contraseña de su cuenta"
+  },
+  "basicInfo": {
+    "name": "Nombre Completo",
+    "country": "País",
+    "language": "Idioma",
+    "languageNote": "Esto afecta el idioma de los correos y notificaciones",
+    "email": "Correo Electrónico",
+    "emailNote": "Contacte al soporte para cambiar su correo"
+  },
+  "password": {
+    "current": "Contraseña Actual",
+    "new": "Nueva Contraseña",
+    "requirements": "La contraseña debe tener al menos 8 caracteres",
+    "confirm": "Confirmar Nueva Contraseña",
+    "change": "Cambiar Contraseña"
+  },
+  "actions": {
+    "edit": "Editar",
+    "save": "Guardar Cambios",
+    "cancel": "Cancelar"
+  },
+  "messages": {
+    "profileUpdated": "Perfil actualizado correctamente",
+    "updateFailed": "Error al actualizar perfil",
+    "passwordChanged": "Contraseña cambiada correctamente",
+    "passwordChangeFailed": "Error al cambiar contraseña",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "passwordTooShort": "La contraseña debe tener al menos 8 caracteres"
+  }
+}

@@ -54,5 +54,11 @@
     "info": "Los créditos se han añadido automáticamente a tu saldo. Ahora puedes usarlos para lanzar campañas de reseñas para tus libros.",
     "createCampaign": "Crear Nueva Campaña",
     "backToDashboard": "Volver al Panel"
+  },
+  "cancel": {
+    "title": "Pago Cancelado",
+    "message": "Tu pago fue cancelado. No se ha realizado ningún cargo a tu cuenta. Puedes intentarlo de nuevo cuando estés listo.",
+    "tryAgain": "Intentar de Nuevo",
+    "backToDashboard": "Volver al Panel"
   }
 }

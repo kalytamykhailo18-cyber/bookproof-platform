@@ -229,6 +229,10 @@ import authorCreditsEN from '../locales/en/author-credits.json';
 import authorCreditsES from '../locales/es/author-credits.json';
 import authorCreditsPT from '../locales/pt/author-credits.json';
 
+import authorProfileEN from '../locales/en/author-profile.json';
+import authorProfileES from '../locales/es/author-profile.json';
+import authorProfilePT from '../locales/pt/author-profile.json';
+
 import authorCampaignsNewEN from '../locales/en/author-campaigns-new.json';
 import authorCampaignsNewES from '../locales/es/author-campaigns-new.json';
 import authorCampaignsNewPT from '../locales/pt/author-campaigns-new.json';
@@ -311,6 +315,8 @@ const resources = {
     campaignAnalytics: campaignAnalyticsEN,
     authorCredits: authorCreditsEN,
     'author.credits.success': authorCreditsEN.success,
+    'author.credits.cancel': authorCreditsEN.cancel,
+    'author.profile': authorProfileEN,
     authorCampaignsNew: authorCampaignsNewEN,
     authorTransactions: authorTransactionsEN,
     keywordResearch: keywordResearchEN,
@@ -388,6 +394,8 @@ const resources = {
     campaignAnalytics: campaignAnalyticsES,
     authorCredits: authorCreditsES,
     'author.credits.success': authorCreditsES.success,
+    'author.credits.cancel': authorCreditsES.cancel,
+    'author.profile': authorProfileES,
     authorCampaignsNew: authorCampaignsNewES,
     authorTransactions: authorTransactionsES,
     keywordResearch: keywordResearchES,
@@ -465,6 +473,8 @@ const resources = {
     campaignAnalytics: campaignAnalyticsPT,
     authorCredits: authorCreditsPT,
     'author.credits.success': authorCreditsPT.success,
+    'author.credits.cancel': authorCreditsPT.cancel,
+    'author.profile': authorProfilePT,
     authorCampaignsNew: authorCampaignsNewPT,
     authorTransactions: authorTransactionsPT,
     keywordResearch: keywordResearchPT,
