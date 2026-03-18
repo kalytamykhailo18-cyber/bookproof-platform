@@ -20,6 +20,7 @@ import {
 } from './dto';
 import { CommissionService } from '@modules/affiliates/services/commission.service';
 import { EmailService } from '@modules/email/email.service';
+import { PagarmePaymentsService } from '@modules/payments/services/pagarme-payments.service';
 import { EmailType, Language } from '@prisma/client';
 
 @Injectable()
@@ -36,6 +37,9 @@ export class CreditsService {
     @Optional() // KeywordsService is optional to avoid circular dependency
     @Inject(forwardRef(() => 'KeywordsService'))
     private keywordsService?: any,
+    @Optional() // PagarmePaymentsService is optional for Brazilian payments
+    @Inject(forwardRef(() => PagarmePaymentsService))
+    private pagarmePaymentsService?: PagarmePaymentsService,
   ) {
     const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
@@ -193,13 +197,19 @@ export class CreditsService {
   }
 
   /**
-   * Create Stripe checkout session for credit purchase
+   * Create checkout session for credit purchase
+   * Routes to Pagar.me for BRL payments, Stripe for all other currencies
    */
   async createCheckoutSession(
     authorProfileId: string,
     dto: PurchaseCreditDto,
   ): Promise<CheckoutSessionResponseDto> {
-    // Ensure Stripe is properly configured
+    // Check if this is a BRL payment and Pagar.me is configured
+    if (dto.currency?.toUpperCase() === 'BRL' && this.pagarmePaymentsService?.isConfigured()) {
+      return this.createPagarmeCheckout(authorProfileId, dto);
+    }
+
+    // Ensure Stripe is properly configured for non-BRL payments
     this.ensureStripeConfigured();
 
     // Get package tier with currency-specific pricing if requested
@@ -681,5 +691,28 @@ export class CreditsService {
         },
       });
     });
+  }
+
+  /**
+   * Create Pagar.me checkout for BRL payments (Brazilian users)
+   */
+  private async createPagarmeCheckout(
+    authorProfileId: string,
+    dto: PurchaseCreditDto,
+  ): Promise<CheckoutSessionResponseDto> {
+    if (!this.pagarmePaymentsService) {
+      throw new BadRequestException('Brazilian payment system is not configured');
+    }
+
+    const result = await this.pagarmePaymentsService.createCheckoutSession(authorProfileId, {
+      packageTierId: dto.packageTierId,
+      couponCode: dto.couponCode,
+      currency: 'BRL',
+    });
+
+    return {
+      url: result.checkoutUrl,
+      sessionId: result.transactionId,
+    };
   }
 }

@@ -194,13 +194,31 @@ export interface SubscriptionManagementDto {
 // API CLIENT METHODS - PAYMENTS
 // ============================================
 
+export interface PagarmeCheckoutResponseDto {
+  checkoutUrl: string;
+  transactionId: string;
+  amount: number;
+  currency: string;
+}
+
 export const stripePaymentsApi = {
   /**
-   * Create Stripe checkout session for one-time payment
+   * Create Stripe checkout session for one-time payment (USD)
    */
   async createCheckout(data: CreateCheckoutSessionDto): Promise<CheckoutSessionResponseDto> {
     const response = await apiClient.post<CheckoutSessionResponseDto>(
       '/payments/checkout/create',
+      data,
+    );
+    return response.data;
+  },
+
+  /**
+   * Create Pagar.me checkout session for Brazilian payments (BRL)
+   */
+  async createBrlCheckout(data: CreateCheckoutSessionDto): Promise<PagarmeCheckoutResponseDto> {
+    const response = await apiClient.post<PagarmeCheckoutResponseDto>(
+      '/payments/checkout/create/brl',
       data,
     );
     return response.data;

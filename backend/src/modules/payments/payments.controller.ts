@@ -15,6 +15,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiExcludeEndpoint, ApiBearerAuth }
 import { Request } from 'express';
 import { PaymentsService } from './payments.service';
 import { StripePaymentsService } from './services/stripe-payments.service';
+import { PagarmePaymentsService } from './services/pagarme-payments.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -39,6 +40,7 @@ export class PaymentsController {
   constructor(
     private readonly paymentsService: PaymentsService,
     private readonly stripePaymentsService: StripePaymentsService,
+    private readonly pagarmePaymentsService: PagarmePaymentsService,
     private readonly configService: ConfigService,
   ) {
     const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
@@ -159,6 +161,37 @@ export class PaymentsController {
   @ApiResponse({ status: 200, description: 'Invoice retrieved', type: InvoiceResponseDto })
   async getInvoice(@Param('id') creditPurchaseId: string): Promise<InvoiceResponseDto> {
     return this.stripePaymentsService.generateInvoice(creditPurchaseId);
+  }
+
+  // ============================================
+  // PAGAR.ME (BRAZILIAN PAYMENT GATEWAY)
+  // ============================================
+
+  @Post('checkout/create/brl')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.AUTHOR)
+  @ApiOperation({ summary: 'Create Pagar.me checkout session for BRL payments' })
+  @ApiResponse({ status: 200, description: 'Checkout session created' })
+  async createBrlCheckout(
+    @Body() dto: CreateCheckoutSessionDto,
+    @Req() req: Request,
+  ) {
+    return this.pagarmePaymentsService.createCheckoutSession(req.user!.authorProfileId!, {
+      packageTierId: dto.packageTierId,
+      couponCode: dto.couponCode,
+      currency: 'BRL',
+    });
+  }
+
+  @Post('pagarme/webhook')
+  @HttpCode(200)
+  @ApiExcludeEndpoint()
+  @ApiOperation({ summary: 'Pagar.me webhook endpoint' })
+  @ApiResponse({ status: 200, description: 'Webhook processed successfully' })
+  async handlePagarmeWebhook(@Body() body: any): Promise<{ received: boolean }> {
+    await this.pagarmePaymentsService.handleWebhook(body);
+    return { received: true };
   }
 
   // ============================================

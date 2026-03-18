@@ -5,6 +5,7 @@ import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 import { StripePaymentsService } from './services/stripe-payments.service';
 import { StripeSubscriptionsService } from './services/stripe-subscriptions.service';
+import { PagarmePaymentsService } from './services/pagarme-payments.service';
 import { PaymentPdfService } from './services/payment-pdf.service';
 import { RefundsService } from './services/refunds.service';
 import { SubscriptionsController } from './subscriptions.controller';
@@ -33,7 +34,7 @@ import { FilesModule } from '../files/files.module';
     forwardRef(() => KeywordsModule), // For keyword research payment handling
   ],
   controllers: [PaymentsController, SubscriptionsController, RefundsController],
-  providers: [PaymentsService, StripePaymentsService, StripeSubscriptionsService, PaymentPdfService, RefundsService],
-  exports: [PaymentsService, StripePaymentsService, StripeSubscriptionsService, PaymentPdfService, RefundsService],
+  providers: [PaymentsService, StripePaymentsService, StripeSubscriptionsService, PagarmePaymentsService, PaymentPdfService, RefundsService],
+  exports: [PaymentsService, StripePaymentsService, StripeSubscriptionsService, PagarmePaymentsService, PaymentPdfService, RefundsService],
 })
 export class PaymentsModule {}
