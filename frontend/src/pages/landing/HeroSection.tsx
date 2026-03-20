@@ -1,39 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play } from 'lucide-react';
 import { useHeroContent } from '@/hooks/useLandingContent';
 
-const BOOK_IMAGES = [...Array(11)].map((_, i) => `/images/${i}.jpg`);
-const LOOP_IMAGES = [...BOOK_IMAGES, ...BOOK_IMAGES, ...BOOK_IMAGES];
-const ITEM_W = 98; // 90px + 8px gap
-
 export function HeroSection() {
   const content = useHeroContent();
-  const [index, setIndex] = useState(BOOK_IMAGES.length);
-  const [scaledIndex, setScaledIndex] = useState(BOOK_IMAGES.length + 1);
-  const [sliding, setSliding] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setScaledIndex(s => s + 1);
-      setSliding(true);
-      setIndex(i => i + 1);
-    }, 2800);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, []);
-
-  // Loop reset — instant jump back to middle copy
-  useEffect(() => {
-    if (index >= BOOK_IMAGES.length * 2) {
-      const t = setTimeout(() => {
-        setSliding(false);
-        setIndex(BOOK_IMAGES.length);
-        setScaledIndex(BOOK_IMAGES.length + 1);
-      }, 450);
-      return () => clearTimeout(t);
-    }
-  }, [index]);
 
   return (
     <section
@@ -105,14 +75,23 @@ export function HeroSection() {
 
           </div>
 
-          {/* ── Right: hero image + carousel ── */}
-          <div className="flex flex-col relative overflow-hidden animate-zoom-in-light-slow">
-            {/* Hero image */}
-            <div className="relative w-full" style={{ marginBottom: '-48px', zIndex: 10 }}>
+          {/* ── Right: hero image ── */}
+          <div className="relative flex items-center justify-center animate-zoom-in-light-slow mt-8 lg:mt-0">
+            {/* Glow effect behind image */}
+            <div
+              className="absolute inset-0 rounded-2xl opacity-60"
+              style={{
+                background: 'radial-gradient(ellipse at center, rgba(59,130,246,0.2) 0%, transparent 70%)',
+                filter: 'blur(40px)',
+              }}
+            />
+
+            {/* Hero image with responsive sizing and smooth edge fade */}
+            <div className="relative w-full max-w-[280px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[500px] xl:max-w-[560px]">
               <img
                 src="/hero.png"
                 alt="BookProof platform"
-                className="w-full rounded-md object-cover"
+                className="w-full h-auto object-cover"
                 style={{
                   transform: 'scale(1.04)',
                   transformOrigin: 'top center',
@@ -122,53 +101,6 @@ export function HeroSection() {
                   WebkitMaskComposite: 'destination-in',
                 }}
               />
-            </div>
-
-            {/* Book carousel */}
-            <div
-              className="relative overflow-x-hidden"
-              style={{
-                paddingTop: '150px',
-                maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
-              }}
-            >
-
-              <div
-                className="flex items-end"
-                style={{
-                  transform: `translateX(-${index * ITEM_W}px)`,
-                  transition: sliding ? 'transform 0.4s ease' : 'none',
-                  gap: '8px',
-                }}
-              >
-                {LOOP_IMAGES.map((src, i) => {
-                  const isFirst = i === scaledIndex;
-                  return (
-                    <div
-                      key={i}
-                      className="flex-shrink-0 overflow-hidden"
-                      style={{
-                        width: '90px',
-                        height: '132px',
-                        transform: isFirst ? 'scale(2)' : 'scale(1)',
-                        transformOrigin: 'left bottom',
-                        transition: 'transform 0.4s ease',
-                        zIndex: isFirst ? 10 : 1,
-                        position: 'relative',
-                        marginRight: isFirst ? '90px' : undefined,
-                      }}
-                    >
-                      <img
-                        src={src}
-                        alt=""
-                        className="w-full h-full object-cover transition-opacity duration-400"
-                        style={{ opacity: isFirst ? 1 : 0.45 }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
             </div>
           </div>
         </div>

@@ -403,3 +403,25 @@ export async function uploadCmsImage(
   );
   return response.data;
 }
+
+/**
+ * Submit enterprise/sales contact form (public endpoint)
+ */
+export interface SalesContactRequest {
+  name: string;
+  email: string;
+  reviewsNeeded: number;
+  message: string;
+  language: Language;
+  captchaToken?: string;
+}
+
+export interface SalesContactResponse {
+  success: boolean;
+  message: string;
+}
+
+export async function submitSalesContact(data: SalesContactRequest): Promise<SalesContactResponse> {
+  const response = await apiClient.post<SalesContactResponse>('/landing-pages/sales-contact', data);
+  return response.data;
+}

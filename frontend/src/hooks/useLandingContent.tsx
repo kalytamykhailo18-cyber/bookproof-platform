@@ -237,17 +237,20 @@ export function usePricingContent() {
   }
 
   // Fallback to i18n - build packages array from translation keys
-  const PACKAGE_KEYS = ['starter', 'growth', 'professional', 'enterprise'];
+  const PACKAGE_KEYS = ['starter', 'growth', 'professional', 'enterprise', 'keywordTool'];
   const packages = PACKAGE_KEYS.map(key => ({
     key,
     name: t(`packages.${key}.name`),
     credits: t(`packages.${key}.credits`),
+    price: t(`packages.${key}.price`),
     reviews: t(`packages.${key}.reviews`),
     duration: t(`packages.${key}.duration`),
     validity: t(`packages.${key}.validity`),
+    subtitle: t(`packages.${key}.subtitle`, ''),
     features: t(`packages.${key}.features`, { returnObjects: true }) as string[],
     isPopular: key === 'growth',
     isEnterprise: key === 'enterprise',
+    isKeywordTool: key === 'keywordTool',
   }));
 
   return {
@@ -257,7 +260,9 @@ export function usePricingContent() {
     packages,
     ctaText: t('cta'),
     enterpriseCta: t('enterpriseCta'),
-    note: t('note'),
+    creditLogic: t('creditLogic'),
+    organicNote: t('organicNote'),
+    installmentNote: t('installmentNote', ''),
     allInclude: t('allInclude.items', { returnObjects: true }) as string[],
     isFromCms: false,
   };

@@ -29,10 +29,13 @@
     }
   },
   "howEarnings": {
-    "title": "How Earnings Work",
+    "title": "Reader Bonus",
     "ebook": "Per ebook review",
+    "ebookPrice": "$0.50",
     "audiobook": "Per audiobook review",
+    "audiobookPrice": "$1.00",
     "minimum": "Minimum payout",
+    "minimumValue": "$50",
     "methods": "PayPal, Bank Transfer, Wise, Crypto",
     "ebookLabel": "Ebook Review",
     "audiobookLabel": "Audiobook Review",

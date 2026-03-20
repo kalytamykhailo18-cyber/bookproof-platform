@@ -3,18 +3,12 @@ import { Check } from 'lucide-react';
 
 const STEP_COLORS = ['#60a5fa', '#a78bfa', '#34d399', '#fbbf24'];
 const STEP_KEYS = ['purchase', 'submit', 'distribute', 'reviews'] as const;
-const STEP_IMAGES = [
-  '/images/cut-2.png',
-  '/images/cut-3.png',
-  '/images/cut-4.png',
-  '/images/cut-6.png',
-];
 
 const STEP_ANIMS = [
-  { text: 'animate-fade-right', card: 'animate-fade-left-fast' },
-  { text: 'animate-fade-left', card: 'animate-fade-right-fast' },
-  { text: 'animate-fade-right-light-slow', card: 'animate-fade-left-light-slow' },
-  { text: 'animate-fade-left-light-slow', card: 'animate-fade-right-light-slow' },
+  'animate-fade-right',
+  'animate-fade-left',
+  'animate-fade-right-light-slow',
+  'animate-fade-left-light-slow',
 ];
 
 export function HowItWorksSection() {
@@ -56,7 +50,7 @@ export function HowItWorksSection() {
             return (
               <div key={key} className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                 {/* Text side */}
-                <div className={`space-y-7 ${!isEven ? 'lg:order-2' : ''} ${anim.text}`}>
+                <div className={`space-y-7 ${!isEven ? 'lg:order-2 lg:col-start-2' : ''} ${anim}`}>
                   <div className="flex items-center gap-5">
                     <div
                       className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-md text-xl font-extrabold"
@@ -93,21 +87,6 @@ export function HowItWorksSection() {
                       </li>
                     ))}
                   </ul>
-                </div>
-
-                {/* Visual image side */}
-                <div className={`${!isEven ? 'lg:order-1' : ''} ${anim.card}`}>
-                  <img
-                    src={STEP_IMAGES[i]}
-                    alt={t(`steps.${key}.title`)}
-                    className="w-full object-cover"
-                    style={{
-                      WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
-                      WebkitMaskComposite: 'source-in',
-                      maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
-                      maskComposite: 'intersect',
-                    }}
-                  />
                 </div>
               </div>
             );

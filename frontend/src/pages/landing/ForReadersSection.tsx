@@ -98,7 +98,7 @@ export function ForReadersSection() {
                     <p className="text-sm font-semibold text-slate-800">{t('howEarnings.ebook', 'Per ebook review')}</p>
                   </div>
                 </div>
-                <span className="text-2xl font-bold text-emerald-600">$5–15</span>
+                <span className="text-2xl font-bold text-emerald-600">{t('howEarnings.ebookPrice', '$0.50')}</span>
               </div>
 
               <div
@@ -114,13 +114,13 @@ export function ForReadersSection() {
                     <p className="text-sm font-semibold text-slate-800">{t('howEarnings.audiobook', 'Per audiobook review')}</p>
                   </div>
                 </div>
-                <span className="text-2xl font-bold text-blue-600">$10–25</span>
+                <span className="text-2xl font-bold text-blue-600">{t('howEarnings.audiobookPrice', '$1.00')}</span>
               </div>
 
               <div className="pt-2 border-t border-slate-200 space-y-3">
                 <div className="flex items-center justify-between animate-fade-right-fast">
                   <span className="text-sm text-slate-600">{t('howEarnings.minimum', 'Minimum payout')}</span>
-                  <span className="text-sm font-semibold text-slate-900">$50</span>
+                  <span className="text-sm font-semibold text-slate-900">{t('howEarnings.minimumValue', '$50')}</span>
                 </div>
                 <div className="animate-fade-left-fast">
                   <p className="text-xs text-slate-500 mb-2.5">{t('howEarnings.paymentMethods')}</p>

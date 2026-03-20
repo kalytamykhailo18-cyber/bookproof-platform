@@ -10,6 +10,8 @@
     "duration": "Duration",
     "validity": "Validity"
   },
+  "creditLogic": "1 ebook review = 1 credit • 1 audiobook review = 2 credits",
+  "organicNote": "Reviews are delivered progressively and organically for natural ranking growth.",
   "allInclude": {
     "title": "All Packages Include",
     "items": [
@@ -22,13 +24,15 @@
   "packages": {
     "starter": {
       "name": "Starter",
-      "credits": "25 Credits",
+      "credits": "20 Credits",
+      "price": "$97",
       "validity": "180 days to activate",
-      "reviews": "~25 ebook reviews",
-      "duration": "~5 weeks",
+      "reviews": "20 ebook reviews",
+      "duration": "Up to 8 weeks",
       "features": [
-        "25 ebook or audiobook reviews",
-        "Weekly progressive distribution",
+        "20 ebook reviews or 10 audiobook reviews",
+        "Progressive weekly distribution (organic delivery)",
+        "Up to 8 weeks of natural ranking growth",
         "14-day replacement guarantee",
         "Real-time campaign dashboard",
         "Email support"
@@ -37,46 +41,84 @@
     "growth": {
       "name": "Growth",
       "credits": "50 Credits",
+      "price": "$197",
       "validity": "180 days to activate",
-      "reviews": "~50 reviews",
-      "duration": "~5-6 weeks",
+      "reviews": "50 ebook reviews",
+      "duration": "Up to 8 weeks",
       "features": [
-        "All Starter features",
-        "Priority reader queue placement",
-        "Faster weekly distribution rate",
-        "Campaign completion PDF report"
+        "50 ebook reviews or 25 audiobook reviews",
+        "Progressive weekly distribution (organic delivery)",
+        "Up to 8 weeks of natural ranking growth",
+        "14-day replacement guarantee",
+        "Real-time campaign dashboard",
+        "Email support"
       ],
       "popular": true
     },
     "professional": {
       "name": "Professional",
       "credits": "100 Credits",
-      "validity": "180 days to activate",
-      "reviews": "~100 reviews",
-      "duration": "~4-6 weeks",
+      "price": "$347",
+      "validity": "360 days to activate",
+      "reviews": "100 ebook reviews",
+      "duration": "Up to 8 weeks",
       "features": [
-        "All Growth features",
-        "Maximum distribution speed",
-        "Keyword research add-on included",
-        "Priority support & campaign review"
+        "100 ebook reviews or 50 audiobook reviews",
+        "Progressive weekly distribution (organic delivery)",
+        "Up to 8 weeks of natural ranking growth",
+        "14-day replacement guarantee",
+        "Real-time campaign dashboard",
+        "Priority support"
       ]
     },
     "enterprise": {
       "name": "Enterprise",
       "credits": "200+ Credits",
+      "price": "Custom",
       "validity": "360 days to activate",
       "reviews": "Custom volume",
       "duration": "Custom timeline",
       "features": [
-        "All Professional features",
+        "200+ ebook reviews or 100+ audiobook reviews",
         "Custom packages available",
         "Dedicated account manager",
         "Volume discounts",
-        "Contact sales for pricing"
+        "Priority support"
+      ]
+    },
+    "keywordTool": {
+      "name": "Keyword Tool",
+      "credits": "One-time Purchase",
+      "price": "$49",
+      "validity": "Lifetime access",
+      "reviews": "N/A",
+      "duration": "Instant access",
+      "subtitle": "Optimize your book positioning",
+      "features": [
+        "Keyword analysis for your book",
+        "Amazon ranking suggestions",
+        "Visibility strategy recommendations",
+        "Category optimization tips",
+        "Competitor keyword insights"
       ]
     }
   },
   "cta": "Get Started",
   "enterpriseCta": "Contact Sales",
-  "note": "Prices set by admin. Contact us for current package pricing."
+  "contactForm": {
+    "title": "Enterprise Inquiry",
+    "subtitle": "Tell us about your needs and we'll create a custom package for you.",
+    "name": "Name",
+    "namePlaceholder": "Your full name",
+    "email": "Email",
+    "emailPlaceholder": "your@email.com",
+    "reviewsNeeded": "Number of Reviews Needed",
+    "message": "Message",
+    "messagePlaceholder": "Tell us about your project...",
+    "submit": "Send Message",
+    "sending": "Sending...",
+    "successTitle": "Message Sent!",
+    "close": "Close",
+    "error": "Failed to submit. Please try again."
+  }
 }

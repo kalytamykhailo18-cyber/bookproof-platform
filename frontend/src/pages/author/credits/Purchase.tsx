@@ -291,6 +291,11 @@ export function CreditPurchasePage() {
                         {formatCurrency(pkg.basePrice, pkg.currency, i18n.language)}
                       </span>
                     </div>
+                    {i18n.language.toLowerCase().startsWith('pt') && (
+                      <p className="mt-1 text-sm font-medium text-emerald-600">
+                        Em até 3x sem juros
+                      </p>
+                    )}
                     <p className="mt-1 text-sm text-muted-foreground">
                       {pkg.credits} credits
                     </p>

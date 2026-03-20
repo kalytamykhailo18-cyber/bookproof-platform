@@ -10,6 +10,9 @@
     "duration": "Duração",
     "validity": "Validade"
   },
+  "creditLogic": "1 avaliação de ebook = 1 crédito • 1 avaliação de audiobook = 2 créditos",
+  "organicNote": "As avaliações são entregues de forma progressiva e orgânica para crescimento natural do ranking.",
+  "installmentNote": "Em até 3x sem juros",
   "allInclude": {
     "title": "Todos os Pacotes Incluem",
     "items": [
@@ -22,13 +25,15 @@
   "packages": {
     "starter": {
       "name": "Iniciante",
-      "credits": "25 Créditos",
+      "credits": "20 Créditos",
+      "price": "R$147",
       "validity": "180 dias para ativar",
-      "reviews": "~25 avaliações de ebook",
-      "duration": "~5 semanas",
+      "reviews": "20 avaliações de ebook",
+      "duration": "Até 8 semanas",
       "features": [
-        "25 avaliações de ebook ou audiobook",
-        "Distribuição progressiva semanal",
+        "20 avaliações de ebook ou 10 de audiobook",
+        "Distribuição progressiva semanal (entrega orgânica)",
+        "Até 8 semanas de crescimento natural de ranking",
         "Garantia de substituição de 14 dias",
         "Painel de campanha em tempo real",
         "Suporte por email"
@@ -37,46 +42,84 @@
     "growth": {
       "name": "Crescimento",
       "credits": "50 Créditos",
+      "price": "R$297",
       "validity": "180 dias para ativar",
-      "reviews": "~50 avaliações",
-      "duration": "~5-6 semanas",
+      "reviews": "50 avaliações de ebook",
+      "duration": "Até 8 semanas",
       "features": [
-        "Todos os recursos Iniciante",
-        "Posição prioritária na fila",
-        "Taxa de distribuição semanal mais rápida",
-        "Relatório PDF de conclusão de campanha"
+        "50 avaliações de ebook ou 25 de audiobook",
+        "Distribuição progressiva semanal (entrega orgânica)",
+        "Até 8 semanas de crescimento natural de ranking",
+        "Garantia de substituição de 14 dias",
+        "Painel de campanha em tempo real",
+        "Suporte por email"
       ],
       "popular": true
     },
     "professional": {
       "name": "Profissional",
       "credits": "100 Créditos",
-      "validity": "180 dias para ativar",
-      "reviews": "~100 avaliações",
-      "duration": "~4-6 semanas",
+      "price": "R$497",
+      "validity": "360 dias para ativar",
+      "reviews": "100 avaliações de ebook",
+      "duration": "Até 8 semanas",
       "features": [
-        "Todos os recursos Crescimento",
-        "Velocidade máxima de distribuição",
-        "Complemento de pesquisa de palavras-chave incluído",
-        "Suporte prioritário e revisão de campanha"
+        "100 avaliações de ebook ou 50 de audiobook",
+        "Distribuição progressiva semanal (entrega orgânica)",
+        "Até 8 semanas de crescimento natural de ranking",
+        "Garantia de substituição de 14 dias",
+        "Painel de campanha em tempo real",
+        "Suporte prioritário"
       ]
     },
     "enterprise": {
       "name": "Empresarial",
       "credits": "200+ Créditos",
+      "price": "Personalizado",
       "validity": "360 dias para ativar",
       "reviews": "Volume personalizado",
       "duration": "Cronograma personalizado",
       "features": [
-        "Todos os recursos Profissional",
+        "200+ avaliações de ebook ou 100+ de audiobook",
         "Pacotes personalizados disponíveis",
         "Gerente de conta dedicado",
         "Descontos por volume",
-        "Entre em contato com vendas para preços"
+        "Suporte prioritário"
+      ]
+    },
+    "keywordTool": {
+      "name": "Ferramenta de Palavras-chave",
+      "credits": "Compra Única",
+      "price": "R$79",
+      "validity": "Acesso vitalício",
+      "reviews": "N/A",
+      "duration": "Acesso imediato",
+      "subtitle": "Otimize o posicionamento do seu livro",
+      "features": [
+        "Análise de palavras-chave para seu livro",
+        "Sugestões de ranking da Amazon",
+        "Recomendações de estratégia de visibilidade",
+        "Dicas de otimização de categoria",
+        "Insights de palavras-chave dos concorrentes"
       ]
     }
   },
   "cta": "Começar",
   "enterpriseCta": "Contatar Vendas",
-  "note": "Preços definidos pelo administrador. Entre em contato para preços atuais dos pacotes."
+  "contactForm": {
+    "title": "Consulta Empresarial",
+    "subtitle": "Conte-nos sobre suas necessidades e criaremos um pacote personalizado para você.",
+    "name": "Nome",
+    "namePlaceholder": "Seu nome completo",
+    "email": "Email",
+    "emailPlaceholder": "seu@email.com",
+    "reviewsNeeded": "Número de Avaliações Necessárias",
+    "message": "Mensagem",
+    "messagePlaceholder": "Conte-nos sobre seu projeto...",
+    "submit": "Enviar Mensagem",
+    "sending": "Enviando...",
+    "successTitle": "Mensagem Enviada!",
+    "close": "Fechar",
+    "error": "Falha ao enviar. Por favor, tente novamente."
+  }
 }

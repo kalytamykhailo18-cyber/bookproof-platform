@@ -184,6 +184,13 @@ export function ReviewOrderModal({
                 {formatCurrency(totalAmount, selectedPackage.currency, language)}
               </span>
             </div>
+
+            {/* Brazilian installment note */}
+            {language.toLowerCase().startsWith('pt') && (
+              <p className="text-center text-sm font-medium text-emerald-600 mt-2">
+                Em até 3x sem juros
+              </p>
+            )}
           </div>
 
           {/* Activation Window Reminder */}

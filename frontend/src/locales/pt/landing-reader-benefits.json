@@ -29,10 +29,13 @@
     }
   },
   "howEarnings": {
-    "title": "Como os Ganhos Funcionam",
+    "title": "Bônus do Leitor",
     "ebook": "Por avaliação de ebook",
+    "ebookPrice": "R$1,00",
     "audiobook": "Por avaliação de audiobook",
+    "audiobookPrice": "R$2,00",
     "minimum": "Saque mínimo",
+    "minimumValue": "$50",
     "methods": "PayPal, Transferência Bancária, Wise, Cripto",
     "ebookLabel": "Avaliação de Ebook",
     "audiobookLabel": "Avaliação de Audiobook",

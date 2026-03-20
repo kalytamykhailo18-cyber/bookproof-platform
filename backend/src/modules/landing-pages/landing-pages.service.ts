@@ -4,6 +4,7 @@ import { EmailService } from '@modules/email/email.service';
 import { CaptchaService } from '@common/services/captcha.service';
 import { CaptureLeadDto, CaptureLeadResponseDto } from './dto/capture-lead.dto';
 import { TrackPageViewDto, TrackPageViewResponseDto } from './dto/track-page-view.dto';
+import { SalesContactDto, SalesContactResponseDto } from './dto/sales-contact.dto';
 import { AnalyticsStatsDto, GlobalAnalyticsDto } from './dto/analytics.dto';
 import {
   UpdateLandingPageDto,
@@ -123,6 +124,136 @@ export class LandingPagesService {
       };
     } catch (error) {
       this.logger.error(`Error tracking page view: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
+  /**
+   * Submit enterprise/sales contact form
+   * Sends email to sales team and auto-reply to customer
+   */
+  async submitSalesContact(dto: SalesContactDto): Promise<SalesContactResponseDto> {
+    try {
+      // Verify CAPTCHA for bot protection
+      await this.captchaService.verify(dto.captchaToken, 'sales_contact');
+
+      const salesEmail = 'sales.bookproof@gmail.com';
+
+      // Get language-specific auto-reply message
+      const autoReplyMessages: Record<string, { subject: string; body: string }> = {
+        EN: {
+          subject: 'Thank you for contacting BookProof Sales',
+          body: `
+            <p>Dear ${dto.name},</p>
+            <p>Thank you for your interest in BookProof Enterprise solutions!</p>
+            <p>We have received your inquiry for <strong>${dto.reviewsNeeded} reviews</strong> and our sales team will get back to you within 24-48 business hours.</p>
+            <p>In the meantime, feel free to explore our standard packages at <a href="https://bookproof.app/#pricing">bookproof.app</a>.</p>
+            <p>Best regards,<br>The BookProof Sales Team</p>
+          `,
+        },
+        PT: {
+          subject: 'Obrigado por entrar em contato com BookProof',
+          body: `
+            <p>Prezado(a) ${dto.name},</p>
+            <p>Obrigado pelo seu interesse nas soluções Enterprise do BookProof!</p>
+            <p>Recebemos sua solicitação para <strong>${dto.reviewsNeeded} avaliações</strong> e nossa equipe de vendas entrará em contato em até 24-48 horas úteis.</p>
+            <p>Enquanto isso, sinta-se à vontade para explorar nossos pacotes padrão em <a href="https://bookproof.app/#pricing">bookproof.app</a>.</p>
+            <p>Atenciosamente,<br>Equipe de Vendas BookProof</p>
+          `,
+        },
+        ES: {
+          subject: 'Gracias por contactar con BookProof',
+          body: `
+            <p>Estimado/a ${dto.name},</p>
+            <p>¡Gracias por su interés en las soluciones Enterprise de BookProof!</p>
+            <p>Hemos recibido su consulta para <strong>${dto.reviewsNeeded} reseñas</strong> y nuestro equipo de ventas se pondrá en contacto con usted en 24-48 horas hábiles.</p>
+            <p>Mientras tanto, no dude en explorar nuestros paquetes estándar en <a href="https://bookproof.app/#pricing">bookproof.app</a>.</p>
+            <p>Saludos cordiales,<br>El Equipo de Ventas de BookProof</p>
+          `,
+        },
+      };
+
+      const langKey = dto.language || 'EN';
+      const autoReply = autoReplyMessages[langKey] || autoReplyMessages.EN;
+
+      // Send email to sales team
+      const salesEmailHtml = `
+        <!DOCTYPE html>
+        <html>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+            <h1 style="color: #2563eb;">New Enterprise Inquiry</h1>
+            <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <p><strong>Name:</strong> ${dto.name}</p>
+              <p><strong>Email:</strong> ${dto.email}</p>
+              <p><strong>Reviews Needed:</strong> ${dto.reviewsNeeded}</p>
+              <p><strong>Language:</strong> ${dto.language}</p>
+            </div>
+            <h3>Message:</h3>
+            <div style="background-color: #ffffff; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+              <p>${dto.message.replace(/\n/g, '<br>')}</p>
+            </div>
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+            <p style="color: #6b7280; font-size: 12px;">This inquiry was submitted via the BookProof Enterprise contact form.</p>
+          </body>
+        </html>
+      `;
+
+      // Use Resend directly for custom emails
+      const { Resend } = await import('resend');
+      const resendApiKey = process.env.RESEND_API_KEY;
+
+      if (!resendApiKey) {
+        this.logger.warn('Resend API key not configured. Sales contact email will not be sent.');
+      } else {
+        const resend = new Resend(resendApiKey);
+
+        // Send to sales team
+        await resend.emails.send({
+          from: 'BookProof <noreply@bookproof.app>',
+          to: salesEmail,
+          reply_to: dto.email,
+          subject: `[Enterprise Inquiry] ${dto.name} - ${dto.reviewsNeeded} reviews`,
+          html: salesEmailHtml,
+        });
+
+        this.logger.log(`Sales inquiry email sent to ${salesEmail} from ${dto.email}`);
+
+        // Send auto-reply to customer
+        const autoReplyHtml = `
+          <!DOCTYPE html>
+          <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+              <div style="background-color: #f8fafc; padding: 30px; border-radius: 8px;">
+                <img src="https://bookproof.app/logo.png" alt="BookProof" style="height: 40px; margin-bottom: 20px;">
+                ${autoReply.body}
+              </div>
+              <p style="color: #9ca3af; font-size: 12px; text-align: center; margin-top: 30px;">
+                © ${new Date().getFullYear()} BookProof. All rights reserved.
+              </p>
+            </body>
+          </html>
+        `;
+
+        await resend.emails.send({
+          from: 'BookProof Sales <noreply@bookproof.app>',
+          to: dto.email,
+          subject: autoReply.subject,
+          html: autoReplyHtml,
+        });
+
+        this.logger.log(`Auto-reply sent to ${dto.email}`);
+      }
+
+      return {
+        success: true,
+        message: langKey === 'PT'
+          ? 'Obrigado! Nossa equipe entrará em contato em breve.'
+          : langKey === 'ES'
+          ? '¡Gracias! Nuestro equipo se pondrá en contacto pronto.'
+          : 'Thank you! Our team will be in touch soon.',
+      };
+    } catch (error) {
+      this.logger.error(`Error submitting sales contact: ${error.message}`, error.stack);
       throw error;
     }
   }

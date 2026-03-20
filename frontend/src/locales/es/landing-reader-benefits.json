@@ -29,10 +29,13 @@
     }
   },
   "howEarnings": {
-    "title": "Cómo Funcionan las Ganancias",
+    "title": "Bono del Lector",
     "ebook": "Por reseña de ebook",
+    "ebookPrice": "$0.50",
     "audiobook": "Por reseña de audiolibro",
+    "audiobookPrice": "$1.00",
     "minimum": "Pago mínimo",
+    "minimumValue": "$50",
     "methods": "PayPal, Transferencia Bancaria, Wise, Cripto",
     "ebookLabel": "Reseña de Ebook",
     "audiobookLabel": "Reseña de Audiolibro",

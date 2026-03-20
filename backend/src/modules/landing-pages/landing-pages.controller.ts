@@ -25,6 +25,7 @@ import { LandingPagesService } from './landing-pages.service';
 import { FilesService } from '@modules/files/files.service';
 import { CaptureLeadDto, CaptureLeadResponseDto } from './dto/capture-lead.dto';
 import { TrackPageViewDto, TrackPageViewResponseDto } from './dto/track-page-view.dto';
+import { SalesContactDto, SalesContactResponseDto } from './dto/sales-contact.dto';
 import { AnalyticsStatsDto, GlobalAnalyticsDto } from './dto/analytics.dto';
 import {
   UpdateLandingPageDto,
@@ -67,6 +68,15 @@ export class LandingPagesController {
   @ApiResponse({ status: 200, description: 'Content retrieved successfully' })
   async getPublicContent(@Param('language') language: Language): Promise<{ content: string; isPublished: boolean }> {
     return this.landingPagesService.getPublicContent(language);
+  }
+
+  @Public()
+  @Post('sales-contact')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Submit enterprise/sales contact form' })
+  @ApiResponse({ status: 200, description: 'Contact form submitted successfully', type: SalesContactResponseDto })
+  async submitSalesContact(@Body() dto: SalesContactDto): Promise<SalesContactResponseDto> {
+    return this.landingPagesService.submitSalesContact(dto);
   }
 
   @Get('analytics')
