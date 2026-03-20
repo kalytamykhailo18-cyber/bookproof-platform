@@ -12,6 +12,11 @@ export interface PagarmeCheckoutDto {
   packageTierId: string;
   couponCode?: string;
   currency?: string;
+  includeKeywordResearch?: boolean;
+  successUrl: string;
+  cancelUrl: string;
+  paymentMethod?: 'credit_card' | 'pix' | 'boleto';
+  installments?: number; // 1-3 for credit card
 }
 
 export interface PagarmeCheckoutResponseDto {
@@ -80,6 +85,7 @@ export class PagarmePaymentsService {
 
   /**
    * Create Pagar.me checkout for credit package purchase (BRL)
+   * Supports: PIX, Boleto, Credit Card with up to 3 installments
    */
   async createCheckoutSession(
     authorProfileId: string,
@@ -107,7 +113,7 @@ export class PagarmePaymentsService {
       throw new BadRequestException('BRL pricing not available for this package');
     }
 
-    // Get author profile
+    // Get author profile with user data (including CPF and phone)
     const authorProfile = await this.prisma.authorProfile.findUnique({
       where: { id: authorProfileId },
       include: { user: true },
@@ -115,6 +121,14 @@ export class PagarmePaymentsService {
 
     if (!authorProfile) {
       throw new NotFoundException('Author profile not found');
+    }
+
+    // Validate required Brazilian payment data
+    const user = authorProfile.user;
+    if (!user.cpf || !user.phone) {
+      throw new BadRequestException(
+        'CPF and phone number are required for Brazilian payments. Please update your profile.',
+      );
     }
 
     let finalAmount = parseFloat(brlPrice.price.toString());
@@ -161,30 +175,97 @@ export class PagarmePaymentsService {
     });
 
     try {
-      // For now, return a mock checkout URL since Pagar.me integration requires additional customer data
-      // that we don't collect (CPF, phone number). In production, this should use Pagar.me's hosted checkout
-      // which handles the customer data collection.
+      // Parse customer name for Pagar.me
+      const nameParts = user.name.split(' ');
+      const firstName = nameParts[0] || 'Customer';
+      const lastName = nameParts.slice(1).join(' ') || 'User';
 
-      // Generate a unique payment reference
-      const paymentRef = `bp_${Date.now()}_${creditPurchase.id.slice(-8)}`;
+      // Format phone for Pagar.me (remove non-digits, extract DDD and number)
+      const phoneDigits = user.phone.replace(/\D/g, '');
+      const phoneDdd = phoneDigits.length >= 10 ? phoneDigits.slice(-11, -9) || phoneDigits.slice(0, 2) : '11';
+      const phoneNumber = phoneDigits.length >= 10 ? phoneDigits.slice(-9) : phoneDigits;
 
-      // Update credit purchase with reference
-      await this.prisma.creditPurchase.update({
-        where: { id: creditPurchase.id },
-        data: {
-          stripePaymentId: `pagarme_${paymentRef}`,
+      // Create Pagar.me order with multiple payment methods
+      const order = await this.client.orders.create({
+        items: [
+          {
+            amount: amountInCentavos,
+            description: `${packageTier.name} - ${packageTier.credits} credits`,
+            quantity: 1,
+            code: packageTier.id,
+          },
+        ],
+        customer: {
+          name: user.name,
+          email: user.email,
+          document: user.cpf.replace(/\D/g, ''), // CPF digits only
+          document_type: 'cpf',
+          type: 'individual',
+          phones: {
+            mobile_phone: {
+              country_code: '55',
+              area_code: phoneDdd,
+              number: phoneNumber,
+            },
+          },
+        },
+        payments: [
+          {
+            payment_method: 'checkout',
+            checkout: {
+              expires_in: 3600, // 1 hour
+              billing_address_editable: false,
+              customer_editable: false,
+              accepted_payment_methods: ['credit_card', 'pix', 'boleto'],
+              success_url: dto.successUrl,
+              skip_checkout_success_page: false,
+              credit_card: {
+                capture: true,
+                statement_descriptor: 'BOOKPROOF',
+                installments: [
+                  { number: 1, total: amountInCentavos },
+                  { number: 2, total: amountInCentavos },
+                  { number: 3, total: amountInCentavos },
+                ],
+              },
+              pix: {
+                expires_in: 3600,
+              },
+              boleto: {
+                due_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days
+                instructions: 'Pagamento para créditos BookProof',
+              },
+            },
+          },
+        ],
+        metadata: {
+          authorProfileId,
+          packageTierId: dto.packageTierId,
+          creditPurchaseId: creditPurchase.id,
         },
       });
 
-      this.logger.log(`Pagar.me payment reference created: ${paymentRef} for amount ${finalAmount} BRL`);
+      // Update credit purchase with Pagar.me order ID
+      await this.prisma.creditPurchase.update({
+        where: { id: creditPurchase.id },
+        data: {
+          stripePaymentId: `pagarme_${order.id}`,
+        },
+      });
 
-      // Return info for manual/PIX payment flow
-      // In production, integrate with Pagar.me's Checkout or Link de Pagamento
-      const appUrl = this.configService.get('APP_URL') || 'https://bookproof.app';
+      this.logger.log(`Pagar.me order created: ${order.id} for amount ${finalAmount} BRL`);
+
+      // Get checkout URL from the response
+      const checkoutPayment = order.charges?.[0]?.last_transaction;
+      const checkoutUrl = checkoutPayment?.checkout_url || order.checkouts?.[0]?.payment_url;
+
+      if (!checkoutUrl) {
+        throw new Error('No checkout URL returned from Pagar.me');
+      }
 
       return {
-        checkoutUrl: `${appUrl}/author/credits/payment-pending?ref=${paymentRef}&amount=${finalAmount}`,
-        transactionId: paymentRef,
+        checkoutUrl,
+        transactionId: order.id,
         amount: finalAmount,
         currency: 'BRL',
       };
@@ -196,6 +277,12 @@ export class PagarmePaymentsService {
         where: { id: creditPurchase.id },
         data: { paymentStatus: PaymentStatus.FAILED },
       });
+
+      // Provide user-friendly error message
+      if (error?.response?.errors) {
+        const errors = error.response.errors.map((e: any) => e.message).join(', ');
+        throw new BadRequestException(`Payment setup failed: ${errors}`);
+      }
 
       throw new BadRequestException('Failed to create payment. Please try again.');
     }

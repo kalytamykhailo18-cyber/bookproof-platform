@@ -26,12 +26,17 @@ export class CreateAuthorByCloserDto {
   @IsOptional()
   preferredCurrency?: string;
 
-  @ApiPropertyOptional({ example: '+1234567890', description: 'Phone number' })
+  @ApiPropertyOptional({ example: '+5511999999999', description: 'Phone number' })
   @IsString()
   @IsOptional()
   phone?: string;
 
-  @ApiPropertyOptional({ example: 'US', description: 'Country of residence' })
+  @ApiPropertyOptional({ example: '12345678909', description: 'Brazilian CPF (required for Pagar.me payments)' })
+  @IsString()
+  @IsOptional()
+  cpf?: string;
+
+  @ApiPropertyOptional({ example: 'BR', description: 'Country of residence' })
   @IsString()
   @IsOptional()
   country?: string;

@@ -109,12 +109,21 @@ export class RegisterDto {
   preferredCurrency?: string;
 
   @ApiPropertyOptional({
-    example: '+1234567890',
-    description: 'Phone number (optional)'
+    example: '+5511999999999',
+    description: 'Phone number (required for Brazilian users with PT language)'
   })
   @IsString()
-  @IsOptional()
+  @ValidateIf(o => o.preferredLanguage === Language.PT)
   phone?: string;
+
+  @ApiPropertyOptional({
+    example: '123.456.789-09',
+    description: 'Brazilian CPF tax ID (required for Brazilian users with PT language)'
+  })
+  @IsString()
+  @ValidateIf(o => o.preferredLanguage === Language.PT)
+  @Matches(/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/, { message: 'Please provide a valid CPF format (XXX.XXX.XXX-XX or XXXXXXXXXXX)' })
+  cpf?: string;
 
   @ApiProperty({
     example: 'US',

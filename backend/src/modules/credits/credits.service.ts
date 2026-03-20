@@ -198,15 +198,42 @@ export class CreditsService {
 
   /**
    * Create checkout session for credit purchase
-   * Uses Stripe for all payments (supports USD, BRL, EUR, etc.)
-   * Note: Pagar.me integration is disabled - requires customer data (CPF, phone) we don't collect
+   * Routes to Pagar.me for BRL payments when user has CPF/phone (PIX, Boleto, Credit Card with installments)
+   * Falls back to Stripe for other currencies or if Pagar.me data is incomplete
    */
   async createCheckoutSession(
     authorProfileId: string,
     dto: PurchaseCreditDto,
   ): Promise<CheckoutSessionResponseDto> {
-    // Use Stripe for all payments - it supports BRL and other currencies
-    // Pagar.me disabled: requires CPF/phone data collection which we don't have
+    // Check if this is a BRL payment and user has Pagar.me required data
+    if (dto.currency?.toUpperCase() === 'BRL' && this.pagarmePaymentsService?.isConfigured()) {
+      // Get author profile to check for CPF
+      const authorForPagarme = await this.prisma.authorProfile.findUnique({
+        where: { id: authorProfileId },
+        include: { user: true },
+      });
+
+      // If user has CPF and phone, use Pagar.me for Brazilian payments
+      if (authorForPagarme?.user?.cpf && authorForPagarme?.user?.phone) {
+        this.logger.log(`Routing BRL payment to Pagar.me for author ${authorProfileId}`);
+        const pagarmeResult = await this.pagarmePaymentsService.createCheckoutSession(authorProfileId, {
+          packageTierId: dto.packageTierId,
+          couponCode: dto.couponCode,
+          includeKeywordResearch: dto.includeKeywordResearch,
+          successUrl: dto.successUrl,
+          cancelUrl: dto.cancelUrl,
+        });
+
+        return {
+          url: pagarmeResult.checkoutUrl,
+          sessionId: pagarmeResult.transactionId,
+        };
+      } else {
+        this.logger.log(`User missing CPF/phone, falling back to Stripe for BRL payment`);
+      }
+    }
+
+    // Use Stripe for non-BRL payments or when Pagar.me data is incomplete
     this.ensureStripeConfigured();
 
     // Get package tier with currency-specific pricing if requested
@@ -704,7 +731,9 @@ export class CreditsService {
     const result = await this.pagarmePaymentsService.createCheckoutSession(authorProfileId, {
       packageTierId: dto.packageTierId,
       couponCode: dto.couponCode,
-      currency: 'BRL',
+      includeKeywordResearch: dto.includeKeywordResearch,
+      successUrl: dto.successUrl,
+      cancelUrl: dto.cancelUrl,
     });
 
     return {

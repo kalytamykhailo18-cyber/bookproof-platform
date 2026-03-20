@@ -38,6 +38,7 @@ model User {
   companyName       String? // Company name (optional, primarily for authors)
   phone             String?
   phoneVerified     Boolean   @default(false)
+  cpf               String?   // Brazilian tax ID (CPF) - required for Pagar.me payments
   country           String?
   preferredLanguage Language  @default(EN)
   preferredCurrency String    @default("USD")

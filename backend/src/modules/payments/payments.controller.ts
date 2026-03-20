@@ -180,7 +180,8 @@ export class PaymentsController {
     return this.pagarmePaymentsService.createCheckoutSession(req.user!.authorProfileId!, {
       packageTierId: dto.packageTierId,
       couponCode: dto.couponCode,
-      currency: 'BRL',
+      successUrl: dto.successUrl,
+      cancelUrl: dto.cancelUrl,
     });
   }
 

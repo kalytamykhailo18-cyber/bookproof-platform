@@ -210,6 +210,7 @@ export class AuthService {
       preferredLanguage,
       preferredCurrency,
       phone,
+      cpf,
       country,
       termsAccepted,
       marketingConsent,
@@ -264,6 +265,7 @@ export class AuthService {
         preferredLanguage: preferredLanguage || 'EN',
         preferredCurrency: preferredCurrency || 'USD',
         phone,
+        cpf: cpf ? cpf.replace(/[^\d]/g, '') : null, // Store CPF as digits only
         country,
         marketingConsent: marketingConsent || false,
         emailVerified: this.skipEmailVerification, // Auto-verify in dev mode
@@ -885,7 +887,7 @@ export class AuthService {
     dto: CreateAuthorByCloserDto,
     closerUserId: string,
   ): Promise<CreateAuthorByCloserResponseDto> {
-    const { email, name, preferredLanguage, preferredCurrency, phone, country, initialCredits, saleNotes } = dto;
+    const { email, name, preferredLanguage, preferredCurrency, phone, cpf, country, initialCredits, saleNotes } = dto;
 
     // Check if user already exists
     const existingUser = await this.prisma.user.findUnique({
@@ -914,6 +916,7 @@ export class AuthService {
         preferredLanguage: preferredLanguage || 'EN',
         preferredCurrency: preferredCurrency || 'USD',
         phone,
+        cpf: cpf ? cpf.replace(/[^\d]/g, '') : null, // Store CPF as digits only
         country,
         emailVerified: this.skipEmailVerification,
         emailVerifiedAt: this.skipEmailVerification ? new Date() : null,

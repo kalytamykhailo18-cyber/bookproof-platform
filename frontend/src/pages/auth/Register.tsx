@@ -45,6 +45,7 @@ const registerSchema = z
     preferredLanguage: z.enum(['EN', 'PT', 'ES']),
     preferredCurrency: z.string().optional(),
     phone: z.string().optional(),
+    cpf: z.string().optional(),
     country: z.string().min(1, 'Country is required'),
     contentPreference: z.enum(['EBOOK', 'AUDIOBOOK', 'BOTH']).optional(),
     amazonProfileLinks: z
@@ -77,6 +78,14 @@ const registerSchema = z
   .refine(
     (data) => data.role !== 'AFFILIATE' || (data.promotionPlan && data.promotionPlan.length >= 50),
     { message: 'Promotion plan is required for affiliates (minimum 50 characters)', path: ['promotionPlan'] },
+  )
+  .refine(
+    (data) => data.preferredLanguage !== 'PT' || (data.phone && data.phone.length > 0),
+    { message: 'Phone number is required for Brazilian users', path: ['phone'] },
+  )
+  .refine(
+    (data) => data.preferredLanguage !== 'PT' || (data.cpf && /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/.test(data.cpf)),
+    { message: 'Valid CPF is required for Brazilian users (XXX.XXX.XXX-XX)', path: ['cpf'] },
   );
 
 type RegisterFormData = z.infer<typeof registerSchema>;
@@ -111,6 +120,8 @@ export function RegisterPage() {
   const termsAccepted = watch('termsAccepted');
   const marketingConsent = watch('marketingConsent');
   const selectedRole = watch('role');
+  const selectedLanguage = watch('preferredLanguage');
+  const isBrazilian = selectedLanguage === 'PT';
 
   const handleAddAmazonLink = () => {
     if (amazonLinks.length < 3) setAmazonLinks([...amazonLinks, '']);
@@ -391,15 +402,34 @@ export function RegisterPage() {
                     {errors.country && <p className="text-sm text-destructive">{errors.country.message}</p>}
                   </div>
                   <div className="space-y-1.5">
-                    <Label>{t('phone') || 'Phone'}</Label>
+                    <Label>{t('phone') || 'Phone'}{isBrazilian && ' *'}</Label>
                     <Input
                       type="tel"
-                      placeholder="+1 (555) 123-4567"
+                      placeholder={isBrazilian ? '+55 11 99999-9999' : '+1 (555) 123-4567'}
                       {...register('phone')}
+                      className={errors.phone ? 'border-destructive' : ''}
                       disabled={isRegistering}
                     />
+                    {errors.phone && <p className="text-sm text-destructive">{errors.phone.message}</p>}
                   </div>
                 </div>
+
+                {/* CPF for Brazilian users */}
+                {isBrazilian && (
+                  <div className="space-y-1.5">
+                    <Label>CPF *</Label>
+                    <Input
+                      placeholder="000.000.000-00"
+                      {...register('cpf')}
+                      className={errors.cpf ? 'border-destructive' : ''}
+                      disabled={isRegistering}
+                    />
+                    <p className="text-xs text-gray-400">
+                      {t('cpfHint') || 'Required for Brazilian payment processing (PIX, Boleto, Credit Card)'}
+                    </p>
+                    {errors.cpf && <p className="text-sm text-destructive">{errors.cpf.message}</p>}
+                  </div>
+                )}
 
                 {/* Language + Currency */}
                 <div className="grid grid-cols-2 gap-3">
