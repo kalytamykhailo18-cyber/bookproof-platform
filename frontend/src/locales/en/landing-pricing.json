@@ -12,6 +12,7 @@
   },
   "creditLogic": "1 ebook review = 1 credit • 1 audiobook review = 2 credits",
   "organicNote": "Reviews are delivered progressively and organically for natural ranking growth.",
+  "installmentNote": "",
   "allInclude": {
     "title": "All Packages Include",
     "items": [
@@ -29,6 +30,7 @@
       "validity": "180 days to activate",
       "reviews": "20 ebook reviews",
       "duration": "Up to 8 weeks",
+      "subtitle": "",
       "features": [
         "20 ebook reviews or 10 audiobook reviews",
         "Progressive weekly distribution (organic delivery)",
@@ -45,6 +47,7 @@
       "validity": "180 days to activate",
       "reviews": "50 ebook reviews",
       "duration": "Up to 8 weeks",
+      "subtitle": "",
       "features": [
         "50 ebook reviews or 25 audiobook reviews",
         "Progressive weekly distribution (organic delivery)",
@@ -62,6 +65,7 @@
       "validity": "360 days to activate",
       "reviews": "100 ebook reviews",
       "duration": "Up to 8 weeks",
+      "subtitle": "",
       "features": [
         "100 ebook reviews or 50 audiobook reviews",
         "Progressive weekly distribution (organic delivery)",
@@ -78,6 +82,7 @@
       "validity": "360 days to activate",
       "reviews": "Custom volume",
       "duration": "Custom timeline",
+      "subtitle": "",
       "features": [
         "200+ ebook reviews or 100+ audiobook reviews",
         "Custom packages available",

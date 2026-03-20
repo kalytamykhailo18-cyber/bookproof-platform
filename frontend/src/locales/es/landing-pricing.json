@@ -12,6 +12,7 @@
   },
   "creditLogic": "1 reseña de ebook = 1 crédito • 1 reseña de audiolibro = 2 créditos",
   "organicNote": "Las reseñas se entregan de forma progresiva y orgánica para un crecimiento natural del ranking.",
+  "installmentNote": "",
   "allInclude": {
     "title": "Todos los Paquetes Incluyen",
     "items": [
@@ -29,6 +30,7 @@
       "validity": "180 días para activar",
       "reviews": "20 reseñas de ebook",
       "duration": "Hasta 8 semanas",
+      "subtitle": "",
       "features": [
         "20 reseñas de ebook o 10 de audiolibro",
         "Distribución progresiva semanal (entrega orgánica)",
@@ -45,6 +47,7 @@
       "validity": "180 días para activar",
       "reviews": "50 reseñas de ebook",
       "duration": "Hasta 8 semanas",
+      "subtitle": "",
       "features": [
         "50 reseñas de ebook o 25 de audiolibro",
         "Distribución progresiva semanal (entrega orgánica)",
@@ -62,6 +65,7 @@
       "validity": "360 días para activar",
       "reviews": "100 reseñas de ebook",
       "duration": "Hasta 8 semanas",
+      "subtitle": "",
       "features": [
         "100 reseñas de ebook o 50 de audiolibro",
         "Distribución progresiva semanal (entrega orgánica)",
@@ -78,6 +82,7 @@
       "validity": "360 días para activar",
       "reviews": "Volumen personalizado",
       "duration": "Cronograma personalizado",
+      "subtitle": "",
       "features": [
         "200+ reseñas de ebook o 100+ de audiolibro",
         "Paquetes personalizados disponibles",
