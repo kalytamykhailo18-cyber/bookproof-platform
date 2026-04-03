@@ -106,10 +106,11 @@ export function RegisterPage() {
     register,
     trigger,
     getValues,
-    formState: { errors },
+    formState: { errors, isValid },
     setValue,
     watch } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
+    mode: 'onChange',
     defaultValues: {
       preferredLanguage: 'EN',
       preferredCurrency: 'USD',
@@ -597,7 +598,7 @@ export function RegisterPage() {
                 <Button
                   type="button"
                   className="w-full mt-1"
-                  disabled={isRegistering}
+                  disabled={isRegistering || !isValid}
                   onClick={handleRegister}
                   style={{ backgroundColor: '#3b82f6', fontWeight: 600 }}
                 >
