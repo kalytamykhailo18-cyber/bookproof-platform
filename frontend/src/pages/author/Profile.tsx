@@ -32,6 +32,8 @@ import {
   Globe,
   Save,
   Edit,
+  Phone,
+  CreditCard,
 } from 'lucide-react';
 
 export function AuthorProfilePage() {
@@ -47,6 +49,8 @@ export function AuthorProfilePage() {
   const [isUpdatingBasicInfo, setIsUpdatingBasicInfo] = useState(false);
   const [name, setName] = useState('');
   const [country, setCountry] = useState('');
+  const [phone, setPhone] = useState('');
+  const [cpf, setCpf] = useState('');
   const [preferredLanguage, setPreferredLanguage] = useState<Language>(Language.EN);
 
   // Password Change state
@@ -60,6 +64,8 @@ export function AuthorProfilePage() {
     if (user) {
       setName(user.name || '');
       setCountry(user.country || '');
+      setPhone(user.phone || '');
+      setCpf(user.cpf || '');
     }
   }, [user]);
 
@@ -83,7 +89,7 @@ export function AuthorProfilePage() {
   const handleUpdateBasicInfo = async () => {
     try {
       setIsUpdatingBasicInfo(true);
-      await updateProfile({ name, country });
+      await updateProfile({ name, country, phone, cpf: cpf || undefined });
       await updateLanguage(preferredLanguage);
       await refreshUser();
       setIsEditingBasicInfo(false);
@@ -194,6 +200,40 @@ export function AuthorProfilePage() {
                     placeholder="Your country"
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">
+                    <Phone className="mr-2 inline h-4 w-4" />
+                    {t('basicInfo.phone') || 'Phone'}
+                  </Label>
+                  <Input
+                    id="phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+5511999999999"
+                  />
+                  {preferredLanguage === Language.PT && (
+                    <p className="text-xs text-muted-foreground">
+                      {t('basicInfo.phoneNote') || 'Required for Brazilian payments (Pagar.me)'}
+                    </p>
+                  )}
+                </div>
+                {preferredLanguage === Language.PT && (
+                  <div className="space-y-2">
+                    <Label htmlFor="cpf">
+                      <CreditCard className="mr-2 inline h-4 w-4" />
+                      {t('basicInfo.cpf') || 'CPF'}
+                    </Label>
+                    <Input
+                      id="cpf"
+                      value={cpf}
+                      onChange={(e) => setCpf(e.target.value)}
+                      placeholder="123.456.789-09"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {t('basicInfo.cpfNote') || 'Required for Brazilian payments (Pagar.me)'}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -245,6 +285,8 @@ export function AuthorProfilePage() {
                     setIsEditingBasicInfo(false);
                     setName(user?.name || '');
                     setCountry(user?.country || '');
+                    setPhone(user?.phone || '');
+                    setCpf(user?.cpf || '');
                   }}
                 >
                   {t('actions.cancel') || 'Cancel'}
@@ -269,6 +311,22 @@ export function AuthorProfilePage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-muted-foreground">
+                  <Phone className="mr-2 inline h-4 w-4" />
+                  {t('basicInfo.phone') || 'Phone'}
+                </p>
+                <p className="mt-1">{user?.phone || '-'}</p>
+              </div>
+              {preferredLanguage === Language.PT && (
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    <CreditCard className="mr-2 inline h-4 w-4" />
+                    {t('basicInfo.cpf') || 'CPF'}
+                  </p>
+                  <p className="mt-1">{user?.cpf || '-'}</p>
+                </div>
+              )}
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
                   <Globe className="mr-2 inline h-4 w-4" />
                   {t('basicInfo.language') || 'Language'}
                 </p>
@@ -276,8 +334,8 @@ export function AuthorProfilePage() {
                   {preferredLanguage === Language.EN
                     ? 'English'
                     : preferredLanguage === Language.PT
-                      ? 'Portugu&ecirc;s'
-                      : 'Espa&ntilde;ol'}
+                      ? 'Português'
+                      : 'Español'}
                 </p>
               </div>
               <div>

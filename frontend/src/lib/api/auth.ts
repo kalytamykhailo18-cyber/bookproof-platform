@@ -50,6 +50,8 @@ export interface UserData {
   emailVerified: boolean;
   photo?: string;
   country?: string;
+  phone?: string; // Phone number (required for Brazilian payments)
+  cpf?: string; // Brazilian tax ID (required for Brazilian payments)
   termsAccepted?: boolean; // For authors - whether they've accepted terms of service
   accountCreatedByCloser?: boolean; // For authors - whether account was created by Closer
   adminRole?: 'SUPER_ADMIN' | 'ADMIN' | 'MODERATOR' | 'SUPPORT'; // For admin users only (Section 5.1, 5.5)

@@ -152,12 +152,16 @@ export interface LanguageResponse {
 export interface UpdateProfileRequest {
   name?: string;
   country?: string;
+  phone?: string;
+  cpf?: string;
 }
 
 export interface UpdateProfileResponse {
   message: string;
   name?: string;
   country?: string;
+  phone?: string;
+  cpf?: string;
 }
 
 export interface ChangePasswordRequest {

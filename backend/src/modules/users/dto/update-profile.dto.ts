@@ -1,4 +1,4 @@
-import { IsString, IsOptional, MaxLength } from 'class-validator';
+import { IsString, IsOptional, MaxLength, Matches } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 /**
@@ -8,6 +8,8 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
  * Editable fields:
  * - Full name
  * - Country
+ * - Phone (required for Brazilian payments)
+ * - CPF (required for Brazilian payments)
  */
 export class UpdateProfileDto {
   @ApiPropertyOptional({
@@ -29,6 +31,25 @@ export class UpdateProfileDto {
   @IsString()
   @MaxLength(100)
   country?: string;
+
+  @ApiPropertyOptional({
+    example: '+5511999999999',
+    description: 'Phone number (required for Brazilian payments via Pagar.me)',
+    maxLength: 20,
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  phone?: string;
+
+  @ApiPropertyOptional({
+    example: '123.456.789-09',
+    description: 'Brazilian CPF tax ID (required for Brazilian payments via Pagar.me)',
+  })
+  @IsOptional()
+  @IsString()
+  @Matches(/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/, { message: 'Please provide a valid CPF format' })
+  cpf?: string;
 }
 
 export class UpdateProfileResponseDto {
@@ -40,4 +61,10 @@ export class UpdateProfileResponseDto {
 
   @ApiPropertyOptional()
   country?: string;
+
+  @ApiPropertyOptional()
+  phone?: string;
+
+  @ApiPropertyOptional()
+  cpf?: string;
 }

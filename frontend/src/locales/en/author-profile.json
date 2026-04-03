@@ -10,6 +10,10 @@
   "basicInfo": {
     "name": "Full Name",
     "country": "Country",
+    "phone": "Phone",
+    "phoneNote": "Required for Brazilian payments (Pagar.me)",
+    "cpf": "CPF",
+    "cpfNote": "Required for Brazilian payments (Pagar.me)",
     "language": "Language",
     "languageNote": "This affects the language of emails and notifications",
     "email": "Email Address",

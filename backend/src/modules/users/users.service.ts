@@ -539,12 +539,19 @@ export class UsersService {
     }
 
     // Build update data object with only provided fields
-    const updateData: { name?: string; country?: string } = {};
+    const updateData: { name?: string; country?: string; phone?: string; cpf?: string } = {};
     if (dto.name !== undefined) {
       updateData.name = dto.name;
     }
     if (dto.country !== undefined) {
       updateData.country = dto.country;
+    }
+    if (dto.phone !== undefined) {
+      updateData.phone = dto.phone;
+    }
+    if (dto.cpf !== undefined) {
+      // Store CPF as digits only
+      updateData.cpf = dto.cpf.replace(/[^\d]/g, '');
     }
 
     // Update the user's profile
@@ -565,6 +572,9 @@ export class UsersService {
           newName: updatedUser.name,
           previousCountry: user.country,
           newCountry: updatedUser.country,
+          previousPhone: user.phone,
+          newPhone: updatedUser.phone,
+          cpfUpdated: dto.cpf !== undefined,
           timestamp: new Date().toISOString(),
         }),
         description: `User updated profile information`,
@@ -578,6 +588,8 @@ export class UsersService {
       message: 'Profile updated successfully',
       name: updatedUser.name,
       country: updatedUser.country || undefined,
+      phone: updatedUser.phone || undefined,
+      cpf: updatedUser.cpf || undefined,
     };
   }
 }

@@ -29,6 +29,12 @@ export class UserDataDto {
   @ApiProperty({ required: false })
   country?: string;
 
+  @ApiProperty({ description: 'Phone number (required for Brazilian payments)', required: false })
+  phone?: string;
+
+  @ApiProperty({ description: 'Brazilian CPF tax ID (required for Brazilian payments)', required: false })
+  cpf?: string;
+
   @ApiProperty({ description: 'Whether the user has accepted the terms of service (for authors)', required: false })
   termsAccepted?: boolean;
 

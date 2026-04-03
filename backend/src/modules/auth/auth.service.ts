@@ -706,6 +706,8 @@ export class AuthService {
       emailVerified: user.emailVerified,
       photo: user.photo,
       country: user.country,
+      phone: user.phone,
+      cpf: user.cpf,
       termsAccepted: user.authorProfile?.termsAccepted ?? true, // Default true for non-authors
       accountCreatedByCloser: user.authorProfile?.accountCreatedByCloser ?? false,
       // Admin role for role-based access control (Section 5.1, 5.5)
