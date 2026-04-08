@@ -123,12 +123,15 @@ type CampaignFormData = z.infer<typeof campaignSchema>;
 const STEPS = ['bookInfo', 'files', 'landingPage', 'credits', 'review'] as const;
 type Step = (typeof STEPS)[number];
 
+const DRAFT_KEY = 'campaign_draft';
+
 export function NewCampaignPage() {
   const { t, i18n } = useTranslation('authorCampaignsNew');
   const navigate = useNavigate();
   const { startLoading, stopLoading } = useLoading();
   const [isCreating, setIsCreating] = useState(false);
   const { uploadProgress } = useUploadProgress();
+  const [hasDraft, setHasDraft] = useState(false);
 
   // Credit balance state
   const [creditBalance, setCreditBalance] = useState<CreditBalance | null>(null);
@@ -193,6 +196,75 @@ export function NewCampaignPage() {
   const creditsToAllocate = watch('creditsToAllocate') || 0;
   const ebookCredits = watch('ebookCredits') || 0;
   const audiobookCredits = watch('audiobookCredits') || 0;
+
+  // Load draft from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedDraft = localStorage.getItem(DRAFT_KEY);
+      if (savedDraft) {
+        const draft = JSON.parse(savedDraft);
+        // Restore form values
+        Object.keys(draft.formData).forEach((key) => {
+          setValue(key as any, draft.formData[key]);
+        });
+        // Restore step
+        if (draft.currentStep) {
+          setCurrentStep(draft.currentStep);
+        }
+        // Restore cover preview (not the file itself, just preview URL)
+        if (draft.coverPreview) {
+          setCoverPreview(draft.coverPreview);
+        }
+        setHasDraft(true);
+        toast.info('Draft restored! You can continue where you left off.', { duration: 5000 });
+      }
+    } catch (error) {
+      console.error('Error loading draft:', error);
+      localStorage.removeItem(DRAFT_KEY);
+    }
+  }, []);
+
+  // Watch all form values for auto-save
+  const watchedValues = watch();
+
+  // Save draft to localStorage whenever form values change
+  useEffect(() => {
+    const formData = getValues();
+    const draft = {
+      formData,
+      currentStep,
+      coverPreview,
+      timestamp: Date.now(),
+    };
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    } catch (error) {
+      console.error('Error saving draft:', error);
+    }
+  }, [watchedValues, currentStep, coverPreview, getValues]);
+
+  // Save draft before page unload
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const formData = getValues();
+      const draft = {
+        formData,
+        currentStep,
+        coverPreview,
+        timestamp: Date.now(),
+      };
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+      } catch (error) {
+        console.error('Error saving draft on unload:', error);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [getValues, currentStep, coverPreview]);
 
   // Watch bookInfo fields for validation
   const title = watch('title');
@@ -368,6 +440,15 @@ export function NewCampaignPage() {
     }
   };
 
+  const clearDraft = () => {
+    try {
+      localStorage.removeItem(DRAFT_KEY);
+      setHasDraft(false);
+    } catch (error) {
+      console.error('Error clearing draft:', error);
+    }
+  };
+
   const handleFormSubmit = async () => {
     // Check confirmations
     if (!confirmInfo || !confirmCredits || !confirmTerms) {
@@ -453,6 +534,7 @@ export function NewCampaignPage() {
       });
 
       stopLoading();
+      clearDraft(); // Clear saved draft after successful submission
       toast.success('Campaign created and activated successfully!');
       navigate(`/author/campaigns/${campaignId}`);
     } catch (error: any) {
@@ -493,14 +575,36 @@ export function NewCampaignPage() {
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Header */}
       <div className="mb-8 animate-fade-up">
-        <Button type="button" variant="ghost" onClick={() => navigate(-1)} className="mb-4">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {t('back') || 'Back'}
-        </Button>
+        <div className="mb-4 flex items-center justify-between">
+          <Button type="button" variant="ghost" onClick={() => navigate(-1)}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {t('back') || 'Back'}
+          </Button>
+          {hasDraft && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (confirm('Are you sure you want to clear the saved draft? This cannot be undone.')) {
+                  clearDraft();
+                  window.location.reload(); // Reload to reset form
+                }
+              }}
+            >
+              Clear Draft
+            </Button>
+          )}
+        </div>
         <h1 className="text-3xl font-bold">{t('title') || 'Create New Campaign'}</h1>
         <p className="mt-2 text-muted-foreground">
           {t('subtitle') || 'Set up your book review campaign'}
         </p>
+        {hasDraft && (
+          <Badge variant="secondary" className="mt-2">
+            Draft restored - Continue where you left off
+          </Badge>
+        )}
       </div>
 
       {/* Progress Steps */}

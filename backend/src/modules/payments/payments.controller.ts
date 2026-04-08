@@ -133,6 +133,24 @@ export class PaymentsController {
     return { received: true };
   }
 
+  // TEMPORARY: Manual payment processing for testing (bypass webhook)
+  @Post('manual-process/:sessionId')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.AUTHOR)
+  @ApiOperation({ summary: 'TESTING ONLY: Manually process payment by session ID' })
+  @ApiResponse({ status: 200, description: 'Payment processed manually' })
+  async manualProcessPayment(
+    @Param('sessionId') sessionId: string,
+  ): Promise<{ success: boolean; message: string }> {
+    try {
+      await this.stripePaymentsService.handlePaymentSuccess(sessionId);
+      return { success: true, message: 'Payment processed and credits added successfully' };
+    } catch (error: any) {
+      return { success: false, message: error.message };
+    }
+  }
+
   @Get('transactions')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)

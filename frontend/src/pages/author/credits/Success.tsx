@@ -19,16 +19,37 @@ export function CreditPurchaseSuccessPage() {
   const [isDashboardLoading, setIsDashboardLoading] = useState(false);
 
   useEffect(() => {
-    // Refetch credit balance after successful purchase
-    const refetchBalance = async () => {
+    // Get session_id from URL query params
+    const sessionId = searchParams.get('session_id');
+
+    // TEMPORARY: Manually process payment if session_id is present (bypasses webhook for testing)
+    const processPayment = async () => {
+      if (sessionId) {
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/v1/payments/manual-process/${sessionId}`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          const result = await response.json();
+          console.log('Manual payment processing:', result);
+        } catch (err) {
+          console.error('Manual payment processing error:', err);
+        }
+      }
+
+      // Refetch credit balance after processing
       try {
         await creditsApi.getCreditBalance();
       } catch (err) {
         console.error('Refetch balance error:', err);
       }
     };
-    refetchBalance();
-  }, []);
+
+    processPayment();
+  }, [searchParams]);
 
   return (
     <div className="container mx-auto max-w-2xl px-4 py-12">

@@ -169,8 +169,8 @@ export function CreditPurchasePage() {
       startLoading('Creating checkout session...');
 
       const successUrl = includeKeywordResearch
-        ? `${window.location.origin}/author/credits/success?includeKeywordResearch=true`
-        : `${window.location.origin}/author/credits/success`;
+        ? `${window.location.origin}/author/credits/success?session_id={CHECKOUT_SESSION_ID}&includeKeywordResearch=true`
+        : `${window.location.origin}/author/credits/success?session_id={CHECKOUT_SESSION_ID}`;
       const cancelUrl = `${window.location.origin}/author/credits/cancel`;
 
       const response = await creditsApi.createCheckoutSession({
