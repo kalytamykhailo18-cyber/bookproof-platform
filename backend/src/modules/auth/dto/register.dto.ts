@@ -102,10 +102,11 @@ export class RegisterDto {
 
   @ApiPropertyOptional({
     example: 'USD',
-    description: 'Preferred currency'
+    description: 'Preferred currency (auto-set based on language: PT→BRL, EN→USD, ES→USD to prevent currency arbitrage)'
   })
   @IsString()
   @IsOptional()
+  @IsIn(['USD', 'BRL', 'EUR'], { message: 'Currency must be USD, BRL, or EUR' })
   preferredCurrency?: string;
 
   @ApiPropertyOptional({

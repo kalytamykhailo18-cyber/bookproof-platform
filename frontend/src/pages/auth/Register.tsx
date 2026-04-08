@@ -122,7 +122,19 @@ export function RegisterPage() {
   const marketingConsent = watch('marketingConsent');
   const selectedRole = watch('role');
   const selectedLanguage = watch('preferredLanguage');
+  const selectedCurrency = watch('preferredCurrency');
   const isBrazilian = selectedLanguage === 'PT';
+
+  // Auto-set currency based on language (prevent currency arbitrage)
+  useEffect(() => {
+    if (selectedLanguage === 'PT') {
+      setValue('preferredCurrency', 'BRL'); // Portuguese → Brazilian Real
+    } else if (selectedLanguage === 'EN') {
+      setValue('preferredCurrency', 'USD'); // English → US Dollar
+    } else if (selectedLanguage === 'ES') {
+      setValue('preferredCurrency', 'USD'); // Spanish → US Dollar (can change to EUR if needed)
+    }
+  }, [selectedLanguage, setValue]);
 
   const handleAddAmazonLink = () => {
     if (amazonLinks.length < 3) setAmazonLinks([...amazonLinks, '']);
@@ -447,7 +459,7 @@ export function RegisterPage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label>{t('currency')}</Label>
-                    <Select onValueChange={(v) => setValue('preferredCurrency', v)} defaultValue="USD" disabled={isRegistering}>
+                    <Select value={selectedCurrency} onValueChange={(v) => setValue('preferredCurrency', v)} disabled>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="USD">USD ($)</SelectItem>
@@ -455,6 +467,9 @@ export function RegisterPage() {
                         <SelectItem value="BRL">BRL (R$)</SelectItem>
                       </SelectContent>
                     </Select>
+                    <p className="text-xs text-muted-foreground">
+                      {t('currencyNote') || 'Currency is automatically set based on your language'}
+                    </p>
                   </div>
                 </div>
 

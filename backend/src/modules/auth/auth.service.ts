@@ -14,7 +14,7 @@ import { AuthResponseDto, UserDataDto } from './dto/auth-response.dto';
 import { CreateAuthorByCloserDto, CreateAuthorByCloserResponseDto } from './dto/create-author-by-closer.dto';
 import { CreateAdminDto, CreateAdminResponseDto, AdminLevel, AdminPermission } from './dto/create-admin.dto';
 import { CreateCloserDto, CreateCloserResponseDto } from './dto/create-closer.dto';
-import { UserRole, ContentPreference, AdminRole } from '@prisma/client';
+import { UserRole, ContentPreference, AdminRole, Language } from '@prisma/client';
 import { Request } from 'express';
 
 /**
@@ -253,6 +253,16 @@ export class AuthService {
     // Generate email verification token
     const verificationToken = PasswordUtil.generateToken(32);
 
+    // Enforce language-currency mapping to prevent arbitrage
+    let enforcedCurrency = preferredCurrency || 'USD';
+    if (preferredLanguage === Language.PT) {
+      enforcedCurrency = 'BRL'; // Portuguese → Brazilian Real only
+    } else if (preferredLanguage === Language.EN) {
+      enforcedCurrency = 'USD'; // English → US Dollar only
+    } else if (preferredLanguage === Language.ES) {
+      enforcedCurrency = 'USD'; // Spanish → US Dollar only
+    }
+
     // Create user and profile based on role
     // DEV MODE: Auto-verify users if SKIP_EMAIL_VERIFICATION=true
     const user = await this.prisma.user.create({
@@ -263,7 +273,7 @@ export class AuthService {
         name,
         companyName,
         preferredLanguage: preferredLanguage || 'EN',
-        preferredCurrency: preferredCurrency || 'USD',
+        preferredCurrency: enforcedCurrency,
         phone,
         cpf: cpf ? cpf.replace(/[^\d]/g, '') : null, // Store CPF as digits only
         country,
@@ -907,6 +917,16 @@ export class AuthService {
     // Generate email verification token
     const verificationToken = PasswordUtil.generateToken(32);
 
+    // Enforce language-currency mapping to prevent arbitrage
+    let enforcedCurrency = preferredCurrency || 'USD';
+    if (preferredLanguage === Language.PT) {
+      enforcedCurrency = 'BRL';
+    } else if (preferredLanguage === Language.EN) {
+      enforcedCurrency = 'USD';
+    } else if (preferredLanguage === Language.ES) {
+      enforcedCurrency = 'USD';
+    }
+
     // Create user with AUTHOR role
     // DEV MODE: Auto-verify users if SKIP_EMAIL_VERIFICATION=true
     const user = await this.prisma.user.create({
@@ -916,7 +936,7 @@ export class AuthService {
         role: UserRole.AUTHOR,
         name,
         preferredLanguage: preferredLanguage || 'EN',
-        preferredCurrency: preferredCurrency || 'USD',
+        preferredCurrency: enforcedCurrency,
         phone,
         cpf: cpf ? cpf.replace(/[^\d]/g, '') : null, // Store CPF as digits only
         country,
