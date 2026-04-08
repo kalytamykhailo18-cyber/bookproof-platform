@@ -333,33 +333,45 @@ export function RegisterPage() {
                 </div>
 
                 {/* Password row */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="password">{t('password')}</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      {...register('password')}
-                      className={errors.password ? 'border-destructive' : ''}
-                      disabled={isRegistering}
-                    />
-                    {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
-                    <p className="text-xs text-muted-foreground">
-                      {t('passwordRequirements') || 'Min 8 characters, uppercase, lowercase, number, special character'}
+                <div className="space-y-3">
+                  <div className="rounded-md bg-blue-50 border border-blue-200 p-3">
+                    <p className="text-sm font-medium text-blue-900 mb-1">
+                      {t('passwordRequirementsTitle') || 'Password Requirements:'}
                     </p>
+                    <ul className="text-xs text-blue-800 space-y-0.5 list-disc list-inside">
+                      <li>{t('passwordReq1') || 'Minimum 8 characters'}</li>
+                      <li>{t('passwordReq2') || 'At least one uppercase letter (A-Z)'}</li>
+                      <li>{t('passwordReq3') || 'At least one lowercase letter (a-z)'}</li>
+                      <li>{t('passwordReq4') || 'At least one number (0-9)'}</li>
+                      <li>{t('passwordReq5') || 'At least one special character (!@#$%^&*)'}</li>
+                    </ul>
                   </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="confirmPassword">{t('confirmPassword')}</Label>
-                    <Input
-                      id="confirmPassword"
-                      type="password"
-                      placeholder="••••••••"
-                      {...register('confirmPassword')}
-                      className={errors.confirmPassword ? 'border-destructive' : ''}
-                      disabled={isRegistering}
-                    />
-                    {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="password">{t('password')}</Label>
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="••••••••"
+                        {...register('password')}
+                        className={errors.password ? 'border-destructive' : ''}
+                        disabled={isRegistering}
+                      />
+                      {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="confirmPassword">{t('confirmPassword')}</Label>
+                      <Input
+                        id="confirmPassword"
+                        type="password"
+                        placeholder="••••••••"
+                        {...register('confirmPassword')}
+                        className={errors.confirmPassword ? 'border-destructive' : ''}
+                        disabled={isRegistering}
+                      />
+                      {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
+                    </div>
                   </div>
                 </div>
 
