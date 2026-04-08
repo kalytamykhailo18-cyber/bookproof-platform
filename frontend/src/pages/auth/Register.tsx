@@ -106,11 +106,12 @@ export function RegisterPage() {
     register,
     trigger,
     getValues,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
     setValue,
     watch } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
-    mode: 'onChange',
+    mode: 'all', // Validate on change, blur, and submit
+    reValidateMode: 'onChange',
     defaultValues: {
       preferredLanguage: 'EN',
       preferredCurrency: 'USD',
@@ -128,11 +129,11 @@ export function RegisterPage() {
   // Auto-set currency based on language (prevent currency arbitrage)
   useEffect(() => {
     if (selectedLanguage === 'PT') {
-      setValue('preferredCurrency', 'BRL'); // Portuguese → Brazilian Real
+      setValue('preferredCurrency', 'BRL', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
     } else if (selectedLanguage === 'EN') {
-      setValue('preferredCurrency', 'USD'); // English → US Dollar
+      setValue('preferredCurrency', 'USD', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
     } else if (selectedLanguage === 'ES') {
-      setValue('preferredCurrency', 'USD'); // Spanish → US Dollar (can change to EUR if needed)
+      setValue('preferredCurrency', 'USD', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
     }
   }, [selectedLanguage, setValue]);
 
@@ -344,6 +345,9 @@ export function RegisterPage() {
                       disabled={isRegistering}
                     />
                     {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+                    <p className="text-xs text-muted-foreground">
+                      {t('passwordRequirements') || 'Min 8 characters, uppercase, lowercase, number, special character'}
+                    </p>
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="confirmPassword">{t('confirmPassword')}</Label>
@@ -613,7 +617,7 @@ export function RegisterPage() {
                 <Button
                   type="button"
                   className="w-full mt-1"
-                  disabled={isRegistering || !isValid}
+                  disabled={isRegistering}
                   onClick={handleRegister}
                   style={{ backgroundColor: '#3b82f6', fontWeight: 600 }}
                 >
