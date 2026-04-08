@@ -8,6 +8,7 @@ import { settingsApi } from '@/lib/api/settings';
 import { PackageTier } from '@/lib/api/credits';
 import { CouponValidationResponseDto, couponsApi } from '@/lib/api/coupons';
 import { stripeApi } from '@/lib/api/stripe';
+import { useAuthStore } from '@/stores/authStore';
 import {
   Card,
   CardContent,
@@ -56,6 +57,7 @@ export function CreditPurchasePage() {
   void _t; // Will use later for translations
   const navigate = useNavigate();
   const { startLoading, stopLoading } = useLoading();
+  const { user } = useAuthStore();
 
   // Package tiers state
   const [packageTiers, setPackageTiers] = useState<PackageTierType[]>([]);
@@ -105,8 +107,12 @@ export function CreditPurchasePage() {
     fetchKeywordPricing();
   }, []);
 
-  // Get currency based on current language
-  const userCurrency = useMemo(() => getCurrencyForLanguage(i18n.language), [i18n.language]);
+  // Get currency based on user's preferred language from their account
+  // This ensures currency matches their registration preference, not just the interface language
+  const userCurrency = useMemo(() => {
+    const langCode = user?.preferredLanguage?.toLowerCase() || i18n.language;
+    return getCurrencyForLanguage(langCode);
+  }, [user?.preferredLanguage, i18n.language]);
 
   // Fetch package tiers with currency-specific pricing
   useEffect(() => {
