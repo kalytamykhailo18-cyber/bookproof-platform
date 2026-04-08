@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiExcludeEndpoint, ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
+import { Public } from '@common/decorators/public.decorator';
 import { PaymentsService } from './payments.service';
 import { StripePaymentsService } from './services/stripe-payments.service';
 import { PagarmePaymentsService } from './services/pagarme-payments.service';
@@ -65,6 +66,7 @@ export class PaymentsController {
     return this.stripePaymentsService.createCheckoutSession(req.user!.authorProfileId!, dto);
   }
 
+  @Public()
   @Post('webhook')
   @HttpCode(200)
   @ApiExcludeEndpoint() // Exclude from Swagger docs (internal endpoint)
@@ -203,6 +205,7 @@ export class PaymentsController {
     });
   }
 
+  @Public()
   @Post('pagarme/webhook')
   @HttpCode(200)
   @ApiExcludeEndpoint()
