@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { authApi } from '@/lib/api/auth';
 import { useAuthStore } from '@/stores/authStore';
