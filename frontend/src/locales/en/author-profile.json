@@ -15,7 +15,7 @@
     "cpf": "CPF",
     "cpfNote": "Required for Brazilian payments (Pagar.me)",
     "language": "Language",
-    "languageNote": "This affects the language of emails and notifications",
+    "languageNote": "Changes interface language, email language, and currency (PT→BRL, EN/ES→USD)",
     "email": "Email Address",
     "emailNote": "Contact support to change your email"
   },

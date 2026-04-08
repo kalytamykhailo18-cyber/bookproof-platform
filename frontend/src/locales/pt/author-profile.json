@@ -15,7 +15,7 @@
     "cpf": "CPF",
     "cpfNote": "Obrigatório para pagamentos brasileiros (Pagar.me)",
     "language": "Idioma",
-    "languageNote": "Isso afeta o idioma dos e-mails e notificações",
+    "languageNote": "Altera idioma da interface, e-mails e moeda (PT→BRL, EN/ES→USD)",
     "email": "Endereço de E-mail",
     "emailNote": "Entre em contato com o suporte para alterar seu e-mail"
   },

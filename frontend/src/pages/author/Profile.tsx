@@ -259,7 +259,7 @@ export function AuthorProfilePage() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  {t('basicInfo.languageNote') || 'This affects the language of emails and notifications'}
+                  {t('basicInfo.languageNote') || 'Changes interface language, email language, and currency (PT→BRL, EN/ES→USD)'}
                 </p>
               </div>
 

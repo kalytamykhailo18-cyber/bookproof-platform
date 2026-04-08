@@ -1,15 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Globe, Menu, X, ChevronDown, LayoutDashboard } from 'lucide-react';
-import i18n from '@/lib/i18n';
+import { Menu, X, LayoutDashboard } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
-
-const LANGUAGES = [
-  { code: 'en', label: 'EN', name: 'English' },
-  { code: 'es', label: 'ES', name: 'Español' },
-  { code: 'pt', label: 'PT', name: 'Português' },
-];
 
 function getDashboardPath(role: string): string {
   switch (role) {
@@ -28,9 +21,6 @@ export function Header() {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
-  const currentLang = LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0];
-  const langRef = useRef<HTMLDivElement>(null);
 
   const isLanding = location.pathname === '/';
 
@@ -41,22 +31,6 @@ export function Header() {
     { href: '#pricing',      label: t('nav.pricing')    },
     { href: '#faq',          label: t('nav.faq')        },
   ];
-
-  useEffect(() => {
-    function handleOutside(e: MouseEvent) {
-      if (langRef.current && !langRef.current.contains(e.target as Node)) {
-        setLangOpen(false);
-      }
-    }
-    if (langOpen) document.addEventListener('mousedown', handleOutside);
-    return () => document.removeEventListener('mousedown', handleOutside);
-  }, [langOpen]);
-
-  function handleLangChange(code: string) {
-    i18n.changeLanguage(code);
-    setLangOpen(false);
-    setMobileOpen(false);
-  }
 
   const dashboardPath = user ? getDashboardPath(user.role) : '/';
 
@@ -94,39 +68,6 @@ export function Header() {
 
           {/* Right actions — lg+ */}
           <div className="hidden lg:flex items-center gap-2 shrink-0">
-            {/* Language switcher */}
-            <div className="relative" ref={langRef}>
-              <button
-                onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1 px-2 py-1.5 rounded-md text-sm font-medium text-[#ddd] hover:text-white hover:bg-white/10 transition-all duration-200"
-              >
-                <Globe className="h-3.5 w-3.5 shrink-0" />
-                <span>{currentLang.label}</span>
-                <ChevronDown className={`h-3 w-3 shrink-0 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {langOpen && (
-                <div
-                  className="absolute right-0 top-full mt-1 rounded-md border border-white/10 py-1 shadow-xl min-w-max z-10"
-                  style={{ background: 'rgba(15, 23, 42, 0.97)', backdropFilter: 'blur(12px)' }}
-                >
-                  {LANGUAGES.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => handleLangChange(lang.code)}
-                      className={`block w-full text-left px-4 py-2 text-sm transition-colors duration-200 ${
-                        lang.code === currentLang.code
-                          ? 'text-blue-400 bg-blue-500/10'
-                          : 'text-[#ddd] hover:text-white hover:bg-white/10'
-                      }`}
-                    >
-                      <span className="font-medium">{lang.label}</span>
-                      <span className="ml-2 text-[#ddd] text-xs">{lang.name}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
             {isAuthenticated && user ? (
               <Link
                 to={dashboardPath}
@@ -188,24 +129,6 @@ export function Header() {
                 ))}
               </div>
             )}
-
-            {/* Language row */}
-            <div className="py-3 border-t border-white/10 flex items-center gap-2">
-              <Globe className="h-3.5 w-3.5 text-[#ddd] shrink-0" />
-              {LANGUAGES.map((lang) => (
-                <button
-                  key={lang.code}
-                  onClick={() => handleLangChange(lang.code)}
-                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
-                    lang.code === currentLang.code
-                      ? 'text-blue-400 bg-blue-500/10'
-                      : 'text-[#ddd] hover:text-white hover:bg-white/10'
-                  }`}
-                >
-                  {lang.label}
-                </button>
-              ))}
-            </div>
 
             {/* CTA buttons */}
             <div className="pb-4 flex flex-col gap-2">
