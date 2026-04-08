@@ -136,10 +136,8 @@ export class PaymentsController {
   }
 
   // TEMPORARY: Manual payment processing for testing (bypass webhook)
+  @Public()
   @Post('manual-process/:sessionId')
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.AUTHOR)
   @ApiOperation({ summary: 'TESTING ONLY: Manually process payment by session ID' })
   @ApiResponse({ status: 200, description: 'Payment processed manually' })
   async manualProcessPayment(

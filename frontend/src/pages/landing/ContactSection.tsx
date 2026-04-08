@@ -58,7 +58,7 @@ export function ContactSection() {
         <div className="grid sm:grid-cols-2 gap-5 sm:gap-6 mb-14 sm:mb-16">
           {channels.map(({ image, key, color, href, animation, hours }) => (
             <div key={key} className={`rounded-md overflow-hidden group ${animation}`}>
-              <img
+{/*              <img
                 src={image}
                 alt={key}
                 width={600}
@@ -69,7 +69,7 @@ export function ContactSection() {
                   maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 50%)',
                 }}
               />
-              <div className="px-7 pt-6 pb-7 sm:px-8 sm:pt-8 sm:pb-8">
+*/}              <div className="px-7 pt-6 pb-7 sm:px-8 sm:pt-8 sm:pb-8">
                 <h3 className="text-base font-semibold text-slate-900 mb-2.5">{t(`${key}.title`)}</h3>
                 <p className="text-sm text-slate-500 leading-relaxed mb-4">{t(`${key}.description`)}</p>
                 {hours && (

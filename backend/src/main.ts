@@ -16,7 +16,20 @@ async function bootstrap() {
   // Configure body parser limits for large file uploads (500MB+ for audiobooks)
   // Note: Multipart form data is handled by multer, but we need to increase
   // the raw body limit for proper request handling
-  app.use(bodyParser.json({ limit: '10mb' }));
+  // IMPORTANT: Webhook endpoints need raw body for signature verification
+  app.use((req: any, res: any, next: any) => {
+    if (req.originalUrl === '/api/v1/payments/webhook' || req.originalUrl === '/api/v1/payments/pagarme/webhook') {
+      // Use raw body parser for webhook endpoints and save to req.rawBody
+      bodyParser.raw({ type: 'application/json' })(req, res, (err) => {
+        if (err) return next(err);
+        req.rawBody = req.body; // Save raw buffer
+        next();
+      });
+    } else {
+      // Use JSON parser for all other routes
+      bodyParser.json({ limit: '10mb' })(req, res, next);
+    }
+  });
   app.use(bodyParser.urlencoded({ limit: '550mb', extended: true }));
 
   const configService = app.get(ConfigService);
