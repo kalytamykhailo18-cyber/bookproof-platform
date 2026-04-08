@@ -66,6 +66,11 @@ export function LoginPage() {
       tokenManager.setToken(response.accessToken);
       setUser(response.user);
 
+      // Set interface language from user's preference
+      if (response.user.preferredLanguage) {
+        i18n.changeLanguage(response.user.preferredLanguage.toLowerCase());
+      }
+
       toast.success(t('login.success'));
 
       // Section 16.1: Redirect to intended destination after successful login

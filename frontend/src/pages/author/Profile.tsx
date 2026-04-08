@@ -37,9 +37,9 @@ import {
 } from 'lucide-react';
 
 export function AuthorProfilePage() {
-  const { t } = useTranslation('author.profile');
+  const { t, i18n } = useTranslation('author.profile');
   const navigate = useNavigate();
-  const { user, refreshUser } = useAuthStore();
+  const { user } = useAuthStore();
 
   // Loading states
   const [isLoadingLanguage, setIsLoadingLanguage] = useState(true);
@@ -90,8 +90,12 @@ export function AuthorProfilePage() {
     try {
       setIsUpdatingBasicInfo(true);
       await updateProfile({ name, country, phone, cpf: cpf || undefined });
-      await updateLanguage(preferredLanguage);
-      await refreshUser();
+      await updateLanguage({ preferredLanguage });
+
+      // Change i18n language immediately for instant UI update
+      i18n.changeLanguage(preferredLanguage.toLowerCase());
+
+      // Note: Page refresh or re-login will update the user data in auth store
       setIsEditingBasicInfo(false);
       toast.success(t('messages.profileUpdated') || 'Profile updated successfully');
     } catch (error: any) {

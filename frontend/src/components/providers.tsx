@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { LoadingProvider } from './providers/LoadingProvider';
+import { LanguageInitializer } from './LanguageInitializer';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,6 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <LoadingProvider>
+        <LanguageInitializer />
         {children}
         <Toaster position="top-right" richColors closeButton />
       </LoadingProvider>
