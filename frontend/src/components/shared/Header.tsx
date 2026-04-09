@@ -1,8 +1,15 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, LayoutDashboard } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Globe, ChevronDown } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
+import i18n from '@/lib/i18n';
+
+const LANGUAGES = [
+  { code: 'en', label: 'EN', name: 'English' },
+  { code: 'es', label: 'ES', name: 'Español' },
+  { code: 'pt', label: 'PT', name: 'Português' },
+];
 
 function getDashboardPath(role: string): string {
   switch (role) {
@@ -16,13 +23,34 @@ function getDashboardPath(role: string): string {
 }
 
 export function Header() {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
 
   const isLanding = location.pathname === '/';
+
+  // Close language dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (langRef.current && !langRef.current.contains(event.target as Node)) {
+        setLangOpen(false);
+      }
+    }
+    if (langOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [langOpen]);
+
+  // Handle language change (only for unauthenticated users)
+  const handleLangChange = (code: string) => {
+    i18n.changeLanguage(code);
+    setLangOpen(false);
+  };
 
   // Anchor nav links — only shown on landing page
   const navLinks = [
@@ -63,6 +91,40 @@ export function Header() {
                   {link.label}
                 </a>
               ))}
+            </div>
+          )}
+
+          {/* Language selector — lg+, only for unauthenticated users */}
+          {!isAuthenticated && (
+            <div className="hidden lg:flex items-center shrink-0" ref={langRef}>
+              <div className="relative">
+                <button
+                  onClick={() => setLangOpen(!langOpen)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium text-[#ddd] hover:text-white hover:bg-white/10 transition-all duration-200"
+                  aria-label="Select language"
+                >
+                  <Globe className="h-4 w-4" />
+                  <span>{LANGUAGES.find(l => l.code === i18n.language)?.label || 'EN'}</span>
+                  <ChevronDown className="h-3.5 w-3.5" />
+                </button>
+                {langOpen && (
+                  <div className="absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-[#1a1f2e] border border-white/10 overflow-hidden z-50">
+                    {LANGUAGES.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => handleLangChange(lang.code)}
+                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                          i18n.language === lang.code
+                            ? 'bg-white/10 text-white font-medium'
+                            : 'text-[#ddd] hover:bg-white/5 hover:text-white'
+                        }`}
+                      >
+                        {lang.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -113,6 +175,31 @@ export function Header() {
           style={{ background: 'rgba(8, 13, 26, 0.98)' }}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            {/* Language selector — mobile, only for unauthenticated users */}
+            {!isAuthenticated && (
+              <div className="py-3 border-b border-white/10">
+                <div className="flex items-center gap-2 px-3 py-1 text-xs text-muted-foreground mb-2">
+                  <Globe className="h-3.5 w-3.5" />
+                  <span>Language</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => handleLangChange(lang.code)}
+                      className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                        i18n.language === lang.code
+                          ? 'bg-white/10 text-white'
+                          : 'text-[#ddd] hover:bg-white/5 hover:text-white border border-white/10'
+                      }`}
+                    >
+                      {lang.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Nav links — landing page only */}
             {isLanding && (
