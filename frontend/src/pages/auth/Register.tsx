@@ -467,9 +467,9 @@ export function RegisterPage() {
                     <Select onValueChange={(v) => setValue('preferredLanguage', v as 'EN' | 'PT' | 'ES')} defaultValue="EN" disabled={isRegistering}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="EN">{t('languages.english', 'English')}</SelectItem>
-                        <SelectItem value="PT">{t('languages.portuguese', 'Português')}</SelectItem>
-                        <SelectItem value="ES">{t('languages.spanish', 'Español')}</SelectItem>
+                        <SelectItem value="EN">{tAuth('languages.english', 'English')}</SelectItem>
+                        <SelectItem value="PT">{tAuth('languages.portuguese', 'Português')}</SelectItem>
+                        <SelectItem value="ES">{tAuth('languages.spanish', 'Español')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
