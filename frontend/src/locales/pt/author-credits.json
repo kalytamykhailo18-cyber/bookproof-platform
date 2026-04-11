@@ -111,5 +111,12 @@
     "message": "Seu pagamento foi cancelado. Nenhum valor foi cobrado da sua conta. Você pode tentar novamente quando estiver pronto.",
     "tryAgain": "Tentar Novamente",
     "backToDashboard": "Voltar ao Painel"
+  },
+  "info": {
+    "title": "Como Funcionam os Créditos",
+    "ebook": "1 crédito = 1 avaliação de ebook",
+    "audiobook": "2 créditos = 1 avaliação de audiobook",
+    "validity": "Os créditos expiram com base no período de validade do pacote",
+    "secure": "Processamento de pagamentos seguro via Stripe"
   }
 }

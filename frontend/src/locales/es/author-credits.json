@@ -98,6 +98,13 @@
       "answer": "¡Sí! Los créditos se agregan al saldo de tu cuenta y pueden asignarse a cualquiera de tus campañas. Sin embargo, recuerda activarlos creando una campaña dentro de la ventana de activación."
     }
   },
+  "info": {
+    "title": "Cómo Funcionan los Créditos",
+    "ebook": "1 crédito = 1 reseña de ebook",
+    "audiobook": "2 créditos = 1 reseña de audiolibro",
+    "validity": "Los créditos expiran según el período de validez del paquete",
+    "secure": "Procesamiento de pagos seguro vía Stripe"
+  },
   "processing": "Procesando...",
   "success": {
     "title": "¡Pago Exitoso!",

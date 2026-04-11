@@ -111,5 +111,12 @@
     "message": "Your payment was cancelled. No charges have been made to your account. You can try again whenever you're ready.",
     "tryAgain": "Try Again",
     "backToDashboard": "Back to Dashboard"
+  },
+  "info": {
+    "title": "How Credits Work",
+    "ebook": "1 credit = 1 ebook review",
+    "audiobook": "2 credits = 1 audiobook review",
+    "validity": "Credits expire based on package validity period",
+    "secure": "Secure payment processing via Stripe"
   }
 }
