@@ -80,5 +80,35 @@
     "bankNameRequired": "O nome do banco é obrigatório",
     "walletAddressRequired": "O endereço da carteira é obrigatório",
     "networkRequired": "A rede é obrigatória"
-  }
+  },
+
+  "subtitle": "Gerencie seus ganhos e solicite pagamentos",
+  "stats": {
+    "readyToPayout": "Pronto para solicitar pagamento",
+    "untilMinimum": "até o mínimo",
+    "reviewsBeingValidated": "Avaliações sendo validadas",
+    "lifetimeEarnings": "Ganhos totais",
+    "totalPayoutsReceived": "Total de pagamentos recebidos"
+  },
+  "transactions": {
+    "description": "Seus ganhos e atividade da carteira",
+    "empty": "Nenhuma transação ainda",
+    "balance": "Saldo",
+    "showing": "Mostrando {{count}} de {{total}} transações"
+  },
+  "payouts": {
+    "description": "Suas solicitações de pagamento e status atual",
+    "paymentMethod": "Método de Pagamento"
+  },
+
+  "backToWallet": "Voltar para a Carteira",
+  "payoutRequestTitle": "Solicitação de Pagamento",
+  "payoutRequestDescription": "Digite o valor e os detalhes do pagamento",
+  "withdrawFullBalance": "Sacar Saldo Total",
+  "selectPaymentMethod": "Selecione o método de pagamento",
+  "notesPlaceholder": "Quaisquer notas adicionais...",
+  "insufficientBalance": "Você precisa de pelo menos {{minAmount}} para solicitar um pagamento. Saldo atual: {{currentBalance}}",
+  "amountExceedsBalance": "O valor não pode exceder o saldo disponível ({{balance}})",
+  "successMessage": "Solicitação de pagamento enviada com sucesso",
+  "errorMessage": "Falha ao enviar a solicitação de pagamento"
 }

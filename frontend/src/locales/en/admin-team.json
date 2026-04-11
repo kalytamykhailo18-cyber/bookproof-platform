@@ -157,5 +157,9 @@
     "submit": "Unlock Account",
     "cancel": "Cancel",
     "unlocking": "Unlocking..."
+  },
+  "accessDenied": {
+    "title": "Access Denied",
+    "description": "You do not have permission to access Team Management."
   }
 }

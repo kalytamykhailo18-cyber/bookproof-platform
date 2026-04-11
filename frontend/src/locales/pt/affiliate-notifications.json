@@ -1,0 +1,16 @@
+{
+  "title": "Notificações",
+  "description": "Fique atualizado com a atividade da sua campanha e mensagens do sistema",
+  "settings": "Configurações",
+  "markAllRead": "Marcar Todas como Lidas ({{count}})",
+  "markAllReadSuccess": "Todas as notificações marcadas como lidas",
+  "markAllReadError": "Falha ao marcar todas as notificações como lidas",
+  "notificationsUpdated": "{{count}} notificação{{count, plural, one {} other {ões}}} atualizada{{count, plural, one {} other {s}}}",
+  "all": "Todas",
+  "unread": "Não Lidas",
+  "allTypes": "Todos os Tipos",
+  "campaigns": "Campanhas",
+  "reviews": "Avaliações",
+  "payments": "Pagamentos",
+  "showing": "Mostrando {{count}} de {{total}} notificações"
+}

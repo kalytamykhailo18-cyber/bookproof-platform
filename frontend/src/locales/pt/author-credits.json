@@ -1,63 +1,114 @@
 {
   "title": "Comprar Créditos",
-  "subtitle": "Compre créditos para executar campanhas de avaliações para seus livros",
+  "subtitle": "Escolha um pacote que atenda às suas necessidades",
+  "activation": {
+    "title": "Sobre as Janelas de Ativação:",
+    "description": "Após comprar créditos, você tem uma janela de tempo específica para começar a usá-los criando sua primeira campanha. Uma vez ativados, você pode continuar usando os créditos para essa campanha até a conclusão."
+  },
   "currentBalance": {
     "title": "Saldo Atual",
     "description": "Seus créditos disponíveis e uso",
     "available": "Créditos Disponíveis",
     "used": "Créditos Usados",
-    "expiring": "Expirando em Breve"
+    "expiring": "Próximos a Expirar"
   },
   "packages": {
     "title": "Pacotes de Créditos",
     "description": "Escolha um pacote que atenda às suas necessidades",
     "credits": "créditos",
-    "validityDays": "Válido por {{days}} dias",
+    "validityDays": "Ativar dentro de {{days}} dias",
     "mostPopular": "Mais Popular",
-    "select": "Selecionar Pacote",
+    "select": "Comprar Pacote",
     "selected": "Selecionado",
-    "noPackages": "Nenhum pacote disponível no momento"
-  },
-  "coupon": {
-    "title": "Tem um Cupom?",
-    "description": "Digite seu código de cupom para obter desconto",
-    "label": "Código do Cupom",
-    "placeholder": "Digite o código do cupom"
+    "noPackages": "Nenhum pacote disponível no momento. Por favor, volte mais tarde.",
+    "pricePerCredit": "Preço por crédito",
+    "installments": "Em até 3x sem juros",
+    "features": {
+      "reviews": "{{count}} avaliações verificadas",
+      "validityDays": "{{days}} dias para iniciar sua campanha",
+      "overbooking": "Buffer de overbooking de 20% incluído",
+      "support": "Suporte por email"
+    }
   },
   "keywordResearch": {
-    "title": "Serviço de Pesquisa de Palavras-chave",
-    "description": "Obtenha pesquisa profissional de palavras-chave para otimizar a descoberta do seu livro",
-    "addLabel": "Incluir Serviço de Pesquisa de Palavras-chave",
-    "benefits": "Análise profissional de palavras-chave para melhor visibilidade do livro na Amazon",
-    "oneTime": "Taxa única"
+    "title": "Adicionar Pesquisa de Palavras-Chave",
+    "recommended": "Recomendado",
+    "description": "Impulsione a descoberta do seu livro com otimização de palavras-chave da Amazon com IA",
+    "include": "Incluir Pesquisa de Palavras-Chave (+{{price}})",
+    "perBook": "por livro",
+    "features": {
+      "keywords": "Palavras-chave primárias, secundárias e de cauda longa",
+      "backend": "Palavras-chave backend do Amazon KDP prontas para usar",
+      "report": "Relatório PDF profissional entregue no seu email"
+    },
+    "note": "Após comprar créditos, você será redirecionado para selecionar a qual livro aplicar a pesquisa de palavras-chave, ou pode",
+    "orderSeparately": "solicitar a pesquisa de palavras-chave separadamente"
   },
-  "orderSummary": {
-    "title": "Resumo do Pedido",
-    "coupon": "Cupom",
-    "appliedAtCheckout": "Aplicado no checkout",
-    "total": "Total"
+  "coupon": {
+    "title": "Tem um Código de Cupom?",
+    "description": "Digite seu código de cupom para obter um desconto na sua compra",
+    "label": "Código de Cupom",
+    "placeholder": "DIGITE-CODIGO-AQUI",
+    "apply": "Aplicar",
+    "remove": "Remover",
+    "validating": "Validando...",
+    "applied": "Cupom aplicado!",
+    "invalid": "Código de cupom inválido",
+    "warning": "Nota: Este cupom pode não se aplicar a compras de créditos."
   },
-  "checkout": {
-    "processing": "Processando...",
-    "button": "Prosseguir para o Pagamento"
+  "history": {
+    "title": "Histórico de Compras",
+    "description": "Suas transações de compra de créditos",
+    "loading": "Carregando transações...",
+    "noTransactions": "Ainda não há compras",
+    "noPurchasesMessage": "Compre seu primeiro pacote de créditos para começar",
+    "table": {
+      "date": "Data",
+      "package": "Pacote",
+      "credits": "Créditos",
+      "amount": "Valor",
+      "status": "Status",
+      "validity": "Validade",
+      "actions": "Ações",
+      "until": "Até",
+      "noExpiry": "Sem expiração"
+    }
   },
-  "info": {
-    "title": "Como os Créditos Funcionam",
-    "ebook": "1 crédito = 1 avaliação de ebook",
-    "audiobook": "2 créditos = 1 avaliação de audiolivro",
-    "validity": "Pacotes padrão válidos por 180 dias, pacotes Empresariais válidos por 360 dias. Os créditos podem ser usados em múltiplas campanhas dentro do período de validade. Os créditos não são reembolsáveis após a compra.",
-    "secure": "Processamento de pagamento seguro via Stripe"
+  "faq": {
+    "title": "Perguntas Frequentes",
+    "activationWindow": {
+      "question": "O que é a janela de ativação?",
+      "answer1": "Cada pacote tem uma janela de ativação (30, 90 ou 120 dias dependendo do pacote). Você deve COMEÇAR a usar seus créditos dentro deste período criando uma campanha. Uma vez ativados, você pode continuar usando os créditos para essa campanha até a conclusão.",
+      "answer2": "Exemplo: Se você comprar o pacote de 100 créditos com uma janela de ativação de 30 dias, você tem 30 dias para criar uma campanha. Uma vez que você crie a campanha e aloque créditos, esses créditos não expiram - você pode usá-los até que sua campanha esteja completa."
+    },
+    "noActivation": {
+      "question": "O que acontece se eu não ativar dentro da janela?",
+      "answer": "Se você não criar uma campanha dentro da janela de ativação, os créditos não utilizados expirarão. Recomendamos comprar créditos quando você estiver pronto para lançar sua campanha para evitar perdê-los."
+    },
+    "refund": {
+      "question": "Posso obter um reembolso?",
+      "answer": "Créditos não utilizados podem ser reembolsados dentro de 14 dias após a compra. Uma vez que os créditos são alocados para uma campanha, eles se tornam não reembolsáveis."
+    },
+    "paymentMethods": {
+      "question": "Quais métodos de pagamento vocês aceitam?",
+      "answer": "Aceitamos todos os principais cartões de crédito, cartões de débito e carteiras digitais através do nosso gateway de pagamento seguro Stripe."
+    },
+    "multipleBooks": {
+      "question": "Posso comprar créditos para múltiplos livros?",
+      "answer": "Sim! Os créditos são adicionados ao saldo da sua conta e podem ser alocados para qualquer uma das suas campanhas. No entanto, lembre-se de ativá-los criando uma campanha dentro da janela de ativação."
+    }
   },
+  "processing": "Processando...",
   "success": {
-    "title": "Pagamento Bem-sucedido!",
-    "message": "Seus créditos foram adicionados à sua conta e estão prontos para uso.",
+    "title": "Pagamento Bem-Sucedido!",
+    "message": "Seus créditos foram adicionados à sua conta e estão prontos para usar.",
     "info": "Os créditos foram automaticamente adicionados ao seu saldo. Agora você pode usá-los para lançar campanhas de avaliações para seus livros.",
     "createCampaign": "Criar Nova Campanha",
     "backToDashboard": "Voltar ao Painel"
   },
   "cancel": {
     "title": "Pagamento Cancelado",
-    "message": "Seu pagamento foi cancelado. Nenhuma cobrança foi feita em sua conta. Você pode tentar novamente quando estiver pronto.",
+    "message": "Seu pagamento foi cancelado. Nenhum valor foi cobrado da sua conta. Você pode tentar novamente quando estiver pronto.",
     "tryAgain": "Tentar Novamente",
     "backToDashboard": "Voltar ao Painel"
   }

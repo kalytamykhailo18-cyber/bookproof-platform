@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 import { disputesApi } from '@/lib/api/disputes';
 import { toast } from 'sonner';
@@ -32,6 +33,7 @@ import { Plus, Scale, MessageSquare, HelpCircle, Loader2 } from 'lucide-react';
 import { DisputeStatus, DisputeType, DisputePriority, AppealStatus } from '@/lib/api/disputes';
 
 export function AuthorSupportPage() {
+  const { t } = useTranslation('support');
   const { user } = useAuthStore();
   const userId = user?.id || '';
 
@@ -53,7 +55,7 @@ export function AuthorSupportPage() {
       setDisputes(data);
     } catch (err) {
       console.error('User disputes error:', err);
-      toast.error('Failed to load disputes');
+      toast.error(t('messages.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -81,14 +83,14 @@ export function AuthorSupportPage() {
         description: disputeDescription,
         priority: DisputePriority.MEDIUM
       });
-      toast.success('Dispute created successfully');
+      toast.success(t('messages.createSuccess'));
       setCreateDialogOpen(false);
       setDisputeType(DisputeType.AUTHOR_COMPLAINT);
       setDisputeDescription('');
       // Refetch disputes
       await fetchDisputes();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to create dispute');
+      toast.error(error.response?.data?.message || t('messages.createError'));
     } finally {
       setIsCreatingDispute(false);
     }
@@ -98,14 +100,14 @@ export function AuthorSupportPage() {
     try {
       setIsFilingAppeal(true);
       await disputesApi.fileAppeal(selectedDisputeId, { reason: appealReason });
-      toast.success('Appeal filed successfully');
+      toast.success(t('messages.appealSuccess'));
       setAppealDialogOpen(false);
       setAppealReason('');
       setSelectedDisputeId('');
       // Refetch disputes
       await fetchDisputes();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to file appeal');
+      toast.error(error.response?.data?.message || t('messages.appealError'));
     } finally {
       setIsFilingAppeal(false);
     }
@@ -151,14 +153,14 @@ export function AuthorSupportPage() {
 
   const getTypeLabel = (type: DisputeType) => {
     const labels: Record<DisputeType, string> = {
-      [DisputeType.AUTHOR_DISPUTE]: 'Campaign Issue',
-      [DisputeType.AUTHOR_COMPLAINT]: 'General Complaint',
-      [DisputeType.READER_COMPLAINT]: 'Reader Complaint',
-      [DisputeType.REVIEW_QUALITY]: 'Review Quality',
-      [DisputeType.PAYMENT_ISSUE]: 'Payment Issue',
-      [DisputeType.SERVICE_ISSUE]: 'Service Issue',
-      [DisputeType.POLICY_VIOLATION]: 'Policy Violation',
-      [DisputeType.OTHER]: 'Other' };
+      [DisputeType.AUTHOR_DISPUTE]: t('issueTypes.campaignIssue'),
+      [DisputeType.AUTHOR_COMPLAINT]: t('issueTypes.generalComplaint'),
+      [DisputeType.READER_COMPLAINT]: t('issueTypes.generalComplaint'),
+      [DisputeType.REVIEW_QUALITY]: t('issueTypes.reviewQuality'),
+      [DisputeType.PAYMENT_ISSUE]: t('issueTypes.paymentIssue'),
+      [DisputeType.SERVICE_ISSUE]: t('issueTypes.serviceIssue'),
+      [DisputeType.POLICY_VIOLATION]: t('issueTypes.other'),
+      [DisputeType.OTHER]: t('issueTypes.other') };
     return labels[type] || type;
   };
 
@@ -166,7 +168,7 @@ export function AuthorSupportPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 items-center justify-center">
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
@@ -176,52 +178,52 @@ export function AuthorSupportPage() {
     <div className="container mx-auto space-y-6 px-4 py-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Support</h1>
+          <h1 className="text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">
-            Get help with issues or disputes
+            {t('subtitle')}
           </p>
         </div>
         <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              New Support Request
+              {t('newRequest')}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create Support Request</DialogTitle>
+              <DialogTitle>{t('createDialog.title')}</DialogTitle>
               <DialogDescription>
-                Describe your issue and our team will review it
+                {t('createDialog.description')}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="disputeType">Issue Type *</Label>
+                <Label htmlFor="disputeType">{t('createDialog.issueTypeLabel')}</Label>
                 <Select
                   value={disputeType}
                   onValueChange={(value: DisputeType) => setDisputeType(value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select issue type" />
+                    <SelectValue placeholder={t('createDialog.issueTypePlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={DisputeType.AUTHOR_COMPLAINT}>General Complaint</SelectItem>
-                    <SelectItem value={DisputeType.AUTHOR_DISPUTE}>Campaign Issue</SelectItem>
-                    <SelectItem value={DisputeType.REVIEW_QUALITY}>Review Quality</SelectItem>
-                    <SelectItem value={DisputeType.PAYMENT_ISSUE}>Payment Issue</SelectItem>
-                    <SelectItem value={DisputeType.SERVICE_ISSUE}>Service Issue</SelectItem>
-                    <SelectItem value={DisputeType.OTHER}>Other</SelectItem>
+                    <SelectItem value={DisputeType.AUTHOR_COMPLAINT}>{t('issueTypes.generalComplaint')}</SelectItem>
+                    <SelectItem value={DisputeType.AUTHOR_DISPUTE}>{t('issueTypes.campaignIssue')}</SelectItem>
+                    <SelectItem value={DisputeType.REVIEW_QUALITY}>{t('issueTypes.reviewQuality')}</SelectItem>
+                    <SelectItem value={DisputeType.PAYMENT_ISSUE}>{t('issueTypes.paymentIssue')}</SelectItem>
+                    <SelectItem value={DisputeType.SERVICE_ISSUE}>{t('issueTypes.serviceIssue')}</SelectItem>
+                    <SelectItem value={DisputeType.OTHER}>{t('issueTypes.other')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label htmlFor="disputeDescription">Description *</Label>
+                <Label htmlFor="disputeDescription">{t('createDialog.descriptionLabel')}</Label>
                 <Textarea
                   id="disputeDescription"
                   value={disputeDescription}
                   onChange={(e) => setDisputeDescription(e.target.value)}
-                  placeholder="Please describe your issue in detail (minimum 10 characters)"
+                  placeholder={t('createDialog.descriptionPlaceholder')}
                   rows={5}
                 />
                 <div className="flex items-center justify-between mt-1">
@@ -231,25 +233,25 @@ export function AuthorSupportPage() {
                       : 'text-green-600 dark:text-green-400'
                   }`}>
                     {disputeDescription.length < 10
-                      ? `${10 - disputeDescription.length} more characters needed`
-                      : '✓ Minimum reached'}
+                      ? t('createDialog.charactersNeeded', { count: 10 - disputeDescription.length })
+                      : t('createDialog.minimumReached')}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {disputeDescription.length}/2000
+                    {t('createDialog.characterCount', { current: disputeDescription.length, max: 2000 })}
                   </p>
                 </div>
               </div>
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setCreateDialogOpen(false)}>
-                Cancel
+                {t('createDialog.cancel')}
               </Button>
               <Button
                 type="button"
                 onClick={handleCreateDispute}
                 disabled={disputeDescription.length < 10 || isCreatingDispute}
               >
-                {isCreatingDispute ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Submit Request'}
+                {isCreatingDispute ? <Loader2 className="h-4 w-4 animate-spin" /> : t('createDialog.submit')}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -261,32 +263,32 @@ export function AuthorSupportPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <HelpCircle className="h-5 w-5 text-muted-foreground" />
-            <CardTitle>Need Help?</CardTitle>
+            <CardTitle>{t('helpCard.title')}</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-2">
-          <p>Our support team typically responds within 24 hours (4 hours for critical issues).</p>
-          <p>If your request has been resolved but you disagree with the outcome, you may file one appeal per issue.</p>
+          <p>{t('helpCard.responseTime')}</p>
+          <p>{t('helpCard.appealInfo')}</p>
         </CardContent>
       </Card>
 
       {/* My Requests Table */}
       <Card>
         <CardHeader>
-          <CardTitle>My Support Requests</CardTitle>
-          <CardDescription>Track the status of your support requests</CardDescription>
+          <CardTitle>{t('requestsTable.title')}</CardTitle>
+          <CardDescription>{t('requestsTable.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Appeal</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{t('requestsTable.headers.id')}</TableHead>
+                <TableHead>{t('requestsTable.headers.type')}</TableHead>
+                <TableHead>{t('requestsTable.headers.status')}</TableHead>
+                <TableHead>{t('requestsTable.headers.appeal')}</TableHead>
+                <TableHead>{t('requestsTable.headers.description')}</TableHead>
+                <TableHead>{t('requestsTable.headers.created')}</TableHead>
+                <TableHead>{t('requestsTable.headers.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -321,49 +323,49 @@ export function AuthorSupportPage() {
                           }}
                         >
                           <DialogTrigger asChild>
-                            <Button variant="outline" size="sm" title="File Appeal">
+                            <Button variant="outline" size="sm" title={t('requestsTable.appealButton')}>
                               <Scale className="h-4 w-4 mr-1" />
-                              Appeal
+                              {t('requestsTable.appealButton')}
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>File an Appeal</DialogTitle>
+                              <DialogTitle>{t('appealDialog.title')}</DialogTitle>
                               <DialogDescription>
-                                You may file one appeal per issue. Please explain why you believe the resolution was incorrect.
+                                {t('appealDialog.description')}
                               </DialogDescription>
                             </DialogHeader>
                             {dispute.resolution && (
                               <div className="rounded-lg border bg-muted/50 p-4">
-                                <p className="text-sm font-medium mb-1">Original Resolution:</p>
+                                <p className="text-sm font-medium mb-1">{t('appealDialog.originalResolution')}</p>
                                 <p className="text-sm text-muted-foreground">{dispute.resolution}</p>
                               </div>
                             )}
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="appealReason">Appeal Reason *</Label>
+                                <Label htmlFor="appealReason">{t('appealDialog.reasonLabel')}</Label>
                                 <Textarea
                                   id="appealReason"
                                   value={appealReason}
                                   onChange={(e) => setAppealReason(e.target.value)}
-                                  placeholder="Explain why you believe the resolution was unfair or incorrect (minimum 20 characters)"
+                                  placeholder={t('appealDialog.reasonPlaceholder')}
                                   rows={5}
                                 />
                                 <p className="text-xs text-muted-foreground mt-1">
-                                  {appealReason.length}/2000 characters (minimum 20)
+                                  {t('appealDialog.characterCount', { current: appealReason.length, max: 2000, min: 20 })}
                                 </p>
                               </div>
                             </div>
                             <DialogFooter>
                               <Button type="button" variant="outline" onClick={() => setAppealDialogOpen(false)}>
-                                Cancel
+                                {t('appealDialog.cancel')}
                               </Button>
                               <Button
                                 type="button"
                                 onClick={handleFileAppeal}
                                 disabled={appealReason.length < 20 || isFilingAppeal}
                               >
-                                {isFilingAppeal ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Submit Appeal'}
+                                {isFilingAppeal ? <Loader2 className="h-4 w-4 animate-spin" /> : t('appealDialog.submit')}
                               </Button>
                             </DialogFooter>
                           </DialogContent>
@@ -372,30 +374,30 @@ export function AuthorSupportPage() {
                       {dispute.resolution && !canFileAppeal(dispute) && (
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="ghost" size="sm" title="View Resolution">
+                            <Button variant="ghost" size="sm" title={t('requestsTable.viewResolutionButton')}>
                               <MessageSquare className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Resolution Details</DialogTitle>
+                              <DialogTitle>{t('resolutionDialog.title')}</DialogTitle>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <p className="text-sm font-medium">Resolution:</p>
+                                <p className="text-sm font-medium">{t('resolutionDialog.resolutionLabel')}</p>
                                 <p className="text-sm text-muted-foreground">{dispute.resolution}</p>
                               </div>
                               {dispute.appealStatus && dispute.appealStatus !== AppealStatus.NONE && (
                                 <>
                                   <div>
-                                    <p className="text-sm font-medium">Appeal Status:</p>
+                                    <p className="text-sm font-medium">{t('resolutionDialog.appealStatusLabel')}</p>
                                     <Badge variant={getAppealStatusColor(dispute.appealStatus)}>
                                       {dispute.appealStatus}
                                     </Badge>
                                   </div>
                                   {dispute.appealResolution && (
                                     <div>
-                                      <p className="text-sm font-medium">Appeal Resolution:</p>
+                                      <p className="text-sm font-medium">{t('resolutionDialog.appealResolutionLabel')}</p>
                                       <p className="text-sm text-muted-foreground">{dispute.appealResolution}</p>
                                     </div>
                                   )}
@@ -411,7 +413,7 @@ export function AuthorSupportPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center text-muted-foreground">
-                    No support requests found
+                    {t('requestsTable.noRequests')}
                   </TableCell>
                 </TableRow>
               )}

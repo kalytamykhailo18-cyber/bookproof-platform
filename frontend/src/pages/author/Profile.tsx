@@ -39,7 +39,7 @@ import {
 export function AuthorProfilePage() {
   const { t, i18n } = useTranslation('author.profile');
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
 
   // Loading states
   const [isLoadingLanguage, setIsLoadingLanguage] = useState(true);
@@ -92,12 +92,30 @@ export function AuthorProfilePage() {
       await updateProfile({ name, country, phone, cpf: cpf || undefined });
       await updateLanguage({ preferredLanguage });
 
-      // Change i18n language immediately for instant UI update
-      i18n.changeLanguage(preferredLanguage.toLowerCase());
+      // Update auth store with new user data FIRST
+      const updatedUser = {
+        ...user!,
+        name,
+        country: country || user!.country,
+        phone: phone || user!.phone,
+        cpf: cpf || user!.cpf,
+        preferredLanguage,
+      };
+      setUser(updatedUser);
 
-      // Note: Page refresh or re-login will update the user data in auth store
+      // Wait for Zustand to persist to localStorage
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Change i18n language
+      await i18n.changeLanguage(preferredLanguage.toLowerCase());
+
       setIsEditingBasicInfo(false);
       toast.success(t('messages.profileUpdated') || 'Profile updated successfully');
+
+      // Reload page to ensure all components pick up new language
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } catch (error: any) {
       toast.error(error.response?.data?.message || t('messages.updateFailed') || 'Failed to update profile');
     } finally {

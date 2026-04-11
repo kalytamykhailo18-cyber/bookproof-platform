@@ -650,14 +650,14 @@ export function AdminSettingsPage() {
               <div className="animate-fade-up-heavy-slow rounded-lg border p-4">
                 <div className="mb-4 flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-semibold">Reader Review Payment Rates</h3>
+                    <h3 className="text-lg font-semibold">{t('reviewRates.title')}</h3>
                     <p className="text-sm text-muted-foreground">
-                      Set payment rates for ebook and audiobook reviews
+                      {t('reviewRates.description')}
                     </p>
                   </div>
                   {!isEditingReviewRates && (
                     <Button type="button" variant="outline" onClick={() => setIsEditingReviewRates(true)}>
-                      Edit Rates
+                      {t('reviewRates.editRates')}
                     </Button>
                   )}
                 </div>
@@ -670,7 +670,7 @@ export function AdminSettingsPage() {
                         name="ebookRate"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Ebook Review Rate (USD)</FormLabel>
+                            <FormLabel>{t('reviewRates.ebookRate')}</FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -688,7 +688,7 @@ export function AdminSettingsPage() {
                               </div>
                             </FormControl>
                             <FormDescription>
-                              Current rate: ${reviewRates?.ebookRate?.toFixed(2) || '1.00'}
+                              {t('reviewRates.currentRate')}: ${reviewRates?.ebookRate?.toFixed(2) || '1.00'}
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -700,7 +700,7 @@ export function AdminSettingsPage() {
                         name="audiobookRate"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Audiobook Review Rate (USD)</FormLabel>
+                            <FormLabel>{t('reviewRates.audiobookRate')}</FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -718,7 +718,7 @@ export function AdminSettingsPage() {
                               </div>
                             </FormControl>
                             <FormDescription>
-                              Current rate: ${reviewRates?.audiobookRate?.toFixed(2) || '2.00'}
+                              {t('reviewRates.currentRate')}: ${reviewRates?.audiobookRate?.toFixed(2) || '2.00'}
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -730,15 +730,15 @@ export function AdminSettingsPage() {
                         name="reason"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Reason (Optional)</FormLabel>
+                            <FormLabel>{t('reviewRates.reasonOptional')}</FormLabel>
                             <FormControl>
                               <Textarea
-                                placeholder="Reason for rate change (for audit trail)"
+                                placeholder={t('reviewRates.reasonPlaceholder')}
                                 className="resize-none"
                                 {...field}
                               />
                             </FormControl>
-                            <FormDescription>This will be logged in the audit trail</FormDescription>
+                            <FormDescription>{t('reviewRates.auditTrail')}</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -753,12 +753,12 @@ export function AdminSettingsPage() {
                           {isUpdatingReviewRates ? (
                             <>
                               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Saving...
+                              {t('reviewRates.saving')}
                             </>
                           ) : (
                             <>
                               <Save className="mr-2 h-4 w-4" />
-                              Save Changes
+                              {t('reviewRates.saveChanges')}
                             </>
                           )}
                         </Button>
@@ -768,7 +768,7 @@ export function AdminSettingsPage() {
                           onClick={handleReviewRatesCancel}
                           disabled={isUpdatingReviewRates}
                         >
-                          Cancel
+                          {t('reviewRates.cancel')}
                         </Button>
                       </div>
                     </div>
@@ -776,29 +776,29 @@ export function AdminSettingsPage() {
                 ) : (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-sm text-muted-foreground">Ebook Rate</Label>
+                      <Label className="text-sm text-muted-foreground">{t('reviewRates.ebookRateLabel')}</Label>
                       <p className="text-2xl font-bold text-green-600">
                         ${reviewRates?.ebookRate?.toFixed(2) || '1.00'}
                       </p>
                     </div>
                     <div>
-                      <Label className="text-sm text-muted-foreground">Audiobook Rate</Label>
+                      <Label className="text-sm text-muted-foreground">{t('reviewRates.audiobookRateLabel')}</Label>
                       <p className="text-2xl font-bold text-green-600">
                         ${reviewRates?.audiobookRate?.toFixed(2) || '2.00'}
                       </p>
                     </div>
                     <div className="col-span-2">
-                      <Label className="text-sm text-muted-foreground">Currency</Label>
+                      <Label className="text-sm text-muted-foreground">{t('reviewRates.currency')}</Label>
                       <p className="text-lg font-medium">
                         {reviewRates?.currency || 'USD'}
                       </p>
                     </div>
                     <div className="col-span-2">
-                      <Label className="text-sm text-muted-foreground">Last Updated</Label>
+                      <Label className="text-sm text-muted-foreground">{t('reviewRates.lastUpdated')}</Label>
                       <p className="text-sm">
                         {reviewRates?.updatedAt
                           ? formatDate(reviewRates.updatedAt)
-                          : 'Never'}
+                          : t('reviewRates.never')}
                       </p>
                     </div>
                   </div>
@@ -815,15 +815,15 @@ export function AdminSettingsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <DollarSign className="h-5 w-5 text-purple-600" />
-              <CardTitle>Closer Standard Credit Price</CardTitle>
+              <CardTitle>{t('closerPricing.title')}</CardTitle>
             </div>
             <Button type="button" variant="outline" size="sm" onClick={refetchCloserPricing}>
               <RefreshCw className="mr-2 h-4 w-4" />
-              Refresh
+              {t('closerPricing.refresh')}
             </Button>
           </div>
           <CardDescription>
-            The standard price per credit used by Closers to determine if a custom package requires Super Admin approval. Packages priced below 80% of this value need approval.
+            {t('closerPricing.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -833,14 +833,14 @@ export function AdminSettingsPage() {
             <div className="rounded-lg border p-4">
               <div className="mb-4 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold">Standard Price Per Credit</h3>
+                  <h3 className="text-lg font-semibold">{t('closerPricing.standardPrice')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Packages priced below ${closerPricing ? (closerPricing.pricePerCredit * 0.80).toFixed(2) : '0.48'}/credit (80% threshold) require Super Admin approval
+                    {t('closerPricing.thresholdDescription').replace('${amount}', closerPricing ? (closerPricing.pricePerCredit * 0.80).toFixed(2) : '0.48')}
                   </p>
                 </div>
                 {!isEditingCloserPricing && (
                   <Button type="button" variant="outline" onClick={() => setIsEditingCloserPricing(true)}>
-                    Edit
+                    {t('closerPricing.edit')}
                   </Button>
                 )}
               </div>
@@ -848,7 +848,7 @@ export function AdminSettingsPage() {
               {isEditingCloserPricing ? (
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="closerPrice">Price Per Credit (USD)</Label>
+                    <Label htmlFor="closerPrice">{t('closerPricing.pricePerCredit')}</Label>
                     <div className="relative mt-1">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                       <Input
@@ -863,16 +863,16 @@ export function AdminSettingsPage() {
                       />
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Approval threshold: ${(parseFloat(closerPriceInput || '0') * 0.80).toFixed(2)}/credit
+                      {t('closerPricing.approvalThreshold')}: ${(parseFloat(closerPriceInput || '0') * 0.80).toFixed(2)}/credit
                     </p>
                   </div>
                   <div>
-                    <Label htmlFor="closerPriceReason">Reason for Change (Optional)</Label>
+                    <Label htmlFor="closerPriceReason">{t('closerPricing.reasonForChange')}</Label>
                     <Textarea
                       id="closerPriceReason"
                       value={closerPriceReason}
                       onChange={(e) => setCloserPriceReason(e.target.value)}
-                      placeholder="Reason for updating the standard price..."
+                      placeholder={t('closerPricing.reasonPlaceholder')}
                       rows={2}
                       className="mt-1"
                     />
@@ -880,9 +880,9 @@ export function AdminSettingsPage() {
                   <div className="flex gap-2">
                     <Button type="button" onClick={handleCloserPricingSubmit} disabled={isUpdatingCloserPricing}>
                       {isUpdatingCloserPricing ? (
-                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</>
+                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{t('closerPricing.saving')}</>
                       ) : (
-                        <><Save className="mr-2 h-4 w-4" />Save</>
+                        <><Save className="mr-2 h-4 w-4" />{t('closerPricing.save')}</>
                       )}
                     </Button>
                     <Button
@@ -895,22 +895,22 @@ export function AdminSettingsPage() {
                       }}
                       disabled={isUpdatingCloserPricing}
                     >
-                      Cancel
+                      {t('closerPricing.cancel')}
                     </Button>
                   </div>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-sm text-muted-foreground">Standard Price</Label>
+                    <Label className="text-sm text-muted-foreground">{t('closerPricing.standardPriceLabel')}</Label>
                     <p className="text-2xl font-bold text-purple-600">
-                      ${closerPricing?.pricePerCredit?.toFixed(2) || '0.60'} / credit
+                      ${closerPricing?.pricePerCredit?.toFixed(2) || '0.60'} {t('closerPricing.perCredit')}
                     </p>
                   </div>
                   <div>
-                    <Label className="text-sm text-muted-foreground">Approval Threshold (80%)</Label>
+                    <Label className="text-sm text-muted-foreground">{t('closerPricing.approvalThresholdLabel')}</Label>
                     <p className="text-2xl font-bold text-orange-600">
-                      ${closerPricing?.minimumThreshold?.toFixed(2) || '0.48'} / credit
+                      ${closerPricing?.minimumThreshold?.toFixed(2) || '0.48'} {t('closerPricing.perCredit')}
                     </p>
                   </div>
                 </div>
@@ -926,15 +926,15 @@ export function AdminSettingsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="h-5 w-5 text-orange-600" />
-              <CardTitle>System Configuration</CardTitle>
+              <CardTitle>{t('systemConfig.title')}</CardTitle>
             </div>
             <Button type="button" variant="outline" size="sm" onClick={() => refetchSystemConfig()}>
               <RefreshCw className="mr-2 h-4 w-4" />
-              Refresh
+              {t('systemConfig.refresh')}
             </Button>
           </div>
           <CardDescription>
-            Configure distribution schedules, review settings, and payment thresholds
+            {t('systemConfig.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -950,7 +950,7 @@ export function AdminSettingsPage() {
               <div className="flex justify-end">
                 {!isEditingSystemConfig ? (
                   <Button type="button" variant="outline" onClick={() => setIsEditingSystemConfig(true)}>
-                    Edit Configuration
+                    {t('systemConfig.editConfiguration')}
                   </Button>
                 ) : null}
               </div>
@@ -962,7 +962,7 @@ export function AdminSettingsPage() {
                     <div className="rounded-lg border p-4">
                       <div className="flex items-center gap-2 mb-4">
                         <Calendar className="h-5 w-5 text-blue-600" />
-                        <h3 className="text-lg font-semibold">Distribution Schedule</h3>
+                        <h3 className="text-lg font-semibold">{t('systemConfig.distributionSchedule')}</h3>
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <FormField
@@ -970,7 +970,7 @@ export function AdminSettingsPage() {
                           name="distributionDay"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Distribution Day</FormLabel>
+                              <FormLabel>{t('systemConfig.distributionDay')}</FormLabel>
                               <FormControl>
                                 <select
                                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -985,7 +985,7 @@ export function AdminSettingsPage() {
                                 </select>
                               </FormControl>
                               <FormDescription>
-                                Day when weekly distribution runs
+                                {t('systemConfig.distributionDayDescription')}
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -1020,7 +1020,7 @@ export function AdminSettingsPage() {
                     <div className="rounded-lg border p-4">
                       <div className="flex items-center gap-2 mb-4">
                         <Users className="h-5 w-5 text-green-600" />
-                        <h3 className="text-lg font-semibold">Reader Slot Settings</h3>
+                        <h3 className="text-lg font-semibold">{t('systemConfig.readerSlotSettings')}</h3>
                       </div>
                       <FormField
                         control={systemConfigForm.control}
@@ -1056,7 +1056,7 @@ export function AdminSettingsPage() {
                     <div className="rounded-lg border p-4">
                       <div className="flex items-center gap-2 mb-4">
                         <FileText className="h-5 w-5 text-purple-600" />
-                        <h3 className="text-lg font-semibold">Review Settings</h3>
+                        <h3 className="text-lg font-semibold">{t('systemConfig.reviewSettings')}</h3>
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <FormField
@@ -1110,7 +1110,7 @@ export function AdminSettingsPage() {
                     <div className="rounded-lg border p-4">
                       <div className="flex items-center gap-2 mb-4">
                         <Wallet className="h-5 w-5 text-yellow-600" />
-                        <h3 className="text-lg font-semibold">Payment Settings</h3>
+                        <h3 className="text-lg font-semibold">{t('systemConfig.paymentSettings')}</h3>
                       </div>
                       <FormField
                         control={systemConfigForm.control}

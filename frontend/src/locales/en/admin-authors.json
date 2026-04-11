@@ -15,7 +15,8 @@
   },
   "status": {
     "verified": "Verified",
-    "unverified": "Unverified"
+    "unverified": "Unverified",
+    "suspended": "Suspended"
   },
   "filters": {
     "title": "Filters",
@@ -25,7 +26,12 @@
     "verified": "Verified",
     "unverified": "Unverified",
     "withActiveCampaigns": "With Active Campaigns",
-    "noActiveCampaigns": "No Active Campaigns"
+    "noActiveCampaigns": "No Active Campaigns",
+    "suspended": "Suspended",
+    "creditBalanceRange": "Credit Balance Range",
+    "min": "Min",
+    "max": "Max",
+    "clearFilters": "Clear Filters"
   },
   "table": {
     "title": "Authors",
@@ -36,12 +42,35 @@
     "totalCredits": "Total Credits",
     "available": "Available",
     "used": "Used",
+    "totalSpent": "Total Spent",
     "campaigns": "Campaigns",
     "actions": "Actions"
+  },
+  "actions": {
+    "viewDetails": "View Details",
+    "viewTransactions": "View Transactions",
+    "addCredits": "Add Credits",
+    "removeCredits": "Remove Credits",
+    "adminNotes": "Admin Notes",
+    "suspendAuthor": "Suspend Author",
+    "unsuspendAuthor": "Unsuspend Author"
   },
   "empty": {
     "title": "No authors found",
     "description": "Try adjusting your filters or search query"
+  },
+  "toast": {
+    "loadFailed": "Failed to load authors",
+    "creditsAdded": "Credits added successfully",
+    "creditsAddFailed": "Failed to add credits",
+    "creditsRemoved": "Credits removed successfully",
+    "creditsRemoveFailed": "Failed to remove credits",
+    "authorSuspended": "Author suspended successfully",
+    "authorSuspendFailed": "Failed to suspend author",
+    "authorUnsuspended": "Author unsuspended successfully",
+    "authorUnsuspendFailed": "Failed to unsuspend author",
+    "notesUpdated": "Admin notes updated successfully",
+    "notesUpdateFailed": "Failed to update admin notes"
   },
   "dialogs": {
     "reason": "Reason",
@@ -55,6 +84,9 @@
       "description": "Manually add credits to author account",
       "amount": "Credits to Add",
       "amountPlaceholder": "Enter amount",
+      "activationWindow": "Activation Window (days)",
+      "activationWindowPlaceholder": "30",
+      "activationWindowHelp": "Number of days before these credits expire (default: 30 days)",
       "confirm": "Add Credits"
     },
     "removeCredits": {
@@ -65,6 +97,37 @@
       "available": "Available",
       "max": "Maximum",
       "confirm": "Remove Credits"
+    },
+    "suspend": {
+      "title": "Suspend Author",
+      "description": "Suspend this author account. This will prevent them from creating new campaigns or accessing certain features.",
+      "reason": "Reason",
+      "reasonPlaceholder": "Enter reason for suspension",
+      "notes": "Notes",
+      "notesPlaceholder": "Additional notes (optional)",
+      "cancel": "Cancel",
+      "confirm": "Suspend Author",
+      "processing": "Suspending..."
+    },
+    "unsuspend": {
+      "title": "Unsuspend Author",
+      "description": "Restore this author account. They will regain full access to the platform.",
+      "reason": "Reason",
+      "reasonPlaceholder": "Enter reason for unsuspension",
+      "notes": "Notes",
+      "notesPlaceholder": "Additional notes (optional)",
+      "cancel": "Cancel",
+      "confirm": "Unsuspend Author",
+      "processing": "Unsuspending..."
+    },
+    "adminNotes": {
+      "title": "Update Admin Notes",
+      "description": "Add or update internal admin notes for this author. These notes are only visible to administrators.",
+      "label": "Admin Notes",
+      "placeholder": "Enter admin notes...",
+      "cancel": "Cancel",
+      "confirm": "Update Notes",
+      "processing": "Updating..."
     }
   }
 }

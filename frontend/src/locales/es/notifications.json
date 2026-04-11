@@ -1,31 +1,72 @@
 {
+  "title": "Notificaciones",
+  "subtitle": "Mantente actualizado con la actividad de tu campaña y mensajes del sistema",
+  "settingsButton": "Configuración",
+  "markAllRead": "Marcar Todo Leído ({{count}})",
+  "tabs": {
+    "all": "Todas",
+    "unread": "No leídas"
+  },
+  "filters": {
+    "allTypes": "Todos los Tipos",
+    "campaigns": "Campañas",
+    "reviews": "Reseñas",
+    "payments": "Pagos"
+  },
+  "pagination": {
+    "showing": "Mostrando {{count}} de {{total}} notificaciones"
+  },
+  "messages": {
+    "loadError": "Error al cargar notificaciones",
+    "markReadError": "Error al marcar notificaciones como leídas",
+    "markAllReadSuccess": "Todas las notificaciones marcadas como leídas",
+    "markAllReadError": "Error al marcar todas las notificaciones como leídas",
+    "updatedCount": "{{count}} notificación actualizada",
+    "updatedCount_other": "{{count}} notificaciones actualizadas"
+  },
   "settings": {
     "title": "Configuración de Notificaciones",
-    "subtitle": "Administra cómo recibes notificaciones",
-    "back": "Volver",
+    "subtitle": "Administra cómo recibes notificaciones y qué tipos quieres obtener",
+    "backButton": "Volver a Notificaciones",
     "save": "Guardar Configuración",
     "saving": "Guardando...",
-    "success": "Configuración guardada exitosamente",
-    "error": "Error al guardar configuración",
-    "emailNotifications": {
+    "loadError": "Error al cargar configuración de notificaciones",
+    "updateSuccess": "Configuración de notificaciones actualizada exitosamente",
+    "updateError": "Error al actualizar configuración de notificaciones",
+    "email": {
       "title": "Notificaciones por Email",
-      "description": "Recibir notificaciones via email",
-      "enabled": "Notificaciones por email activadas",
-      "disabled": "Notificaciones por email desactivadas"
+      "description": "Controla cuándo y cómo recibes notificaciones por email",
+      "enableLabel": "Habilitar Notificaciones por Email",
+      "enableDescription": "Recibe notificaciones por email además de notificaciones en la aplicación"
     },
     "frequency": {
       "title": "Frecuencia de Email",
-      "description": "¿Con qué frecuencia te gustaría recibir resúmenes por email?",
       "immediate": "Inmediato",
-      "immediateDesc": "Recibe emails cuando ocurran los eventos",
+      "immediateDesc": "Recibe notificaciones tan pronto como ocurran los eventos",
       "daily": "Resumen Diario",
-      "dailyDesc": "Recibe un resumen diario de notificaciones",
+      "dailyDesc": "Recibe un resumen una vez al día",
       "weekly": "Resumen Semanal",
-      "weeklyDesc": "Recibe un resumen semanal de notificaciones"
+      "weeklyDesc": "Recibe un resumen una vez por semana"
     },
     "types": {
       "title": "Tipos de Notificaciones",
-      "description": "Elige qué tipos de notificaciones deseas recibir"
+      "description": "Elige qué tipos de notificaciones deseas recibir (las notificaciones en la aplicación siempre están habilitadas)",
+      "campaign": {
+        "label": "Actualizaciones de Campaña",
+        "description": "Actualizaciones sobre tus campañas activas y progreso"
+      },
+      "review": {
+        "label": "Notificaciones de Reseñas",
+        "description": "Nuevas reseñas entregadas, validaciones y cambios de estado de reseñas"
+      },
+      "payment": {
+        "label": "Confirmaciones de Pago",
+        "description": "Compras de créditos, facturas y confirmaciones de pago"
+      },
+      "system": {
+        "label": "Notificaciones del Sistema",
+        "description": "Actualizaciones del sistema, avisos de mantenimiento y anuncios importantes"
+      }
     }
   }
 }

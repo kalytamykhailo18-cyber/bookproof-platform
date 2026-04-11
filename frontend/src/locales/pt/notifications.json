@@ -1,31 +1,72 @@
 {
+  "title": "Notificações",
+  "subtitle": "Mantenha-se atualizado com a atividade da sua campanha e mensagens do sistema",
+  "settingsButton": "Configurações",
+  "markAllRead": "Marcar Tudo Lido ({{count}})",
+  "tabs": {
+    "all": "Todas",
+    "unread": "Não lidas"
+  },
+  "filters": {
+    "allTypes": "Todos os Tipos",
+    "campaigns": "Campanhas",
+    "reviews": "Avaliações",
+    "payments": "Pagamentos"
+  },
+  "pagination": {
+    "showing": "Mostrando {{count}} de {{total}} notificações"
+  },
+  "messages": {
+    "loadError": "Falha ao carregar notificações",
+    "markReadError": "Falha ao marcar notificações como lidas",
+    "markAllReadSuccess": "Todas as notificações marcadas como lidas",
+    "markAllReadError": "Falha ao marcar todas as notificações como lidas",
+    "updatedCount": "{{count}} notificação atualizada",
+    "updatedCount_other": "{{count}} notificações atualizadas"
+  },
   "settings": {
     "title": "Configurações de Notificações",
-    "subtitle": "Gerencie como você recebe notificações",
-    "back": "Voltar",
+    "subtitle": "Gerencie como você recebe notificações e quais tipos deseja obter",
+    "backButton": "Voltar para Notificações",
     "save": "Salvar Configurações",
     "saving": "Salvando...",
-    "success": "Configurações salvas com sucesso",
-    "error": "Falha ao salvar configurações",
-    "emailNotifications": {
+    "loadError": "Falha ao carregar configurações de notificações",
+    "updateSuccess": "Configurações de notificações atualizadas com sucesso",
+    "updateError": "Falha ao atualizar configurações de notificações",
+    "email": {
       "title": "Notificações por Email",
-      "description": "Receber notificações via email",
-      "enabled": "Notificações por email ativadas",
-      "disabled": "Notificações por email desativadas"
+      "description": "Controle quando e como você recebe notificações por email",
+      "enableLabel": "Habilitar Notificações por Email",
+      "enableDescription": "Receba notificações por email além das notificações no aplicativo"
     },
     "frequency": {
       "title": "Frequência de Email",
-      "description": "Com que frequência você gostaria de receber resumos por email?",
       "immediate": "Imediato",
-      "immediateDesc": "Receba emails conforme os eventos acontecem",
+      "immediateDesc": "Seja notificado assim que os eventos acontecerem",
       "daily": "Resumo Diário",
-      "dailyDesc": "Receba um resumo diário das notificações",
+      "dailyDesc": "Receba um resumo uma vez por dia",
       "weekly": "Resumo Semanal",
-      "weeklyDesc": "Receba um resumo semanal das notificações"
+      "weeklyDesc": "Receba um resumo uma vez por semana"
     },
     "types": {
       "title": "Tipos de Notificações",
-      "description": "Escolha quais tipos de notificações você deseja receber"
+      "description": "Escolha quais tipos de notificações você deseja receber (notificações no aplicativo estão sempre habilitadas)",
+      "campaign": {
+        "label": "Atualizações de Campanha",
+        "description": "Atualizações sobre suas campanhas ativas e progresso"
+      },
+      "review": {
+        "label": "Notificações de Avaliações",
+        "description": "Novas avaliações entregues, validações e mudanças de status de avaliações"
+      },
+      "payment": {
+        "label": "Confirmações de Pagamento",
+        "description": "Compras de créditos, faturas e confirmações de pagamento"
+      },
+      "system": {
+        "label": "Notificações do Sistema",
+        "description": "Atualizações do sistema, avisos de manutenção e anúncios importantes"
+      }
     }
   }
 }

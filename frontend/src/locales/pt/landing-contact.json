@@ -21,6 +21,9 @@
   },
   "languages": {
     "title": "Idiomas Suportados",
-    "description": "Nossa equipe de suporte pode atendê-lo em inglês, português e espanhol — no seu idioma preferido para uma experiência sem barreiras."
+    "description": "Nossa equipe de suporte pode atendê-lo em inglês, português e espanhol — no seu idioma preferido para uma experiência sem barreiras.",
+    "english": "English",
+    "portuguese": "Português",
+    "spanish": "Español"
   }
 }

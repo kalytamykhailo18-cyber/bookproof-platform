@@ -1,0 +1,78 @@
+{
+  "title": "Support",
+  "subtitle": "Get help with issues or disputes",
+  "newRequest": "New Support Request",
+  "loading": "Loading...",
+  "createDialog": {
+    "title": "Create Support Request",
+    "description": "Describe your issue and our team will review it",
+    "issueTypeLabel": "Issue Type *",
+    "issueTypePlaceholder": "Select issue type",
+    "descriptionLabel": "Description *",
+    "descriptionPlaceholder": "Please describe your issue in detail (minimum 10 characters)",
+    "charactersNeeded": "{{count}} more characters needed",
+    "minimumReached": "✓ Minimum reached",
+    "characterCount": "{{current}}/{{max}}",
+    "cancel": "Cancel",
+    "submit": "Submit Request",
+    "submitting": "Submitting..."
+  },
+  "issueTypes": {
+    "generalComplaint": "General Complaint",
+    "campaignIssue": "Campaign Issue",
+    "reviewQuality": "Review Quality",
+    "paymentIssue": "Payment Issue",
+    "serviceIssue": "Service Issue",
+    "other": "Other"
+  },
+  "disputeTypes": {
+    "authorDispute": "Author Dispute",
+    "authorComplaint": "Author Complaint",
+    "policyViolation": "Policy Violation"
+  },
+  "helpCard": {
+    "title": "Need Help?",
+    "responseTime": "Our support team typically responds within 24 hours (4 hours for critical issues).",
+    "appealInfo": "If your request has been resolved but you disagree with the outcome, you may file one appeal per issue."
+  },
+  "requestsTable": {
+    "title": "My Support Requests",
+    "description": "Track the status of your support requests",
+    "headers": {
+      "id": "ID",
+      "type": "Type",
+      "status": "Status",
+      "appeal": "Appeal",
+      "description": "Description",
+      "created": "Created",
+      "actions": "Actions"
+    },
+    "noRequests": "No support requests found",
+    "appealButton": "Appeal",
+    "viewResolutionButton": "View Resolution"
+  },
+  "appealDialog": {
+    "title": "File an Appeal",
+    "description": "You may file one appeal per issue. Please explain why you believe the resolution was incorrect.",
+    "originalResolution": "Original Resolution:",
+    "reasonLabel": "Appeal Reason *",
+    "reasonPlaceholder": "Explain why you believe the resolution was unfair or incorrect (minimum 20 characters)",
+    "characterCount": "{{current}}/{{max}} characters (minimum {{min}})",
+    "cancel": "Cancel",
+    "submit": "Submit Appeal",
+    "submitting": "Submitting..."
+  },
+  "resolutionDialog": {
+    "title": "Resolution Details",
+    "resolutionLabel": "Resolution:",
+    "appealStatusLabel": "Appeal Status:",
+    "appealResolutionLabel": "Appeal Resolution:"
+  },
+  "messages": {
+    "createSuccess": "Dispute created successfully",
+    "createError": "Failed to create dispute",
+    "loadError": "Failed to load disputes",
+    "appealSuccess": "Appeal filed successfully",
+    "appealError": "Failed to file appeal"
+  }
+}

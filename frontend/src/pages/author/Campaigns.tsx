@@ -72,13 +72,13 @@ export function CampaignsListPage() {
         setCampaigns(data);
       } catch (err) {
         console.error('Campaigns error:', err);
-        toast.error('Failed to load campaigns');
+        toast.error(t('errorLoading'));
       } finally {
         setIsLoading(false);
       }
     };
     fetchCampaigns();
-  }, []);
+  }, [t]);
 
   // Filter campaigns
   const filteredCampaigns = useMemo(() => {
@@ -120,12 +120,12 @@ export function CampaignsListPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">My Campaigns</h1>
-          <p className="text-muted-foreground mt-1">Manage your book review campaigns</p>
+          <h1 className="text-3xl font-bold">{t('title')}</h1>
+          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
         </div>
         <Button onClick={() => navigate('/author/campaigns/new')}>
           <Plus className="mr-2 h-4 w-4" />
-          New Campaign
+          {t('newCampaign')}
         </Button>
       </div>
 
@@ -137,7 +137,7 @@ export function CampaignsListPage() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search campaigns..."
+                  placeholder={t('search')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -146,15 +146,15 @@ export function CampaignsListPage() {
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Filter by status" />
+                <SelectValue placeholder={t('filterByStatus')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value={CampaignStatus.DRAFT}>Draft</SelectItem>
-                <SelectItem value={CampaignStatus.ACTIVE}>Active</SelectItem>
-                <SelectItem value={CampaignStatus.PAUSED}>Paused</SelectItem>
-                <SelectItem value={CampaignStatus.COMPLETED}>Completed</SelectItem>
-                <SelectItem value={CampaignStatus.CANCELLED}>Cancelled</SelectItem>
+                <SelectItem value="all">{t('allStatuses')}</SelectItem>
+                <SelectItem value={CampaignStatus.DRAFT}>{t('statusDraft')}</SelectItem>
+                <SelectItem value={CampaignStatus.ACTIVE}>{t('statusActive')}</SelectItem>
+                <SelectItem value={CampaignStatus.PAUSED}>{t('statusPaused')}</SelectItem>
+                <SelectItem value={CampaignStatus.COMPLETED}>{t('statusCompleted')}</SelectItem>
+                <SelectItem value={CampaignStatus.CANCELLED}>{t('statusCancelled')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -202,9 +202,9 @@ export function CampaignsListPage() {
                   {/* Progress Bar */}
                   <div>
                     <div className="flex items-center justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Progress</span>
+                      <span className="text-muted-foreground">{t('progress')}</span>
                       <span className="font-medium">
-                        {campaign.totalReviewsDelivered} / {campaign.targetReviews} reviews
+                        {campaign.totalReviewsDelivered} / {campaign.targetReviews} {t('reviews')}
                       </span>
                     </div>
                     <Progress
@@ -216,23 +216,23 @@ export function CampaignsListPage() {
                   {/* Stats */}
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
                     <div>
-                      <p className="text-muted-foreground">Target</p>
+                      <p className="text-muted-foreground">{t('stats.target')}</p>
                       <p className="font-semibold">{campaign.targetReviews}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground">Delivered</p>
+                      <p className="text-muted-foreground">{t('stats.delivered')}</p>
                       <p className="font-semibold text-green-600">{campaign.totalReviewsDelivered}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground">Pending</p>
+                      <p className="text-muted-foreground">{t('stats.pending')}</p>
                       <p className="font-semibold text-yellow-600">{campaign.totalReviewsPending}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground">Credits</p>
+                      <p className="text-muted-foreground">{t('stats.credits')}</p>
                       <p className="font-semibold">{campaign.creditsAllocated}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground">Format</p>
+                      <p className="text-muted-foreground">{t('stats.format')}</p>
                       <p className="font-semibold">{campaign.availableFormats}</p>
                     </div>
                   </div>
@@ -245,16 +245,16 @@ export function CampaignsListPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-lg font-medium mb-2">No campaigns found</p>
+            <p className="text-lg font-medium mb-2">{t('noCampaigns')}</p>
             <p className="text-sm text-muted-foreground mb-4">
               {searchQuery || statusFilter !== 'all'
-                ? 'Try adjusting your filters'
-                : 'Create your first campaign to get started'}
+                ? t('tryAdjusting')
+                : t('createFirst')}
             </p>
             {!searchQuery && statusFilter === 'all' && (
               <Button onClick={() => navigate('/author/campaigns/new')}>
                 <Plus className="mr-2 h-4 w-4" />
-                Create Campaign
+                {t('createCampaign')}
               </Button>
             )}
           </CardContent>
@@ -293,7 +293,7 @@ export function CampaignDetailPage() {
       setCampaign(data);
     } catch (error: any) {
       console.error('Campaign error:', error);
-      toast.error('Failed to load campaign');
+      toast.error(t('errors.loadCampaign'));
     } finally {
       setIsLoading(false);
     }
@@ -338,14 +338,14 @@ export function CampaignDetailPage() {
     if (file && campaign) {
       try {
         setIsUploadingEbook(true);
-        startLoading('Uploading ebook...');
+        startLoading(t('loading.uploadEbook'));
         await campaignsApi.uploadEbook(campaign.id, file);
         stopLoading();
-        toast.success('Ebook uploaded successfully!');
+        toast.success(t('success.uploadEbook'));
         await refetch();
       } catch (error: any) {
         stopLoading();
-        const message = error.response?.data?.message || 'Failed to upload ebook';
+        const message = error.response?.data?.message || t('errors.uploadEbook');
         toast.error(message);
       } finally {
         setIsUploadingEbook(false);
@@ -358,14 +358,14 @@ export function CampaignDetailPage() {
     if (file && campaign) {
       try {
         setIsUploadingAudiobook(true);
-        startLoading('Uploading audiobook...');
+        startLoading(t('loading.uploadAudiobook'));
         await campaignsApi.uploadAudiobook(campaign.id, file);
         stopLoading();
-        toast.success('Audiobook uploaded successfully!');
+        toast.success(t('success.uploadAudiobook'));
         await refetch();
       } catch (error: any) {
         stopLoading();
-        const message = error.response?.data?.message || 'Failed to upload audiobook';
+        const message = error.response?.data?.message || t('errors.uploadAudiobook');
         toast.error(message);
       } finally {
         setIsUploadingAudiobook(false);
@@ -378,14 +378,14 @@ export function CampaignDetailPage() {
     if (file && campaign) {
       try {
         setIsUploadingCover(true);
-        startLoading('Uploading cover image...');
+        startLoading(t('loading.uploadCover'));
         await campaignsApi.uploadCover(campaign.id, file);
         stopLoading();
-        toast.success('Cover image uploaded successfully!');
+        toast.success(t('success.uploadCover'));
         await refetch();
       } catch (error: any) {
         stopLoading();
-        const message = error.response?.data?.message || 'Failed to upload cover image';
+        const message = error.response?.data?.message || t('errors.uploadCover');
         toast.error(message);
       } finally {
         setIsUploadingCover(false);
@@ -398,14 +398,14 @@ export function CampaignDetailPage() {
     if (file && campaign) {
       try {
         setIsUploadingSynopsis(true);
-        startLoading('Uploading synopsis...');
+        startLoading(t('loading.uploadSynopsis'));
         await campaignsApi.uploadSynopsis(campaign.id, file);
         stopLoading();
-        toast.success('Synopsis uploaded successfully!');
+        toast.success(t('success.uploadSynopsis'));
         await refetch();
       } catch (error: any) {
         stopLoading();
-        const message = error.response?.data?.message || 'Failed to upload synopsis';
+        const message = error.response?.data?.message || t('errors.uploadSynopsis');
         toast.error(message);
       } finally {
         setIsUploadingSynopsis(false);
@@ -417,15 +417,15 @@ export function CampaignDetailPage() {
     if (campaign && creditsToAllocate > 0) {
       try {
         setIsActivating(true);
-        startLoading('Activating campaign...');
+        startLoading(t('loading.activateCampaign'));
         await campaignsApi.activateCampaign(campaign.id, { creditsToAllocate });
         stopLoading();
-        toast.success('Campaign activated successfully!');
+        toast.success(t('success.activateCampaign'));
         setShowActivateDialog(false);
         await refetch();
       } catch (error: any) {
         stopLoading();
-        const message = error.response?.data?.message || 'Failed to activate campaign';
+        const message = error.response?.data?.message || t('errors.activateCampaign');
         toast.error(message);
       } finally {
         setIsActivating(false);
@@ -437,14 +437,14 @@ export function CampaignDetailPage() {
     if (campaign) {
       try {
         setIsDeleting(true);
-        startLoading('Deleting campaign...');
+        startLoading(t('loading.deleteCampaign'));
         await campaignsApi.deleteCampaign(campaign.id);
         stopLoading();
-        toast.success('Campaign deleted successfully!');
+        toast.success(t('success.deleteCampaign'));
         navigate('/author/campaigns');
       } catch (error: any) {
         stopLoading();
-        const message = error.response?.data?.message || 'Failed to delete campaign';
+        const message = error.response?.data?.message || t('errors.deleteCampaign');
         toast.error(message);
       } finally {
         setIsDeleting(false);
@@ -896,15 +896,15 @@ export function CampaignDetailPage() {
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <Globe className="h-5 w-5" />
-                      Public Landing Pages
+                      {t('landingPages.title')}
                     </CardTitle>
                     <CardDescription>
-                      Share these links to let readers discover your campaign
+                      {t('landingPages.description')}
                     </CardDescription>
                   </div>
                   <Badge variant="outline" className="bg-green-50 text-green-700">
                     <Eye className="mr-1 h-3 w-3" />
-                    {campaign.totalPublicViews || 0} views
+                    {campaign.totalPublicViews || 0} {t('landingPages.views')}
                   </Badge>
                 </div>
               </CardHeader>
@@ -913,11 +913,11 @@ export function CampaignDetailPage() {
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-4 rounded-lg bg-muted/50 p-4">
                     <div className="text-center">
-                      <p className="text-sm text-muted-foreground">Total Views</p>
+                      <p className="text-sm text-muted-foreground">{t('landingPages.totalViews')}</p>
                       <p className="text-2xl font-bold">{campaign.totalPublicViews || 0}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-sm text-muted-foreground">Unique Visitors</p>
+                      <p className="text-sm text-muted-foreground">{t('landingPages.uniqueVisitors')}</p>
                       <p className="text-2xl font-bold text-primary">{campaign.totalUniqueVisitors || 0}</p>
                     </div>
                   </div>
@@ -926,34 +926,34 @@ export function CampaignDetailPage() {
                   <div className="grid grid-cols-3 gap-4 rounded-lg border p-4">
                     {campaign.landingPageLanguages?.includes(Language.EN) && (
                       <div className="text-center">
-                        <p className="text-sm text-muted-foreground">English</p>
+                        <p className="text-sm text-muted-foreground">{t('landingPages.english')}</p>
                         <p className="text-xl font-bold text-blue-600">
                           {campaign.totalENViews || 0}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {campaign.uniqueENVisitors || 0} unique
+                          {campaign.uniqueENVisitors || 0} {t('landingPages.unique')}
                         </p>
                       </div>
                     )}
                     {campaign.landingPageLanguages?.includes(Language.PT) && (
                       <div className="text-center">
-                        <p className="text-sm text-muted-foreground">Portuguese</p>
+                        <p className="text-sm text-muted-foreground">{t('landingPages.portuguese')}</p>
                         <p className="text-xl font-bold text-green-600">
                           {campaign.totalPTViews || 0}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {campaign.uniquePTVisitors || 0} unique
+                          {campaign.uniquePTVisitors || 0} {t('landingPages.unique')}
                         </p>
                       </div>
                     )}
                     {campaign.landingPageLanguages?.includes(Language.ES) && (
                       <div className="text-center">
-                        <p className="text-sm text-muted-foreground">Spanish</p>
+                        <p className="text-sm text-muted-foreground">{t('landingPages.spanish')}</p>
                         <p className="text-xl font-bold text-orange-600">
                           {campaign.totalESViews || 0}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {campaign.uniqueESVisitors || 0} unique
+                          {campaign.uniqueESVisitors || 0} {t('landingPages.unique')}
                         </p>
                       </div>
                     )}
@@ -962,7 +962,7 @@ export function CampaignDetailPage() {
 
                 {/* Public URLs */}
                 <div className="space-y-3">
-                  <h4 className="font-medium">Shareable Links</h4>
+                  <h4 className="font-medium">{t('landingPages.shareableLinks')}</h4>
                   {Object.entries(campaign.publicUrls).map(([lang, url]: [string, string]) => (
                     <div key={lang} className="flex items-center gap-2">
                       <Badge variant="outline" className="shrink-0">
@@ -976,7 +976,7 @@ export function CampaignDetailPage() {
                         onClick={() => {
                           navigator.clipboard.writeText(url);
                         }}
-                        title="Copy to clipboard"
+                        title={t('landingPages.copyToClipboard')}
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
@@ -985,7 +985,7 @@ export function CampaignDetailPage() {
                         size="sm"
                         variant="outline"
                         onClick={() => window.open(url, '_blank')}
-                        title="Open in new tab"
+                        title={t('landingPages.openInNewTab')}
                       >
                         <ExternalLink className="h-4 w-4" />
                       </Button>
@@ -995,7 +995,7 @@ export function CampaignDetailPage() {
 
                 {campaign.lastViewedAt && (
                   <p className="text-xs text-muted-foreground">
-                    Last viewed:{' '}
+                    {t('landingPages.lastViewed')}:{' '}
                     {new Date(campaign.lastViewedAt).toLocaleString(undefined, {
                       dateStyle: 'medium',
                       timeStyle: 'short' })}
@@ -1070,14 +1070,14 @@ export function CampaignDetailPage() {
                   onClick={async () => {
                     try {
                       setIsPausing(true);
-                      startLoading('Pausing campaign...');
+                      startLoading(t('loading.pauseCampaign'));
                       await campaignsApi.pauseCampaign(campaign.id);
                       stopLoading();
-                      toast.success('Campaign paused successfully!');
+                      toast.success(t('success.pauseCampaign'));
                       await refetch();
                     } catch (error: any) {
                       stopLoading();
-                      const message = error.response?.data?.message || 'Failed to pause campaign';
+                      const message = error.response?.data?.message || t('errors.pauseCampaign');
                       toast.error(message);
                     } finally {
                       setIsPausing(false);
@@ -1128,14 +1128,14 @@ export function CampaignDetailPage() {
                   onClick={async () => {
                     try {
                       setIsResuming(true);
-                      startLoading('Resuming campaign...');
+                      startLoading(t('loading.resumeCampaign'));
                       await campaignsApi.resumeCampaign(campaign.id);
                       stopLoading();
-                      toast.success('Campaign resumed successfully!');
+                      toast.success(t('success.resumeCampaign'));
                       await refetch();
                     } catch (error: any) {
                       stopLoading();
-                      const message = error.response?.data?.message || 'Failed to resume campaign';
+                      const message = error.response?.data?.message || t('errors.resumeCampaign');
                       toast.error(message);
                     } finally {
                       setIsResuming(false);

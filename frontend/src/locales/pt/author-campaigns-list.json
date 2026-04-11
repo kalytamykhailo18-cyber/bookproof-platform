@@ -5,8 +5,23 @@
   "search": "Pesquisar campanhas...",
   "filterByStatus": "Filtrar por status",
   "allStatuses": "Todos os Status",
+  "statusDraft": "Rascunho",
+  "statusActive": "Ativa",
+  "statusPaused": "Pausada",
+  "statusCompleted": "Concluída",
+  "statusCancelled": "Cancelada",
+  "progress": "Progresso",
+  "reviews": "avaliações",
+  "stats": {
+    "target": "Meta",
+    "delivered": "Entregues",
+    "pending": "Pendentes",
+    "credits": "Créditos",
+    "format": "Formato"
+  },
   "noCampaigns": "Nenhuma campanha encontrada",
   "tryAdjusting": "Tente ajustar seus filtros",
   "createFirst": "Crie sua primeira campanha para começar",
-  "createCampaign": "Criar Campanha"
+  "createCampaign": "Criar Campanha",
+  "errorLoading": "Falha ao carregar as campanhas"
 }

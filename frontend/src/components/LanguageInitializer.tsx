@@ -20,7 +20,12 @@ export function LanguageInitializer() {
       const langCode = user.preferredLanguage.toLowerCase();
       // Only change if different from current language
       if (i18n.language !== langCode) {
-        i18n.changeLanguage(langCode);
+        console.log(`🌐 LanguageInitializer: Changing language from ${i18n.language} to ${langCode}`);
+        i18n.changeLanguage(langCode).then(() => {
+          console.log(`✅ Language changed successfully to ${langCode}`);
+        });
+      } else {
+        console.log(`🌐 LanguageInitializer: Language already set to ${langCode}`);
       }
     }
   }, [user, _hasHydrated]);

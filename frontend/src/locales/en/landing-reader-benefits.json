@@ -39,7 +39,13 @@
     "methods": "PayPal, Bank Transfer, Wise, Crypto",
     "ebookLabel": "Ebook Review",
     "audiobookLabel": "Audiobook Review",
-    "paymentMethods": "Payment Methods"
+    "paymentMethods": "Payment Methods",
+    "paymentMethodsList": {
+      "paypal": "PayPal",
+      "bankTransfer": "Bank Transfer",
+      "wise": "Wise",
+      "crypto": "Crypto"
+    }
   },
   "howToGet": {
     "title": "How to Get Started as a Reader",

@@ -159,7 +159,7 @@ export function AdminDashboardPage() {
           disabled={loadingPath === 'disputes'}
         >
           {loadingPath === 'disputes' ? <Loader2 className="h-5 w-5 animate-spin" /> : <MessageSquare className="h-5 w-5 text-orange-500" />}
-          <span className="text-xs">Disputes</span>
+          <span className="text-xs">{t('quickActions.disputes')}</span>
           {dashboard?.quickActions?.pendingDisputesCount ? (
             <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               {dashboard.quickActions.pendingDisputesCount}
@@ -175,7 +175,7 @@ export function AdminDashboardPage() {
           disabled={loadingPath === 'affiliates'}
         >
           {loadingPath === 'affiliates' ? <Loader2 className="h-5 w-5 animate-spin" /> : <UserPlus className="h-5 w-5 text-blue-500" />}
-          <span className="text-xs">Affiliate Apps</span>
+          <span className="text-xs">{t('quickActions.affiliateApps')}</span>
           {dashboard?.quickActions?.pendingAffiliateApplicationsCount ? (
             <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               {dashboard.quickActions.pendingAffiliateApplicationsCount}
@@ -191,7 +191,7 @@ export function AdminDashboardPage() {
           disabled={loadingPath === 'payouts'}
         >
           {loadingPath === 'payouts' ? <Loader2 className="h-5 w-5 animate-spin" /> : <CreditCard className="h-5 w-5 text-green-500" />}
-          <span className="text-xs">Payout Requests</span>
+          <span className="text-xs">{t('quickActions.payoutRequests')}</span>
           {dashboard?.quickActions?.pendingPayoutRequestsCount ? (
             <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               {dashboard.quickActions.pendingPayoutRequestsCount}
@@ -207,7 +207,7 @@ export function AdminDashboardPage() {
           disabled={loadingPath === 'reports/financial'}
         >
           {loadingPath === 'reports/financial' ? <Loader2 className="h-5 w-5 animate-spin" /> : <FileText className="h-5 w-5 text-purple-500" />}
-          <span className="text-xs">Financial Reports</span>
+          <span className="text-xs">{t('quickActions.financialReports')}</span>
         </Button>
 
         <Button
@@ -218,7 +218,7 @@ export function AdminDashboardPage() {
           disabled={loadingPath === 'notifications'}
         >
           {loadingPath === 'notifications' ? <Loader2 className="h-5 w-5 animate-spin" /> : <AlertCircle className="h-5 w-5 text-yellow-500" />}
-          <span className="text-xs">Announcements</span>
+          <span className="text-xs">{t('quickActions.announcements')}</span>
         </Button>
       </div>
 
@@ -261,23 +261,23 @@ export function AdminDashboardPage() {
 
         <Card className="animate-fade-up-heavy-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Closers</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('cards.closers')}</CardTitle>
             <Users className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{dashboard?.summary.totalClosers || 0}</div>
-            <p className="text-xs text-muted-foreground">Sales team</p>
+            <p className="text-xs text-muted-foreground">{t('cards.closersDesc')}</p>
           </CardContent>
         </Card>
 
         <Card className="animate-fade-left-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Affiliates</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('cards.affiliates')}</CardTitle>
             <UserPlus className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{dashboard?.summary.totalAffiliates || 0}</div>
-            <p className="text-xs text-muted-foreground">Approved affiliates</p>
+            <p className="text-xs text-muted-foreground">{t('cards.affiliatesDesc')}</p>
           </CardContent>
         </Card>
 
@@ -299,27 +299,27 @@ export function AdminDashboardPage() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card className="animate-fade-up cursor-pointer hover:border-primary/50 transition-colors" onClick={() => navigateTo('payouts')}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Payouts</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('cards.pendingPayouts')}</CardTitle>
             <DollarSign className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-orange-600">
               {dashboard?.quickActions?.pendingPayoutRequestsCount || 0}
             </div>
-            <p className="text-xs text-muted-foreground">Reader and affiliate payout requests waiting for processing</p>
+            <p className="text-xs text-muted-foreground">{t('cards.pendingPayoutsDesc')}</p>
           </CardContent>
         </Card>
 
         <Card className="animate-fade-up-slow cursor-pointer hover:border-primary/50 transition-colors" onClick={() => navigateTo('validation')}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Validation Queue</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('cards.validationQueue')}</CardTitle>
             <ClipboardList className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
               {dashboard?.summary.totalReviewsPendingValidation || 0}
             </div>
-            <p className="text-xs text-muted-foreground">Reviews awaiting admin validation</p>
+            <p className="text-xs text-muted-foreground">{t('cards.validationQueueDesc')}</p>
           </CardContent>
         </Card>
       </div>
@@ -328,45 +328,45 @@ export function AdminDashboardPage() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="animate-zoom-in-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Reviews In Progress</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('cards.reviewsInProgress')}</CardTitle>
             <Timer className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{dashboard?.summary.reviewsInProgress || 0}</div>
-            <p className="text-xs text-muted-foreground">Within 72-hour window</p>
+            <p className="text-xs text-muted-foreground">{t('stats.platformWide')}</p>
           </CardContent>
         </Card>
 
         <Card className="animate-zoom-in-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Overdue Reviews</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('cards.overdueReviews')}</CardTitle>
             <AlertTriangle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">{dashboard?.summary.overdueReviews || 0}</div>
-            <p className="text-xs text-muted-foreground">Past deadline</p>
+            <p className="text-xs text-muted-foreground">{t('cards.overdueReviewsDesc')}</p>
           </CardContent>
         </Card>
 
         <Card className="animate-zoom-in-medium-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Credits in Circulation</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('cards.creditsInCirculation')}</CardTitle>
             <Coins className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{dashboard?.summary.creditsInCirculation || 0}</div>
-            <p className="text-xs text-muted-foreground">Purchased but not consumed</p>
+            <p className="text-xs text-muted-foreground">{t('cards.creditsDesc')}</p>
           </CardContent>
         </Card>
 
         <Card className="animate-zoom-in-heavy-slow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Issues Flagged</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('cards.issuesFlagged')}</CardTitle>
             <Flag className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{dashboard?.summary.totalIssuesFlagged || 0}</div>
-            <p className="text-xs text-muted-foreground">Open issues</p>
+            <p className="text-xs text-muted-foreground">{t('cards.issuesDesc')}</p>
           </CardContent>
         </Card>
       </div>
@@ -808,10 +808,10 @@ export function AdminDashboardPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Server className="h-5 w-5 text-purple-500" />
-            System Health
+            {t('systemHealth.title')}
           </CardTitle>
           <CardDescription>
-            Real-time status of critical system components
+            {t('stats.platformWide')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -820,7 +820,7 @@ export function AdminDashboardPage() {
               <div className="flex items-center gap-3">
                 <Database className="h-5 w-5 text-blue-500" />
                 <div>
-                  <p className="font-medium">Database</p>
+                  <p className="font-medium">{t('systemHealth.database')}</p>
                   <p className="text-xs text-muted-foreground">PostgreSQL</p>
                 </div>
               </div>
@@ -828,7 +828,7 @@ export function AdminDashboardPage() {
                 variant={dashboard?.systemHealth?.databaseStatus === 'healthy' ? 'default' : 'destructive'}
                 className={dashboard?.systemHealth?.databaseStatus === 'healthy' ? 'bg-green-500' : ''}
               >
-                {dashboard?.systemHealth?.databaseStatus || 'checking'}
+                {dashboard?.systemHealth?.databaseStatus === 'healthy' ? t('systemHealth.healthy') : t('systemHealth.unhealthy')}
               </Badge>
             </div>
 
@@ -836,7 +836,7 @@ export function AdminDashboardPage() {
               <div className="flex items-center gap-3">
                 <Layers className="h-5 w-5 text-red-500" />
                 <div>
-                  <p className="font-medium">Cache</p>
+                  <p className="font-medium">{t('systemHealth.redis')}</p>
                   <p className="text-xs text-muted-foreground">Redis</p>
                 </div>
               </div>
@@ -844,7 +844,7 @@ export function AdminDashboardPage() {
                 variant={dashboard?.systemHealth?.cacheStatus === 'healthy' ? 'default' : 'destructive'}
                 className={dashboard?.systemHealth?.cacheStatus === 'healthy' ? 'bg-green-500' : ''}
               >
-                {dashboard?.systemHealth?.cacheStatus || 'checking'}
+                {dashboard?.systemHealth?.cacheStatus === 'healthy' ? t('systemHealth.healthy') : t('systemHealth.unhealthy')}
               </Badge>
             </div>
 
@@ -852,7 +852,7 @@ export function AdminDashboardPage() {
               <div className="flex items-center gap-3">
                 <ClipboardList className="h-5 w-5 text-orange-500" />
                 <div>
-                  <p className="font-medium">Job Queue</p>
+                  <p className="font-medium">{t('systemHealth.jobQueue')}</p>
                   <p className="text-xs text-muted-foreground">BullMQ</p>
                 </div>
               </div>
@@ -860,13 +860,13 @@ export function AdminDashboardPage() {
                 variant={dashboard?.systemHealth?.queueStatus === 'healthy' ? 'default' : 'destructive'}
                 className={dashboard?.systemHealth?.queueStatus === 'healthy' ? 'bg-green-500' : ''}
               >
-                {dashboard?.systemHealth?.queueStatus || 'checking'}
+                {dashboard?.systemHealth?.queueStatus === 'healthy' ? t('systemHealth.healthy') : t('systemHealth.unhealthy')}
               </Badge>
             </div>
           </div>
           {dashboard?.systemHealth?.lastHealthCheck && (
             <p className="mt-4 text-xs text-muted-foreground text-center">
-              Last health check: {new Date(dashboard.systemHealth.lastHealthCheck).toLocaleString()}
+              {t('systemHealth.lastCheck')}: {new Date(dashboard.systemHealth.lastHealthCheck).toLocaleString()}
             </p>
           )}
         </CardContent>

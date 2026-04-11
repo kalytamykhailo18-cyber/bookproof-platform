@@ -48,14 +48,14 @@ export function KeywordResearchDetailsPage() {
       if (research?.status === KeywordResearchStatus.PROCESSING &&
           data.status !== KeywordResearchStatus.PROCESSING) {
         if (data.status === KeywordResearchStatus.COMPLETED) {
-          toast.success('Your keyword research report is ready!');
+          toast.success(t('details.reportReady'));
         } else if (data.status === KeywordResearchStatus.FAILED) {
-          toast.error('Keyword research processing failed. Please contact support.');
+          toast.error(t('details.processingFailed'));
         }
       }
     } catch (error: any) {
       console.error('Research error:', error);
-      if (showLoading) toast.error('Failed to load keyword research');
+      if (showLoading) toast.error(t('details.loadFailed'));
     } finally {
       if (showLoading) setIsLoading(false);
     }
@@ -99,13 +99,13 @@ export function KeywordResearchDetailsPage() {
     const cancelled = searchParams.get('cancelled');
 
     if (success === 'true') {
-      toast.success('Payment successful! Your keyword research is being processed.');
+      toast.success(t('details.paymentSuccess'));
       // Refetch to get updated status
       fetchResearch();
       // Clean up URL
       navigate(`/author/keyword-research/${id}`);
     } else if (cancelled === 'true') {
-      toast.error('Payment was cancelled. Please try again.');
+      toast.error(t('details.paymentCancelled'));
       navigate(`/author/keyword-research/${id}`);
     }
   }, [searchParams, id, navigate]);
@@ -116,10 +116,10 @@ export function KeywordResearchDetailsPage() {
       const data = await keywordsApi.downloadPdf(id);
       // Open PDF in new tab
       window.open(data.url, '_blank');
-      toast.success('PDF download started');
+      toast.success(t('details.downloadStarted'));
     } catch (error: any) {
       console.error('Download error:', error);
-      const message = error.response?.data?.message || 'Failed to download PDF';
+      const message = error.response?.data?.message || t('details.downloadError');
       toast.error(message);
     } finally {
       setIsDownloading(false);
@@ -142,7 +142,7 @@ export function KeywordResearchDetailsPage() {
       window.location.href = data.checkoutUrl;
     } catch (error: any) {
       console.error('Checkout error:', error);
-      const message = error.response?.data?.message || 'Failed to create checkout session';
+      const message = error.response?.data?.message || t('details.checkoutError');
       toast.error(message);
       setIsCheckingOut(false);
     }
@@ -250,9 +250,9 @@ export function KeywordResearchDetailsPage() {
           <CardContent className="py-12">
             <div className="text-center">
               <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-              <h3 className="mb-2 text-lg font-semibold">Keyword research not found</h3>
+              <h3 className="mb-2 text-lg font-semibold">{t('details.notFound')}</h3>
               <p className="text-muted-foreground">
-                The requested keyword research could not be found.
+                {t('details.notFoundDescription')}
               </p>
             </div>
           </CardContent>
@@ -287,7 +287,7 @@ export function KeywordResearchDetailsPage() {
                 ) : (
                   <CreditCard className="mr-2 h-4 w-4" />
                 )}
-                Pay Now ({formatCurrency(research.price, 'USD', i18n.language)})
+                {t('details.payNow')} ({formatCurrency(research.price, 'USD', i18n.language)})
               </Button>
             )}
           {/* Download button - only for COMPLETED status */}
@@ -310,10 +310,9 @@ export function KeywordResearchDetailsPage() {
         research.price > 0 && (
           <Alert variant="destructive" className="mb-6">
             <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>Payment Required</AlertTitle>
+            <AlertTitle>{t('details.paymentRequired')}</AlertTitle>
             <AlertDescription>
-              Your keyword research order is awaiting payment. Please complete payment to start
-              processing. Amount due: <strong>{formatCurrency(research.price, 'USD', i18n.language)}</strong>
+              {t('details.paymentRequiredDescription')} <strong>{formatCurrency(research.price, 'USD', i18n.language)}</strong>
             </AlertDescription>
           </Alert>
         )}
@@ -330,7 +329,7 @@ export function KeywordResearchDetailsPage() {
                 <h3 className="font-semibold">{t('details.status')}</h3>
                 <Badge className={getStatusColor(research.status)}>
                   {research.status === KeywordResearchStatus.PENDING && !research.paid
-                    ? 'PENDING PAYMENT'
+                    ? t('details.pendingPayment')
                     : research.status}
                 </Badge>
               </div>
@@ -362,22 +361,22 @@ export function KeywordResearchDetailsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-sm text-muted-foreground">Title</p>
+                <p className="text-sm text-muted-foreground">{t('details.bookTitle')}</p>
                 <p className="font-medium">{research.bookTitle}</p>
               </div>
               <div className="my-2 border-t" />
               <div>
-                <p className="text-sm text-muted-foreground">Genre</p>
+                <p className="text-sm text-muted-foreground">{t('details.genre')}</p>
                 <p className="font-medium">{research.genre}</p>
               </div>
               <div className="my-2 border-t" />
               <div>
-                <p className="text-sm text-muted-foreground">Category</p>
+                <p className="text-sm text-muted-foreground">{t('details.category')}</p>
                 <p className="font-medium">{research.category}</p>
               </div>
               <div className="my-2 border-t" />
               <div>
-                <p className="text-sm text-muted-foreground">Language</p>
+                <p className="text-sm text-muted-foreground">{t('details.language')}</p>
                 <p className="font-medium">{research.bookLanguage}</p>
               </div>
               <div className="my-2 border-t" />
@@ -391,7 +390,7 @@ export function KeywordResearchDetailsPage() {
               </div>
               <div className="my-2 border-t" />
               <div>
-                <p className="text-sm text-muted-foreground">Target Audience</p>
+                <p className="text-sm text-muted-foreground">{t('details.targetAudience')}</p>
                 <p className="font-medium">{research.targetAudience}</p>
               </div>
             </CardContent>
@@ -504,7 +503,7 @@ export function KeywordResearchDetailsPage() {
                         </p>
                         {guideline.examples && guideline.examples.length > 0 && (
                           <div className="mt-2 space-y-1">
-                            <p className="text-xs font-medium text-muted-foreground">Examples:</p>
+                            <p className="text-xs font-medium text-muted-foreground">{t('details.examples')}</p>
                             {guideline.examples.map((example, exampleIndex) => (
                               <p key={exampleIndex} className="text-sm italic">
                                 "{example}"

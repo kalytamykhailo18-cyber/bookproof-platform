@@ -105,11 +105,11 @@ export function RequestPayoutPage() {
         paymentDetails: data.paymentDetails,
         notes: data.notes
       });
-      toast.success('Payout request submitted successfully');
+      toast.success(t('successMessage'));
       navigate(`/reader/wallet`);
     } catch (error: any) {
       console.error('Request payout error:', error);
-      toast.error(error.response?.data?.message || 'Failed to submit payout request');
+      toast.error(error.response?.data?.message || t('errorMessage'));
     } finally {
       setIsPending(false);
     }
@@ -243,7 +243,7 @@ export function RequestPayoutPage() {
         disabled={isBackLoading}
       >
         {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
-        Back to Wallet
+        {t('backToWallet')}
       </Button>
 
       {/* Page Header */}
@@ -267,7 +267,10 @@ export function RequestPayoutPage() {
           {availableBalance < MIN_PAYOUT_AMOUNT && (
             <Alert className="mt-4" variant="destructive">
               <AlertDescription>
-                You need at least {formatCurrency(MIN_PAYOUT_AMOUNT, getCurrencyForLanguage(i18n.language), i18n.language)} to request a payout. Current balance: {formatCurrency(availableBalance, getCurrencyForLanguage(i18n.language), i18n.language)}
+                {t('insufficientBalance', {
+                  minAmount: formatCurrency(MIN_PAYOUT_AMOUNT, getCurrencyForLanguage(i18n.language), i18n.language),
+                  currentBalance: formatCurrency(availableBalance, getCurrencyForLanguage(i18n.language), i18n.language)
+                })}
               </AlertDescription>
             </Alert>
           )}
@@ -279,9 +282,9 @@ export function RequestPayoutPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <DollarSign className="h-5 w-5" />
-            Payout Request
+            {t('payoutRequestTitle')}
           </CardTitle>
-          <CardDescription>Enter the amount and payment details</CardDescription>
+          <CardDescription>{t('payoutRequestDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
@@ -312,7 +315,7 @@ export function RequestPayoutPage() {
                   onClick={() => setValue('amount', availableBalance)}
                   disabled={availableBalance < MIN_PAYOUT_AMOUNT}
                 >
-                  {t('withdrawFullBalance') || 'Withdraw Full Balance'}
+                  {t('withdrawFullBalance')}
                 </Button>
               </div>
               {errors.amount && (
@@ -320,7 +323,9 @@ export function RequestPayoutPage() {
               )}
               {amount > availableBalance && (
                 <p className="mt-1 text-sm text-red-500">
-                  Amount cannot exceed available balance ({formatCurrency(availableBalance, getCurrencyForLanguage(i18n.language), i18n.language)})
+                  {t('amountExceedsBalance', {
+                    balance: formatCurrency(availableBalance, getCurrencyForLanguage(i18n.language), i18n.language)
+                  })}
                 </p>
               )}
             </div>
@@ -340,7 +345,7 @@ export function RequestPayoutPage() {
                 disabled={availableBalance < MIN_PAYOUT_AMOUNT}
               >
                 <SelectTrigger className="mt-1.5">
-                  <SelectValue placeholder="Select payment method" />
+                  <SelectValue placeholder={t('selectPaymentMethod')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="PayPal">{t('paymentMethods.PayPal')}</SelectItem>
@@ -368,7 +373,7 @@ export function RequestPayoutPage() {
               <Textarea
                 id="notes"
                 {...register('notes')}
-                placeholder="Any additional notes..."
+                placeholder={t('notesPlaceholder')}
                 className="mt-1.5 min-h-[100px]"
                 disabled={availableBalance < MIN_PAYOUT_AMOUNT}
               />

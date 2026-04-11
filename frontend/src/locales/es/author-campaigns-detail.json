@@ -69,5 +69,51 @@
     "cancel": "Cancelar",
     "deleting": "Eliminando...",
     "confirm": "Eliminar Campaña"
+  },
+  "landingPages": {
+    "title": "Páginas de Destino Públicas",
+    "description": "Comparte estos enlaces para que los lectores descubran tu campaña",
+    "views": "vistas",
+    "totalViews": "Vistas Totales",
+    "uniqueVisitors": "Visitantes Únicos",
+    "english": "Inglés",
+    "portuguese": "Portugués",
+    "spanish": "Español",
+    "unique": "únicos",
+    "shareableLinks": "Enlaces Compartibles",
+    "copyToClipboard": "Copiar al portapapeles",
+    "openInNewTab": "Abrir en nueva pestaña",
+    "lastViewed": "Última visualización"
+  },
+  "errors": {
+    "loadCampaign": "Error al cargar la campaña",
+    "uploadEbook": "Error al subir el ebook",
+    "uploadAudiobook": "Error al subir el audiolibro",
+    "uploadCover": "Error al subir la imagen de portada",
+    "uploadSynopsis": "Error al subir la sinopsis",
+    "activateCampaign": "Error al activar la campaña",
+    "deleteCampaign": "Error al eliminar la campaña",
+    "pauseCampaign": "Error al pausar la campaña",
+    "resumeCampaign": "Error al reanudar la campaña"
+  },
+  "success": {
+    "uploadEbook": "¡Ebook subido exitosamente!",
+    "uploadAudiobook": "¡Audiolibro subido exitosamente!",
+    "uploadCover": "¡Imagen de portada subida exitosamente!",
+    "uploadSynopsis": "¡Sinopsis subida exitosamente!",
+    "activateCampaign": "¡Campaña activada exitosamente!",
+    "deleteCampaign": "¡Campaña eliminada exitosamente!",
+    "pauseCampaign": "¡Campaña pausada exitosamente!",
+    "resumeCampaign": "¡Campaña reanudada exitosamente!"
+  },
+  "loading": {
+    "uploadEbook": "Subiendo ebook...",
+    "uploadAudiobook": "Subiendo audiolibro...",
+    "uploadCover": "Subiendo imagen de portada...",
+    "uploadSynopsis": "Subiendo sinopsis...",
+    "activateCampaign": "Activando campaña...",
+    "deleteCampaign": "Eliminando campaña...",
+    "pauseCampaign": "Pausando campaña...",
+    "resumeCampaign": "Reanudando campaña..."
   }
 }

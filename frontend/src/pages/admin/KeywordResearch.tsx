@@ -378,9 +378,9 @@ export function AdminKeywordResearchPage() {
       <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
         <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Keyword Research Details</DialogTitle>
+            <DialogTitle>{t('detailDialog.title')}</DialogTitle>
             <DialogDescription>
-              View detailed information about this keyword research order
+              {t('detailDialog.description')}
             </DialogDescription>
           </DialogHeader>
           {isLoadingDetail ? (
@@ -392,11 +392,11 @@ export function AdminKeywordResearchPage() {
               {/* Basic Info */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Book Title</label>
+                  <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.bookTitle')}</label>
                   <p className="mt-1 text-base font-semibold">{selectedResearch.bookTitle}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Status</label>
+                  <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.status')}</label>
                   <div className="mt-1">
                     <Badge className={getStatusColor(selectedResearch.status)}>
                       {tCommon(`status.${selectedResearch.status.toLowerCase()}`)}
@@ -404,96 +404,96 @@ export function AdminKeywordResearchPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Price</label>
+                  <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.price')}</label>
                   <p className="mt-1 text-base">{formatCurrency(selectedResearch.price, selectedResearch.currency || "USD", i18n.language)}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Paid</label>
+                  <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.paid')}</label>
                   <div className="mt-1">
                     {selectedResearch.paid ? (
                       <Badge variant="outline" className="border-green-200 bg-green-50 text-green-700">
-                        Yes
+                        {t('paid.yes')}
                       </Badge>
                     ) : (
                       <Badge variant="outline" className="border-yellow-200 bg-yellow-50 text-yellow-700">
-                        No
+                        {t('paid.no')}
                       </Badge>
                     )}
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Created At</label>
+                  <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.createdAt')}</label>
                   <p className="mt-1 text-base">{formatDate(selectedResearch.createdAt)}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Completed At</label>
+                  <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.completedAt')}</label>
                   <p className="mt-1 text-base">
-                    {selectedResearch.completedAt ? formatDate(selectedResearch.completedAt) : 'Not completed'}
+                    {selectedResearch.completedAt ? formatDate(selectedResearch.completedAt) : t('detailDialog.notCompleted')}
                   </p>
                 </div>
               </div>
 
               {/* Research Details */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Research Information</h3>
+                <h3 className="text-lg font-semibold">{t('detailDialog.researchInfo')}</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {selectedResearch.bookSubtitle && (
                     <div className="col-span-2">
-                      <label className="text-sm font-medium text-muted-foreground">Subtitle</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.subtitle')}</label>
                       <p className="mt-1 text-base">{selectedResearch.bookSubtitle}</p>
                     </div>
                   )}
                   {selectedResearch.genre && (
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">Genre</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.genre')}</label>
                       <p className="mt-1 text-base">{selectedResearch.genre}</p>
                     </div>
                   )}
                   {selectedResearch.category && (
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">Category</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.category')}</label>
                       <p className="mt-1 text-base">{selectedResearch.category}</p>
                     </div>
                   )}
                   {selectedResearch.description && (
                     <div className="col-span-2">
-                      <label className="text-sm font-medium text-muted-foreground">Description</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.description')}</label>
                       <p className="mt-1 text-base">{selectedResearch.description}</p>
                     </div>
                   )}
                   {selectedResearch.targetAudience && (
                     <div className="col-span-2">
-                      <label className="text-sm font-medium text-muted-foreground">Target Audience</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.targetAudience')}</label>
                       <p className="mt-1 text-base">{selectedResearch.targetAudience}</p>
                     </div>
                   )}
                   {selectedResearch.bookLanguage && (
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">Book Language</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.bookLanguage')}</label>
                       <p className="mt-1 text-base">{selectedResearch.bookLanguage}</p>
                     </div>
                   )}
                   {selectedResearch.targetMarket && (
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">Target Market</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.targetMarket')}</label>
                       <p className="mt-1 text-base">{selectedResearch.targetMarket}</p>
                     </div>
                   )}
                   {selectedResearch.competingBooks && (
                     <div className="col-span-2">
-                      <label className="text-sm font-medium text-muted-foreground">Competing Books</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.competingBooks')}</label>
                       <p className="mt-1 text-base whitespace-pre-line">{selectedResearch.competingBooks}</p>
                     </div>
                   )}
                   {selectedResearch.specificKeywords && (
                     <div className="col-span-2">
-                      <label className="text-sm font-medium text-muted-foreground">Specific Keywords</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.specificKeywords')}</label>
                       <p className="mt-1 text-base">{selectedResearch.specificKeywords}</p>
                     </div>
                   )}
                   {selectedResearch.additionalNotes && (
                     <div className="col-span-2">
-                      <label className="text-sm font-medium text-muted-foreground">Additional Notes</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.additionalNotes')}</label>
                       <p className="mt-1 text-base whitespace-pre-line">{selectedResearch.additionalNotes}</p>
                     </div>
                   )}
@@ -503,10 +503,10 @@ export function AdminKeywordResearchPage() {
               {/* Generated Keywords (if completed) */}
               {selectedResearch.status === KeywordResearchStatus.COMPLETED && (
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Generated Keywords</h3>
+                  <h3 className="text-lg font-semibold">{t('detailDialog.generatedKeywords')}</h3>
                   {selectedResearch.primaryKeywords && selectedResearch.primaryKeywords.length > 0 && (
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">Primary Keywords</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.primaryKeywords')}</label>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {selectedResearch.primaryKeywords.map((keyword: string, idx: number) => (
                           <Badge key={idx} variant="default">{keyword}</Badge>
@@ -516,7 +516,7 @@ export function AdminKeywordResearchPage() {
                   )}
                   {selectedResearch.secondaryKeywords && selectedResearch.secondaryKeywords.length > 0 && (
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">Secondary Keywords</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.secondaryKeywords')}</label>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {selectedResearch.secondaryKeywords.map((keyword: string, idx: number) => (
                           <Badge key={idx} variant="secondary">{keyword}</Badge>
@@ -526,7 +526,7 @@ export function AdminKeywordResearchPage() {
                   )}
                   {selectedResearch.longTailKeywords && selectedResearch.longTailKeywords.length > 0 && (
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">Long-tail Keywords</label>
+                      <label className="text-sm font-medium text-muted-foreground">{t('detailDialog.longTailKeywords')}</label>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {selectedResearch.longTailKeywords.map((keyword: string, idx: number) => (
                           <Badge key={idx} variant="outline">{keyword}</Badge>
@@ -540,7 +540,7 @@ export function AdminKeywordResearchPage() {
               {/* Error Message (if failed) */}
               {selectedResearch.status === KeywordResearchStatus.FAILED && selectedResearch.errorMessage && (
                 <div className="rounded-md bg-red-50 p-4">
-                  <label className="text-sm font-medium text-red-800">Error Message</label>
+                  <label className="text-sm font-medium text-red-800">{t('detailDialog.errorMessage')}</label>
                   <p className="mt-1 text-sm text-red-700">{selectedResearch.errorMessage}</p>
                 </div>
               )}
@@ -550,13 +550,13 @@ export function AdminKeywordResearchPage() {
                 <div className="flex justify-end gap-2 pt-4 border-t">
                   <Button onClick={() => handleDownload(selectedResearch.id)} variant="default">
                     <Download className="mr-2 h-4 w-4" />
-                    Download PDF
+                    {t('detailDialog.downloadPdf')}
                   </Button>
                 </div>
               )}
             </div>
           ) : (
-            <p className="text-center text-muted-foreground py-8">No details available</p>
+            <p className="text-center text-muted-foreground py-8">{t('detailDialog.noDetails')}</p>
           )}
         </DialogContent>
       </Dialog>

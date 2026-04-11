@@ -21,6 +21,9 @@
   },
   "languages": {
     "title": "Idiomas Soportados",
-    "description": "Nuestro equipo de soporte puede asistirte en inglés, portugués y español — en tu idioma preferido para una experiencia fluida."
+    "description": "Nuestro equipo de soporte puede asistirte en inglés, portugués y español — en tu idioma preferido para una experiencia fluida.",
+    "english": "English",
+    "portuguese": "Português",
+    "spanish": "Español"
   }
 }

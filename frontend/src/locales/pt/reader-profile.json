@@ -7,27 +7,35 @@
     "profileSettings": "Configurações do Perfil",
     "currentDesc": "Configure suas preferências de leitura",
     "editDesc": "Atualize as configurações do seu perfil",
+    "createDesc": "Crie seu perfil de leitor para começar a receber oportunidades de avaliação",
     "amazonProfiles": "Perfis da Amazon",
     "amazonProfilesDesc": "Adicione suas URLs de perfil de avaliador da Amazon para verificação",
     "basicInfo": "Informações Básicas",
-    "basicInfoDesc": "Detalhes da sua conta e informações pessoais",
+    "basicInfoDesc": "Atualize seu nome, país e preferência de idioma",
     "passwordChange": "Alterar Senha",
     "passwordChangeDesc": "Atualize a senha da sua conta"
   },
   "basicInfo": {
     "name": "Nome Completo",
+    "namePlaceholder": "João Silva",
     "country": "País",
-    "language": "Idioma",
-    "languageNote": "Isso afeta o idioma dos e-mails e notificações",
-    "email": "Endereço de E-mail",
-    "emailNote": "Entre em contato com o administrador para alterar seu e-mail"
+    "countryPlaceholder": "Estados Unidos",
+    "language": "Idioma Preferido",
+    "languagePlaceholder": "Selecione o idioma",
+    "languageNote": "Idioma para a interface da plataforma e notificações por e-mail",
+    "email": "E-mail",
+    "emailNote": "O e-mail não pode ser alterado. Entre em contato com o suporte se necessário."
   },
   "password": {
     "current": "Senha Atual",
+    "currentPlaceholder": "Digite a senha atual",
     "new": "Nova Senha",
-    "requirements": "A senha deve ter pelo menos 8 caracteres",
+    "newPlaceholder": "Digite nova senha (mín 8 caracteres)",
+    "requirements": "Deve ter pelo menos 8 caracteres com maiúsculas, minúsculas, números e caracteres especiais",
     "confirm": "Confirmar Nova Senha",
-    "change": "Alterar Senha"
+    "confirmPlaceholder": "Digite novamente a nova senha",
+    "change": "Alterar Senha",
+    "changing": "Alterando..."
   },
   "contentPreference": {
     "label": "Preferência de Conteúdo",
@@ -43,7 +51,7 @@
   "amazonProfiles": {
     "pending": "Verificação Pendente",
     "verified": "Verificado",
-    "addLabel": "Adicionar URL do Perfil da Amazon",
+    "addLabel": "Adicionar URL do Perfil da Amazon ({{count}}/3)",
     "placeholder": "https://www.amazon.com/gp/profile/...",
     "example": "Exemplo: https://www.amazon.com/gp/profile/SEU_ID_DE_PERFIL",
     "maxReached": "Máximo de 3 perfis da Amazon permitidos"
@@ -57,11 +65,18 @@
     "expired": "Expirados",
     "rejected": "Rejeitados",
     "reliabilityScore": "Pontuação de Confiabilidade",
-    "completionRate": "Taxa de Conclusão"
+    "completionRate": "Taxa de Conclusão",
+    "accountFlagged": "Conta Sinalizada"
   },
   "actions": {
-    "save": "Salvar Alterações",
+    "save": "Salvar",
     "cancel": "Cancelar",
-    "edit": "Editar"
+    "edit": "Editar",
+    "create": "Criar Perfil",
+    "requestPayout": "Solicitar Pagamento"
+  },
+  "createPrompt": {
+    "title": "Crie Seu Perfil",
+    "description": "Configure seu perfil de leitor para começar a receber oportunidades de avaliação de livros adaptadas às suas preferências."
   }
 }

@@ -1,0 +1,82 @@
+{
+  "backToAuthors": "Voltar aos Autores",
+  "notFound": {
+    "title": "Autor não encontrado"
+  },
+  "status": {
+    "verified": "Verificado",
+    "unverified": "Não Verificado",
+    "suspended": "Suspenso",
+    "active": "Ativo",
+    "paused": "Pausado",
+    "completed": "Concluído",
+    "cancelled": "Cancelado",
+    "draft": "Rascunho"
+  },
+  "paymentStatus": {
+    "completed": "Concluído",
+    "pending": "Pendente",
+    "failed": "Falhou",
+    "refunded": "Reembolsado",
+    "cancelled": "Cancelado"
+  },
+  "stats": {
+    "availableCredits": "Créditos Disponíveis",
+    "purchased": "comprados",
+    "creditsUsed": "Créditos Usados",
+    "lifetimeUsage": "Uso total",
+    "totalSpent": "Total Gasto",
+    "revenueGenerated": "Receita gerada",
+    "campaigns": "Campanhas",
+    "active": "ativas"
+  },
+  "profile": {
+    "title": "Informações do Perfil",
+    "fullName": "Nome Completo",
+    "email": "E-mail",
+    "company": "Empresa",
+    "phone": "Telefone",
+    "country": "País",
+    "language": "Idioma",
+    "joined": "Registrado em",
+    "lastLogin": "Último Acesso",
+    "suspensionReason": "Motivo da Suspensão:",
+    "adminNotes": "Notas do Administrador:"
+  },
+  "tabs": {
+    "campaigns": "Campanhas",
+    "purchaseHistory": "Histórico de Compras"
+  },
+  "campaignsTab": {
+    "title": "Campanhas",
+    "description": "Todas as campanhas criadas por este autor",
+    "noCampaigns": "Ainda não há campanhas",
+    "table": {
+      "bookTitle": "Título do Livro",
+      "status": "Status",
+      "credits": "Créditos",
+      "reviews": "Avaliações",
+      "startDate": "Data de Início",
+      "endDate": "Data de Término",
+      "actions": "Ações",
+      "view": "Ver"
+    }
+  },
+  "purchasesTab": {
+    "title": "Histórico de Compras",
+    "description": "Todas as compras de créditos deste autor",
+    "noPurchases": "Ainda não há compras",
+    "table": {
+      "date": "Data",
+      "package": "Pacote",
+      "credits": "Créditos",
+      "amount": "Valor",
+      "discount": "Desconto",
+      "coupon": "Cupom",
+      "status": "Status"
+    }
+  },
+  "errors": {
+    "failedToLoad": "Falha ao carregar os detalhes do autor"
+  }
+}

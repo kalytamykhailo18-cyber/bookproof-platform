@@ -58,13 +58,13 @@ export function PackagesListPage() {
 
   const getStatusBadge = (status: CustomPackageStatus) => {
     const statusConfig = {
-      [CustomPackageStatus.DRAFT]: { label: 'Draft', className: 'bg-gray-100 text-gray-700' },
-      [CustomPackageStatus.PENDING_APPROVAL]: { label: 'Pending Approval', className: 'bg-yellow-100 text-yellow-700' },
-      [CustomPackageStatus.SENT]: { label: 'Sent', className: 'bg-blue-100 text-blue-700' },
-      [CustomPackageStatus.VIEWED]: { label: 'Viewed', className: 'bg-purple-100 text-purple-700' },
-      [CustomPackageStatus.PAID]: { label: 'Paid', className: 'bg-green-100 text-green-700' },
-      [CustomPackageStatus.EXPIRED]: { label: 'Expired', className: 'bg-red-100 text-red-700' },
-      [CustomPackageStatus.CANCELLED]: { label: 'Cancelled', className: 'bg-gray-100 text-gray-700' },
+      [CustomPackageStatus.DRAFT]: { label: t('status.draft'), className: 'bg-gray-100 text-gray-700' },
+      [CustomPackageStatus.PENDING_APPROVAL]: { label: t('status.pendingApproval'), className: 'bg-yellow-100 text-yellow-700' },
+      [CustomPackageStatus.SENT]: { label: t('status.sent'), className: 'bg-blue-100 text-blue-700' },
+      [CustomPackageStatus.VIEWED]: { label: t('status.viewed'), className: 'bg-purple-100 text-purple-700' },
+      [CustomPackageStatus.PAID]: { label: t('status.paid'), className: 'bg-green-100 text-green-700' },
+      [CustomPackageStatus.EXPIRED]: { label: t('status.expired'), className: 'bg-red-100 text-red-700' },
+      [CustomPackageStatus.CANCELLED]: { label: t('status.cancelled'), className: 'bg-gray-100 text-gray-700' },
     };
     const config = statusConfig[status] || statusConfig[CustomPackageStatus.DRAFT];
     return <Badge className={config.className}>{config.label}</Badge>;
@@ -127,28 +127,28 @@ export function PackagesListPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            {t('filters.title') || 'Filters'}
+            {t('filters.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-4">
             <div className="flex-1 max-w-xs">
               <label className="mb-2 block text-sm font-medium">
-                {t('packages.statusFilter') || 'Status'}
+                {t('packages.statusFilter')}
               </label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('filters.allStatuses') || 'All Statuses'}</SelectItem>
-                  <SelectItem value={CustomPackageStatus.DRAFT}>Draft</SelectItem>
-                  <SelectItem value={CustomPackageStatus.PENDING_APPROVAL}>Pending Approval</SelectItem>
-                  <SelectItem value={CustomPackageStatus.SENT}>Sent</SelectItem>
-                  <SelectItem value={CustomPackageStatus.VIEWED}>Viewed (Pending Payment)</SelectItem>
-                  <SelectItem value={CustomPackageStatus.PAID}>Paid</SelectItem>
-                  <SelectItem value={CustomPackageStatus.EXPIRED}>Expired</SelectItem>
-                  <SelectItem value={CustomPackageStatus.CANCELLED}>Cancelled</SelectItem>
+                  <SelectItem value="all">{t('filters.allStatuses')}</SelectItem>
+                  <SelectItem value={CustomPackageStatus.DRAFT}>{t('status.draft')}</SelectItem>
+                  <SelectItem value={CustomPackageStatus.PENDING_APPROVAL}>{t('status.pendingApproval')}</SelectItem>
+                  <SelectItem value={CustomPackageStatus.SENT}>{t('status.sent')}</SelectItem>
+                  <SelectItem value={CustomPackageStatus.VIEWED}>{t('status.viewedPendingPayment')}</SelectItem>
+                  <SelectItem value={CustomPackageStatus.PAID}>{t('status.paid')}</SelectItem>
+                  <SelectItem value={CustomPackageStatus.EXPIRED}>{t('status.expired')}</SelectItem>
+                  <SelectItem value={CustomPackageStatus.CANCELLED}>{t('status.cancelled')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -159,7 +159,7 @@ export function PackagesListPage() {
                 onClick={() => setStatusFilter('all')}
                 className="mt-7"
               >
-                {t('filters.clear') || 'Clear Filter'}
+                {t('filters.clear')}
               </Button>
             )}
           </div>

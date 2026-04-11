@@ -293,13 +293,13 @@ export function AdminReadersListPage() {
 
             {/* Section 4.4 Bug M1 - Country Filter */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Country</label>
+              <label className="text-sm font-medium">{t('filters.country')}</label>
               <Select value={countryFilter} onValueChange={setCountryFilter}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Countries" />
+                  <SelectValue placeholder={t('filters.allCountries')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Countries</SelectItem>
+                  <SelectItem value="all">{t('filters.allCountries')}</SelectItem>
                   {countries.map((country) => (
                     <SelectItem key={country} value={country}>
                       {country}
@@ -311,13 +311,13 @@ export function AdminReadersListPage() {
 
             {/* Section 4.4 Bug M2 - Language Filter */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Language</label>
+              <label className="text-sm font-medium">{t('filters.language')}</label>
               <Select value={languageFilter} onValueChange={setLanguageFilter}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Languages" />
+                  <SelectValue placeholder={t('filters.allLanguages')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Languages</SelectItem>
+                  <SelectItem value="all">{t('filters.allLanguages')}</SelectItem>
                   {languages.map((language) => (
                     <SelectItem key={language} value={language}>
                       {language}
@@ -417,10 +417,10 @@ export function AdminReadersListPage() {
                           <span className="font-medium text-green-600">
                             {reader.reviewsCompleted}
                           </span>
-                          <span className="text-muted-foreground">completed</span>
+                          <span className="text-muted-foreground">{t('table.completed')}</span>
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {reader.reviewsExpired} expired · {reader.reviewsRejected} rejected
+                          {reader.reviewsExpired} {t('table.expired')} · {reader.reviewsRejected} {t('table.rejected')}
                         </div>
                       </div>
                     </TableCell>
@@ -428,7 +428,7 @@ export function AdminReadersListPage() {
                       <div className="space-y-1 text-sm">
                         <div className="font-medium">{formatCurrency(reader.walletBalance, "USD", i18n.language)}</div>
                         <div className="text-xs text-muted-foreground">
-                          {formatCurrency(reader.totalEarned, "USD", i18n.language)} earned
+                          {formatCurrency(reader.totalEarned, "USD", i18n.language)} {t('table.earned')}
                         </div>
                       </div>
                     </TableCell>

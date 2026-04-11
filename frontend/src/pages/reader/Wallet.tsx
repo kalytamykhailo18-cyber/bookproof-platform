@@ -165,7 +165,7 @@ export function WalletPage() {
       <div className="mb-8 flex animate-fade-down-fast items-center justify-between">
         <div>
           <h1 className="mb-2 text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground">Manage your earnings and request payouts</p>
+          <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
         <Button
           type="button"
@@ -192,8 +192,8 @@ export function WalletPage() {
             <div className="text-2xl font-bold">{formatCurrency(availableBalance, getCurrencyForLanguage(i18n.language), i18n.language)}</div>
             <p className="mt-1 text-xs text-muted-foreground">
               {availableBalance >= 50
-                ? 'Ready to request payout'
-                : `${formatCurrency(50 - availableBalance, getCurrencyForLanguage(i18n.language), i18n.language)} until minimum`}
+                ? t('stats.readyToPayout')
+                : `${formatCurrency(50 - availableBalance, getCurrencyForLanguage(i18n.language), i18n.language)} ${t('stats.untilMinimum')}`}
             </p>
           </CardContent>
         </Card>
@@ -205,7 +205,7 @@ export function WalletPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(pendingEarnings, getCurrencyForLanguage(i18n.language), i18n.language)}</div>
-            <p className="mt-1 text-xs text-muted-foreground">Reviews being validated</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t('stats.reviewsBeingValidated')}</p>
           </CardContent>
         </Card>
 
@@ -216,7 +216,7 @@ export function WalletPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(totalEarned, getCurrencyForLanguage(i18n.language), i18n.language)}</div>
-            <p className="mt-1 text-xs text-muted-foreground">Lifetime earnings</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t('stats.lifetimeEarnings')}</p>
           </CardContent>
         </Card>
 
@@ -227,7 +227,7 @@ export function WalletPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(totalWithdrawn, getCurrencyForLanguage(i18n.language), i18n.language)}</div>
-            <p className="mt-1 text-xs text-muted-foreground">Total payouts received</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t('stats.totalPayoutsReceived')}</p>
           </CardContent>
         </Card>
       </div>
@@ -236,13 +236,13 @@ export function WalletPage() {
       <Card className="mb-8 animate-fade-up-very-slow">
         <CardHeader>
           <CardTitle>{t('transactionHistory')}</CardTitle>
-          <CardDescription>Your earnings and wallet activity</CardDescription>
+          <CardDescription>{t('transactions.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           {!transactions || transactions.length === 0 ? (
             <div className="animate-fade-up-fast py-12 text-center">
               <DollarSign className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-              <p className="text-muted-foreground">No transactions yet</p>
+              <p className="text-muted-foreground">{t('transactions.empty')}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -282,7 +282,7 @@ export function WalletPage() {
                         {tx.amount >= 0 ? '+' : ''}{formatCurrency(tx.amount, getCurrencyForLanguage(i18n.language), i18n.language)}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        Balance: {formatCurrency(tx.balanceAfter, getCurrencyForLanguage(i18n.language), i18n.language)}
+                        {t('transactions.balance')}: {formatCurrency(tx.balanceAfter, getCurrencyForLanguage(i18n.language), i18n.language)}
                       </p>
                     </div>
                   </div>
@@ -290,7 +290,7 @@ export function WalletPage() {
               })}
               {transactions.length > 10 && (
                 <p className="text-center text-sm text-muted-foreground">
-                  Showing 10 of {transactions.length} transactions
+                  {t('transactions.showing', { count: 10, total: transactions.length })}
                 </p>
               )}
             </div>
@@ -302,7 +302,7 @@ export function WalletPage() {
       <Card className="animate-fade-up-very-slow">
         <CardHeader>
           <CardTitle>{t('payoutHistory')}</CardTitle>
-          <CardDescription>Your payout requests and their current status</CardDescription>
+          <CardDescription>{t('payouts.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           {!payouts || payouts.length === 0 ? (
@@ -354,7 +354,7 @@ export function WalletPage() {
 
                         <div className="ml-8 space-y-1 text-sm text-muted-foreground">
                           <div>
-                            <span className="font-medium">Payment Method:</span>{' '}
+                            <span className="font-medium">{t('payouts.paymentMethod')}:</span>{' '}
                             {payout.paymentMethod}
                           </div>
                           <div>

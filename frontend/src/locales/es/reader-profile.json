@@ -7,27 +7,35 @@
     "profileSettings": "Configuración del Perfil",
     "currentDesc": "Configure sus preferencias de lectura",
     "editDesc": "Actualice la configuración de su perfil",
+    "createDesc": "Cree su perfil de lector para comenzar a recibir oportunidades de reseñas",
     "amazonProfiles": "Perfiles de Amazon",
     "amazonProfilesDesc": "Agregue sus URLs de perfil de revisor de Amazon para verificación",
     "basicInfo": "Información Básica",
-    "basicInfoDesc": "Detalles de su cuenta e información personal",
+    "basicInfoDesc": "Actualice su nombre, país y preferencia de idioma",
     "passwordChange": "Cambiar Contraseña",
     "passwordChangeDesc": "Actualice la contraseña de su cuenta"
   },
   "basicInfo": {
     "name": "Nombre Completo",
+    "namePlaceholder": "Juan Pérez",
     "country": "País",
-    "language": "Idioma",
-    "languageNote": "Esto afecta el idioma de los correos y notificaciones",
+    "countryPlaceholder": "Estados Unidos",
+    "language": "Idioma Preferido",
+    "languagePlaceholder": "Seleccione idioma",
+    "languageNote": "Idioma para la interfaz de la plataforma y notificaciones por correo",
     "email": "Correo Electrónico",
-    "emailNote": "Contacte al administrador para cambiar su correo"
+    "emailNote": "El correo no se puede cambiar. Contacte a soporte si es necesario."
   },
   "password": {
     "current": "Contraseña Actual",
+    "currentPlaceholder": "Ingrese contraseña actual",
     "new": "Nueva Contraseña",
-    "requirements": "La contraseña debe tener al menos 8 caracteres",
+    "newPlaceholder": "Ingrese nueva contraseña (mín 8 caracteres)",
+    "requirements": "Debe tener al menos 8 caracteres con mayúsculas, minúsculas, números y caracteres especiales",
     "confirm": "Confirmar Nueva Contraseña",
-    "change": "Cambiar Contraseña"
+    "confirmPlaceholder": "Reingrese nueva contraseña",
+    "change": "Cambiar Contraseña",
+    "changing": "Cambiando..."
   },
   "contentPreference": {
     "label": "Preferencia de Contenido",
@@ -43,7 +51,7 @@
   "amazonProfiles": {
     "pending": "Verificación Pendiente",
     "verified": "Verificado",
-    "addLabel": "Agregar URL del Perfil de Amazon",
+    "addLabel": "Agregar URL del Perfil de Amazon ({{count}}/3)",
     "placeholder": "https://www.amazon.com/gp/profile/...",
     "example": "Ejemplo: https://www.amazon.com/gp/profile/TU_ID_DE_PERFIL",
     "maxReached": "Máximo de 3 perfiles de Amazon permitidos"
@@ -57,11 +65,18 @@
     "expired": "Expirados",
     "rejected": "Rechazados",
     "reliabilityScore": "Puntuación de Confiabilidad",
-    "completionRate": "Tasa de Finalización"
+    "completionRate": "Tasa de Finalización",
+    "accountFlagged": "Cuenta Marcada"
   },
   "actions": {
-    "save": "Guardar Cambios",
+    "save": "Guardar",
     "cancel": "Cancelar",
-    "edit": "Editar"
+    "edit": "Editar",
+    "create": "Crear Perfil",
+    "requestPayout": "Solicitar Pago"
+  },
+  "createPrompt": {
+    "title": "Cree Su Perfil",
+    "description": "Configure su perfil de lector para comenzar a recibir oportunidades de reseñas de libros adaptadas a sus preferencias."
   }
 }

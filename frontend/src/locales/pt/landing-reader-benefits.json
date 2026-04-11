@@ -39,7 +39,13 @@
     "methods": "PayPal, Transferência Bancária, Wise, Cripto",
     "ebookLabel": "Avaliação de Ebook",
     "audiobookLabel": "Avaliação de Audiobook",
-    "paymentMethods": "Métodos de Pagamento"
+    "paymentMethods": "Métodos de Pagamento",
+    "paymentMethodsList": {
+      "paypal": "PayPal",
+      "bankTransfer": "Transferência Bancária",
+      "wise": "Wise",
+      "crypto": "Cripto"
+    }
   },
   "howToGet": {
     "title": "Como Começar como Leitor",

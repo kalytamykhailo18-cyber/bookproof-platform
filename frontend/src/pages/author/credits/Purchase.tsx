@@ -49,12 +49,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { useNavigate,  useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ReviewOrderModal } from '@/components/author/ReviewOrderModal';
 
 export function CreditPurchasePage() {
-  const { t: _t, i18n } = useTranslation('credits');
-  void _t; // Will use later for translations
+  const { t, i18n } = useTranslation('authorCredits');
   const navigate = useNavigate();
   const { startLoading, stopLoading } = useLoading();
   const { user } = useAuthStore();
@@ -242,24 +241,25 @@ export function CreditPurchasePage() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString(i18n.language || 'en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric' });
+      day: 'numeric'
+    });
   };
 
   return (
     <div className="container mx-auto space-y-8 px-4 py-8">
       <div>
-        <h1 className="text-3xl font-bold">Purchase Credits</h1>
-        <p className="text-muted-foreground">Choose a package that fits your needs</p>
+        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <p className="text-muted-foreground">{t('subtitle')}</p>
       </div>
 
       {/* Activation Window Info */}
       <Alert className="border-blue-500 bg-blue-50 dark:bg-blue-950/20">
         <Calendar className="h-4 w-4 text-blue-600" />
         <AlertDescription className="text-blue-700 dark:text-blue-400">
-          <span className="font-medium">About Activation Windows:</span> After purchasing credits, you have a specific time window to <strong>start using them</strong> by creating your first campaign. Once activated, you can continue using the credits for that campaign until completion.
+          <span className="font-medium">{t('activation.title')}</span> {t('activation.description')}
         </AlertDescription>
       </Alert>
 
@@ -280,7 +280,7 @@ export function CreditPurchasePage() {
               >
                 {pkg.isPopular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
+                    <Badge className="bg-primary text-primary-foreground">{t('packages.mostPopular')}</Badge>
                   </div>
                 )}
                 <CardHeader>
@@ -288,7 +288,7 @@ export function CreditPurchasePage() {
                     <CardTitle>{pkg.name}</CardTitle>
                     <Package className="h-6 w-6 text-muted-foreground" />
                   </div>
-                  <CardDescription>{pkg.description || 'Credit package'}</CardDescription>
+                  <CardDescription>{pkg.description || t('packages.description')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
@@ -299,15 +299,15 @@ export function CreditPurchasePage() {
                     </div>
                     {i18n.language.toLowerCase().startsWith('pt') && (
                       <p className="mt-1 text-sm font-medium text-emerald-600">
-                        Em até 3x sem juros
+                        {t('packages.installments')}
                       </p>
                     )}
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {pkg.credits} credits
+                      {pkg.credits} {t('packages.credits')}
                     </p>
                     <div className="mt-2 flex items-center gap-1.5 text-sm font-medium text-orange-600 dark:text-orange-400">
                       <Calendar className="h-4 w-4" />
-                      <span>Activate within {pkg.validityDays} days</span>
+                      <span>{t('packages.validityDays', { days: pkg.validityDays })}</span>
                     </div>
                   </div>
 
@@ -323,19 +323,19 @@ export function CreditPurchasePage() {
                       <>
                         <div className="flex items-start gap-2">
                           <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
-                          <span className="text-sm">{pkg.credits} verified reviews</span>
+                          <span className="text-sm">{t('packages.features.reviews', { count: pkg.credits })}</span>
                         </div>
                         <div className="flex items-start gap-2">
                           <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
-                          <span className="text-sm">{pkg.validityDays} days to start your campaign</span>
+                          <span className="text-sm">{t('packages.features.validityDays', { days: pkg.validityDays })}</span>
                         </div>
                         <div className="flex items-start gap-2">
                           <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
-                          <span className="text-sm">20% overbooking buffer included</span>
+                          <span className="text-sm">{t('packages.features.overbooking')}</span>
                         </div>
                         <div className="flex items-start gap-2">
                           <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
-                          <span className="text-sm">Email support</span>
+                          <span className="text-sm">{t('packages.features.support')}</span>
                         </div>
                       </>
                     )}
@@ -343,7 +343,7 @@ export function CreditPurchasePage() {
 
                   <div className="pt-2">
                     <p className="text-xs text-muted-foreground">
-                      Price per credit: {formatCurrency(pkg.basePrice / pkg.credits, pkg.currency, i18n.language)}
+                      {t('packages.pricePerCredit')}: {formatCurrency(pkg.basePrice / pkg.credits, pkg.currency, i18n.language)}
                     </p>
                   </div>
                 </CardContent>
@@ -358,12 +358,12 @@ export function CreditPurchasePage() {
                     {isPurchasing ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Processing...
+                        {t('processing')}
                       </>
                     ) : (
                       <>
                         <CreditCard className="mr-2 h-4 w-4" />
-                        Purchase Package
+                        {t('packages.select')}
                       </>
                     )}
                   </Button>
@@ -377,7 +377,7 @@ export function CreditPurchasePage() {
           <CardContent className="py-12 text-center">
             <Package className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
             <p className="text-muted-foreground">
-              No packages available at the moment. Please check back later.
+              {t('packages.noPackages')}
             </p>
           </CardContent>
         </Card>
@@ -388,13 +388,13 @@ export function CreditPurchasePage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            <CardTitle>Add Keyword Research</CardTitle>
+            <CardTitle>{t('keywordResearch.title')}</CardTitle>
             <Badge variant="secondary" className="ml-2">
-              Recommended
+              {t('keywordResearch.recommended')}
             </Badge>
           </div>
           <CardDescription>
-            Boost your book&apos;s discoverability with AI-powered Amazon keyword optimization
+            {t('keywordResearch.description')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -410,40 +410,39 @@ export function CreditPurchasePage() {
                   htmlFor="keywordResearch"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Include Keyword Research (+{formatCurrency(keywordPrice, keywordPricing?.currency || 'USD', i18n.language)})
+                  {t('keywordResearch.include', { price: formatCurrency(keywordPrice, keywordPricing?.currency || 'USD', i18n.language) })}
                 </label>
               </div>
               <div className="grid gap-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Search className="h-4 w-4 text-primary" />
-                  <span>Primary, secondary & long-tail keywords</span>
+                  <span>{t('keywordResearch.features.keywords')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-green-500" />
-                  <span>Ready-to-use Amazon KDP backend keywords</span>
+                  <span>{t('keywordResearch.features.backend')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Check className="h-4 w-4 text-green-500" />
-                  <span>Professional PDF report delivered to your email</span>
+                  <span>{t('keywordResearch.features.report')}</span>
                 </div>
               </div>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-primary">{formatCurrency(keywordPrice, keywordPricing?.currency || 'USD', i18n.language)}</div>
-              <div className="text-xs text-muted-foreground">per book</div>
+              <div className="text-xs text-muted-foreground">{t('keywordResearch.perBook')}</div>
             </div>
           </div>
           {includeKeywordResearch && (
             <div className="rounded-md bg-primary/10 p-3 text-sm">
-              <strong>Note:</strong> After purchasing credits, you&apos;ll be redirected to select
-              which book to apply keyword research to, or you can{' '}
+              <strong>Note:</strong> {t('keywordResearch.note')}{' '}
               <Button
                 type="button"
                 variant="link"
                 className="h-auto p-0 text-primary underline"
                 onClick={() => navigate(`/author/keyword-research/new`)}
               >
-                order keyword research separately
+                {t('keywordResearch.orderSeparately')}
               </Button>
               .
             </div>
@@ -456,16 +455,16 @@ export function CreditPurchasePage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Tag className="h-5 w-5" />
-            Have a Coupon Code?
+            {t('coupon.title')}
           </CardTitle>
           <CardDescription>
-            Enter your coupon code to get a discount on your purchase
+            {t('coupon.description')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex max-w-md gap-4">
             <div className="flex-1">
-              <Label htmlFor="couponCode">Coupon Code</Label>
+              <Label htmlFor="couponCode">{t('coupon.label')}</Label>
               <Input
                 id="couponCode"
                 value={couponCode}
@@ -474,7 +473,7 @@ export function CreditPurchasePage() {
                   // Reset validation when code changes
                   if (validatedCoupon) setValidatedCoupon(null);
                 }}
-                placeholder="ENTER-CODE-HERE"
+                placeholder={t('coupon.placeholder')}
                 disabled={validatedCoupon?.valid}
               />
             </div>
@@ -482,7 +481,7 @@ export function CreditPurchasePage() {
               {validatedCoupon?.valid ? (
                 <Button type="button" variant="outline" onClick={handleRemoveCoupon}>
                   <X className="mr-2 h-4 w-4" />
-                  Remove
+                  {t('coupon.remove')}
                 </Button>
               ) : (
                 <Button
@@ -494,10 +493,10 @@ export function CreditPurchasePage() {
                   {isValidating ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Validating...
+                      {t('coupon.validating')}
                     </>
                   ) : (
-                    'Apply'
+                    t('coupon.apply')
                   )}
                 </Button>
               )}
@@ -511,11 +510,11 @@ export function CreditPurchasePage() {
                 <Alert className="border-green-500 bg-green-50 dark:bg-green-950/20">
                   <CheckCircle className="h-4 w-4 text-green-600" />
                   <AlertDescription className="text-green-700 dark:text-green-400">
-                    <span className="font-medium">Coupon applied!</span> {getDiscountText()}
+                    <span className="font-medium">{t('coupon.applied')}</span> {getDiscountText()}
                     {validatedCoupon.coupon?.appliesTo !== 'CREDITS' &&
                       validatedCoupon.coupon?.appliesTo !== 'ALL' && (
                         <span className="mt-1 block text-sm text-amber-600 dark:text-amber-400">
-                          Note: This coupon may not apply to credit purchases.
+                          {t('coupon.warning')}
                         </span>
                       )}
                   </AlertDescription>
@@ -524,7 +523,7 @@ export function CreditPurchasePage() {
                 <Alert className="border-destructive bg-destructive/10">
                   <XCircle className="h-4 w-4 text-destructive" />
                   <AlertDescription className="text-destructive">
-                    {validatedCoupon.error || 'Invalid coupon code'}
+                    {validatedCoupon.error || t('coupon.invalid')}
                   </AlertDescription>
                 </Alert>
               )}
@@ -538,26 +537,26 @@ export function CreditPurchasePage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Receipt className="h-5 w-5" />
-            Purchase History
+            {t('history.title')}
           </CardTitle>
-          <CardDescription>Your credit purchase transactions</CardDescription>
+          <CardDescription>{t('history.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoadingTransactions ? (
             <div className="flex items-center justify-center py-8">
-              <p className="text-muted-foreground">Loading transactions...</p>
+              <p className="text-muted-foreground">{t('history.loading')}</p>
             </div>
           ) : transactions && transactions.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Package</TableHead>
-                  <TableHead>Credits</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Validity</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>{t('history.table.date')}</TableHead>
+                  <TableHead>{t('history.table.package')}</TableHead>
+                  <TableHead>{t('history.table.credits')}</TableHead>
+                  <TableHead>{t('history.table.amount')}</TableHead>
+                  <TableHead>{t('history.table.status')}</TableHead>
+                  <TableHead>{t('history.table.validity')}</TableHead>
+                  <TableHead>{t('history.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -571,7 +570,7 @@ export function CreditPurchasePage() {
                     </TableCell>
                     <TableCell className="font-medium">{transaction.package.name}</TableCell>
                     <TableCell>
-                      <Badge variant="outline">{transaction.credits} credits</Badge>
+                      <Badge variant="outline">{transaction.credits} {t('packages.credits')}</Badge>
                     </TableCell>
                     <TableCell>
                       {formatCurrency(transaction.amountPaid, transaction.currency, i18n.language)}
@@ -592,10 +591,10 @@ export function CreditPurchasePage() {
                     <TableCell>
                       {transaction.activationWindowExpiresAt ? (
                         <span className="text-sm">
-                          Until {formatDate(transaction.activationWindowExpiresAt)}
+                          {t('history.table.until')} {formatDate(transaction.activationWindowExpiresAt)}
                         </span>
                       ) : (
-                        <span className="text-sm text-muted-foreground">No expiry</span>
+                        <span className="text-sm text-muted-foreground">{t('history.table.noExpiry')}</span>
                       )}
                     </TableCell>
                     <TableCell>
@@ -621,9 +620,9 @@ export function CreditPurchasePage() {
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Receipt className="mb-4 h-12 w-12 text-muted-foreground" />
-              <p className="text-muted-foreground">No purchases yet</p>
+              <p className="text-muted-foreground">{t('history.noTransactions')}</p>
               <p className="text-sm text-muted-foreground">
-                Purchase your first credit package to get started
+                {t('history.noPurchasesMessage')}
               </p>
             </div>
           )}
@@ -633,58 +632,50 @@ export function CreditPurchasePage() {
       {/* FAQ Section */}
       <Card>
         <CardHeader>
-          <CardTitle>Frequently Asked Questions</CardTitle>
+          <CardTitle>{t('faq.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="activation-window">
-              <AccordionTrigger>What is the activation window?</AccordionTrigger>
+              <AccordionTrigger>{t('faq.activationWindow.question')}</AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground">
-                  Each package has an activation window (30, 90, or 120 days depending on the package).
-                  You must <strong>START using your credits</strong> within this timeframe by creating a campaign.
-                  Once activated, you can continue using the credits for that campaign until completion.
+                  {t('faq.activationWindow.answer1')}
                 </p>
                 <p className="mt-2 text-muted-foreground">
-                  <strong>Example:</strong> If you buy the 100-credit package with a 30-day activation window,
-                  you have 30 days to create a campaign. Once you create the campaign and allocate credits,
-                  those credits don't expire - you can use them until your campaign is complete.
+                  <strong>Example:</strong> {t('faq.activationWindow.answer2')}
                 </p>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="no-activation">
-              <AccordionTrigger>What happens if I don't activate within the window?</AccordionTrigger>
+              <AccordionTrigger>{t('faq.noActivation.question')}</AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground">
-                  If you don't create a campaign within the activation window, the unused credits will expire.
-                  We recommend purchasing credits when you're ready to launch your campaign to avoid losing them.
+                  {t('faq.noActivation.answer')}
                 </p>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="refund">
-              <AccordionTrigger>Can I get a refund?</AccordionTrigger>
+              <AccordionTrigger>{t('faq.refund.question')}</AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground">
-                  Unused credits can be refunded within 14 days of purchase. Once credits are allocated
-                  to a campaign, they become non-refundable.
+                  {t('faq.refund.answer')}
                 </p>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="payment-methods">
-              <AccordionTrigger>What payment methods do you accept?</AccordionTrigger>
+              <AccordionTrigger>{t('faq.paymentMethods.question')}</AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground">
-                  We accept all major credit cards, debit cards, and digital wallets through our secure
-                  Stripe payment gateway.
+                  {t('faq.paymentMethods.answer')}
                 </p>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="multiple-books">
-              <AccordionTrigger>Can I purchase credits for multiple books?</AccordionTrigger>
+              <AccordionTrigger>{t('faq.multipleBooks.question')}</AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground">
-                  Yes! Credits are added to your account balance and can be allocated to any of your
-                  campaigns. However, remember to activate them by creating a campaign within the activation window.
+                  {t('faq.multipleBooks.answer')}
                 </p>
               </AccordionContent>
             </AccordionItem>

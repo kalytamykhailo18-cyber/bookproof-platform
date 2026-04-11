@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { adminControlsApi, type AuthorDetailViewDto } from '@/lib/api/admin-controls';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -39,6 +40,7 @@ import { format } from 'date-fns';
 export function AdminAuthorDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation('adminAuthorDetail');
   const [author, setAuthor] = useState<AuthorDetailViewDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -55,7 +57,7 @@ export function AdminAuthorDetailPage() {
       setAuthor(data);
     } catch (error: any) {
       console.error('Error fetching author details:', error);
-      toast.error('Failed to load author details');
+      toast.error(t('errors.failedToLoad'));
     } finally {
       setIsLoading(false);
     }
@@ -80,10 +82,10 @@ export function AdminAuthorDetailPage() {
       <div className="container mx-auto p-6">
         <div className="flex flex-col items-center justify-center py-16">
           <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold">Author not found</h3>
+          <h3 className="text-lg font-semibold">{t('notFound.title')}</h3>
           <Button onClick={() => navigate('/admin/authors')} className="mt-4">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Authors
+            {t('backToAuthors')}
           </Button>
         </div>
       </div>
@@ -92,11 +94,11 @@ export function AdminAuthorDetailPage() {
 
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { label: string; className: string }> = {
-      ACTIVE: { label: 'Active', className: 'bg-green-100 text-green-800' },
-      PAUSED: { label: 'Paused', className: 'bg-yellow-100 text-yellow-800' },
-      COMPLETED: { label: 'Completed', className: 'bg-blue-100 text-blue-800' },
-      CANCELLED: { label: 'Cancelled', className: 'bg-red-100 text-red-800' },
-      DRAFT: { label: 'Draft', className: 'bg-gray-100 text-gray-800' },
+      ACTIVE: { label: t('status.active'), className: 'bg-green-100 text-green-800' },
+      PAUSED: { label: t('status.paused'), className: 'bg-yellow-100 text-yellow-800' },
+      COMPLETED: { label: t('status.completed'), className: 'bg-blue-100 text-blue-800' },
+      CANCELLED: { label: t('status.cancelled'), className: 'bg-red-100 text-red-800' },
+      DRAFT: { label: t('status.draft'), className: 'bg-gray-100 text-gray-800' },
     };
 
     const config = statusMap[status] || { label: status, className: 'bg-gray-100 text-gray-800' };
@@ -105,11 +107,11 @@ export function AdminAuthorDetailPage() {
 
   const getPaymentStatusBadge = (status: string) => {
     const statusMap: Record<string, { label: string; className: string }> = {
-      COMPLETED: { label: 'Completed', className: 'bg-green-100 text-green-800' },
-      PENDING: { label: 'Pending', className: 'bg-yellow-100 text-yellow-800' },
-      FAILED: { label: 'Failed', className: 'bg-red-100 text-red-800' },
-      REFUNDED: { label: 'Refunded', className: 'bg-purple-100 text-purple-800' },
-      CANCELLED: { label: 'Cancelled', className: 'bg-gray-100 text-gray-800' },
+      COMPLETED: { label: t('paymentStatus.completed'), className: 'bg-green-100 text-green-800' },
+      PENDING: { label: t('paymentStatus.pending'), className: 'bg-yellow-100 text-yellow-800' },
+      FAILED: { label: t('paymentStatus.failed'), className: 'bg-red-100 text-red-800' },
+      REFUNDED: { label: t('paymentStatus.refunded'), className: 'bg-purple-100 text-purple-800' },
+      CANCELLED: { label: t('paymentStatus.cancelled'), className: 'bg-gray-100 text-gray-800' },
     };
 
     const config = statusMap[status] || { label: status, className: 'bg-gray-100 text-gray-800' };
@@ -127,7 +129,7 @@ export function AdminAuthorDetailPage() {
             className="mb-2"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Authors
+            {t('backToAuthors')}
           </Button>
           <h1 className="text-3xl font-bold">{author.name}</h1>
           <p className="text-muted-foreground">{author.email}</p>
@@ -136,18 +138,18 @@ export function AdminAuthorDetailPage() {
           {author.isVerified ? (
             <Badge className="bg-green-100 text-green-800">
               <CheckCircle className="mr-1 h-3 w-3" />
-              Verified
+              {t('status.verified')}
             </Badge>
           ) : (
             <Badge className="bg-yellow-100 text-yellow-800">
               <XCircle className="mr-1 h-3 w-3" />
-              Unverified
+              {t('status.unverified')}
             </Badge>
           )}
           {author.isSuspended && (
             <Badge className="bg-red-100 text-red-800">
               <Ban className="mr-1 h-3 w-3" />
-              Suspended
+              {t('status.suspended')}
             </Badge>
           )}
         </div>
@@ -157,50 +159,50 @@ export function AdminAuthorDetailPage() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Available Credits</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.availableCredits')}</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{author.availableCredits.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              {author.totalCreditsPurchased.toLocaleString()} purchased
+              {author.totalCreditsPurchased.toLocaleString()} {t('stats.purchased')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Credits Used</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.creditsUsed')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{author.totalCreditsUsed.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Lifetime usage</p>
+            <p className="text-xs text-muted-foreground">{t('stats.lifetimeUsage')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.totalSpent')}</CardTitle>
             <DollarSign className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
               ${(author.totalSpentCents / 100).toFixed(2)}
             </div>
-            <p className="text-xs text-muted-foreground">Revenue generated</p>
+            <p className="text-xs text-muted-foreground">{t('stats.revenueGenerated')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Campaigns</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('stats.campaigns')}</CardTitle>
             <BookOpen className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">{author.campaigns.length}</div>
             <p className="text-xs text-muted-foreground">
-              {author.campaigns.filter((c) => c.status === 'ACTIVE').length} active
+              {author.campaigns.filter((c) => c.status === 'ACTIVE').length} {t('stats.active')}
             </p>
           </CardContent>
         </Card>
@@ -209,21 +211,21 @@ export function AdminAuthorDetailPage() {
       {/* Profile Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Profile Information</CardTitle>
+          <CardTitle>{t('profile.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="flex items-start gap-3">
               <User className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div>
-                <p className="text-sm font-medium">Full Name</p>
+                <p className="text-sm font-medium">{t('profile.fullName')}</p>
                 <p className="text-sm text-muted-foreground">{author.name}</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <Mail className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div>
-                <p className="text-sm font-medium">Email</p>
+                <p className="text-sm font-medium">{t('profile.email')}</p>
                 <p className="text-sm text-muted-foreground">{author.email}</p>
               </div>
             </div>
@@ -231,7 +233,7 @@ export function AdminAuthorDetailPage() {
               <div className="flex items-start gap-3">
                 <Building className="h-5 w-5 text-muted-foreground mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium">Company</p>
+                  <p className="text-sm font-medium">{t('profile.company')}</p>
                   <p className="text-sm text-muted-foreground">{author.companyName}</p>
                 </div>
               </div>
@@ -240,7 +242,7 @@ export function AdminAuthorDetailPage() {
               <div className="flex items-start gap-3">
                 <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium">Phone</p>
+                  <p className="text-sm font-medium">{t('profile.phone')}</p>
                   <p className="text-sm text-muted-foreground">{author.phone}</p>
                 </div>
               </div>
@@ -249,7 +251,7 @@ export function AdminAuthorDetailPage() {
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium">Country</p>
+                  <p className="text-sm font-medium">{t('profile.country')}</p>
                   <p className="text-sm text-muted-foreground">{author.country}</p>
                 </div>
               </div>
@@ -257,14 +259,14 @@ export function AdminAuthorDetailPage() {
             <div className="flex items-start gap-3">
               <Globe className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div>
-                <p className="text-sm font-medium">Language</p>
+                <p className="text-sm font-medium">{t('profile.language')}</p>
                 <p className="text-sm text-muted-foreground">{author.preferredLanguage}</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div>
-                <p className="text-sm font-medium">Joined</p>
+                <p className="text-sm font-medium">{t('profile.joined')}</p>
                 <p className="text-sm text-muted-foreground">
                   {format(new Date(author.createdAt), 'PPP')}
                 </p>
@@ -274,7 +276,7 @@ export function AdminAuthorDetailPage() {
               <div className="flex items-start gap-3">
                 <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium">Last Login</p>
+                  <p className="text-sm font-medium">{t('profile.lastLogin')}</p>
                   <p className="text-sm text-muted-foreground">
                     {format(new Date(author.lastLoginAt), 'PPP')}
                   </p>
@@ -285,14 +287,14 @@ export function AdminAuthorDetailPage() {
 
           {author.isSuspended && author.suspendReason && (
             <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-sm font-medium text-red-800">Suspension Reason:</p>
+              <p className="text-sm font-medium text-red-800">{t('profile.suspensionReason')}</p>
               <p className="text-sm text-red-700">{author.suspendReason}</p>
             </div>
           )}
 
           {author.adminNotes && (
             <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
-              <p className="text-sm font-medium text-blue-800">Admin Notes:</p>
+              <p className="text-sm font-medium text-blue-800">{t('profile.adminNotes')}</p>
               <p className="text-sm text-blue-700 whitespace-pre-wrap">{author.adminNotes}</p>
             </div>
           )}
@@ -304,37 +306,37 @@ export function AdminAuthorDetailPage() {
         <TabsList>
           <TabsTrigger value="campaigns">
             <BookOpen className="mr-2 h-4 w-4" />
-            Campaigns ({author.campaigns.length})
+            {t('tabs.campaigns')} ({author.campaigns.length})
           </TabsTrigger>
           <TabsTrigger value="purchases">
             <Package className="mr-2 h-4 w-4" />
-            Purchase History ({author.purchases.length})
+            {t('tabs.purchaseHistory')} ({author.purchases.length})
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="campaigns" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Campaigns</CardTitle>
-              <CardDescription>All campaigns created by this author</CardDescription>
+              <CardTitle>{t('campaignsTab.title')}</CardTitle>
+              <CardDescription>{t('campaignsTab.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               {author.campaigns.length === 0 ? (
                 <div className="py-8 text-center">
                   <BookOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No campaigns yet</p>
+                  <p className="text-muted-foreground">{t('campaignsTab.noCampaigns')}</p>
                 </div>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Book Title</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Credits</TableHead>
-                      <TableHead className="text-right">Reviews</TableHead>
-                      <TableHead>Start Date</TableHead>
-                      <TableHead>End Date</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead>{t('campaignsTab.table.bookTitle')}</TableHead>
+                      <TableHead>{t('campaignsTab.table.status')}</TableHead>
+                      <TableHead className="text-right">{t('campaignsTab.table.credits')}</TableHead>
+                      <TableHead className="text-right">{t('campaignsTab.table.reviews')}</TableHead>
+                      <TableHead>{t('campaignsTab.table.startDate')}</TableHead>
+                      <TableHead>{t('campaignsTab.table.endDate')}</TableHead>
+                      <TableHead className="text-right">{t('campaignsTab.table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -358,7 +360,7 @@ export function AdminAuthorDetailPage() {
                             size="sm"
                             onClick={() => navigate(`/admin/campaigns/${campaign.id}`)}
                           >
-                            View
+                            {t('campaignsTab.table.view')}
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -373,26 +375,26 @@ export function AdminAuthorDetailPage() {
         <TabsContent value="purchases" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Purchase History</CardTitle>
-              <CardDescription>All credit purchases by this author</CardDescription>
+              <CardTitle>{t('purchasesTab.title')}</CardTitle>
+              <CardDescription>{t('purchasesTab.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               {author.purchases.length === 0 ? (
                 <div className="py-8 text-center">
                   <Package className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No purchases yet</p>
+                  <p className="text-muted-foreground">{t('purchasesTab.noPurchases')}</p>
                 </div>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Package</TableHead>
-                      <TableHead className="text-right">Credits</TableHead>
-                      <TableHead className="text-right">Amount</TableHead>
-                      <TableHead className="text-right">Discount</TableHead>
-                      <TableHead>Coupon</TableHead>
-                      <TableHead>Status</TableHead>
+                      <TableHead>{t('purchasesTab.table.date')}</TableHead>
+                      <TableHead>{t('purchasesTab.table.package')}</TableHead>
+                      <TableHead className="text-right">{t('purchasesTab.table.credits')}</TableHead>
+                      <TableHead className="text-right">{t('purchasesTab.table.amount')}</TableHead>
+                      <TableHead className="text-right">{t('purchasesTab.table.discount')}</TableHead>
+                      <TableHead>{t('purchasesTab.table.coupon')}</TableHead>
+                      <TableHead>{t('purchasesTab.table.status')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

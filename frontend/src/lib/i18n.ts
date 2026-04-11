@@ -94,6 +94,10 @@ import adminAuthorsEN from '../locales/en/admin-authors.json';
 import adminAuthorsES from '../locales/es/admin-authors.json';
 import adminAuthorsPT from '../locales/pt/admin-authors.json';
 
+import adminAuthorDetailEN from '../locales/en/admin-author-detail.json';
+import adminAuthorDetailES from '../locales/es/admin-author-detail.json';
+import adminAuthorDetailPT from '../locales/pt/admin-author-detail.json';
+
 import adminAuthorTransactionsEN from '../locales/en/admin-author-transactions.json';
 import adminAuthorTransactionsES from '../locales/es/admin-author-transactions.json';
 import adminAuthorTransactionsPT from '../locales/pt/admin-author-transactions.json';
@@ -161,6 +165,10 @@ import adminKeywordResearchPT from '../locales/pt/admin-keyword-research.json';
 import adminNotificationsEN from '../locales/en/admin-notifications.json';
 import adminNotificationsES from '../locales/es/admin-notifications.json';
 import adminNotificationsPT from '../locales/pt/admin-notifications.json';
+
+import notificationsEN from '../locales/en/notifications.json';
+import notificationsES from '../locales/es/notifications.json';
+import notificationsPT from '../locales/pt/notifications.json';
 
 import adminDisputesEN from '../locales/en/admin-disputes.json';
 import adminDisputesES from '../locales/es/admin-disputes.json';
@@ -261,6 +269,22 @@ import closerEN from '../locales/en/closer.json';
 import closerES from '../locales/es/closer.json';
 import closerPT from '../locales/pt/closer.json';
 
+import subscriptionEN from '../locales/en/subscription.json';
+import subscriptionES from '../locales/es/subscription.json';
+import subscriptionPT from '../locales/pt/subscription.json';
+
+import supportEN from '../locales/en/support.json';
+import supportES from '../locales/es/support.json';
+import supportPT from '../locales/pt/support.json';
+
+import affiliateMarketingMaterialsEN from '../locales/en/affiliate-marketing-materials.json';
+import affiliateMarketingMaterialsES from '../locales/es/affiliate-marketing-materials.json';
+import affiliateMarketingMaterialsPT from '../locales/pt/affiliate-marketing-materials.json';
+
+import affiliateNotificationsEN from '../locales/en/affiliate-notifications.json';
+import affiliateNotificationsES from '../locales/es/affiliate-notifications.json';
+import affiliateNotificationsPT from '../locales/pt/affiliate-notifications.json';
+
 // Build resources object with all translations
 const resources = {
   en: {
@@ -275,6 +299,7 @@ const resources = {
     admin: adminEN,
     adminDashboard: adminDashboardEN,
     adminAuthors: adminAuthorsEN,
+    adminAuthorDetail: adminAuthorDetailEN,
     adminAuthorTransactions: adminAuthorTransactionsEN,
     adminReaders: adminReadersEN,
     adminAffiliates: adminAffiliatesEN,
@@ -292,6 +317,8 @@ const resources = {
     adminExceptions: adminExceptionsEN,
     adminKeywordResearch: adminKeywordResearchEN,
     adminNotifications: adminNotificationsEN,
+    notifications: notificationsEN,
+    'notifications.settings': notificationsEN.settings,
     adminDisputes: adminDisputesEN,
     adminIssues: adminIssuesEN,
     adminReaderBehavior: adminReaderBehaviorEN,
@@ -341,6 +368,10 @@ const resources = {
     legalTerms: legalTermsEN,
     legalPrivacy: legalPrivacyEN,
     legalCookies: legalCookiesEN,
+    subscription: subscriptionEN,
+    support: supportEN,
+    'affiliate-marketing-materials': affiliateMarketingMaterialsEN,
+    'affiliate-notifications': affiliateNotificationsEN,
   },
   es: {
     common: commonES,
@@ -354,6 +385,7 @@ const resources = {
     admin: adminES,
     adminDashboard: adminDashboardES,
     adminAuthors: adminAuthorsES,
+    adminAuthorDetail: adminAuthorDetailES,
     adminAuthorTransactions: adminAuthorTransactionsES,
     adminReaders: adminReadersES,
     adminAffiliates: adminAffiliatesES,
@@ -371,6 +403,8 @@ const resources = {
     adminExceptions: adminExceptionsES,
     adminKeywordResearch: adminKeywordResearchES,
     adminNotifications: adminNotificationsES,
+    notifications: notificationsES,
+    'notifications.settings': notificationsES.settings,
     adminDisputes: adminDisputesES,
     adminIssues: adminIssuesES,
     adminReaderBehavior: adminReaderBehaviorES,
@@ -420,6 +454,10 @@ const resources = {
     legalTerms: legalTermsES,
     legalPrivacy: legalPrivacyES,
     legalCookies: legalCookiesES,
+    subscription: subscriptionES,
+    support: supportES,
+    'affiliate-marketing-materials': affiliateMarketingMaterialsES,
+    'affiliate-notifications': affiliateNotificationsES,
   },
   pt: {
     common: commonPT,
@@ -433,6 +471,7 @@ const resources = {
     admin: adminPT,
     adminDashboard: adminDashboardPT,
     adminAuthors: adminAuthorsPT,
+    adminAuthorDetail: adminAuthorDetailPT,
     adminAuthorTransactions: adminAuthorTransactionsPT,
     adminReaders: adminReadersPT,
     adminAffiliates: adminAffiliatesPT,
@@ -450,6 +489,8 @@ const resources = {
     adminExceptions: adminExceptionsPT,
     adminKeywordResearch: adminKeywordResearchPT,
     adminNotifications: adminNotificationsPT,
+    notifications: notificationsPT,
+    'notifications.settings': notificationsPT.settings,
     adminDisputes: adminDisputesPT,
     adminIssues: adminIssuesPT,
     adminReaderBehavior: adminReaderBehaviorPT,
@@ -499,6 +540,10 @@ const resources = {
     legalTerms: legalTermsPT,
     legalPrivacy: legalPrivacyPT,
     legalCookies: legalCookiesPT,
+    subscription: subscriptionPT,
+    support: supportPT,
+    'affiliate-marketing-materials': affiliateMarketingMaterialsPT,
+    'affiliate-notifications': affiliateNotificationsPT,
   },
 };
 

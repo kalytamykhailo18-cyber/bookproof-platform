@@ -4,9 +4,18 @@
   "subtitle": "Manage your privacy, data, and account preferences",
   "language": {
     "title": "Language Preference",
-    "description": "Choose your preferred language for the platform",
+    "description": "Choose your preferred language for the platform and email notifications",
+    "interfaceLabel": "Interface Language",
+    "interfaceDescription": "This will change the language of the entire platform",
     "selectLabel": "Select Language",
-    "selectPlaceholder": "Choose a language"
+    "selectPlaceholder": "Select language",
+    "english": "English",
+    "portuguese": "Português",
+    "spanish": "Español",
+    "updateSuccess": "Language updated",
+    "updateSuccessDescription": "Your preferred language has been changed to {{language}}",
+    "updateError": "Failed to update language",
+    "updateErrorDescription": "Please try again later"
   },
   "consents": {
     "title": "Privacy & Consent",
@@ -83,12 +92,16 @@
     "description": "Download a complete copy of all your personal data in JSON format (GDPR compliance)",
     "includes": "Your export will include:",
     "personalInfo": "Personal information (email, name, profile data)",
-    "campaigns": "Campaign history and transactions (if author)",
-    "reviews": "Review assignments and submissions (if reader)",
-    "affiliate": "Affiliate data and commissions (if affiliate)",
+    "reviewAssignments": "Review assignments and submissions",
+    "campaigns": "Campaign history and transactions",
+    "credits": "Credit purchase history",
     "consents": "Consent records and activity logs",
     "button": "Download My Data",
-    "exporting": "Exporting..."
+    "exporting": "Exporting...",
+    "success": "Data exported successfully",
+    "successDescription": "Your data has been downloaded as a JSON file",
+    "error": "Failed to export data",
+    "errorDescription": "Please try again later"
   },
   "privacy": {
     "title": "Privacy & Consent",
@@ -104,12 +117,19 @@
     "personalization": {
       "title": "Personalization",
       "description": "Personalize your experience with recommendations and customized content"
-    }
+    },
+    "updateSuccess": "Consent updated",
+    "updateSuccessDescription": "{{consentType}} consent {{status}}",
+    "granted": "granted",
+    "withdrawn": "withdrawn",
+    "updateError": "Failed to update consent",
+    "updateErrorDescription": "Please try again later"
   },
   "delete": {
     "title": "Danger Zone",
     "description": "Permanently delete your account and all associated data",
     "button": "Delete My Account",
+    "noteLabel": "Note:",
     "dialog": {
       "title": "Are you absolutely sure?",
       "warning": "This action will schedule your account for deletion:",
@@ -125,7 +145,11 @@
       "confirm": "Delete Account",
       "deleting": "Deleting..."
     },
-    "note": "Account deletion requests include a 30-day grace period. During this time, you can log in and cancel the deletion request if you change your mind."
+    "note": "Account deletion requests include a 30-day grace period. During this time, you can log in and cancel the deletion request if you change your mind.",
+    "success": "Account deletion scheduled",
+    "successDescription": "Your account will be deleted on {{date}}. You can cancel within {{days}} days.",
+    "error": "Failed to delete account",
+    "errorDescription": "Please try again later"
   },
   "privacyPolicy": {
     "title": "Privacy Policy",

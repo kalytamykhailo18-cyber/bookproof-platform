@@ -7,27 +7,35 @@
     "profileSettings": "Profile Settings",
     "currentDesc": "Configure your reading preferences",
     "editDesc": "Update your profile settings",
+    "createDesc": "Create your reader profile to start receiving review opportunities",
     "amazonProfiles": "Amazon Profiles",
     "amazonProfilesDesc": "Add your Amazon reviewer profile URLs for verification",
     "basicInfo": "Basic Information",
-    "basicInfoDesc": "Your account details and personal information",
+    "basicInfoDesc": "Update your name, country, and language preference",
     "passwordChange": "Change Password",
     "passwordChangeDesc": "Update your account password"
   },
   "basicInfo": {
     "name": "Full Name",
+    "namePlaceholder": "John Doe",
     "country": "Country",
-    "language": "Language",
-    "languageNote": "This affects the language of emails and notifications",
-    "email": "Email Address",
-    "emailNote": "Contact your administrator to change your email"
+    "countryPlaceholder": "United States",
+    "language": "Preferred Language",
+    "languagePlaceholder": "Select language",
+    "languageNote": "Language for platform interface and email notifications",
+    "email": "Email",
+    "emailNote": "Email cannot be changed. Contact support if needed."
   },
   "password": {
     "current": "Current Password",
+    "currentPlaceholder": "Enter current password",
     "new": "New Password",
-    "requirements": "Password must be at least 8 characters",
+    "newPlaceholder": "Enter new password (min 8 characters)",
+    "requirements": "Must be at least 8 characters with uppercase, lowercase, number, and special character",
     "confirm": "Confirm New Password",
-    "change": "Change Password"
+    "confirmPlaceholder": "Re-enter new password",
+    "change": "Change Password",
+    "changing": "Changing..."
   },
   "contentPreference": {
     "label": "Content Preference",
@@ -43,7 +51,7 @@
   "amazonProfiles": {
     "pending": "Pending Verification",
     "verified": "Verified",
-    "addLabel": "Add Amazon Profile URL",
+    "addLabel": "Add Amazon Profile URL ({{count}}/3)",
     "placeholder": "https://www.amazon.com/gp/profile/...",
     "example": "Example: https://www.amazon.com/gp/profile/YOUR_PROFILE_ID",
     "maxReached": "Maximum of 3 Amazon profiles allowed"
@@ -57,11 +65,18 @@
     "expired": "Expired",
     "rejected": "Rejected",
     "reliabilityScore": "Reliability Score",
-    "completionRate": "Completion Rate"
+    "completionRate": "Completion Rate",
+    "accountFlagged": "Account Flagged"
   },
   "actions": {
-    "save": "Save Changes",
+    "save": "Save",
     "cancel": "Cancel",
-    "edit": "Edit"
+    "edit": "Edit",
+    "create": "Create Profile",
+    "requestPayout": "Request Payout"
+  },
+  "createPrompt": {
+    "title": "Create Your Profile",
+    "description": "Set up your reader profile to start receiving book review opportunities tailored to your preferences."
   }
 }

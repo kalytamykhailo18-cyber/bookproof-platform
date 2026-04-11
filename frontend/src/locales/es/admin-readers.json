@@ -88,7 +88,10 @@
     "country": "País",
     "language": "Idioma",
     "completedExpired": "completadas / expiradas",
-    "earned": "Ganado",
+    "completed": "completadas",
+    "expired": "expiradas",
+    "rejected": "rechazadas",
+    "earned": "ganado",
     "book": "Libro",
     "format": "Formato",
     "assignedAt": "Asignado",
@@ -243,5 +246,72 @@
     "title": "Lector No Encontrado",
     "description": "El lector que buscas no existe o ha sido eliminado.",
     "backToList": "Volver a Lectores"
+  },
+  "userManagement": {
+    "title": "Gestión de Cuenta de Usuario",
+    "description": "Estas acciones afectan la cuenta de usuario directamente, no solo el perfil de lector.",
+    "banUser": "Banear Usuario",
+    "unbanUser": "Desbanear Usuario",
+    "resetPassword": "Restablecer Contraseña",
+    "verifyEmail": "Verificar Email",
+    "unverifyEmail": "Desverificar Email",
+    "sendEmail": "Enviar Email",
+    "userBanned": "Usuario está baneado",
+    "reason": "Razón",
+    "banDialog": {
+      "title": "Banear Usuario (Permanente)",
+      "description": "Esto baneará permanentemente al usuario de la plataforma. No podrá iniciar sesión ni acceder a ninguna funcionalidad.",
+      "reasonLabel": "Razón *",
+      "reasonPlaceholder": "Ingresa la razón para banear a este usuario",
+      "notesLabel": "Notas Adicionales",
+      "notesPlaceholder": "Notas opcionales para el registro de auditoría",
+      "confirm": "Banear Usuario",
+      "banning": "Baneando..."
+    },
+    "unbanDialog": {
+      "title": "Desbanear Usuario",
+      "description": "Esto eliminará el baneo permanente y permitirá al usuario acceder a la plataforma nuevamente.",
+      "reasonLabel": "Razón *",
+      "reasonPlaceholder": "Ingresa la razón para desbanear a este usuario",
+      "notesLabel": "Notas Adicionales",
+      "notesPlaceholder": "Notas opcionales para el registro de auditoría",
+      "confirm": "Desbanear Usuario",
+      "unbanning": "Desbaneando..."
+    },
+    "resetPasswordDialog": {
+      "title": "Restablecer Contraseña de Usuario",
+      "description": "Esto enviará un correo de restablecimiento de contraseña al usuario. Necesitará hacer clic en el enlace para establecer una nueva contraseña.",
+      "emailLabel": "Email",
+      "reasonLabel": "Razón (opcional)",
+      "reasonPlaceholder": "Ingresa la razón para restablecer la contraseña",
+      "confirm": "Enviar Email de Restablecimiento",
+      "sending": "Enviando..."
+    },
+    "verifyEmailDialog": {
+      "verifyTitle": "Verificar Email",
+      "unverifyTitle": "Desverificar Email",
+      "verifyDescription": "Esto marcará manualmente el email como verificado sin requerir que el usuario haga clic en un enlace de verificación.",
+      "unverifyDescription": "Esto marcará el email como no verificado.",
+      "emailLabel": "Email",
+      "currentStatus": "Estado Actual",
+      "verified": "Verificado",
+      "notVerified": "No Verificado",
+      "reasonLabel": "Razón (opcional)",
+      "reasonPlaceholder": "Ingresa la razón para el cambio de verificación",
+      "verifyConfirm": "Verificar Email",
+      "unverifyConfirm": "Desverificar Email",
+      "updating": "Actualizando..."
+    },
+    "sendEmailDialog": {
+      "title": "Enviar Email al Usuario",
+      "description": "Envía un email personalizado a este usuario. El email será enviado desde la plataforma.",
+      "toLabel": "Para",
+      "subjectLabel": "Asunto *",
+      "subjectPlaceholder": "Ingresa el asunto del email",
+      "messageLabel": "Mensaje *",
+      "messagePlaceholder": "Ingresa tu mensaje",
+      "confirm": "Enviar Email",
+      "sending": "Enviando..."
+    }
   }
 }

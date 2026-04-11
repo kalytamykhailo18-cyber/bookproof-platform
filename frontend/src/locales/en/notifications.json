@@ -1,31 +1,72 @@
 {
+  "title": "Notifications",
+  "subtitle": "Stay updated with your campaign activity and system messages",
+  "settingsButton": "Settings",
+  "markAllRead": "Mark All Read ({{count}})",
+  "tabs": {
+    "all": "All",
+    "unread": "Unread"
+  },
+  "filters": {
+    "allTypes": "All Types",
+    "campaigns": "Campaigns",
+    "reviews": "Reviews",
+    "payments": "Payments"
+  },
+  "pagination": {
+    "showing": "Showing {{count}} of {{total}} notifications"
+  },
+  "messages": {
+    "loadError": "Failed to load notifications",
+    "markReadError": "Failed to mark notifications as read",
+    "markAllReadSuccess": "All notifications marked as read",
+    "markAllReadError": "Failed to mark all notifications as read",
+    "updatedCount": "{{count}} notification updated",
+    "updatedCount_other": "{{count}} notifications updated"
+  },
   "settings": {
     "title": "Notification Settings",
-    "subtitle": "Manage how you receive notifications",
-    "back": "Back",
+    "subtitle": "Manage how you receive notifications and which types you want to get",
+    "backButton": "Back to Notifications",
     "save": "Save Settings",
     "saving": "Saving...",
-    "success": "Settings saved successfully",
-    "error": "Failed to save settings",
-    "emailNotifications": {
+    "loadError": "Failed to load notification settings",
+    "updateSuccess": "Notification settings updated successfully",
+    "updateError": "Failed to update notification settings",
+    "email": {
       "title": "Email Notifications",
-      "description": "Receive notifications via email",
-      "enabled": "Email notifications enabled",
-      "disabled": "Email notifications disabled"
+      "description": "Control when and how you receive email notifications",
+      "enableLabel": "Enable Email Notifications",
+      "enableDescription": "Receive notifications via email in addition to in-app notifications"
     },
     "frequency": {
       "title": "Email Frequency",
-      "description": "How often would you like to receive email digests?",
       "immediate": "Immediate",
-      "immediateDesc": "Receive emails as events happen",
+      "immediateDesc": "Get notified as soon as events happen",
       "daily": "Daily Digest",
-      "dailyDesc": "Receive a daily summary of notifications",
+      "dailyDesc": "Receive a summary once per day",
       "weekly": "Weekly Digest",
-      "weeklyDesc": "Receive a weekly summary of notifications"
+      "weeklyDesc": "Receive a summary once per week"
     },
     "types": {
       "title": "Notification Types",
-      "description": "Choose which types of notifications you want to receive"
+      "description": "Choose which types of notifications you want to receive (in-app notifications are always enabled)",
+      "campaign": {
+        "label": "Campaign Updates",
+        "description": "Updates about your active campaigns and progress"
+      },
+      "review": {
+        "label": "Review Notifications",
+        "description": "New reviews delivered, validations, and review status changes"
+      },
+      "payment": {
+        "label": "Payment Confirmations",
+        "description": "Credit purchases, invoices, and payment confirmations"
+      },
+      "system": {
+        "label": "System Notifications",
+        "description": "System updates, maintenance notices, and important announcements"
+      }
     }
   }
 }

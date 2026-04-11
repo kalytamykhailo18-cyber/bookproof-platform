@@ -1,0 +1,78 @@
+{
+  "title": "Soporte",
+  "subtitle": "Obtén ayuda con problemas o disputas",
+  "newRequest": "Nueva Solicitud de Soporte",
+  "loading": "Cargando...",
+  "createDialog": {
+    "title": "Crear Solicitud de Soporte",
+    "description": "Describe tu problema y nuestro equipo lo revisará",
+    "issueTypeLabel": "Tipo de Problema *",
+    "issueTypePlaceholder": "Selecciona el tipo de problema",
+    "descriptionLabel": "Descripción *",
+    "descriptionPlaceholder": "Por favor describe tu problema en detalle (mínimo 10 caracteres)",
+    "charactersNeeded": "{{count}} caracteres más necesarios",
+    "minimumReached": "✓ Mínimo alcanzado",
+    "characterCount": "{{current}}/{{max}}",
+    "cancel": "Cancelar",
+    "submit": "Enviar Solicitud",
+    "submitting": "Enviando..."
+  },
+  "issueTypes": {
+    "generalComplaint": "Queja General",
+    "campaignIssue": "Problema de Campaña",
+    "reviewQuality": "Calidad de Revisión",
+    "paymentIssue": "Problema de Pago",
+    "serviceIssue": "Problema de Servicio",
+    "other": "Otro"
+  },
+  "disputeTypes": {
+    "authorDispute": "Disputa de Autor",
+    "authorComplaint": "Queja de Autor",
+    "policyViolation": "Violación de Política"
+  },
+  "helpCard": {
+    "title": "¿Necesitas Ayuda?",
+    "responseTime": "Nuestro equipo de soporte generalmente responde en 24 horas (4 horas para problemas críticos).",
+    "appealInfo": "Si tu solicitud ha sido resuelta pero no estás de acuerdo con el resultado, puedes presentar una apelación por problema."
+  },
+  "requestsTable": {
+    "title": "Mis Solicitudes de Soporte",
+    "description": "Rastrea el estado de tus solicitudes de soporte",
+    "headers": {
+      "id": "ID",
+      "type": "Tipo",
+      "status": "Estado",
+      "appeal": "Apelación",
+      "description": "Descripción",
+      "created": "Creado",
+      "actions": "Acciones"
+    },
+    "noRequests": "No se encontraron solicitudes de soporte",
+    "appealButton": "Apelar",
+    "viewResolutionButton": "Ver Resolución"
+  },
+  "appealDialog": {
+    "title": "Presentar una Apelación",
+    "description": "Puedes presentar una apelación por problema. Por favor explica por qué crees que la resolución fue incorrecta.",
+    "originalResolution": "Resolución Original:",
+    "reasonLabel": "Motivo de Apelación *",
+    "reasonPlaceholder": "Explica por qué crees que la resolución fue injusta o incorrecta (mínimo 20 caracteres)",
+    "characterCount": "{{current}}/{{max}} caracteres (mínimo {{min}})",
+    "cancel": "Cancelar",
+    "submit": "Enviar Apelación",
+    "submitting": "Enviando..."
+  },
+  "resolutionDialog": {
+    "title": "Detalles de la Resolución",
+    "resolutionLabel": "Resolución:",
+    "appealStatusLabel": "Estado de la Apelación:",
+    "appealResolutionLabel": "Resolución de la Apelación:"
+  },
+  "messages": {
+    "createSuccess": "Disputa creada exitosamente",
+    "createError": "Error al crear la disputa",
+    "loadError": "Error al cargar las disputas",
+    "appealSuccess": "Apelación presentada exitosamente",
+    "appealError": "Error al presentar la apelación"
+  }
+}

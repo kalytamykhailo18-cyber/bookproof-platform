@@ -519,20 +519,20 @@ export function AdminCampaignDetailPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="h-5 w-5" />
-                Campaign Author
+                {t('detail.overview.authorInfo')}
               </CardTitle>
               <CardDescription>
-                Information about the campaign owner
+                {t('detail.overview.authorInfoDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 <div>
-                  <Label className="text-muted-foreground">Author Name</Label>
+                  <Label className="text-muted-foreground">{t('detail.overview.authorName')}</Label>
                   <p className="text-lg font-semibold">{analytics.author.name}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">Email</Label>
+                  <Label className="text-muted-foreground">{t('detail.overview.email')}</Label>
                   <a
                     href={`mailto:${analytics.author.email}`}
                     className="text-lg font-medium text-blue-600 hover:underline"
@@ -542,7 +542,7 @@ export function AdminCampaignDetailPage() {
                 </div>
                 {analytics.author.company && (
                   <div>
-                    <Label className="text-muted-foreground">Company</Label>
+                    <Label className="text-muted-foreground">{t('detail.overview.company')}</Label>
                     <p className="text-lg font-semibold">{analytics.author.company}</p>
                   </div>
                 )}
@@ -555,34 +555,34 @@ export function AdminCampaignDetailPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Queue Statistics
+                {t('detail.overview.queueStatistics')}
               </CardTitle>
               <CardDescription>
-                Breakdown of reader assignments by status
+                {t('detail.overview.queueStatisticsDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Active</Label>
+                  <Label className="text-muted-foreground">{t('detail.overview.active')}</Label>
                   <p className="text-2xl font-bold text-blue-600">
                     {analytics.queueStatistics.activeCount}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Completed</Label>
+                  <Label className="text-muted-foreground">{t('detail.overview.completed')}</Label>
                   <p className="text-2xl font-bold text-green-600">
                     {analytics.queueStatistics.completedCount}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Expired</Label>
+                  <Label className="text-muted-foreground">{t('detail.overview.expired')}</Label>
                   <p className="text-2xl font-bold text-red-600">
                     {analytics.queueStatistics.expiredCount}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Total</Label>
+                  <Label className="text-muted-foreground">{t('detail.overview.total')}</Label>
                   <p className="text-2xl font-bold text-gray-700">
                     {analytics.queueStatistics.totalAssignments}
                   </p>
@@ -596,30 +596,30 @@ export function AdminCampaignDetailPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Reader Assignments ({analytics.assignments.length})
+                {t('detail.overview.readerAssignments', { count: analytics.assignments.length })}
               </CardTitle>
               <CardDescription>
-                All readers assigned to this campaign
+                {t('detail.overview.readerAssignmentsDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               {analytics.assignments.length === 0 ? (
                 <div className="text-center py-8">
                   <Users className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No assignments yet</p>
+                  <p className="text-muted-foreground">{t('detail.overview.noAssignmentsYet')}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Reader</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Format</TableHead>
-                        <TableHead>Assigned</TableHead>
-                        <TableHead>Deadline</TableHead>
-                        <TableHead>Review</TableHead>
+                        <TableHead>{t('detail.overview.reader')}</TableHead>
+                        <TableHead>{t('detail.overview.email')}</TableHead>
+                        <TableHead>{t('detail.overview.status')}</TableHead>
+                        <TableHead>{t('detail.overview.format')}</TableHead>
+                        <TableHead>{t('detail.overview.assigned')}</TableHead>
+                        <TableHead>{t('detail.overview.deadline')}</TableHead>
+                        <TableHead>{t('detail.overview.review')}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -636,7 +636,7 @@ export function AdminCampaignDetailPage() {
                                 <span className="font-medium">{assignment.readerName}</span>
                                 {assignment.isManualAssignment && (
                                   <Badge variant="outline" className="text-xs w-fit">
-                                    Manual
+                                    {t('detail.overview.manual')}
                                   </Badge>
                                 )}
                               </div>
@@ -674,7 +674,7 @@ export function AdminCampaignDetailPage() {
                             {new Date(assignment.deadlineAt) < new Date() &&
                               assignment.status === 'ACTIVE' && (
                                 <span className="ml-2 text-red-600 text-xs font-semibold">
-                                  Overdue
+                                  {t('detail.overview.overdue')}
                                 </span>
                               )}
                           </TableCell>
@@ -687,11 +687,11 @@ export function AdminCampaignDetailPage() {
                                 className="text-blue-600 hover:underline flex items-center gap-1"
                               >
                                 <ExternalLink className="h-4 w-4" />
-                                View
+                                {t('detail.overview.view')}
                               </a>
                             ) : (
                               <span className="text-muted-foreground text-sm">
-                                {assignment.status === 'ACTIVE' ? 'Pending' : 'N/A'}
+                                {assignment.status === 'ACTIVE' ? t('detail.overview.pending') : t('detail.overview.notApplicable')}
                               </span>
                             )}
                           </TableCell>

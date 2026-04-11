@@ -5,8 +5,23 @@
   "search": "Search campaigns...",
   "filterByStatus": "Filter by status",
   "allStatuses": "All Statuses",
+  "statusDraft": "Draft",
+  "statusActive": "Active",
+  "statusPaused": "Paused",
+  "statusCompleted": "Completed",
+  "statusCancelled": "Cancelled",
+  "progress": "Progress",
+  "reviews": "reviews",
+  "stats": {
+    "target": "Target",
+    "delivered": "Delivered",
+    "pending": "Pending",
+    "credits": "Credits",
+    "format": "Format"
+  },
   "noCampaigns": "No campaigns found",
   "tryAdjusting": "Try adjusting your filters",
   "createFirst": "Create your first campaign to get started",
-  "createCampaign": "Create Campaign"
+  "createCampaign": "Create Campaign",
+  "errorLoading": "Failed to load campaigns"
 }

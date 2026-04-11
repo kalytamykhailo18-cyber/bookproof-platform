@@ -80,5 +80,35 @@
     "bankNameRequired": "El nombre del banco es requerido",
     "walletAddressRequired": "La dirección de billetera es requerida",
     "networkRequired": "La red es requerida"
-  }
+  },
+
+  "subtitle": "Administra tus ganancias y solicita pagos",
+  "stats": {
+    "readyToPayout": "Listo para solicitar pago",
+    "untilMinimum": "hasta el mínimo",
+    "reviewsBeingValidated": "Reseñas siendo validadas",
+    "lifetimeEarnings": "Ganancias totales",
+    "totalPayoutsReceived": "Total de pagos recibidos"
+  },
+  "transactions": {
+    "description": "Tus ganancias y actividad de billetera",
+    "empty": "No hay transacciones aún",
+    "balance": "Saldo",
+    "showing": "Mostrando {{count}} de {{total}} transacciones"
+  },
+  "payouts": {
+    "description": "Tus solicitudes de pago y su estado actual",
+    "paymentMethod": "Método de Pago"
+  },
+
+  "backToWallet": "Volver a la Billetera",
+  "payoutRequestTitle": "Solicitud de Pago",
+  "payoutRequestDescription": "Ingrese el monto y los detalles de pago",
+  "withdrawFullBalance": "Retirar Saldo Completo",
+  "selectPaymentMethod": "Seleccione el método de pago",
+  "notesPlaceholder": "Cualquier nota adicional...",
+  "insufficientBalance": "Necesitas al menos {{minAmount}} para solicitar un pago. Saldo actual: {{currentBalance}}",
+  "amountExceedsBalance": "El monto no puede exceder el saldo disponible ({{balance}})",
+  "successMessage": "Solicitud de pago enviada exitosamente",
+  "errorMessage": "Error al enviar la solicitud de pago"
 }

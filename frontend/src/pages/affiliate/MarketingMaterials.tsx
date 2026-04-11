@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   MarketingMaterialType,
   Language,
@@ -26,6 +27,7 @@ import {
 import { toast } from 'sonner';
 
 export function MarketingMaterialsPage() {
+  const { t } = useTranslation('affiliate-marketing-materials');
   const [typeFilter, setTypeFilter] = useState<MarketingMaterialType | 'all'>('all');
   const [languageFilter, setLanguageFilter] = useState<Language | 'all'>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -151,9 +153,9 @@ export function MarketingMaterialsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <h1 className="text-3xl font-bold">Marketing Materials</h1>
+        <h1 className="text-3xl font-bold">{t('title')}</h1>
         <p className="text-muted-foreground">
-          Download banners, templates, and promotional content to help you promote BookProof
+          {t('description')}
         </p>
       </div>
 
@@ -162,18 +164,18 @@ export function MarketingMaterialsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            Filters
+            {t('filters.title')}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 md:flex-row">
           <div className="flex-1">
-            <label className="mb-2 block text-sm font-medium">Type</label>
+            <label className="mb-2 block text-sm font-medium">{t('filters.type')}</label>
             <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v as any)}>
               <SelectTrigger>
-                <SelectValue placeholder="All types" />
+                <SelectValue placeholder={t('filters.allTypes')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="all">{t('filters.allTypes')}</SelectItem>
                 {Object.values(MarketingMaterialType).map((type) => (
                   <SelectItem key={type} value={type}>
                     {formatTypeName(type)}
@@ -184,16 +186,16 @@ export function MarketingMaterialsPage() {
           </div>
 
           <div className="flex-1">
-            <label className="mb-2 block text-sm font-medium">Language</label>
+            <label className="mb-2 block text-sm font-medium">{t('filters.language')}</label>
             <Select value={languageFilter} onValueChange={(v) => setLanguageFilter(v as any)}>
               <SelectTrigger>
-                <SelectValue placeholder="All languages" />
+                <SelectValue placeholder={t('filters.allLanguages')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Languages</SelectItem>
-                <SelectItem value={Language.EN}>English</SelectItem>
-                <SelectItem value={Language.PT}>Portuguese</SelectItem>
-                <SelectItem value={Language.ES}>Spanish</SelectItem>
+                <SelectItem value="all">{t('filters.allLanguages')}</SelectItem>
+                <SelectItem value={Language.EN}>{t('filters.english')}</SelectItem>
+                <SelectItem value={Language.PT}>{t('filters.portuguese')}</SelectItem>
+                <SelectItem value={Language.ES}>{t('filters.spanish')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -205,9 +207,9 @@ export function MarketingMaterialsPage() {
         <Card className="animate-fade-up-medium-slow">
           <CardContent className="py-16 text-center">
             <FileText className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-            <h3 className="text-lg font-semibold">No Marketing Materials Found</h3>
+            <h3 className="text-lg font-semibold">{t('noMaterials')}</h3>
             <p className="text-muted-foreground">
-              No materials match your current filters. Try adjusting your selection.
+              {t('noMaterialsDescription')}
             </p>
           </CardContent>
         </Card>
@@ -249,7 +251,7 @@ export function MarketingMaterialsPage() {
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
                   <span>{formatTypeName(material.type)}</span>
-                  <span>{material.downloadCount} downloads</span>
+                  <span>{material.downloadCount} {t('downloads')}</span>
                 </div>
 
                 <div className="flex gap-2">
@@ -261,7 +263,7 @@ export function MarketingMaterialsPage() {
                       disabled={isTracking}
                     >
                       <Download className="mr-2 h-4 w-4" />
-                      Download
+                      {t('download')}
                     </Button>
                   )}
 
@@ -276,12 +278,12 @@ export function MarketingMaterialsPage() {
                       {copiedId === material.id ? (
                         <>
                           <CheckCircle className="mr-2 h-4 w-4" />
-                          Copied!
+                          {t('copied')}
                         </>
                       ) : (
                         <>
                           <Copy className="mr-2 h-4 w-4" />
-                          Copy
+                          {t('copy')}
                         </>
                       )}
                     </Button>

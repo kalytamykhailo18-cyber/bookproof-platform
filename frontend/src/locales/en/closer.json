@@ -1,7 +1,8 @@
 {
   "filters": {
     "title": "Filters",
-    "allStatuses": "All Statuses"
+    "allStatuses": "All Statuses",
+    "clear": "Clear Filter"
   },
   "dashboard": {
     "title": "Sales Dashboard",
@@ -101,6 +102,12 @@
     "clientEmail": "Client Email",
     "clientCompany": "Company Name",
     "clientPhone": "Phone",
+    "currencies": {
+      "usd": "USD - US Dollar",
+      "eur": "EUR - Euro",
+      "gbp": "GBP - British Pound",
+      "brl": "BRL - Brazilian Real"
+    },
     "inclusions": "Inclusions",
     "inclusionsDescription": "Additional services to include in this package",
     "includeKeywordResearch": "Include Keyword Research",
@@ -184,8 +191,10 @@
   },
   "status": {
     "draft": "Draft",
+    "pendingApproval": "Pending Approval",
     "sent": "Sent",
     "viewed": "Viewed",
+    "viewedPendingPayment": "Viewed (Pending Payment)",
     "paid": "Paid",
     "expired": "Expired",
     "cancelled": "Cancelled",

@@ -120,9 +120,9 @@ export function ContactSection() {
             </p>
             <div className="flex gap-2.5">
               {[
-                { flag: '🇺🇸', label: 'English'   },
-                { flag: '🇧🇷', label: 'Português' },
-                { flag: '🇪🇸', label: 'Español'   },
+                { flag: '🇺🇸', label: t('languages.english', 'English')   },
+                { flag: '🇧🇷', label: t('languages.portuguese', 'Português') },
+                { flag: '🇪🇸', label: t('languages.spanish', 'Español')   },
               ].map((lang) => (
                 <div
                   key={lang.label}

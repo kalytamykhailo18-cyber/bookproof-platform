@@ -157,5 +157,9 @@
     "submit": "Desbloquear Conta",
     "cancel": "Cancelar",
     "unlocking": "Desbloqueando..."
+  },
+  "accessDenied": {
+    "title": "Acesso Negado",
+    "description": "Você não tem permissão para acessar a Gestão da Equipe."
   }
 }

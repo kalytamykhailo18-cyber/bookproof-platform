@@ -15,7 +15,8 @@
   },
   "status": {
     "verified": "Verificado",
-    "unverified": "No Verificado"
+    "unverified": "No Verificado",
+    "suspended": "Suspendido"
   },
   "filters": {
     "title": "Filtros",
@@ -25,7 +26,12 @@
     "verified": "Verificado",
     "unverified": "No Verificado",
     "withActiveCampaigns": "Con Campañas Activas",
-    "noActiveCampaigns": "Sin Campañas Activas"
+    "noActiveCampaigns": "Sin Campañas Activas",
+    "suspended": "Suspendido",
+    "creditBalanceRange": "Rango de Saldo de Créditos",
+    "min": "Mín",
+    "max": "Máx",
+    "clearFilters": "Limpiar Filtros"
   },
   "table": {
     "title": "Autores",
@@ -36,12 +42,35 @@
     "totalCredits": "Créditos Totales",
     "available": "Disponibles",
     "used": "Usados",
+    "totalSpent": "Total Gastado",
     "campaigns": "Campañas",
     "actions": "Acciones"
+  },
+  "actions": {
+    "viewDetails": "Ver Detalles",
+    "viewTransactions": "Ver Transacciones",
+    "addCredits": "Agregar Créditos",
+    "removeCredits": "Quitar Créditos",
+    "adminNotes": "Notas de Administración",
+    "suspendAuthor": "Suspender Autor",
+    "unsuspendAuthor": "Reactivar Autor"
   },
   "empty": {
     "title": "No se encontraron autores",
     "description": "Intenta ajustar tus filtros o búsqueda"
+  },
+  "toast": {
+    "loadFailed": "Error al cargar autores",
+    "creditsAdded": "Créditos agregados exitosamente",
+    "creditsAddFailed": "Error al agregar créditos",
+    "creditsRemoved": "Créditos eliminados exitosamente",
+    "creditsRemoveFailed": "Error al eliminar créditos",
+    "authorSuspended": "Autor suspendido exitosamente",
+    "authorSuspendFailed": "Error al suspender autor",
+    "authorUnsuspended": "Autor reactivado exitosamente",
+    "authorUnsuspendFailed": "Error al reactivar autor",
+    "notesUpdated": "Notas de administración actualizadas exitosamente",
+    "notesUpdateFailed": "Error al actualizar notas de administración"
   },
   "dialogs": {
     "reason": "Razón",
@@ -55,6 +84,9 @@
       "description": "Agregar créditos manualmente a la cuenta del autor",
       "amount": "Créditos a Agregar",
       "amountPlaceholder": "Ingresa la cantidad",
+      "activationWindow": "Ventana de Activación (días)",
+      "activationWindowPlaceholder": "30",
+      "activationWindowHelp": "Número de días antes de que estos créditos expiren (predeterminado: 30 días)",
       "confirm": "Agregar Créditos"
     },
     "removeCredits": {
@@ -65,6 +97,37 @@
       "available": "Disponibles",
       "max": "Máximo",
       "confirm": "Quitar Créditos"
+    },
+    "suspend": {
+      "title": "Suspender Autor",
+      "description": "Suspender esta cuenta de autor. Esto evitará que creen nuevas campañas o accedan a ciertas funciones.",
+      "reason": "Razón",
+      "reasonPlaceholder": "Ingresa el motivo de la suspensión",
+      "notes": "Notas",
+      "notesPlaceholder": "Notas adicionales (opcional)",
+      "cancel": "Cancelar",
+      "confirm": "Suspender Autor",
+      "processing": "Suspendiendo..."
+    },
+    "unsuspend": {
+      "title": "Reactivar Autor",
+      "description": "Restaurar esta cuenta de autor. Recuperarán acceso completo a la plataforma.",
+      "reason": "Razón",
+      "reasonPlaceholder": "Ingresa el motivo de la reactivación",
+      "notes": "Notas",
+      "notesPlaceholder": "Notas adicionales (opcional)",
+      "cancel": "Cancelar",
+      "confirm": "Reactivar Autor",
+      "processing": "Reactivando..."
+    },
+    "adminNotes": {
+      "title": "Actualizar Notas de Administración",
+      "description": "Agregar o actualizar notas internas de administración para este autor. Estas notas solo son visibles para los administradores.",
+      "label": "Notas de Administración",
+      "placeholder": "Ingresa notas de administración...",
+      "cancel": "Cancelar",
+      "confirm": "Actualizar Notas",
+      "processing": "Actualizando..."
     }
   }
 }

@@ -83,6 +83,38 @@
   },
   "loading": "Loading dashboard...",
   "quickActions": {
-    "flaggedReviews": "Flagged Reviews"
+    "flaggedReviews": "Flagged Reviews",
+    "disputes": "Disputes",
+    "affiliateApps": "Affiliate Apps",
+    "payoutRequests": "Payout Requests",
+    "financialReports": "Financial Reports",
+    "announcements": "Announcements"
+  },
+  "cards": {
+    "closers": "Closers",
+    "closersDesc": "Sales team",
+    "affiliates": "Affiliates",
+    "affiliatesDesc": "Approved affiliates",
+    "pendingPayouts": "Pending Payouts",
+    "pendingPayoutsDesc": "Reader and affiliate payout requests waiting for processing",
+    "validationQueue": "Validation Queue",
+    "validationQueueDesc": "Reviews awaiting admin validation",
+    "reviewsInProgress": "Reviews In Progress",
+    "overdueReviews": "Overdue Reviews",
+    "overdueReviewsDesc": "Past deadline",
+    "creditsInCirculation": "Credits in Circulation",
+    "creditsDesc": "Purchased but not consumed",
+    "issuesFlagged": "Issues Flagged",
+    "issuesDesc": "Open issues",
+    "activeSubscriptions": "Active Subscriptions"
+  },
+  "systemHealth": {
+    "title": "System Health",
+    "database": "Database",
+    "healthy": "Healthy",
+    "unhealthy": "Unhealthy",
+    "redis": "Redis Cache",
+    "jobQueue": "Job Queue",
+    "lastCheck": "Last health check"
   }
 }

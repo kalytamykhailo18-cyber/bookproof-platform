@@ -1,0 +1,78 @@
+{
+  "title": "Suporte",
+  "subtitle": "Obtenha ajuda com problemas ou disputas",
+  "newRequest": "Nova Solicitação de Suporte",
+  "loading": "Carregando...",
+  "createDialog": {
+    "title": "Criar Solicitação de Suporte",
+    "description": "Descreva seu problema e nossa equipe irá revisá-lo",
+    "issueTypeLabel": "Tipo de Problema *",
+    "issueTypePlaceholder": "Selecione o tipo de problema",
+    "descriptionLabel": "Descrição *",
+    "descriptionPlaceholder": "Por favor descreva seu problema em detalhes (mínimo 10 caracteres)",
+    "charactersNeeded": "{{count}} caracteres a mais necessários",
+    "minimumReached": "✓ Mínimo alcançado",
+    "characterCount": "{{current}}/{{max}}",
+    "cancel": "Cancelar",
+    "submit": "Enviar Solicitação",
+    "submitting": "Enviando..."
+  },
+  "issueTypes": {
+    "generalComplaint": "Reclamação Geral",
+    "campaignIssue": "Problema de Campanha",
+    "reviewQuality": "Qualidade de Revisão",
+    "paymentIssue": "Problema de Pagamento",
+    "serviceIssue": "Problema de Serviço",
+    "other": "Outro"
+  },
+  "disputeTypes": {
+    "authorDispute": "Disputa de Autor",
+    "authorComplaint": "Reclamação de Autor",
+    "policyViolation": "Violação de Política"
+  },
+  "helpCard": {
+    "title": "Precisa de Ajuda?",
+    "responseTime": "Nossa equipe de suporte normalmente responde em 24 horas (4 horas para problemas críticos).",
+    "appealInfo": "Se sua solicitação foi resolvida mas você discorda do resultado, pode apresentar um recurso por problema."
+  },
+  "requestsTable": {
+    "title": "Minhas Solicitações de Suporte",
+    "description": "Acompanhe o status de suas solicitações de suporte",
+    "headers": {
+      "id": "ID",
+      "type": "Tipo",
+      "status": "Status",
+      "appeal": "Recurso",
+      "description": "Descrição",
+      "created": "Criado",
+      "actions": "Ações"
+    },
+    "noRequests": "Nenhuma solicitação de suporte encontrada",
+    "appealButton": "Recorrer",
+    "viewResolutionButton": "Ver Resolução"
+  },
+  "appealDialog": {
+    "title": "Apresentar um Recurso",
+    "description": "Você pode apresentar um recurso por problema. Por favor explique por que acredita que a resolução estava incorreta.",
+    "originalResolution": "Resolução Original:",
+    "reasonLabel": "Motivo do Recurso *",
+    "reasonPlaceholder": "Explique por que acredita que a resolução foi injusta ou incorreta (mínimo 20 caracteres)",
+    "characterCount": "{{current}}/{{max}} caracteres (mínimo {{min}})",
+    "cancel": "Cancelar",
+    "submit": "Enviar Recurso",
+    "submitting": "Enviando..."
+  },
+  "resolutionDialog": {
+    "title": "Detalhes da Resolução",
+    "resolutionLabel": "Resolução:",
+    "appealStatusLabel": "Status do Recurso:",
+    "appealResolutionLabel": "Resolução do Recurso:"
+  },
+  "messages": {
+    "createSuccess": "Disputa criada com sucesso",
+    "createError": "Falha ao criar disputa",
+    "loadError": "Falha ao carregar disputas",
+    "appealSuccess": "Recurso apresentado com sucesso",
+    "appealError": "Falha ao apresentar recurso"
+  }
+}

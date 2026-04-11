@@ -4,9 +4,18 @@
   "subtitle": "Administra tu privacidad, datos y preferencias de cuenta",
   "language": {
     "title": "Preferencia de Idioma",
-    "description": "Elige tu idioma preferido para la plataforma",
+    "description": "Elige tu idioma preferido para la plataforma y notificaciones por correo",
+    "interfaceLabel": "Idioma de la Interfaz",
+    "interfaceDescription": "Esto cambiará el idioma de toda la plataforma",
     "selectLabel": "Seleccionar Idioma",
-    "selectPlaceholder": "Elige un idioma"
+    "selectPlaceholder": "Seleccionar idioma",
+    "english": "English",
+    "portuguese": "Português",
+    "spanish": "Español",
+    "updateSuccess": "Idioma actualizado",
+    "updateSuccessDescription": "Tu idioma preferido ha sido cambiado a {{language}}",
+    "updateError": "Error al actualizar el idioma",
+    "updateErrorDescription": "Por favor, inténtalo de nuevo más tarde"
   },
   "consents": {
     "title": "Privacidad y Consentimiento",
@@ -83,12 +92,16 @@
     "description": "Descarga una copia completa de todos tus datos personales en formato JSON (cumplimiento GDPR)",
     "includes": "Tu exportación incluirá:",
     "personalInfo": "Información personal (email, nombre, datos de perfil)",
-    "campaigns": "Historial de campañas y transacciones (si eres autor)",
-    "reviews": "Asignaciones y envíos de reseñas (si eres lector)",
-    "affiliate": "Datos de afiliado y comisiones (si eres afiliado)",
+    "reviewAssignments": "Asignaciones de reseñas y envíos",
+    "campaigns": "Historial de campañas y transacciones",
+    "credits": "Historial de compra de créditos",
     "consents": "Registros de consentimiento y logs de actividad",
     "button": "Descargar Mis Datos",
-    "exporting": "Exportando..."
+    "exporting": "Exportando...",
+    "success": "Datos exportados exitosamente",
+    "successDescription": "Tus datos han sido descargados como un archivo JSON",
+    "error": "Error al exportar datos",
+    "errorDescription": "Por favor, inténtalo de nuevo más tarde"
   },
   "privacy": {
     "title": "Privacidad y Consentimiento",
@@ -104,12 +117,19 @@
     "personalization": {
       "title": "Personalización",
       "description": "Personaliza tu experiencia con recomendaciones y contenido personalizado"
-    }
+    },
+    "updateSuccess": "Consentimiento actualizado",
+    "updateSuccessDescription": "Consentimiento de {{consentType}} {{status}}",
+    "granted": "otorgado",
+    "withdrawn": "retirado",
+    "updateError": "Error al actualizar consentimiento",
+    "updateErrorDescription": "Por favor, inténtalo de nuevo más tarde"
   },
   "delete": {
     "title": "Zona de Peligro",
     "description": "Eliminar permanentemente tu cuenta y todos los datos asociados",
     "button": "Eliminar Mi Cuenta",
+    "noteLabel": "Nota:",
     "dialog": {
       "title": "¿Estás absolutamente seguro?",
       "warning": "Esta acción programará la eliminación de tu cuenta:",
@@ -125,7 +145,11 @@
       "confirm": "Eliminar Cuenta",
       "deleting": "Eliminando..."
     },
-    "note": "Las solicitudes de eliminación de cuenta incluyen un período de gracia de 30 días. Durante este tiempo, puedes iniciar sesión y cancelar la solicitud de eliminación si cambias de opinión."
+    "note": "Las solicitudes de eliminación de cuenta incluyen un período de gracia de 30 días. Durante este tiempo, puedes iniciar sesión y cancelar la solicitud de eliminación si cambias de opinión.",
+    "success": "Eliminación de cuenta programada",
+    "successDescription": "Tu cuenta será eliminada el {{date}}. Puedes cancelar dentro de {{days}} días.",
+    "error": "Error al eliminar cuenta",
+    "errorDescription": "Por favor, inténtalo de nuevo más tarde"
   },
   "privacyPolicy": {
     "title": "Política de Privacidad",

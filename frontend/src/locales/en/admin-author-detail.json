@@ -1,0 +1,82 @@
+{
+  "backToAuthors": "Back to Authors",
+  "notFound": {
+    "title": "Author not found"
+  },
+  "status": {
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "suspended": "Suspended",
+    "active": "Active",
+    "paused": "Paused",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "draft": "Draft"
+  },
+  "paymentStatus": {
+    "completed": "Completed",
+    "pending": "Pending",
+    "failed": "Failed",
+    "refunded": "Refunded",
+    "cancelled": "Cancelled"
+  },
+  "stats": {
+    "availableCredits": "Available Credits",
+    "purchased": "purchased",
+    "creditsUsed": "Credits Used",
+    "lifetimeUsage": "Lifetime usage",
+    "totalSpent": "Total Spent",
+    "revenueGenerated": "Revenue generated",
+    "campaigns": "Campaigns",
+    "active": "active"
+  },
+  "profile": {
+    "title": "Profile Information",
+    "fullName": "Full Name",
+    "email": "Email",
+    "company": "Company",
+    "phone": "Phone",
+    "country": "Country",
+    "language": "Language",
+    "joined": "Joined",
+    "lastLogin": "Last Login",
+    "suspensionReason": "Suspension Reason:",
+    "adminNotes": "Admin Notes:"
+  },
+  "tabs": {
+    "campaigns": "Campaigns",
+    "purchaseHistory": "Purchase History"
+  },
+  "campaignsTab": {
+    "title": "Campaigns",
+    "description": "All campaigns created by this author",
+    "noCampaigns": "No campaigns yet",
+    "table": {
+      "bookTitle": "Book Title",
+      "status": "Status",
+      "credits": "Credits",
+      "reviews": "Reviews",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "actions": "Actions",
+      "view": "View"
+    }
+  },
+  "purchasesTab": {
+    "title": "Purchase History",
+    "description": "All credit purchases by this author",
+    "noPurchases": "No purchases yet",
+    "table": {
+      "date": "Date",
+      "package": "Package",
+      "credits": "Credits",
+      "amount": "Amount",
+      "discount": "Discount",
+      "coupon": "Coupon",
+      "status": "Status"
+    }
+  },
+  "errors": {
+    "failedToLoad": "Failed to load author details"
+  }
+}

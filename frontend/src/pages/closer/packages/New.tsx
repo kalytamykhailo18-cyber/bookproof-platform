@@ -180,10 +180,10 @@ export function CreatePackagePage() {
                     value={formData.currency}
                     onChange={(e) => updateField('currency', e.target.value)}
                   >
-                    <option value="USD">USD - US Dollar</option>
-                    <option value="EUR">EUR - Euro</option>
-                    <option value="GBP">GBP - British Pound</option>
-                    <option value="BRL">BRL - Brazilian Real</option>
+                    <option value="USD">{t('createPackage.currencies.usd')}</option>
+                    <option value="EUR">{t('createPackage.currencies.eur')}</option>
+                    <option value="GBP">{t('createPackage.currencies.gbp')}</option>
+                    <option value="BRL">{t('createPackage.currencies.brl')}</option>
                   </select>
                 </div>
               </div>

@@ -1,0 +1,82 @@
+{
+  "backToAuthors": "Volver a Autores",
+  "notFound": {
+    "title": "Autor no encontrado"
+  },
+  "status": {
+    "verified": "Verificado",
+    "unverified": "No Verificado",
+    "suspended": "Suspendido",
+    "active": "Activo",
+    "paused": "Pausado",
+    "completed": "Completado",
+    "cancelled": "Cancelado",
+    "draft": "Borrador"
+  },
+  "paymentStatus": {
+    "completed": "Completado",
+    "pending": "Pendiente",
+    "failed": "Fallido",
+    "refunded": "Reembolsado",
+    "cancelled": "Cancelado"
+  },
+  "stats": {
+    "availableCredits": "Créditos Disponibles",
+    "purchased": "comprados",
+    "creditsUsed": "Créditos Usados",
+    "lifetimeUsage": "Uso total",
+    "totalSpent": "Total Gastado",
+    "revenueGenerated": "Ingresos generados",
+    "campaigns": "Campañas",
+    "active": "activas"
+  },
+  "profile": {
+    "title": "Información del Perfil",
+    "fullName": "Nombre Completo",
+    "email": "Correo Electrónico",
+    "company": "Empresa",
+    "phone": "Teléfono",
+    "country": "País",
+    "language": "Idioma",
+    "joined": "Registrado",
+    "lastLogin": "Último Acceso",
+    "suspensionReason": "Razón de Suspensión:",
+    "adminNotes": "Notas del Administrador:"
+  },
+  "tabs": {
+    "campaigns": "Campañas",
+    "purchaseHistory": "Historial de Compras"
+  },
+  "campaignsTab": {
+    "title": "Campañas",
+    "description": "Todas las campañas creadas por este autor",
+    "noCampaigns": "Aún no hay campañas",
+    "table": {
+      "bookTitle": "Título del Libro",
+      "status": "Estado",
+      "credits": "Créditos",
+      "reviews": "Reseñas",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin",
+      "actions": "Acciones",
+      "view": "Ver"
+    }
+  },
+  "purchasesTab": {
+    "title": "Historial de Compras",
+    "description": "Todas las compras de créditos de este autor",
+    "noPurchases": "Aún no hay compras",
+    "table": {
+      "date": "Fecha",
+      "package": "Paquete",
+      "credits": "Créditos",
+      "amount": "Monto",
+      "discount": "Descuento",
+      "coupon": "Cupón",
+      "status": "Estado"
+    }
+  },
+  "errors": {
+    "failedToLoad": "Error al cargar los detalles del autor"
+  }
+}

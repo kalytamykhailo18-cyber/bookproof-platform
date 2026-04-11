@@ -106,12 +106,12 @@ export function AdminTeamPage() {
   // Wait for store hydration and user data to be loaded before checking
   useEffect(() => {
     if (hasHydrated && user && isSupport) {
-      toast.error('Access Denied', {
-        description: 'You do not have permission to access Team Management.',
+      toast.error(t('accessDenied.title'), {
+        description: t('accessDenied.description'),
       });
       navigate('/admin/dashboard');
     }
-  }, [hasHydrated, user, isSupport, navigate]);
+  }, [hasHydrated, user, isSupport, navigate, t]);
 
   // Fetch closers - only after hydration, user loaded, and confirmed not Support
   const fetchClosers = async () => {

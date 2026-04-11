@@ -125,9 +125,14 @@ export function ForReadersSection() {
                 <div className="animate-fade-left-fast">
                   <p className="text-xs text-slate-500 mb-2.5">{t('howEarnings.paymentMethods')}</p>
                   <div className="flex flex-wrap gap-2">
-                    {['PayPal', 'Bank Transfer', 'Wise', 'Crypto'].map((m) => (
+                    {[
+                      t('howEarnings.paymentMethodsList.paypal', 'PayPal'),
+                      t('howEarnings.paymentMethodsList.bankTransfer', 'Bank Transfer'),
+                      t('howEarnings.paymentMethodsList.wise', 'Wise'),
+                      t('howEarnings.paymentMethodsList.crypto', 'Crypto')
+                    ].map((m, idx) => (
                       <span
-                        key={m}
+                        key={idx}
                         className="px-2.5 py-1 rounded-md text-xs font-medium text-slate-600"
                         style={{ background: '#f8fafc', border: '1px solid rgba(203,213,225,0.8)' }}
                       >

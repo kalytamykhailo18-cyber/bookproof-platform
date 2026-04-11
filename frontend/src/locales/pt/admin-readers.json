@@ -88,7 +88,10 @@
     "country": "País",
     "language": "Idioma",
     "completedExpired": "concluídas / expiradas",
-    "earned": "Ganho",
+    "completed": "concluídas",
+    "expired": "expiradas",
+    "rejected": "rejeitadas",
+    "earned": "ganho",
     "book": "Livro",
     "format": "Formato",
     "assignedAt": "Atribuído",
@@ -243,5 +246,72 @@
     "title": "Leitor Não Encontrado",
     "description": "O leitor que você está procurando não existe ou foi removido.",
     "backToList": "Voltar para Leitores"
+  },
+  "userManagement": {
+    "title": "Gestão de Conta de Usuário",
+    "description": "Estas ações afetam a conta de usuário diretamente, não apenas o perfil de leitor.",
+    "banUser": "Banir Usuário",
+    "unbanUser": "Desbanir Usuário",
+    "resetPassword": "Redefinir Senha",
+    "verifyEmail": "Verificar Email",
+    "unverifyEmail": "Desverificar Email",
+    "sendEmail": "Enviar Email",
+    "userBanned": "Usuário está banido",
+    "reason": "Motivo",
+    "banDialog": {
+      "title": "Banir Usuário (Permanente)",
+      "description": "Isso banirá permanentemente o usuário da plataforma. Ele não poderá fazer login ou acessar nenhuma funcionalidade.",
+      "reasonLabel": "Motivo *",
+      "reasonPlaceholder": "Digite o motivo para banir este usuário",
+      "notesLabel": "Notas Adicionais",
+      "notesPlaceholder": "Notas opcionais para registro de auditoria",
+      "confirm": "Banir Usuário",
+      "banning": "Banindo..."
+    },
+    "unbanDialog": {
+      "title": "Desbanir Usuário",
+      "description": "Isso removerá o banimento permanente e permitirá que o usuário acesse a plataforma novamente.",
+      "reasonLabel": "Motivo *",
+      "reasonPlaceholder": "Digite o motivo para desbanir este usuário",
+      "notesLabel": "Notas Adicionais",
+      "notesPlaceholder": "Notas opcionais para registro de auditoria",
+      "confirm": "Desbanir Usuário",
+      "unbanning": "Desbanindo..."
+    },
+    "resetPasswordDialog": {
+      "title": "Redefinir Senha do Usuário",
+      "description": "Isso enviará um email de redefinição de senha ao usuário. Ele precisará clicar no link para definir uma nova senha.",
+      "emailLabel": "Email",
+      "reasonLabel": "Motivo (opcional)",
+      "reasonPlaceholder": "Digite o motivo para redefinição de senha",
+      "confirm": "Enviar Email de Redefinição",
+      "sending": "Enviando..."
+    },
+    "verifyEmailDialog": {
+      "verifyTitle": "Verificar Email",
+      "unverifyTitle": "Desverificar Email",
+      "verifyDescription": "Isso marcará manualmente o email como verificado sem exigir que o usuário clique em um link de verificação.",
+      "unverifyDescription": "Isso marcará o email como não verificado.",
+      "emailLabel": "Email",
+      "currentStatus": "Status Atual",
+      "verified": "Verificado",
+      "notVerified": "Não Verificado",
+      "reasonLabel": "Motivo (opcional)",
+      "reasonPlaceholder": "Digite o motivo para alteração de verificação",
+      "verifyConfirm": "Verificar Email",
+      "unverifyConfirm": "Desverificar Email",
+      "updating": "Atualizando..."
+    },
+    "sendEmailDialog": {
+      "title": "Enviar Email ao Usuário",
+      "description": "Envie um email personalizado a este usuário. O email será enviado da plataforma.",
+      "toLabel": "Para",
+      "subjectLabel": "Assunto *",
+      "subjectPlaceholder": "Digite o assunto do email",
+      "messageLabel": "Mensagem *",
+      "messagePlaceholder": "Digite sua mensagem",
+      "confirm": "Enviar Email",
+      "sending": "Enviando..."
+    }
   }
 }

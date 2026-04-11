@@ -52,5 +52,42 @@
     "regenerateError": "Erro ao regenerar pesquisa de palavras-chave",
     "downloadSuccess": "Download do PDF iniciado",
     "downloadError": "Erro ao baixar PDF"
+  },
+  "detailDialog": {
+    "title": "Detalhes da Pesquisa de Palavras-Chave",
+    "description": "Ver informações detalhadas sobre este pedido de pesquisa de palavras-chave",
+    "loading": "Carregando...",
+    "noDetails": "Nenhum detalhe disponível",
+    "bookTitle": "Título do Livro",
+    "status": "Status",
+    "price": "Preço",
+    "paid": "Pago",
+    "createdAt": "Criado em",
+    "completedAt": "Concluído em",
+    "notCompleted": "Não concluído",
+    "researchInfo": "Informações da Pesquisa",
+    "subtitle": "Subtítulo",
+    "genre": "Gênero",
+    "category": "Categoria",
+    "description": "Descrição",
+    "targetAudience": "Público-Alvo",
+    "bookLanguage": "Idioma do Livro",
+    "targetMarket": "Mercado-Alvo",
+    "competingBooks": "Livros Concorrentes",
+    "specificKeywords": "Palavras-Chave Específicas",
+    "additionalNotes": "Notas Adicionais",
+    "generatedKeywords": "Palavras-Chave Geradas",
+    "primaryKeywords": "Palavras-Chave Primárias",
+    "secondaryKeywords": "Palavras-Chave Secundárias",
+    "longTailKeywords": "Palavras-Chave de Cauda Longa",
+    "errorMessage": "Mensagem de Erro",
+    "downloadPdf": "Baixar PDF"
+  },
+  "deleteDialog": {
+    "title": "Excluir Pesquisa de Palavras-Chave",
+    "description": "Tem certeza de que deseja excluir esta pesquisa de palavras-chave? Esta ação não pode ser desfeita.",
+    "cancel": "Cancelar",
+    "confirm": "Excluir",
+    "deleting": "Excluindo..."
   }
 }

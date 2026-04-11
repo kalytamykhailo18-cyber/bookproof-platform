@@ -33,8 +33,7 @@ import {
   Loader2 } from 'lucide-react';
 
 export function SubscriptionPage() {
-  const { t: _t, i18n } = useTranslation('subscription');
-  void _t; // Will use later for translations
+  const { t, i18n } = useTranslation('subscription');
 
   const [subscription, setSubscription] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,48 +74,64 @@ export function SubscriptionPage() {
     }
   };
 
-  // Example subscription plans - these would typically come from an API
+  // Get feature translations
+  const getFeatureText = (featureKey: string, credits?: number) => {
+    switch (featureKey) {
+      case 'creditsPerMonth':
+        return `${credits} ${t('plans.creditsPerMonth')}`;
+      case 'autoRenewal':
+        return t('features.autoRenewal');
+      case 'emailSupport':
+        return t('features.emailSupport');
+      case 'cancelAnytime':
+        return t('features.cancelAnytime');
+      case 'prioritySupport':
+        return t('features.prioritySupport');
+      case 'analyticsDashboard':
+        return t('features.analyticsDashboard');
+      case 'dedicatedSupport':
+        return t('features.dedicatedSupport');
+      case 'advancedAnalytics':
+        return t('features.advancedAnalytics');
+      case 'bulkOperations':
+        return t('features.bulkOperations');
+      default:
+        return featureKey;
+    }
+  };
+
+  // Subscription plans
   const plans = [
     {
       id: 'plan_basic',
-      name: 'Basic Monthly',
+      nameKey: 'plans.basic.name',
+      descriptionKey: 'plans.basic.description',
       creditsPerMonth: 50,
       pricePerMonth: 79.99,
       currency: 'USD',
-      description: 'Regular monthly credits',
-      features: ['50 Credits Per Month', 'Auto-Renewal', 'Email Support', 'Cancel Anytime'],
-      popular: false },
+      features: ['creditsPerMonth', 'autoRenewal', 'emailSupport', 'cancelAnytime'],
+      popular: false
+    },
     {
       id: 'plan_professional',
-      name: 'Professional Monthly',
+      nameKey: 'plans.professional.name',
+      descriptionKey: 'plans.professional.description',
       creditsPerMonth: 100,
       pricePerMonth: 129.99,
       currency: 'USD',
-      description: 'Best value for active authors',
-      features: [
-        '100 Credits Per Month',
-        'Auto-Renewal',
-        'Priority Support',
-        'Analytics Dashboard',
-        'Cancel Anytime',
-      ],
-      popular: true },
+      features: ['creditsPerMonth', 'autoRenewal', 'prioritySupport', 'analyticsDashboard', 'cancelAnytime'],
+      popular: true
+    },
     {
       id: 'plan_premium',
-      name: 'Premium Monthly',
+      nameKey: 'plans.premium.name',
+      descriptionKey: 'plans.premium.description',
       creditsPerMonth: 250,
       pricePerMonth: 299.99,
       currency: 'USD',
-      description: 'For prolific authors',
-      features: [
-        '250 Credits Per Month',
-        'Auto-Renewal',
-        'Dedicated Support',
-        'Advanced Analytics',
-        'Bulk Operations',
-        'Cancel Anytime',
-      ],
-      popular: false },
+      features: ['creditsPerMonth', 'autoRenewal', 'dedicatedSupport', 'advancedAnalytics', 'bulkOperations', 'cancelAnytime'],
+      popular: false
+    },
   ];
 
   const handleSubscribe = async (stripePriceId: string) => {
@@ -168,17 +183,18 @@ export function SubscriptionPage() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString(i18n.language || 'en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric' });
+      day: 'numeric'
+    });
   };
 
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 items-center justify-center">
-          <p className="text-muted-foreground">Loading subscription...</p>
+          <p className="text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
@@ -187,8 +203,8 @@ export function SubscriptionPage() {
   return (
     <div className="container mx-auto space-y-8 px-4 py-8">
       <div>
-        <h1 className="text-3xl font-bold">Subscription Management</h1>
-        <p className="text-muted-foreground">Manage your monthly credit subscription</p>
+        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <p className="text-muted-foreground">{t('description')}</p>
       </div>
 
       {/* Current Subscription Status */}
@@ -199,7 +215,7 @@ export function SubscriptionPage() {
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <RefreshCw className="h-5 w-5 text-primary" />
-                  Active Subscription
+                  {t('active.title')}
                 </CardTitle>
                 <CardDescription>{subscription.subscription.planName}</CardDescription>
               </div>
@@ -219,17 +235,17 @@ export function SubscriptionPage() {
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               <div>
-                <p className="mb-1 text-sm text-muted-foreground">Monthly Credits</p>
+                <p className="mb-1 text-sm text-muted-foreground">{t('active.monthlyCredits')}</p>
                 <p className="text-2xl font-bold">{subscription.subscription.creditsPerMonth}</p>
               </div>
               <div>
-                <p className="mb-1 text-sm text-muted-foreground">Monthly Price</p>
+                <p className="mb-1 text-sm text-muted-foreground">{t('active.monthlyPrice')}</p>
                 <p className="text-2xl font-bold">
                   {formatCurrency(subscription.subscription.pricePerMonth, subscription.subscription.currency || 'USD', i18n.language)}
                 </p>
               </div>
               <div>
-                <p className="mb-1 text-sm text-muted-foreground">Total Allocated</p>
+                <p className="mb-1 text-sm text-muted-foreground">{t('active.totalAllocated')}</p>
                 <p className="text-2xl font-bold">
                   {subscription.subscription.totalCreditsAllocated}
                 </p>
@@ -240,7 +256,7 @@ export function SubscriptionPage() {
               <div className="flex items-start gap-3">
                 <Calendar className="mt-0.5 h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">Started</p>
+                  <p className="text-sm font-medium">{t('active.started')}</p>
                   <p className="text-sm text-muted-foreground">
                     {formatDate(subscription.subscription.createdAt)}
                   </p>
@@ -249,7 +265,7 @@ export function SubscriptionPage() {
               <div className="flex items-start gap-3">
                 <RefreshCw className="mt-0.5 h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">Next Renewal</p>
+                  <p className="text-sm font-medium">{t('active.nextRenewal')}</p>
                   <p className="text-sm text-muted-foreground">
                     {subscription.subscription.currentPeriodEnd
                       ? formatDate(subscription.subscription.currentPeriodEnd)
@@ -263,57 +279,55 @@ export function SubscriptionPage() {
               <div className="flex items-start gap-3 rounded-md border border-destructive/20 bg-destructive/10 p-4">
                 <AlertCircle className="mt-0.5 h-5 w-5 text-destructive" />
                 <div>
-                  <p className="text-sm font-medium text-destructive">Payment Failed</p>
+                  <p className="text-sm font-medium text-destructive">{t('active.pastDue.title')}</p>
                   <p className="text-sm text-muted-foreground">
-                    Your last payment failed. Please update your payment method to continue your
-                    subscription.
+                    {t('active.pastDue.message')}
                   </p>
                 </div>
               </div>
             )}
           </CardContent>
           <CardFooter className="flex gap-2">
-            <Button variant="outline">Update Payment Method</Button>
+            <Button variant="outline">{t('active.updatePaymentMethod')}</Button>
             <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="destructive">
                   <XCircle className="mr-2 h-4 w-4" />
-                  Cancel Subscription
+                  {t('active.cancelSubscription')}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Cancel Subscription</DialogTitle>
+                  <DialogTitle>{t('cancel.title')}</DialogTitle>
                   <DialogDescription>
-                    Are you sure you want to cancel your subscription? You'll continue to have
-                    access until the end of your current billing period.
+                    {t('cancel.description')}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="cancelReason">Reason for Cancellation *</Label>
+                    <Label htmlFor="cancelReason">{t('cancel.reasonLabel')}</Label>
                     <Textarea
                       id="cancelReason"
                       value={cancelReason}
                       onChange={(e) => setCancelReason(e.target.value)}
-                      placeholder="Please tell us why you're cancelling"
+                      placeholder={t('cancel.reasonPlaceholder')}
                       rows={3}
                     />
                   </div>
                   <div>
-                    <Label htmlFor="cancelFeedback">Additional Feedback (Optional)</Label>
+                    <Label htmlFor="cancelFeedback">{t('cancel.feedbackLabel')}</Label>
                     <Textarea
                       id="cancelFeedback"
                       value={cancelFeedback}
                       onChange={(e) => setCancelFeedback(e.target.value)}
-                      placeholder="How can we improve?"
+                      placeholder={t('cancel.feedbackPlaceholder')}
                       rows={3}
                     />
                   </div>
                 </div>
                 <DialogFooter>
                   <Button type="button" variant="outline" onClick={() => setCancelDialogOpen(false)}>
-                    Keep Subscription
+                    {t('cancel.keepButton')}
                   </Button>
                   <Button
                     type="button"
@@ -321,7 +335,7 @@ export function SubscriptionPage() {
                     onClick={handleCancelSubscription}
                     disabled={!cancelReason || isCancelling}
                   >
-                    {isCancelling ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Confirm Cancellation'}
+                    {isCancelling ? <Loader2 className="h-4 w-4 animate-spin" /> : t('cancel.confirmButton')}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -331,12 +345,12 @@ export function SubscriptionPage() {
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>No Active Subscription</CardTitle>
-            <CardDescription>Subscribe to get monthly credits automatically</CardDescription>
+            <CardTitle>{t('noSubscription.title')}</CardTitle>
+            <CardDescription>{t('noSubscription.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              Choose a subscription plan below to get started with automatic monthly credits.
+              {t('noSubscription.message')}
             </p>
           </CardContent>
         </Card>
@@ -346,9 +360,9 @@ export function SubscriptionPage() {
       {!subscription && (
         <>
           <div>
-            <h2 className="mb-2 text-2xl font-bold">Available Plans</h2>
+            <h2 className="mb-2 text-2xl font-bold">{t('plans.title')}</h2>
             <p className="text-muted-foreground">
-              Subscribe and get credits automatically every month
+              {t('plans.description')}
             </p>
           </div>
 
@@ -360,24 +374,24 @@ export function SubscriptionPage() {
               >
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
+                    <Badge className="bg-primary text-primary-foreground">{t('plans.mostPopular')}</Badge>
                   </div>
                 )}
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle>{plan.name}</CardTitle>
+                    <CardTitle>{t(plan.nameKey)}</CardTitle>
                     <RefreshCw className="h-6 w-6 text-muted-foreground" />
                   </div>
-                  <CardDescription>{plan.description}</CardDescription>
+                  <CardDescription>{t(plan.descriptionKey)}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
                     <div className="flex items-baseline gap-2">
                       <span className="text-4xl font-bold">{formatCurrency(plan.pricePerMonth, plan.currency || 'USD', i18n.language)}</span>
-                      <span className="text-muted-foreground">/month</span>
+                      <span className="text-muted-foreground">{t('plans.perMonth')}</span>
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {plan.creditsPerMonth} credits per month
+                      {plan.creditsPerMonth} {t('plans.creditsPerMonth')}
                     </p>
                   </div>
 
@@ -385,14 +399,14 @@ export function SubscriptionPage() {
                     {plan.features.map((feature, index) => (
                       <div key={index} className="flex items-start gap-2">
                         <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
-                        <span className="text-sm">{feature}</span>
+                        <span className="text-sm">{getFeatureText(feature, feature === 'creditsPerMonth' ? plan.creditsPerMonth : undefined)}</span>
                       </div>
                     ))}
                   </div>
 
                   <div className="pt-2">
                     <p className="text-xs text-muted-foreground">
-                      Price per credit: {formatCurrency(plan.pricePerMonth / plan.creditsPerMonth, plan.currency || 'USD', i18n.language)}
+                      {t('plans.pricePerCredit')}: {formatCurrency(plan.pricePerMonth / plan.creditsPerMonth, plan.currency || 'USD', i18n.language)}
                     </p>
                   </div>
                 </CardContent>
@@ -404,7 +418,7 @@ export function SubscriptionPage() {
                     disabled={isCreatingCheckout}
                   >
                     <CreditCard className="mr-2 h-4 w-4" />
-                    {isCreatingCheckout ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Subscribe Now'}
+                    {isCreatingCheckout ? <Loader2 className="h-4 w-4 animate-spin" /> : t('plans.subscribeButton')}
                   </Button>
                 </CardFooter>
               </Card>
@@ -418,7 +432,7 @@ export function SubscriptionPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5" />
-            Subscription Benefits
+            {t('benefits.title')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -428,9 +442,9 @@ export function SubscriptionPage() {
                 <Check className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <h4 className="mb-1 font-medium">Automatic Credits</h4>
+                <h4 className="mb-1 font-medium">{t('benefits.automaticCredits.title')}</h4>
                 <p className="text-sm text-muted-foreground">
-                  Credits are automatically added to your account each month
+                  {t('benefits.automaticCredits.description')}
                 </p>
               </div>
             </div>
@@ -439,9 +453,9 @@ export function SubscriptionPage() {
                 <Check className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <h4 className="mb-1 font-medium">Better Value</h4>
+                <h4 className="mb-1 font-medium">{t('benefits.betterValue.title')}</h4>
                 <p className="text-sm text-muted-foreground">
-                  Save up to 30% compared to one-time purchases
+                  {t('benefits.betterValue.description')}
                 </p>
               </div>
             </div>
@@ -450,9 +464,9 @@ export function SubscriptionPage() {
                 <Check className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <h4 className="mb-1 font-medium">Flexible Cancellation</h4>
+                <h4 className="mb-1 font-medium">{t('benefits.flexibleCancellation.title')}</h4>
                 <p className="text-sm text-muted-foreground">
-                  Cancel anytime - no long-term commitment required
+                  {t('benefits.flexibleCancellation.description')}
                 </p>
               </div>
             </div>
@@ -461,9 +475,9 @@ export function SubscriptionPage() {
                 <Check className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <h4 className="mb-1 font-medium">Priority Support</h4>
+                <h4 className="mb-1 font-medium">{t('benefits.prioritySupport.title')}</h4>
                 <p className="text-sm text-muted-foreground">
-                  Get faster response times for your support requests
+                  {t('benefits.prioritySupport.description')}
                 </p>
               </div>
             </div>
@@ -474,35 +488,31 @@ export function SubscriptionPage() {
       {/* FAQ Section */}
       <Card>
         <CardHeader>
-          <CardTitle>Frequently Asked Questions</CardTitle>
+          <CardTitle>{t('faq.title')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <h4 className="mb-1 font-medium">When do I get charged?</h4>
+            <h4 className="mb-1 font-medium">{t('faq.question1')}</h4>
             <p className="text-sm text-muted-foreground">
-              You're charged on the same day each month. Credits are added to your account
-              immediately after successful payment.
+              {t('faq.answer1')}
             </p>
           </div>
           <div>
-            <h4 className="mb-1 font-medium">What happens if I cancel?</h4>
+            <h4 className="mb-1 font-medium">{t('faq.question2')}</h4>
             <p className="text-sm text-muted-foreground">
-              You'll keep access to your subscription benefits until the end of your current billing
-              period. No refunds for partial months.
+              {t('faq.answer2')}
             </p>
           </div>
           <div>
-            <h4 className="mb-1 font-medium">Do unused credits roll over?</h4>
+            <h4 className="mb-1 font-medium">{t('faq.question3')}</h4>
             <p className="text-sm text-muted-foreground">
-              Yes! Unused subscription credits accumulate in your account and don't expire as long
-              as your subscription is active.
+              {t('faq.answer3')}
             </p>
           </div>
           <div>
-            <h4 className="mb-1 font-medium">Can I change my plan?</h4>
+            <h4 className="mb-1 font-medium">{t('faq.question4')}</h4>
             <p className="text-sm text-muted-foreground">
-              Yes, you can upgrade or downgrade at any time. Changes take effect at the start of
-              your next billing cycle.
+              {t('faq.answer4')}
             </p>
           </div>
         </CardContent>

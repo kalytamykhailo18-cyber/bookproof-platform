@@ -142,12 +142,12 @@ export function SettingsPage() {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
-      toast.success('Data exported successfully', {
-        description: 'Your data has been downloaded as a JSON file',
+      toast.success(t('export.success'), {
+        description: t('export.successDescription'),
       });
     } catch (error: any) {
-      toast.error('Failed to export data', {
-        description: error.message || 'Please try again later',
+      toast.error(t('export.error'), {
+        description: error.message || t('export.errorDescription'),
       });
     } finally {
       setIsExporting(false);
@@ -166,8 +166,11 @@ export function SettingsPage() {
         reason: deleteReason || undefined,
       });
 
-      toast.success('Account deletion scheduled', {
-        description: `Your account will be deleted on ${new Date(data.scheduledDeletionDate).toLocaleDateString()}. You can cancel within ${data.gracePeriodDays} days.`,
+      toast.success(t('delete.success'), {
+        description: t('delete.successDescription', {
+          date: new Date(data.scheduledDeletionDate).toLocaleDateString(),
+          days: data.gracePeriodDays
+        }),
         duration: 10000,
       });
 
@@ -175,8 +178,8 @@ export function SettingsPage() {
       setDeleteConfirmation('');
       setDeleteReason('');
     } catch (error: any) {
-      toast.error('Failed to delete account', {
-        description: error.message || 'Please try again later',
+      toast.error(t('delete.error'), {
+        description: error.message || t('delete.errorDescription'),
       });
     } finally {
       setIsDeletingAccount(false);
@@ -191,14 +194,17 @@ export function SettingsPage() {
         granted,
       });
 
-      toast.success('Consent updated', {
-        description: `${data.consentType} consent ${data.granted ? 'granted' : 'withdrawn'}`,
+      toast.success(t('privacy.updateSuccess'), {
+        description: t('privacy.updateSuccessDescription', {
+          consentType: data.consentType,
+          status: data.granted ? t('privacy.granted') : t('privacy.withdrawn')
+        }),
       });
 
       await refetchConsents();
     } catch (error: any) {
-      toast.error('Failed to update consent', {
-        description: error.message || 'Please try again later',
+      toast.error(t('privacy.updateError'), {
+        description: error.message || t('privacy.updateErrorDescription'),
       });
     } finally {
       setIsUpdatingConsent(false);
@@ -220,14 +226,14 @@ export function SettingsPage() {
       // Then save to backend
       const data = await updateLanguageApi({ preferredLanguage: newLanguage });
 
-      toast.success('Language updated', {
-        description: `Your preferred language has been changed to ${data.preferredLanguage}`,
+      toast.success(t('language.updateSuccess'), {
+        description: t('language.updateSuccessDescription', { language: data.preferredLanguage }),
       });
 
       await refetchLanguage();
     } catch (error: any) {
-      toast.error('Failed to update language', {
-        description: error.message || 'Please try again later',
+      toast.error(t('language.updateError'), {
+        description: error.message || t('language.updateErrorDescription'),
       });
     } finally {
       setIsUpdatingLanguage(false);
@@ -237,9 +243,9 @@ export function SettingsPage() {
   return (
     <div className="container mx-auto p-6 max-w-4xl space-y-6">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Account Settings</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
         <p className="text-muted-foreground">
-          Manage your privacy, data, and account preferences
+          {t('description')}
         </p>
       </div>
 
@@ -248,20 +254,20 @@ export function SettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Globe className="h-5 w-5" />
-            <CardTitle>Language Preference</CardTitle>
+            <CardTitle>{t('language.title')}</CardTitle>
           </div>
           <CardDescription>
-            Choose your preferred language for the platform and email notifications
+            {t('language.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between space-x-4 p-4 rounded-lg border">
             <div className="flex-1 space-y-1">
               <Label htmlFor="language" className="text-base font-medium">
-                Interface Language
+                {t('language.interfaceLabel')}
               </Label>
               <p className="text-sm text-muted-foreground">
-                This will change the language of the entire platform
+                {t('language.interfaceDescription')}
               </p>
             </div>
             {isLoadingLanguage ? (
@@ -273,12 +279,12 @@ export function SettingsPage() {
                 disabled={isUpdatingLanguage}
               >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select language" />
+                  <SelectValue placeholder={t('language.selectPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={Language.EN}>English</SelectItem>
-                  <SelectItem value={Language.PT}>Português</SelectItem>
-                  <SelectItem value={Language.ES}>Español</SelectItem>
+                  <SelectItem value={Language.EN}>{t('language.english')}</SelectItem>
+                  <SelectItem value={Language.PT}>{t('language.portuguese')}</SelectItem>
+                  <SelectItem value={Language.ES}>{t('language.spanish')}</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -291,20 +297,20 @@ export function SettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Download className="h-5 w-5" />
-            <CardTitle>Export Your Data</CardTitle>
+            <CardTitle>{t('export.title')}</CardTitle>
           </div>
           <CardDescription>
-            Download a complete copy of all your personal data in JSON format (GDPR compliance)
+            {t('export.description')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-lg bg-muted p-4 space-y-2">
-            <p className="text-sm font-medium">Your export will include:</p>
+            <p className="text-sm font-medium">{t('export.includes')}</p>
             <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-              <li>Personal information (email, name, profile data)</li>
-              <li>Campaign history and transactions</li>
-              <li>Credit purchase history</li>
-              <li>Consent records and activity logs</li>
+              <li>{t('export.personalInfo')}</li>
+              <li>{t('export.campaigns')}</li>
+              <li>{t('export.credits')}</li>
+              <li>{t('export.consents')}</li>
             </ul>
           </div>
 
@@ -316,12 +322,12 @@ export function SettingsPage() {
             {isExporting ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Exporting...
+                {t('export.exporting')}
               </>
             ) : (
               <>
                 <Download className="h-4 w-4 mr-2" />
-                Download My Data
+                {t('export.button')}
               </>
             )}
           </Button>
@@ -333,10 +339,10 @@ export function SettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            <CardTitle>Privacy & Consent</CardTitle>
+            <CardTitle>{t('privacy.title')}</CardTitle>
           </div>
           <CardDescription>
-            Manage how we use your data (you can withdraw consent anytime)
+            {t('privacy.description')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -351,7 +357,7 @@ export function SettingsPage() {
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center gap-2">
                     <Label htmlFor="marketing" className="text-base font-medium cursor-pointer">
-                      Marketing Communications
+                      {t('privacy.marketing.title')}
                     </Label>
                     {getConsentStatus(ConsentType.MARKETING) ? (
                       <CheckCircle2 className="h-4 w-4 text-green-600" />
@@ -360,7 +366,7 @@ export function SettingsPage() {
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Receive promotional emails about new features, offers, and platform updates
+                    {t('privacy.marketing.description')}
                   </p>
                 </div>
                 <Switch
@@ -378,7 +384,7 @@ export function SettingsPage() {
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center gap-2">
                     <Label htmlFor="analytics" className="text-base font-medium cursor-pointer">
-                      Analytics & Performance
+                      {t('privacy.analytics.title')}
                     </Label>
                     {getConsentStatus(ConsentType.ANALYTICS) ? (
                       <CheckCircle2 className="h-4 w-4 text-green-600" />
@@ -387,7 +393,7 @@ export function SettingsPage() {
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Help us improve by allowing anonymous usage analytics and error tracking
+                    {t('privacy.analytics.description')}
                   </p>
                 </div>
                 <Switch
@@ -405,7 +411,7 @@ export function SettingsPage() {
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center gap-2">
                     <Label htmlFor="personalization" className="text-base font-medium cursor-pointer">
-                      Personalization
+                      {t('privacy.personalization.title')}
                     </Label>
                     {getConsentStatus(ConsentType.PERSONALIZATION) ? (
                       <CheckCircle2 className="h-4 w-4 text-green-600" />
@@ -414,7 +420,7 @@ export function SettingsPage() {
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Personalize your experience with recommendations and customized content
+                    {t('privacy.personalization.description')}
                   </p>
                 </div>
                 <Switch
@@ -436,10 +442,10 @@ export function SettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-destructive" />
-            <CardTitle className="text-destructive">Danger Zone</CardTitle>
+            <CardTitle className="text-destructive">{t('delete.title')}</CardTitle>
           </div>
           <CardDescription>
-            Permanently delete your account and all associated data
+            {t('delete.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -447,51 +453,51 @@ export function SettingsPage() {
             <AlertDialogTrigger asChild>
               <Button variant="destructive" className="w-full sm:w-auto">
                 <Trash2 className="h-4 w-4 mr-2" />
-                Delete My Account
+                {t('delete.button')}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="max-w-md">
               <AlertDialogHeader>
                 <AlertDialogTitle className="flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5 text-destructive" />
-                  Are you absolutely sure?
+                  {t('delete.dialog.title')}
                 </AlertDialogTitle>
                 <AlertDialogDescription className="space-y-4 pt-4">
                   <div className="rounded-lg bg-destructive/10 p-3 space-y-2">
                     <p className="text-sm font-medium text-destructive">
-                      This action will schedule your account for deletion:
+                      {t('delete.dialog.warning')}
                     </p>
                     <ul className="text-sm space-y-1 list-disc list-inside">
-                      <li>30-day grace period before permanent deletion</li>
-                      <li>All personal data will be permanently removed</li>
-                      <li>Campaigns, reviews, and transactions will be deleted</li>
-                      <li>You can cancel within the grace period</li>
+                      <li>{t('delete.dialog.gracePeriod')}</li>
+                      <li>{t('delete.dialog.dataRemoved')}</li>
+                      <li>{t('delete.dialog.contentDeleted')}</li>
+                      <li>{t('delete.dialog.cancelable')}</li>
                     </ul>
                   </div>
 
                   <div className="space-y-3">
                     <div className="space-y-2">
                       <Label htmlFor="deleteConfirmation" className="text-sm font-medium">
-                        Type <span className="font-mono bg-muted px-1 rounded">DELETE MY ACCOUNT</span> to confirm:
+                        {t('delete.dialog.confirmLabel', { phrase: t('delete.dialog.confirmPhrase') }).replace('{phrase}', '')} <span className="font-mono bg-muted px-1 rounded">{t('delete.dialog.confirmPhrase')}</span>:
                       </Label>
                       <Input
                         id="deleteConfirmation"
                         value={deleteConfirmation}
                         onChange={(e) => setDeleteConfirmation(e.target.value)}
-                        placeholder="DELETE MY ACCOUNT"
+                        placeholder={t('delete.dialog.confirmPhrase')}
                         className="font-mono"
                       />
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="deleteReason" className="text-sm font-medium">
-                        Reason (optional - helps us improve):
+                        {t('delete.dialog.reasonLabel')}
                       </Label>
                       <Textarea
                         id="deleteReason"
                         value={deleteReason}
                         onChange={(e) => setDeleteReason(e.target.value)}
-                        placeholder="Tell us why you're leaving..."
+                        placeholder={t('delete.dialog.reasonPlaceholder')}
                         rows={3}
                       />
                     </div>
@@ -503,7 +509,7 @@ export function SettingsPage() {
                   setDeleteConfirmation('');
                   setDeleteReason('');
                 }}>
-                  Cancel
+                  {t('delete.dialog.cancel')}
                 </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDeleteAccount}
@@ -513,12 +519,12 @@ export function SettingsPage() {
                   {isDeletingAccount ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Deleting...
+                      {t('delete.dialog.deleting')}
                     </>
                   ) : (
                     <>
                       <Trash2 className="h-4 w-4 mr-2" />
-                      Delete Account
+                      {t('delete.dialog.confirm')}
                     </>
                   )}
                 </AlertDialogAction>
@@ -528,8 +534,7 @@ export function SettingsPage() {
 
           <div className="mt-4 rounded-lg bg-muted p-4">
             <p className="text-sm text-muted-foreground">
-              <strong>Note:</strong> Account deletion requests include a 30-day grace period.
-              During this time, you can log in and cancel the deletion request if you change your mind.
+              <strong>{t('delete.noteLabel')}</strong> {t('delete.note')}
             </p>
           </div>
         </CardContent>
@@ -540,16 +545,16 @@ export function SettingsPage() {
         <CardContent className="pt-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium">Privacy Policy</p>
+              <p className="text-sm font-medium">{t('privacyPolicy.title')}</p>
               <p className="text-sm text-muted-foreground">
-                Learn more about how we protect your data
+                {t('privacyPolicy.description')}
               </p>
             </div>
             <Button
               variant="outline"
               onClick={() => window.open('/privacy', '_blank', 'noopener,noreferrer')}
             >
-              Read Policy
+              {t('privacyPolicy.button')}
             </Button>
           </div>
         </CardContent>

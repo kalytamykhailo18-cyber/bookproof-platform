@@ -1,7 +1,8 @@
 {
   "filters": {
     "title": "Filtros",
-    "allStatuses": "Todos os Status"
+    "allStatuses": "Todos os Status",
+    "clear": "Limpar Filtro"
   },
   "dashboard": {
     "title": "Painel de Vendas",
@@ -101,6 +102,12 @@
     "clientEmail": "Email do Cliente",
     "clientCompany": "Nome da Empresa",
     "clientPhone": "Telefone",
+    "currencies": {
+      "usd": "USD - Dólar Americano",
+      "eur": "EUR - Euro",
+      "gbp": "GBP - Libra Esterlina",
+      "brl": "BRL - Real Brasileiro"
+    },
     "inclusions": "Inclusões",
     "inclusionsDescription": "Serviços adicionais para incluir neste pacote",
     "includeKeywordResearch": "Incluir Pesquisa de Palavras-chave",
@@ -184,8 +191,10 @@
   },
   "status": {
     "draft": "Rascunho",
+    "pendingApproval": "Aprovação Pendente",
     "sent": "Enviado",
     "viewed": "Visualizado",
+    "viewedPendingPayment": "Visualizado (Pagamento Pendente)",
     "paid": "Pago",
     "expired": "Expirado",
     "cancelled": "Cancelado",

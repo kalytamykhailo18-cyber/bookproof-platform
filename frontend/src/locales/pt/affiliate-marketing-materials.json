@@ -1,0 +1,20 @@
+{
+  "title": "Materiais de Marketing",
+  "description": "Baixe banners, modelos e conteúdo promocional para ajudá-lo a promover BookProof",
+  "filters": {
+    "title": "Filtros",
+    "type": "Tipo",
+    "language": "Idioma",
+    "allTypes": "Todos os Tipos",
+    "allLanguages": "Todos os Idiomas",
+    "english": "Inglês",
+    "portuguese": "Português",
+    "spanish": "Espanhol"
+  },
+  "noMaterials": "Nenhum Material de Marketing Encontrado",
+  "noMaterialsDescription": "Nenhum material corresponde aos seus filtros atuais. Tente ajustar sua seleção.",
+  "downloads": "downloads",
+  "download": "Baixar",
+  "copy": "Copiar",
+  "copied": "Copiado!"
+}

@@ -19,24 +19,7 @@ interface SettingsFormData {
   disabledTypes: NotificationType[];
 }
 
-const notificationTypes = [
-  {
-    type: NotificationType.CAMPAIGN,
-    label: 'Campaign Updates',
-    description: 'Updates about your active campaigns and progress' },
-  {
-    type: NotificationType.REVIEW,
-    label: 'Review Notifications',
-    description: 'New reviews delivered, validations, and review status changes' },
-  {
-    type: NotificationType.PAYMENT,
-    label: 'Payment Confirmations',
-    description: 'Credit purchases, invoices, and payment confirmations' },
-  {
-    type: NotificationType.SYSTEM,
-    label: 'System Notifications',
-    description: 'System updates, maintenance notices, and important announcements' },
-];
+// Notification types will use translations dynamically
 
 export function NotificationSettingsPage() {
   const { t, i18n } = useTranslation('notifications.settings');
@@ -60,7 +43,7 @@ export function NotificationSettingsPage() {
       setSettings(data);
     } catch (error: any) {
       console.error('Settings error:', error);
-      toast.error('Failed to load notification settings');
+      toast.error(t('loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -83,11 +66,11 @@ export function NotificationSettingsPage() {
     try {
       setIsPending(true);
       await updateNotificationSettings(data);
-      toast.success('Notification settings updated successfully');
+      toast.success(t('updateSuccess'));
       await fetchSettings();
     } catch (error: any) {
       console.error('Update settings error:', error);
-      toast.error('Failed to update notification settings');
+      toast.error(t('updateError'));
     } finally {
       setIsPending(false);
     }
@@ -135,11 +118,11 @@ export function NotificationSettingsPage() {
           disabled={isBackLoading}
         >
           {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
-          Back to Notifications
+          {t('backButton')}
         </Button>
-        <h1 className="text-3xl font-bold">Notification Settings</h1>
+        <h1 className="text-3xl font-bold">{t('title')}</h1>
         <p className="mt-2 text-muted-foreground">
-          Manage how you receive notifications and which types you want to get
+          {t('subtitle')}
         </p>
       </div>
 
@@ -147,9 +130,9 @@ export function NotificationSettingsPage() {
         {/* Email Notifications */}
         <Card className="animate-fade-up-fast">
           <CardHeader>
-            <CardTitle>Email Notifications</CardTitle>
+            <CardTitle>{t('email.title')}</CardTitle>
             <CardDescription>
-              Control when and how you receive email notifications
+              {t('email.description')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -157,10 +140,10 @@ export function NotificationSettingsPage() {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="emailEnabled" className="text-base">
-                  Enable Email Notifications
+                  {t('email.enableLabel')}
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Receive notifications via email in addition to in-app notifications
+                  {t('email.enableDescription')}
                 </p>
               </div>
               <Switch
@@ -173,7 +156,7 @@ export function NotificationSettingsPage() {
             {/* Email Frequency */}
             {emailEnabled && (
               <div className="space-y-3">
-                <Label>Email Frequency</Label>
+                <Label>{t('frequency.title')}</Label>
                 <RadioGroup
                   value={emailFrequency}
                   onValueChange={(value) =>
@@ -183,27 +166,27 @@ export function NotificationSettingsPage() {
                   <div className="flex items-center space-x-2 rounded-md border p-3 hover:bg-muted/50">
                     <RadioGroupItem value="IMMEDIATE" id="immediate" />
                     <Label htmlFor="immediate" className="flex-1 cursor-pointer">
-                      <div className="font-medium">Immediate</div>
+                      <div className="font-medium">{t('frequency.immediate')}</div>
                       <div className="text-sm text-muted-foreground">
-                        Get notified as soon as events happen
+                        {t('frequency.immediateDesc')}
                       </div>
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2 rounded-md border p-3 hover:bg-muted/50">
                     <RadioGroupItem value="DAILY" id="daily" />
                     <Label htmlFor="daily" className="flex-1 cursor-pointer">
-                      <div className="font-medium">Daily Digest</div>
+                      <div className="font-medium">{t('frequency.daily')}</div>
                       <div className="text-sm text-muted-foreground">
-                        Receive a summary once per day
+                        {t('frequency.dailyDesc')}
                       </div>
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2 rounded-md border p-3 hover:bg-muted/50">
                     <RadioGroupItem value="WEEKLY" id="weekly" />
                     <Label htmlFor="weekly" className="flex-1 cursor-pointer">
-                      <div className="font-medium">Weekly Digest</div>
+                      <div className="font-medium">{t('frequency.weekly')}</div>
                       <div className="text-sm text-muted-foreground">
-                        Receive a summary once per week
+                        {t('frequency.weeklyDesc')}
                       </div>
                     </Label>
                   </div>
@@ -216,14 +199,18 @@ export function NotificationSettingsPage() {
         {/* Notification Types */}
         <Card className="animate-fade-up-normal">
           <CardHeader>
-            <CardTitle>Notification Types</CardTitle>
+            <CardTitle>{t('types.title')}</CardTitle>
             <CardDescription>
-              Choose which types of notifications you want to receive (in-app notifications are
-              always enabled)
+              {t('types.description')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {notificationTypes.map((item, index) => {
+            {[
+              { type: NotificationType.CAMPAIGN, key: 'campaign' },
+              { type: NotificationType.REVIEW, key: 'review' },
+              { type: NotificationType.PAYMENT, key: 'payment' },
+              { type: NotificationType.SYSTEM, key: 'system' },
+            ].map((item, index) => {
               const isDisabled = disabledTypes?.includes(item.type);
               const animationClass = [
                 'animate-fade-left-fast',
@@ -243,8 +230,8 @@ export function NotificationSettingsPage() {
                     className="mt-1"
                   />
                   <Label htmlFor={item.type} className="flex-1 cursor-pointer space-y-1">
-                    <div className="font-medium">{item.label}</div>
-                    <div className="text-sm text-muted-foreground">{item.description}</div>
+                    <div className="font-medium">{t(`types.${item.key}.label`)}</div>
+                    <div className="text-sm text-muted-foreground">{t(`types.${item.key}.description`)}</div>
                   </Label>
                 </div>
               );
@@ -258,12 +245,12 @@ export function NotificationSettingsPage() {
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
+                {t('saving')}
               </>
             ) : (
               <>
                 <Save className="mr-2 h-4 w-4" />
-                Save Settings
+                {t('save')}
               </>
             )}
           </Button>

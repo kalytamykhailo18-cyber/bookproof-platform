@@ -52,5 +52,42 @@
     "regenerateError": "Error al regenerar investigación de palabras clave",
     "downloadSuccess": "Descarga de PDF iniciada",
     "downloadError": "Error al descargar PDF"
+  },
+  "detailDialog": {
+    "title": "Detalles de Investigación de Palabras Clave",
+    "description": "Ver información detallada sobre esta orden de investigación de palabras clave",
+    "loading": "Cargando...",
+    "noDetails": "No hay detalles disponibles",
+    "bookTitle": "Título del Libro",
+    "status": "Estado",
+    "price": "Precio",
+    "paid": "Pagado",
+    "createdAt": "Creado el",
+    "completedAt": "Completado el",
+    "notCompleted": "No completado",
+    "researchInfo": "Información de Investigación",
+    "subtitle": "Subtítulo",
+    "genre": "Género",
+    "category": "Categoría",
+    "description": "Descripción",
+    "targetAudience": "Audiencia Objetivo",
+    "bookLanguage": "Idioma del Libro",
+    "targetMarket": "Mercado Objetivo",
+    "competingBooks": "Libros Competidores",
+    "specificKeywords": "Palabras Clave Específicas",
+    "additionalNotes": "Notas Adicionales",
+    "generatedKeywords": "Palabras Clave Generadas",
+    "primaryKeywords": "Palabras Clave Primarias",
+    "secondaryKeywords": "Palabras Clave Secundarias",
+    "longTailKeywords": "Palabras Clave de Cola Larga",
+    "errorMessage": "Mensaje de Error",
+    "downloadPdf": "Descargar PDF"
+  },
+  "deleteDialog": {
+    "title": "Eliminar Investigación de Palabras Clave",
+    "description": "¿Está seguro de que desea eliminar esta investigación de palabras clave? Esta acción no se puede deshacer.",
+    "cancel": "Cancelar",
+    "confirm": "Eliminar",
+    "deleting": "Eliminando..."
   }
 }

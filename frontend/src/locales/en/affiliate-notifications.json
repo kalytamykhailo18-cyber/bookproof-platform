@@ -1,0 +1,16 @@
+{
+  "title": "Notifications",
+  "description": "Stay updated with your campaign activity and system messages",
+  "settings": "Settings",
+  "markAllRead": "Mark All Read ({{count}})",
+  "markAllReadSuccess": "All notifications marked as read",
+  "markAllReadError": "Failed to mark all notifications as read",
+  "notificationsUpdated": "{{count}} notification{{count, plural, one {} other {s}}} updated",
+  "all": "All",
+  "unread": "Unread",
+  "allTypes": "All Types",
+  "campaigns": "Campaigns",
+  "reviews": "Reviews",
+  "payments": "Payments",
+  "showing": "Showing {{count}} of {{total}} notifications"
+}

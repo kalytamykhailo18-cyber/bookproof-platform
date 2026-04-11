@@ -88,7 +88,10 @@
     "country": "Country",
     "language": "Language",
     "completedExpired": "completed / expired",
-    "earned": "Earned",
+    "completed": "completed",
+    "expired": "expired",
+    "rejected": "rejected",
+    "earned": "earned",
     "book": "Book",
     "format": "Format",
     "assignedAt": "Assigned",
@@ -243,5 +246,72 @@
     "title": "Reader Not Found",
     "description": "The reader you're looking for doesn't exist or has been removed.",
     "backToList": "Back to Readers"
+  },
+  "userManagement": {
+    "title": "User Account Management",
+    "description": "These actions affect the user account directly, not just the reader profile.",
+    "banUser": "Ban User",
+    "unbanUser": "Unban User",
+    "resetPassword": "Reset Password",
+    "verifyEmail": "Verify Email",
+    "unverifyEmail": "Unverify Email",
+    "sendEmail": "Send Email",
+    "userBanned": "User is banned",
+    "reason": "Reason",
+    "banDialog": {
+      "title": "Ban User (Permanent)",
+      "description": "This will permanently ban the user from the platform. They will not be able to log in or access any features.",
+      "reasonLabel": "Reason *",
+      "reasonPlaceholder": "Enter reason for banning this user",
+      "notesLabel": "Additional Notes",
+      "notesPlaceholder": "Optional notes for audit trail",
+      "confirm": "Ban User",
+      "banning": "Banning..."
+    },
+    "unbanDialog": {
+      "title": "Unban User",
+      "description": "This will remove the permanent ban and allow the user to access the platform again.",
+      "reasonLabel": "Reason *",
+      "reasonPlaceholder": "Enter reason for unbanning this user",
+      "notesLabel": "Additional Notes",
+      "notesPlaceholder": "Optional notes for audit trail",
+      "confirm": "Unban User",
+      "unbanning": "Unbanning..."
+    },
+    "resetPasswordDialog": {
+      "title": "Reset User Password",
+      "description": "This will send a password reset email to the user. They will need to click the link to set a new password.",
+      "emailLabel": "Email",
+      "reasonLabel": "Reason (optional)",
+      "reasonPlaceholder": "Enter reason for password reset",
+      "confirm": "Send Reset Email",
+      "sending": "Sending..."
+    },
+    "verifyEmailDialog": {
+      "verifyTitle": "Verify Email",
+      "unverifyTitle": "Unverify Email",
+      "verifyDescription": "This will manually mark the email as verified without requiring the user to click a verification link.",
+      "unverifyDescription": "This will mark the email as unverified.",
+      "emailLabel": "Email",
+      "currentStatus": "Current Status",
+      "verified": "Verified",
+      "notVerified": "Not Verified",
+      "reasonLabel": "Reason (optional)",
+      "reasonPlaceholder": "Enter reason for verification change",
+      "verifyConfirm": "Verify Email",
+      "unverifyConfirm": "Unverify Email",
+      "updating": "Updating..."
+    },
+    "sendEmailDialog": {
+      "title": "Send Email to User",
+      "description": "Send a custom email to this user. The email will be sent from the platform.",
+      "toLabel": "To",
+      "subjectLabel": "Subject *",
+      "subjectPlaceholder": "Enter email subject",
+      "messageLabel": "Message *",
+      "messagePlaceholder": "Enter your message",
+      "confirm": "Send Email",
+      "sending": "Sending..."
+    }
   }
 }

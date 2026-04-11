@@ -59,7 +59,7 @@ const GENRE_OPTIONS = [
 export function ReaderProfilePage() {
   const { t, i18n } = useTranslation('reader.profile');
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
 
   const [profile, setProfile] = useState<ReaderProfile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
@@ -209,12 +209,18 @@ export function ReaderProfilePage() {
         name: name.trim(),
         country: country.trim(),
       });
+
+      // Update auth store with new user data
+      if (user) {
+        setUser({
+          ...user,
+          name: name.trim(),
+          country: country.trim(),
+        });
+      }
+
       toast.success('Basic information updated successfully!');
       setIsEditingBasicInfo(false);
-      // Trigger user refresh if available
-      if (user) {
-        window.location.reload(); // Simple refresh to update auth context
-      }
     } catch (error: any) {
       const message = error.response?.data?.message || 'Failed to update basic information';
       toast.error(message);
@@ -226,13 +232,27 @@ export function ReaderProfilePage() {
   const handleLanguageChange = async (newLanguage: Language) => {
     try {
       await updateLanguage({ preferredLanguage: newLanguage });
-      toast.success('Language updated successfully!');
+
       // Update local state
       setPreferredLanguage(newLanguage);
-      // Change i18next language - automatically saved to localStorage
+
+      // Update auth store with new user data FIRST
+      const updatedUser = {
+        ...user!,
+        preferredLanguage: newLanguage,
+      };
+      setUser(updatedUser);
+
+      // Wait for Zustand to persist to localStorage
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Change i18next language
       const newLocale = newLanguage.toLowerCase();
-      i18n.changeLanguage(newLocale);
-      // Trigger user refresh to update auth context
+      await i18n.changeLanguage(newLocale);
+
+      toast.success('Language updated successfully!');
+
+      // Reload page to ensure all components pick up the new language
       setTimeout(() => {
         window.location.reload();
       }, 500);
@@ -334,36 +354,36 @@ export function ReaderProfilePage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="h-5 w-5" />
-                {t('sections.basicInfo') || 'Basic Information'}
+                {t('sections.basicInfo')}
               </CardTitle>
               <CardDescription>
-                {t('sections.basicInfoDesc') || 'Update your name, country, and language preference'}
+                {t('sections.basicInfoDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Full Name */}
               <div className="animate-fade-up-fast space-y-2">
-                <Label htmlFor="name">{t('basicInfo.name') || 'Full Name'}</Label>
+                <Label htmlFor="name">{t('basicInfo.name')}</Label>
                 <Input
                   id="name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   disabled={!isEditingBasicInfo}
-                  placeholder="John Doe"
+                  placeholder={t('basicInfo.namePlaceholder')}
                 />
               </div>
 
               {/* Country */}
               <div className="animate-fade-up-light-slow space-y-2">
-                <Label htmlFor="country">{t('basicInfo.country') || 'Country'}</Label>
+                <Label htmlFor="country">{t('basicInfo.country')}</Label>
                 <Input
                   id="country"
                   type="text"
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
                   disabled={!isEditingBasicInfo}
-                  placeholder="United States"
+                  placeholder={t('basicInfo.countryPlaceholder')}
                 />
               </div>
 
@@ -371,7 +391,7 @@ export function ReaderProfilePage() {
               <div className="animate-fade-up-light-slow space-y-2">
                 <Label htmlFor="preferredLanguage" className="flex items-center gap-2">
                   <Globe className="h-4 w-4" />
-                  {t('basicInfo.language') || 'Preferred Language'}
+                  {t('basicInfo.language')}
                 </Label>
                 <Select
                   value={preferredLanguage}
@@ -379,7 +399,7 @@ export function ReaderProfilePage() {
                   disabled={!isEditingBasicInfo}
                 >
                   <SelectTrigger id="preferredLanguage">
-                    <SelectValue placeholder="Select language" />
+                    <SelectValue placeholder={t('basicInfo.languagePlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={Language.EN}>English</SelectItem>
@@ -388,7 +408,7 @@ export function ReaderProfilePage() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  {t('basicInfo.languageNote') || 'Language for platform interface and email notifications'}
+                  {t('basicInfo.languageNote')}
                 </p>
               </div>
 
@@ -396,7 +416,7 @@ export function ReaderProfilePage() {
               <div className="animate-fade-up-medium-slow space-y-2">
                 <Label htmlFor="email" className="flex items-center gap-2">
                   <Mail className="h-4 w-4" />
-                  {t('basicInfo.email') || 'Email'}
+                  {t('basicInfo.email')}
                 </Label>
                 <Input
                   id="email"
@@ -406,7 +426,7 @@ export function ReaderProfilePage() {
                   className="bg-muted"
                 />
                 <p className="text-xs text-muted-foreground">
-                  {t('basicInfo.emailNote') || 'Email cannot be changed. Contact support if needed.'}
+                  {t('basicInfo.emailNote')}
                 </p>
               </div>
 
@@ -414,7 +434,7 @@ export function ReaderProfilePage() {
               <div className="animate-fade-up-heavy-slow flex gap-2 pt-4">
                 {!isEditingBasicInfo ? (
                   <Button type="button" onClick={() => setIsEditingBasicInfo(true)}>
-                    {t('actions.edit') || 'Edit'}
+                    {t('actions.edit')}
                   </Button>
                 ) : (
                   <>
@@ -424,7 +444,7 @@ export function ReaderProfilePage() {
                       ) : (
                         <>
                           <Save className="mr-2 h-4 w-4" />
-                          {t('actions.save') || 'Save'}
+                          {t('actions.save')}
                         </>
                       )}
                     </Button>
@@ -438,7 +458,7 @@ export function ReaderProfilePage() {
                         setPreferredLanguage((user?.preferredLanguage as Language) || Language.EN);
                       }}
                     >
-                      {t('actions.cancel') || 'Cancel'}
+                      {t('actions.cancel')}
                     </Button>
                   </>
                 )}
@@ -451,49 +471,49 @@ export function ReaderProfilePage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Lock className="h-5 w-5" />
-                {t('sections.passwordChange') || 'Change Password'}
+                {t('sections.passwordChange')}
               </CardTitle>
               <CardDescription>
-                {t('sections.passwordChangeDesc') || 'Update your account password'}
+                {t('sections.passwordChangeDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Current Password */}
               <div className="animate-fade-up-fast space-y-2">
-                <Label htmlFor="currentPassword">{t('password.current') || 'Current Password'}</Label>
+                <Label htmlFor="currentPassword">{t('password.current')}</Label>
                 <Input
                   id="currentPassword"
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Enter current password"
+                  placeholder={t('password.currentPlaceholder')}
                 />
               </div>
 
               {/* New Password */}
               <div className="animate-fade-up-light-slow space-y-2">
-                <Label htmlFor="newPassword">{t('password.new') || 'New Password'}</Label>
+                <Label htmlFor="newPassword">{t('password.new')}</Label>
                 <Input
                   id="newPassword"
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter new password (min 8 characters)"
+                  placeholder={t('password.newPlaceholder')}
                 />
                 <p className="text-xs text-muted-foreground">
-                  {t('password.requirements') || 'Must be at least 8 characters with uppercase, lowercase, number, and special character'}
+                  {t('password.requirements')}
                 </p>
               </div>
 
               {/* Confirm New Password */}
               <div className="animate-fade-up-medium-slow space-y-2">
-                <Label htmlFor="confirmPassword">{t('password.confirm') || 'Confirm New Password'}</Label>
+                <Label htmlFor="confirmPassword">{t('password.confirm')}</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Re-enter new password"
+                  placeholder={t('password.confirmPlaceholder')}
                 />
               </div>
 
@@ -507,12 +527,12 @@ export function ReaderProfilePage() {
                   {isChangingPassword ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {t('password.changing') || 'Changing...'}
+                      {t('password.changing')}
                     </>
                   ) : (
                     <>
                       <Lock className="mr-2 h-4 w-4" />
-                      {t('password.change') || 'Change Password'}
+                      {t('password.change')}
                     </>
                   )}
                 </Button>
@@ -589,7 +609,7 @@ export function ReaderProfilePage() {
                     ) : (
                       <>
                         <Save className="mr-2 h-4 w-4" />
-                        {!hasProfile ? t('actions.create') : t('actions.save')}
+                        {hasProfile ? t('actions.save') : t('actions.create')}
                       </>
                     )}
                   </Button>
@@ -784,7 +804,7 @@ export function ReaderProfilePage() {
                   <div className="pt-4">
                     <Button type="button" className="w-full" onClick={() => navigate(`/reader/wallet`)}>
                       <TrendingUp className="mr-2 h-4 w-4" />
-                      Request Payout
+                      {t('actions.requestPayout')}
                     </Button>
                   </div>
                 )}

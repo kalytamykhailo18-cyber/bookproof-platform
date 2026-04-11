@@ -95,7 +95,7 @@ export function AdminAuthorsPage() {
       setAuthors(data);
     } catch (error: any) {
       console.error('Authors error:', error);
-      toast.error('Failed to load authors');
+      toast.error(t('toast.loadFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -155,12 +155,12 @@ export function AdminAuthorsPage() {
           notes: creditNotes || undefined,
           activationWindowDays: activationWindowDays ? parseInt(activationWindowDays) : 30
         });
-        toast.success('Credits added successfully');
+        toast.success(t('toast.creditsAdded'));
         setAddCreditsDialogOpen(false);
         resetForm();
         await fetchAuthors();
       } catch (error: any) {
-        toast.error(error.response?.data?.message || 'Failed to add credits');
+        toast.error(error.response?.data?.message || t('toast.creditsAddFailed'));
       } finally {
         setIsAddingCredits(false);
       }
@@ -176,12 +176,12 @@ export function AdminAuthorsPage() {
           reason: creditReason,
           notes: creditNotes || undefined
         });
-        toast.success('Credits removed successfully');
+        toast.success(t('toast.creditsRemoved'));
         setRemoveCreditsDialogOpen(false);
         resetForm();
         await fetchAuthors();
       } catch (error: any) {
-        toast.error(error.response?.data?.message || 'Failed to remove credits');
+        toast.error(error.response?.data?.message || t('toast.creditsRemoveFailed'));
       } finally {
         setIsRemovingCredits(false);
       }
@@ -214,14 +214,14 @@ export function AdminAuthorsPage() {
           reason: suspendReason,
           notes: suspendNotes || undefined
         });
-        toast.success('Author suspended successfully');
+        toast.success(t('toast.authorSuspended'));
         setSuspendDialogOpen(false);
         setSuspendReason('');
         setSuspendNotes('');
         setSelectedAuthor(null);
         await fetchAuthors();
       } catch (error: any) {
-        toast.error(error.response?.data?.message || 'Failed to suspend author');
+        toast.error(error.response?.data?.message || t('toast.authorSuspendFailed'));
       } finally {
         setIsSuspending(false);
       }
@@ -236,14 +236,14 @@ export function AdminAuthorsPage() {
           reason: suspendReason,
           notes: suspendNotes || undefined
         });
-        toast.success('Author unsuspended successfully');
+        toast.success(t('toast.authorUnsuspended'));
         setUnsuspendDialogOpen(false);
         setSuspendReason('');
         setSuspendNotes('');
         setSelectedAuthor(null);
         await fetchAuthors();
       } catch (error: any) {
-        toast.error(error.response?.data?.message || 'Failed to unsuspend author');
+        toast.error(error.response?.data?.message || t('toast.authorUnsuspendFailed'));
       } finally {
         setIsUnsuspending(false);
       }
@@ -257,13 +257,13 @@ export function AdminAuthorsPage() {
         await adminAuthorsApi.updateAdminNotes(selectedAuthor.id, {
           adminNotes: adminNotes
         });
-        toast.success('Admin notes updated successfully');
+        toast.success(t('toast.notesUpdated'));
         setNotesDialogOpen(false);
         setAdminNotes('');
         setSelectedAuthor(null);
         await fetchAuthors();
       } catch (error: any) {
-        toast.error(error.response?.data?.message || 'Failed to update admin notes');
+        toast.error(error.response?.data?.message || t('toast.notesUpdateFailed'));
       } finally {
         setIsUpdatingNotes(false);
       }
@@ -402,20 +402,20 @@ export function AdminAuthorsPage() {
                     <SelectItem value="unverified">{t('filters.unverified')}</SelectItem>
                     <SelectItem value="active">{t('filters.withActiveCampaigns')}</SelectItem>
                     <SelectItem value="inactive">{t('filters.noActiveCampaigns')}</SelectItem>
-                    <SelectItem value="suspended">Suspended</SelectItem>
+                    <SelectItem value="suspended">{t('filters.suspended')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div className="flex flex-col gap-4 md:flex-row">
               <div className="w-full md:w-1/2">
-                <Label htmlFor="min-credits">Credit Balance Range</Label>
+                <Label htmlFor="min-credits">{t('filters.creditBalanceRange')}</Label>
                 <div className="flex gap-2 mt-2">
                   <Input
                     id="min-credits"
                     type="number"
                     min="0"
-                    placeholder="Min"
+                    placeholder={t('filters.min')}
                     value={minCredits}
                     onChange={(e) => setMinCredits(e.target.value)}
                   />
@@ -423,7 +423,7 @@ export function AdminAuthorsPage() {
                     id="max-credits"
                     type="number"
                     min="0"
-                    placeholder="Max"
+                    placeholder={t('filters.max')}
                     value={maxCredits}
                     onChange={(e) => setMaxCredits(e.target.value)}
                   />
@@ -439,7 +439,7 @@ export function AdminAuthorsPage() {
                     setMaxCredits('');
                   }}
                 >
-                  Clear Filters
+                  {t('filters.clearFilters')}
                 </Button>
               </div>
             </div>
@@ -473,7 +473,7 @@ export function AdminAuthorsPage() {
                   <TableHead className="text-right">{t('table.totalCredits')}</TableHead>
                   <TableHead className="text-right">{t('table.available')}</TableHead>
                   <TableHead className="text-right">{t('table.used')}</TableHead>
-                  <TableHead className="text-right">Total Spent</TableHead>
+                  <TableHead className="text-right">{t('table.totalSpent')}</TableHead>
                   <TableHead className="text-center">{t('table.campaigns')}</TableHead>
                   <TableHead className="text-right">{t('table.actions')}</TableHead>
                 </TableRow>
@@ -511,7 +511,7 @@ export function AdminAuthorsPage() {
                         {author.isSuspended && (
                           <Badge className="bg-red-100 text-red-800">
                             <Ban className="mr-1 h-3 w-3" />
-                            Suspended
+                            {t('status.suspended')}
                           </Badge>
                         )}
                       </div>
@@ -540,7 +540,7 @@ export function AdminAuthorsPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => navigate(`/admin/authors/${author.id}`)}
-                          title="View Details"
+                          title={t('actions.viewDetails')}
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -553,7 +553,7 @@ export function AdminAuthorsPage() {
                             navigate(`/admin/authors/${author.id}/transactions`);
                           }}
                           disabled={loadingAuthorId === author.id}
-                          title="View Transactions"
+                          title={t('actions.viewTransactions')}
                         >
                           {loadingAuthorId === author.id ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -566,7 +566,7 @@ export function AdminAuthorsPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => openAddCreditsDialog(author)}
-                          title="Add Credits"
+                          title={t('actions.addCredits')}
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
@@ -576,7 +576,7 @@ export function AdminAuthorsPage() {
                           size="sm"
                           onClick={() => openRemoveCreditsDialog(author)}
                           disabled={author.availableCredits === 0}
-                          title="Remove Credits"
+                          title={t('actions.removeCredits')}
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
@@ -585,7 +585,7 @@ export function AdminAuthorsPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => openNotesDialog(author)}
-                          title="Admin Notes"
+                          title={t('actions.adminNotes')}
                         >
                           <FileText className="h-4 w-4" />
                         </Button>
@@ -595,7 +595,7 @@ export function AdminAuthorsPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => openSuspendDialog(author)}
-                            title="Suspend Author"
+                            title={t('actions.suspendAuthor')}
                           >
                             <Ban className="h-4 w-4 text-red-600" />
                           </Button>
@@ -606,7 +606,7 @@ export function AdminAuthorsPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => openUnsuspendDialog(author)}
-                            title="Unsuspend Author"
+                            title={t('actions.unsuspendAuthor')}
                           >
                             <ShieldCheck className="h-4 w-4 text-green-600" />
                           </Button>
@@ -667,7 +667,7 @@ export function AdminAuthorsPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="activation-window-days">
-                Activation Window (days) *
+                {t('dialogs.addCredits.activationWindow')} *
               </Label>
               <Input
                 id="activation-window-days"
@@ -676,10 +676,10 @@ export function AdminAuthorsPage() {
                 max="365"
                 value={activationWindowDays}
                 onChange={(e) => setActivationWindowDays(e.target.value)}
-                placeholder="30"
+                placeholder={t('dialogs.addCredits.activationWindowPlaceholder')}
               />
               <p className="text-sm text-muted-foreground">
-                Number of days before these credits expire (default: 30 days)
+                {t('dialogs.addCredits.activationWindowHelp')}
               </p>
             </div>
           </div>
@@ -776,10 +776,9 @@ export function AdminAuthorsPage() {
       <Dialog open={suspendDialogOpen} onOpenChange={setSuspendDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Suspend Author</DialogTitle>
+            <DialogTitle>{t('dialogs.suspend.title')}</DialogTitle>
             <DialogDescription>
-              Suspend this author account. This will prevent them from creating new campaigns or
-              accessing certain features.
+              {t('dialogs.suspend.description')}
               {selectedAuthor && (
                 <span className="mt-2 block font-semibold">
                   {selectedAuthor.name} ({selectedAuthor.email})
@@ -789,27 +788,27 @@ export function AdminAuthorsPage() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="suspend-reason">Reason *</Label>
+              <Label htmlFor="suspend-reason">{t('dialogs.suspend.reason')} *</Label>
               <Input
                 id="suspend-reason"
                 value={suspendReason}
                 onChange={(e) => setSuspendReason(e.target.value)}
-                placeholder="Enter reason for suspension"
+                placeholder={t('dialogs.suspend.reasonPlaceholder')}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="suspend-notes">Notes</Label>
+              <Label htmlFor="suspend-notes">{t('dialogs.suspend.notes')}</Label>
               <Textarea
                 id="suspend-notes"
                 value={suspendNotes}
                 onChange={(e) => setSuspendNotes(e.target.value)}
-                placeholder="Additional notes (optional)"
+                placeholder={t('dialogs.suspend.notesPlaceholder')}
               />
             </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setSuspendDialogOpen(false)}>
-              Cancel
+              {t('dialogs.suspend.cancel')}
             </Button>
             <Button
               type="button"
@@ -817,7 +816,7 @@ export function AdminAuthorsPage() {
               onClick={handleSuspendAuthor}
               disabled={!suspendReason || isSuspending}
             >
-              {isSuspending ? 'Suspending...' : 'Suspend Author'}
+              {isSuspending ? t('dialogs.suspend.processing') : t('dialogs.suspend.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -827,9 +826,9 @@ export function AdminAuthorsPage() {
       <Dialog open={unsuspendDialogOpen} onOpenChange={setUnsuspendDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Unsuspend Author</DialogTitle>
+            <DialogTitle>{t('dialogs.unsuspend.title')}</DialogTitle>
             <DialogDescription>
-              Restore this author account. They will regain full access to the platform.
+              {t('dialogs.unsuspend.description')}
               {selectedAuthor && (
                 <span className="mt-2 block font-semibold">
                   {selectedAuthor.name} ({selectedAuthor.email})
@@ -839,34 +838,34 @@ export function AdminAuthorsPage() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="unsuspend-reason">Reason *</Label>
+              <Label htmlFor="unsuspend-reason">{t('dialogs.unsuspend.reason')} *</Label>
               <Input
                 id="unsuspend-reason"
                 value={suspendReason}
                 onChange={(e) => setSuspendReason(e.target.value)}
-                placeholder="Enter reason for unsuspension"
+                placeholder={t('dialogs.unsuspend.reasonPlaceholder')}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="unsuspend-notes">Notes</Label>
+              <Label htmlFor="unsuspend-notes">{t('dialogs.unsuspend.notes')}</Label>
               <Textarea
                 id="unsuspend-notes"
                 value={suspendNotes}
                 onChange={(e) => setSuspendNotes(e.target.value)}
-                placeholder="Additional notes (optional)"
+                placeholder={t('dialogs.unsuspend.notesPlaceholder')}
               />
             </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setUnsuspendDialogOpen(false)}>
-              Cancel
+              {t('dialogs.unsuspend.cancel')}
             </Button>
             <Button
               type="button"
               onClick={handleUnsuspendAuthor}
               disabled={!suspendReason || isUnsuspending}
             >
-              {isUnsuspending ? 'Unsuspending...' : 'Unsuspend Author'}
+              {isUnsuspending ? t('dialogs.unsuspend.processing') : t('dialogs.unsuspend.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -876,10 +875,9 @@ export function AdminAuthorsPage() {
       <Dialog open={notesDialogOpen} onOpenChange={setNotesDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Update Admin Notes</DialogTitle>
+            <DialogTitle>{t('dialogs.adminNotes.title')}</DialogTitle>
             <DialogDescription>
-              Add or update internal admin notes for this author. These notes are only visible to
-              administrators.
+              {t('dialogs.adminNotes.description')}
               {selectedAuthor && (
                 <span className="mt-2 block font-semibold">
                   {selectedAuthor.name} ({selectedAuthor.email})
@@ -889,26 +887,26 @@ export function AdminAuthorsPage() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="admin-notes">Admin Notes</Label>
+              <Label htmlFor="admin-notes">{t('dialogs.adminNotes.label')}</Label>
               <Textarea
                 id="admin-notes"
                 value={adminNotes}
                 onChange={(e) => setAdminNotes(e.target.value)}
-                placeholder="Enter admin notes..."
+                placeholder={t('dialogs.adminNotes.placeholder')}
                 rows={6}
               />
             </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setNotesDialogOpen(false)}>
-              Cancel
+              {t('dialogs.adminNotes.cancel')}
             </Button>
             <Button
               type="button"
               onClick={handleUpdateNotes}
               disabled={!adminNotes.trim() || isUpdatingNotes}
             >
-              {isUpdatingNotes ? 'Updating...' : 'Update Notes'}
+              {isUpdatingNotes ? t('dialogs.adminNotes.processing') : t('dialogs.adminNotes.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

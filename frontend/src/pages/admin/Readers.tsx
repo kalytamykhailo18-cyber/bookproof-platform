@@ -1269,10 +1269,10 @@ export function AdminReaderDetailPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-orange-800 dark:text-orange-200">
                 <Shield className="h-5 w-5" />
-                User Account Management
+                {t('userManagement.title')}
               </CardTitle>
               <CardDescription>
-                These actions affect the user account directly, not just the reader profile.
+                {t('userManagement.description')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1286,7 +1286,7 @@ export function AdminReaderDetailPage() {
                     onClick={() => setUnbanDialogOpen(true)}
                   >
                     <UserCheck className="mr-2 h-4 w-4" />
-                    Unban User
+                    {t('userManagement.unbanUser')}
                   </Button>
                 ) : (
                   <Button
@@ -1296,7 +1296,7 @@ export function AdminReaderDetailPage() {
                     onClick={() => setBanDialogOpen(true)}
                   >
                     <Ban className="mr-2 h-4 w-4" />
-                    Ban User
+                    {t('userManagement.banUser')}
                   </Button>
                 )}
 
@@ -1308,7 +1308,7 @@ export function AdminReaderDetailPage() {
                   onClick={() => setResetPasswordDialogOpen(true)}
                 >
                   <Key className="mr-2 h-4 w-4" />
-                  Reset Password
+                  {t('userManagement.resetPassword')}
                 </Button>
 
                 {/* Verify/Unverify Email */}
@@ -1321,12 +1321,12 @@ export function AdminReaderDetailPage() {
                   {reader.emailVerified ? (
                     <>
                       <XCircle className="mr-2 h-4 w-4" />
-                      Unverify Email
+                      {t('userManagement.unverifyEmail')}
                     </>
                   ) : (
                     <>
                       <MailCheck className="mr-2 h-4 w-4" />
-                      Verify Email
+                      {t('userManagement.verifyEmail')}
                     </>
                   )}
                 </Button>
@@ -1339,14 +1339,14 @@ export function AdminReaderDetailPage() {
                   onClick={() => setSendEmailDialogOpen(true)}
                 >
                   <Send className="mr-2 h-4 w-4" />
-                  Send Email
+                  {t('userManagement.sendEmail')}
                 </Button>
               </div>
 
               {reader.isBanned && (
                 <div className="mt-4 rounded-lg bg-red-100 p-3 text-sm text-red-800 dark:bg-red-900/30 dark:text-red-200">
-                  <strong>User is banned</strong>
-                  {reader.banReason && <p className="mt-1">Reason: {reader.banReason}</p>}
+                  <strong>{t('userManagement.userBanned')}</strong>
+                  {reader.banReason && <p className="mt-1">{t('userManagement.reason')}: {reader.banReason}</p>}
                 </div>
               )}
             </CardContent>
@@ -1638,35 +1638,34 @@ export function AdminReaderDetailPage() {
       <Dialog open={banDialogOpen} onOpenChange={setBanDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-red-600">Ban User (Permanent)</DialogTitle>
+            <DialogTitle className="text-red-600">{t('userManagement.banDialog.title')}</DialogTitle>
             <DialogDescription>
-              This will permanently ban the user from the platform. They will not be able to log in
-              or access any features.
+              {t('userManagement.banDialog.description')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="banReason">Reason *</Label>
+              <Label htmlFor="banReason">{t('userManagement.banDialog.reasonLabel')}</Label>
               <Input
                 id="banReason"
                 value={banReason}
                 onChange={(e) => setBanReason(e.target.value)}
-                placeholder="Enter reason for banning this user"
+                placeholder={t('userManagement.banDialog.reasonPlaceholder')}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="banNotes">Additional Notes</Label>
+              <Label htmlFor="banNotes">{t('userManagement.banDialog.notesLabel')}</Label>
               <Textarea
                 id="banNotes"
                 value={banNotes}
                 onChange={(e) => setBanNotes(e.target.value)}
-                placeholder="Optional notes for audit trail"
+                placeholder={t('userManagement.banDialog.notesPlaceholder')}
               />
             </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setBanDialogOpen(false)}>
-              Cancel
+              {t('dialogs.cancel')}
             </Button>
             <Button
               type="button"
@@ -1674,7 +1673,7 @@ export function AdminReaderDetailPage() {
               onClick={handleBanUser}
               disabled={!banReason.trim() || isBanning}
             >
-              {isBanning ? 'Banning...' : 'Ban User'}
+              {isBanning ? t('userManagement.banDialog.banning') : t('userManagement.banDialog.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1684,41 +1683,41 @@ export function AdminReaderDetailPage() {
       <Dialog open={unbanDialogOpen} onOpenChange={setUnbanDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Unban User</DialogTitle>
+            <DialogTitle>{t('userManagement.unbanDialog.title')}</DialogTitle>
             <DialogDescription>
-              This will remove the permanent ban and allow the user to access the platform again.
+              {t('userManagement.unbanDialog.description')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="unbanReason">Reason *</Label>
+              <Label htmlFor="unbanReason">{t('userManagement.unbanDialog.reasonLabel')}</Label>
               <Input
                 id="unbanReason"
                 value={actionReason}
                 onChange={(e) => setActionReason(e.target.value)}
-                placeholder="Enter reason for unbanning this user"
+                placeholder={t('userManagement.unbanDialog.reasonPlaceholder')}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="unbanNotes">Additional Notes</Label>
+              <Label htmlFor="unbanNotes">{t('userManagement.unbanDialog.notesLabel')}</Label>
               <Textarea
                 id="unbanNotes"
                 value={actionNotes}
                 onChange={(e) => setActionNotes(e.target.value)}
-                placeholder="Optional notes for audit trail"
+                placeholder={t('userManagement.unbanDialog.notesPlaceholder')}
               />
             </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setUnbanDialogOpen(false)}>
-              Cancel
+              {t('dialogs.cancel')}
             </Button>
             <Button
               type="button"
               onClick={handleUnbanUser}
               disabled={!actionReason.trim() || isUnbanning}
             >
-              {isUnbanning ? 'Unbanning...' : 'Unban User'}
+              {isUnbanning ? t('userManagement.unbanDialog.unbanning') : t('userManagement.unbanDialog.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1728,38 +1727,37 @@ export function AdminReaderDetailPage() {
       <Dialog open={resetPasswordDialogOpen} onOpenChange={setResetPasswordDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Reset User Password</DialogTitle>
+            <DialogTitle>{t('userManagement.resetPasswordDialog.title')}</DialogTitle>
             <DialogDescription>
-              This will send a password reset email to the user. They will need to click the link
-              to set a new password.
+              {t('userManagement.resetPasswordDialog.description')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="rounded-lg bg-muted p-4">
               <p className="text-sm">
-                <strong>Email:</strong> {reader?.email}
+                <strong>{t('userManagement.resetPasswordDialog.emailLabel')}:</strong> {reader?.email}
               </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="resetReason">Reason (optional)</Label>
+              <Label htmlFor="resetReason">{t('userManagement.resetPasswordDialog.reasonLabel')}</Label>
               <Input
                 id="resetReason"
                 value={actionReason}
                 onChange={(e) => setActionReason(e.target.value)}
-                placeholder="Enter reason for password reset"
+                placeholder={t('userManagement.resetPasswordDialog.reasonPlaceholder')}
               />
             </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setResetPasswordDialogOpen(false)}>
-              Cancel
+              {t('dialogs.cancel')}
             </Button>
             <Button
               type="button"
               onClick={handleResetPassword}
               disabled={isResettingPassword}
             >
-              {isResettingPassword ? 'Sending...' : 'Send Reset Email'}
+              {isResettingPassword ? t('userManagement.resetPasswordDialog.sending') : t('userManagement.resetPasswordDialog.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1770,41 +1768,41 @@ export function AdminReaderDetailPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {reader?.emailVerified ? 'Unverify Email' : 'Verify Email'}
+              {reader?.emailVerified ? t('userManagement.verifyEmailDialog.unverifyTitle') : t('userManagement.verifyEmailDialog.verifyTitle')}
             </DialogTitle>
             <DialogDescription>
               {reader?.emailVerified
-                ? 'This will mark the email as unverified.'
-                : 'This will manually mark the email as verified without requiring the user to click a verification link.'}
+                ? t('userManagement.verifyEmailDialog.unverifyDescription')
+                : t('userManagement.verifyEmailDialog.verifyDescription')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="rounded-lg bg-muted p-4">
               <p className="text-sm">
-                <strong>Email:</strong> {reader?.email}
+                <strong>{t('userManagement.verifyEmailDialog.emailLabel')}:</strong> {reader?.email}
               </p>
               <p className="mt-1 text-sm">
-                <strong>Current Status:</strong>{' '}
+                <strong>{t('userManagement.verifyEmailDialog.currentStatus')}:</strong>{' '}
                 {reader?.emailVerified ? (
-                  <span className="text-green-600">Verified</span>
+                  <span className="text-green-600">{t('userManagement.verifyEmailDialog.verified')}</span>
                 ) : (
-                  <span className="text-red-600">Not Verified</span>
+                  <span className="text-red-600">{t('userManagement.verifyEmailDialog.notVerified')}</span>
                 )}
               </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="verifyReason">Reason (optional)</Label>
+              <Label htmlFor="verifyReason">{t('userManagement.verifyEmailDialog.reasonLabel')}</Label>
               <Input
                 id="verifyReason"
                 value={actionReason}
                 onChange={(e) => setActionReason(e.target.value)}
-                placeholder="Enter reason for verification change"
+                placeholder={t('userManagement.verifyEmailDialog.reasonPlaceholder')}
               />
             </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setVerifyEmailDialogOpen(false)}>
-              Cancel
+              {t('dialogs.cancel')}
             </Button>
             <Button
               type="button"
@@ -1812,10 +1810,10 @@ export function AdminReaderDetailPage() {
               disabled={isUpdatingEmailVerification}
             >
               {isUpdatingEmailVerification
-                ? 'Updating...'
+                ? t('userManagement.verifyEmailDialog.updating')
                 : reader?.emailVerified
-                  ? 'Unverify Email'
-                  : 'Verify Email'}
+                  ? t('userManagement.verifyEmailDialog.unverifyConfirm')
+                  : t('userManagement.verifyEmailDialog.verifyConfirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1825,47 +1823,47 @@ export function AdminReaderDetailPage() {
       <Dialog open={sendEmailDialogOpen} onOpenChange={setSendEmailDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Send Email to User</DialogTitle>
+            <DialogTitle>{t('userManagement.sendEmailDialog.title')}</DialogTitle>
             <DialogDescription>
-              Send a custom email to this user. The email will be sent from the platform.
+              {t('userManagement.sendEmailDialog.description')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="rounded-lg bg-muted p-4">
               <p className="text-sm">
-                <strong>To:</strong> {reader?.email}
+                <strong>{t('userManagement.sendEmailDialog.toLabel')}:</strong> {reader?.email}
               </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="emailSubject">Subject *</Label>
+              <Label htmlFor="emailSubject">{t('userManagement.sendEmailDialog.subjectLabel')}</Label>
               <Input
                 id="emailSubject"
                 value={emailSubject}
                 onChange={(e) => setEmailSubject(e.target.value)}
-                placeholder="Enter email subject"
+                placeholder={t('userManagement.sendEmailDialog.subjectPlaceholder')}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="emailMessage">Message *</Label>
+              <Label htmlFor="emailMessage">{t('userManagement.sendEmailDialog.messageLabel')}</Label>
               <Textarea
                 id="emailMessage"
                 value={emailMessage}
                 onChange={(e) => setEmailMessage(e.target.value)}
-                placeholder="Enter your message"
+                placeholder={t('userManagement.sendEmailDialog.messagePlaceholder')}
                 rows={6}
               />
             </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setSendEmailDialogOpen(false)}>
-              Cancel
+              {t('dialogs.cancel')}
             </Button>
             <Button
               type="button"
               onClick={handleSendEmail}
               disabled={!emailSubject.trim() || !emailMessage.trim() || isSendingEmail}
             >
-              {isSendingEmail ? 'Sending...' : 'Send Email'}
+              {isSendingEmail ? t('userManagement.sendEmailDialog.sending') : t('userManagement.sendEmailDialog.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

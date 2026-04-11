@@ -1,6 +1,10 @@
 {
   "title": "Purchase Credits",
-  "subtitle": "Buy credits to run review campaigns for your books",
+  "subtitle": "Choose a package that fits your needs",
+  "activation": {
+    "title": "About Activation Windows:",
+    "description": "After purchasing credits, you have a specific time window to start using them by creating your first campaign. Once activated, you can continue using the credits for that campaign until completion."
+  },
   "currentBalance": {
     "title": "Current Balance",
     "description": "Your available credits and usage",
@@ -12,42 +16,89 @@
     "title": "Credit Packages",
     "description": "Choose a package that fits your needs",
     "credits": "credits",
-    "validityDays": "Valid for {{days}} days",
+    "validityDays": "Activate within {{days}} days",
     "mostPopular": "Most Popular",
-    "select": "Select Package",
+    "select": "Purchase Package",
     "selected": "Selected",
-    "noPackages": "No packages available at this time"
-  },
-  "coupon": {
-    "title": "Have a Coupon?",
-    "description": "Enter your coupon code for a discount",
-    "label": "Coupon Code",
-    "placeholder": "Enter coupon code"
+    "noPackages": "No packages available at the moment. Please check back later.",
+    "pricePerCredit": "Price per credit",
+    "installments": "In up to 3x interest-free",
+    "features": {
+      "reviews": "{{count}} verified reviews",
+      "validityDays": "{{days}} days to start your campaign",
+      "overbooking": "20% overbooking buffer included",
+      "support": "Email support"
+    }
   },
   "keywordResearch": {
-    "title": "Keyword Research Service",
-    "description": "Get professional keyword research to optimize your book's discoverability",
-    "addLabel": "Include Keyword Research Service",
-    "benefits": "Professional keyword analysis for better book visibility on Amazon",
-    "oneTime": "One-time fee"
+    "title": "Add Keyword Research",
+    "recommended": "Recommended",
+    "description": "Boost your book's discoverability with AI-powered Amazon keyword optimization",
+    "include": "Include Keyword Research (+{{price}})",
+    "perBook": "per book",
+    "features": {
+      "keywords": "Primary, secondary & long-tail keywords",
+      "backend": "Ready-to-use Amazon KDP backend keywords",
+      "report": "Professional PDF report delivered to your email"
+    },
+    "note": "After purchasing credits, you'll be redirected to select which book to apply keyword research to, or you can",
+    "orderSeparately": "order keyword research separately"
   },
-  "orderSummary": {
-    "title": "Order Summary",
-    "coupon": "Coupon",
-    "appliedAtCheckout": "Applied at checkout",
-    "total": "Total"
+  "coupon": {
+    "title": "Have a Coupon Code?",
+    "description": "Enter your coupon code to get a discount on your purchase",
+    "label": "Coupon Code",
+    "placeholder": "ENTER-CODE-HERE",
+    "apply": "Apply",
+    "remove": "Remove",
+    "validating": "Validating...",
+    "applied": "Coupon applied!",
+    "invalid": "Invalid coupon code",
+    "warning": "Note: This coupon may not apply to credit purchases."
   },
-  "checkout": {
-    "processing": "Processing...",
-    "button": "Proceed to Checkout"
+  "history": {
+    "title": "Purchase History",
+    "description": "Your credit purchase transactions",
+    "loading": "Loading transactions...",
+    "noTransactions": "No purchases yet",
+    "noPurchasesMessage": "Purchase your first credit package to get started",
+    "table": {
+      "date": "Date",
+      "package": "Package",
+      "credits": "Credits",
+      "amount": "Amount",
+      "status": "Status",
+      "validity": "Validity",
+      "actions": "Actions",
+      "until": "Until",
+      "noExpiry": "No expiry"
+    }
   },
-  "info": {
-    "title": "How Credits Work",
-    "ebook": "1 credit = 1 ebook review",
-    "audiobook": "2 credits = 1 audiobook review",
-    "validity": "Standard packages valid for 180 days, Enterprise packages valid for 360 days. Credits can be used across multiple campaigns within the validity period. Credits are non-refundable once purchased.",
-    "secure": "Secure payment processing via Stripe"
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "activationWindow": {
+      "question": "What is the activation window?",
+      "answer1": "Each package has an activation window (30, 90, or 120 days depending on the package). You must START using your credits within this timeframe by creating a campaign. Once activated, you can continue using the credits for that campaign until completion.",
+      "answer2": "Example: If you buy the 100-credit package with a 30-day activation window, you have 30 days to create a campaign. Once you create the campaign and allocate credits, those credits don't expire - you can use them until your campaign is complete."
+    },
+    "noActivation": {
+      "question": "What happens if I don't activate within the window?",
+      "answer": "If you don't create a campaign within the activation window, the unused credits will expire. We recommend purchasing credits when you're ready to launch your campaign to avoid losing them."
+    },
+    "refund": {
+      "question": "Can I get a refund?",
+      "answer": "Unused credits can be refunded within 14 days of purchase. Once credits are allocated to a campaign, they become non-refundable."
+    },
+    "paymentMethods": {
+      "question": "What payment methods do you accept?",
+      "answer": "We accept all major credit cards, debit cards, and digital wallets through our secure Stripe payment gateway."
+    },
+    "multipleBooks": {
+      "question": "Can I purchase credits for multiple books?",
+      "answer": "Yes! Credits are added to your account balance and can be allocated to any of your campaigns. However, remember to activate them by creating a campaign within the activation window."
+    }
   },
+  "processing": "Processing...",
   "success": {
     "title": "Payment Successful!",
     "message": "Your credits have been added to your account and are ready to use.",

@@ -69,5 +69,51 @@
     "cancel": "Cancel",
     "deleting": "Deleting...",
     "confirm": "Delete Campaign"
+  },
+  "landingPages": {
+    "title": "Public Landing Pages",
+    "description": "Share these links to let readers discover your campaign",
+    "views": "views",
+    "totalViews": "Total Views",
+    "uniqueVisitors": "Unique Visitors",
+    "english": "English",
+    "portuguese": "Portuguese",
+    "spanish": "Spanish",
+    "unique": "unique",
+    "shareableLinks": "Shareable Links",
+    "copyToClipboard": "Copy to clipboard",
+    "openInNewTab": "Open in new tab",
+    "lastViewed": "Last viewed"
+  },
+  "errors": {
+    "loadCampaign": "Failed to load campaign",
+    "uploadEbook": "Failed to upload ebook",
+    "uploadAudiobook": "Failed to upload audiobook",
+    "uploadCover": "Failed to upload cover image",
+    "uploadSynopsis": "Failed to upload synopsis",
+    "activateCampaign": "Failed to activate campaign",
+    "deleteCampaign": "Failed to delete campaign",
+    "pauseCampaign": "Failed to pause campaign",
+    "resumeCampaign": "Failed to resume campaign"
+  },
+  "success": {
+    "uploadEbook": "Ebook uploaded successfully!",
+    "uploadAudiobook": "Audiobook uploaded successfully!",
+    "uploadCover": "Cover image uploaded successfully!",
+    "uploadSynopsis": "Synopsis uploaded successfully!",
+    "activateCampaign": "Campaign activated successfully!",
+    "deleteCampaign": "Campaign deleted successfully!",
+    "pauseCampaign": "Campaign paused successfully!",
+    "resumeCampaign": "Campaign resumed successfully!"
+  },
+  "loading": {
+    "uploadEbook": "Uploading ebook...",
+    "uploadAudiobook": "Uploading audiobook...",
+    "uploadCover": "Uploading cover image...",
+    "uploadSynopsis": "Uploading synopsis...",
+    "activateCampaign": "Activating campaign...",
+    "deleteCampaign": "Deleting campaign...",
+    "pauseCampaign": "Pausing campaign...",
+    "resumeCampaign": "Resuming campaign..."
   }
 }

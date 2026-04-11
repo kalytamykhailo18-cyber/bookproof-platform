@@ -83,6 +83,38 @@
   },
   "loading": "Cargando panel...",
   "quickActions": {
-    "flaggedReviews": "Reseñas marcadas"
+    "flaggedReviews": "Reseñas marcadas",
+    "disputes": "Disputas",
+    "affiliateApps": "Solicitudes de Afiliados",
+    "payoutRequests": "Solicitudes de Pago",
+    "financialReports": "Informes Financieros",
+    "announcements": "Anuncios"
+  },
+  "cards": {
+    "closers": "Closer",
+    "closersDesc": "Equipo de ventas",
+    "affiliates": "Afiliados",
+    "affiliatesDesc": "Afiliados aprobados",
+    "pendingPayouts": "Pagos Pendientes",
+    "pendingPayoutsDesc": "Solicitudes de pago de lectores y afiliados esperando procesamiento",
+    "validationQueue": "Cola de Validación",
+    "validationQueueDesc": "Reseñas esperando validación del admin",
+    "reviewsInProgress": "Reseñas en Progreso",
+    "overdueReviews": "Reseñas Atrasadas",
+    "overdueReviewsDesc": "Pasó el plazo",
+    "creditsInCirculation": "Créditos en Circulación",
+    "creditsDesc": "Comprados pero no consumidos",
+    "issuesFlagged": "Problemas Marcados",
+    "issuesDesc": "Problemas abiertos",
+    "activeSubscriptions": "Suscripciones Activas"
+  },
+  "systemHealth": {
+    "title": "Salud del Sistema",
+    "database": "Base de Datos",
+    "healthy": "Saludable",
+    "unhealthy": "No Saludable",
+    "redis": "Caché Redis",
+    "jobQueue": "Cola de Trabajos",
+    "lastCheck": "Última verificación de salud"
   }
 }

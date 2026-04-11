@@ -69,5 +69,51 @@
     "cancel": "Cancelar",
     "deleting": "Excluindo...",
     "confirm": "Excluir Campanha"
+  },
+  "landingPages": {
+    "title": "Páginas de Destino Públicas",
+    "description": "Compartilhe esses links para que os leitores descubram sua campanha",
+    "views": "visualizações",
+    "totalViews": "Total de Visualizações",
+    "uniqueVisitors": "Visitantes Únicos",
+    "english": "Inglês",
+    "portuguese": "Português",
+    "spanish": "Espanhol",
+    "unique": "únicos",
+    "shareableLinks": "Links Compartilháveis",
+    "copyToClipboard": "Copiar para área de transferência",
+    "openInNewTab": "Abrir em nova aba",
+    "lastViewed": "Última visualização"
+  },
+  "errors": {
+    "loadCampaign": "Falha ao carregar a campanha",
+    "uploadEbook": "Falha ao enviar o ebook",
+    "uploadAudiobook": "Falha ao enviar o audiolivro",
+    "uploadCover": "Falha ao enviar a imagem de capa",
+    "uploadSynopsis": "Falha ao enviar a sinopse",
+    "activateCampaign": "Falha ao ativar a campanha",
+    "deleteCampaign": "Falha ao excluir a campanha",
+    "pauseCampaign": "Falha ao pausar a campanha",
+    "resumeCampaign": "Falha ao retomar a campanha"
+  },
+  "success": {
+    "uploadEbook": "Ebook enviado com sucesso!",
+    "uploadAudiobook": "Audiolivro enviado com sucesso!",
+    "uploadCover": "Imagem de capa enviada com sucesso!",
+    "uploadSynopsis": "Sinopse enviada com sucesso!",
+    "activateCampaign": "Campanha ativada com sucesso!",
+    "deleteCampaign": "Campanha excluída com sucesso!",
+    "pauseCampaign": "Campanha pausada com sucesso!",
+    "resumeCampaign": "Campanha retomada com sucesso!"
+  },
+  "loading": {
+    "uploadEbook": "Enviando ebook...",
+    "uploadAudiobook": "Enviando audiolivro...",
+    "uploadCover": "Enviando imagem de capa...",
+    "uploadSynopsis": "Enviando sinopse...",
+    "activateCampaign": "Ativando campanha...",
+    "deleteCampaign": "Excluindo campanha...",
+    "pauseCampaign": "Pausando campanha...",
+    "resumeCampaign": "Retomando campanha..."
   }
 }

@@ -21,6 +21,9 @@
   },
   "languages": {
     "title": "Supported Languages",
-    "description": "Our support team can assist you in English, Portuguese, and Spanish — matching your preferred language for a seamless experience."
+    "description": "Our support team can assist you in English, Portuguese, and Spanish — matching your preferred language for a seamless experience.",
+    "english": "English",
+    "portuguese": "Português",
+    "spanish": "Español"
   }
 }

@@ -157,5 +157,9 @@
     "submit": "Desbloquear Cuenta",
     "cancel": "Cancelar",
     "unlocking": "Desbloqueando..."
+  },
+  "accessDenied": {
+    "title": "Acceso Denegado",
+    "description": "No tienes permiso para acceder a la Gestión del Equipo."
   }
 }

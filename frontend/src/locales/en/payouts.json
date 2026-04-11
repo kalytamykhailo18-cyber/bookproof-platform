@@ -80,5 +80,35 @@
     "bankNameRequired": "Bank name is required",
     "walletAddressRequired": "Wallet address is required",
     "networkRequired": "Network is required"
-  }
+  },
+
+  "subtitle": "Manage your earnings and request payouts",
+  "stats": {
+    "readyToPayout": "Ready to request payout",
+    "untilMinimum": "until minimum",
+    "reviewsBeingValidated": "Reviews being validated",
+    "lifetimeEarnings": "Lifetime earnings",
+    "totalPayoutsReceived": "Total payouts received"
+  },
+  "transactions": {
+    "description": "Your earnings and wallet activity",
+    "empty": "No transactions yet",
+    "balance": "Balance",
+    "showing": "Showing {{count}} of {{total}} transactions"
+  },
+  "payouts": {
+    "description": "Your payout requests and their current status",
+    "paymentMethod": "Payment Method"
+  },
+
+  "backToWallet": "Back to Wallet",
+  "payoutRequestTitle": "Payout Request",
+  "payoutRequestDescription": "Enter the amount and payment details",
+  "withdrawFullBalance": "Withdraw Full Balance",
+  "selectPaymentMethod": "Select payment method",
+  "notesPlaceholder": "Any additional notes...",
+  "insufficientBalance": "You need at least {{minAmount}} to request a payout. Current balance: {{currentBalance}}",
+  "amountExceedsBalance": "Amount cannot exceed available balance ({{balance}})",
+  "successMessage": "Payout request submitted successfully",
+  "errorMessage": "Failed to submit payout request"
 }
