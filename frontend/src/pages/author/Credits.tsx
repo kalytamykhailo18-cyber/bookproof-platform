@@ -35,13 +35,35 @@ export function CreditPurchasePage() {
   // Keyword research price (should come from backend/config)
   const keywordResearchPrice = 49.99;
 
-  // Fetch data on mount
+  // Map language to currency
+  const getCurrencyFromLanguage = (lang: string): string => {
+    const langCode = lang.toLowerCase();
+    if (langCode === 'pt') return 'BRL'; // Portuguese → Brazilian Real
+    if (langCode === 'es') return 'USD'; // Spanish → US Dollar
+    return 'USD'; // Default to USD
+  };
+
+  // Format price with proper currency symbol and locale formatting
+  const formatPrice = (price: number, currencyCode: string): string => {
+    if (currencyCode === 'BRL') {
+      // Brazilian format: R$ 1.234,56
+      const formatted = price.toFixed(2).replace('.', ',');
+      const parts = formatted.split(',');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      return `R$ ${parts.join(',')}`;
+    }
+    // USD format: $1,234.56
+    return `$${price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+  };
+
+  // Fetch data on mount and when language changes
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoadingPackages(true);
+        const currency = getCurrencyFromLanguage(i18n.language);
         const [tiersData, balanceData] = await Promise.all([
-          creditsApi.getPackageTiers(),
+          creditsApi.getPackageTiers(currency),
           creditsApi.getCreditBalance()
         ]);
         setPackageTiers(tiersData);
@@ -54,7 +76,7 @@ export function CreditPurchasePage() {
       }
     };
     fetchData();
-  }, []);
+  }, [i18n.language]);
 
   const handlePurchase = async () => {
     if (!selectedPackage) return;
@@ -68,10 +90,12 @@ export function CreditPurchasePage() {
         : `${window.location.origin}/author/credits/success?session_id={CHECKOUT_SESSION_ID}`;
       const cancelUrl = `${window.location.origin}/author/credits/cancel`;
 
+      const currency = getCurrencyFromLanguage(i18n.language);
       const response = await creditsApi.createCheckoutSession({
         packageTierId: selectedPackage,
         couponCode: couponCode || undefined,
         includeKeywordResearch: includeKeywordResearch || undefined,
+        currency,
         successUrl,
         cancelUrl
       });
@@ -181,10 +205,7 @@ export function CreditPurchasePage() {
                   <CardContent>
                     <div className="mb-4">
                       <p className="text-3xl font-bold">
-                        ${pkg.basePrice}
-                        <span className="ml-2 text-base font-normal text-muted-foreground">
-                          {pkg.currency}
-                        </span>
+                        {formatPrice(pkg.basePrice, pkg.currency)}
                       </p>
                       <p className="mt-1 text-sm text-muted-foreground">
                         {pkg.credits} {t('packages.credits')}
@@ -283,7 +304,9 @@ export function CreditPurchasePage() {
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-xl font-bold text-primary">+${keywordResearchPrice}</p>
+                <p className="text-xl font-bold text-primary">
+                  +{formatPrice(keywordResearchPrice, getCurrencyFromLanguage(i18n.language))}
+                </p>
                 <p className="text-xs text-muted-foreground">
                   {t('keywordResearch.oneTime') || 'One-time fee'}
                 </p>
@@ -307,7 +330,10 @@ export function CreditPurchasePage() {
                     {packageTiers.find((p) => p.id === selectedPackage)?.name || 'Credit Package'}
                   </span>
                   <span className="font-medium">
-                    ${packageTiers.find((p) => p.id === selectedPackage)?.basePrice || 0}
+                    {formatPrice(
+                      packageTiers.find((p) => p.id === selectedPackage)?.basePrice || 0,
+                      packageTiers.find((p) => p.id === selectedPackage)?.currency || getCurrencyFromLanguage(i18n.language)
+                    )}
                   </span>
                 </div>
               )}
@@ -316,7 +342,9 @@ export function CreditPurchasePage() {
                   <span className="text-muted-foreground">
                     {t('keywordResearch.title') || 'Keyword Research'}
                   </span>
-                  <span className="font-medium">${keywordResearchPrice}</span>
+                  <span className="font-medium">
+                    {formatPrice(keywordResearchPrice, getCurrencyFromLanguage(i18n.language))}
+                  </span>
                 </div>
               )}
               {couponCode && (
@@ -331,11 +359,11 @@ export function CreditPurchasePage() {
                 <div className="flex justify-between text-lg font-bold">
                   <span>{t('orderSummary.total') || 'Total'}</span>
                   <span>
-                    $
-                    {(
+                    {formatPrice(
                       ((Array.isArray(packageTiers) ? packageTiers.find((p) => p.id === selectedPackage)?.basePrice : 0) || 0) +
-                      (includeKeywordResearch ? keywordResearchPrice : 0)
-                    ).toFixed(2)}
+                      (includeKeywordResearch ? keywordResearchPrice : 0),
+                      packageTiers.find((p) => p.id === selectedPackage)?.currency || getCurrencyFromLanguage(i18n.language)
+                    )}
                   </span>
                 </div>
               </div>
