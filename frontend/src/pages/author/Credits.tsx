@@ -62,10 +62,12 @@ export function CreditPurchasePage() {
       try {
         setIsLoadingPackages(true);
         const currency = getCurrencyFromLanguage(i18n.language);
+        console.log(`💰 Credits Page - Language: ${i18n.language}, Currency: ${currency}`);
         const [tiersData, balanceData] = await Promise.all([
           creditsApi.getPackageTiers(currency),
           creditsApi.getCreditBalance()
         ]);
+        console.log(`💰 Loaded ${tiersData.length} package tiers:`, tiersData.map(t => `${t.name}: ${t.basePrice} ${t.currency}`));
         setPackageTiers(tiersData);
         setCreditBalance(balanceData);
       } catch (err) {
