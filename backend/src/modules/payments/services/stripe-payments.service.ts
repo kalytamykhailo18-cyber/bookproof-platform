@@ -193,6 +193,19 @@ export class StripePaymentsService {
     const authorProfileId = session.metadata!.authorProfileId;
     const packageTierId = session.metadata!.packageTierId;
     const couponCode = session.metadata!.couponCode;
+    const paymentIntentId = session.payment_intent as string;
+
+    // IDEMPOTENCY CHECK: Check if this payment was already processed
+    // This prevents duplicate credit additions when Stripe retries webhooks
+    const existingPurchase = await this.prisma.creditPurchase.findUnique({
+      where: { stripePaymentId: paymentIntentId },
+    });
+
+    if (existingPurchase) {
+      // Payment already processed, return success (idempotent behavior)
+      console.log(`Payment ${paymentIntentId} already processed, skipping duplicate`);
+      return;
+    }
 
     // Get package tier
     const packageTier = await this.prisma.packageTier.findUnique({
