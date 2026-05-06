@@ -58,7 +58,7 @@ export function HeroSection() {
             <div className="flex flex-wrap gap-3 animate-fade-up-slow relative z-10">
               <Link
                 to="/register"
-                className="animate-btn-shine relative overflow-hidden inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-semibold text-white landing-btn-primary"
+                className="animate-btn-shine relative overflow-hidden inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-semibold text-white landing-btn-primary h-12 sm:h-auto"
                 style={{ boxShadow: '0 0 32px rgba(59,130,246,0.45), 0 4px 20px rgba(59,130,246,0.3)' }}
               >
                 {content.ctaPrimary}
@@ -66,7 +66,7 @@ export function HeroSection() {
               </Link>
               <a
                 href="#how-it-works"
-                className="btn-golden-flow inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-medium text-white hover:text-white transition-colors duration-200"
+                className="btn-golden-flow inline-flex items-center gap-2.5 px-7 py-3.5 rounded-md text-base font-medium text-white hover:text-white transition-colors duration-200 h-12 sm:h-auto"
               >
                 <Play className="h-4 w-4 fill-current" />
                 {content.ctaSecondary}

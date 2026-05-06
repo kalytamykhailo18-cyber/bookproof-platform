@@ -204,7 +204,7 @@ export function PricingSection() {
                 {isEnterprise ? (
                   <button
                     onClick={handleOpenModal}
-                    className="block w-full text-center px-4 py-3 rounded-md text-sm font-semibold transition-all duration-200 border cursor-pointer"
+                    className="block w-full text-center px-4 py-3 rounded-md text-sm font-semibold transition-all duration-200 border cursor-pointer h-11 sm:h-auto"
                     style={{ color, borderColor: `${color}35`, background: `${color}0a` }}
                   >
                     {content.enterpriseCta}
@@ -212,7 +212,7 @@ export function PricingSection() {
                 ) : isKeywordTool ? (
                   <Link
                     to="/register"
-                    className="block text-center px-4 py-3 rounded-md text-sm font-semibold text-white transition-all duration-200"
+                    className="flex items-center justify-center text-center px-4 py-3 rounded-md text-sm font-semibold text-white transition-all duration-200 h-11 sm:h-auto"
                     style={{ background: `linear-gradient(135deg, ${color}, #a855f7)`, boxShadow: `0 4px 16px ${color}28` }}
                   >
                     {content.ctaText}
@@ -220,7 +220,7 @@ export function PricingSection() {
                 ) : (
                   <Link
                     to="/register"
-                    className="block text-center px-4 py-3 rounded-md text-sm font-semibold text-white transition-all duration-200"
+                    className="flex items-center justify-center text-center px-4 py-3 rounded-md text-sm font-semibold text-white transition-all duration-200 h-11 sm:h-auto"
                     style={isPopular
                       ? { background: `linear-gradient(135deg, ${color}, #6366f1)`, boxShadow: `0 4px 16px ${color}28` }
                       : { background: `${color}18`, border: `1px solid ${color}28`, color }}
@@ -293,7 +293,7 @@ export function PricingSection() {
                   <p className="text-slate-600">{submitMessage}</p>
                   <button
                     onClick={handleCloseModal}
-                    className="mt-6 px-6 py-2 bg-emerald-600 text-white rounded-md font-medium hover:bg-emerald-700 transition-colors"
+                    className="mt-6 px-6 py-2 bg-emerald-600 text-white rounded-md font-medium hover:bg-emerald-700 transition-colors h-11 sm:h-auto"
                   >
                     {t('contactForm.close', 'Close')}
                   </button>
@@ -322,7 +322,7 @@ export function PricingSection() {
                         required
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors"
+                        className="w-full px-3 py-2.5 sm:py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors min-h-[44px] sm:h-auto"
                         placeholder={t('contactForm.namePlaceholder', 'Your full name')}
                       />
                     </div>
@@ -336,7 +336,7 @@ export function PricingSection() {
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors"
+                        className="w-full px-3 py-2.5 sm:py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors min-h-[44px] sm:h-auto"
                         placeholder={t('contactForm.emailPlaceholder', 'your@email.com')}
                       />
                     </div>
@@ -351,7 +351,7 @@ export function PricingSection() {
                         min={1}
                         value={formData.reviewsNeeded}
                         onChange={(e) => setFormData({ ...formData, reviewsNeeded: parseInt(e.target.value) || 200 })}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors"
+                        className="w-full px-3 py-2.5 sm:py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors min-h-[44px] sm:h-auto"
                       />
                     </div>
 
@@ -376,7 +376,7 @@ export function PricingSection() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-3 bg-emerald-600 text-white rounded-md font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full py-3 bg-emerald-600 text-white rounded-md font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 h-11 sm:h-auto"
                     >
                       {isSubmitting ? (
                         <>
