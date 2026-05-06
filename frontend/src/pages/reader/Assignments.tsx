@@ -113,16 +113,16 @@ export function AssignmentDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto space-y-6 p-6">
-        <Skeleton className="h-12 w-96 animate-pulse" />
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="space-y-6 md:col-span-2">
-            <Skeleton className="h-96 animate-pulse" />
-            <Skeleton className="h-64 animate-pulse" />
+      <div className="container mx-auto space-y-4 sm:space-y-6 px-4 py-6">
+        <Skeleton className="h-10 sm:h-12 w-64 sm:w-96 animate-pulse" />
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
+          <div className="space-y-4 sm:space-y-6 md:col-span-2">
+            <Skeleton className="h-64 sm:h-96 animate-pulse" />
+            <Skeleton className="h-48 sm:h-64 animate-pulse" />
           </div>
-          <div className="space-y-6">
-            <Skeleton className="h-64 animate-pulse" />
-            <Skeleton className="h-32 animate-pulse" />
+          <div className="space-y-4 sm:space-y-6">
+            <Skeleton className="h-48 sm:h-64 animate-pulse" />
+            <Skeleton className="h-24 sm:h-32 animate-pulse" />
           </div>
         </div>
       </div>
@@ -131,13 +131,13 @@ export function AssignmentDetailPage() {
 
   if (!assignment) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto px-4 py-6">
         <Card className="animate-fade-up">
-          <CardContent className="py-16 text-center">
-            <XCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-red-500" />
-            <h3 className="mb-2 text-lg font-semibold">{t('notFound.title')}</h3>
-            <p className="mb-4 text-muted-foreground">{t('notFound.description')}</p>
-            <Button type="button" onClick={() => navigate(`/reader`)}>
+          <CardContent className="py-12 sm:py-16 text-center">
+            <XCircle className="animate-bounce-slow mx-auto mb-4 h-12 sm:h-16 w-12 sm:w-16 text-red-500" />
+            <h3 className="mb-2 text-base sm:text-lg font-semibold">{t('notFound.title')}</h3>
+            <p className="mb-4 text-sm sm:text-base text-muted-foreground">{t('notFound.description')}</p>
+            <Button type="button" onClick={() => navigate(`/reader`)} className="h-11 sm:h-10">
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -261,21 +261,21 @@ export function AssignmentDetailPage() {
   };
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
+    <div className="container mx-auto space-y-4 sm:space-y-6 px-4 py-6">
       {/* Back Button */}
       <div className="animate-fade-right">
-        <Button type="button" variant="ghost" size="sm" onClick={() => navigate(`/reader`)}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => navigate(`/reader`)} className="h-11 sm:h-auto -ml-2">
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToDashboard')}
         </Button>
       </div>
 
       {/* Header */}
-      <div className="flex animate-fade-up items-start justify-between gap-4">
-        <div className="flex-1">
-          <h1 className="mb-2 text-3xl font-bold">{assignment.book.title}</h1>
-          <p className="text-lg text-muted-foreground">by {assignment.book.authorName}</p>
-          <div className="mt-3 flex items-center gap-2">
+      <div className="flex animate-fade-up flex-col sm:flex-row items-start gap-4">
+        <div className="flex-1 w-full">
+          <h1 className="mb-1 sm:mb-2 text-2xl sm:text-3xl font-bold leading-tight">{assignment.book.title}</h1>
+          <p className="text-base sm:text-lg text-muted-foreground">by {assignment.book.authorName}</p>
+          <div className="mt-2 sm:mt-3 flex flex-wrap items-center gap-2">
             <Badge className={getStatusColor(assignment.status)}>
               {assignment.status.replace('_', ' ')}
             </Badge>
@@ -290,14 +290,14 @@ export function AssignmentDetailPage() {
           <img
             src={assignment.book.coverImageUrl}
             alt={assignment.book.title}
-            className="h-48 w-32 animate-zoom-in rounded object-cover shadow-lg"
+            className="h-40 w-28 sm:h-48 sm:w-32 animate-zoom-in rounded object-cover shadow-lg"
           />
         )}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
         {/* Main Content */}
-        <div className="space-y-6 md:col-span-2">
+        <div className="space-y-4 sm:space-y-6 md:col-span-2">
           {/* Deadline Warning */}
           {assignment.deadlineAt && materialsAvailable && (
             <Card
@@ -421,6 +421,7 @@ export function AssignmentDetailPage() {
                       variant="outline"
                       size="sm"
                       onClick={handleSynopsisDownload}
+                      className="h-11 sm:h-auto shrink-0"
                     >
                       <Download className="mr-2 h-4 w-4" />
                       Download
@@ -445,7 +446,7 @@ export function AssignmentDetailPage() {
                     <CardDescription>{t('sections.ebookDownloadDesc')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Button type="button" onClick={handleEbookDownload} className="w-full">
+                    <Button type="button" onClick={handleEbookDownload} className="w-full h-11 sm:h-10">
                       <Download className="mr-2 h-4 w-4" />
                       {t('sections.downloadButton')}
                     </Button>
@@ -521,7 +522,7 @@ export function AssignmentDetailPage() {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Assignment Info */}
           <Card className="animate-fade-left">
             <CardHeader>
@@ -651,7 +652,7 @@ export function AssignmentDetailPage() {
               <CardContent>
                 <Button
                   type="button"
-                  className="w-full"
+                  className="w-full h-11 sm:h-10"
                   onClick={() => navigate(`/reader/assignments/${assignment.id}/submit-review`)}
                 >
                   <Send className="mr-2 h-4 w-4" />
@@ -670,7 +671,7 @@ export function AssignmentDetailPage() {
               <CardContent>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button type="button" variant="destructive" className="w-full" disabled={isWithdrawing}>
+                    <Button type="button" variant="destructive" className="w-full h-11 sm:h-10" disabled={isWithdrawing}>
                       {isWithdrawing ? <Loader2 className="h-4 w-4 animate-spin" /> : t('actions.withdraw')}
                     </Button>
                   </AlertDialogTrigger>
