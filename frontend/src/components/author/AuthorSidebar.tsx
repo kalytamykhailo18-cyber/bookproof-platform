@@ -31,7 +31,12 @@ interface NavSection {
   items: NavItem[];
 }
 
-export function AuthorSidebar() {
+interface AuthorSidebarProps {
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
+}
+
+export function AuthorSidebar({ mobileOpen = false, onMobileClose }: AuthorSidebarProps = {}) {
   const navigate = useNavigate();
   const params = useParams();
   const { pathname } = useLocation();
@@ -98,9 +103,14 @@ export function AuthorSidebar() {
     // Don't navigate if already on this page
     // pathname doesn't include locale, href does, so strip locale from href
     const hrefWithoutLocale = href;
-    if (pathname === hrefWithoutLocale) return;
+    if (pathname === hrefWithoutLocale) {
+      onMobileClose?.();
+      return;
+    }
     setLoadingPath(href);
     navigate(href);
+    // Close mobile drawer after navigation
+    onMobileClose?.();
   };
 
   const isActive = (href: string) => {
@@ -125,12 +135,27 @@ export function AuthorSidebar() {
   };
 
   return (
-    <aside
-      className={cn(
-        'fixed left-0 top-0 z-40 h-screen border-r bg-background transition-all duration-300',
-        collapsed ? 'w-16' : 'w-64'
+    <>
+      {/* Mobile backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          onClick={onMobileClose}
+        />
       )}
-    >
+
+      {/* Sidebar */}
+      <aside
+        className={cn(
+          'fixed left-0 top-0 z-40 h-screen border-r bg-background transition-all duration-300',
+          // Desktop: always visible, collapsible width
+          'lg:translate-x-0',
+          collapsed ? 'lg:w-16' : 'lg:w-64',
+          // Mobile: drawer that slides in from left
+          'w-64',
+          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        )}
+      >
       {/* Logo */}
       <div className="flex h-14 items-center justify-between border-b px-4 bg-primary">
         {!collapsed && <button onClick={() => handleNavigation('/')} className="flex items-center gap-2">
@@ -142,7 +167,7 @@ export function AuthorSidebar() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-white"
+          className="hidden lg:flex h-8 w-8 text-white"
           onClick={() => setCollapsed(!collapsed)}
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
@@ -190,5 +215,6 @@ export function AuthorSidebar() {
         </div>
       </ScrollArea>
     </aside>
+    </>
   );
 }
