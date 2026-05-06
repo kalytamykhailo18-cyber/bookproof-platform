@@ -168,18 +168,18 @@ export function AuthorDashboardPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-6 sm:py-8">
       {/* Header */}
-      <div className="mb-8 flex animate-fade-up items-center justify-between">
+      <div className="mb-6 sm:mb-8 flex animate-fade-up flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
-          <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+          <p className="mt-1 sm:mt-2 text-sm sm:text-base text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-col sm:flex-row">
           <Button
             type="button"
             variant="outline"
-            className="animate-fade-left"
+            className="animate-fade-left h-11 sm:h-10 w-full sm:w-auto"
             onClick={() => navigateTo('credits')}
             disabled={loadingPath === 'credits'}
           >
@@ -188,7 +188,7 @@ export function AuthorDashboardPage() {
           </Button>
           <Button
             type="button"
-            className="animate-fade-left-fast"
+            className="animate-fade-left-fast h-11 sm:h-10 w-full sm:w-auto"
             disabled={loadingPath === 'campaigns/new' || !creditBalance?.availableCredits || creditBalance.availableCredits <= 0}
             title={
               !creditBalance?.availableCredits || creditBalance.availableCredits <= 0
@@ -204,7 +204,7 @@ export function AuthorDashboardPage() {
       </div>
 
       {/* Credit Balance Cards */}
-      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="mb-6 sm:mb-8 grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 md:grid-cols-3">
         <Card className="animate-fade-up-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('creditBalance.available')}</CardTitle>
@@ -266,7 +266,7 @@ export function AuthorDashboardPage() {
       </div>
 
       {/* Campaign Stats Cards - per requirements.md Section 2.1 */}
-      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="mb-6 sm:mb-8 grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2">
         <Card className="animate-zoom-in-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -311,7 +311,7 @@ export function AuthorDashboardPage() {
       </div>
 
       {/* Recent Activity Feed - Section 2.1 */}
-      <div className="mb-8 animate-fade-up">
+      <div className="mb-6 sm:mb-8 animate-fade-up">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -368,7 +368,7 @@ export function AuthorDashboardPage() {
           <Button
             type="button"
             variant="ghost"
-            className="text-primary"
+            className="text-primary h-11 sm:h-auto"
             onClick={() => navigateTo('campaigns')}
             disabled={loadingPath === 'campaigns'}
           >
@@ -408,7 +408,7 @@ export function AuthorDashboardPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-5">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4 text-sm sm:grid-cols-3 md:grid-cols-5">
                       <div>
                         <p className="text-muted-foreground">{t('campaigns.targetReviews')}</p>
                         <p className="font-semibold">{campaign.targetReviews}</p>
@@ -452,6 +452,7 @@ export function AuthorDashboardPage() {
                 type="button"
                 onClick={() => navigateTo('campaigns/new')}
                 disabled={loadingPath === 'campaigns/new'}
+                className="h-11 sm:h-10"
               >
                 {loadingPath === 'campaigns/new' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
                 {t('buttons.newCampaign')}
