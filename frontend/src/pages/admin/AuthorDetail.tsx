@@ -65,9 +65,9 @@ export function AdminAuthorDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto space-y-6 p-6">
+      <div className="container mx-auto space-y-4 sm:space-y-6 px-4 py-6 sm:p-6">
         <Skeleton className="h-10 w-64 animate-pulse" />
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
             <Skeleton key={i} className="h-32 animate-pulse" />
           ))}
@@ -79,11 +79,11 @@ export function AdminAuthorDetailPage() {
 
   if (!author) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto px-4 py-6 sm:p-6">
         <div className="flex flex-col items-center justify-center py-16">
           <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
           <h3 className="text-lg font-semibold">{t('notFound.title')}</h3>
-          <Button onClick={() => navigate('/admin/authors')} className="mt-4">
+          <Button onClick={() => navigate('/admin/authors')} className="mt-4 h-11 sm:h-10">
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t('backToAuthors')}
           </Button>
@@ -119,20 +119,20 @@ export function AdminAuthorDetailPage() {
   };
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
+    <div className="container mx-auto space-y-4 sm:space-y-6 px-4 py-6 sm:p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <Button
             variant="ghost"
             onClick={() => navigate('/admin/authors')}
-            className="mb-2"
+            className="mb-2 h-11 sm:h-10"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t('backToAuthors')}
           </Button>
-          <h1 className="text-3xl font-bold">{author.name}</h1>
-          <p className="text-muted-foreground">{author.email}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">{author.name}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">{author.email}</p>
         </div>
         <div className="flex gap-2">
           {author.isVerified ? (
@@ -156,7 +156,7 @@ export function AdminAuthorDetailPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('stats.availableCredits')}</CardTitle>
@@ -358,6 +358,7 @@ export function AdminAuthorDetailPage() {
                           <Button
                             variant="ghost"
                             size="sm"
+                            className="h-9 sm:h-8"
                             onClick={() => navigate(`/admin/campaigns/${campaign.id}`)}
                           >
                             {t('campaignsTab.table.view')}

@@ -110,7 +110,7 @@ export function AuthorTransactionsPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto space-y-6 p-6">
+      <div className="container mx-auto space-y-4 sm:space-y-6 px-4 py-6 sm:p-6">
         <div className="flex items-center gap-4">
           <Skeleton className="h-10 w-10 animate-pulse" />
           <Skeleton className="h-10 w-64 animate-pulse" />
@@ -123,13 +123,13 @@ export function AuthorTransactionsPage() {
 
   if (isError || !data) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto px-4 py-6 sm:p-6">
         <Card className="animate-fade-up">
           <CardContent className="py-16 text-center">
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-semibold">{t('error.title')}</h3>
             <p className="text-muted-foreground">{t('error.description')}</p>
-            <Button type="button" className="mt-4" onClick={() => navigate(`/admin/authors`)}>
+            <Button type="button" className="mt-4 h-11 sm:h-10" onClick={() => navigate(`/admin/authors`)}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               {t('backToAuthors')}
             </Button>
@@ -140,7 +140,7 @@ export function AuthorTransactionsPage() {
   }
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
+    <div className="container mx-auto space-y-4 sm:space-y-6 px-4 py-6 sm:p-6">
       {/* Header */}
       <div className="flex animate-fade-right items-center gap-4">
         <Button
@@ -156,8 +156,8 @@ export function AuthorTransactionsPage() {
           {isBackLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <ArrowLeft className="h-5 w-5" />}
         </Button>
         <div>
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground">{t('subtitle')}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">{t('subtitle')}</p>
         </div>
       </div>
 
@@ -174,7 +174,7 @@ export function AuthorTransactionsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-3">
             <div className="flex animate-fade-up-fast items-center gap-3 rounded-lg border p-4">
               <CreditCard className="h-8 w-8 text-blue-500" />
               <div>
@@ -321,6 +321,7 @@ export function AuthorTransactionsPage() {
                   type="button"
                   variant="outline"
                   size="sm"
+                  className="h-9 sm:h-8"
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
                   disabled={page === 0}
                 >
@@ -330,6 +331,7 @@ export function AuthorTransactionsPage() {
                   type="button"
                   variant="outline"
                   size="sm"
+                  className="h-9 sm:h-8"
                   onClick={() => setPage((p) => p + 1)}
                   disabled={(page + 1) * limit >= data.totalTransactions}
                 >
