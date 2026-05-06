@@ -127,7 +127,7 @@ export function KeywordResearchListPage() {
       {/* Header */}
       <div className="mb-8 flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Keyword Research</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Keyword Research</h1>
           <p className="mt-2 text-muted-foreground">
             View and manage your keyword research orders
           </p>

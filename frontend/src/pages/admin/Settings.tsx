@@ -431,8 +431,8 @@ export function AdminSettingsPage() {
         <div className="flex items-center gap-3">
           <Settings className="h-8 w-8 text-primary" />
           <div>
-            <h1 className="text-3xl font-bold">{t('title')}</h1>
-            <p className="text-muted-foreground">{t('description')}</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">{t('description')}</p>
           </div>
         </div>
       </div>
@@ -519,7 +519,7 @@ export function AdminSettingsPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Keyword Research Pricing */}
               <div className="animate-fade-up-heavy-slow rounded-lg border p-4">
                 <div className="mb-4 flex items-center justify-between">
@@ -945,7 +945,7 @@ export function AdminSettingsPage() {
               <Skeleton className="h-12 animate-pulse" />
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Edit / View Mode Toggle */}
               <div className="flex justify-end">
                 {!isEditingSystemConfig ? (
@@ -957,7 +957,7 @@ export function AdminSettingsPage() {
 
               {isEditingSystemConfig ? (
                 <Form {...systemConfigForm}>
-                  <div className="space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     {/* Distribution Schedule */}
                     <div className="rounded-lg border p-4">
                       <div className="flex items-center gap-2 mb-4">
@@ -1196,7 +1196,7 @@ export function AdminSettingsPage() {
                   </div>
                 </Form>
               ) : (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {/* Distribution Schedule Display */}
                   <div className="rounded-lg border p-4">
                     <div className="flex items-center gap-2 mb-4">
@@ -1321,7 +1321,7 @@ export function AdminSettingsPage() {
               }
 
               return (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {filteredCategories.map(([category, settings]) => (
                     <div key={category} className="rounded-lg border p-4">
                       <h3 className="text-lg font-semibold capitalize mb-4">

@@ -181,7 +181,7 @@ export function AuthorProfilePage() {
               </div>
             </div>
             {!isEditingBasicInfo && (
-              <Button variant="outline" size="sm" className="h-11 sm:h-auto" onClick={() => setIsEditingBasicInfo(true)}>
+              <Button variant="outline" size="sm" onClick={() => setIsEditingBasicInfo(true)}>
                 <Edit className="mr-2 h-4 w-4" />
                 {t('actions.edit') || 'Edit'}
               </Button>
@@ -293,7 +293,7 @@ export function AuthorProfilePage() {
               </div>
 
               <div className="flex gap-2">
-                <Button onClick={handleUpdateBasicInfo} className="h-11 sm:h-10" disabled={isUpdatingBasicInfo}>
+                <Button onClick={handleUpdateBasicInfo} disabled={isUpdatingBasicInfo}>
                   {isUpdatingBasicInfo ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (

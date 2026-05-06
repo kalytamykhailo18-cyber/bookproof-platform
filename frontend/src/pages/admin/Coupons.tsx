@@ -159,7 +159,7 @@ export function CouponDetailPage() {
           </Button>
           <div>
             <h1 className="font-mono text-3xl font-bold">{coupon.code}</h1>
-            <p className="text-muted-foreground">{t('detail.subtitle')}</p>
+            <p className="text-sm sm:text-base text-muted-foreground">{t('detail.subtitle')}</p>
           </div>
         </div>
         <div className="flex animate-fade-left gap-2">

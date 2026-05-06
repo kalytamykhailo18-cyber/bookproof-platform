@@ -98,7 +98,7 @@ export function AdminAffiliateReportsPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Affiliate Reports</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Affiliate Reports</h1>
           <p className="text-muted-foreground">
             Performance tracking, conversion rates, and commission costs
           </p>

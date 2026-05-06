@@ -194,7 +194,7 @@ export function SubscriptionPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 items-center justify-center">
-          <p className="text-muted-foreground">{t('loading')}</p>
+          <p className="text-sm sm:text-base text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
@@ -203,8 +203,8 @@ export function SubscriptionPage() {
   return (
     <div className="container mx-auto space-y-8 px-4 py-8">
       <div>
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('description')}</p>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">{t('description')}</p>
       </div>
 
       {/* Current Subscription Status */}
@@ -232,7 +232,7 @@ export function SubscriptionPage() {
               </Badge>
             </div>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4 sm:space-y-6">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               <div>
                 <p className="mb-1 text-sm text-muted-foreground">{t('active.monthlyCredits')}</p>
@@ -349,7 +349,7 @@ export function SubscriptionPage() {
             <CardDescription>{t('noSubscription.description')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground">
+            <p className="text-sm sm:text-base text-muted-foreground">
               {t('noSubscription.message')}
             </p>
           </CardContent>
@@ -361,7 +361,7 @@ export function SubscriptionPage() {
         <>
           <div>
             <h2 className="mb-2 text-2xl font-bold">{t('plans.title')}</h2>
-            <p className="text-muted-foreground">
+            <p className="text-sm sm:text-base text-muted-foreground">
               {t('plans.description')}
             </p>
           </div>
@@ -388,7 +388,7 @@ export function SubscriptionPage() {
                   <div>
                     <div className="flex items-baseline gap-2">
                       <span className="text-4xl font-bold">{formatCurrency(plan.pricePerMonth, plan.currency || 'USD', i18n.language)}</span>
-                      <span className="text-muted-foreground">{t('plans.perMonth')}</span>
+                      <span className="text-sm sm:text-base text-muted-foreground">{t('plans.perMonth')}</span>
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">
                       {plan.creditsPerMonth} {t('plans.creditsPerMonth')}

@@ -413,7 +413,7 @@ export function PackageDetailPage() {
           </Button>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold">{pkg.packageName}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold">{pkg.packageName}</h1>
               {getStatusBadge(pkg.status)}
             </div>
             <p className="text-muted-foreground">

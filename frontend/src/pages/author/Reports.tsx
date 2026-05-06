@@ -115,7 +115,7 @@ export function ReportsPage() {
           <Skeleton className="mb-2 h-10 w-64" />
           <Skeleton className="h-6 w-96" />
         </div>
-        <div className="grid gap-6">
+        <div className="grid gap-4 sm:gap-6">
           {[1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-96 w-full" />
           ))}
@@ -128,7 +128,7 @@ export function ReportsPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 animate-fade-up-fast">
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
           <p className="mt-2 text-muted-foreground">{t('description')}</p>
         </div>
 
@@ -148,11 +148,11 @@ export function ReportsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 animate-fade-up-fast">
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
         <p className="mt-2 text-muted-foreground">{t('description')}</p>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid gap-4 sm:gap-6">
         {reportsWithCampaigns.map((report, index) => (
           <Card
             key={report.id}

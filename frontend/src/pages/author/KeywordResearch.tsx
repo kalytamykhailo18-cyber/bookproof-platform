@@ -251,7 +251,7 @@ export function KeywordResearchDetailsPage() {
             <div className="text-center">
               <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="mb-2 text-lg font-semibold">{t('details.notFound')}</h3>
-              <p className="text-muted-foreground">
+              <p className="text-sm sm:text-base text-muted-foreground">
                 {t('details.notFoundDescription')}
               </p>
             </div>
@@ -266,7 +266,7 @@ export function KeywordResearchDetailsPage() {
       {/* Header */}
       <div className="mb-8 flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('details.title')}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('details.title')}</h1>
           <p className="mt-2 text-muted-foreground">{research.bookTitle}</p>
         </div>
         <div className="flex gap-2">

@@ -264,8 +264,8 @@ export function ExceptionsPage() {
       {/* Header */}
       <div className="flex animate-fade-up items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground">{t('description')}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">{t('description')}</p>
         </div>
         <div className="flex gap-2">
           <Dialog open={bulkReassignDialogOpen} onOpenChange={setBulkReassignDialogOpen}>
@@ -321,7 +321,7 @@ export function ExceptionsPage() {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
         <Card className="animate-fade-up-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('stats.overdue')}</CardTitle>

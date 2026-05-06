@@ -279,7 +279,7 @@ export function AdminAffiliateDetailsPage() {
       {/* Header */}
       <div className="flex animate-fade-up items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{affiliate.userName}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">{affiliate.userName}</h1>
           <p className="mt-1 text-muted-foreground">{affiliate.userEmail}</p>
         </div>
         <div className="flex gap-2">

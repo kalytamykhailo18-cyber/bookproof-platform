@@ -102,7 +102,7 @@ export function ReferredAuthorsPage() {
     <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
       {/* Header */}
       <div className="animate-fade-up">
-        <h1 className="text-3xl font-bold">{t('title') || 'Referred Authors'}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title') || 'Referred Authors'}</h1>
         <p className="mt-2 text-muted-foreground">
           {t('description') || 'View all authors you have referred and their purchase activity'}
         </p>
@@ -239,7 +239,7 @@ export function ReferredAuthorsPage() {
               <Skeleton className="h-48 animate-pulse" />
             </div>
           ) : authorDetail ? (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Summary */}
               <div className="rounded-lg bg-muted p-4">
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4">

@@ -156,7 +156,7 @@ export function AffiliateRegisterPage() {
     <div className="container mx-auto max-w-3xl px-4 py-8">
       {/* Header */}
       <div className="mb-8 animate-fade-up">
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
         <p className="mt-2 text-muted-foreground">{t('description')}</p>
       </div>
 
@@ -195,7 +195,7 @@ export function AffiliateRegisterPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <FormField
                 control={form.control}
                 name="websiteUrl"

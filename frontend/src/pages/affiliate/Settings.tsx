@@ -355,7 +355,7 @@ export function SettingsPage() {
             Manage how we use your data (you can withdraw consent anytime)
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 sm:space-y-6">
           {isLoadingConsents ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />

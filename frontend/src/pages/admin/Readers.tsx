@@ -522,7 +522,7 @@ export function AdminReaderDetailPage() {
             <Skeleton className="h-64 animate-pulse" />
             <Skeleton className="h-96 animate-pulse" />
           </div>
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <Skeleton className="h-48 animate-pulse" />
             <Skeleton className="h-64 animate-pulse" />
           </div>
@@ -533,13 +533,13 @@ export function AdminReaderDetailPage() {
 
   if (!reader) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto px-4 py-6 sm:p-6">
         <Card className="animate-fade-up">
           <CardContent className="py-16 text-center">
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-semibold">{t('notFound.title')}</h3>
-            <p className="text-muted-foreground">{t('notFound.description')}</p>
-            <Button type="button" className="mt-4" onClick={() => navigate(`/admin/readers`)}>
+            <p className="text-sm sm:text-base text-muted-foreground">{t('notFound.description')}</p>
+            <Button type="button" className="h-11 sm:h-10 mt-4" onClick={() => navigate(`/admin/readers`)}>
               {t('notFound.backToList')}
             </Button>
           </CardContent>
@@ -571,10 +571,10 @@ export function AdminReaderDetailPage() {
       <div className="flex animate-fade-up items-start justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold">{reader.name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold">{reader.name}</h1>
             {getStatusBadge()}
           </div>
-          <p className="text-muted-foreground">{reader.email}</p>
+          <p className="text-sm sm:text-base text-muted-foreground">{reader.email}</p>
           <p className="text-sm text-muted-foreground">
             {t('detail.joined')}: {new Date(reader.createdAt).toLocaleDateString()}
           </p>
@@ -636,7 +636,7 @@ export function AdminReaderDetailPage() {
         </TabsList>
 
         {/* Overview Tab */}
-        <TabsContent value="overview" className="space-y-6">
+        <TabsContent value="overview" className="space-y-4 sm:space-y-6">
           <div className="grid gap-6 md:grid-cols-3">
             <div className="space-y-6 md:col-span-2">
               {/* Profile Info */}
@@ -647,17 +647,17 @@ export function AdminReaderDetailPage() {
                     {t('overview.profileInfo')}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="grid gap-4 md:grid-cols-2">
+                <CardContent className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2">
                   <div className="animate-fade-up-light-slow">
-                    <Label className="text-muted-foreground">{t('fields.country')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('fields.country')}</Label>
                     <p className="font-medium">{reader.country}</p>
                   </div>
                   <div className="animate-fade-up-medium-slow">
-                    <Label className="text-muted-foreground">{t('fields.language')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('fields.language')}</Label>
                     <p className="font-medium">{reader.language}</p>
                   </div>
                   <div className="animate-fade-up-heavy-slow">
-                    <Label className="text-muted-foreground">{t('fields.contentPreference')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('fields.contentPreference')}</Label>
                     <p className="font-medium">
                       {reader.contentPreference === ContentPreference.EBOOK
                         ? t('contentPreference.ebook')
@@ -667,7 +667,7 @@ export function AdminReaderDetailPage() {
                     </p>
                   </div>
                   <div className="animate-fade-up-extra-slow">
-                    <Label className="text-muted-foreground">{t('fields.preferredGenres')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('fields.preferredGenres')}</Label>
                     <div className="mt-1 flex flex-wrap gap-1">
                       {reader.preferredGenres?.length > 0 ? (
                         reader.preferredGenres.map((genre) => (
@@ -693,31 +693,31 @@ export function AdminReaderDetailPage() {
                     {t('overview.performance')}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="grid gap-4 md:grid-cols-3">
+                <CardContent className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                   <div className="animate-fade-up-fast space-y-2">
-                    <Label className="text-muted-foreground">{t('stats.reliability')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('stats.reliability')}</Label>
                     <div className="flex items-center gap-2">
                       <Progress value={reader.reliabilityScore} className="flex-1" />
                       <span className="font-bold">{reader.reliabilityScore.toFixed(0)}%</span>
                     </div>
                   </div>
                   <div className="animate-fade-up-light-slow space-y-2">
-                    <Label className="text-muted-foreground">{t('stats.completion')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('stats.completion')}</Label>
                     <div className="flex items-center gap-2">
                       <Progress value={reader.completionRate} className="flex-1" />
                       <span className="font-bold">{reader.completionRate.toFixed(0)}%</span>
                     </div>
                   </div>
                   <div className="animate-fade-up-medium-slow">
-                    <Label className="text-muted-foreground">{t('stats.reviewsCompleted')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('stats.reviewsCompleted')}</Label>
                     <p className="text-2xl font-bold text-green-600">{reader.reviewsCompleted}</p>
                   </div>
                   <div className="animate-fade-up-heavy-slow">
-                    <Label className="text-muted-foreground">{t('stats.reviewsExpired')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('stats.reviewsExpired')}</Label>
                     <p className="text-2xl font-bold text-red-600">{reader.reviewsExpired}</p>
                   </div>
                   <div className="animate-fade-up-extra-slow">
-                    <Label className="text-muted-foreground">{t('stats.reviewsRejected')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('stats.reviewsRejected')}</Label>
                     <p className="text-2xl font-bold text-yellow-600">{reader.reviewsRejected}</p>
                   </div>
                 </CardContent>
@@ -768,7 +768,7 @@ export function AdminReaderDetailPage() {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Wallet Summary */}
               <Card className="animate-fade-left-fast">
                 <CardHeader>
@@ -779,18 +779,18 @@ export function AdminReaderDetailPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label className="text-muted-foreground">{t('wallet.balance')}</Label>
-                    <p className="text-3xl font-bold">{formatCurrency(reader.walletBalance, "USD", i18n.language)}</p>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('wallet.balance')}</Label>
+                    <p className="text-2xl sm:text-3xl font-bold">{formatCurrency(reader.walletBalance, "USD", i18n.language)}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-muted-foreground">{t('wallet.totalEarned')}</Label>
+                      <Label className="text-sm sm:text-base text-muted-foreground">{t('wallet.totalEarned')}</Label>
                       <p className="text-lg font-semibold text-green-600">
                         {formatCurrency(reader.totalEarned, "USD", i18n.language)}
                       </p>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground">{t('wallet.totalWithdrawn')}</Label>
+                      <Label className="text-sm sm:text-base text-muted-foreground">{t('wallet.totalWithdrawn')}</Label>
                       <p className="text-lg font-semibold">{formatCurrency(reader.totalWithdrawn, "USD", i18n.language)}</p>
                     </div>
                   </div>
@@ -876,7 +876,7 @@ export function AdminReaderDetailPage() {
         </TabsContent>
 
         {/* Reviews Tab */}
-        <TabsContent value="reviews" className="space-y-6">
+        <TabsContent value="reviews" className="space-y-4 sm:space-y-6">
           <Card className="animate-fade-up">
             <CardHeader>
               <CardTitle>{t('reviews.title')}</CardTitle>
@@ -926,7 +926,7 @@ export function AdminReaderDetailPage() {
         </TabsContent>
 
         {/* Wallet Tab */}
-        <TabsContent value="wallet" className="space-y-6">
+        <TabsContent value="wallet" className="space-y-4 sm:space-y-6">
           <div className="grid gap-6 md:grid-cols-3">
             <Card className="animate-fade-up-fast">
               <CardHeader>
@@ -1058,7 +1058,7 @@ export function AdminReaderDetailPage() {
         </TabsContent>
 
         {/* Amazon Tab */}
-        <TabsContent value="amazon" className="space-y-6">
+        <TabsContent value="amazon" className="space-y-4 sm:space-y-6">
           <Card className="animate-fade-up">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1130,7 +1130,7 @@ export function AdminReaderDetailPage() {
         </TabsContent>
 
         {/* Actions Tab */}
-        <TabsContent value="actions" className="space-y-6">
+        <TabsContent value="actions" className="space-y-4 sm:space-y-6">
           <div className="grid gap-6 md:grid-cols-2">
             <Card className="animate-fade-up-fast">
               <CardHeader>
@@ -1276,7 +1276,7 @@ export function AdminReaderDetailPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
                 {/* Ban/Unban User */}
                 {reader.isBanned ? (
                   <Button

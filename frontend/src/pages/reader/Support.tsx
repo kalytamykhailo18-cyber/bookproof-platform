@@ -178,7 +178,7 @@ export function ReaderSupportPage() {
     <div className="container mx-auto space-y-6 px-4 py-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
           <p className="text-muted-foreground">
             {t('subtitle')}
           </p>

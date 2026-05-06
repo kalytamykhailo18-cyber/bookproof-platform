@@ -313,7 +313,7 @@ export function SettingsPage() {
             </ul>
           </div>
 
-          <Button
+          <Button className="h-11 sm:h-10"
             type="button"
             onClick={handleExportData}
             disabled={isExporting}
@@ -451,7 +451,7 @@ export function SettingsPage() {
         <CardContent>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button type="button" variant="destructive" className="w-full sm:w-auto">
+              <Button className="h-11 sm:h-10" type="button" variant="destructive" className="w-full sm:w-auto">
                 <Trash2 className="h-4 w-4 mr-2" />
                 {t('delete.button')}
               </Button>
@@ -550,7 +550,7 @@ export function SettingsPage() {
                 {t('privacyPolicy.description')}
               </p>
             </div>
-            <Button
+            <Button className="h-11 sm:h-10"
               type="button"
               variant="outline"
               onClick={() => window.open('/privacy', '_blank', 'noopener,noreferrer')}

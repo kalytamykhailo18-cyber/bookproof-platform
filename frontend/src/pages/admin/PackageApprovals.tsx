@@ -119,7 +119,7 @@ export function PackageApprovalsPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto space-y-6 px-4 py-8">
+      <div className="container mx-auto space-y-4 sm:space-y-6 px-4 py-6 sm:py-8">
         <div className="space-y-2">
           <Skeleton className="h-9 w-64 animate-pulse" />
           <Skeleton className="h-5 w-96 animate-pulse" />
@@ -130,14 +130,14 @@ export function PackageApprovalsPage() {
   }
 
   return (
-    <div className="container mx-auto space-y-6 px-4 py-8">
+    <div className="container mx-auto space-y-4 sm:space-y-6 px-4 py-6 sm:py-8">
       {/* Header */}
       <div className="animate-fade-up">
         <div className="flex items-center gap-3">
           <Package className="h-8 w-8 text-orange-500" />
           <div>
-            <h1 className="text-3xl font-bold">{t('packageApprovals.title')}</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl sm:text-3xl font-bold">{t('packageApprovals.title')}</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
               {t('packageApprovals.description')}
             </p>
           </div>
@@ -155,15 +155,15 @@ export function PackageApprovalsPage() {
         <CardContent>
           <div className="grid gap-4 text-sm md:grid-cols-3">
             <div>
-              <p className="text-muted-foreground">{t('packageApprovals.standardRate')}</p>
+              <p className="text-sm sm:text-base text-muted-foreground">{t('packageApprovals.standardRate')}</p>
               <p className="font-semibold">${STANDARD_RATE.toFixed(2)} / credit</p>
             </div>
             <div>
-              <p className="text-muted-foreground">{t('packageApprovals.minimumThreshold')}</p>
+              <p className="text-sm sm:text-base text-muted-foreground">{t('packageApprovals.minimumThreshold')}</p>
               <p className="font-semibold">${MIN_RATE.toFixed(2)} / credit</p>
             </div>
             <div>
-              <p className="text-muted-foreground">{t('packageApprovals.requiresApproval')}</p>
+              <p className="text-sm sm:text-base text-muted-foreground">{t('packageApprovals.requiresApproval')}</p>
               <p className="font-semibold">&lt; ${MIN_RATE.toFixed(2)} / credit</p>
             </div>
           </div>
@@ -260,7 +260,7 @@ export function PackageApprovalsPage() {
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <CheckCircle className="mb-4 h-12 w-12 text-green-500" />
               <p className="text-lg font-medium">{t('packageApprovals.noPending')}</p>
-              <p className="text-muted-foreground">
+              <p className="text-sm sm:text-base text-muted-foreground">
                 {t('packageApprovals.allCaughtUp')}
               </p>
             </div>

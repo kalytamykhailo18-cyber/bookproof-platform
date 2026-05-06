@@ -170,7 +170,7 @@ export function CustomPackageCheckoutPage() {
         <CardDescription>Review your custom package details and proceed to payment</CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4 sm:space-y-6">
         {/* Client Info */}
         <div className="rounded-lg bg-muted/50 p-4">
           <p className="text-sm text-muted-foreground">Prepared for</p>

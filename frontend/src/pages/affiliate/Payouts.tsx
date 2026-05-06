@@ -144,7 +144,7 @@ export function AffiliatePayoutsPage() {
       {/* Header */}
       <div className="flex animate-fade-up items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
           <p className="mt-2 text-muted-foreground">{t('description')}</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

@@ -161,7 +161,7 @@ function AnalyticsTabContent() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{t('analytics.title')}</h3>
         <Button type="button" variant="outline" size="sm" onClick={fetchAnalytics}>
@@ -203,15 +203,15 @@ function AnalyticsTabContent() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-muted-foreground">{t('analytics.totalViews')}</p>
+                  <p className="text-sm sm:text-base text-muted-foreground">{t('analytics.totalViews')}</p>
                   <p className="text-xl font-semibold">{stats.totalViews}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">{t('analytics.totalLeads')}</p>
+                  <p className="text-sm sm:text-base text-muted-foreground">{t('analytics.totalLeads')}</p>
                   <p className="text-xl font-semibold">{stats.totalLeads}</p>
                 </div>
                 <div className="col-span-2">
-                  <p className="text-muted-foreground">{t('analytics.conversionRate')}</p>
+                  <p className="text-sm sm:text-base text-muted-foreground">{t('analytics.conversionRate')}</p>
                   <p className="text-xl font-semibold">{stats.conversionRate.toFixed(2)}%</p>
                 </div>
               </div>
@@ -233,7 +233,7 @@ function AnalyticsTabContent() {
                   <div className="space-y-1">
                     {stats.topSources.slice(0, 3).map((source, idx) => (
                       <div key={idx} className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">{source.source}</span>
+                        <span className="text-sm sm:text-base text-muted-foreground">{source.source}</span>
                         <span>{source.count}</span>
                       </div>
                     ))}
@@ -350,7 +350,7 @@ function LeadsTabContent() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Filters and Actions */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4">
@@ -639,7 +639,7 @@ function CtaSettingsTabContent() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{t('settings.title')}</h3>
         <Button type="button" variant="outline" size="sm" onClick={fetchPages}>
@@ -676,7 +676,7 @@ function CtaSettingsTabContent() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <FormField
                 control={form.control}
                 name="ctaMode"
@@ -824,8 +824,8 @@ export function AdminLandingPagesPage() {
           <div className="flex items-center gap-3">
             <Globe className="h-8 w-8 text-primary" />
             <div>
-              <h1 className="text-3xl font-bold">{t('title')}</h1>
-              <p className="text-muted-foreground">{t('subtitle')}</p>
+              <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">{t('subtitle')}</p>
             </div>
           </div>
         </div>

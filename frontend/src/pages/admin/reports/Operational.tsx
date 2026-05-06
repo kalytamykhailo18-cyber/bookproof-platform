@@ -98,7 +98,7 @@ export function AdminOperationalReportsPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Operational Reports</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Operational Reports</h1>
           <p className="text-muted-foreground">
             Campaign health, reader metrics, and validation statistics
           </p>
@@ -368,7 +368,7 @@ export function AdminOperationalReportsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Summary Statistics */}
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
                   <div>

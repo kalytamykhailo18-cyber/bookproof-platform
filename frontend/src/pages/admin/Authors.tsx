@@ -290,7 +290,7 @@ export function AdminAuthorsPage() {
     return (
       <div className="container mx-auto space-y-6 p-6">
         <Skeleton className="h-10 w-64 animate-pulse" />
-        <div className="grid gap-4 md:grid-cols-5">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-5">
           {[1, 2, 3, 4, 5].map((i) => (
             <Skeleton key={i} className="h-28 animate-pulse" />
           ))}
@@ -305,12 +305,12 @@ export function AdminAuthorsPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('subtitle')}</p>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">{t('subtitle')}</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-5">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-5">
         <Card className="animate-fade-up-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('stats.totalAuthors')}</CardTitle>
@@ -461,7 +461,7 @@ export function AdminAuthorsPage() {
             <div className="animate-fade-up py-16 text-center">
               <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="text-lg font-semibold">{t('empty.title')}</h3>
-              <p className="text-muted-foreground">{t('empty.description')}</p>
+              <p className="text-sm sm:text-base text-muted-foreground">{t('empty.description')}</p>
             </div>
           ) : (
             <Table>

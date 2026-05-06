@@ -288,7 +288,7 @@ export function NewKeywordResearchPage() {
     <div className="container mx-auto max-w-4xl px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">{t('new.title')}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('new.title')}</h1>
         <p className="mt-2 text-muted-foreground">{t('new.subtitle')}</p>
       </div>
 
@@ -328,7 +328,7 @@ export function NewKeywordResearchPage() {
       )}
 
       <Form {...form}>
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Book Selection */}
           <Card>
             <CardHeader>
@@ -637,7 +637,7 @@ export function NewKeywordResearchPage() {
                   : 'Review your order and complete payment'}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4 sm:space-y-6">
               {/* Coupon Code - Only show if NOT from credit purchase */}
               {!fromCreditPurchase && (
                 <FormField

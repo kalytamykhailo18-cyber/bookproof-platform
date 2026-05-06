@@ -168,7 +168,7 @@ export function AuthorSupportPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 items-center justify-center">
-          <p className="text-muted-foreground">{t('loading')}</p>
+          <p className="text-sm sm:text-base text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
@@ -178,8 +178,8 @@ export function AuthorSupportPage() {
     <div className="container mx-auto space-y-6 px-4 py-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
             {t('subtitle')}
           </p>
         </div>

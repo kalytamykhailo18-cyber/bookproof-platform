@@ -110,7 +110,7 @@ export function AdminFinancialReportsPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Financial Reports</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Financial Reports</h1>
           <p className="text-muted-foreground">
             Revenue, payouts, and net revenue analysis
           </p>

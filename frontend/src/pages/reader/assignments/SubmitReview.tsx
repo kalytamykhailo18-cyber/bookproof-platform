@@ -186,12 +186,12 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
 
   if (!assignment) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto px-4 py-6 sm:p-6">
         <Card className="animate-fade-up">
           <CardContent className="py-16 text-center">
             <AlertCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="mb-2 text-lg font-semibold">{t('notFound.title')}</h3>
-            <Button type="button" className="mt-4" onClick={() => navigate(`/reader`)}>
+            <Button type="button" className="h-11 sm:h-10 mt-4" onClick={() => navigate(`/reader`)}>
               {t('backToDashboard')}
             </Button>
           </CardContent>
@@ -240,7 +240,7 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
           <ArrowLeft className="mr-2 h-4 w-4" />
           {t('backToAssignment')}
         </Button>
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
         <p className="text-muted-foreground">{t('subtitle', { title: assignment.book.title })}</p>
       </div>
 
@@ -279,7 +279,7 @@ export function SubmitReviewPage({ params }: { params: { id: string } }) {
             </CardTitle>
             <CardDescription>{t('form.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4 sm:space-y-6">
             {/* Amazon Review Link */}
             <div className="animate-fade-up-fast space-y-2">
               <Label htmlFor="amazonReviewLink">

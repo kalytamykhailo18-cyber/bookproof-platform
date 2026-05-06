@@ -104,7 +104,7 @@ export function CloserDashboardPage() {
       {/* Header */}
       <div className="flex animate-fade-up items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('dashboard.title')}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground">{t('dashboard.description')}</p>
         </div>
         <Button

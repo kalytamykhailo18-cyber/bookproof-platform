@@ -280,7 +280,7 @@ export function EditCampaignPage() {
           {isBackLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ArrowLeft className="mr-2 h-4 w-4" />}
           {t('back')}
         </Button>
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
         <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
       </div>
 
@@ -315,7 +315,7 @@ export function EditCampaignPage() {
             <CardTitle>{tNew(`${currentStep}.title`)}</CardTitle>
             <CardDescription>{tNew(`${currentStep}.description`)}</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4 sm:space-y-6">
             {/* Step 1: Basic Information */}
             {currentStep === 'basic' && (
               <div className="space-y-4">

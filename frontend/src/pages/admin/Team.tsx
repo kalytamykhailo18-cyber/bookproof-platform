@@ -269,7 +269,7 @@ export function AdminTeamPage() {
     return (
       <div className="container mx-auto space-y-6 p-6">
         <Skeleton className="h-10 w-64 animate-pulse" />
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
             <Skeleton key={i} className="h-28 animate-pulse" />
           ))}
@@ -285,8 +285,8 @@ export function AdminTeamPage() {
       {/* Header */}
       <div className="flex animate-fade-up items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground">{t('subtitle')}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">{t('subtitle')}</p>
         </div>
         <div className="flex gap-2">
           <UnlockAccountDialog />
@@ -296,7 +296,7 @@ export function AdminTeamPage() {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
         <Card className="animate-fade-up-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('stats.totalClosers')}</CardTitle>
@@ -411,7 +411,7 @@ export function AdminTeamPage() {
                 <div className="py-16 text-center">
                   <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
                   <h3 className="text-lg font-semibold">{t('closers.empty.title')}</h3>
-                  <p className="text-muted-foreground">{t('closers.empty.description')}</p>
+                  <p className="text-sm sm:text-base text-muted-foreground">{t('closers.empty.description')}</p>
                 </div>
               ) : (
                 <Table>
@@ -503,7 +503,7 @@ export function AdminTeamPage() {
                 <div className="py-16 text-center">
                   <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
                   <h3 className="text-lg font-semibold">{t('admins.empty.title')}</h3>
-                  <p className="text-muted-foreground">{t('admins.empty.description')}</p>
+                  <p className="text-sm sm:text-base text-muted-foreground">{t('admins.empty.description')}</p>
                 </div>
               ) : (
                 <Table>

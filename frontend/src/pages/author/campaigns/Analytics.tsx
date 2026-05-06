@@ -138,7 +138,7 @@ export function CampaignAnalyticsPage() {
         </Button>
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold">{tracking.campaign.bookTitle}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold">{tracking.campaign.bookTitle}</h1>
             <p className="text-muted-foreground">
               {isCompleted
                 ? t('finalReportSubtitle') || 'Campaign Final Report'
@@ -247,7 +247,7 @@ export function CampaignAnalyticsPage() {
             {t('timeline.description') || 'Detailed campaign events and milestones'}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 sm:space-y-6">
           {/* Timeline Events */}
           <div className="relative space-y-4 pl-6 before:absolute before:left-0 before:top-2 before:h-[calc(100%-1rem)] before:w-0.5 before:bg-border">
             {/* Campaign Created */}

@@ -176,12 +176,12 @@ export function AdminIssuesPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('subtitle')}</p>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">{t('subtitle')}</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('stats.openIssues')}</CardTitle>
@@ -236,7 +236,7 @@ export function AdminIssuesPage() {
                 <div className="py-16 text-center">
                   <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
                   <h3 className="mb-2 text-lg font-semibold">{t('openIssues.empty.title')}</h3>
-                  <p className="text-muted-foreground">{t('openIssues.empty.subtitle')}</p>
+                  <p className="text-sm sm:text-base text-muted-foreground">{t('openIssues.empty.subtitle')}</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -368,7 +368,7 @@ export function AdminIssuesPage() {
                 <div className="py-16 text-center">
                   <Shield className="mx-auto mb-4 h-16 w-16 text-blue-500" />
                   <h3 className="mb-2 text-lg font-semibold">{t('monitoring.empty.title')}</h3>
-                  <p className="text-muted-foreground">
+                  <p className="text-sm sm:text-base text-muted-foreground">
                     {t('monitoring.empty.subtitle')}
                   </p>
                 </div>
@@ -407,14 +407,14 @@ export function AdminIssuesPage() {
                             {/* Monitoring Info */}
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               <div>
-                                <p className="text-muted-foreground">{t('monitoring.card.started')}</p>
+                                <p className="text-sm sm:text-base text-muted-foreground">{t('monitoring.card.started')}</p>
                                 <p>
                                   {formatDistanceToNow(new Date(monitor.monitoringStartDate), {
                                     addSuffix: true })}
                                 </p>
                               </div>
                               <div>
-                                <p className="text-muted-foreground">{t('monitoring.card.lastChecked')}</p>
+                                <p className="text-sm sm:text-base text-muted-foreground">{t('monitoring.card.lastChecked')}</p>
                                 <p>
                                   {monitor.lastChecked
                                     ? formatDistanceToNow(new Date(monitor.lastChecked), {
@@ -423,11 +423,11 @@ export function AdminIssuesPage() {
                                 </p>
                               </div>
                               <div>
-                                <p className="text-muted-foreground">{t('monitoring.card.status')}</p>
+                                <p className="text-sm sm:text-base text-muted-foreground">{t('monitoring.card.status')}</p>
                                 <p>{monitor.status}</p>
                               </div>
                               <div>
-                                <p className="text-muted-foreground">{t('monitoring.card.status')}</p>
+                                <p className="text-sm sm:text-base text-muted-foreground">{t('monitoring.card.status')}</p>
                                 <Badge
                                   variant={monitor.stillExistsOnAmazon ? 'default' : 'destructive'}
                                 >

@@ -242,7 +242,7 @@ export function AffiliateDashboardPage() {
       {/* Header */}
       <div className="flex animate-fade-up items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
           <p className="mt-2 text-muted-foreground">
             {t('subtitle')}: <span className="font-mono font-semibold">{profile.referralCode}</span>
           </p>

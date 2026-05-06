@@ -84,7 +84,7 @@ export function AffiliateCommissionsPage() {
     <div className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
       {/* Header */}
       <div className="animate-fade-up">
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
         <p className="mt-2 text-muted-foreground">{t('description')}</p>
       </div>
 

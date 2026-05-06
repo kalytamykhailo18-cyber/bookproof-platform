@@ -126,7 +126,7 @@ export function NotificationSettingsPage() {
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Email Notifications */}
         <Card className="animate-fade-up-fast">
           <CardHeader>
@@ -135,7 +135,7 @@ export function NotificationSettingsPage() {
               {t('email.description')}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4 sm:space-y-6">
             {/* Email Enabled Toggle */}
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">

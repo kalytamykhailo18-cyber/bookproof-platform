@@ -234,12 +234,12 @@ export function AdminValidationPage() {
     <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="animate-fade-up">
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('subtitle')}</p>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">{t('subtitle')}</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
         <Card className="animate-fade-up-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('stats.pending')}</CardTitle>
@@ -333,7 +333,7 @@ export function AdminValidationPage() {
             <div className="animate-fade-up py-16 text-center">
               <CheckCircle className="animate-bounce-slow mx-auto mb-4 h-16 w-16 text-green-500" />
               <h3 className="mb-2 text-lg font-semibold">{t('empty.title')}</h3>
-              <p className="text-muted-foreground">{t('empty.description')}</p>
+              <p className="text-sm sm:text-base text-muted-foreground">{t('empty.description')}</p>
             </div>
           ) : isFetchingPending && (!pendingReviews || pendingReviews.length === 0) ? (
             <div className="space-y-4">

@@ -201,7 +201,7 @@ export function InvoicesPage() {
       {/* Header */}
       <div className="flex animate-fade-up items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('invoices.title')}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('invoices.title')}</h1>
           <p className="text-muted-foreground">{t('invoices.description')}</p>
         </div>
         <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>

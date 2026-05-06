@@ -458,8 +458,8 @@ export function TransactionsPage() {
   return (
     <div className="container mx-auto space-y-6 px-4 py-8">
       <div className="animate-fade-up">
-        <h1 className="text-3xl font-bold">{t('title') || 'Transaction History'}</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title') || 'Transaction History'}</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
           {t('subtitle') ||
             'View all your credit purchases, subscription payments, and credit usage'}
         </p>
@@ -637,7 +637,7 @@ export function TransactionsPage() {
                   className="h-8 w-36"
                   placeholder="Start date"
                 />
-                <span className="text-muted-foreground">to</span>
+                <span className="text-sm sm:text-base text-muted-foreground">to</span>
                 <Input
                   type="date"
                   value={endDate}
@@ -1032,19 +1032,19 @@ export function TransactionsPage() {
                 )}
                 <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <span className="text-muted-foreground">Purchase Amount:</span>{' '}
+                    <span className="text-sm sm:text-base text-muted-foreground">Purchase Amount:</span>{' '}
                     <span className="font-medium">{formatCurrency(eligibility.originalAmount, 'USD', i18n.language)}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Days Since Purchase:</span>{' '}
+                    <span className="text-sm sm:text-base text-muted-foreground">Days Since Purchase:</span>{' '}
                     <span className="font-medium">{eligibility.daysSincePurchase}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Credits Purchased:</span>{' '}
+                    <span className="text-sm sm:text-base text-muted-foreground">Credits Purchased:</span>{' '}
                     <span className="font-medium">{eligibility.creditsAmount}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Credits Remaining:</span>{' '}
+                    <span className="text-sm sm:text-base text-muted-foreground">Credits Remaining:</span>{' '}
                     <span className="font-medium">{eligibility.creditsRemaining}</span>
                   </div>
                 </div>
@@ -1094,7 +1094,7 @@ export function TransactionsPage() {
           ) : (
             <div className="py-8 text-center">
               <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-              <p className="text-muted-foreground">Unable to check eligibility. Please try again.</p>
+              <p className="text-sm sm:text-base text-muted-foreground">Unable to check eligibility. Please try again.</p>
             </div>
           )}
 

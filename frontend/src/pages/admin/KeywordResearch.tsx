@@ -187,7 +187,7 @@ export function AdminKeywordResearchPage() {
     <div className="container mx-auto max-w-7xl px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
         <p className="mt-2 text-muted-foreground">{t('description')}</p>
       </div>
 
@@ -198,7 +198,7 @@ export function AdminKeywordResearchPage() {
             <CardDescription>{t('stats.totalOrders')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">{stats.total}</p>
+            <p className="text-2xl sm:text-3xl font-bold">{stats.total}</p>
           </CardContent>
         </Card>
         <Card>
@@ -277,7 +277,7 @@ export function AdminKeywordResearchPage() {
             </div>
           ) : !filteredResearches || filteredResearches.length === 0 ? (
             <div className="py-12 text-center">
-              <p className="text-muted-foreground">{t('table.noOrders')}</p>
+              <p className="text-sm sm:text-base text-muted-foreground">{t('table.noOrders')}</p>
             </div>
           ) : (
             <Table>
@@ -388,7 +388,7 @@ export function AdminKeywordResearchPage() {
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : selectedResearch ? (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Basic Info */}
               <div className="grid grid-cols-2 gap-4">
                 <div>

@@ -242,7 +242,7 @@ export function DisputesPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 flex-col items-center justify-center gap-4">
           <AlertTriangle className="h-12 w-12 text-destructive" />
-          <p className="text-muted-foreground">{t('messages.loadError')}</p>
+          <p className="text-sm sm:text-base text-muted-foreground">{t('messages.loadError')}</p>
           <Button variant="outline" onClick={fetchDisputes}>
             {t('table.retry', 'Retry')}
           </Button>
@@ -255,18 +255,18 @@ export function DisputesPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex h-64 items-center justify-center">
-          <p className="text-muted-foreground">{t('loading')}</p>
+          <p className="text-sm sm:text-base text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto space-y-6 px-4 py-8">
+    <div className="container mx-auto space-y-4 sm:space-y-6 px-4 py-6 sm:py-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
             {t('subtitle')}
           </p>
         </div>
@@ -344,7 +344,7 @@ export function DisputesPage() {
                   {slaStats.byPriority.map((p) => (
                     <div key={p.priority} className="text-sm">
                       <Badge variant="outline" className="mb-1">{p.priority}</Badge>
-                      <p className="text-muted-foreground">
+                      <p className="text-sm sm:text-base text-muted-foreground">
                         {p.complianceRate.toFixed(0)}% ({p.total - p.breached}/{p.total})
                       </p>
                     </div>

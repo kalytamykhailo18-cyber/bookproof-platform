@@ -202,7 +202,7 @@ export function AdminCampaignDetailPage() {
     return (
       <div className="container mx-auto space-y-6 p-6">
         <Skeleton className="h-10 w-64 animate-pulse" />
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
             <Skeleton key={i} className="h-28 animate-pulse" />
           ))}
@@ -214,12 +214,12 @@ export function AdminCampaignDetailPage() {
 
   if (!analytics || !health) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto px-4 py-6 sm:p-6">
         <Card className="animate-fade-up">
           <CardContent className="py-16 text-center">
             <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-500" />
             <h3 className="text-lg font-semibold">{t('detail.notFound.title')}</h3>
-            <p className="text-muted-foreground">{t('detail.notFound.description')}</p>
+            <p className="text-sm sm:text-base text-muted-foreground">{t('detail.notFound.description')}</p>
             <Button className="mt-4" onClick={() => navigate(`/admin/campaigns`)}>
               {t('detail.backToCampaigns')}
             </Button>
@@ -248,7 +248,7 @@ export function AdminCampaignDetailPage() {
         </Button>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">{analytics.campaign.title}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold">{analytics.campaign.title}</h1>
             <div className="mt-2 flex items-center gap-2">
               {getStatusBadge(analytics.campaign.status)}
               {getHealthStatusBadge(health.status)}
@@ -361,7 +361,7 @@ export function AdminCampaignDetailPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
         <Card className="animate-fade-up-fast">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('detail.stats.progress')}</CardTitle>
@@ -436,20 +436,20 @@ export function AdminCampaignDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2">
                 <div className="space-y-3">
                   <div>
-                    <Label className="text-muted-foreground">{t('detail.overview.targetReviews')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.targetReviews')}</Label>
                     <p className="text-lg font-semibold">{analytics.campaign.targetReviews}</p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">
+                    <Label className="text-sm sm:text-base text-muted-foreground">
                       {t('detail.overview.reviewsDelivered')}
                     </Label>
                     <p className="text-lg font-semibold">{analytics.progress.reviewsDelivered}</p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">
+                    <Label className="text-sm sm:text-base text-muted-foreground">
                       {t('detail.overview.reviewsValidated')}
                     </Label>
                     <p className="text-lg font-semibold text-green-600">
@@ -459,19 +459,19 @@ export function AdminCampaignDetailPage() {
                 </div>
                 <div className="space-y-3">
                   <div>
-                    <Label className="text-muted-foreground">{t('detail.overview.reviewsRejected')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.reviewsRejected')}</Label>
                     <p className="text-lg font-semibold text-red-600">
                       {analytics.progress.reviewsRejected}
                     </p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">{t('detail.overview.reviewsExpired')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.reviewsExpired')}</Label>
                     <p className="text-lg font-semibold text-yellow-600">
                       {analytics.progress.reviewsExpired}
                     </p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">
+                    <Label className="text-sm sm:text-base text-muted-foreground">
                       {t('detail.overview.completionPercentage')}
                     </Label>
                     <p className="text-lg font-semibold">
@@ -491,21 +491,21 @@ export function AdminCampaignDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                 <div>
-                  <Label className="text-muted-foreground">{t('detail.overview.startDate')}</Label>
+                  <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.startDate')}</Label>
                   <p className="text-lg font-semibold">
                     {new Date(analytics.timeline.startDate).toLocaleDateString()}
                   </p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{t('detail.overview.expectedEndDate')}</Label>
+                  <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.expectedEndDate')}</Label>
                   <p className="text-lg font-semibold">
                     {new Date(analytics.timeline.expectedEndDate).toLocaleDateString()}
                   </p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{t('detail.overview.projectedEndDate')}</Label>
+                  <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.projectedEndDate')}</Label>
                   <p className="text-lg font-semibold">
                     {new Date(analytics.timeline.projectedEndDate).toLocaleDateString()}
                   </p>
@@ -528,11 +528,11 @@ export function AdminCampaignDetailPage() {
             <CardContent>
               <div className="space-y-3">
                 <div>
-                  <Label className="text-muted-foreground">{t('detail.overview.authorName')}</Label>
+                  <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.authorName')}</Label>
                   <p className="text-lg font-semibold">{analytics.author.name}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{t('detail.overview.email')}</Label>
+                  <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.email')}</Label>
                   <a
                     href={`mailto:${analytics.author.email}`}
                     className="text-lg font-medium text-blue-600 hover:underline"
@@ -542,7 +542,7 @@ export function AdminCampaignDetailPage() {
                 </div>
                 {analytics.author.company && (
                   <div>
-                    <Label className="text-muted-foreground">{t('detail.overview.company')}</Label>
+                    <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.company')}</Label>
                     <p className="text-lg font-semibold">{analytics.author.company}</p>
                   </div>
                 )}
@@ -564,25 +564,25 @@ export function AdminCampaignDetailPage() {
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">{t('detail.overview.active')}</Label>
+                  <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.active')}</Label>
                   <p className="text-2xl font-bold text-blue-600">
                     {analytics.queueStatistics.activeCount}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">{t('detail.overview.completed')}</Label>
+                  <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.completed')}</Label>
                   <p className="text-2xl font-bold text-green-600">
                     {analytics.queueStatistics.completedCount}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">{t('detail.overview.expired')}</Label>
+                  <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.expired')}</Label>
                   <p className="text-2xl font-bold text-red-600">
                     {analytics.queueStatistics.expiredCount}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">{t('detail.overview.total')}</Label>
+                  <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.total')}</Label>
                   <p className="text-2xl font-bold text-gray-700">
                     {analytics.queueStatistics.totalAssignments}
                   </p>
@@ -606,7 +606,7 @@ export function AdminCampaignDetailPage() {
               {analytics.assignments.length === 0 ? (
                 <div className="text-center py-8">
                   <Users className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">{t('detail.overview.noAssignmentsYet')}</p>
+                  <p className="text-sm sm:text-base text-muted-foreground">{t('detail.overview.noAssignmentsYet')}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -766,9 +766,9 @@ export function AdminCampaignDetailPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                 <div>
-                  <Label className="text-muted-foreground">
+                  <Label className="text-sm sm:text-base text-muted-foreground">
                     {t('detail.distribution.reviewsPerWeek')}
                   </Label>
                   <div className="flex items-center gap-2">
@@ -779,11 +779,11 @@ export function AdminCampaignDetailPage() {
                   </div>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{t('detail.distribution.currentWeek')}</Label>
+                  <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.distribution.currentWeek')}</Label>
                   <p className="text-2xl font-bold">{analytics.distribution.currentWeek}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">{t('detail.distribution.totalWeeks')}</Label>
+                  <Label className="text-sm sm:text-base text-muted-foreground">{t('detail.distribution.totalWeeks')}</Label>
                   <p className="text-2xl font-bold">{analytics.distribution.totalWeeks}</p>
                 </div>
               </div>
