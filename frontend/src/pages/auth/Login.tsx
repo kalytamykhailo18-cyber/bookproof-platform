@@ -224,7 +224,7 @@ export function LoginPage() {
       </div>
 
       {/* ── Right panel — login form ── */}
-      <div className="w-full lg:w-1/2 xl:w-2/5 flex flex-col items-center justify-center px-6 py-12 bg-gray-50">
+      <div className="w-full lg:w-1/2 xl:w-2/5 flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12 bg-gray-50">
         <div className="w-full max-w-md animate-fade-up">
 
           {/* Card */}
@@ -232,7 +232,7 @@ export function LoginPage() {
             {/* Top stripe */}
             <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-blue-400 to-teal-400" />
 
-            <div className="px-8 py-8">
+            <div className="px-5 sm:px-8 py-6 sm:py-8">
               {/* Header */}
               <div className="flex flex-col items-center mb-7">
                 <div className="w-12 h-12 bg-blue-50 rounded-md flex items-center justify-center mb-3">
@@ -251,7 +251,7 @@ export function LoginPage() {
                     type="email"
                     placeholder={t('login.emailPlaceholder')}
                     {...register('email')}
-                    className={errors.email ? 'border-destructive' : ''}
+                    className={`h-11 sm:h-10 ${errors.email ? 'border-destructive' : ''}`}
                     disabled={isLoggingIn}
                   />
                   {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
@@ -264,7 +264,7 @@ export function LoginPage() {
                     type="password"
                     placeholder={t('login.passwordPlaceholder')}
                     {...register('password')}
-                    className={errors.password ? 'border-destructive' : ''}
+                    className={`h-11 sm:h-10 ${errors.password ? 'border-destructive' : ''}`}
                     disabled={isLoggingIn}
                   />
                   {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
@@ -319,7 +319,7 @@ export function LoginPage() {
 
                 <Button
                   type="button"
-                  className="w-full mt-1"
+                  className="w-full mt-1 h-11 sm:h-10"
                   disabled={isLoggingIn}
                   onClick={handleLogin}
                   style={{ backgroundColor: '#3b82f6', fontWeight: 600 }}
@@ -349,11 +349,11 @@ export function LoginPage() {
           </div>
 
           {/* Trust signals */}
-          <div className="mt-5 flex flex-wrap justify-center gap-4">
+          <div className="mt-5 flex flex-wrap justify-center gap-3 sm:gap-4 px-2">
             {(t('login.trustSignals', { returnObjects: true }) as string[]).map((label) => (
               <div key={label} className="flex items-center gap-1.5 text-gray-400 text-xs">
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-                {label}
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />
+                <span className="whitespace-nowrap">{label}</span>
               </div>
             ))}
           </div>
