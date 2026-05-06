@@ -572,11 +572,11 @@ export function NewCampaignPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
+    <div className="container mx-auto max-w-4xl px-4 sm:px-4 py-6 sm:py-8">
       {/* Header */}
       <div className="mb-8 animate-fade-up">
         <div className="mb-4 flex items-center justify-between">
-          <Button type="button" variant="ghost" onClick={() => navigate(-1)}>
+          <Button type="button" variant="ghost" onClick={() => navigate(-1)} className="h-11 sm:h-10">
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t('back') || 'Back'}
           </Button>
@@ -591,6 +591,7 @@ export function NewCampaignPage() {
                   window.location.reload(); // Reload to reset form
                 }
               }}
+              className="h-11 sm:h-10"
             >
               Clear Draft
             </Button>
@@ -648,6 +649,7 @@ export function NewCampaignPage() {
                     id="title"
                     {...register('title')}
                     placeholder={t('bookInfo.bookTitlePlaceholder') || 'Enter book title'}
+                    className="h-11 sm:h-10"
                   />
                   {errors.title && (
                     <p className="mt-1 text-sm text-red-500">{errors.title.message}</p>
@@ -661,7 +663,7 @@ export function NewCampaignPage() {
                   <Input
                     id="subtitle"
                     {...register('subtitle')}
-                    placeholder={t('bookInfo.subtitlePlaceholder') || 'Enter subtitle (optional)'}
+                    placeholder={t('bookInfo.subtitlePlaceholder') || 'Enter subtitle (optional)'} className="h-11 sm:h-10"
                   />
                 </div>
 
@@ -672,17 +674,17 @@ export function NewCampaignPage() {
                     {...register('authorName')}
                     placeholder={
                       t('bookInfo.authorNamePlaceholder') || 'Author name as appears on book'
-                    }
+                    } className="h-11 sm:h-10"
                   />
                   {errors.authorName && (
                     <p className="mt-1 text-sm text-red-500">{errors.authorName.message}</p>
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="animate-fade-up-slow">
                     <Label htmlFor="asin">{t('bookInfo.asin') || 'Amazon ASIN'} *</Label>
-                    <Input id="asin" {...register('asin')} placeholder="B001234567" />
+                    <Input id="asin" {...register('asin')} placeholder="B001234567" className="h-11 sm:h-10" />
                     {errors.asin && (
                       <p className="mt-1 text-sm text-red-500">{errors.asin.message}</p>
                     )}
@@ -694,7 +696,7 @@ export function NewCampaignPage() {
                       value={watch('language')}
                       onValueChange={(value) => setValue('language', value as Language)}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="h-11 sm:h-10">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -713,14 +715,14 @@ export function NewCampaignPage() {
                   <Input
                     id="amazonLink"
                     {...register('amazonLink')}
-                    placeholder="https://www.amazon.com/dp/B001234567"
+                    placeholder="https://www.amazon.com/dp/B001234567" className="h-11 sm:h-10"
                   />
                   {errors.amazonLink && (
                     <p className="mt-1 text-sm text-red-500">{errors.amazonLink.message}</p>
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="animate-zoom-in-fast">
                     <Label htmlFor="genre">{t('bookInfo.genre') || 'Primary Genre'} *</Label>
                     <Input
@@ -728,7 +730,7 @@ export function NewCampaignPage() {
                       {...register('genre')}
                       placeholder={
                         t('bookInfo.genrePlaceholder') || 'e.g., Fantasy, Romance, Thriller'
-                      }
+                      } className="h-11 sm:h-10"
                     />
                     {errors.genre && (
                       <p className="mt-1 text-sm text-red-500">{errors.genre.message}</p>
@@ -744,7 +746,7 @@ export function NewCampaignPage() {
                       {...register('secondaryGenre')}
                       placeholder={
                         t('bookInfo.secondaryGenrePlaceholder') || 'e.g., Adventure, Mystery'
-                      }
+                      } className="h-11 sm:h-10"
                     />
                     {errors.secondaryGenre && (
                       <p className="mt-1 text-sm text-red-500">{errors.secondaryGenre.message}</p>
@@ -758,7 +760,7 @@ export function NewCampaignPage() {
                       {...register('category')}
                       placeholder={
                         t('bookInfo.categoryPlaceholder') || 'e.g., Fiction, Non-Fiction'
-                      }
+                      } className="h-11 sm:h-10"
                     />
                     {errors.category && (
                       <p className="mt-1 text-sm text-red-500">{errors.category.message}</p>
@@ -799,7 +801,7 @@ export function NewCampaignPage() {
                     value={watch('availableFormats')}
                     onValueChange={(value) => setValue('availableFormats', value as BookFormat)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="h-11 sm:h-10">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -981,7 +983,7 @@ export function NewCampaignPage() {
                     {...register('amazonCouponCode')}
                     placeholder={
                       t('files.couponCodePlaceholder') || 'Enter Amazon coupon code for readers'
-                    }
+                    } className="h-11 sm:h-10"
                   />
                   <p className="mt-1 text-sm text-muted-foreground">
                     {t('files.couponCodeHelp') ||
@@ -1083,7 +1085,7 @@ export function NewCampaignPage() {
                       <Input
                         id="slug"
                         {...register('slug')}
-                        placeholder="my-awesome-book"
+                        placeholder="my-awesome-book" className="h-11 sm:h-10"
                       />
                       {errors.slug && (
                         <p className="mt-1 text-sm text-red-500">{errors.slug.message}</p>
@@ -1102,7 +1104,7 @@ export function NewCampaignPage() {
                         <Input
                           id="titleEN"
                           {...register('titleEN')}
-                          placeholder="Leave empty to use main title"
+                          placeholder="Leave empty to use main title" className="h-11 sm:h-10"
                         />
                         <p className="mt-1 text-sm text-muted-foreground">
                           Only fill if different from main title
@@ -1118,7 +1120,7 @@ export function NewCampaignPage() {
                         <Input
                           id="titlePT"
                           {...register('titlePT')}
-                          placeholder="Título em português"
+                          placeholder="Título em português" className="h-11 sm:h-10"
                         />
                         <p className="mt-1 text-sm text-muted-foreground">
                           Only fill if different from main title
@@ -1134,7 +1136,7 @@ export function NewCampaignPage() {
                         <Input
                           id="titleES"
                           {...register('titleES')}
-                          placeholder="Título en español"
+                          placeholder="Título en español" className="h-11 sm:h-10"
                         />
                         <p className="mt-1 text-sm text-muted-foreground">
                           Only fill if different from main title
@@ -1277,7 +1279,7 @@ export function NewCampaignPage() {
                     <p className="text-sm text-muted-foreground">
                       Note: Ebook reviews cost 1 credit each. Audiobook reviews cost 2 credits each.
                     </p>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="ebookCredits">
                           <Book className="mr-1 inline h-4 w-4" />
@@ -1374,7 +1376,7 @@ export function NewCampaignPage() {
                   <h4 className="mb-3 font-semibold">
                     {t('review.bookInfo') || 'Book Information'}
                   </h4>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                     <div>
                       <span className="text-muted-foreground">{t('review.title') || 'Title'}:</span>
                       <p className="font-medium">{watch('title')}</p>
@@ -1553,13 +1555,14 @@ export function NewCampaignPage() {
             variant="outline"
             onClick={handleBack}
             disabled={!canGoBack || isCreating}
+            className="h-11 sm:h-10"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t('previous') || 'Previous'}
           </Button>
 
           {canGoNext ? (
-            <Button type="button" onClick={handleNext} disabled={!isCurrentStepValid || isCreating}>
+            <Button type="button" onClick={handleNext} disabled={!isCurrentStepValid || isCreating} className="h-11 sm:h-10">
               {t('next') || 'Next'}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -1574,6 +1577,7 @@ export function NewCampaignPage() {
                 !confirmTerms ||
                 creditsToAllocate > availableCredits
               }
+              className="h-11 sm:h-10"
             >
               {isCreating ? (
                 <>
