@@ -183,10 +183,10 @@ export function CreditPurchasePage() {
               return (
                 <Card
                   key={pkg.id}
-                  className={`relative cursor-pointer transition-all ${
-                    isSelected ? 'shadow-lg ring-2 ring-primary' : 'hover:shadow-md'
+                  className={`relative ${pkg.name !== 'Enterprise' ? 'cursor-pointer' : ''} transition-all ${
+                    isSelected ? 'shadow-lg ring-2 ring-primary' : pkg.name !== 'Enterprise' ? 'hover:shadow-md' : ''
                   } ${pkg.isPopular ? 'border-primary' : ''} ${animationClass}`}
-                  onClick={() => setSelectedPackage(pkg.id)}
+                  onClick={() => pkg.name !== 'Enterprise' && setSelectedPackage(pkg.id)}
                 >
                   {/* Most Popular Badge - per requirements.md Section 2.2 */}
                   {pkg.isPopular && (
@@ -206,12 +206,25 @@ export function CreditPurchasePage() {
                   </CardHeader>
                   <CardContent>
                     <div className="mb-4">
-                      <p className="text-3xl font-bold">
-                        {formatPrice(pkg.basePrice, pkg.currency)}
-                      </p>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {pkg.credits} {t('packages.credits')}
-                      </p>
+                      {pkg.name === 'Enterprise' ? (
+                        <>
+                          <p className="text-3xl font-bold">
+                            {t('packages.custom') || 'Custom'}
+                          </p>
+                          <p className="mt-1 text-sm text-muted-foreground">
+                            {t('packages.contactSales') || 'Contact Sales'}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-3xl font-bold">
+                            {formatPrice(pkg.basePrice, pkg.currency)}
+                          </p>
+                          <p className="mt-1 text-sm text-muted-foreground">
+                            {pkg.credits} {t('packages.credits')}
+                          </p>
+                        </>
+                      )}
                     </div>
 
                     <div className="space-y-2">
@@ -232,9 +245,23 @@ export function CreditPurchasePage() {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button type="button" className="w-full" variant={isSelected ? 'default' : 'outline'}>
-                      {isSelected ? t('packages.selected') : t('packages.select')}
-                    </Button>
+                    {pkg.name === 'Enterprise' ? (
+                      <Button
+                        type="button"
+                        className="w-full"
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.location.href = 'mailto:support@bookproof.app?subject=Enterprise%20Plan%20Inquiry';
+                        }}
+                      >
+                        {t('packages.contactSales')}
+                      </Button>
+                    ) : (
+                      <Button type="button" className="w-full" variant={isSelected ? 'default' : 'outline'}>
+                        {isSelected ? t('packages.selected') : t('packages.select')}
+                      </Button>
+                    )}
                   </CardFooter>
                 </Card>
               );

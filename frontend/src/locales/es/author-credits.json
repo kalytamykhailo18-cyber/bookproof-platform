@@ -23,6 +23,8 @@
     "noPackages": "No hay paquetes disponibles en este momento. Por favor, vuelva más tarde.",
     "pricePerCredit": "Precio por crédito",
     "installments": "En hasta 3x sin intereses",
+    "custom": "Personalizado",
+    "contactSales": "Contactar Ventas",
     "features": {
       "reviews": "{{count}} reseñas verificadas",
       "validityDays": "{{days}} días para iniciar tu campaña",

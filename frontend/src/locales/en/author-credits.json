@@ -23,6 +23,8 @@
     "noPackages": "No packages available at the moment. Please check back later.",
     "pricePerCredit": "Price per credit",
     "installments": "In up to 3x interest-free",
+    "custom": "Custom",
+    "contactSales": "Contact Sales",
     "features": {
       "reviews": "{{count}} verified reviews",
       "validityDays": "{{days}} days to start your campaign",
