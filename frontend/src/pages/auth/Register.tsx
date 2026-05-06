@@ -284,7 +284,7 @@ export function RegisterPage() {
       </div>
 
       {/* ── Right panel — register form ── */}
-      <div className="w-full lg:w-7/12 xl:w-3/5 flex flex-col items-center justify-start px-6 py-12 bg-gray-50 overflow-y-auto">
+      <div className="w-full lg:w-7/12 xl:w-3/5 flex flex-col items-center justify-start px-4 sm:px-6 py-8 sm:py-12 bg-gray-50 overflow-y-auto">
         <div className="w-full max-w-xl animate-fade-up">
 
           {/* Card */}
@@ -292,7 +292,7 @@ export function RegisterPage() {
             {/* Top stripe */}
             <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-purple-400 to-teal-400" />
 
-            <div className="px-8 py-8">
+            <div className="px-5 sm:px-8 py-6 sm:py-8">
               {/* Header */}
               <div className="flex flex-col items-center mb-7">
                 <div className="w-12 h-12 bg-blue-50 rounded-md flex items-center justify-center mb-3">
@@ -312,7 +312,7 @@ export function RegisterPage() {
                     id="name"
                     placeholder={t('namePlaceholder')}
                     {...register('name')}
-                    className={errors.name ? 'border-destructive' : ''}
+                    className={`h-11 sm:h-10 ${errors.name ? 'border-destructive' : ''}`}
                     disabled={isRegistering}
                   />
                   {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
@@ -326,7 +326,7 @@ export function RegisterPage() {
                     type="email"
                     placeholder={t('emailPlaceholder')}
                     {...register('email')}
-                    className={errors.email ? 'border-destructive' : ''}
+                    className={`h-11 sm:h-10 ${errors.email ? 'border-destructive' : ''}`}
                     disabled={isRegistering}
                   />
                   {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
@@ -347,7 +347,7 @@ export function RegisterPage() {
                     </ul>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="space-y-1.5">
                       <Label htmlFor="password">{t('password')}</Label>
                       <Input
@@ -355,7 +355,7 @@ export function RegisterPage() {
                         type="password"
                         placeholder="••••••••"
                         {...register('password')}
-                        className={errors.password ? 'border-destructive' : ''}
+                        className={`h-11 sm:h-10 ${errors.password ? 'border-destructive' : ''}`}
                         disabled={isRegistering}
                       />
                       {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
@@ -367,7 +367,7 @@ export function RegisterPage() {
                         type="password"
                         placeholder="••••••••"
                         {...register('confirmPassword')}
-                        className={errors.confirmPassword ? 'border-destructive' : ''}
+                        className={`h-11 sm:h-10 ${errors.confirmPassword ? 'border-destructive' : ''}`}
                         disabled={isRegistering}
                       />
                       {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
@@ -378,7 +378,7 @@ export function RegisterPage() {
                 {/* Role selector */}
                 <div className="space-y-2">
                   <Label>{t('role')}</Label>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {roles.map(({ key, icon: Icon, color, title, desc }) => {
                       const isSelected = selectedRole === key;
                       return (
@@ -386,7 +386,7 @@ export function RegisterPage() {
                           key={key}
                           type="button"
                           onClick={() => setValue('role', key as 'AUTHOR' | 'READER' | 'AFFILIATE')}
-                          className="flex flex-col items-center gap-2 p-3 rounded-md border-2 transition-all text-center"
+                          className="flex flex-col items-center gap-2 p-4 sm:p-3 rounded-md border-2 transition-all text-center min-h-[100px] sm:min-h-0"
                           style={isSelected
                             ? { borderColor: color, background: `${color}0f` }
                             : { borderColor: '#e5e7eb', background: '#fff' }}
@@ -405,11 +405,11 @@ export function RegisterPage() {
                 </div>
 
                 {/* Country + Phone */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
                     <Label>{t('country') || 'Country'} *</Label>
                     <Select onValueChange={(value) => setValue('country', value)} disabled={isRegistering}>
-                      <SelectTrigger className={errors.country ? 'border-destructive' : ''}>
+                      <SelectTrigger className={`h-11 sm:h-10 ${errors.country ? 'border-destructive' : ''}`}>
                         <SelectValue placeholder={t('selectCountryPlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -436,7 +436,7 @@ export function RegisterPage() {
                       type="tel"
                       placeholder={isBrazilian ? '+55 11 99999-9999' : '+1 (555) 123-4567'}
                       {...register('phone')}
-                      className={errors.phone ? 'border-destructive' : ''}
+                      className={`h-11 sm:h-10 ${errors.phone ? 'border-destructive' : ''}`}
                       disabled={isRegistering}
                     />
                     {errors.phone && <p className="text-sm text-destructive">{errors.phone.message}</p>}
@@ -450,7 +450,7 @@ export function RegisterPage() {
                     <Input
                       placeholder="000.000.000-00"
                       {...register('cpf')}
-                      className={errors.cpf ? 'border-destructive' : ''}
+                      className={`h-11 sm:h-10 ${errors.cpf ? 'border-destructive' : ''}`}
                       disabled={isRegistering}
                     />
                     <p className="text-xs text-gray-400">
@@ -461,11 +461,11 @@ export function RegisterPage() {
                 )}
 
                 {/* Language + Currency */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
                     <Label>{t('language')}</Label>
                     <Select onValueChange={(v) => setValue('preferredLanguage', v as 'EN' | 'PT' | 'ES')} defaultValue="EN" disabled={isRegistering}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectTrigger className="h-11 sm:h-10"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="EN">{tAuth('languages.english', 'English')}</SelectItem>
                         <SelectItem value="PT">{tAuth('languages.portuguese', 'Português')}</SelectItem>
@@ -476,7 +476,7 @@ export function RegisterPage() {
                   <div className="space-y-1.5">
                     <Label>{t('currency')}</Label>
                     <Select value={selectedCurrency} onValueChange={(v) => setValue('preferredCurrency', v)} disabled>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectTrigger className="h-11 sm:h-10"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="USD">USD ($)</SelectItem>
                         <SelectItem value="EUR">EUR (€)</SelectItem>
@@ -496,7 +496,7 @@ export function RegisterPage() {
                     <Input
                       placeholder={t('companyNamePlaceholder') || 'Your publishing company (optional)'}
                       {...register('companyName')}
-                      className={errors.companyName ? 'border-destructive' : ''}
+                      className={`h-11 sm:h-10 ${errors.companyName ? 'border-destructive' : ''}`}
                       disabled={isRegistering}
                     />
                     {errors.companyName && <p className="text-sm text-destructive">{errors.companyName.message}</p>}
@@ -509,7 +509,7 @@ export function RegisterPage() {
                     <div className="space-y-1.5">
                       <Label>{t('contentPreference') || 'Content Format Preference'} *</Label>
                       <Select onValueChange={(v) => setValue('contentPreference', v as 'EBOOK' | 'AUDIOBOOK' | 'BOTH')} disabled={isRegistering}>
-                        <SelectTrigger className={errors.contentPreference ? 'border-destructive' : ''}>
+                        <SelectTrigger className={`h-11 sm:h-10 ${errors.contentPreference ? 'border-destructive' : ''}`}>
                           <SelectValue placeholder={t('selectFormatPlaceholder')} />
                         </SelectTrigger>
                         <SelectContent>
@@ -530,7 +530,7 @@ export function RegisterPage() {
                             placeholder="https://www.amazon.com/gp/profile/..."
                             value={link}
                             onChange={(e) => handleAmazonLinkChange(index, e.target.value)}
-                            className={errors.amazonProfileLinks ? 'border-destructive' : ''}
+                            className={`h-11 sm:h-10 ${errors.amazonProfileLinks ? 'border-destructive' : ''}`}
                             disabled={isRegistering}
                           />
                           {amazonLinks.length > 1 && (
@@ -555,13 +555,13 @@ export function RegisterPage() {
                   <div className="space-y-5">
                     <div className="space-y-1.5">
                       <Label>{t('websiteUrl') || 'Website URL'} *</Label>
-                      <Input type="url" placeholder="https://yourblog.com" {...register('websiteUrl')} className={errors.websiteUrl ? 'border-destructive' : ''} disabled={isRegistering} />
+                      <Input type="url" placeholder="https://yourblog.com" {...register('websiteUrl')} className={`h-11 sm:h-10 ${errors.websiteUrl ? 'border-destructive' : ''}`} disabled={isRegistering} />
                       {errors.websiteUrl && <p className="text-sm text-destructive">{errors.websiteUrl.message}</p>}
                     </div>
 
                     <div className="space-y-1.5">
                       <Label>{t('socialMediaUrls') || 'Social Media URLs'}</Label>
-                      <Input placeholder="https://twitter.com/you, https://instagram.com/you" {...register('socialMediaUrls')} disabled={isRegistering} />
+                      <Input placeholder="https://twitter.com/you, https://instagram.com/you" {...register('socialMediaUrls')} className="h-11 sm:h-10" disabled={isRegistering} />
                       <p className="text-xs text-gray-400">{t('commaSeparatedHint')}</p>
                     </div>
 
@@ -576,21 +576,21 @@ export function RegisterPage() {
                       {errors.promotionPlan && <p className="text-sm text-destructive">{errors.promotionPlan.message}</p>}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
                         <Label>{t('estimatedReach') || 'Est. Audience Reach'}</Label>
-                        <Input placeholder="e.g. 10,000 monthly visitors" {...register('estimatedReach')} disabled={isRegistering} />
+                        <Input placeholder="e.g. 10,000 monthly visitors" {...register('estimatedReach')} className="h-11 sm:h-10" disabled={isRegistering} />
                       </div>
                       <div className="space-y-1.5">
                         <Label>{t('preferredSlug') || 'Referral Slug'}</Label>
-                        <Input placeholder="my-book-blog" {...register('preferredSlug')} className={errors.preferredSlug ? 'border-destructive' : ''} disabled={isRegistering} />
+                        <Input placeholder="my-book-blog" {...register('preferredSlug')} className={`h-11 sm:h-10 ${errors.preferredSlug ? 'border-destructive' : ''}`} disabled={isRegistering} />
                         {errors.preferredSlug && <p className="text-sm text-destructive">{errors.preferredSlug.message}</p>}
                       </div>
                     </div>
 
                     <div className="space-y-1.5">
                       <Label>{t('paypalEmail') || 'PayPal Email'}</Label>
-                      <Input type="email" placeholder="payments@youremail.com" {...register('paypalEmail')} className={errors.paypalEmail ? 'border-destructive' : ''} disabled={isRegistering} />
+                      <Input type="email" placeholder="payments@youremail.com" {...register('paypalEmail')} className={`h-11 sm:h-10 ${errors.paypalEmail ? 'border-destructive' : ''}`} disabled={isRegistering} />
                       {errors.paypalEmail && <p className="text-sm text-destructive">{errors.paypalEmail.message}</p>}
                     </div>
                   </div>
@@ -628,7 +628,7 @@ export function RegisterPage() {
                 {/* Submit */}
                 <Button
                   type="button"
-                  className="w-full mt-1"
+                  className="w-full mt-1 h-11 sm:h-10"
                   disabled={isRegistering}
                   onClick={handleRegister}
                   style={{ backgroundColor: '#3b82f6', fontWeight: 600 }}
