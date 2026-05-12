@@ -25,14 +25,14 @@
   "packages": {
     "starter": {
       "name": "Starter",
-      "credits": "20 Credits",
-      "price": "$97",
+      "credits": "25 Credits",
+      "price": "$197",
       "validity": "180 days to activate",
-      "reviews": "20 ebook reviews",
+      "reviews": "25 ebook reviews",
       "duration": "Up to 8 weeks",
       "subtitle": "",
       "features": [
-        "20 ebook reviews or 10 audiobook reviews",
+        "25 ebook reviews or 12 audiobook reviews",
         "Progressive weekly distribution (organic delivery)",
         "Up to 8 weeks of natural ranking growth",
         "14-day replacement guarantee",
@@ -40,10 +40,10 @@
         "Email support"
       ]
     },
-    "growth": {
-      "name": "Growth",
+    "basic": {
+      "name": "Basic",
       "credits": "50 Credits",
-      "price": "$197",
+      "price": "$367",
       "validity": "180 days to activate",
       "reviews": "50 ebook reviews",
       "duration": "Up to 8 weeks",
@@ -55,14 +55,13 @@
         "14-day replacement guarantee",
         "Real-time campaign dashboard",
         "Email support"
-      ],
-      "popular": true
+      ]
     },
-    "professional": {
-      "name": "Professional",
+    "growth": {
+      "name": "Growth",
       "credits": "100 Credits",
-      "price": "$347",
-      "validity": "360 days to activate",
+      "price": "$667",
+      "validity": "180 days to activate",
       "reviews": "100 ebook reviews",
       "duration": "Up to 8 weeks",
       "subtitle": "",
@@ -73,21 +72,56 @@
         "14-day replacement guarantee",
         "Real-time campaign dashboard",
         "Priority support"
+      ],
+      "popular": true
+    },
+    "professional": {
+      "name": "Professional",
+      "credits": "200 Credits",
+      "price": "$1,197",
+      "validity": "360 days to activate",
+      "reviews": "200 ebook reviews",
+      "duration": "Up to 8 weeks",
+      "subtitle": "",
+      "features": [
+        "200 ebook reviews or 100 audiobook reviews",
+        "Progressive weekly distribution (organic delivery)",
+        "Up to 8 weeks of natural ranking growth",
+        "14-day replacement guarantee",
+        "Real-time campaign dashboard",
+        "Priority support"
+      ]
+    },
+    "premium": {
+      "name": "Premium",
+      "credits": "500 Credits",
+      "price": "$2,747",
+      "validity": "360 days to activate",
+      "reviews": "500 ebook reviews",
+      "duration": "Up to 8 weeks",
+      "subtitle": "",
+      "features": [
+        "500 ebook reviews or 250 audiobook reviews",
+        "Progressive weekly distribution (organic delivery)",
+        "Up to 8 weeks of natural ranking growth",
+        "14-day replacement guarantee",
+        "Real-time campaign dashboard",
+        "Dedicated support"
       ]
     },
     "enterprise": {
       "name": "Enterprise",
-      "credits": "200+ Credits",
-      "price": "Custom",
-      "validity": "360 days to activate",
-      "reviews": "Custom volume",
-      "duration": "Custom timeline",
-      "subtitle": "",
+      "credits": "Custom",
+      "price": "",
+      "validity": "",
+      "reviews": "",
+      "duration": "",
+      "subtitle": "Need higher volume? Contact our team for a custom plan.",
       "features": [
-        "200+ ebook reviews or 100+ audiobook reviews",
-        "Custom packages available",
+        "Custom credit packages",
         "Dedicated account manager",
         "Volume discounts",
+        "Custom timeline & delivery",
         "Priority support"
       ]
     },

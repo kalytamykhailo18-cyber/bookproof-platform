@@ -237,7 +237,7 @@ export function usePricingContent() {
   }
 
   // Fallback to i18n - build packages array from translation keys
-  const PACKAGE_KEYS = ['starter', 'growth', 'professional', 'enterprise', 'keywordTool'];
+  const PACKAGE_KEYS = ['starter', 'basic', 'growth', 'professional', 'premium', 'enterprise', 'keywordTool'];
   const packages = PACKAGE_KEYS.map(key => ({
     key,
     name: t(`packages.${key}.name`),

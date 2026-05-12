@@ -11,7 +11,9 @@ const PACKAGE_STYLES = [
   { icon: Star,      color: '#8b5cf6', animation: 'animate-fade-up' },
   { icon: Crown,     color: '#f59e0b', animation: 'animate-fade-up-light-slow' },
   { icon: Building2, color: '#10b981', animation: 'animate-fade-up-slow' },
-  { icon: Search,    color: '#ec4899', animation: 'animate-fade-up-fast' },
+  { icon: Crown,     color: '#ef4444', animation: 'animate-fade-up-fast' },
+  { icon: Building2, color: '#06b6d4', animation: 'animate-fade-up' },
+  { icon: Search,    color: '#ec4899', animation: 'animate-fade-up-light-slow' },
 ];
 
 export function PricingSection() {
@@ -111,7 +113,7 @@ export function PricingSection() {
         </div>
 
         {/* Pricing cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-5 sm:gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
           {content.packages.map((pkg, index) => {
             const style = PACKAGE_STYLES[index % PACKAGE_STYLES.length];
             const Icon = style.icon;

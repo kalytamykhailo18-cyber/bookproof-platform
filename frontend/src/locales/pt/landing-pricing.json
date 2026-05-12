@@ -10,7 +10,7 @@
     "duration": "Duração",
     "validity": "Validade"
   },
-  "creditLogic": "1 avaliação de ebook = 1 crédito • 1 avaliação de audiobook = 2 créditos",
+  "creditLogic": "1 crédito = 1 review de ebook • 2 créditos = 1 review de audiobook",
   "organicNote": "As avaliações são entregues de forma progressiva e orgânica para crescimento natural do ranking.",
   "installmentNote": "Em até 3x sem juros",
   "allInclude": {
@@ -25,14 +25,31 @@
   "packages": {
     "starter": {
       "name": "Iniciante",
-      "credits": "20 Créditos",
-      "price": "R$147",
+      "credits": "25 Créditos",
+      "price": "R$ 247",
       "validity": "180 dias para ativar",
-      "reviews": "20 avaliações de ebook",
+      "reviews": "25 reviews de ebook",
       "duration": "Até 8 semanas",
       "subtitle": "",
       "features": [
-        "20 avaliações de ebook ou 10 de audiobook",
+        "25 reviews de ebook ou 12 de audiobook",
+        "Distribuição progressiva semanal (entrega orgânica)",
+        "Até 8 semanas de crescimento natural de ranking",
+        "Garantia de substituição de 14 dias",
+        "Painel de campanha em tempo real",
+        "Suporte por email"
+      ]
+    },
+    "basic": {
+      "name": "Básico",
+      "credits": "50 Créditos",
+      "price": "R$ 467",
+      "validity": "180 dias para ativar",
+      "reviews": "50 reviews de ebook",
+      "duration": "Até 8 semanas",
+      "subtitle": "",
+      "features": [
+        "50 reviews de ebook ou 25 de audiobook",
         "Distribuição progressiva semanal (entrega orgânica)",
         "Até 8 semanas de crescimento natural de ranking",
         "Garantia de substituição de 14 dias",
@@ -42,32 +59,32 @@
     },
     "growth": {
       "name": "Crescimento",
-      "credits": "50 Créditos",
-      "price": "R$297",
+      "credits": "100 Créditos",
+      "price": "R$ 867",
       "validity": "180 dias para ativar",
-      "reviews": "50 avaliações de ebook",
+      "reviews": "100 reviews de ebook",
       "duration": "Até 8 semanas",
       "subtitle": "",
       "features": [
-        "50 avaliações de ebook ou 25 de audiobook",
+        "100 reviews de ebook ou 50 de audiobook",
         "Distribuição progressiva semanal (entrega orgânica)",
         "Até 8 semanas de crescimento natural de ranking",
         "Garantia de substituição de 14 dias",
         "Painel de campanha em tempo real",
-        "Suporte por email"
+        "Suporte prioritário"
       ],
       "popular": true
     },
     "professional": {
       "name": "Profissional",
-      "credits": "100 Créditos",
-      "price": "R$497",
+      "credits": "200 Créditos",
+      "price": "R$ 1.597",
       "validity": "360 dias para ativar",
-      "reviews": "100 avaliações de ebook",
+      "reviews": "200 reviews de ebook",
       "duration": "Até 8 semanas",
       "subtitle": "",
       "features": [
-        "100 avaliações de ebook ou 50 de audiobook",
+        "200 reviews de ebook ou 100 de audiobook",
         "Distribuição progressiva semanal (entrega orgânica)",
         "Até 8 semanas de crescimento natural de ranking",
         "Garantia de substituição de 14 dias",
@@ -75,19 +92,36 @@
         "Suporte prioritário"
       ]
     },
-    "enterprise": {
-      "name": "Empresarial",
-      "credits": "200+ Créditos",
-      "price": "Personalizado",
+    "premium": {
+      "name": "Premium",
+      "credits": "500 Créditos",
+      "price": "R$ 3.747",
       "validity": "360 dias para ativar",
-      "reviews": "Volume personalizado",
-      "duration": "Cronograma personalizado",
+      "reviews": "500 reviews de ebook",
+      "duration": "Até 8 semanas",
       "subtitle": "",
       "features": [
-        "200+ avaliações de ebook ou 100+ de audiobook",
-        "Pacotes personalizados disponíveis",
+        "500 reviews de ebook ou 250 de audiobook",
+        "Distribuição progressiva semanal (entrega orgânica)",
+        "Até 8 semanas de crescimento natural de ranking",
+        "Garantia de substituição de 14 dias",
+        "Painel de campanha em tempo real",
+        "Suporte dedicado"
+      ]
+    },
+    "enterprise": {
+      "name": "Personalizado",
+      "credits": "Personalizado",
+      "price": "",
+      "validity": "",
+      "reviews": "",
+      "duration": "",
+      "subtitle": "Precisa de mais volume? Fale com nosso time para um plano personalizado.",
+      "features": [
+        "Pacotes de créditos personalizados",
         "Gerente de conta dedicado",
         "Descontos por volume",
+        "Cronograma e entrega personalizados",
         "Suporte prioritário"
       ]
     },

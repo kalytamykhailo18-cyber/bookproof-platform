@@ -25,14 +25,14 @@
   "packages": {
     "starter": {
       "name": "Inicial",
-      "credits": "20 Créditos",
-      "price": "$97",
+      "credits": "25 Créditos",
+      "price": "$197",
       "validity": "180 días para activar",
-      "reviews": "20 reseñas de ebook",
+      "reviews": "25 reseñas de ebook",
       "duration": "Hasta 8 semanas",
       "subtitle": "",
       "features": [
-        "20 reseñas de ebook o 10 de audiolibro",
+        "25 reseñas de ebook o 12 de audiolibro",
         "Distribución progresiva semanal (entrega orgánica)",
         "Hasta 8 semanas de crecimiento natural de ranking",
         "Garantía de reemplazo de 14 días",
@@ -40,10 +40,10 @@
         "Soporte por email"
       ]
     },
-    "growth": {
-      "name": "Crecimiento",
+    "basic": {
+      "name": "Básico",
       "credits": "50 Créditos",
-      "price": "$197",
+      "price": "$367",
       "validity": "180 días para activar",
       "reviews": "50 reseñas de ebook",
       "duration": "Hasta 8 semanas",
@@ -55,14 +55,13 @@
         "Garantía de reemplazo de 14 días",
         "Panel de campaña en tiempo real",
         "Soporte por email"
-      ],
-      "popular": true
+      ]
     },
-    "professional": {
-      "name": "Profesional",
+    "growth": {
+      "name": "Crecimiento",
       "credits": "100 Créditos",
-      "price": "$347",
-      "validity": "360 días para activar",
+      "price": "$667",
+      "validity": "180 días para activar",
       "reviews": "100 reseñas de ebook",
       "duration": "Hasta 8 semanas",
       "subtitle": "",
@@ -73,21 +72,56 @@
         "Garantía de reemplazo de 14 días",
         "Panel de campaña en tiempo real",
         "Soporte prioritario"
+      ],
+      "popular": true
+    },
+    "professional": {
+      "name": "Profesional",
+      "credits": "200 Créditos",
+      "price": "$1,197",
+      "validity": "360 días para activar",
+      "reviews": "200 reseñas de ebook",
+      "duration": "Hasta 8 semanas",
+      "subtitle": "",
+      "features": [
+        "200 reseñas de ebook o 100 de audiolibro",
+        "Distribución progresiva semanal (entrega orgánica)",
+        "Hasta 8 semanas de crecimiento natural de ranking",
+        "Garantía de reemplazo de 14 días",
+        "Panel de campaña en tiempo real",
+        "Soporte prioritario"
+      ]
+    },
+    "premium": {
+      "name": "Premium",
+      "credits": "500 Créditos",
+      "price": "$2,747",
+      "validity": "360 días para activar",
+      "reviews": "500 reseñas de ebook",
+      "duration": "Hasta 8 semanas",
+      "subtitle": "",
+      "features": [
+        "500 reseñas de ebook o 250 de audiolibro",
+        "Distribución progresiva semanal (entrega orgánica)",
+        "Hasta 8 semanas de crecimiento natural de ranking",
+        "Garantía de reemplazo de 14 días",
+        "Panel de campaña en tiempo real",
+        "Soporte dedicado"
       ]
     },
     "enterprise": {
       "name": "Empresarial",
-      "credits": "200+ Créditos",
-      "price": "Personalizado",
-      "validity": "360 días para activar",
-      "reviews": "Volumen personalizado",
-      "duration": "Cronograma personalizado",
-      "subtitle": "",
+      "credits": "Personalizado",
+      "price": "",
+      "validity": "",
+      "reviews": "",
+      "duration": "",
+      "subtitle": "¿Necesitas mayor volumen? Contacta a nuestro equipo para un plan personalizado.",
       "features": [
-        "200+ reseñas de ebook o 100+ de audiolibro",
-        "Paquetes personalizados disponibles",
+        "Paquetes de créditos personalizados",
         "Gerente de cuenta dedicado",
         "Descuentos por volumen",
+        "Cronograma y entrega personalizados",
         "Soporte prioritario"
       ]
     },
